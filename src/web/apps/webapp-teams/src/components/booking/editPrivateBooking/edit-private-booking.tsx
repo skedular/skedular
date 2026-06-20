@@ -152,6 +152,21 @@ const getChangedPrivateBookingFields = (
   return changed;
 };
 
+const getValidPrivateBookingPatchFields = (fieldsToUpdate: PrivateBookingPatchField[], values: BookingDetails): PrivateBookingPatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    const formFields = privateBookingFieldGroups.find(([field]) => field === patchField)?.[1] ?? [];
+
+    try {
+      for (const formField of formFields) {
+        bookingSchema.validateSyncAt(formField, values);
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay, rootDataAvailableResourcesRelay }: Props) => {
   const rootData = useFragment<editPrivateBooking_query$key>(
     graphql`
@@ -546,39 +561,43 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     handleRefetchAvailableResources(dateRangeValidation, locationId);
   }, [dateRangeValidation, handleRefetchAvailableResources, locationId]);
 
-  const handleBookingDetailUpdateClick = (
-    fieldsToUpdate: PrivateBookingPatchField[],
-    { date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, category }: BookingDetails,
-  ) => {
-    if (!booking || !bookingSchema.isValidSync({ date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, category })) {
+  const handleBookingDetailUpdateClick = (fieldsToUpdate: PrivateBookingPatchField[], values: BookingDetails) => {
+    const { date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, category } = values;
+    const validFieldsToUpdate = getValidPrivateBookingPatchFields(fieldsToUpdate, values);
+    if (!booking || validFieldsToUpdate.length === 0) {
       return;
     }
 
-    const start = date as unknown as Dayjs;
-    const [timeFrom, timeUntil] = timeRange;
-    const dateRange = getDateRange(toAllDayBoolean(allDay), start, { timeFrom, timeUntil });
-    if (!dateRange.valid) {
-      return;
-    }
+    let from = booking.from;
+    let until = booking.until;
+    let shortDateTimeFormatFrom = toShortDate(booking.from);
+    if (validFieldsToUpdate.includes('SCHEDULE')) {
+      const start = date as unknown as Dayjs;
+      const [timeFrom, timeUntil] = timeRange;
+      const dateRange = getDateRange(toAllDayBoolean(allDay), start, { timeFrom, timeUntil });
+      if (!dateRange.valid) {
+        return;
+      }
 
-    const from = dateRange.from.toISOString();
-    const until = dateRange.until.toISOString();
-    const shortDateTimeFormatFrom = toShortDate(start);
+      from = dateRange.from.toISOString();
+      until = dateRange.until.toISOString();
+      shortDateTimeFormatFrom = toShortDate(start);
+    }
 
     commitUpdatePrivateBooking({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: booking.id,
-          fieldsToUpdate,
+          fieldsToUpdate: validFieldsToUpdate,
           from,
           until,
           notes,
           category: category as BookingCategory,
-          customerIds: [memberId],
+          customerIds: validFieldsToUpdate.includes('PARTICIPANTS') ? [memberId] : booking.involvedCustomers.map(({ id }) => id),
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
-          teamIds: teamId ? [teamId] : [],
-          resourceIds,
+          teamIds: validFieldsToUpdate.includes('PARTICIPANTS') ? (teamId ? [teamId] : []) : booking.involvedTeams.map(({ id }) => id),
+          resourceIds: validFieldsToUpdate.includes('RESOURCES') ? resourceIds : booking.bookingResources.map(({ resource }) => resource.id),
         },
       },
       onCompleted: (_, errors) => {

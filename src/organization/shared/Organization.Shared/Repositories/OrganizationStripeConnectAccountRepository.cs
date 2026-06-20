@@ -151,7 +151,8 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
                     nameof(OrganizationStripeConnectAccount.Name),
                     query => query.Name,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

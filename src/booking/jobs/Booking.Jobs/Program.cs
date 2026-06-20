@@ -1,5 +1,6 @@
 using System.Reflection;
 using Api.Shared.Services;
+using Booking.Jobs.Services;
 using Booking.Shared;
 using Booking.Shared.Activities;
 using Booking.Shared.Database;
@@ -65,15 +66,21 @@ public class Program
             .AddWorkflow<PayRecurringBookingViaBankTransfer>()
             .AddWorkflow<PayRecurringBookingViaCard>()
             .AddWorkflow<RunOrganizationArrearsBilling>()
+            .AddWorkflow<RolloverSpacesBookingUsage>()
             .AddWorkflow<MaintainAccountingInvoiceState>()
             .AddWorkflow<MaintainOrganizationArrearsInvoiceAccountingState>()
+            .AddWorkflow<NotifyMarketplaceBookingFailure>()
             .AddScopedActivities<BookingIntegrations>()
             .AddScopedActivities<InvoiceIntegrations>()
             .AddScopedActivities<LocationResourceSlot>()
             .AddScopedActivities<MarketplaceBookingSubscriptionIntegrations>()
+            .AddScopedActivities<MarketplaceBookingFailureNotificationIntegrations>()
             .AddScopedActivities<OrganizationArrearsBillingIntegrations>()
             .AddScopedActivities<PrivateRecurringBookingIntegrations>()
+            .AddScopedActivities<SpacesBookingUsageRolloverIntegrations>()
             .AddScopedActivities<StripeIntegrations>();
+
+        services.AddHostedService<SpacesBookingUsageRolloverWorkflowHostedService>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

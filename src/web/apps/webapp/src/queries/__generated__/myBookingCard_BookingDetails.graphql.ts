@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<99da42b6aa62da37fc8b9c1b956d251b>>
+ * @generated SignedSource<<f481b2ab9addf871bbd0fdcfe118997d>>
  * @lightSyntaxTransform
  */
 
@@ -32,6 +32,14 @@ export type myBookingCard_BookingDetails$data = {
   readonly channel: {
     readonly channel: BookingChannel;
   };
+  readonly failure: {
+    readonly category: {
+      readonly name: string;
+    };
+    readonly customerAction: {
+      readonly name: string;
+    };
+  } | null | undefined;
   readonly from: any;
   readonly id: string;
   readonly involvedCustomers: ReadonlyArray<{
@@ -93,17 +101,20 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = {
+v2 = [
+  (v1/*:: as any*/)
+],
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v3 = [
+v4 = [
   (v0/*:: as any*/),
   (v1/*:: as any*/),
-  (v2/*:: as any*/)
+  (v3/*:: as any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -146,6 +157,37 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "channel",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "MarketplaceBookingFailureDetails",
+      "kind": "LinkedField",
+      "name": "failure",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceBookingFailureChoiceDetails",
+          "kind": "LinkedField",
+          "name": "category",
+          "plural": false,
+          "selections": (v2/*:: as any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceBookingFailureChoiceDetails",
+          "kind": "LinkedField",
+          "name": "customerAction",
+          "plural": false,
+          "selections": (v2/*:: as any*/),
           "storageKey": null
         }
       ],
@@ -242,7 +284,7 @@ return {
           "selections": [
             (v0/*:: as any*/),
             (v1/*:: as any*/),
-            (v2/*:: as any*/),
+            (v3/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -250,7 +292,7 @@ return {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v3/*:: as any*/),
+              "selections": (v4/*:: as any*/),
               "storageKey": null
             },
             {
@@ -260,7 +302,7 @@ return {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v3/*:: as any*/),
+              "selections": (v4/*:: as any*/),
               "storageKey": null
             }
           ],
@@ -343,9 +385,7 @@ return {
           "kind": "LinkedField",
           "name": "frequency",
           "plural": false,
-          "selections": [
-            (v1/*:: as any*/)
-          ],
+          "selections": (v2/*:: as any*/),
           "storageKey": null
         },
         {
@@ -369,6 +409,6 @@ return {
 };
 })();
 
-(node as any).hash = "4fab7f20b5a32242b9e546e5fa584272";
+(node as any).hash = "3b1d54823fea70db03f0f2eedf02954f";
 
 export default node;

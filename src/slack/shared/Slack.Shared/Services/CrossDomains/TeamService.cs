@@ -134,13 +134,15 @@ public class TeamService(
                 TeamMemberRole.Owner => Role.Owner,
                 TeamMemberRole.Administrator => Role.Administrator,
                 TeamMemberRole.Member => Role.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
+                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input.")
             },
             Status = item.Status switch
             {
                 TeamMemberStatus.Active => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active,
                 TeamMemberStatus.Inactive => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
+                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input.")
             },
             OrganizationMember = new OrganizationMember
             {
@@ -151,7 +153,8 @@ public class TeamService(
                     OrganizationMemberRole.Owner => Role.Owner,
                     OrganizationMemberRole.Administrator => Role.Administrator,
                     OrganizationMemberRole.Member => Role.Member,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.OrganizationMember.Role), item.OrganizationMember.Role,
+                        $"Unexpected value for {nameof(item.OrganizationMember.Role)}: {item.OrganizationMember.Role}. Update enum mapping or caller input.")
                 }
             }
         }));
@@ -207,13 +210,15 @@ public class TeamService(
                 TeamMemberRole.Owner => Role.Owner,
                 TeamMemberRole.Administrator => Role.Administrator,
                 TeamMemberRole.Member => Role.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
+                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input.")
             },
             Status = item.Status switch
             {
                 TeamMemberStatus.Active => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active,
                 TeamMemberStatus.Inactive => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
+                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input.")
             },
             OrganizationMember = new OrganizationMember
             {
@@ -224,7 +229,8 @@ public class TeamService(
                     OrganizationMemberRole.Owner => Role.Owner,
                     OrganizationMemberRole.Administrator => Role.Administrator,
                     OrganizationMemberRole.Member => Role.Member,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.OrganizationMember.Role), item.OrganizationMember.Role,
+                        $"Unexpected value for {nameof(item.OrganizationMember.Role)}: {item.OrganizationMember.Role}. Update enum mapping or caller input.")
                 }
             }
         }));

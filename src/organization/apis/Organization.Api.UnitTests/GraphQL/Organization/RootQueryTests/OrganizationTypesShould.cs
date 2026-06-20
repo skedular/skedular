@@ -20,7 +20,7 @@ public class OrganizationTypesShould
             item.Type == OrganizationType.Marketplace &&
             item.Name == OrganizationTypeConstants.Marketplace.ToOrganizationTypeName());
         result.ShouldContain(item =>
-            item.Type == OrganizationType.Individual &&
-            item.Name == OrganizationTypeConstants.Individual.ToOrganizationTypeName());
+            item.Type == OrganizationType.Host &&
+            item.Name == OrganizationTypeConstants.Host.ToOrganizationTypeName());
     }
 }

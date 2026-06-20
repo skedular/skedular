@@ -35,7 +35,8 @@ public class OrganizationZonesGrpcService(
                 {
                     ZoneOrderField.Name => OrganizationTagOrderField.Name,
                     ZoneOrderField.Description => OrganizationTagOrderField.Description,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
                 };
 
                 return new TagOrder(direction, field);

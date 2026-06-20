@@ -2,7 +2,7 @@ name: Skedular CI/CD Pipeline
 
 concurrency:
     group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    # cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 on:
     workflow_dispatch:
@@ -137,11 +137,9 @@ jobs:
                   app_paths = {
                       "public-web": "src/web/apps/public-web/",
                       "webapp": "src/web/apps/webapp/",
-                      "webapp-help": "src/web/apps/webapp-help/",
                       "webapp-teams": "src/web/apps/webapp-teams/",
-                      "webapp-teams-help": "src/web/apps/webapp-teams-help/",
                       "webapp-spaces": "src/web/apps/webapp-spaces/",
-                      "webapp-spaces-help": "src/web/apps/webapp-spaces-help/",
+                      "webapp-host": "src/web/apps/webapp-host/",
                   }
                   domain_paths = [
                       "src/booking/",
@@ -251,11 +249,9 @@ jobs:
                           "productionProjectName": "production-public-web",
                       },
                       "webapp": {"dockerfile": "./src/web/apps/webapp/Dockerfile", "repository": "webapp", "component": "webapp", "workos": "WEBAPP_WORKOS_API_KEY", "richSecrets": True},
-                      "webapp-help": {"dockerfile": "./src/web/apps/webapp-help/Dockerfile", "repository": "webapphelp", "component": "webapphelp", "workos": "", "richSecrets": False},
                       "webapp-teams": {"dockerfile": "./src/web/apps/webapp-teams/Dockerfile", "repository": "webapp-teams", "component": "webapp-teams", "workos": "WEBAPP_TEAMS_WORKOS_API_KEY", "richSecrets": True},
-                      "webapp-teams-help": {"dockerfile": "./src/web/apps/webapp-teams-help/Dockerfile", "repository": "webapp-teams-help", "component": "webapp-teams-help", "workos": "", "richSecrets": False},
                       "webapp-spaces": {"dockerfile": "./src/web/apps/webapp-spaces/Dockerfile", "repository": "webapp-spaces", "component": "webapp-spaces", "workos": "WEBAPP_SPACES_WORKOS_API_KEY", "richSecrets": True},
-                      "webapp-spaces-help": {"dockerfile": "./src/web/apps/webapp-spaces-help/Dockerfile", "repository": "webapp-spaces-help", "component": "webapp-spaces-help", "workos": "", "richSecrets": False},
+                      "webapp-host": {"dockerfile": "./src/web/apps/webapp-host/Dockerfile", "repository": "webapp-host", "component": "webapp-host", "workos": "WEBAPP_HOST_WORKOS_API_KEY", "richSecrets": True},
                   }
                   web_ci_matrix = [
                       dict(
@@ -345,7 +341,7 @@ jobs:
                       infra_targets = []
                       infra_validation_targets = []
 
-                  cd_target_names = set(web_apps.keys()) | {"docs-event-catalog"}
+                  cd_target_names = set(web_apps.keys()) | {"docs-event-catalog", "shared"}
                   if manual_full_run:
                       staging_cd = [target for target in infra_targets if target["environment"] == "staging" and target["enabled"] == "true"]
                       production_cd = [target for target in infra_targets if target["environment"] == "production" and target["enabled"] == "true"]
@@ -529,7 +525,7 @@ jobs:
                   TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
                   TF_VAR_slack_client_secret: ${{ secrets.STAGING_SLACK_CLIENT_SECRET }}
                   TF_VAR_google_map_api_key: ${{ secrets.STAGING_GOOGLE_MAP_API_KEY }}
-                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.STAGING_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.STAGING_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.STAGING_WEBAPP_SPACES_WORKOS_API_KEY || '' }}
+                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.STAGING_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.STAGING_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.STAGING_WEBAPP_SPACES_WORKOS_API_KEY || matrix.name == 'webapp-host' && secrets.STAGING_WEBAPP_HOST_WORKOS_API_KEY || '' }}
               with:
                   githubToken: ${{ secrets.GITHUB_TOKEN }}
                   workingDirectory: ${{ matrix.stagingWorkingDirectory }}
@@ -566,7 +562,7 @@ jobs:
                   TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
                   TF_VAR_slack_client_secret: ${{ secrets.PRODUCTION_SLACK_CLIENT_SECRET }}
                   TF_VAR_google_map_api_key: ${{ secrets.PRODUCTION_GOOGLE_MAP_API_KEY }}
-                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.PRODUCTION_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.PRODUCTION_WEBAPP_SPACES_WORKOS_API_KEY || '' }}
+                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.PRODUCTION_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.PRODUCTION_WEBAPP_SPACES_WORKOS_API_KEY || matrix.name == 'webapp-host' && secrets.PRODUCTION_WEBAPP_HOST_WORKOS_API_KEY || '' }}
               with:
                   githubToken: ${{ secrets.GITHUB_TOKEN }}
                   workingDirectory: ${{ matrix.productionWorkingDirectory }}
@@ -623,25 +619,31 @@ jobs:
                   TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.STAGING_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
                   TF_VAR_slack_client_secret: ${{ secrets.STAGING_SLACK_CLIENT_SECRET }}
                   TF_VAR_google_map_api_key: ${{ secrets.STAGING_GOOGLE_MAP_API_KEY }}
-                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.STAGING_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.STAGING_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.STAGING_WEBAPP_SPACES_WORKOS_API_KEY || '' }}
+                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.STAGING_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.STAGING_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.STAGING_WEBAPP_SPACES_WORKOS_API_KEY || matrix.name == 'webapp-host' && secrets.STAGING_WEBAPP_HOST_WORKOS_API_KEY || '' }}
               with:
                   workingDirectory: ${{ matrix.workingDirectory }}
             - name: Enable pnpm for public static web
               if: ${{ matrix.name == 'public-web' }}
               run: |
                   corepack enable
-                  corepack prepare pnpm@11.6.0 --activate
+                  corepack prepare pnpm@11.17.0 --activate
             - name: Install public static web dependencies
               if: ${{ matrix.name == 'public-web' }}
               run: pnpm --dir src/web install --frozen-lockfile
             - name: Build public static web
               if: ${{ matrix.name == 'public-web' }}
               env:
+                  PUBLIC_WEB_SITE_URL: https://staging.getskedular.com
                   PUBLIC_SKEDULAR_APP_URL: https://staging.skedular.app
                   PUBLIC_SKEDULAR_SIGNUP_URL: https://staging.skedular.app
+                  PUBLIC_SKEDULAR_TEAMS_APP_URL: https://teamsstaging.skedular.app
+                  PUBLIC_SKEDULAR_SPACES_APP_URL: https://spacesstaging.skedular.app
+                  PUBLIC_SKEDULAR_HOST_APP_URL: https://hoststaging.skedular.app
                   PUBLIC_SKEDULAR_DEMO_URL: https://calendly.com/morteza-alizadeh/skedular
-                  PUBLIC_SKEDULAR_BECOME_HOST_URL: https://staging.skedular.app
+                  PUBLIC_SKEDULAR_BECOME_HOST_URL: https://hoststaging.skedular.app
                   PUBLIC_SKEDULAR_SLACK_INSTALL_URL: "https://slack.com/oauth/v2/authorize?scope=app_mentions%3Aread%2Cchannels%3Ajoin%2Cchannels%3Amanage%2Cchannels%3Aread%2Cchat%3Awrite%2Cteam%3Aread%2Cusers%3Aread%2Cusers%3Aread.email%2Cusers.profile%3Aread&user_scope=users.profile%3Awrite%2Cusers.profile%3Aread&redirect_uri=https%3A%2F%2Fslackapistaging.skedular.app%2Fv1%2Fslack%2Fcallback&client_id=118234978193.5578036232262"
+                  PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID: G-QP614CYLZL
+                  PUBLIC_LOGROCKET_APP_ID: ""
               run: pnpm --dir src/web public-web#build
             - name: Deploy public static web to Cloudflare Pages
               if: ${{ matrix.name == 'public-web' }}
@@ -700,25 +702,31 @@ jobs:
                   TF_VAR_gcp_web_credentials_client_secret: ${{ secrets.PRODUCTION_GCP_WEB_CREDENTIALS_CLIENT_SECRET }}
                   TF_VAR_slack_client_secret: ${{ secrets.PRODUCTION_SLACK_CLIENT_SECRET }}
                   TF_VAR_google_map_api_key: ${{ secrets.PRODUCTION_GOOGLE_MAP_API_KEY }}
-                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.PRODUCTION_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.PRODUCTION_WEBAPP_SPACES_WORKOS_API_KEY || '' }}
+                  TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.PRODUCTION_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.PRODUCTION_WEBAPP_SPACES_WORKOS_API_KEY || matrix.name == 'webapp-host' && secrets.PRODUCTION_WEBAPP_HOST_WORKOS_API_KEY || '' }}
               with:
                   workingDirectory: ${{ matrix.workingDirectory }}
             - name: Enable pnpm for public static web
               if: ${{ matrix.name == 'public-web' }}
               run: |
                   corepack enable
-                  corepack prepare pnpm@11.6.0 --activate
+                  corepack prepare pnpm@11.17.0 --activate
             - name: Install public static web dependencies
               if: ${{ matrix.name == 'public-web' }}
               run: pnpm --dir src/web install --frozen-lockfile
             - name: Build public static web
               if: ${{ matrix.name == 'public-web' }}
               env:
+                  PUBLIC_WEB_SITE_URL: https://getskedular.com
                   PUBLIC_SKEDULAR_APP_URL: https://skedular.app
                   PUBLIC_SKEDULAR_SIGNUP_URL: https://skedular.app
+                  PUBLIC_SKEDULAR_TEAMS_APP_URL: https://teams.skedular.app
+                  PUBLIC_SKEDULAR_SPACES_APP_URL: https://spaces.skedular.app
+                  PUBLIC_SKEDULAR_HOST_APP_URL: https://host.skedular.app
                   PUBLIC_SKEDULAR_DEMO_URL: https://calendly.com/morteza-alizadeh/skedular
-                  PUBLIC_SKEDULAR_BECOME_HOST_URL: https://skedular.app
+                  PUBLIC_SKEDULAR_BECOME_HOST_URL: https://host.skedular.app
                   PUBLIC_SKEDULAR_SLACK_INSTALL_URL: "https://slack.com/oauth/v2/authorize?scope=app_mentions%3Aread%2Cchannels%3Ajoin%2Cchannels%3Amanage%2Cchannels%3Aread%2Cchat%3Awrite%2Cteam%3Aread%2Cusers%3Aread%2Cusers%3Aread.email%2Cusers.profile%3Aread&user_scope=users.profile%3Awrite%2Cusers.profile%3Aread&redirect_uri=https%3A%2F%2Fslackapi.skedular.app%2Fv1%2Fslack%2Fcallback&client_id=118234978193.5578039519830"
+                  PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID: G-3TYYHWY70E
+                  PUBLIC_LOGROCKET_APP_ID: skedular/skedular-public-website-production
               run: pnpm --dir src/web public-web#build
             - name: Deploy public static web to Cloudflare Pages
               if: ${{ matrix.name == 'public-web' }}

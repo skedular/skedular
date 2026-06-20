@@ -37,10 +37,10 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         /// </summary>
         /// <returns>the status of organization republishing</returns>
 
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/republish")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{customDomain}/republish")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("republish organization")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> Republish(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> Republish(string customDomain, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// republish all organizations
@@ -73,15 +73,15 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RerunAllOfferingsWorkflows(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// set enterprise offering
+        /// set negotiated organization offering
         /// </summary>
         /// <param name="x_API_Key">API Key</param>
-        /// <returns>the status of setting the enterprise offering</returns>
+        /// <returns>the status of setting the negotiated organization offering</returns>
 
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/enterprise-offering")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/enterprise-offering")]
         [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("set enterprise offering")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> SetEnterpriseOffering(string organizationId, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, [Microsoft.AspNetCore.Mvc.FromBody] SetEnterpriseOfferingRequest body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [System.ComponentModel.Description("set negotiated organization offering")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> SetEnterpriseOffering([Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, [Microsoft.AspNetCore.Mvc.FromBody] SetEnterpriseOfferingRequest body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// resync all azure tenants
@@ -118,10 +118,10 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         /// </summary>
         /// <returns>the status of regenerating organization daily analytics</returns>
 
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/analytics/{organizationId}/regenerate-daily-analytics")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/analytics/{customDomain}/regenerate-daily-analytics")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("regenerate organization daily analytics")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateDailyAnalytics(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateDailyAnalytics(string customDomain, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -129,12 +129,27 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
     public partial class SetEnterpriseOfferingRequest
     {
 
+        [System.Text.Json.Serialization.JsonPropertyName("organizationId")]
+        public string? OrganizationId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("customDomain")]
+        public string? CustomDomain { get; set; } = default!;
+
         /// <summary>
-        /// Fixed monthly price for the negotiated enterprise offering in minor currency units.
+        /// The organization offering code to assign.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("offeringCode")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<OfferingCode>))]
+        [System.ComponentModel.Description("The organization offering code to assign.")]
+        public OfferingCode OfferingCode { get; set; } = default!;
+
+        /// <summary>
+        /// Fixed monthly price for the negotiated offering in minor currency units.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("fixedPrice")]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
-        [System.ComponentModel.Description("Fixed monthly price for the negotiated enterprise offering in minor currency units.")]
+        [System.ComponentModel.Description("Fixed monthly price for the negotiated offering in minor currency units.")]
         public int FixedPrice { get; set; } = default!;
 
         [System.Text.Json.Serialization.JsonPropertyName("currency")]
@@ -143,28 +158,77 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1
         public Currency Currency { get; set; } = default!;
 
         /// <summary>
-        /// Maximum monthly users allowed for the negotiated enterprise offering.
+        /// Optional maximum monthly users allowed for the negotiated offering. Omit for the offering default.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("purchasedUserCapacity")]
         [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
-        [System.ComponentModel.Description("Maximum monthly users allowed for the negotiated enterprise offering.")]
-        public int PurchasedUserCapacity { get; set; } = default!;
+        [System.ComponentModel.Description("Optional maximum monthly users allowed for the negotiated offering. Omit for the offering default.")]
+        public int? PurchasedUserCapacity { get; set; } = default!;
 
         /// <summary>
-        /// Maximum monthly locations allowed for the negotiated enterprise offering.
+        /// Optional maximum monthly locations allowed for the negotiated offering. Omit for the offering default.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("purchasedLocationCapacity")]
         [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
-        [System.ComponentModel.Description("Maximum monthly locations allowed for the negotiated enterprise offering.")]
-        public int PurchasedLocationCapacity { get; set; } = default!;
+        [System.ComponentModel.Description("Optional maximum monthly locations allowed for the negotiated offering. Omit for the offering default.")]
+        public int? PurchasedLocationCapacity { get; set; } = default!;
 
         /// <summary>
-        /// Maximum monthly teams allowed for the negotiated enterprise offering.
+        /// Optional maximum monthly teams allowed for the negotiated offering. Omit for the offering default.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("purchasedTeamCapacity")]
         [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
-        [System.ComponentModel.Description("Maximum monthly teams allowed for the negotiated enterprise offering.")]
-        public int PurchasedTeamCapacity { get; set; } = default!;
+        [System.ComponentModel.Description("Optional maximum monthly teams allowed for the negotiated offering. Omit for the offering default.")]
+        public int? PurchasedTeamCapacity { get; set; } = default!;
+
+        /// <summary>
+        /// Optional monthly booking instance quota for Spaces offerings. Omit for the offering default.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("monthlyBookingInstanceQuota")]
+        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+        [System.ComponentModel.Description("Optional monthly booking instance quota for Spaces offerings. Omit for the offering default.")]
+        public int? MonthlyBookingInstanceQuota { get; set; } = default!;
+
+        /// <summary>
+        /// Optional discount percentage to apply while billing this offering. It is copied to renewed offering periods until changed.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("discountPercentage")]
+        [System.ComponentModel.DataAnnotations.Range(0, 100)]
+        [System.ComponentModel.Description("Optional discount percentage to apply while billing this offering. It is copied to renewed offering periods until changed.")]
+        public int DiscountPercentage { get; set; } = 0;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum OfferingCode
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EARLY_BIRD_V1")]
+        EARLY_BIRD_V1 = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"FREE_TIER_V1")]
+        FREE_TIER_V1 = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"PAY_AS_YOU_GO_V1")]
+        PAY_AS_YOU_GO_V1 = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"ENTERPRISE_CUSTOM_V1")]
+        ENTERPRISE_CUSTOM_V1 = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_FREE_TIER_V1")]
+        SPACES_FREE_TIER_V1 = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_GROWTH_V1")]
+        SPACES_GROWTH_V1 = 5,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_BUSINESS_V1")]
+        SPACES_BUSINESS_V1 = 6,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_CONTACT_US_V1")]
+        SPACES_CONTACT_US_V1 = 7,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"HOST_STANDARD_V1")]
+        HOST_STANDARD_V1 = 8,
 
     }
 

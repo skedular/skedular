@@ -1,8 +1,11 @@
+using Api.Shared.Services;
+using Api.Shared.Services.Offering;
 using Booking.Api.Mappers;
 using Booking.Api.Models;
 using Booking.Api.Services;
 using HotChocolate;
 using HotChocolate.Types;
+using MarketplaceBookingAvailabilityConflict = Booking.Shared.Services.MarketplaceBookingAvailabilityConflict;
 
 namespace Booking.Api.GraphQL.Booking;
 
@@ -15,8 +18,19 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await privateBookingService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
+        try
+        {
+            var booking = await privateBookingService.AddAsync(graphQlMapper.MapTo(input), input.FullOpeningHoursDate, cancellationToken);
+            return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
+        }
+        catch (SpacesBookingQuotaExceeded exception)
+        {
+            return ToQuotaErrorPayload(input.ClientMutationId, exception);
+        }
+        catch (SpacesAccessDenied exception)
+        {
+            return ToAccessErrorPayload(input.ClientMutationId, exception);
+        }
     }
 
     [UseResolverScope]
@@ -25,10 +39,17 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await privateBookingService.UpdateAsync(
-            new PrivateBookingPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
-            cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
+        try
+        {
+            var booking = await privateBookingService.UpdateAsync(
+                new PrivateBookingPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+                cancellationToken);
+            return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
+        }
+        catch (SpacesAccessDenied exception)
+        {
+            return ToAccessErrorPayload(input.ClientMutationId, exception);
+        }
     }
 
     [UseResolverScope]
@@ -47,8 +68,35 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] IMarketplaceBookingService marketplaceBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await marketplaceBookingService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
+        try
+        {
+            var result = await marketplaceBookingService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
+            if (result.Failure is not null)
+            {
+                return new BookingPayload { ClientMutationId = input.ClientMutationId, Failure = graphQlMapper.MapTo(result.Failure) };
+            }
+
+            return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(result.Booking!) };
+        }
+        catch (SpacesBookingQuotaExceeded exception)
+        {
+            return ToQuotaErrorPayload(input.ClientMutationId, exception);
+        }
+        catch (SpacesAccessDenied exception)
+        {
+            return ToAccessErrorPayload(input.ClientMutationId, exception);
+        }
+        catch (MarketplaceBookingAvailabilityConflict exception)
+        {
+            return new BookingPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                AvailabilityError = new BookingAvailabilityErrorDetails
+                {
+                    Message = exception.Message, UnavailableResourceIds = exception.UnavailableResourceIds
+                }
+            };
+        }
     }
 
     [UseResolverScope]
@@ -57,10 +105,17 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] IMarketplaceBookingService marketplaceBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await marketplaceBookingService.UpdateAsync(
-            new MarketplaceBookingPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
-            cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
+        try
+        {
+            var booking = await marketplaceBookingService.UpdateAsync(
+                new MarketplaceBookingPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
+                cancellationToken);
+            return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
+        }
+        catch (SpacesAccessDenied exception)
+        {
+            return ToAccessErrorPayload(input.ClientMutationId, exception);
+        }
     }
 
     [UseResolverScope]
@@ -72,4 +127,43 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         var booking = await marketplaceBookingService.DeleteAsync(input.Id, cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
     }
+
+    private static BookingPayload ToQuotaErrorPayload(string? clientMutationId, SpacesBookingQuotaExceeded exception) =>
+        new()
+        {
+            ClientMutationId = clientMutationId,
+            QuotaError = new BookingSpacesQuotaErrorDetails
+            {
+                ErrorCode = exception.ErrorCode,
+                ReasonCode =
+                    new SpacesQuotaReasonCodeDetails { Type = exception.ReasonCode, Name = exception.ReasonCode.ToSpacesQuotaReasonCodeName() },
+                CurrentUsage = exception.CurrentUsage,
+                QuotaLimit = exception.QuotaLimit,
+                AttemptedCurrentPeriodCount = exception.AttemptedCurrentPeriodCount,
+                ExcludedOutOfPeriodCount = exception.ExcludedOutOfPeriodCount,
+                TotalAttemptedInstanceCount = exception.TotalAttemptedInstanceCount,
+                RemainingQuota = exception.RemainingQuota,
+                UpgradePlans = exception.UpgradePlans.Select(upgrade => new UpgradePlanDetails
+                {
+                    PlanCode = upgrade.PlanCode,
+                    Name = upgrade.Name,
+                    Availability = upgrade.Availability,
+                    PriceDescription = upgrade.PriceDescription
+                }).ToList()
+            }
+        };
+
+    private static BookingPayload ToAccessErrorPayload(string? clientMutationId, SpacesAccessDenied exception) =>
+        new()
+        {
+            ClientMutationId = clientMutationId,
+            AccessError = new SpacesAccessErrorDetails
+            {
+                ErrorCode = exception.ErrorCode,
+                Status = exception.Status,
+                ReasonCode = exception.ReasonCode,
+                UpgradeRequired = exception.UpgradeRequired,
+                Message = exception.Message
+            }
+        };
 }

@@ -1,0 +1,42 @@
+variable "environment" {
+  type        = string
+  description = "environment name"
+}
+
+variable "gcp_web_credentials_client_id" {
+  type        = string
+  description = "GCP web credentials client Id"
+  default     = ""
+}
+
+variable "gcp_web_credentials_client_secret" {
+  type        = string
+  description = "GCP web credentials client Secret"
+  default     = ""
+}
+
+variable "google_analytics_measurement_id" {
+  type        = string
+  description = "Google Analytics measurement id"
+}
+
+variable "google_tag_manager_container_id" {
+  type        = string
+  description = "Google Tag Manager container id"
+}
+
+variable "google_map_api_key" {
+  type        = string
+  description = "Google Map API Key"
+}
+
+variable "workos_api_key" {
+  type        = string
+  description = "WorkOS API Key"
+  sensitive   = true
+}
+
+variable "workos_client_id" {
+  type        = string
+  description = "WorkOS Client ID"
+}

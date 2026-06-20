@@ -1,3 +1,4 @@
+using Booking.Api.GraphQL.Booking;
 using HotChocolate;
 
 namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
@@ -8,5 +9,7 @@ public class MarketplaceBookingSubscriptionPayload
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
 
     [GraphQLName("marketplaceBookingSubscription")]
-    public MarketplaceBookingSubscriptionDetails MarketplaceBookingSubscription { get; set; } = new();
+    public MarketplaceBookingSubscriptionDetails? MarketplaceBookingSubscription { get; set; }
+
+    [GraphQLName("accessError")] public SpacesAccessErrorDetails? AccessError { get; set; }
 }

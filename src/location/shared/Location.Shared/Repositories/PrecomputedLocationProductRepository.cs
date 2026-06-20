@@ -10,6 +10,7 @@ namespace Location.Shared.Repositories;
 public interface IPrecomputedLocationProductRepository : IRepository<PrecomputedLocationProduct>
 {
     Task<IReadOnlyList<PrecomputedLocationProduct>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<PrecomputedLocationProduct>> GetByLocationAsync(string locationId, CancellationToken cancellationToken);
     PrecomputedLocationProduct Add(PrecomputedLocationProduct precomputedLocationProduct);
     void RemoveRange(IEnumerable<PrecomputedLocationProduct> precomputedLocationProducts);
 }
@@ -38,6 +39,12 @@ public class PrecomputedLocationProductRepository(LocationDbContext dbContext, T
         await DbContext.PrecomputedLocationProduct
             .Where(query => query.Organization.Id == organizationId)
             .AddDependentObjects(true)
+            .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<PrecomputedLocationProduct>> GetByLocationAsync(string locationId, CancellationToken cancellationToken) =>
+        await DbContext.PrecomputedLocationProduct
+            .Where(query => query.Location.Id == locationId)
+            .AddDependentObjects(false)
             .ToListAsync(cancellationToken);
 
     public PrecomputedLocationProduct Add(PrecomputedLocationProduct precomputedLocationProduct)

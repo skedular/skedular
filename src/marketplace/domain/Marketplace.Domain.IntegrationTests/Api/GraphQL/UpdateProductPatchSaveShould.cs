@@ -1,8 +1,10 @@
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Marketplace.Domain.IntegrationTests.Skedular.GraphQL.V1;
 using Marketplace.Shared.Database.Entities;
 using Marketplace.Shared.Repositories;
 using Currency = Marketplace.Domain.IntegrationTests.Skedular.GraphQL.V1.Currency;
+using OfferingModel = Api.Shared.Services.Models.Offering;
 
 namespace Marketplace.Domain.IntegrationTests.Api.GraphQL;
 
@@ -10,7 +12,8 @@ namespace Marketplace.Domain.IntegrationTests.Api.GraphQL;
 [Collection("Marketplace.Api")]
 public class UpdateProductPatchSaveShould(
     IUpdateProductPatchSaveMutation updateProductPatchSaveMutation,
-    IRepositoryFactory repositoryFactory)
+    IRepositoryFactory repositoryFactory,
+    TimeProvider timeProvider)
 {
     [Theory]
     [AutoFakeItEasyData]
@@ -88,6 +91,14 @@ public class UpdateProductPatchSaveShould(
     {
         var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken);
         organization.Type = OrganizationTypeConstants.Marketplace;
+        var trialStartedAt = timeProvider.GetUtcNow();
+        organization.Offering = new OfferingModel
+        {
+            Code = OfferingCode.SpacesFreeTierV1,
+            SpacesProductEnabled = true,
+            SpacesTrialStartedAt = trialStartedAt,
+            SpacesTrialEndsAt = trialStartedAt.AddDays(14)
+        };
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, cancellationToken);
         var product = repositoryFactory.ProductRepository.Add(new Product { Id = productId, Organization = organization });
 

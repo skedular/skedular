@@ -1,5 +1,6 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
@@ -7,6 +8,7 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
+using Microsoft.Extensions.Logging;
 using Constants = Booking.Shared.GraphQL.Constants;
 
 namespace Booking.Shared.Services;
@@ -48,7 +50,9 @@ public class PrivateBookingService(
     IResourceService resourceService,
     IPrivateBookingPreferenceService privateBookingPreferenceService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
-    ITemporalOutboxService temporalOutboxService) : IPrivateBookingService
+    ITemporalOutboxService temporalOutboxService,
+    ISpacesBookingQuotaService spacesBookingQuotaService,
+    ILogger<PrivateBookingService> logger) : IPrivateBookingService
 {
     public async Task<Models.Booking> AddAsync(
         Models.Booking booking,
@@ -121,6 +125,38 @@ public class PrivateBookingService(
         bookingEntity.Channel = BookingChannelConstants.Private;
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
+        foreach (var organization in organizations.DistinctBy(item => item.Id).Where(ShouldEnforceSpacesQuota))
+        {
+            var decision = await spacesBookingQuotaService.TryReserveBookingInstancesAsync(
+                organization.Id,
+                [booking.From.ToUniversalTime()],
+                cancellationToken);
+
+            if (decision.CanCreate)
+            {
+                continue;
+            }
+
+            if (decision.AccessDecision is { Allowed: false } accessDecision)
+            {
+                throw new SpacesAccessDenied(accessDecision);
+            }
+
+            if (decision.ReasonCode == SpacesQuotaReasonCode.MissingOfferingState)
+            {
+                throw new SpacesOfferingStateMissing();
+            }
+
+            throw new SpacesBookingQuotaExceeded(
+                decision.ReasonCode,
+                decision.CurrentUsage,
+                decision.QuotaLimit,
+                decision.AttemptedCurrentPeriodCount,
+                decision.ExcludedOutOfPeriodCount,
+                decision.RemainingQuota,
+                decision.UpgradePlans);
+        }
+
         booking = entityMapper.MapTo(bookingEntity);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
@@ -155,6 +191,18 @@ public class PrivateBookingService(
         if (customerEntities.Count != customerIds.Count)
         {
             throw new CustomerNotFound();
+        }
+
+        foreach (var organization in organizations.DistinctBy(item => item.Id).Where(ShouldEnforceSpacesQuota))
+        {
+            var accessDecision = await spacesBookingQuotaService.EvaluateAccessAsync(
+                organization.Id,
+                SpacesAccessAction.CreateOrModify,
+                cancellationToken);
+            if (!accessDecision.Allowed)
+            {
+                throw new SpacesAccessDenied(accessDecision);
+            }
         }
 
         var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -241,6 +289,8 @@ public class PrivateBookingService(
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
         booking = entityMapper.MapTo(bookingEntity);
 
+        logger.LogInformation("Update path excluded from Spaces quota usage. BookingId: {BookingId}", bookingEntity.Id);
+
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -297,6 +347,8 @@ public class PrivateBookingService(
 
         return deletedBooking;
     }
+
+    private static bool ShouldEnforceSpacesQuota(Organization organization) => organization.Type == OrganizationTypeConstants.Marketplace;
 
     private static void ValidateBookingWindowWithinSingleDay(Models.Booking booking)
     {

@@ -43,7 +43,8 @@ public static class OrganizationXeroBillingModeExtensions
                 OrganizationXeroBillingMode.Disabled => XeroBillingModeConstants.Disabled,
                 OrganizationXeroBillingMode.Enabled => XeroBillingModeConstants.Enabled,
                 OrganizationXeroBillingMode.RepeatingInvoices => XeroBillingModeConstants.RepeatingInvoices,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
 
         public string ToOrganizationXeroBillingModeName() =>
@@ -52,7 +53,8 @@ public static class OrganizationXeroBillingModeExtensions
                 OrganizationXeroBillingMode.Disabled => "Disabled",
                 OrganizationXeroBillingMode.Enabled => "Enabled",
                 OrganizationXeroBillingMode.RepeatingInvoices => "Repeating Invoices",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 
@@ -64,7 +66,8 @@ public static class OrganizationXeroBillingModeExtensions
                 XeroBillingModeConstants.Disabled => OrganizationXeroBillingMode.Disabled,
                 XeroBillingModeConstants.Enabled => OrganizationXeroBillingMode.Enabled,
                 XeroBillingModeConstants.RepeatingInvoices => OrganizationXeroBillingMode.RepeatingInvoices,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 }

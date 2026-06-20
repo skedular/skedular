@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<070375dca43cf83fa61ab757c453cf75>>
+ * @generated SignedSource<<a6e2da0557dc67f4fb4a785d3967cb61>>
  * @lightSyntaxTransform
  */
 
@@ -10,9 +10,16 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceProductSubscribe_rootQuery$variables = {
+  organizationCustomDomain: string;
   productId: string;
 };
 export type marketplaceProductSubscribe_rootQuery$data = {
+  readonly organization: {
+    readonly spacesPublicBookingAvailability: {
+      readonly available: boolean;
+      readonly message: string;
+    };
+  } | null | undefined;
   readonly product: {
     readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductSubscribeHero_product">;
   } | null | undefined;
@@ -24,49 +31,84 @@ export type marketplaceProductSubscribe_rootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "organizationCustomDomain"
+},
+v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "productId"
+},
+v2 = [
   {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "productId"
+    "kind": "Variable",
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
-v1 = [
+v3 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "SpacesPublicBookingAvailabilityDetails",
+  "kind": "LinkedField",
+  "name": "spacesPublicBookingAvailability",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "available",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "message",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v4 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "productId"
   }
 ],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "subTitle",
-  "storageKey": null
-},
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = {
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "subTitle",
+  "storageKey": null
+},
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v6 = [
+v9 = [
   {
     "alias": null,
     "args": null,
@@ -74,18 +116,33 @@ v6 = [
     "name": "type",
     "storageKey": null
   },
-  (v5/*:: as any*/)
+  (v8/*:: as any*/)
 ];
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*:: as any*/),
+    "argumentDefinitions": [
+      (v0/*:: as any*/),
+      (v1/*:: as any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductSubscribe_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*:: as any*/),
+        "args": (v2/*:: as any*/),
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "organization",
+        "plural": false,
+        "selections": [
+          (v3/*:: as any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v4/*:: as any*/),
         "concreteType": "ProductDetails",
         "kind": "LinkedField",
         "name": "product",
@@ -116,13 +173,29 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*:: as any*/),
+    "argumentDefinitions": [
+      (v1/*:: as any*/),
+      (v0/*:: as any*/)
+    ],
     "kind": "Operation",
     "name": "marketplaceProductSubscribe_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*:: as any*/),
+        "args": (v2/*:: as any*/),
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "organization",
+        "plural": false,
+        "selections": [
+          (v3/*:: as any*/),
+          (v5/*:: as any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v4/*:: as any*/),
         "concreteType": "ProductDetails",
         "kind": "LinkedField",
         "name": "product",
@@ -136,8 +209,8 @@ return {
             "name": "listingMetadata",
             "plural": false,
             "selections": [
-              (v2/*:: as any*/),
-              (v3/*:: as any*/),
+              (v6/*:: as any*/),
+              (v7/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -192,12 +265,12 @@ return {
             "name": "amenities",
             "plural": true,
             "selections": [
-              (v4/*:: as any*/),
-              (v5/*:: as any*/)
+              (v5/*:: as any*/),
+              (v8/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v4/*:: as any*/),
+          (v5/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -212,7 +285,7 @@ return {
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": (v6/*:: as any*/),
+            "selections": (v9/*:: as any*/),
             "storageKey": null
           },
           {
@@ -240,7 +313,7 @@ return {
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v6/*:: as any*/),
+            "selections": (v9/*:: as any*/),
             "storageKey": null
           },
           {
@@ -251,7 +324,7 @@ return {
             "name": "pricingOptions",
             "plural": true,
             "selections": [
-              (v4/*:: as any*/),
+              (v5/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -267,8 +340,8 @@ return {
                 "name": "listingMetadata",
                 "plural": false,
                 "selections": [
-                  (v2/*:: as any*/),
-                  (v3/*:: as any*/)
+                  (v6/*:: as any*/),
+                  (v7/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -312,6 +385,20 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "acceptedPaymentMethods",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "availableDays",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "requiredDaysPerWeek",
                 "storageKey": null
               },
               {
@@ -367,7 +454,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v4/*:: as any*/),
+          (v5/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -385,7 +472,7 @@ return {
         "kind": "LinkedField",
         "name": "productPricingCadences",
         "plural": true,
-        "selections": (v6/*:: as any*/),
+        "selections": (v9/*:: as any*/),
         "storageKey": null
       },
       {
@@ -395,7 +482,7 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v6/*:: as any*/),
+        "selections": (v9/*:: as any*/),
         "storageKey": null
       },
       {
@@ -405,22 +492,22 @@ return {
         "kind": "LinkedField",
         "name": "paymentMethodTypes",
         "plural": true,
-        "selections": (v6/*:: as any*/),
+        "selections": (v9/*:: as any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "213094a8089b96c5b4f6e6ece3451305",
+    "cacheID": "0d023d2f86f332c9d6cf1d31306122a1",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscribe_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductSubscribe_rootQuery(\n  $productId: String!\n) {\n  product(id: $productId) {\n    ...marketplaceProductSubscribeHero_product\n    id\n  }\n  ...marketplaceProductSubscribeForm_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      customerFacingTermsAndConditionsUrl\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      price\n      isTaxInclusive\n      supportsSubscriptionAutoRenewal\n      billingMode\n      acceptedPaymentMethods\n      numberOfResourcesToBook\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n    }\n  }\n}\n\nfragment marketplaceProductSubscribeHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
+    "text": "query marketplaceProductSubscribe_rootQuery(\n  $productId: String!\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  product(id: $productId) {\n    ...marketplaceProductSubscribeHero_product\n    id\n  }\n  ...marketplaceProductSubscribeForm_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      customerFacingTermsAndConditionsUrl\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      price\n      isTaxInclusive\n      supportsSubscriptionAutoRenewal\n      billingMode\n      acceptedPaymentMethods\n      availableDays\n      requiredDaysPerWeek\n      numberOfResourcesToBook\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n    }\n  }\n}\n\nfragment marketplaceProductSubscribeHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "69042f5609d8f66ccafd82276d1808d2";
+(node as any).hash = "9fc0301a8042b79c68b42538e458a83e";
 
 export default node;

@@ -83,7 +83,7 @@ public class OrganizationAuthorizationService(
             OrganizationTypeConstants.Private => member.Role is OrganizationMemberRoleConstants.Owner or
                 OrganizationMemberRoleConstants.Administrator or
                 OrganizationMemberRoleConstants.Member,
-            OrganizationTypeConstants.Marketplace or OrganizationTypeConstants.Individual => member.Role is OrganizationMemberRoleConstants.Owner or
+            OrganizationTypeConstants.Marketplace or OrganizationTypeConstants.Host => member.Role is OrganizationMemberRoleConstants.Owner or
                 OrganizationMemberRoleConstants.Administrator,
             _ => false
         };

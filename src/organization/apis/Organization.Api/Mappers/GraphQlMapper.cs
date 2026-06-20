@@ -18,6 +18,7 @@ using Organization.Api.GraphQL.TaxDetails;
 using Organization.Api.GraphQL.Xero;
 using Organization.Shared.Models;
 using Organization.Shared.Models.PricingCatalog;
+using Organization.Shared.Services.Pricing;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
 using AddProductTagInput = Organization.Api.GraphQL.Tag.AddProductTagInput;
@@ -189,51 +190,8 @@ public class GraphQlMapper : IGraphQlMapper
     public IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Shared.Database.Entities.Organization> src) =>
         src.Select(item => MapTo(item, Constants.EmptyUri));
 
-    public Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src, Uri stripeAuthorizeExistingConnectAccountUrl)
-    {
-        var organization = new Shared.Models.Organization
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            CustomDomain = src.CustomDomain,
-            Name = src.Name,
-            MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
-            Website = src.Website,
-            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
-            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
-            LogoUrl = src.LogoUrl,
-            Type = src.Type.ToOrganizationType(),
-            BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
-            InvoiceDueInDays = src.InvoiceDueInDays,
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
-            RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
-            IsOwnershipVerified = src.IsOwnershipVerified,
-            FeatureImages = src.FeatureImages.ToSafeCollection(),
-            StripeAuthorizeExistingConnectAccountUrl = stripeAuthorizeExistingConnectAccountUrl,
-            TermsOfUse = MapTo(src.TermsOfUse),
-            IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList(),
-            OrganizationSsoSettings = MapTo(src.OrganizationSsoSettings),
-            OrganizationTaxDetails = MapTo(src.OrganizationTaxDetails),
-            OrganizationXeroConnection = MapTo(src.OrganizationXeroConnection)
-        };
-
-        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
-        organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
-        organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
-        organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
-        organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
-        organization.Tags = MapTo(src.Tags, organization).ToList();
-        organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
-        organization.BillingDetails = MapTo(src.BillingDetails, organization);
-        organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
-        organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
-        organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
-
-        return organization;
-    }
+    public Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src, Uri stripeAuthorizeExistingConnectAccountUrl) =>
+        MapTo(src, stripeAuthorizeExistingConnectAccountUrl, true);
 
     public OrganizationMember MapTo(Shared.Database.Entities.OrganizationMember src, Shared.Models.Organization organization) =>
         new()
@@ -372,7 +330,7 @@ public class GraphQlMapper : IGraphQlMapper
         var organizationOffering = src.OrganizationOfferings.FirstOrDefault();
         var availableOfferings = organizationOffering is null || organizationOffering.Code == OfferingCode.EarlyBirdV1
             ? []
-            : Offerings.AllOfferings
+            : GetAvailableOfferingCodes(src.Type)
                 .Where(item => item != organizationOffering.Code)
                 .Select(item =>
                 {
@@ -383,15 +341,16 @@ public class GraphQlMapper : IGraphQlMapper
                         Code = item.ToOfferingCode(),
                         Name = offering.Name,
                         UnitPrice = offering.UnitPrice,
-                        FixedPrice = item.IsPayAsYouGoOffering() ? null : 0,
-                        Currency = PricingCatalogConstants.SkedularPricingCurrency.ToCurrency(),
+                        FixedPrice = offering.FixedPrice,
+                        Currency = new CurrencyDetails { Type = offering.Currency, Name = offering.Currency.ToCurrencyName() },
                         PurchasedUserCapacity = offering.MaxUserCount,
                         PurchasedLocationCapacity = offering.MaxLocationCount,
                         PurchasedTeamCapacity = offering.MaxTeamCount,
                         FeatureSet = MapTo(offering),
                         UnderPriceLines = offering.UnderPriceLines,
                         Free = item.IsFreeOffering(),
-                        EarlyBird = item.IsEarlyBirdOffering()
+                        EarlyBird = item.IsEarlyBirdOffering(),
+                        HostCommissionPercentage = offering.HostCommissionPercentage
                     };
                 });
 
@@ -1124,6 +1083,66 @@ public class GraphQlMapper : IGraphQlMapper
             GeneratedAt = src.GeneratedAt
         };
 
+    private static IReadOnlyList<OfferingCode> GetAvailableOfferingCodes(OrganizationType organizationType) =>
+        organizationType switch
+        {
+            OrganizationType.Marketplace => Offerings.SpacesOfferings,
+            _ => Offerings.TeamsOfferings
+        };
+
+    private Shared.Models.Organization MapTo(
+        Shared.Database.Entities.Organization src,
+        Uri stripeAuthorizeExistingConnectAccountUrl,
+        bool includeSpacesSubscription)
+    {
+        var organization = new Shared.Models.Organization
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            CustomDomain = src.CustomDomain,
+            Name = src.Name,
+            MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
+            Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
+            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
+            LogoUrl = src.LogoUrl,
+            Type = src.Type.ToOrganizationType(),
+            BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
+            InvoiceDueInDays = src.InvoiceDueInDays,
+            ContactEmail = src.ContactEmail,
+            ContactPhone = src.ContactPhone,
+            RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
+            IsOwnershipVerified = src.IsOwnershipVerified,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
+            StripeAuthorizeExistingConnectAccountUrl = stripeAuthorizeExistingConnectAccountUrl,
+            TermsOfUse = MapTo(src.TermsOfUse),
+            IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList(),
+            OrganizationSsoSettings = MapTo(src.OrganizationSsoSettings),
+            OrganizationTaxDetails = MapTo(src.OrganizationTaxDetails),
+            OrganizationXeroConnection = MapTo(src.OrganizationXeroConnection)
+        };
+
+        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
+        organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
+        organization.OrganizationSpacesSubscription = includeSpacesSubscription
+            ? src.OrganizationOfferings.Where(item => IsSpacesOffering(src, item)).Select(item => MapToSpacesSubscription(item, src))
+                .SingleOrDefault()
+            : null;
+        organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
+        organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
+        organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
+        organization.Tags = MapTo(src.Tags, organization).ToList();
+        organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
+        organization.BillingDetails = MapTo(src.BillingDetails, organization);
+        organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
+        organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
+        organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
+
+        return organization;
+    }
+
     private static PricingProductOfferingDetails MapToPricingProductOffering(ProductOffering offering) =>
         new()
         {
@@ -1214,6 +1233,7 @@ public class GraphQlMapper : IGraphQlMapper
             End = src.End,
             UnitPrice = src.UnitPrice,
             FixedPrice = src.FixedPrice,
+            DiscountPercentage = src.DiscountPercentage,
             Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
             PurchasedUserCapacity = src.PurchasedUserCapacity,
             PurchasedLocationCapacity = src.PurchasedLocationCapacity,
@@ -1334,9 +1354,50 @@ public class GraphQlMapper : IGraphQlMapper
             PurchasedUserCapacity = src.PurchasedUserCapacity,
             PurchasedLocationCapacity = src.PurchasedLocationCapacity,
             PurchasedTeamCapacity = src.PurchasedTeamCapacity,
+            DiscountPercentage = src.DiscountPercentage,
             CatalogVersion = src.CatalogVersion.ToNullableCatalogVersion(),
             Organization = organization
         };
+
+    private OrganizationSpacesSubscription MapToSpacesSubscription(
+        Shared.Database.Entities.OrganizationOffering src,
+        Shared.Database.Entities.Organization organization) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            Organization = MapTo(organization, Constants.EmptyUri, false),
+            PlanCode = src.Code.ToPricingCatalogSubscriptionPlanCode(),
+            CommercialModel = GetSpacesCommercialModel(src.Code.ToPricingCatalogSubscriptionPlanCode()),
+            CurrentPeriodStart = src.Start,
+            CurrentPeriodEnd = src.End,
+            UsageLimit = src.Code == OfferingCode.EarlyBirdV1 ? null : src.PurchasedTeamCapacity,
+            RolloverDate = src.End,
+            CustomCapacity = src.Code == OfferingCode.SpacesContactUsV1 ? src.PurchasedTeamCapacity : null,
+            CatalogVersion = src.CatalogVersion ?? src.Code.GetCurrentCatalogVersion(),
+            Status = src.Code.IsEarlyBirdOffering() ? OrganizationOfferingPlanStatus.Legacy : OrganizationOfferingPlanStatus.Active
+        };
+
+    private static PricingCatalogCommercialModel GetSpacesCommercialModel(PricingCatalogSubscriptionPlanCode planCode) =>
+        planCode switch
+        {
+            PricingCatalogSubscriptionPlanCode.Free => PricingCatalogCommercialModel.Free,
+            PricingCatalogSubscriptionPlanCode.Growth or PricingCatalogSubscriptionPlanCode.Business => PricingCatalogCommercialModel.UsageBased,
+            PricingCatalogSubscriptionPlanCode.ContactUs => PricingCatalogCommercialModel.CapacityBased,
+            PricingCatalogSubscriptionPlanCode.LegacyEarlyBird => PricingCatalogCommercialModel.Free,
+            _ => PricingCatalogCommercialModel.Free
+        };
+
+    private static bool IsSpacesOffering(Shared.Database.Entities.Organization organization,
+        Shared.Database.Entities.OrganizationOffering offering) =>
+        organization.Type == OrganizationTypeConstants.Marketplace &&
+        !offering.DeletedAt.HasValue &&
+        offering.Code is OfferingCode.EarlyBirdV1
+            or OfferingCode.SpacesFreeTierV1
+            or OfferingCode.SpacesGrowthV1
+            or OfferingCode.SpacesBusinessV1
+            or OfferingCode.SpacesContactUsV1;
 
     private static IEnumerable<DailyMemberCountRecording> MapTo(
         IEnumerable<Shared.Database.Entities.DailyMemberCountRecording> src,

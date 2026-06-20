@@ -53,6 +53,7 @@ public static class MarketplaceBookingSubscriptionExtensions
                         (!recurringBooking.EndDate.HasValue || recurringBooking.EndDate.Value >= activeRecurringWindowStart)))
                 .ThenInclude(query => query.MarketplaceBooking)
                 .ThenInclude(query => query!.StripeCheckoutSession)
+                .ThenInclude(query => query!.StripeCustomer)
                 .Include(query =>
                     query.RecurringBookings.Where(recurringBooking =>
                         !recurringBooking.DeletedAt.HasValue &&
@@ -94,7 +95,10 @@ public static class MarketplaceBookingSubscriptionExtensions
             MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
             MarketplaceBookingSubscriptionAccessScope? accessScope)
         {
-            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
+            // A subscription is only displayable once its root marketplace booking exists.
+            // Historical/incomplete projections without that booking cannot satisfy the
+            // non-null GraphQL marketplaceBooking contract.
+            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue && item.MarketplaceBooking != null);
 
             if (searchCriteria.StartedAtGt is not null)
             {
@@ -304,7 +308,8 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
                     nameof(MarketplaceBookingSubscription.Status),
                     query => query.Status,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

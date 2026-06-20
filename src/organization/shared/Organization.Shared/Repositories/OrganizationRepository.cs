@@ -36,6 +36,7 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
     Database.Entities.Organization Add(Database.Entities.Organization organization);
     Database.Entities.Organization Update(Database.Entities.Organization organization);
     Database.Entities.Organization Remove(Database.Entities.Organization organization);
+    void ClearTrackedEntities();
 
     Task<(PaginatedInfo, IReadOnlyList<Edge<Database.Entities.Organization>>, int)> GetPaginatedOrganizationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
@@ -130,6 +131,8 @@ public static class OrganizationExtensions
 public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<OrganizationDbContext, Database.Entities.Organization>(dbContext, timeProvider), IOrganizationRepository
 {
+    public void ClearTrackedEntities() => DbContext.ChangeTracker.Clear();
+
     public Database.Entities.Organization Add(Database.Entities.Organization organization)
     {
         var now = TimeProvider.GetUtcNow();
@@ -328,7 +331,8 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
                     nameof(Database.Entities.Organization.Name),
                     query => query.Name,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

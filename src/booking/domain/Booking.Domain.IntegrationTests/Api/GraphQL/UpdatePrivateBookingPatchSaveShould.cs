@@ -42,6 +42,7 @@ public class UpdatePrivateBookingPatchSaveShould(
 
             notesResult.Errors.Select(error => error.Message).ShouldBeEmpty();
             notesResult.Data.ShouldNotBeNull();
+            notesResult.Data.UpdatePrivateBooking.Booking.ShouldNotBeNull();
             notesResult.Data.UpdatePrivateBooking.Booking.Notes.ShouldBe(updatedNotes);
             notesResult.Data.UpdatePrivateBooking.Booking.From.ShouldBe(from);
 
@@ -56,9 +57,9 @@ public class UpdatePrivateBookingPatchSaveShould(
 
             groupedResult.Errors.Select(error => error.Message).ShouldBeEmpty();
             groupedResult.Data.ShouldNotBeNull();
+            groupedResult.Data.UpdatePrivateBooking.Booking.ShouldNotBeNull();
             groupedResult.Data.UpdatePrivateBooking.Booking.Notes.ShouldBe(updatedNotes);
-            groupedResult.Data.UpdatePrivateBooking.Booking.Category.Category.ShouldBe(
-                BookingCategory.AnnualLeave);
+            groupedResult.Data.UpdatePrivateBooking.Booking.Category.Category.ShouldBe(BookingCategory.AnnualLeave);
 
             var booking = await repositoryFactory.BookingRepository.GetByIdUntrackedAsync(bookingId, cancellationToken);
             booking.ShouldNotBeNull();

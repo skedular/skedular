@@ -12,6 +12,7 @@ public interface IProductRepository : IRepository<Product>
     Task<Product> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<Product>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
+    Product Add(Product product);
     Product Update(Product product);
     Product Remove(Product product);
 }
@@ -51,6 +52,8 @@ public class ProductRepository(LocationDbContext dbContext, TimeProvider timePro
             .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId)
             .AddDependentObjects()
             .ToListAsync(cancellationToken);
+
+    public Product Add(Product product) => DbContext.Product.Add(product).Entity;
 
     public Product Update(Product product)
     {

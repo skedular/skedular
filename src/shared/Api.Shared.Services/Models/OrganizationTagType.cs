@@ -10,6 +10,7 @@ public enum OrganizationTagType
     ResourceRoom,
     ResourceParking,
     ResourceOthers,
+    ResourceEntireLocation,
 
     LocationSpaceTypeCarParkSpace,
     LocationSpaceTypeEventSpace,
@@ -186,6 +187,7 @@ public static class OrganizationTagTypeConstants
     public const string ResourceRoom = "RESOURCE_ROOM";
     public const string ResourceParking = "RESOURCE_PARKING";
     public const string ResourceOthers = "RESOURCE_OTHERS";
+    public const string ResourceEntireLocation = "RESOURCE_ENTIRE_LOCATION";
 
     public const string LocationSpaceTypeCarParkSpace = "LOCATION_SPACE_TYPE_CARPARK_SPACE";
     public const string LocationSpaceTypeEventSpace = "LOCATION_SPACE_TYPE_EVENT_SPACE";
@@ -360,7 +362,8 @@ public static class OrganizationTagTypeConstants
         ResourceDesk,
         ResourceRoom,
         ResourceParking,
-        ResourceOthers
+        ResourceOthers,
+        ResourceEntireLocation
     ];
 
     public static readonly IReadOnlyList<OrganizationTagType> ResourceTypes =
@@ -368,7 +371,8 @@ public static class OrganizationTagTypeConstants
         OrganizationTagType.ResourceDesk,
         OrganizationTagType.ResourceRoom,
         OrganizationTagType.ResourceParking,
-        OrganizationTagType.ResourceOthers
+        OrganizationTagType.ResourceOthers,
+        OrganizationTagType.ResourceEntireLocation
     ];
 
     public static readonly IReadOnlyList<OrganizationTagType> LocationSpaceTypes =
@@ -557,6 +561,7 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagTypeConstants.ResourceRoom => OrganizationTagType.ResourceRoom,
                 OrganizationTagTypeConstants.ResourceParking => OrganizationTagType.ResourceParking,
                 OrganizationTagTypeConstants.ResourceOthers => OrganizationTagType.ResourceOthers,
+                OrganizationTagTypeConstants.ResourceEntireLocation => OrganizationTagType.ResourceEntireLocation,
 
                 OrganizationTagTypeConstants.LocationSpaceTypeCarParkSpace => OrganizationTagType.LocationSpaceTypeCarParkSpace,
                 OrganizationTagTypeConstants.LocationSpaceTypeEventSpace => OrganizationTagType.LocationSpaceTypeEventSpace,
@@ -722,7 +727,8 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagTypeConstants.AmenitySpecializedToolsEquipment => OrganizationTagType.AmenitySpecializedToolsEquipment,
                 OrganizationTagTypeConstants.AmenitySafetyComplianceKit => OrganizationTagType.AmenitySafetyComplianceKit,
 
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 
@@ -747,6 +753,7 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagType.ResourceRoom => OrganizationTagTypeConstants.ResourceRoom,
                 OrganizationTagType.ResourceParking => OrganizationTagTypeConstants.ResourceParking,
                 OrganizationTagType.ResourceOthers => OrganizationTagTypeConstants.ResourceOthers,
+                OrganizationTagType.ResourceEntireLocation => OrganizationTagTypeConstants.ResourceEntireLocation,
 
                 OrganizationTagType.LocationSpaceTypeCarParkSpace => OrganizationTagTypeConstants.LocationSpaceTypeCarParkSpace,
                 OrganizationTagType.LocationSpaceTypeEventSpace => OrganizationTagTypeConstants.LocationSpaceTypeEventSpace,
@@ -912,7 +919,8 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagType.AmenitySpecializedToolsEquipment => OrganizationTagTypeConstants.AmenitySpecializedToolsEquipment,
                 OrganizationTagType.AmenitySafetyComplianceKit => OrganizationTagTypeConstants.AmenitySafetyComplianceKit,
 
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
 
         public string ToOrganizationTagTypeName() =>
@@ -926,6 +934,7 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagType.ResourceRoom => "Room",
                 OrganizationTagType.ResourceParking => "Parking",
                 OrganizationTagType.ResourceOthers => "Others",
+                OrganizationTagType.ResourceEntireLocation => "Entire Location",
 
                 OrganizationTagType.LocationSpaceTypeCarParkSpace => "Car Park Space",
                 OrganizationTagType.LocationSpaceTypeEventSpace => "Event Space",
@@ -1091,7 +1100,8 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagType.AmenitySpecializedToolsEquipment => "Specialized Tools Equipment",
                 OrganizationTagType.AmenitySafetyComplianceKit => "Safety Compliance Kit",
 
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 

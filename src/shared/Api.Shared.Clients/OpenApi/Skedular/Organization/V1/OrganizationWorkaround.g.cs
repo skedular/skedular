@@ -36,7 +36,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
         /// </summary>
         /// <returns>the status of organization republishing</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task RepublishAsync(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task RepublishAsync(string customDomain, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -64,12 +64,12 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// set enterprise offering
+        /// set negotiated organization offering
         /// </summary>
         /// <param name="x_API_Key">API Key</param>
-        /// <returns>the status of setting the enterprise offering</returns>
+        /// <returns>the status of setting the negotiated organization offering</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task SetEnterpriseOfferingAsync(string organizationId, string x_API_Key, SetEnterpriseOfferingRequest body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task SetEnterpriseOfferingAsync(string x_API_Key, SetEnterpriseOfferingRequest body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -101,7 +101,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
         /// </summary>
         /// <returns>the status of regenerating organization daily analytics</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task RegenerateDailyAnalyticsAsync(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task RegenerateDailyAnalyticsAsync(string customDomain, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
 
@@ -143,10 +143,10 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
         /// </summary>
         /// <returns>the status of organization republishing</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task RepublishAsync(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task RepublishAsync(string customDomain, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (organizationId == null)
-                throw new System.ArgumentNullException("organizationId");
+            if (customDomain == null)
+                throw new System.ArgumentNullException("customDomain");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -159,9 +159,9 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "v1/organization/{organizationId}/republish"
+                    // Operation Path: "v1/organization/{customDomain}/republish"
                     urlBuilder_.Append("v1/organization/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(organizationId, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(customDomain, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/republish");
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -436,16 +436,13 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// set enterprise offering
+        /// set negotiated organization offering
         /// </summary>
         /// <param name="x_API_Key">API Key</param>
-        /// <returns>the status of setting the enterprise offering</returns>
+        /// <returns>the status of setting the negotiated organization offering</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task SetEnterpriseOfferingAsync(string organizationId, string x_API_Key, SetEnterpriseOfferingRequest body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task SetEnterpriseOfferingAsync(string x_API_Key, SetEnterpriseOfferingRequest body, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (organizationId == null)
-                throw new System.ArgumentNullException("organizationId");
-
             if (body == null)
                 throw new System.ArgumentNullException("body");
 
@@ -467,10 +464,8 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "v1/organization/{organizationId}/enterprise-offering"
-                    urlBuilder_.Append("v1/organization/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(organizationId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append("/enterprise-offering");
+                    // Operation Path: "v1/organization/enterprise-offering"
+                    urlBuilder_.Append("v1/organization/enterprise-offering");
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -753,10 +748,10 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
         /// </summary>
         /// <returns>the status of regenerating organization daily analytics</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task RegenerateDailyAnalyticsAsync(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task RegenerateDailyAnalyticsAsync(string customDomain, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
-            if (organizationId == null)
-                throw new System.ArgumentNullException("organizationId");
+            if (customDomain == null)
+                throw new System.ArgumentNullException("customDomain");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -769,9 +764,9 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "v1/organization/analytics/{organizationId}/regenerate-daily-analytics"
+                    // Operation Path: "v1/organization/analytics/{customDomain}/regenerate-daily-analytics"
                     urlBuilder_.Append("v1/organization/analytics/");
-                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(organizationId, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(customDomain, System.Globalization.CultureInfo.InvariantCulture)));
                     urlBuilder_.Append("/regenerate-daily-analytics");
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -966,8 +961,22 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
     public partial class SetEnterpriseOfferingRequest
     {
 
+        [System.Text.Json.Serialization.JsonPropertyName("organizationId")]
+        public string? OrganizationId { get; set; } = default!;
+
+        [System.Text.Json.Serialization.JsonPropertyName("customDomain")]
+        public string? CustomDomain { get; set; } = default!;
+
         /// <summary>
-        /// Fixed monthly price for the negotiated enterprise offering in minor currency units.
+        /// The organization offering code to assign.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("offeringCode")]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        [System.Text.Json.Serialization.JsonConverter(typeof(System.Text.Json.Serialization.JsonStringEnumConverter<OfferingCode>))]
+        public OfferingCode OfferingCode { get; set; } = default!;
+
+        /// <summary>
+        /// Fixed monthly price for the negotiated offering in minor currency units.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("fixedPrice")]
         [System.ComponentModel.DataAnnotations.Range(0, int.MaxValue)]
@@ -979,25 +988,72 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Workaround.V1
         public Currency Currency { get; set; } = default!;
 
         /// <summary>
-        /// Maximum monthly users allowed for the negotiated enterprise offering.
+        /// Optional maximum monthly users allowed for the negotiated offering. Omit for the offering default.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("purchasedUserCapacity")]
         [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
-        public int PurchasedUserCapacity { get; set; } = default!;
+        public int? PurchasedUserCapacity { get; set; } = default!;
 
         /// <summary>
-        /// Maximum monthly locations allowed for the negotiated enterprise offering.
+        /// Optional maximum monthly locations allowed for the negotiated offering. Omit for the offering default.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("purchasedLocationCapacity")]
         [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
-        public int PurchasedLocationCapacity { get; set; } = default!;
+        public int? PurchasedLocationCapacity { get; set; } = default!;
 
         /// <summary>
-        /// Maximum monthly teams allowed for the negotiated enterprise offering.
+        /// Optional maximum monthly teams allowed for the negotiated offering. Omit for the offering default.
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("purchasedTeamCapacity")]
         [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
-        public int PurchasedTeamCapacity { get; set; } = default!;
+        public int? PurchasedTeamCapacity { get; set; } = default!;
+
+        /// <summary>
+        /// Optional monthly booking instance quota for Spaces offerings. Omit for the offering default.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("monthlyBookingInstanceQuota")]
+        [System.ComponentModel.DataAnnotations.Range(1, int.MaxValue)]
+        public int? MonthlyBookingInstanceQuota { get; set; } = default!;
+
+        /// <summary>
+        /// Optional discount percentage to apply while billing this offering. It is copied to renewed offering periods until changed.
+        /// </summary>
+        [System.Text.Json.Serialization.JsonPropertyName("discountPercentage")]
+        [System.ComponentModel.DataAnnotations.Range(0, 100)]
+        public int DiscountPercentage { get; set; } = 0;
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum OfferingCode
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EARLY_BIRD_V1")]
+        EARLY_BIRD_V1 = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"FREE_TIER_V1")]
+        FREE_TIER_V1 = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"PAY_AS_YOU_GO_V1")]
+        PAY_AS_YOU_GO_V1 = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"ENTERPRISE_CUSTOM_V1")]
+        ENTERPRISE_CUSTOM_V1 = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_FREE_TIER_V1")]
+        SPACES_FREE_TIER_V1 = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_GROWTH_V1")]
+        SPACES_GROWTH_V1 = 5,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_BUSINESS_V1")]
+        SPACES_BUSINESS_V1 = 6,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_CONTACT_US_V1")]
+        SPACES_CONTACT_US_V1 = 7,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"HOST_STANDARD_V1")]
+        HOST_STANDARD_V1 = 8,
 
     }
 

@@ -55,6 +55,84 @@ public class MarketplaceBookingSubscriptionServiceShould
 
     [Theory]
     [AutoFakeItEasyData]
+    public async Task AddAsync_Uses_Selected_Weekly_Days_Instead_Of_The_Subscription_Start_Date(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IProductVersionHelperService productVersionHelperService,
+        [Frozen] IMarketplaceBookingWeeklyDaySelectionService marketplaceBookingWeeklyDaySelectionService,
+        [Frozen] IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        MarketplaceBookingSubscriptionService sut,
+        ICustomerRepository customerRepository,
+        IResourceRepository resourceRepository,
+        IProductVersionRepository productVersionRepository,
+        IUnitOfWork unitOfWork,
+        CancellationToken cancellationToken)
+    {
+        var customer = new Customer { Id = "customer-1" };
+        var resource = new Resource { Id = "resource-1" };
+        var pricing = ProductPricing.Empty("weekly-price") with
+        {
+            PurchaseCadence = ProductPricingCadence.Weekly,
+            BookingCadence = ProductPricingCadence.Daily,
+            RequiredDaysPerWeek = 2,
+            AvailableDays = [DayOfWeek.Tuesday, DayOfWeek.Wednesday],
+            AcceptedPaymentMethods = [PaymentMethod.Card],
+            NumberOfResourcesToBook = 1
+        };
+        var subscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            StartedAt = new DateTimeOffset(2026, 3, 16, 0, 0, 0, TimeSpan.Zero), // Monday
+            InvolvedCustomers = [new Shared.Models.Customer { Id = customer.Id }],
+            RequestedResources = [new Shared.Models.Resource { Id = resource.Id }],
+            MarketplaceBooking = new Shared.Models.MarketplaceBooking
+            {
+                ProductVersion = new ProductVersion { Id = "product-version-1" }, ProductPricing = pricing, PaymentMethod = PaymentMethod.Card
+            },
+            WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Wednesday]
+        };
+        var productVersion = new Database.Entities.ProductVersion
+        {
+            Id = "product-version-1",
+            Type = ProductTypeConstants.Resource,
+            OrganizationTags = [new OrganizationTag { Id = "tag-1", Type = OrganizationTagTypeConstants.Product }],
+            PricingOptions = [pricing],
+            Product = new Product { Organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Host } }
+        };
+        var expectedException = new InvalidOperationException("stop after scheduling guards");
+
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
+        A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => customerRepository.GetByIdsAsync(A<IReadOnlyList<string>>.That.Contains(customer.Id), true, cancellationToken))
+            .Returns([customer]);
+        A.CallTo(() => resourceRepository.GetByIdsAsync(A<IReadOnlyList<string>>.That.Contains(resource.Id), false, cancellationToken))
+            .Returns([resource]);
+        A.CallTo(() => productVersionRepository.GetByIdAsync(productVersion.Id, cancellationToken)).Returns(productVersion);
+        A.CallTo(() => productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, pricing)).Returns(pricing);
+        A.CallTo(() => marketplaceBookingWeeklyDaySelectionService.Validate(pricing, A<IEnumerable<DayOfWeek>>._))
+            .Returns([DayOfWeek.Tuesday, DayOfWeek.Wednesday]);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken))
+            .Returns(Task.FromException<IDbContextTransaction>(expectedException));
+
+        var exception = await Should.ThrowAsync<InvalidOperationException>(() => sut.AddAsync(subscription, customer, [], [], cancellationToken));
+
+        exception.ShouldBeSameAs(expectedException);
+        A.CallTo(() => marketplaceBookingOpeningHoursService.TryResolveDailyPlanAsync(
+                A<Customer?>._,
+                A<Database.Entities.ProductVersion>._,
+                A<ProductPricing>._,
+                A<DateOnly>._,
+                A<int>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<string?>._,
+                A<CancellationToken>._))
+            .MustNotHaveHappened();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public async Task DeleteAsync_Throws_MarketplaceBookingSubscriptionCancellationNotAllowed_When_User_Delete_Has_No_Cancellation_Policy(
         [Frozen] TimeProvider timeProvider,
         MarketplaceBookingSubscriptionService sut,

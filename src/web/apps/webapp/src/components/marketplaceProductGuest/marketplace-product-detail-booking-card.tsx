@@ -2,6 +2,7 @@ import { formatPriceForDisplay, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceLocationLink, getMarketplaceProductBookingLink, getMarketplaceProductSubscribeLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel, MarketplaceCancellationPolicyDetails } from '@/components/marketplaceProduct';
+import { getAvailableDaysGuidance } from '@/components/marketplaceProduct/available-days';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 
 import type { marketplaceProductDetailBookingCard_product$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_product.graphql';
@@ -88,6 +89,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
           price
           isTaxInclusive
           supportsSubscriptionAutoRenewal
+          availableDays
           acceptedPaymentMethods
           minDurationMinutes
           maxDurationMinutes
@@ -142,6 +144,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.purchaseCadence)?.name ?? pricingOption.purchaseCadence,
         amountLabel: formatPriceForDisplay(currencyLabel, pricingOption.price, pricingOption.purchaseCadence),
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
+        availableDays: pricingOption.availableDays ?? [],
         cancellationPolicyType: pricingOption.cancellationPolicyType,
         cancellationRefundRules: pricingOption.cancellationRefundRules,
       }));
@@ -198,6 +201,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
                     <CaptionIconTypography label={pricingPlan.note} sx={{ opacity: 0.7 }} />
                   </Box>
                 </StackRow>
+                <CaptionIconTypography label={getAvailableDaysGuidance(pricingPlan.availableDays)} sx={{ mt: 0.9, opacity: 0.78 }} />
                 <Button
                   fullWidth
                   variant="contained"

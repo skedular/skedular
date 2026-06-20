@@ -53,10 +53,13 @@ public class Program
             .AddWorkflow<RecomputeLocationBookingDerivedState>()
             .AddWorkflow<ComputeOrganizationLocationsAndProductsRelationships>()
             .AddWorkflow<NewLocationJoined>()
+            .AddWorkflow<ProvisionHostLocation>()
+            .AddWorkflow<DeprovisionHostLocation>()
             .AddScopedActivities<LocationDailyAnalytics>()
             .AddScopedActivities<LocationBookingDerivedState>()
             .AddScopedActivities<LocationsProductsRelationships>()
-            .AddScopedActivities<EmailIntegrations>();
+            .AddScopedActivities<EmailIntegrations>()
+            .AddScopedActivities<HostLocationProvisioning>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

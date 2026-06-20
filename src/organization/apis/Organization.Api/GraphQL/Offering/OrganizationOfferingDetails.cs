@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using HotChocolate;
 
 namespace Organization.Api.GraphQL.Offering;
@@ -11,7 +10,7 @@ public class OrganizationOfferingDetails
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("unitPrice")] public int? UnitPrice { get; set; }
     [GraphQLName("fixedPrice")] public int? FixedPrice { get; set; }
-    [GraphQLName("currency")] public Currency Currency { get; set; }
+    [GraphQLName("currency")] public CurrencyDetails Currency { get; set; } = new();
     [GraphQLName("purchasedUserCapacity")] public int? PurchasedUserCapacity { get; set; }
 
     [GraphQLName("purchasedLocationCapacity")]
@@ -22,4 +21,7 @@ public class OrganizationOfferingDetails
     [GraphQLName("featureSet")] public IEnumerable<string> FeatureSet { get; set; } = [];
     [GraphQLName("free")] public bool Free { get; set; }
     [GraphQLName("earlyBird")] public bool EarlyBird { get; set; }
+
+    [GraphQLName("hostCommissionPercentage")]
+    public decimal HostCommissionPercentage { get; set; }
 }

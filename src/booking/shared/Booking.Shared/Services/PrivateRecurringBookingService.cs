@@ -1,5 +1,6 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
@@ -36,7 +37,8 @@ public class PrivateRecurringBookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IEntityMapper entityMapper,
-    ITemporalOutboxService temporalOutboxService) : IPrivateRecurringBookingService
+    ITemporalOutboxService temporalOutboxService,
+    ISpacesBookingQuotaService spacesBookingQuotaService) : IPrivateRecurringBookingService
 {
     public async Task<RecurringBooking> AddAsync(
         RecurringBooking recurringBooking,
@@ -45,6 +47,8 @@ public class PrivateRecurringBookingService(
         IReadOnlyList<Team> teams,
         CancellationToken cancellationToken)
     {
+        await EnsureSpacesAccessAsync(organizations, cancellationToken);
+
         var customerIds = recurringBooking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
         var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)
@@ -101,6 +105,8 @@ public class PrivateRecurringBookingService(
         {
             throw new RecurringBookingIsNotPrivate();
         }
+
+        await EnsureSpacesAccessAsync(organizations, cancellationToken);
 
         var customerIds = recurringBooking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
         var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
@@ -165,5 +171,24 @@ public class PrivateRecurringBookingService(
         await transaction.CommitAsync(cancellationToken);
 
         return deletedRecurringBooking;
+    }
+
+    private async Task EnsureSpacesAccessAsync(
+        IReadOnlyList<Organization> organizations,
+        CancellationToken cancellationToken)
+    {
+        foreach (var organization in organizations
+                     .Where(item => item.Type == OrganizationTypeConstants.Marketplace)
+                     .DistinctBy(item => item.Id))
+        {
+            var decision = await spacesBookingQuotaService.EvaluateAccessAsync(
+                organization.Id,
+                SpacesAccessAction.CreateOrModify,
+                cancellationToken);
+            if (!decision.Allowed)
+            {
+                throw new SpacesAccessDenied(decision);
+            }
+        }
     }
 }

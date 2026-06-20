@@ -81,7 +81,8 @@ public class EventMapper : IEventMapper
             {
                 CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
                 CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             Identities = customer.Identities
                 .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
@@ -125,14 +126,19 @@ public class EventMapper : IEventMapper
                 EntitlementReasonCode = string.IsNullOrWhiteSpace(organizationAfterState.Offering.EntitlementReasonCode)
                     ? null
                     : organizationAfterState.Offering.EntitlementReasonCode,
-                ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray()
+                ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray(),
+                SpacesTrialStartedAt = organizationAfterState.Offering.SpacesTrialStartedAt?.ToDateTimeOffset(),
+                SpacesTrialEndsAt = organizationAfterState.Offering.SpacesTrialEndsAt?.ToDateTimeOffset(),
+                SpacesProductEnabled = organizationAfterState.Offering.SpacesProductEnabled,
+                SpacesNextBillingAt = organizationAfterState.Offering.SpacesNextBillingAt?.ToDateTimeOffset()
             },
             Type = organizationAfterState.Type switch
             {
                 OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
-                OrganizationType.Individual => Api.Shared.Services.Models.OrganizationType.Individual,
-                _ => throw new ArgumentOutOfRangeException()
+                OrganizationType.Host => Api.Shared.Services.Models.OrganizationType.Host,
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             IsOwnershipVerified = organizationAfterState.IsOwnershipVerified
         };
@@ -156,13 +162,15 @@ public class EventMapper : IEventMapper
                 OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
                 OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             Status = item.Status switch
             {
                 OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             Customer = new Customer { Id = item.CustomerId },
             Organization = organization
@@ -335,6 +343,7 @@ public class EventMapper : IEventMapper
         {
             ProductType.Resource => Api.Shared.Services.Models.ProductType.Resource,
             ProductType.Event => Api.Shared.Services.Models.ProductType.Event,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
         };
 }

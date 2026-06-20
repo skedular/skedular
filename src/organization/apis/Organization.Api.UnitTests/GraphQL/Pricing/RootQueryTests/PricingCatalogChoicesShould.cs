@@ -1,3 +1,4 @@
+using Api.Shared.Services.Offering;
 using Organization.Api.GraphQL.Pricing;
 using Organization.Shared.Models.PricingCatalog;
 
@@ -24,5 +25,18 @@ public class PricingCatalogChoicesShould
 
         result.ShouldContain(item => item.Type == OrganizationOfferingPlanStatus.Active && item.Name == "Active");
         result.ShouldContain(item => item.Type == OrganizationOfferingPlanStatus.Legacy && item.Name == "Legacy");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_Spaces_Subscription_Status_And_Reason_Choices(RootQuery sut)
+    {
+        var statuses = sut.SpacesSubscriptionStatuses().ToList();
+        var reasons = sut.SpacesAccessReasons().ToList();
+
+        statuses.ShouldContain(item => item.Type == SpacesSubscriptionStatus.TrialActive && item.Name == "Trial Active");
+        statuses.ShouldContain(item => item.Type == SpacesSubscriptionStatus.TrialExpired && item.Name == "Trial Expired");
+        reasons.ShouldContain(item => item.Type == SpacesAccessReasonCode.AllowedTrial && item.Name == "Allowed Trial");
+        reasons.ShouldContain(item => item.Type == SpacesAccessReasonCode.TrialExpired && item.Name == "Trial Expired");
     }
 }

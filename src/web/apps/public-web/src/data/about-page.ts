@@ -32,7 +32,12 @@ export const aboutPage = {
       detail:
         "We incorporated after working on the first version of UnityHub. Feedback from early users helped us understand what actually matters for desk scheduling, especially when teams split time between offices and remote work.",
     },
-    { label: "Home base", value: "Auckland", detail: "Built in New Zealand, designed for how people actually work today." },
+    {
+      label: "Home base",
+      value: "Auckland",
+      detail:
+        "Built in New Zealand, designed for how people actually work today.",
+    },
     {
       label: "Product family",
       value: "2 products",

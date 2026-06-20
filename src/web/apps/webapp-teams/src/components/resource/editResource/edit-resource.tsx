@@ -94,6 +94,25 @@ const getChangedResourceFields = (
   return changed;
 };
 
+const getValidResourcePatchFields = (fieldsToUpdate: ResourcePatchField[], resourceDetails: ResourceDetails): ResourcePatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    if (patchField === 'COLOR') {
+      return true;
+    }
+
+    const formFields = resourceFieldGroups.find(([field]) => field === patchField)?.[1] ?? [];
+
+    try {
+      for (const formField of formFields) {
+        ResourceSchema.validateSyncAt(formField, resourceDetails);
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   const rootData = useFragment<editResource_query$key>(
     graphql`
@@ -432,13 +451,15 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     router.back();
   };
 
-  const handleResourceDetailUpdateClick = (fieldsToUpdate: ResourcePatchField[], { resourceTypeId, name, customTagIds, zoneIds, capacity: capacityStr }: ResourceDetails) => {
+  const handleResourceDetailUpdateClick = (fieldsToUpdate: ResourcePatchField[], resourceDetails: ResourceDetails) => {
+    const { resourceTypeId, name, customTagIds, zoneIds, capacity: capacityStr } = resourceDetails;
     const resource = rootData.resource;
     if (!resource) {
       return;
     }
 
-    if (!ResourceSchema.isValidSync({ resourceTypeId, name, customTagIds, zoneIds, capacity: capacityStr })) {
+    const validFieldsToUpdate = getValidResourcePatchFields(fieldsToUpdate, resourceDetails);
+    if (validFieldsToUpdate.length === 0) {
       return;
     }
 
@@ -450,7 +471,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         input: {
           clientMutationId: uuid(),
           id: resource.id,
-          fieldsToUpdate,
+          fieldsToUpdate: validFieldsToUpdate,
           name,
           inactive: resource.inactive,
           requireBookingApproval: resource.requireBookingApproval,

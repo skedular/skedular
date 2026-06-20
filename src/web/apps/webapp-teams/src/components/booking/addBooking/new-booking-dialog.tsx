@@ -304,7 +304,7 @@ const NewBookingDialog = ({
   const [allDay, setAllDay] = useState<boolean>(true);
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('00:00'), toOpeningHoursFromTime('00:00')]);
   // date/time validation message is derived from inputs (computed later)
-  const [customerId, setCustomerId] = useState<string | undefined>();
+  const [customerId, setCustomerId] = useState<string | undefined>(rootData.me.id);
   const [teamId, setTeamId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
   const [notes, setNotes] = useState<string>('');
@@ -420,6 +420,12 @@ const NewBookingDialog = ({
       handleRefetchAvailableResources(dateRange, locationId);
     }
   }, [handleRefetchAvailableResources, dateRange, locationId]);
+
+  useEffect(() => {
+    if (isDialogOpen && customerId) {
+      handleRefetchTeams(customerId);
+    }
+  }, [customerId, handleRefetchTeams, isDialogOpen]);
 
   const timeRangeValidDerived = dateRange.valid;
   const dateTimeErrorMessageDerived = dateRange.errorMessage || '';

@@ -47,6 +47,16 @@ public class RootQuery
     }
 
     [UseResolverScope]
+    public async Task<OrganizationSpacesSubscriptionDetails?> OrganizationSpacesSubscriptionAsync(
+        string organizationId,
+        [Service] IOrganizationSpacesSubscriptionService organizationSpacesSubscriptionService,
+        CancellationToken cancellationToken)
+    {
+        var subscription = await organizationSpacesSubscriptionService.GetAsync(organizationId, cancellationToken);
+        return subscription is null ? null : MapTo(subscription);
+    }
+
+    [UseResolverScope]
     public IEnumerable<PricingCatalogProductOfferingDetails> PricingCatalogProductOfferings() =>
     [
         new()
@@ -83,6 +93,21 @@ public class RootQuery
         {
             Type = PricingCatalogSubscriptionPlanCode.LegacyEarlyBird,
             Name = PricingCatalogSubscriptionPlanCode.LegacyEarlyBird.ToPricingCatalogSubscriptionPlanCodeName()
+        },
+        new()
+        {
+            Type = PricingCatalogSubscriptionPlanCode.Growth,
+            Name = PricingCatalogSubscriptionPlanCode.Growth.ToPricingCatalogSubscriptionPlanCodeName()
+        },
+        new()
+        {
+            Type = PricingCatalogSubscriptionPlanCode.Business,
+            Name = PricingCatalogSubscriptionPlanCode.Business.ToPricingCatalogSubscriptionPlanCodeName()
+        },
+        new()
+        {
+            Type = PricingCatalogSubscriptionPlanCode.ContactUs,
+            Name = PricingCatalogSubscriptionPlanCode.ContactUs.ToPricingCatalogSubscriptionPlanCodeName()
         }
     ];
 
@@ -140,4 +165,45 @@ public class RootQuery
         Enum.GetValues<EntitlementReasonCode>()
             .Where(reasonCode => reasonCode != EntitlementReasonCode.NotSet)
             .Select(reasonCode => new PricingEntitlementReasonCodeDetails { Type = reasonCode, Name = reasonCode.ToEntitlementReasonCodeName() });
+
+    [UseResolverScope]
+    public IEnumerable<SpacesSubscriptionStatusDetails> SpacesSubscriptionStatuses() =>
+        Enum.GetValues<SpacesSubscriptionStatus>()
+            .Where(status => status != SpacesSubscriptionStatus.NotSet)
+            .Select(status => new SpacesSubscriptionStatusDetails { Type = status, Name = status.ToSpacesSubscriptionStatusName() });
+
+    [UseResolverScope]
+    public IEnumerable<SpacesAccessReasonDetails> SpacesAccessReasons() =>
+        Enum.GetValues<SpacesAccessReasonCode>()
+            .Where(reason => reason != SpacesAccessReasonCode.NotSet)
+            .Select(reason => new SpacesAccessReasonDetails { Type = reason, Name = reason.ToSpacesAccessReasonCodeName() });
+
+    private static OrganizationSpacesSubscriptionDetails MapTo(OrganizationSpacesSubscription subscription) =>
+        new()
+        {
+            Id = subscription.Id,
+            OrganizationId = subscription.Organization.Id,
+            PlanCode = subscription.PlanCode,
+            CommercialModel = subscription.CommercialModel,
+            CurrentPeriodStartUtc = subscription.CurrentPeriodStart,
+            CurrentPeriodEndUtc = subscription.CurrentPeriodEnd,
+            UsageLimit = subscription.UsageLimit,
+            RolloverDate = subscription.RolloverDate,
+            CustomCapacity = subscription.CustomCapacity,
+            CatalogVersionCode = subscription.CatalogVersion,
+            Status = subscription.Status,
+            SubscriptionStatus = subscription.SubscriptionStatus,
+            AccessReason = subscription.AccessReason,
+            TrialStartedAt = subscription.TrialStartedAt,
+            TrialEndsAt = subscription.TrialEndsAt,
+            RemainingTrialDays = subscription.RemainingTrialDays,
+            CanUseProduct = subscription.CanUseProduct,
+            CanAcceptBookings = subscription.CanAcceptBookings,
+            CanProtectExistingCommitments = subscription.CanProtectExistingCommitments,
+            UpgradeRequired = subscription.UpgradeRequired,
+            IsComplimentaryBridge = subscription.IsComplimentaryBridge,
+            NextBillingAt = subscription.NextBillingAt,
+            CreatedAt = subscription.CreatedAt,
+            UpdatedAt = subscription.ModifiedAt ?? subscription.CreatedAt
+        };
 }

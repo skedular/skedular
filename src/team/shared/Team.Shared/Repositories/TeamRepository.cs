@@ -186,7 +186,8 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
                     nameof(Database.Entities.Team.About),
                     query => query.About,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(orderField.Field), orderField.Field,
+                    $"Unexpected value for {nameof(orderField.Field)}: {orderField.Field}. Update enum mapping or caller input.")
             })
             .ToList();
     }

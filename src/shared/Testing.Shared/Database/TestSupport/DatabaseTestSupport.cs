@@ -36,6 +36,7 @@ public class DatabaseTestContext(DbContextOptions options) : DbContext(options),
     public DbSet<OwnerEntity> Owners => Set<OwnerEntity>();
     public DbSet<SpecEntity> Specs => Set<SpecEntity>();
     public DbSet<ReplicatedDeletedEntity> ReplicatedDeletedEntities => Set<ReplicatedDeletedEntity>();
+    public bool HasActiveTransaction => Database.CurrentTransaction is not null;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

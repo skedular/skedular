@@ -44,6 +44,11 @@ type InnerProps = {
   queryReference: PreloadedQuery<organizationAdminSubscriptionsSectionQuery>;
 };
 
+const getOfferingPriceLabel = (offering: { fixedPrice: number | null | undefined; unitPrice: number | null | undefined; isEnterprise: boolean }) =>
+  offering.isEnterprise ? 'TBC' : ((offering.fixedPrice ?? offering.unitPrice ?? 0) / 100).toFixed(0);
+
+const getCurrencyLabel = (currency: { readonly name: string } | null | undefined) => currency?.name ?? '';
+
 const RootQuery = graphql`
   query organizationAdminSubscriptionsSectionQuery($organizationCustomDomain: String!) {
     organization(customDomain: $organizationCustomDomain) {
@@ -65,6 +70,9 @@ const RootQuery = graphql`
         end
         unitPrice
         fixedPrice
+        currency {
+          name
+        }
         featureSet
         underPriceLines
         free
@@ -75,6 +83,9 @@ const RootQuery = graphql`
         name
         unitPrice
         fixedPrice
+        currency {
+          name
+        }
         featureSet
         underPriceLines
         free
@@ -215,12 +226,9 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
                 <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%', backgroundColor: 'white' }}>
                   <CardContent sx={{ marginLeft: 1 }}>
                     <BodyIconTypography label={activeOffering.name} sx={{ color: coal }} />
-                    <StackRow spacing={0.5} sx={{ marginTop: -2 }}>
-                      <ExtraLargeHeadingIconTypography
-                        label={((activeOffering.fixedPrice ?? activeOffering.unitPrice ?? 0) / 100).toFixed(0)}
-                        sx={{ paddingTop: 4, color: coal }}
-                      />
-                      <BodyIconTypography label="$" sx={{ color: coal }} />
+                    <StackRow spacing={1} sx={{ marginTop: -2, minHeight: 72, alignItems: 'flex-start' }}>
+                      <ExtraLargeHeadingIconTypography label={getOfferingPriceLabel(activeOffering)} sx={{ paddingTop: 4, color: coal }} />
+                      <BodyIconTypography label={getCurrencyLabel(activeOffering.currency)} sx={{ color: coal, paddingTop: 5 }} />
                     </StackRow>
 
                     <List sx={{ padding: 0 }}>
@@ -263,12 +271,9 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
                 <Card sx={{ width: { xs: '100%', sm: 300 }, height: '100%', backgroundColor: 'white' }}>
                   <CardContent sx={{ marginLeft: 1 }}>
                     <BodyIconTypography label={availableOffering.name} sx={{ color: coal }} />
-                    <StackRow spacing={0.5} sx={{ marginTop: -2 }}>
-                      {(availableOffering.unitPrice ?? 0) > 0 && (
-                        <ExtraLargeHeadingIconTypography label={((availableOffering.unitPrice ?? 0) / 100).toFixed(0)} sx={{ paddingTop: 4, color: coal }} />
-                      )}
-                      {availableOffering.isEnterprise && <ExtraLargeHeadingIconTypography label="TBC" sx={{ paddingTop: 4, color: coal }} />}
-                      <BodyIconTypography label="$" sx={{ color: coal }} />
+                    <StackRow spacing={1} sx={{ marginTop: -2, minHeight: 72, alignItems: 'flex-start' }}>
+                      <ExtraLargeHeadingIconTypography label={getOfferingPriceLabel(availableOffering)} sx={{ paddingTop: 4, color: coal }} />
+                      <BodyIconTypography label={getCurrencyLabel(availableOffering.currency)} sx={{ color: coal, paddingTop: 5 }} />
                     </StackRow>
 
                     <List sx={{ padding: 0 }}>

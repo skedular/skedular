@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Payment;
+using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
@@ -34,6 +35,18 @@ public class MarketplaceBookingDetails : Node
     public string TaxRatePercentageToDisplay { get; set; } = string.Empty;
 
     [GraphQLName("totalAmount")] public decimal? TotalAmount { get; set; }
+
+    [GraphQLName("hostCommissionRatePercentage")]
+    public decimal? HostCommissionRatePercentage { get; set; }
+
+    [GraphQLName("hostCommissionAmount")] public decimal? HostCommissionAmount { get; set; }
+    [GraphQLName("hostPayoutAmount")] public decimal? HostPayoutAmount { get; set; }
+
+    // This is the amount due to the host before Stripe processing fees. Keep
+    // hostPayoutAmount for compatibility while clients move to the precise name.
+    [GraphQLName("hostGrossProceedsAmount")]
+    public decimal? HostGrossProceedsAmount { get; set; }
+
     [GraphQLName("totalAmountToDisplay")] public string TotalAmountToDisplay { get; set; } = string.Empty;
     [GraphQLName("currency")] public CurrencyDetails? Currency { get; set; }
     [GraphQLName("currencyToDisplay")] public string CurrencyToDisplay { get; set; } = string.Empty;
@@ -77,4 +90,18 @@ public static partial class MarketplaceBookingDetailsType
         [Service] IMarketplaceRefundReadService marketplaceRefundReadService,
         CancellationToken cancellationToken) =>
         marketplaceRefundReadService.GetByMarketplaceBookingIdAsync(item.Id, cancellationToken);
+
+    public static async Task<MarketplaceBookingFailureDetails?> GetFailure(
+        [Parent] MarketplaceBookingDetails item,
+        [Service] IMarketplaceBookingFailureReadService failureReadService,
+        [Service] IMarketplaceBookingService marketplaceBookingService,
+        [Service] IGraphQlMapper graphQlMapper,
+        CancellationToken cancellationToken)
+    {
+        var bookingId = await marketplaceBookingService.GetBookingIdAsync(item.Id, cancellationToken);
+        var failure = bookingId is null
+            ? null
+            : await failureReadService.GetByBookingIdAsync(bookingId, cancellationToken);
+        return failure is null ? null : graphQlMapper.MapTo(failure);
+    }
 }

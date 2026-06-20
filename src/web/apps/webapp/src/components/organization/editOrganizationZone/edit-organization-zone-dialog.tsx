@@ -69,6 +69,21 @@ const zoneSchema = object({
   description: string().nullable(),
 });
 
+const getValidZonePatchFields = (fieldsToUpdate: TagPatchField[], values: ZonePatchDetails): TagPatchField[] =>
+  fieldsToUpdate.filter((field) => {
+    if (field === 'COLOR') {
+      return true;
+    }
+
+    const formField = field === 'NAME' ? 'name' : 'description';
+    try {
+      zoneSchema.validateSyncAt(formField, values);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const EditOrganizationZonePageComponent = ({ queryReference, zoneId, onCancel }: Props) => {
   const rootData = usePreloadedQuery<editOrganizationZoneDialog_rootQuery>(RootQuery, queryReference);
   const [commitUpdateZonePatch] = useMutation<editOrganizationZoneDialog_updateZoneMutation>(graphql`
@@ -103,12 +118,13 @@ const EditOrganizationZonePageComponent = ({ queryReference, zoneId, onCancel }:
   const commitZonePatch = useCallback(
     (fieldsToUpdate: TagPatchField[], values: ZonePatchDetails) => {
       const zone = rootData.zone;
-      if (!zone || fieldsToUpdate.length === 0 || !zoneSchema.isValidSync({ name: values.name, description: values.description })) {
+      const validFieldsToUpdate = getValidZonePatchFields(fieldsToUpdate, values);
+      if (!zone || validFieldsToUpdate.length === 0) {
         return;
       }
 
       const previousValues = submittedZoneValues.current;
-      if (getChangedZoneFields(previousValues, values).length === 0) {
+      if (getChangedZoneFields(previousValues, values).filter((field) => validFieldsToUpdate.includes(field)).length === 0) {
         return;
       }
       submittedZoneValues.current = values;
@@ -118,7 +134,7 @@ const EditOrganizationZonePageComponent = ({ queryReference, zoneId, onCancel }:
           input: {
             clientMutationId: uuid(),
             id: zoneId,
-            fieldsToUpdate,
+            fieldsToUpdate: validFieldsToUpdate,
             name: values.name,
             description: values.description,
             color: values.color,

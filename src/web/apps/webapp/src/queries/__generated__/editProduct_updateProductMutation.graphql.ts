@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af5b923ad630e059f8dddcbc19cf837d>>
+ * @generated SignedSource<<37db1dae5583144ecdaffa7fe7078b48>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
+export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPatchField = "CURRENCY" | "FEATURE_IMAGES" | "LISTING_METADATA" | "PRICING_OPTIONS" | "TAGS" | "TYPE" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
@@ -43,6 +44,7 @@ export type ListingMetadataInput = {
 };
 export type ProductPricingInput = {
   acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+  availableDays?: ReadonlyArray<DayOfWeek> | null | undefined;
   billingMode: ProductPricingBillingMode;
   bookingCadence: ProductPricingCadence;
   cancellationPolicyType: ProductPricingCancellationPolicyType;
@@ -58,6 +60,7 @@ export type ProductPricingInput = {
   numberOfResourcesToBook: number;
   price: any;
   purchaseCadence: ProductPricingCadence;
+  requiredDaysPerWeek?: number | null | undefined;
   supportsSubscriptionAutoRenewal: boolean;
 };
 export type ProductPricingCancellationRefundRuleInput = {

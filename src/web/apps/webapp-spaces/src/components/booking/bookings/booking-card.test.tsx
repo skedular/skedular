@@ -184,6 +184,7 @@ describe('BookingCard', () => {
     expect(screen.getByText('North Wing')).toBeInTheDocument();
     expect(screen.getByText('Needs projector access')).toBeInTheDocument();
     expect(screen.getByText('View Invoice')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'View details' })).toBeInTheDocument();
     expect(screen.queryByText('Weekly recurring booking')).not.toBeInTheDocument();
     expect(screen.queryByText('Recurring booking')).not.toBeInTheDocument();
     expect(screen.queryByText('Open booking')).not.toBeInTheDocument();
@@ -213,9 +214,11 @@ describe('BookingCard', () => {
       />,
     );
 
-    expect(lastMenuOptions.map((item) => item.label)).toContain('Edit this occurrence');
+    expect(screen.getByRole('button', { name: 'View occurrence details' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Remove this occurrence' })).toBeInTheDocument();
     expect(lastMenuOptions.map((item) => item.label)).toContain('Edit recurring booking');
-    expect(lastMenuOptions.map((item) => item.label)).toContain('Remove this occurrence');
     expect(lastMenuOptions.map((item) => item.label)).toContain('Remove recurring series');
+    expect(lastMenuOptions.map((item) => item.label)).not.toContain('View occurrence details');
+    expect(lastMenuOptions.map((item) => item.label)).not.toContain('Remove this occurrence');
   });
 });

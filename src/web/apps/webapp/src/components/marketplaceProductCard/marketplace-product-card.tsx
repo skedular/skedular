@@ -1,4 +1,5 @@
 import { getMarketplaceProductBookingLink, getMarketplaceProductLink, getMarketplaceProductSubscribeLink } from '@/components/links';
+import { getAvailableDaysLabel } from '@/components/marketplaceProduct/available-days';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import useKnownParams from '@/hooks/use-known-params';
 import Button from '@mui/material/Button';
@@ -14,6 +15,7 @@ import { memo, useMemo, useState } from 'react';
 
 type PricingRow = {
   amountLabel: string;
+  availableDays: readonly string[];
   cadence: string;
   cadenceLabel: string;
   id: string;
@@ -116,6 +118,7 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
                       <Box sx={{ minWidth: 0 }}>
                         <CaptionIconTypography label={row.cadenceLabel} sx={{ opacity: 0.9, display: 'block', fontWeight: 500 }} />
                         <CaptionIconTypography label={row.title} sx={{ opacity: 0.65, display: 'block' }} />
+                        <CaptionIconTypography label={getAvailableDaysLabel(row.availableDays)} sx={{ opacity: 0.65, display: 'block' }} />
                       </Box>
                     </StackRow>
                     <Box sx={{ textAlign: 'right', flexShrink: 0 }}>

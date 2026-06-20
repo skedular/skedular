@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
+using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 
 namespace Booking.Shared.UnitTests.Repositories;
@@ -11,7 +12,7 @@ public class FilterByStatusesShould
     private static IQueryable<MarketplaceBookingSubscription> BuildQueryable(
         IEnumerable<string> statuses) =>
         statuses
-            .Select(status => new MarketplaceBookingSubscription { Status = status })
+            .Select(status => new MarketplaceBookingSubscription { Status = status, MarketplaceBooking = new MarketplaceBooking() })
             .AsQueryable();
 
     private static MarketplaceBookingSubscriptionSearchCriteria CriteriaWith(
@@ -90,5 +91,24 @@ public class FilterByStatusesShould
         result.Count.ShouldBe(2);
         result.ShouldContain(item => item.Status == MarketplaceBookingSubscriptionStatusConstants.Active);
         result.ShouldContain(item => item.Status == MarketplaceBookingSubscriptionStatusConstants.Paused);
+    }
+
+    [Fact]
+    public void Exclude_Subscriptions_Without_A_Root_Marketplace_Booking()
+    {
+        var queryable = new[]
+            {
+                new MarketplaceBookingSubscription
+                {
+                    Status = MarketplaceBookingSubscriptionStatusConstants.Active, MarketplaceBooking = new MarketplaceBooking()
+                },
+                new MarketplaceBookingSubscription { Status = MarketplaceBookingSubscriptionStatusConstants.Active, MarketplaceBooking = null! }
+            }
+            .AsQueryable();
+
+        var result = queryable.AddSearchCriteria(CriteriaWith([]), null).ToList();
+
+        result.Count.ShouldBe(1);
+        result[0].MarketplaceBooking.ShouldNotBeNull();
     }
 }

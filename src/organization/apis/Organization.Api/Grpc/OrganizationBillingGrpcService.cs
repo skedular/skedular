@@ -46,7 +46,8 @@ public class OrganizationBillingGrpcService(
                 var field = item.Field switch
                 {
                     StripeConnectAccountOrderField.Name => OrganizationStripeConnectAccountOrderField.Name,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
                 };
 
                 return new OrganizationStripeConnectAccountOrder(direction, field);
@@ -85,7 +86,8 @@ public class OrganizationBillingGrpcService(
                 var field = item.Field switch
                 {
                     BankAccountOrderField.Name => OrganizationBankAccountOrderField.Name,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
                 };
 
                 return new OrganizationBankAccountOrder(direction, field);

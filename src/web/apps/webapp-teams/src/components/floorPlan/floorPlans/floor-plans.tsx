@@ -1,6 +1,7 @@
 import { BookingCard } from '@/components/booking/bookings';
 import { DayPicker } from '@/components/datePickers';
 import { FloorPlanSelector } from '@/components/floorPlan/floorPlanSelector';
+import { CustomerAvatar } from '@/components/avatars';
 import { ResourceCard } from '@/components/resource';
 import type { floorPlans_bookings_query$key } from '@/queries/__generated__/floorPlans_bookings_query.graphql';
 import type { floorPlans_bookings_refetchableFragment } from '@/queries/__generated__/floorPlans_bookings_refetchableFragment.graphql';
@@ -8,11 +9,12 @@ import type { floorPlans_floorPlan_query$key } from '@/queries/__generated__/flo
 import type { floorPlans_floorPlan_refetchableFragment } from '@/queries/__generated__/floorPlans_floorPlan_refetchableFragment.graphql';
 import type { floorPlans_query$key } from '@/queries/__generated__/floorPlans_query.graphql';
 import Popover from '@mui/material/Popover';
+import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
-import { endOfDay, startOfDay } from '@skedular/shared';
-import { defaultPadding, emerald, flame, GridContainer, maxScreenWidth, StackColumn } from '@skedular/ui';
-import { Dayjs } from 'dayjs';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
+import { dateRangeToShortDateWithAdditionalDayInfo, endOfDay, getCustomerFullName, startOfDay } from '@skedular/shared';
+import { BodyIconTypography, defaultPadding, emerald, flame, GridContainer, maxScreenWidth, SmallIconTypography, StackColumn } from '@skedular/ui';
+import dayjs, { Dayjs } from 'dayjs';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 // import { CustomTagSelector } from '@/components/organization/customTagSelector';
 // import { OrganizationUserSelector } from '@/components/organization/organizationUserSelector';
@@ -102,6 +104,16 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
               id
               involvedCustomers {
                 id
+                name
+                givenName
+                middleName
+                familyName
+                photoUrl
+              }
+              from
+              until
+              category {
+                name
               }
               bookingResources {
                 resource {
@@ -118,6 +130,14 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
   );
 
   const [, startTransition] = useTransition();
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
   const resources = useMemo(
     () => (rootDataFloorPlan.location && rootDataFloorPlan.location.resources ? rootDataFloorPlan.location.resources.edges.map(({ node }) => node) : []),
     [rootDataFloorPlan.location],
@@ -141,7 +161,15 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
 
   const handleRefetchFloorPlan = useCallback(
     (floorPlanId: string) => {
+      if (!mountedRef.current) {
+        return;
+      }
+
       startTransition(() => {
+        if (!mountedRef.current) {
+          return;
+        }
+
         refetchFloorPlan(
           {
             floorPlanId,
@@ -158,7 +186,15 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
 
   const handleRefetchBookings = useCallback(
     (date: Dayjs) => {
+      if (!mountedRef.current) {
+        return;
+      }
+
       startTransition(() => {
+        if (!mountedRef.current) {
+          return;
+        }
+
         refetchBookings(
           {
             bookingsSearchCriteriaFrom: date.toISOString(),
@@ -199,6 +235,10 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
 
   const handleReloadRequired = () => {
     startTransition(() => {
+      if (!mountedRef.current) {
+        return;
+      }
+
       handlePopoverClose();
       handleRefetchBookings(date);
       onReloadRequired();
@@ -207,6 +247,51 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
 
   const floorPlanImageWidth = rootDataFloorPlan.floorPlan?.image?.original?.width ?? 1;
   const floorPlanImageHeight = rootDataFloorPlan.floorPlan?.image?.original?.height ?? 1;
+
+  const getBookingTooltipTitle = (
+    resourceName: string,
+    bookings: readonly {
+      readonly from: string;
+      readonly until: string;
+      readonly category: { readonly name: string };
+      readonly involvedCustomers: readonly {
+        readonly id: string;
+        readonly name: string | null | undefined;
+        readonly givenName: string | null | undefined;
+        readonly middleName: string | null | undefined;
+        readonly familyName: string | null | undefined;
+        readonly photoUrl: string | null | undefined;
+      }[];
+    }[],
+  ) => {
+    if (bookings.length === 0) {
+      return (
+        <StackColumn spacing={0.5}>
+          <BodyIconTypography label={resourceName} fontWeight={700} />
+          <SmallIconTypography label="Available" />
+        </StackColumn>
+      );
+    }
+
+    return (
+      <StackColumn spacing={0.75}>
+        <BodyIconTypography label={resourceName} fontWeight={700} />
+        {bookings.slice(0, 3).map((booking) => {
+          const customer = booking.involvedCustomers[0];
+          const dateRange = dateRangeToShortDateWithAdditionalDayInfo(dayjs(booking.from), dayjs(booking.until));
+          const customerName = customer ? getCustomerFullName(customer) : 'Unknown person';
+
+          return (
+            <StackColumn key={`${booking.from}-${customer?.id ?? 'unknown'}`} spacing={0.25}>
+              <SmallIconTypography label={customerName} fontWeight={700} />
+              <SmallIconTypography label={`${booking.category.name} · ${dateRange.primaryLine}${dateRange.secondaryLine ? ` · ${dateRange.secondaryLine}` : ''}`} />
+            </StackColumn>
+          );
+        })}
+        {bookings.length > 3 && <SmallIconTypography label={`+${bookings.length - 3} more booking${bookings.length - 3 === 1 ? '' : 's'}`} />}
+      </StackColumn>
+    );
+  };
 
   return (
     <>
@@ -232,31 +317,65 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
                   if (!resource) {
                     return null;
                   }
-                  const booking = bookings.find((item) => item.bookingResources.some((bookingResource) => bookingResource.resource.id === resource.id));
+                  const resourceBookings = bookings.filter((item) => item.bookingResources.some((bookingResource) => bookingResource.resource.id === resource.id));
+                  const booking = resourceBookings[0];
+                  const primaryCustomer = booking?.involvedCustomers[0];
 
                   return (
-                    <Box
+                    <Tooltip
                       key={resource.id}
-                      sx={{
-                        position: 'absolute',
-                        left: `${(position.x / floorPlanImageWidth) * 100}%`,
-                        top: `${(position.y / floorPlanImageHeight) * 100}%`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: 40,
-                        height: 40,
-                        borderRadius: '50%',
-                        border: 2,
-                        backgroundColor: (theme) => theme.palette.background.paper,
-                        boxShadow: 1,
+                      title={getBookingTooltipTitle(resource.name, resourceBookings)}
+                      arrow
+                      placement="top"
+                      slotProps={{
+                        tooltip: {
+                          sx: {
+                            bgcolor: 'background.paper',
+                            color: 'text.primary',
+                            border: 1,
+                            borderColor: 'divider',
+                            boxShadow: 3,
+                            p: 1.25,
+                            '& .MuiTypography-root': {
+                              color: 'inherit',
+                            },
+                          },
+                        },
+                        arrow: {
+                          sx: {
+                            color: 'background.paper',
+                            '&::before': {
+                              border: 1,
+                              borderColor: 'divider',
+                            },
+                          },
+                        },
                       }}
-                      title={resource.name}
-                      onClick={(event) => handleResourceClick(event, resource.id, booking ? booking.id : null)}
                     >
-                      {!booking && <Box sx={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: emerald }} />}
-                      {booking && <Box sx={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: flame }} />}
-                    </Box>
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          left: `${(position.x / floorPlanImageWidth) * 100}%`,
+                          top: `${(position.y / floorPlanImageHeight) * 100}%`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          width: 40,
+                          height: 40,
+                          borderRadius: '50%',
+                          border: 2,
+                          backgroundColor: (theme) => theme.palette.background.paper,
+                          boxShadow: 1,
+                          cursor: 'pointer',
+                          overflow: 'hidden',
+                        }}
+                        onClick={(event) => handleResourceClick(event, resource.id, booking ? booking.id : null)}
+                      >
+                        {!booking && <Box sx={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: emerald }} />}
+                        {booking && primaryCustomer && <CustomerAvatar name={primaryCustomer} photo={{ url: primaryCustomer.photoUrl }} size="medium" />}
+                        {booking && !primaryCustomer && <Box sx={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: flame }} />}
+                      </Box>
+                    </Tooltip>
                   );
                 })}
               </Box>
@@ -290,6 +409,7 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
             organizationCustomDomain={organizationCustomDomain}
             locationId={locationId}
             date={date}
+            connectionIds={bookingConnectionIds}
           />
         )}
       </Popover>

@@ -6,6 +6,25 @@ option csharp_namespace = "Api.Shared.Grpc.Skedular.Marketplace.Core.V1";
 service MarketplaceService {
 
   rpc GetVersion (VersionInput) returns (Version);
+  rpc EnsureHostLocationDraftProduct (EnsureHostLocationDraftProductInput) returns (HostLocationProduct);
+  rpc RemoveHostLocationDraftProduct (RemoveHostLocationDraftProductInput) returns (HostLocationProduct);
+}
+
+message EnsureHostLocationDraftProductInput {
+  string id = 1;
+  string organizationId = 2;
+  string productTagId = 3;
+  string locationName = 4;
+}
+
+message RemoveHostLocationDraftProductInput {
+  string id = 1;
+  string organizationId = 2;
+}
+
+message HostLocationProduct {
+  string id = 1;
+  bool inactive = 2;
 }
 
 message VersionInput {

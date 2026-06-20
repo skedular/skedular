@@ -30,6 +30,9 @@ export type PricingOptionForm = {
   maxAllowedResourcesLockTimePaidViaBankTransfer: string;
   billingMode: string;
   acceptedPaymentMethods: string[];
+  /** Empty means this price is available every calendar day. */
+  availableDays: string[];
+  requiredDaysPerWeek: string;
 };
 
 export type CancellationRefundRuleForm = {
@@ -99,12 +102,19 @@ export const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCar
   maxAllowedResourcesLockTimePaidViaBankTransfer: (defaultMaxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
   billingMode: 'NOT_SET',
   acceptedPaymentMethods: [],
+  availableDays: [],
+  requiredDaysPerWeek: '',
 });
 
 export const isSubscriptionCadence = (cadence?: string | null) =>
   !!cadence && new Set(['DAILY', 'WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'TWO_MONTHS', 'QUARTERLY', 'FOUR_MONTHS', 'FIVE_MONTHS', 'SIX_MONTHS', 'YEARLY']).has(cadence);
 
 export const isEventType = (type?: string | null) => type === 'EVENT';
+
+export const toRequiredDaysPerWeekInput = (cadence: string, requiredDaysPerWeek: string) =>
+  cadence === 'WEEKLY' && requiredDaysPerWeek.trim() ? Number(requiredDaysPerWeek) : null;
+
+export const sanitizeWeeklyRequiredDays = (value: string) => value.replace(/[^0-9]/g, '').slice(0, 1);
 
 export const getDurationStepDetails = (cadence: string, bookingSlotSizeInMinutes: number) => {
   switch (cadence) {
@@ -261,6 +271,14 @@ export const productSchema = (bookingSlotSizeInMinutes: number) =>
             .required('Please choose a billing mode.')
             .test('is-not-not-set', 'Please choose a billing mode.', (value) => value !== 'NOT_SET'),
           acceptedPaymentMethods: array().min(1, 'Choose at least one accepted payment method.').required('Please choose at least one accepted payment method.'),
+          requiredDaysPerWeek: string().test('weekly-day-selection', 'Set the required number of selected days from 1 up to the enabled weekdays.', function (value) {
+            const { cadence, availableDays } = this.parent as PricingOptionForm;
+            if (cadence !== 'WEEKLY') return !value;
+            if (!value) return true;
+            const required = Number(value);
+            const availableCount = availableDays.length || 7;
+            return Number.isInteger(required) && required > 0 && required <= availableCount;
+          }),
         }),
       )
       .min(1, 'Add at least one pricing option.')
@@ -274,7 +292,7 @@ export const productSchema = (bookingSlotSizeInMinutes: number) =>
 
           const combinations = new Set<string>();
           for (const pricingOption of value) {
-            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}`;
+            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}|${pricingOption.cadence === 'WEEKLY' ? pricingOption.requiredDaysPerWeek : ''}`;
             if (combinations.has(combination)) {
               return false;
             }

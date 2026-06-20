@@ -27,7 +27,8 @@ public static class ProductPricingCancellationPolicyTypeExtensions
                 ProductPricingCancellationPolicyType.NoCancellation => ProductPricingCancellationPolicyTypeConstants.NoCancellation,
                 ProductPricingCancellationPolicyType.FullRefundBeforeCutoff => ProductPricingCancellationPolicyTypeConstants.FullRefundBeforeCutoff,
                 ProductPricingCancellationPolicyType.TieredRefund => ProductPricingCancellationPolicyTypeConstants.TieredRefund,
-                _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public string ToProductPricingCancellationPolicyTypeName() =>
@@ -37,7 +38,8 @@ public static class ProductPricingCancellationPolicyTypeExtensions
                 ProductPricingCancellationPolicyType.NoCancellation => "No Cancellation",
                 ProductPricingCancellationPolicyType.FullRefundBeforeCutoff => "Full Refund Before Cutoff",
                 ProductPricingCancellationPolicyType.TieredRefund => "Tiered Refund",
-                _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -50,7 +52,8 @@ public static class ProductPricingCancellationPolicyTypeExtensions
                 ProductPricingCancellationPolicyTypeConstants.NoCancellation => ProductPricingCancellationPolicyType.NoCancellation,
                 ProductPricingCancellationPolicyTypeConstants.FullRefundBeforeCutoff => ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
                 ProductPricingCancellationPolicyTypeConstants.TieredRefund => ProductPricingCancellationPolicyType.TieredRefund,
-                _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 }

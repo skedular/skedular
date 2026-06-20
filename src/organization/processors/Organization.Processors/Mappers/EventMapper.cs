@@ -61,7 +61,8 @@ public class EventMapper : IEventMapper
             {
                 CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
                 CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(customer.Type), customer.Type,
+                    $"Unexpected value for {nameof(customer.Type)}: {customer.Type}. Update enum mapping or caller input.")
             },
             Identities = customer.Identities
                 .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
@@ -262,6 +263,7 @@ public class EventMapper : IEventMapper
             PurchasedUserCapacity = src.PurchasedUserCapacity,
             PurchasedLocationCapacity = src.PurchasedLocationCapacity,
             PurchasedTeamCapacity = src.PurchasedTeamCapacity,
+            DiscountPercentage = src.DiscountPercentage,
             Organization = organization
         };
 

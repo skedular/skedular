@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c00f23c222905a34a8a92252face3096>>
+ * @generated SignedSource<<0693fc8faadf28f82d0047e94ba71b0a>>
  * @lightSyntaxTransform
  */
 
@@ -191,8 +191,7 @@ return {
             "kind": "Literal",
             "name": "types",
             "value": [
-              "MARKETPLACE",
-              "INDIVIDUAL"
+              "MARKETPLACE"
             ]
           }
         ],
@@ -224,17 +223,17 @@ return {
           },
           (v5/*:: as any*/)
         ],
-        "storageKey": "myOrganizations(types:[\"MARKETPLACE\",\"INDIVIDUAL\"])"
+        "storageKey": "myOrganizations(types:[\"MARKETPLACE\"])"
       }
     ]
   },
   "params": {
-    "cacheID": "63644c0ef0540b90f47c018b9e1dc1a7",
+    "cacheID": "17be5c20bdf40d16aeb6c44262db3bee",
     "id": null,
     "metadata": {},
     "name": "noOrganizationRootShell_rootQuery",
     "operationKind": "query",
-    "text": "query noOrganizationRootShell_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  customerReadinessSynced\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  ...noOrganizationAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment noOrganizationAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations(types: [MARKETPLACE, INDIVIDUAL]) {\n    uniqueId\n    customDomain\n    logoUrl\n    name\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
+    "text": "query noOrganizationRootShell_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  customerReadinessSynced\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  ...noOrganizationAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment noOrganizationAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations(types: [MARKETPLACE]) {\n    uniqueId\n    customDomain\n    logoUrl\n    name\n  }\n  ...newFeedbackDialog_query\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
   }
 };
 })();

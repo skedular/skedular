@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<707629703255e3beee38088d9a3debf3>>
+ * @generated SignedSource<<b8d5c4fc2d90989921a2169226f94b03>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
+export type OrganizationType = "HOST" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
   readonly organization: {

@@ -1,13 +1,13 @@
 using System.Globalization;
 using Api.Shared.Services;
 using Api.Shared.Services.Configurations.Grpc;
-using Api.Shared.Services.Offering;
 using Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1;
 using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Api.Services;
 using Organization.Shared.Publishers;
 using Stripe;
+using OfferingCode = Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1.OfferingCode;
 using StripeConfiguration = Enterprise.Shared.Payment.Configurations.StripeConfiguration;
 using Version = Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1.Version;
 
@@ -42,9 +42,9 @@ public class OrganizationCoreController(
         });
     }
 
-    public override async Task<IActionResult> ChangeOrganizationOffering(
+    public override async Task<IActionResult> ChangeOrganizationOfferingById(
         string organizationId,
-        string offeringCode,
+        OfferingCode offeringCode,
         // ReSharper disable once InconsistentNaming
         string x_API_Key,
         CancellationToken cancellationToken = default)
@@ -54,7 +54,63 @@ public class OrganizationCoreController(
             return Unauthorized();
         }
 
-        await organizationOfferingService.UpdateOfferingAsync(organizationId, null, offeringCode.ToOfferingCode(), true, cancellationToken);
+        await organizationOfferingService.UpdateOfferingAsync(
+            organizationId,
+            null,
+            offeringCode switch
+            {
+                OfferingCode.EARLY_BIRD_V1 => global::Api.Shared.Services.Offering.OfferingCode.EarlyBirdV1,
+                OfferingCode.FREE_TIER_V1 => global::Api.Shared.Services.Offering.OfferingCode.FreeTierV1,
+                OfferingCode.PAY_AS_YOU_GO_V1 => global::Api.Shared.Services.Offering.OfferingCode.PayAsYouGoV1,
+                OfferingCode.ENTERPRISE_CUSTOM_V1 => global::Api.Shared.Services.Offering.OfferingCode.EnterpriseCustomV1,
+                OfferingCode.SPACES_FREE_TIER_V1 => global::Api.Shared.Services.Offering.OfferingCode.SpacesFreeTierV1,
+                OfferingCode.SPACES_GROWTH_V1 => global::Api.Shared.Services.Offering.OfferingCode.SpacesGrowthV1,
+                OfferingCode.SPACES_BUSINESS_V1 => global::Api.Shared.Services.Offering.OfferingCode.SpacesBusinessV1,
+                OfferingCode.SPACES_CONTACT_US_V1 => global::Api.Shared.Services.Offering.OfferingCode.SpacesContactUsV1,
+                OfferingCode.HOST_STANDARD_V1 => global::Api.Shared.Services.Offering.OfferingCode.HostStandardV1,
+                _ => throw new ArgumentOutOfRangeException(
+                    nameof(offeringCode),
+                    offeringCode,
+                    $"Unexpected value for {nameof(offeringCode)}: {offeringCode}. Update enum mapping or caller input.")
+            },
+            true,
+            cancellationToken);
+        return Ok();
+    }
+
+    public override async Task<IActionResult> ChangeOrganizationOfferingByCustomDomain(
+        string customDomain,
+        OfferingCode offeringCode,
+        // ReSharper disable once InconsistentNaming
+        string x_API_Key,
+        CancellationToken cancellationToken = default)
+    {
+        if (x_API_Key != organizationConfiguration.ApiKey)
+        {
+            return Unauthorized();
+        }
+
+        await organizationOfferingService.UpdateOfferingAsync(
+            null,
+            customDomain,
+            offeringCode switch
+            {
+                OfferingCode.EARLY_BIRD_V1 => global::Api.Shared.Services.Offering.OfferingCode.EarlyBirdV1,
+                OfferingCode.FREE_TIER_V1 => global::Api.Shared.Services.Offering.OfferingCode.FreeTierV1,
+                OfferingCode.PAY_AS_YOU_GO_V1 => global::Api.Shared.Services.Offering.OfferingCode.PayAsYouGoV1,
+                OfferingCode.ENTERPRISE_CUSTOM_V1 => global::Api.Shared.Services.Offering.OfferingCode.EnterpriseCustomV1,
+                OfferingCode.SPACES_FREE_TIER_V1 => global::Api.Shared.Services.Offering.OfferingCode.SpacesFreeTierV1,
+                OfferingCode.SPACES_GROWTH_V1 => global::Api.Shared.Services.Offering.OfferingCode.SpacesGrowthV1,
+                OfferingCode.SPACES_BUSINESS_V1 => global::Api.Shared.Services.Offering.OfferingCode.SpacesBusinessV1,
+                OfferingCode.SPACES_CONTACT_US_V1 => global::Api.Shared.Services.Offering.OfferingCode.SpacesContactUsV1,
+                OfferingCode.HOST_STANDARD_V1 => global::Api.Shared.Services.Offering.OfferingCode.HostStandardV1,
+                _ => throw new ArgumentOutOfRangeException(
+                    nameof(offeringCode),
+                    offeringCode,
+                    $"Unexpected value for {nameof(offeringCode)}: {offeringCode}. Update enum mapping or caller input.")
+            },
+            true,
+            cancellationToken);
 
         return Ok();
     }

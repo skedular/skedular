@@ -35,13 +35,15 @@ public class EventMapper : IEventMapper
                 BookingCategory.Vacation => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.Vacation,
                 BookingCategory.TravelingForWork => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             Channel = src.Channel switch
             {
                 BookingChannel.Private => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingChannel.Private,
                 BookingChannel.Marketplace => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingChannel.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             }
         };
 

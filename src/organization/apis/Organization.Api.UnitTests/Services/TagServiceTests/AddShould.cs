@@ -17,6 +17,22 @@ public class AddShould
 {
     [Theory]
     [AutoFakeItEasyData]
+    public async Task Reject_User_Supplied_System_Host_Location_Tag_Ids(
+        [Frozen] ICustomerService customerService,
+        TagService sut,
+        CancellationToken cancellationToken)
+    {
+        var tag = new Tag { Id = HostLocationSystemIds.ProductTag("location-1"), Name = "Forged Host tag", Type = OrganizationTagType.Product };
+        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
+            .Returns((new Customer { Id = "customer-1" }, new Shared.Database.Entities.Customer { Id = "customer-1" }));
+
+        var exception = await Should.ThrowAsync<UnauthorizedAccessException>(() => sut.AddAsync(tag, false, cancellationToken));
+
+        exception.Message.ShouldContain("system managed");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public async Task Throw_Custom_Tag_Exception_When_A_Matching_Custom_Tag_Already_Exists(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ITagRepository tagRepository,

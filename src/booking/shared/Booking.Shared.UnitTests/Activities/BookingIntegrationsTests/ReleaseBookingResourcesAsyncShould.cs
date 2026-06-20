@@ -9,6 +9,10 @@ using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore.Storage;
 using Temporalio.Testing;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
+using MarketplaceBookingFailure = Booking.Shared.Database.Entities.MarketplaceBookingFailure;
+using MarketplaceBookingFailureCategoryConstants = Booking.Shared.Models.MarketplaceBookingFailureCategoryConstants;
+using MarketplaceBookingFailureFinalization = Booking.Shared.Models.MarketplaceBookingFailureFinalization;
+using MarketplaceBookingFailureScopeConstants = Booking.Shared.Models.MarketplaceBookingFailureScopeConstants;
 
 namespace Booking.Shared.UnitTests.Activities.BookingIntegrationsTests;
 
@@ -28,6 +32,7 @@ public class ReleaseBookingResourcesAsyncShould
         [Frozen] IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
         [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
         [Frozen] ICachedBookingService cachedBookingService,
+        [Frozen] IMarketplaceBookingFailureService marketplaceBookingFailureService,
         BookingIntegrations sut,
         string bookingId)
     {
@@ -46,9 +51,14 @@ public class ReleaseBookingResourcesAsyncShould
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => bookingRepository.GetByIdAsync(bookingId, environment.CancellationTokenSource.Token)).Returns(booking);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, environment.CancellationTokenSource.Token)).Returns(transaction);
+        A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(A<MarketplaceBookingFailureFinalization>._,
+                environment.CancellationTokenSource.Token))
+            .Returns(new MarketplaceBookingFailure());
 
         await environment.RunAsync(() =>
-            sut.ReleaseBookingResourcesAsync(new ReleaseBookingResourcesInput(bookingId)));
+            sut.ReleaseBookingResourcesAsync(new ReleaseBookingResourcesInput(
+                bookingId,
+                MarketplaceBookingFailureCategoryConstants.PaymentFailed)));
 
         booking.MarketplaceBooking.PaymentStatus.ShouldBe(PaymentStatusConstants.RecordNeverCreated);
         A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(booking, environment.CancellationTokenSource.Token))
@@ -59,5 +69,12 @@ public class ReleaseBookingResourcesAsyncShould
         A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedTwiceExactly();
         A.CallTo(() => transaction.CommitAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
         A.CallTo(() => cachedBookingService.UpdateByIdAsync(bookingId, environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(
+                A<MarketplaceBookingFailureFinalization>.That.Matches(item =>
+                    item.Category == MarketplaceBookingFailureCategoryConstants.PaymentFailed &&
+                    item.Scope == MarketplaceBookingFailureScopeConstants.OneTimeBooking &&
+                    item.BookingId == bookingId),
+                environment.CancellationTokenSource.Token))
+            .MustHaveHappenedOnceExactly();
     }
 }

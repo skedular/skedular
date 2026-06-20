@@ -45,6 +45,29 @@ const bankAccountSchema = object({
   country: string().required('Country is required'),
 });
 
+const bankAccountPatchFields: Record<keyof BankAccountDetails, BankAccountPatchField> = {
+  name: 'NAME',
+  bankName: 'BANK_NAME',
+  accountHolderName: 'ACCOUNT_HOLDER_NAME',
+  accountNumber: 'ACCOUNT_NUMBER',
+  country: 'COUNTRY',
+};
+
+const getValidBankAccountPatchFields = (fieldsToUpdate: BankAccountPatchField[], values: BankAccountDetails): BankAccountPatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    const formField = (Object.entries(bankAccountPatchFields) as [keyof BankAccountDetails, BankAccountPatchField][]).find(([, field]) => field === patchField)?.[0];
+    if (!formField) {
+      return false;
+    }
+
+    try {
+      bankAccountSchema.validateSyncAt(formField, values);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const EditBankAccount = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<editBankAccount_query$key>(
     graphql`
@@ -93,9 +116,11 @@ const EditBankAccount = ({ rootDataRelay }: Props) => {
   const draftBankAccountValues = useRef(initialBankAccountValues);
 
   const commitBankAccountPatch = useCallback(
-    (fieldsToUpdate: BankAccountPatchField[], { name, bankName, accountHolderName, accountNumber, country }: BankAccountDetails) => {
+    (fieldsToUpdate: BankAccountPatchField[], values: BankAccountDetails) => {
+      const { name, bankName, accountHolderName, accountNumber, country } = values;
       const account = rootData.organizationBankAccount;
-      if (!account || fieldsToUpdate.length === 0 || !bankAccountSchema.isValidSync({ name, bankName, accountHolderName, accountNumber, country })) {
+      const validFieldsToUpdate = getValidBankAccountPatchFields(fieldsToUpdate, values);
+      if (!account || validFieldsToUpdate.length === 0) {
         return;
       }
 
@@ -104,7 +129,7 @@ const EditBankAccount = ({ rootDataRelay }: Props) => {
           input: {
             clientMutationId: uuid(),
             id: account.id,
-            fieldsToUpdate,
+            fieldsToUpdate: validFieldsToUpdate,
             name,
             bankName,
             accountHolderName,

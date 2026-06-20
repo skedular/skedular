@@ -50,6 +50,8 @@ public static class Extensions
                 .AddSingleton<IOrganizationArrearsChargeSegmentService, OrganizationArrearsChargeSegmentService>()
                 .AddSingleton<IOrganizationArrearsBillingPlannerService, OrganizationArrearsBillingPlannerService>()
                 .AddScoped<IMarketplaceBookingOpeningHoursService, MarketplaceBookingOpeningHoursService>()
+                .AddSingleton<IMarketplaceBookingAvailableDaysService, MarketplaceBookingAvailableDaysService>()
+                .AddSingleton<IMarketplaceBookingWeeklyDaySelectionService, MarketplaceBookingWeeklyDaySelectionService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
                 .AddScoped<ICachedTeamService, CachedTeamService>()
@@ -60,8 +62,14 @@ public static class Extensions
                 .AddScoped<IBookingResourceSlotsHelperService, BookingResourceSlotsHelperService>()
                 .AddScoped<IMarketplaceRefundEventService, MarketplaceRefundEventService>()
                 .AddScoped<IMarketplaceRefundService, MarketplaceRefundService>()
+                .AddScoped<IHostCommissionService, HostCommissionService>()
+                .AddScoped<IHostStripeApplicationFeeService, HostStripeApplicationFeeService>()
+                .AddScoped<IStripeHostRefundService, StripeHostRefundService>()
+                .AddScoped<IStripeHostRefundClient, StripeHostRefundClient>()
                 .AddScoped<IMarketplaceRefundAutomationService, MarketplaceRefundAutomationService>()
                 .AddScoped<IMarketplaceRefundNotificationService, MarketplaceRefundNotificationService>()
+                .AddScoped<IMarketplaceBookingFailureService, MarketplaceBookingFailureService>()
+                .AddScoped<IMarketplaceBookingFailureNotificationService, MarketplaceBookingFailureNotificationService>()
                 .AddScoped<IStripeProductPricingService, StripeProductPricingService>()
                 .AddScoped<IStripeCustomerService, StripeCustomerService>()
                 .AddScoped<IXeroWebhookService, XeroWebhookService>()
@@ -73,6 +81,9 @@ public static class Extensions
                 .AddScoped<IMarketplaceBookingPreferenceService, MarketplaceBookingPreferenceService>()
                 .AddScoped<IPrivateBookingService, PrivateBookingService>()
                 .AddScoped<IPrivateRecurringBookingService, PrivateRecurringBookingService>()
+                .AddSingleton<ISpacesBookingInstanceCounter, SpacesBookingInstanceCounter>()
+                .AddScoped<ISpacesBookingQuotaService, SpacesBookingQuotaService>()
+                .AddScoped<ISpacesBookingUsageRolloverService, SpacesBookingUsageRolloverService>()
                 .AddScoped<IMarketplaceBookingSubscriptionService, MarketplaceBookingSubscriptionService>()
                 .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>()
                 .AddScoped<ISkedularInvoiceService, SkedularInvoiceService>()
@@ -81,9 +92,9 @@ public static class Extensions
                 .AddSingleton<IResourceAvailabilityClassifier, ResourceAvailabilityClassifier>()
                 .AddSingleton<IResourceDayViewBookingVisibilityFilter, ResourceDayViewBookingVisibilityFilter>()
                 .AddSingleton<ISubscriptionKeyService, SubscriptionKeyService>()
+                .AddScoped<IResourceAvailabilityDayViewService, ResourceAvailabilityDayViewService>()
                 .AddOptions<ResourceAvailabilityOptions>()
-                .Services
-                .AddScoped<IResourceAvailabilityDayViewService, ResourceAvailabilityDayViewService>();
+                .Services;
 
         public IServiceCollection AddRepositoryFactory() =>
             services.AddScoped<IRepositoryFactory, RepositoryFactory>();
@@ -102,6 +113,9 @@ public static class Extensions
                 .AddScoped<IMarketplaceBookingSubscriptionRepository, MarketplaceBookingSubscriptionRepository>()
                 .AddScoped<IMarketplaceRefundEventRepository, MarketplaceRefundEventRepository>()
                 .AddScoped<IMarketplaceRefundRepository, MarketplaceRefundRepository>()
+                .AddScoped<IMarketplaceBookingFailureRepository, MarketplaceBookingFailureRepository>()
+                .AddScoped<IMarketplaceBookingFailureEventRepository, MarketplaceBookingFailureEventRepository>()
+                .AddScoped<IMarketplaceBookingFailureDeliveryRepository, MarketplaceBookingFailureDeliveryRepository>()
                 .AddScoped<IOrganizationArrearsInvoiceRepository, OrganizationArrearsInvoiceRepository>()
                 .AddScoped<IOrganizationInvoiceCounterRepository, OrganizationInvoiceCounterRepository>()
                 .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
@@ -118,7 +132,8 @@ public static class Extensions
                 .AddScoped<IStripePriceRepository, StripePriceRepository>()
                 .AddScoped<IStripeProductRepository, StripeProductRepository>()
                 .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
-                .AddScoped<ITeamRepository, TeamRepository>();
+                .AddScoped<ITeamRepository, TeamRepository>()
+                .AddScoped<ISpacesBookingUsageRepository, SpacesBookingUsageRepository>();
 
         public IServiceCollection AddPublishers() =>
             services

@@ -2140,6 +2140,9 @@ namespace Organization.Shared.Database.Migrations
                     b.PrimitiveCollection<string>("RefundNotificationEmails")
                         .HasColumnType("jsonb");
 
+                    b.Property<DateTimeOffset?>("SpacesTrialStartedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("TermsOfUseId")
                         .HasColumnType("character varying(100)");
 
@@ -2172,6 +2175,8 @@ namespace Organization.Shared.Database.Migrations
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("SpacesTrialStartedAt");
 
                     b.HasIndex("TermsOfUseId");
 
@@ -2452,17 +2457,27 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("DiscountPercentage")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.Property<DateTimeOffset>("End")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("FixedPrice")
-                        .HasColumnType("integer");
 
                     b.Property<uint>("EntityFrameworkVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
+
+                    b.Property<int?>("FixedPrice")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("HostCommissionPercentage")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("DECIMAL(5,2)")
+                        .HasDefaultValue(5m);
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -2482,6 +2497,9 @@ namespace Organization.Shared.Database.Migrations
 
                     b.Property<int?>("PurchasedUserCapacity")
                         .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("SpacesBillingStartsAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("Start")
                         .HasColumnType("timestamp with time zone");
@@ -2503,9 +2521,13 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
+                    b.HasIndex("DiscountPercentage");
+
                     b.HasIndex("End");
 
                     b.HasIndex("FixedPrice");
+
+                    b.HasIndex("HostCommissionPercentage");
 
                     b.HasIndex("ModifiedAt");
 
@@ -2519,6 +2541,8 @@ namespace Organization.Shared.Database.Migrations
                     b.HasIndex("PurchasedTeamCapacity");
 
                     b.HasIndex("PurchasedUserCapacity");
+
+                    b.HasIndex("SpacesBillingStartsAt");
 
                     b.HasIndex("Start");
 

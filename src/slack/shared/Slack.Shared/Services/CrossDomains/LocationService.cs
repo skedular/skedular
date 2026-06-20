@@ -92,7 +92,8 @@ public class LocationService(
                     {
                         LocationType.Private => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private,
                         LocationType.Marketplace => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace,
-                        _ => throw new ArgumentOutOfRangeException()
+                        _ => throw new ArgumentOutOfRangeException(nameof(location.Type), location.Type,
+                            $"Unexpected value for {nameof(location.Type)}: {location.Type}. Update enum mapping or caller input.")
                     }
                 },
                 locationConfiguration.ApiKey.CreateMetadata(),
@@ -133,7 +134,8 @@ public class LocationService(
                     {
                         LocationType.Private => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private,
                         LocationType.Marketplace => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace,
-                        _ => throw new ArgumentOutOfRangeException()
+                        _ => throw new ArgumentOutOfRangeException(nameof(location.Type), location.Type,
+                            $"Unexpected value for {nameof(location.Type)}: {location.Type}. Update enum mapping or caller input.")
                     }
                 },
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),

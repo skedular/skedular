@@ -1,3 +1,5 @@
+using Api.Shared.Services.Offering;
+
 namespace Api.Shared.Services;
 
 public class CustomerNotFound() : Exception("We couldn't find that customer.");
@@ -49,7 +51,53 @@ public class RecurringBookingNotFound() : Exception("We couldn't find that recur
 public class NoMoreInteractionAllowed()
     : Exception("You've reached the limit of the free plan. Upgrade to Pay as you go to keep using all features.");
 
+public class SpacesBookingQuotaExceeded(
+    SpacesQuotaReasonCode reasonCode,
+    int currentUsage,
+    int quotaLimit,
+    int attemptedCurrentPeriodCount,
+    int excludedOutOfPeriodCount,
+    int remainingQuota,
+    IReadOnlyList<SpacesQuotaUpgradePlan> upgradePlans)
+    : Exception("You've reached the Spaces booking quota for the current billing period.")
+{
+    public const string Code = "SPACES_BOOKING_QUOTA_EXCEEDED";
+    public string ErrorCode { get; } = Code;
+    public SpacesQuotaReasonCode ReasonCode { get; } = reasonCode;
+    public int CurrentUsage { get; } = currentUsage;
+    public int QuotaLimit { get; } = quotaLimit;
+    public int AttemptedCurrentPeriodCount { get; } = attemptedCurrentPeriodCount;
+    public int ExcludedOutOfPeriodCount { get; } = excludedOutOfPeriodCount;
+    public int TotalAttemptedInstanceCount => AttemptedCurrentPeriodCount + ExcludedOutOfPeriodCount;
+    public int RemainingQuota { get; } = remainingQuota;
+    public IReadOnlyList<SpacesQuotaUpgradePlan> UpgradePlans { get; } = upgradePlans;
+}
+
+public class SpacesOfferingStateMissing()
+    : Exception("This organization does not have Spaces offering state. Run the default Free assignment before creating bookings.");
+
+public class SpacesAccessDenied(SpacesAccessDecision decision)
+    : Exception(GetMessage(decision))
+{
+    public const string Code = "SPACES_ACCESS_DENIED";
+    public string ErrorCode { get; } = Code;
+    public SpacesSubscriptionStatus Status { get; } = decision.Status;
+    public SpacesAccessReasonCode ReasonCode { get; } = decision.ReasonCode;
+    public bool UpgradeRequired { get; } = decision.UpgradeRequired;
+
+    private static string GetMessage(SpacesAccessDecision decision) => decision.ReasonCode switch
+    {
+        SpacesAccessReasonCode.TrialExpired => "This organization's Spaces trial has ended. Upgrade to a paid plan to continue.",
+        SpacesAccessReasonCode.PaidInactive => "This organization's Spaces subscription is inactive. Update the subscription to continue.",
+        SpacesAccessReasonCode.MissingOfferingState or SpacesAccessReasonCode.MissingTrialState =>
+            "This organization's Spaces subscription state is incomplete. Update the subscription to continue.",
+        _ => "This organization cannot perform this Spaces action with its current subscription."
+    };
+}
+
 public class ResourceNotAvailable() : Exception("That resource is no longer available for the selected time.");
+
+public class MarketplaceBookingDateUnavailable() : Exception("This price is not available on the selected date.");
 
 public class NoResourceAvailable() : Exception("No resources are available for the selected time.");
 
@@ -173,6 +221,18 @@ public class ProductPricingMaxDurationIncrementInvalid(string durationStepLabel)
 
 public class ProductPricingMaxDurationMustNotBeLessThanMinDuration()
     : Exception("Maximum booking length can't be shorter than the minimum booking length.");
+
+public class ProductPricingAvailableDaysInvalid()
+    : Exception("Available days must be unique calendar days from Monday through Sunday.");
+
+public class ProductPricingWeeklyDaySelectionOnlySupportedForWeeklyPricing()
+    : Exception("Selected days per week can only be configured for weekly pricing.");
+
+public class ProductPricingWeeklyDaySelectionRangeInvalid()
+    : Exception("Required selected days per week must be from 1 to 7 and fit within the available days.");
+
+public class MarketplaceBookingWeeklyDaySelectionInvalid()
+    : Exception("Choose the required number of available days per week.");
 
 public class OrganizationXeroConnectionUnauthorizedException()
     : UnauthorizedAccessException("You don't have permission to change this organization's Xero connection.");

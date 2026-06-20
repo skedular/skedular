@@ -69,6 +69,21 @@ const productTagSchema = object({
   description: string().nullable(),
 });
 
+const getValidTagPatchFields = (fieldsToUpdate: TagPatchField[], values: ProductTagPatchDetails): TagPatchField[] =>
+  fieldsToUpdate.filter((field) => {
+    if (field === 'COLOR') {
+      return true;
+    }
+
+    const formField = field === 'NAME' ? 'name' : 'description';
+    try {
+      productTagSchema.validateSyncAt(formField, values);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId, onCancel }: Props) => {
   const rootData = usePreloadedQuery<editOrganizationProductTagDialog_rootQuery>(RootQuery, queryReference);
   const [commitUpdateProductTagPatch] = useMutation<editOrganizationProductTagDialog_updateProductTagMutation>(graphql`
@@ -103,12 +118,13 @@ const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId,
   const commitProductTagPatch = useCallback(
     (fieldsToUpdate: TagPatchField[], values: ProductTagPatchDetails) => {
       const productTag = rootData.productTag;
-      if (!productTag || fieldsToUpdate.length === 0 || !productTagSchema.isValidSync({ name: values.name, description: values.description })) {
+      const validFieldsToUpdate = getValidTagPatchFields(fieldsToUpdate, values);
+      if (!productTag || validFieldsToUpdate.length === 0) {
         return;
       }
 
       const previousValues = submittedProductTagValues.current;
-      if (getChangedTagFields(previousValues, values).length === 0) {
+      if (getChangedTagFields(previousValues, values).filter((field) => validFieldsToUpdate.includes(field)).length === 0) {
         return;
       }
       submittedProductTagValues.current = values;
@@ -118,7 +134,7 @@ const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId,
           input: {
             clientMutationId: uuid(),
             id: productTagId,
-            fieldsToUpdate,
+            fieldsToUpdate: validFieldsToUpdate,
             name: values.name,
             description: values.description,
             color: values.color,

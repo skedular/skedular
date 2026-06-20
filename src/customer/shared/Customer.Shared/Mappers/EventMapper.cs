@@ -48,13 +48,15 @@ public class EventMapper : IEventMapper
             {
                 PersonalInformationVisibility.Visible => Api.Shared.Clients.Events.Skedular.Customer.V1.PersonalInformationVisibility.Visible,
                 PersonalInformationVisibility.Redacted => Api.Shared.Clients.Events.Skedular.Customer.V1.PersonalInformationVisibility.Redacted,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.PersonalInformationVisibility), src.PersonalInformationVisibility,
+                    $"Unexpected value for {nameof(src.PersonalInformationVisibility)}: {src.PersonalInformationVisibility}. Update enum mapping or caller input.")
             },
             Type = src.Type switch
             {
                 CustomerType.Guest => Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType.Guest,
                 CustomerType.Registered => Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType.Registered,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
             }
         };
 

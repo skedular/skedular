@@ -1,19 +1,22 @@
 import { RelayError, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { AppBar } from '@/components/appBar';
 import { InfoIcon, SignOutIcon } from '@/components/icons';
-import { getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
+import { getOrganizationAdminSubscriptionsBaseLink, getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
+import { SpacesSubscriptionProvider, type SpacesSubscriptionState } from './spaces-subscription-context';
+import { getSpacesSubscriptionPresentation } from './spaces-subscription-presentation';
 
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { BodyIconTypography, CaptionIconTypography, PushToRight, SmallHeadingIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -46,6 +49,19 @@ const RootQuery = graphql`
         type
       }
     }
+    organizationSpacesSubscription(organizationId: $organizationCustomDomain) {
+      subscriptionStatus
+      accessReason
+      trialStartedAt
+      trialEndsAt
+      remainingTrialDays
+      canUseProduct
+      canAcceptBookings
+      canProtectExistingCommitments
+      upgradeRequired
+      isComplimentaryBridge
+      nextBillingAt
+    }
     ...appBar_query
     ...leftSideNavigationMenu_query
     ...observability_query
@@ -59,11 +75,13 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
   const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
   const pathName = usePathname();
+  const searchParams = useSearchParams();
   const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
   const rootLink = getRootLink(integratedPlatform);
   const welcomeLink = getWelcomeLink(integratedPlatform);
   const areCustomerRecordsSync = !!rootData?.customerReadinessSynced;
+  const spacesSubscription = rootData.organizationSpacesSubscription as SpacesSubscriptionState | null;
 
   useEffect(() => {
     if (reloadCount === maxRetryAttemptsToReload || (rootData.me && areCustomerRecordsSync)) {
@@ -105,14 +123,32 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
     return <Loading message="Kindly hold on as we proceed to activate your account..." />;
   }
 
+  const subscriptionPresentation = getSpacesSubscriptionPresentation(spacesSubscription);
+  const canRenderProduct = !subscriptionPresentation.blocksProduct || (pathName.endsWith('/admin') && searchParams.get('section') === 'subscriptions');
+
   return (
-    <>
+    <SpacesSubscriptionProvider value={spacesSubscription}>
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
         <LeftSideNavigationMenu rootDataRelay={rootData} />
         <Box sx={{ flexGrow: 1 }}>
           <AppBar rootDataRelay={rootData} />
+          {rootData.me.isOnboardingDone && subscriptionPresentation.showBanner ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', px: { xs: 1, sm: 2, md: 3 }, pt: 1.5 }}>
+              <Alert
+                severity={subscriptionPresentation.severity}
+                action={
+                  <Button color="inherit" href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain)} sx={{ whiteSpace: 'nowrap' }}>
+                    Upgrade
+                  </Button>
+                }
+                sx={{ width: '100%', maxWidth: 1200 }}
+              >
+                {subscriptionPresentation.bannerMessage}
+              </Alert>
+            </Box>
+          ) : null}
           {rootData.me.isOnboardingDone && !rootData.organization?.isSsoTokenValid && (
             <Box sx={{ display: 'flex', justifyContent: 'center', px: { xs: 1, sm: 2, md: 3 }, pt: 1.5 }}>
               <Box
@@ -146,38 +182,48 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
               </Box>
             </Box>
           )}
-          {rootData.me.isOnboardingDone &&
-            !rootData.organization?.isOwnershipVerified &&
-            (rootData.organization?.type.type === 'MARKETPLACE' || rootData.organization?.type.type === 'INDIVIDUAL') && (
-              <Box sx={{ display: 'flex', justifyContent: 'center', px: { xs: 1, sm: 2, md: 3 }, pt: 1.5 }}>
-                <Box
-                  sx={{
-                    width: '100%',
-                    maxWidth: 1200,
-                    mx: 'auto',
-                    borderRadius: 3,
-                    border: 1,
-                    borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(217, 119, 6, 0.18)' : 'rgba(251, 191, 36, 0.28)'),
-                    backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 251, 235, 0.92)' : 'rgba(120, 53, 15, 0.24)'),
-                    boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 20px rgba(120, 53, 15, 0.06)' : 'none'),
-                    px: 2,
-                    py: 1.5,
-                  }}
-                >
-                  <StackRow sx={{ alignItems: 'flex-start', gap: 1.5 }}>
-                    <InfoIcon color="warning" excludeTooltip sx={{ mt: 0.25 }} />
-                    <StackColumn sx={{ gap: 0.25 }}>
-                      <BodyIconTypography label="Ownership verification in progress" />
-                      <CaptionIconTypography label="We need to verify ownership for your organization. We will get back to you within 24 hours." />
-                    </StackColumn>
-                  </StackRow>
-                </Box>
+          {rootData.me.isOnboardingDone && !rootData.organization?.isOwnershipVerified && rootData.organization?.type.type === 'MARKETPLACE' && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', px: { xs: 1, sm: 2, md: 3 }, pt: 1.5 }}>
+              <Box
+                sx={{
+                  width: '100%',
+                  maxWidth: 1200,
+                  mx: 'auto',
+                  borderRadius: 3,
+                  border: 1,
+                  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(217, 119, 6, 0.18)' : 'rgba(251, 191, 36, 0.28)'),
+                  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 251, 235, 0.92)' : 'rgba(120, 53, 15, 0.24)'),
+                  boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 20px rgba(120, 53, 15, 0.06)' : 'none'),
+                  px: 2,
+                  py: 1.5,
+                }}
+              >
+                <StackRow sx={{ alignItems: 'flex-start', gap: 1.5 }}>
+                  <InfoIcon color="warning" excludeTooltip sx={{ mt: 0.25 }} />
+                  <StackColumn sx={{ gap: 0.25 }}>
+                    <BodyIconTypography label="Ownership verification in progress" />
+                    <CaptionIconTypography label="We need to verify ownership for your organization. We will get back to you within 24 hours." />
+                  </StackColumn>
+                </StackRow>
               </Box>
-            )}
-          {rootData.me.isOnboardingDone && rootData.organization?.isSsoTokenValid && <>{children}</>}
+            </Box>
+          )}
+          {rootData.me.isOnboardingDone && rootData.organization?.isSsoTokenValid && canRenderProduct ? (
+            <>{children}</>
+          ) : rootData.me.isOnboardingDone && rootData.organization?.isSsoTokenValid ? (
+            <Box sx={{ maxWidth: 760, mx: 'auto', px: 2, py: 8 }}>
+              <StackColumn spacing={2} sx={{ alignItems: 'flex-start' }}>
+                <SmallHeadingIconTypography label="Your Spaces trial has ended" />
+                <BodyIconTypography label="Upgrade to a paid plan to continue using Spaces and accepting bookings. Your listings, bookings, configuration, and history are preserved." />
+                <Button variant="contained" href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain)}>
+                  View upgrade options
+                </Button>
+              </StackColumn>
+            </Box>
+          ) : null}
         </Box>
       </Box>
-    </>
+    </SpacesSubscriptionProvider>
   );
 };
 

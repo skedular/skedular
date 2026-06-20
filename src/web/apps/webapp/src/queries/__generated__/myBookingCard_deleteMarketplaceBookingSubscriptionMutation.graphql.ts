@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5772662a8a55f158fab6b98a252f6bb9>>
+ * @generated SignedSource<<82e2620a012335b7c3260cea11c589fc>>
  * @lightSyntaxTransform
  */
 
@@ -28,7 +28,7 @@ export type myBookingCard_deleteMarketplaceBookingSubscriptionMutation$data = {
         readonly name: string;
         readonly type: MarketplaceBookingSubscriptionStatus;
       };
-    };
+    } | null | undefined;
   };
 };
 export type myBookingCard_deleteMarketplaceBookingSubscriptionMutation = {

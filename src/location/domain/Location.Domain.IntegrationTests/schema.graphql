@@ -1,6 +1,7 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
 type Query {
@@ -103,6 +104,10 @@ type Mutation {
     @cost(weight: "10")
 }
 
+type Subscription {
+  listingProductReady(locationId: String!): HostListingProductReady!
+}
+
 type AreaRange {
   fromInSqm: String!
   toInSqm: String!
@@ -177,6 +182,16 @@ type FloorPlanPayload {
   floorPlan: FloorPlanDetails!
 }
 
+type HostListingProductReady {
+  locationId: String!
+  product: HostListingProductReadyProduct
+}
+
+type HostListingProductReadyProduct {
+  id: String!
+  inactive: Boolean!
+}
+
 type ListingMetadata @shareable {
   about: String
   title: String
@@ -225,6 +240,7 @@ type LocationDetails @key(fields: "id") {
   spaceTypes: [OrganizationTagDetails!]!
   amenities: [OrganizationTagDetails!]!
   resourceTypes: [OrganizationTagDetails!]!
+  productTags: [OrganizationTagDetails!]!
   featureImages: [CdnImageFile!]!
   floorPlanCount: Int!
   extraMetadata: LocationExtraMetadata
@@ -890,6 +906,7 @@ enum OrganizationTagType {
   RESOURCE_ROOM
   RESOURCE_PARKING
   RESOURCE_OTHERS
+  RESOURCE_ENTIRE_LOCATION
   LOCATION_SPACE_TYPE_CAR_PARK_SPACE
   LOCATION_SPACE_TYPE_EVENT_SPACE
   LOCATION_SPACE_TYPE_MEETING_SPACE

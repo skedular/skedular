@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<943e3d71cf72df5778073d646dadef28>>
+ * @generated SignedSource<<4858c164b3863abb19348c8724f5a30a>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
+export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
@@ -36,6 +37,7 @@ export type marketplaceProductDetailBookingCard_product$data = {
   };
   readonly pricingOptions: ReadonlyArray<{
     readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+    readonly availableDays: ReadonlyArray<DayOfWeek> | null | undefined;
     readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
     readonly cancellationRefundRules: ReadonlyArray<{
       readonly minutesBefore: number;
@@ -258,6 +260,13 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "availableDays",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "acceptedPaymentMethods",
           "storageKey": null
         },
@@ -323,6 +332,6 @@ return {
 };
 })();
 
-(node as any).hash = "06783a5b8b0607bf6b6589bb1dbdbefc";
+(node as any).hash = "bec1a8d95d7e5c7588a6378bd2bee5af";
 
 export default node;

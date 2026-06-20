@@ -11,6 +11,7 @@ describe('createWebAppSwitcherModel', () => {
         NEXT_PUBLIC_SITE_URL: 'https://app.skedular.test/',
         NEXT_PUBLIC_SKEDULAR_TEAMS_APP_URL: 'https://teams.skedular.test/',
         NEXT_PUBLIC_SKEDULAR_SPACES_APP_URL: 'https://spaces.skedular.test/',
+        NEXT_PUBLIC_SKEDULAR_HOST_APP_URL: 'https://host.skedular.test/',
       } as NodeJS.ProcessEnv,
     });
 
@@ -19,9 +20,10 @@ describe('createWebAppSwitcherModel', () => {
       ['webapp', 'current'],
       ['webapp-teams', 'available'],
       ['webapp-spaces', 'available'],
+      ['webapp-host', 'available'],
     ]);
     expect(logger.info).toHaveBeenCalledWith(
-      expect.objectContaining({ event: 'web_app_switcher_configuration', availableDestinationCount: 2 }),
+      expect.objectContaining({ event: 'web_app_switcher_configuration', availableDestinationCount: 3 }),
       'Web app switcher configuration resolved',
     );
   });

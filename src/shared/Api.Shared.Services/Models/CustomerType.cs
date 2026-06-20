@@ -23,7 +23,8 @@ public static class CustomerTypeExtensions
                 {
                     CustomerType.Guest => CustomerTypeConstants.Guest,
                     CustomerType.Registered => CustomerTypeConstants.Registered,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
                 };
     }
 
@@ -34,7 +35,8 @@ public static class CustomerTypeExtensions
             {
                 CustomerType.Guest => CustomerTypeConstants.Guest,
                 CustomerType.Registered => CustomerTypeConstants.Registered,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -47,7 +49,8 @@ public static class CustomerTypeExtensions
                 {
                     CustomerTypeConstants.Guest => CustomerType.Guest,
                     CustomerTypeConstants.Registered => CustomerType.Registered,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
                 };
     }
 
@@ -58,7 +61,8 @@ public static class CustomerTypeExtensions
             {
                 CustomerTypeConstants.Guest => CustomerType.Guest,
                 CustomerTypeConstants.Registered => CustomerType.Registered,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 }

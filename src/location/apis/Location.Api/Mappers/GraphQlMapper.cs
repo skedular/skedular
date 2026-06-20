@@ -89,6 +89,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Amenities = MapTo(src.Amenities),
                 ResourceTypes = MapTo(src.Organization.Tags
                     .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))),
+                ProductTags = MapTo(src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Product)),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
                 UniqueClaimCode = src.UniqueClaimCode,
                 ContactedViaEmail = src.ContactedViaEmail,

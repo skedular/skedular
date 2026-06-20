@@ -17,6 +17,7 @@ public class MarketplaceBookingSubscriptionDetails : Node
     [GraphQLName("status")] public MarketplaceBookingSubscriptionStatusDetails Status { get; set; } = new();
     [GraphQLName("autoRenew")] public bool AutoRenew { get; set; }
     [GraphQLName("cancelAtPeriodEnd")] public bool CancelAtPeriodEnd { get; set; }
+    [GraphQLName("weeklySelectedDays")] public IEnumerable<DayOfWeek> WeeklySelectedDays { get; set; } = [];
     [GraphQLName("marketplaceBooking")] public MarketplaceBookingDetails MarketplaceBooking { get; set; } = new();
     [GraphQLName("recurringBookings")] public IEnumerable<RecurringBookingDetails> RecurringBookings { get; set; } = [];
     [GraphQLName("involvedCustomerIds")] public IEnumerable<string> InvolvedCustomerIds { get; set; } = [];
@@ -75,4 +76,14 @@ public static partial class MarketplaceBookingSubscriptionDetailsType
         [Service] IMarketplaceRefundReadService marketplaceRefundReadService,
         CancellationToken cancellationToken) =>
         marketplaceRefundReadService.GetByMarketplaceBookingSubscriptionIdAsync(item.Id, cancellationToken);
+
+    public static async Task<MarketplaceBookingFailureDetails?> GetFailure(
+        [Parent] MarketplaceBookingSubscriptionDetails item,
+        [Service] IMarketplaceBookingFailureReadService failureReadService,
+        [Service] IGraphQlMapper graphQlMapper,
+        CancellationToken cancellationToken)
+    {
+        var failure = await failureReadService.GetBySubscriptionIdAsync(item.Id, cancellationToken);
+        return failure is null ? null : graphQlMapper.MapTo(failure);
+    }
 }

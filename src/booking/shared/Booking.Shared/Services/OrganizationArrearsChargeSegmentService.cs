@@ -234,7 +234,8 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             ProductPricingCadence.FiveMonths => pricing.Price * marketplaceBooking.Quantity,
             ProductPricingCadence.SixMonths => pricing.Price * marketplaceBooking.Quantity,
             ProductPricingCadence.Yearly => pricing.Price * marketplaceBooking.Quantity,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(null,
+                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
         };
     }
 
@@ -262,7 +263,8 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             ProductPricingCadence.FiveMonths => pricing.Price * marketplaceBooking.Quantity,
             ProductPricingCadence.SixMonths => pricing.Price * marketplaceBooking.Quantity,
             ProductPricingCadence.Yearly => pricing.Price * marketplaceBooking.Quantity,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(null,
+                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
         };
     }
 

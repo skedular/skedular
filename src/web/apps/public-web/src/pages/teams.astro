@@ -1,7 +1,10 @@
 ---
 import ProductPageSections from "../components/ProductPageSections.astro";
 import { teamsPage } from "../data/teams-page";
+import { getPublicDestinationUrl } from "../data/public-destination-urls";
 import SiteLayout from "../layouts/SiteLayout.astro";
+
+const teamsAppUrl = getPublicDestinationUrl("PUBLIC_SKEDULAR_TEAMS_APP_URL");
 ---
 
 <SiteLayout
@@ -27,7 +30,7 @@ import SiteLayout from "../layouts/SiteLayout.astro";
         )
       }
       <div class="button-row">
-        <a href="/contact" class="button">Book a demo</a>
+        <a href={teamsAppUrl} class="button" data-cta-id="try-teams">Try Teams</a>
         <a href="/pricing/teams" class="text-link">View Teams pricing</a>
       </div>
     </div>

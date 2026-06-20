@@ -15,6 +15,7 @@ namespace Booking.Shared.Repositories;
 public interface IBookingRepository : IRepository<Database.Entities.Booking>
 {
     Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Database.Entities.Booking?> GetByMarketplaceBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken);
     Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsMinimalAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsWithValidMarketplaceAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<Database.Entities.Booking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
@@ -81,6 +82,8 @@ public static class BookingExtensions
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession)
+            .Include(query => query.RecurringBooking)
+            .ThenInclude(query => query!.RequestedResources)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.PaidByCustomer)
             .Include(query => query.MarketplaceBooking)
@@ -290,6 +293,11 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .AddSingleBookingDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
+    public async Task<Database.Entities.Booking?> GetByMarketplaceBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken) =>
+        await DbContext.Booking
+            .AsNoTracking()
+            .FirstOrDefaultAsync(query => query.MarketplaceBooking != null && query.MarketplaceBooking.Id == marketplaceBookingId, cancellationToken);
+
     public async Task<IReadOnlyList<Database.Entities.Booking>>
         GetByIdsMinimalAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Booking
@@ -421,7 +429,8 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
                     nameof(Database.Entities.Booking.Channel),
                     query => query.Channel,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

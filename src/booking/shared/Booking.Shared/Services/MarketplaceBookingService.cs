@@ -1,5 +1,7 @@
+using System.Data;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
@@ -11,8 +13,15 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Constants = Booking.Shared.GraphQL.Constants;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
+using MarketplaceBookingFailureCategoryConstants = Booking.Shared.Models.MarketplaceBookingFailureCategoryConstants;
+using MarketplaceBookingFailureCustomerActionConstants = Booking.Shared.Models.MarketplaceBookingFailureCustomerActionConstants;
+using MarketplaceBookingFailureFinalization = Booking.Shared.Models.MarketplaceBookingFailureFinalization;
+using MarketplaceBookingFailureRecipient = Booking.Shared.Models.MarketplaceBookingFailureRecipient;
+using MarketplaceBookingFailureScopeConstants = Booking.Shared.Models.MarketplaceBookingFailureScopeConstants;
 
 namespace Booking.Shared.Services;
 
@@ -30,6 +39,9 @@ public interface IMarketplaceBookingService
     /// <param name="organizations">The organizations involved in the booking.</param>
     /// <param name="teams">The teams involved in the booking.</param>
     /// <param name="recurringBooking">The recurring booking if applicable.</param>
+    /// <param name="allowAutomaticResourceAssignment">Whether a resource-less booking may be automatically assigned a resource.</param>
+    /// <param name="finalizeAvailabilityFailure"></param>
+    /// <param name="useExistingTransaction"></param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>The added booking model.</returns>
     Task<Models.Booking> AddAsync(
@@ -38,6 +50,9 @@ public interface IMarketplaceBookingService
         IReadOnlyList<Organization> organizations,
         IReadOnlyList<Team> teams,
         RecurringBooking? recurringBooking,
+        bool allowAutomaticResourceAssignment,
+        bool finalizeAvailabilityFailure,
+        bool useExistingTransaction,
         CancellationToken cancellationToken);
 
     /// <summary>
@@ -108,7 +123,12 @@ public class MarketplaceBookingService(
     MarketplaceRefundPolicyService marketplaceRefundPolicyService,
     IMarketplaceRefundService marketplaceRefundService,
     IMarketplaceRefundAutomationService marketplaceRefundAutomationService,
-    IMarketplaceRefundNotificationService marketplaceRefundNotificationService) : IMarketplaceBookingService
+    IMarketplaceRefundNotificationService marketplaceRefundNotificationService,
+    ISpacesBookingQuotaService spacesBookingQuotaService,
+    IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
+    IMarketplaceBookingFailureService marketplaceBookingFailureService,
+    IMarketplaceBookingFailureNotificationService marketplaceBookingFailureNotificationService,
+    ILogger<MarketplaceBookingService> logger) : IMarketplaceBookingService
 {
     /// <summary>
     ///     Adds a new marketplace booking.
@@ -120,6 +140,9 @@ public class MarketplaceBookingService(
     /// <param name="organizations">The organizations involved in the booking.</param>
     /// <param name="teams">The teams involved in the booking.</param>
     /// <param name="recurringBooking">The recurring booking if applicable.</param>
+    /// <param name="allowAutomaticResourceAssignment">Whether a resource-less booking may be automatically assigned a resource.</param>
+    /// <param name="finalizeAvailabilityFailure"></param>
+    /// <param name="useExistingTransaction"></param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>The added booking model.</returns>
     /// <exception cref="CustomerNotFound">Thrown when customer entities cannot be found.</exception>
@@ -134,6 +157,9 @@ public class MarketplaceBookingService(
         IReadOnlyList<Organization> organizations,
         IReadOnlyList<Team> teams,
         RecurringBooking? recurringBooking,
+        bool allowAutomaticResourceAssignment,
+        bool finalizeAvailabilityFailure,
+        bool useExistingTransaction,
         CancellationToken cancellationToken)
     {
         ValidateBookingWindowWithinSingleDay(booking);
@@ -176,6 +202,21 @@ public class MarketplaceBookingService(
 
         ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.BookingCadence, recurringBooking);
 
+        // Reject disallowed dates before asking any availability service to allocate slots.
+        if (!marketplaceBookingAvailableDaysService.IsAvailable(
+                marketplaceBooking.ProductPricing,
+                booking.From,
+                out var selectedLocalDate))
+        {
+            logger.LogWarning(
+                "Rejected marketplace booking for unavailable price day. ProductVersionId: {ProductVersionId}, PricingId: {PricingId}, BookingFrom: {BookingFrom}, LocalDate: {LocalDate}",
+                productVersion.Id,
+                marketplaceBooking.ProductPricing.Id,
+                booking.From,
+                selectedLocalDate);
+            throw new MarketplaceBookingDateUnavailable();
+        }
+
         var isEventProduct = productVersion.Type == ProductTypeConstants.Event;
         NormalizeEventQuantity(isEventProduct, marketplaceBooking);
         var requestedResourceCount = ResolveRequestedResourceCount(isEventProduct, marketplaceBooking);
@@ -203,9 +244,20 @@ public class MarketplaceBookingService(
             throw new BookingPaymentMethodNotAccepted();
         }
 
-        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+        // Availability is re-evaluated as part of this transaction by the resource-selection
+        // queries below. PostgreSQL serializable isolation rejects a conflicting concurrent
+        // claim instead of allowing two checkout attempts to attach the same slot.
+        // Initial series materialization opens one serializable transaction around all
+        // occurrences. Its individual booking adds must participate in that transaction.
+        var ownsTransaction = !useExistingTransaction;
+        var transaction = ownsTransaction
+            ? await transactionBuilder.BeginTransactionAsync(
+                repositoryFactory.UnitOfWork,
+                IsolationLevel.Serializable,
+                cancellationToken)
+            : null;
 
-        if (resources.Count == 0)
+        if (resources.Count == 0 && allowAutomaticResourceAssignment)
         {
             resources = isEventProduct
                 ? await marketplaceEventResourceService.PickEventResourcesAsync(
@@ -222,16 +274,35 @@ public class MarketplaceBookingService(
                     cancellationToken);
         }
 
-        var slots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
-        foreach (var slot in slots)
+        if (resources.Count < requestedResourceCount)
         {
-            foreach (var matchingCustomerEntity in customerEntities)
+            if (ownsTransaction)
             {
-                slot.Customers.Add(matchingCustomerEntity);
+                await transaction!.RollbackAsync(cancellationToken);
+                repositoryFactory.ResetChangeTracker();
             }
-        }
 
-        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
+            if (!finalizeAvailabilityFailure)
+            {
+                throw new MarketplaceBookingAvailabilityConflict([]);
+            }
+
+            var recipients = await marketplaceBookingFailureNotificationService.ResolveRecipientsAsync(
+                customer,
+                organizations.Select(item => item.Id).ToList(),
+                cancellationToken);
+            var requestedResourceIds = booking.Resources.Select(r => r.Resource.Id).ToList();
+            var failure = await FinalizeSubmissionAvailabilityConflictAsync(
+                booking.Id,
+                null,
+                booking.From,
+                booking.Until,
+                requestedResourceIds,
+                customer.Id,
+                recipients,
+                cancellationToken);
+            throw new MarketplaceBookingAvailabilityConflict([], failure);
+        }
 
         var marketplaceBookingEntity = entityMapper.MapTo(marketplaceBooking, customer, null, productVersion, null);
         var paymentExpiry = timeProvider
@@ -258,6 +329,72 @@ public class MarketplaceBookingService(
         bookingEntity.Channel = BookingChannelConstants.Marketplace;
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
+        var claim = await repositoryFactory.ResourceRepository.TryClaimCompleteSlotSetAsync(
+            bookingEntity,
+            resources.Select(item => item.Id).ToList(),
+            cancellationToken);
+        if (!claim.Claimed)
+        {
+            logger.LogInformation(
+                "Marketplace booking availability claim conflicted. BookingId={BookingId}, UnavailableResourceCount={UnavailableResourceCount}",
+                bookingEntity.Id,
+                claim.UnavailableResourceIds.Count);
+            if (ownsTransaction)
+            {
+                await transaction!.RollbackAsync(cancellationToken);
+                repositoryFactory.ResetChangeTracker();
+            }
+
+            if (!finalizeAvailabilityFailure)
+            {
+                throw new MarketplaceBookingAvailabilityConflict(claim.UnavailableResourceIds);
+            }
+
+            var recipients = await marketplaceBookingFailureNotificationService.ResolveRecipientsAsync(
+                customer,
+                organizations.Select(item => item.Id).ToList(),
+                cancellationToken);
+            var failure = await FinalizeSubmissionAvailabilityConflictAsync(
+                booking.Id,
+                null,
+                booking.From,
+                booking.Until,
+                resources.Select(r => r.Id).ToList(),
+                customer.Id,
+                recipients,
+                cancellationToken);
+            throw new MarketplaceBookingAvailabilityConflict(claim.UnavailableResourceIds, failure);
+        }
+
+        foreach (var organization in organizations.DistinctBy(item => item.Id).Where(ShouldEnforceSpacesQuota))
+        {
+            var decision = await spacesBookingQuotaService.TryReserveBookingInstancesAsync(
+                organization.Id,
+                [booking.From.ToUniversalTime()],
+                cancellationToken);
+
+            if (!decision.CanCreate)
+            {
+                if (decision.AccessDecision is { Allowed: false } accessDecision)
+                {
+                    throw new SpacesAccessDenied(accessDecision);
+                }
+
+                if (decision.ReasonCode == SpacesQuotaReasonCode.MissingOfferingState)
+                {
+                    throw new SpacesOfferingStateMissing();
+                }
+
+                throw new SpacesBookingQuotaExceeded(
+                    decision.ReasonCode,
+                    decision.CurrentUsage,
+                    decision.QuotaLimit,
+                    decision.AttemptedCurrentPeriodCount,
+                    decision.ExcludedOutOfPeriodCount,
+                    decision.RemainingQuota,
+                    decision.UpgradePlans);
+            }
+        }
 
         booking = entityMapper.MapTo(bookingEntity);
 
@@ -295,15 +432,59 @@ public class MarketplaceBookingService(
                         break;
 
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException(nameof(marketplaceBooking.PaymentMethod), marketplaceBooking.PaymentMethod,
+                            $"Unexpected value for {nameof(marketplaceBooking.PaymentMethod)}: {marketplaceBooking.PaymentMethod}. Update enum mapping or caller input.");
                 }
             }
         }
 
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
+        try
+        {
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            if (ownsTransaction)
+            {
+                await transaction!.CommitAsync(cancellationToken);
+            }
+        }
+        catch (DbUpdateException exception) when (IsSerializableConflict(exception))
+        {
+            if (!ownsTransaction)
+            {
+                if (!finalizeAvailabilityFailure)
+                {
+                    throw new MarketplaceBookingAvailabilityConflict(resources.Select(item => item.Id).ToList());
+                }
 
-        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
+                throw;
+            }
+
+            await transaction!.RollbackAsync(cancellationToken);
+            repositoryFactory.ResetChangeTracker();
+            if (!finalizeAvailabilityFailure)
+            {
+                throw new MarketplaceBookingAvailabilityConflict(resources.Select(item => item.Id).ToList());
+            }
+
+            var recipients = await marketplaceBookingFailureNotificationService.ResolveRecipientsAsync(
+                customer,
+                organizations.Select(item => item.Id).ToList(),
+                cancellationToken);
+            var failure = await FinalizeSubmissionAvailabilityConflictAsync(
+                booking.Id,
+                null,
+                booking.From,
+                booking.Until,
+                resources.Select(item => item.Id).ToList(),
+                customer.Id,
+                recipients,
+                cancellationToken);
+            throw new MarketplaceBookingAvailabilityConflict(resources.Select(item => item.Id).ToList(), failure);
+        }
+
+        if (ownsTransaction)
+        {
+            await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
+        }
 
         return booking;
     }
@@ -348,6 +529,18 @@ public class MarketplaceBookingService(
         if (customerEntities.Count != customerIds.Count)
         {
             throw new CustomerNotFound();
+        }
+
+        foreach (var organization in organizations.DistinctBy(item => item.Id).Where(ShouldEnforceSpacesQuota))
+        {
+            var accessDecision = await spacesBookingQuotaService.EvaluateAccessAsync(
+                organization.Id,
+                SpacesAccessAction.CreateOrModify,
+                cancellationToken);
+            if (!accessDecision.Allowed)
+            {
+                throw new SpacesAccessDenied(accessDecision);
+            }
         }
 
         var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -549,7 +742,9 @@ public class MarketplaceBookingService(
                     temporalOutboxService.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
                     break;
 
-                default: throw new ArgumentOutOfRangeException();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(marketplaceBooking.PaymentMethod), marketplaceBooking.PaymentMethod,
+                        $"Unexpected value for {nameof(marketplaceBooking.PaymentMethod)}: {marketplaceBooking.PaymentMethod}. Update enum mapping or caller input.");
             }
         }
 
@@ -609,6 +804,11 @@ public class MarketplaceBookingService(
         }
 
         var resourceIds = booking.InvolvedResources.Select(item => item.Id).ToList();
+        if (resourceIds.Count == 0 && booking.RecurringBooking?.RequestedResources.Count > 0)
+        {
+            resourceIds = booking.RecurringBooking.RequestedResources.Select(item => item.Id).ToList();
+        }
+
         var isEventProduct = productVersion.Type == ProductTypeConstants.Event;
         NormalizeEventQuantity(isEventProduct, marketplaceBooking);
         var requestedResourceCount = ResolveRequestedResourceCount(isEventProduct, marketplaceBooking);
@@ -618,7 +818,10 @@ public class MarketplaceBookingService(
             booking.From,
             booking.Until,
             resourceIds,
-            [],
+            productVersion.OrganizationTags
+                .Where(item => item.Type == OrganizationTagTypeConstants.Product)
+                .Select(item => item.Id)
+                .ToList(),
             [],
             cancellationToken);
 
@@ -643,6 +846,22 @@ public class MarketplaceBookingService(
                     cancellationToken);
         }
 
+        // An untouched shell is only considered repaired once the full compatible resource
+        // requirement can be met. Do not turn a shell into a partial or incompatible booking.
+        if (resources.Count < requiredAvailableResources)
+        {
+            logger.LogWarning(
+                "Marketplace booking resource repair could not satisfy the required compatible resource count. BookingId: {BookingId}, RequiredResourceCount: {RequiredResourceCount}, AvailableResourceCount: {AvailableResourceCount}",
+                booking.Id,
+                requiredAvailableResources,
+                resources.Count);
+            resources = [];
+        }
+        else if (requiredAvailableResources > 0)
+        {
+            resources = resources.Take(requiredAvailableResources).ToList();
+        }
+
         var slots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
         foreach (var slot in slots)
         {
@@ -664,6 +883,45 @@ public class MarketplaceBookingService(
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
 
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+    }
+
+    private static bool ShouldEnforceSpacesQuota(Organization organization) =>
+        organization.Type == OrganizationTypeConstants.Marketplace;
+
+    private static bool IsSerializableConflict(DbUpdateException exception) =>
+        exception.InnerException?.Message.Contains("40001", StringComparison.Ordinal) == true ||
+        exception.Message.Contains("40001", StringComparison.Ordinal);
+
+    private async Task<string> FinalizeSubmissionAvailabilityConflictAsync(
+        string? bookingId,
+        string? recurringBookingId,
+        DateTimeOffset requestedFrom,
+        DateTimeOffset requestedUntil,
+        IReadOnlyCollection<string> requestedResourceIds,
+        string? actorCustomerId,
+        IReadOnlyCollection<MarketplaceBookingFailureRecipient> recipients,
+        CancellationToken cancellationToken)
+    {
+        var failure = await marketplaceBookingFailureService.FinalizeAsync(
+            new MarketplaceBookingFailureFinalization(
+                null,
+                MarketplaceBookingFailureCategoryConstants.AvailabilityConflict,
+                MarketplaceBookingFailureScopeConstants.OneTimeBooking,
+                timeProvider.GetUtcNow(),
+                bookingId,
+                recurringBookingId,
+                null,
+                requestedFrom,
+                requestedUntil,
+                requestedResourceIds,
+                MarketplaceBookingFailureCustomerActionConstants.Rebook,
+                bookingId,
+                "The requested booking capacity is no longer available.",
+                actorCustomerId,
+                recipients),
+            cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        return failure.Id;
     }
 
     /// <summary>
@@ -791,7 +1049,8 @@ public class MarketplaceBookingService(
         {
             PaymentMethod.Card => pricing.MaxAllowedResourcesLockTimePaidViaCard,
             PaymentMethod.BankTransfer => pricing.MaxAllowedResourcesLockTimePaidViaBankTransfer,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(nameof(paymentMethod), paymentMethod,
+                $"Unexpected value for {nameof(paymentMethod)}: {paymentMethod}. Update enum mapping or caller input.")
         };
 
     /// <summary>

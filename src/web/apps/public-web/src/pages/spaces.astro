@@ -1,7 +1,10 @@
 ---
 import ProductPageSections from "../components/ProductPageSections.astro";
 import { spacesPage } from "../data/spaces-page";
+import { getPublicDestinationUrl } from "../data/public-destination-urls";
 import SiteLayout from "../layouts/SiteLayout.astro";
+
+const spacesAppUrl = getPublicDestinationUrl("PUBLIC_SKEDULAR_SPACES_APP_URL");
 ---
 
 <SiteLayout
@@ -27,7 +30,7 @@ import SiteLayout from "../layouts/SiteLayout.astro";
         )
       }
       <div class="button-row">
-        <a href="/contact" class="button">Book a demo</a>
+        <a href={spacesAppUrl} class="button" data-cta-id="try-spaces">Try Spaces</a>
         <a href="/pricing/spaces" class="text-link">View Spaces pricing</a>
       </div>
     </div>

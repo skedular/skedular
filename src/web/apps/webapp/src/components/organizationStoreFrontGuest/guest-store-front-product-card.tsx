@@ -60,6 +60,7 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationC
           price
           isTaxInclusive
           supportsSubscriptionAutoRenewal
+          availableDays
         }
       }
     `,
@@ -79,6 +80,7 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationC
           cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
           amountLabel: formatPriceForDisplay(currency, option.price, option.purchaseCadence),
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
+          availableDays: option.availableDays ?? [],
         })),
     [currency, product.pricingOptions, rootData.productPricingCadences],
   );

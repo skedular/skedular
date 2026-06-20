@@ -24,7 +24,7 @@ describe('app-switcher-logger', () => {
       currentAppId: 'webapp',
       availableDestinationCount: 0,
       invalidDestinationAppIds: ['webapp-teams'],
-      missingDestinationAppIds: ['webapp-spaces'],
+      missingDestinationAppIds: ['webapp-spaces', 'webapp-host'],
       correlationId: 'correlation-id',
     });
   });

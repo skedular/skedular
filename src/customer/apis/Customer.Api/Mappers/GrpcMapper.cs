@@ -48,13 +48,15 @@ public class GrpcMapper : IGrpcMapper
                 PersonalInformationVisibility.Visible => global::Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility.Visible,
                 PersonalInformationVisibility.Redacted =>
                     global::Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility.Redacted,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.PersonalInformationVisibility), src.PersonalInformationVisibility,
+                    $"Unexpected value for {nameof(src.PersonalInformationVisibility)}: {src.PersonalInformationVisibility}. Update enum mapping or caller input.")
             },
             Type = src.Type switch
             {
                 CustomerType.Guest => global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Guest,
                 CustomerType.Registered => global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
             }
         };
 
@@ -112,13 +114,15 @@ public class GrpcMapper : IGrpcMapper
                 global::Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility.Visible => PersonalInformationVisibility.Visible,
                 global::Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility.Redacted =>
                     PersonalInformationVisibility.Redacted,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.PersonalInformationVisibility), src.PersonalInformationVisibility,
+                    $"Unexpected value for {nameof(src.PersonalInformationVisibility)}: {src.PersonalInformationVisibility}. Update enum mapping or caller input.")
             },
             Type = src.Type switch
             {
                 global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Guest => CustomerType.Guest,
                 global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered => CustomerType.Registered,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
             }
         };
 

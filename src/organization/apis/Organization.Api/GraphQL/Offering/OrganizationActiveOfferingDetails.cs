@@ -13,6 +13,7 @@ public class OrganizationActiveOfferingDetails : Node
     [GraphQLName("end")] public DateTimeOffset End { get; set; }
     [GraphQLName("unitPrice")] public int? UnitPrice { get; set; }
     [GraphQLName("fixedPrice")] public int? FixedPrice { get; set; }
+    [GraphQLName("discountPercentage")] public int DiscountPercentage { get; set; }
     [GraphQLName("currency")] public CurrencyDetails Currency { get; set; } = new();
     [GraphQLName("catalogVersion")] public CatalogVersionDetails? CatalogVersion { get; set; }
     [GraphQLName("purchasedUserCapacity")] public int? PurchasedUserCapacity { get; set; }

@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using HotChocolate.Types.Composite;
 
 namespace Api.Shared.Services.Models;
@@ -20,7 +22,10 @@ public record ProductPricing(
     int MaxAllowedResourcesLockTimePaidViaBankTransfer,
     int NumberOfResourcesToBook,
     ProductPricingCancellationPolicyType CancellationPolicyType,
-    IReadOnlyList<ProductPricingCancellationRefundRule> CancellationRefundRules)
+    IReadOnlyList<ProductPricingCancellationRefundRule> CancellationRefundRules,
+    [property: JsonConverter(typeof(DayOfWeekListJsonConverter))]
+    IReadOnlyList<DayOfWeek>? AvailableDays = null,
+    int? RequiredDaysPerWeek = null)
 {
     public static ProductPricing Empty(string id) =>
         new(
@@ -41,4 +46,17 @@ public record ProductPricing(
             int.MinValue,
             ProductPricingCancellationPolicyType.NotSet,
             []);
+}
+
+/// <summary>Persists price availability as readable JSON strings while retaining enum models.</summary>
+public sealed class DayOfWeekListJsonConverter : JsonConverter<IReadOnlyList<DayOfWeek>>
+{
+    public override IReadOnlyList<DayOfWeek> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        var days = JsonSerializer.Deserialize<List<string>>(ref reader, options) ?? [];
+        return days.Select(Enum.Parse<DayOfWeek>).ToList();
+    }
+
+    public override void Write(Utf8JsonWriter writer, IReadOnlyList<DayOfWeek> value, JsonSerializerOptions options) =>
+        JsonSerializer.Serialize(writer, value.Select(item => item.ToString()).ToList(), options);
 }

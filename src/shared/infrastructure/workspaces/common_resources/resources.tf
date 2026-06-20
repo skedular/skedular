@@ -73,36 +73,6 @@ resource "aws_ssm_parameter" "stripe_pay_as_you_go_v1_product_unit_amount" {
   tags  = local.tags
 }
 
-resource "cloudflare_dns_record" "cloudflare_dns_record_production" {
-  count   = local.is_staging ? 0 : 1
-  zone_id = module.common.cloudflare_public_website_zone_id
-  name    = "@"
-  content = "35.213.200.184"
-  type    = "A"
-  proxied = false
-  ttl     = 600
-}
-
-resource "cloudflare_dns_record" "cloudflare_dns_record_production_www_public_website" {
-  count   = local.is_staging ? 0 : 1
-  zone_id = module.common.cloudflare_public_website_zone_id
-  name    = "www"
-  content = "35.213.200.184"
-  type    = "A"
-  proxied = true
-  ttl     = 1
-}
-
-resource "cloudflare_dns_record" "cloudflare_dns_record_production_staging" {
-  count   = local.is_staging ? 1 : 0
-  zone_id = module.common.cloudflare_public_website_zone_id
-  name    = "staging"
-  content = "35.213.200.184"
-  type    = "A"
-  proxied = false
-  ttl     = 600
-}
-
 resource "cloudflare_dns_record" "cloudflare_dns_record_production_www_webapp" {
   count   = local.is_staging ? 0 : 1
   zone_id = module.common.cloudflare_webapp_zone_id

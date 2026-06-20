@@ -24,7 +24,8 @@ public static class OrganizationBillingCycleExtensions
                 OrganizationBillingCycle.Weekly => OrganizationBillingCycleConstants.Weekly,
                 OrganizationBillingCycle.Fortnightly => OrganizationBillingCycleConstants.Fortnightly,
                 OrganizationBillingCycle.Monthly => OrganizationBillingCycleConstants.Monthly,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public string ToOrganizationBillingCycleName() =>
@@ -33,7 +34,8 @@ public static class OrganizationBillingCycleExtensions
                 OrganizationBillingCycle.Weekly => "Weekly",
                 OrganizationBillingCycle.Fortnightly => "Fortnightly",
                 OrganizationBillingCycle.Monthly => "Monthly",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -45,7 +47,8 @@ public static class OrganizationBillingCycleExtensions
                 OrganizationBillingCycleConstants.Weekly => OrganizationBillingCycle.Weekly,
                 OrganizationBillingCycleConstants.Fortnightly => OrganizationBillingCycle.Fortnightly,
                 OrganizationBillingCycleConstants.Monthly => OrganizationBillingCycle.Monthly,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 }

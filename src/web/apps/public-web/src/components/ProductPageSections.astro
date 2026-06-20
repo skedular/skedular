@@ -1,5 +1,6 @@
 ---
 import type { ProductPageContent } from "../data/content-types";
+import { getPublicDestinationUrl } from "../data/public-destination-urls";
 import { getCta } from "../data/ctas";
 import CtaLink from "./CtaLink.astro";
 import SlackInstallButton from "./SlackInstallButton.astro";
@@ -8,7 +9,15 @@ interface Props {
   page: ProductPageContent;
 }
 
-const { page } = Astro.props;
+const { page } = Astro.props as Props;
+
+const resolveProductCtaHref = (href: string) => {
+  if (href === "PUBLIC_SKEDULAR_TEAMS_APP_URL" || href === "PUBLIC_SKEDULAR_SPACES_APP_URL" || href === "PUBLIC_SKEDULAR_HOST_APP_URL") {
+    return getPublicDestinationUrl(href);
+  }
+
+  return href;
+};
 
 // Hero Icons - SVG components
 const CheckIcon =
@@ -87,7 +96,7 @@ const BrandIcon =
           <p>{page.whyOrganizationsNeedMore.description}</p>
         </div>
         <div class="benefits-grid">
-          {page.whyOrganizationsNeedMore.cards.map((card) => (
+          {page.whyOrganizationsNeedMore.cards.map((card: { title: string; description: string }, _index: number) => (
             <article class="benefit-card">
               <div class="benefit-card-icon" set:html={CheckIcon()} />
               <h3>{card.title}</h3>
@@ -210,7 +219,7 @@ const BrandIcon =
           <h2 id="why-choose-title">{page.whyChooseUs.heading}</h2>
         </div>
         <div class="why-choose-grid">
-          {page.whyChooseUs.cards.map((card, index) => (
+          {page.whyChooseUs.cards.map((card: { title: string; description: string }, index: number) => (
             <article class="why-choose-card">
               {page.id === "spaces" ? (
                 <>
@@ -295,8 +304,15 @@ const BrandIcon =
                 <h2>{section.heading}</h2>
                 <p>{section.subheading}</p>
               </div>
-              <div class="screenshot-placeholder" aria-label={`${section.placeholderText} preview`}>
-                <span class="screenshot-placeholder-text">{section.placeholderText}</span>
+              <div
+                class={`screenshot-placeholder ${section.imageSrc ? "" : "screenshot-placeholder--empty"}`}
+                aria-label={section.imageSrc ? `${section.heading} screenshot` : `${section.placeholderText} preview`}
+              >
+                {section.imageSrc ? (
+                  <img class="screenshot-image" src={section.imageSrc} alt={`${section.heading} screenshot`} loading="lazy" />
+                ) : (
+                  <span class="screenshot-placeholder-text">{section.placeholderText}</span>
+                )}
               </div>
             </div>
           </div>
@@ -439,12 +455,12 @@ const BrandIcon =
           <p>{page.finalCTA.description}</p>
           <div class="button-row" style="justify-content: center; flex-wrap: wrap;">
             {page.finalCTA.primaryCTA && (
-              <a href={page.finalCTA.primaryCTA.href} class="button">
+              <a href={resolveProductCtaHref(page.finalCTA.primaryCTA.href)} class="button">
                 {page.finalCTA.primaryCTA.label}
               </a>
             )}
             {page.finalCTA.secondaryCTA && (
-              <a href={page.finalCTA.secondaryCTA.href} class="text-link">
+              <a href={resolveProductCtaHref(page.finalCTA.secondaryCTA.href)} class="text-link">
                 {page.finalCTA.secondaryCTA.label}
               </a>
             )}

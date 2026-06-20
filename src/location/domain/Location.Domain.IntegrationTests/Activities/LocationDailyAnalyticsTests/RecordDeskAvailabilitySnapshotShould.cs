@@ -47,7 +47,7 @@ public class RecordDeskAvailabilitySnapshotShould(
         var now = timeProvider.GetUtcNow();
 
         var org = new Organization { Id = organizationId, CreatedAt = now };
-        repositoryFactory.DbContext.Organization.Add(org);
+        await repositoryFactory.DbContext.Organization.AddAsync(org, cancellationToken);
 
         var location = new LocationEntity
         {
@@ -57,10 +57,10 @@ public class RecordDeskAvailabilitySnapshotShould(
             Type = LocationTypeConstants.Private,
             CreatedAt = now
         };
-        repositoryFactory.DbContext.Location.Add(location);
+        await repositoryFactory.DbContext.Location.AddAsync(location, cancellationToken);
 
         var deskTag = new OrganizationTag { Id = deskTagId, Type = OrganizationTagTypeConstants.ResourceDesk, Organization = org, CreatedAt = now };
-        repositoryFactory.DbContext.OrganizationTag.Add(deskTag);
+        await repositoryFactory.DbContext.OrganizationTag.AddAsync(deskTag, cancellationToken);
 
         for (var i = 0; i < deskCount; i++)
         {
@@ -69,7 +69,7 @@ public class RecordDeskAvailabilitySnapshotShould(
                 Id = await Nanoid.GenerateAsync(), Name = $"Desk {i + 1:D2}", Location = location, CreatedAt = now
             };
             resource.OrganizationTags.Add(deskTag);
-            repositoryFactory.DbContext.Resource.Add(resource);
+            await repositoryFactory.DbContext.Resource.AddAsync(resource, cancellationToken);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

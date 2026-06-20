@@ -6,7 +6,10 @@ export const capabilityClaims: CapabilityClaim[] = [
     claimText:
       "Teams supports desk, room, parking, equipment, team attendance, floor plans, analytics, Slack, Microsoft Teams, and enterprise identity content.",
     claimType: "product-capability",
-    sourceRefs: ["draft:teams-product-page", "draft:complete-feature-inventory"],
+    sourceRefs: [
+      "draft:teams-product-page",
+      "draft:complete-feature-inventory",
+    ],
     reviewStatus: "pending",
     publishedPageIds: ["teams", "workplace-integrations"],
   },
@@ -17,23 +20,33 @@ export const capabilityClaims: CapabilityClaim[] = [
     claimType: "product-capability",
     sourceRefs: ["draft:spaces-product-page", "draft:pricing-strategy"],
     reviewStatus: "pending",
-    publishedPageIds: ["spaces", "payments-billing-invoicing", "operator-publishing"],
+    publishedPageIds: [
+      "spaces",
+      "payments-billing-invoicing",
+      "operator-publishing",
+    ],
   },
   {
     id: "pricing-values",
-    claimText: "Pricing uses draft Teams tiers, Spaces tiers, and host commission range.",
+    claimText:
+      "Pricing uses Teams active-user tiers and Spaces fixed monthly plans based on booking-instance volume.",
     claimType: "pricing",
-    sourceRefs: ["draft:pricing-strategy"],
+    sourceRefs: ["spec:028-skedular-spaces-pricing", "draft:pricing-strategy"],
     reviewStatus: "pending",
     publishedPageIds: ["pricing"],
   },
   {
     id: "comparison-neutrality",
-    claimText: "Comparison pages use neutral reviewed positioning and no unverified competitor claims.",
+    claimText:
+      "Comparison pages use neutral reviewed positioning and no unverified competitor claims.",
     claimType: "competitor",
     sourceRefs: ["draft:comparison-pages"],
     reviewStatus: "pending",
-    publishedPageIds: ["skedular-vs-skedda", "skedular-vs-robin", "skedular-vs-envoy"],
+    publishedPageIds: [
+      "skedular-vs-skedda",
+      "skedular-vs-robin",
+      "skedular-vs-envoy",
+    ],
   },
 ];
 

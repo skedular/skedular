@@ -6,6 +6,7 @@ export type MarketplaceProductPricingPlan = {
   cadenceLabel: string;
   amountLabel: string;
   note: string;
+  availableDays: readonly string[];
   cancellationPolicyType: string | null | undefined;
   cancellationRefundRules: ReadonlyArray<{ minutesBefore: number; refundPercentage: number }> | null | undefined;
 };

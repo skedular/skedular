@@ -37,7 +37,8 @@ public class OrganizationTagsGrpcService(
                 {
                     TagOrderField.Name => OrganizationTagOrderField.Name,
                     TagOrderField.Description => OrganizationTagOrderField.Description,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
                 };
 
                 return new TagOrder(direction, field);
@@ -84,7 +85,8 @@ public class OrganizationTagsGrpcService(
                 {
                     TagOrderField.Name => OrganizationTagOrderField.Name,
                     TagOrderField.Description => OrganizationTagOrderField.Description,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
                 };
 
                 return new TagOrder(direction, field);
@@ -157,7 +159,8 @@ public class OrganizationTagsGrpcService(
                 {
                     CustomTagOrderField.Name => OrganizationTagOrderField.Name,
                     CustomTagOrderField.Description => OrganizationTagOrderField.Description,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
                 };
 
                 return new TagOrder(direction, field);
@@ -234,7 +237,8 @@ public class OrganizationTagsGrpcService(
                 {
                     ProductTagOrderField.Name => OrganizationTagOrderField.Name,
                     ProductTagOrderField.Description => OrganizationTagOrderField.Description,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
                 };
 
                 return new TagOrder(direction, field);
@@ -276,7 +280,7 @@ public class OrganizationTagsGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return grpcMapper.MapToGrpcResponseProductTag(await tagService.AddAsync(grpcMapper.MapTo(request), false, context.CancellationToken));
+        return grpcMapper.MapToGrpcResponseProductTag(await tagService.AddAsync(grpcMapper.MapTo(request), true, context.CancellationToken));
     }
 
     public override async Task<ProductTag> UpdateProductTag(UpdateTagInput request, ServerCallContext context)

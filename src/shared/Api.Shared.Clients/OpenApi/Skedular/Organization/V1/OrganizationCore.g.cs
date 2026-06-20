@@ -40,12 +40,21 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// change organization offering
+        /// change organization offering by Id
         /// </summary>
         /// <param name="x_API_Key">API Key</param>
         /// <returns>the status of changing organization offering</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task ChangeOrganizationOfferingAsync(string organizationId, string offeringCode, string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        System.Threading.Tasks.Task ChangeOrganizationOfferingByIdAsync(string organizationId, OfferingCode offeringCode, string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// change organization offering by custom domain
+        /// </summary>
+        /// <param name="x_API_Key">API Key</param>
+        /// <returns>the status of changing organization offering</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task ChangeOrganizationOfferingByCustomDomainAsync(string customDomain, OfferingCode offeringCode, string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
@@ -261,12 +270,12 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// change organization offering
+        /// change organization offering by Id
         /// </summary>
         /// <param name="x_API_Key">API Key</param>
         /// <returns>the status of changing organization offering</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task ChangeOrganizationOfferingAsync(string organizationId, string offeringCode, string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task ChangeOrganizationOfferingByIdAsync(string organizationId, OfferingCode offeringCode, string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (organizationId == null)
                 throw new System.ArgumentNullException("organizationId");
@@ -289,10 +298,97 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
 
                     var urlBuilder_ = new System.Text.StringBuilder();
                 
-                    // Operation Path: "v1/organization/{organizationId}/offering/{offeringCode}"
+                    // Operation Path: "v1/organization/{organizationId}/changeOrganizationOfferingById/{offeringCode}"
                     urlBuilder_.Append("v1/organization/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(organizationId, System.Globalization.CultureInfo.InvariantCulture)));
-                    urlBuilder_.Append("/offering/");
+                    urlBuilder_.Append("/changeOrganizationOfferingById/");
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(offeringCode, System.Globalization.CultureInfo.InvariantCulture)));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IEnumerable<string>>();
+                        foreach (var item_ in response_.Headers)
+                            headers_[item_.Key] = item_.Value;
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new ApiException<ProblemDetails>("unexpected error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// change organization offering by custom domain
+        /// </summary>
+        /// <param name="x_API_Key">API Key</param>
+        /// <returns>the status of changing organization offering</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task ChangeOrganizationOfferingByCustomDomainAsync(string customDomain, OfferingCode offeringCode, string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        {
+            if (customDomain == null)
+                throw new System.ArgumentNullException("customDomain");
+
+            if (offeringCode == null)
+                throw new System.ArgumentNullException("offeringCode");
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+
+                    if (x_API_Key == null)
+                        throw new System.ArgumentNullException("x_API_Key");
+                    request_.Headers.TryAddWithoutValidation("X-API-Key", ConvertToString(x_API_Key, System.Globalization.CultureInfo.InvariantCulture));
+                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
+                    request_.Method = new System.Net.Http.HttpMethod("PUT");
+
+                    var urlBuilder_ = new System.Text.StringBuilder();
+                
+                    // Operation Path: "v1/organization/{customDomain}/changeOrganizationOfferingByCustomDomain/{offeringCode}"
+                    urlBuilder_.Append("v1/organization/");
+                    urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(customDomain, System.Globalization.CultureInfo.InvariantCulture)));
+                    urlBuilder_.Append("/changeOrganizationOfferingByCustomDomain/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(offeringCode, System.Globalization.CultureInfo.InvariantCulture)));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -1470,6 +1566,39 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1
             var result = System.Convert.ToString(value, cultureInfo);
             return result == null ? "" : result;
         }
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum OfferingCode
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EARLY_BIRD_V1")]
+        EARLY_BIRD_V1 = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"FREE_TIER_V1")]
+        FREE_TIER_V1 = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"PAY_AS_YOU_GO_V1")]
+        PAY_AS_YOU_GO_V1 = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"ENTERPRISE_CUSTOM_V1")]
+        ENTERPRISE_CUSTOM_V1 = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_FREE_TIER_V1")]
+        SPACES_FREE_TIER_V1 = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_GROWTH_V1")]
+        SPACES_GROWTH_V1 = 5,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_BUSINESS_V1")]
+        SPACES_BUSINESS_V1 = 6,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_CONTACT_US_V1")]
+        SPACES_CONTACT_US_V1 = 7,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"HOST_STANDARD_V1")]
+        HOST_STANDARD_V1 = 8,
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]

@@ -3,23 +3,25 @@ import { describe, expect, it } from "vitest";
 import { publicUrlEnvironment, publicUrlFixtures } from "./public-url-fixtures";
 
 function runBuild(environment: NodeJS.ProcessEnv) {
-  return new Promise<{ code: number | null; stdout: string; stderr: string }>((resolve) => {
-    const child = spawn("pnpm", ["build"], {
-      cwd: process.cwd(),
-      env: environment,
-      shell: false,
-    });
-    let stdout = "";
-    let stderr = "";
+  return new Promise<{ code: number | null; stdout: string; stderr: string }>(
+    (resolve) => {
+      const child = spawn("pnpm", ["build"], {
+        cwd: process.cwd(),
+        env: environment,
+        shell: false,
+      });
+      let stdout = "";
+      let stderr = "";
 
-    child.stdout.on("data", (chunk) => {
-      stdout += chunk;
-    });
-    child.stderr.on("data", (chunk) => {
-      stderr += chunk;
-    });
-    child.on("close", (code) => resolve({ code, stdout, stderr }));
-  });
+      child.stdout.on("data", (chunk) => {
+        stdout += chunk;
+      });
+      child.stderr.on("data", (chunk) => {
+        stderr += chunk;
+      });
+      child.on("close", (code) => resolve({ code, stdout, stderr }));
+    },
+  );
 }
 
 describe("public website build diagnostics", () => {
@@ -28,7 +30,9 @@ describe("public website build diagnostics", () => {
 
     expect(result.code, `${result.stdout}\n${result.stderr}`).toBe(0);
     expect(result.stdout).toContain('"event":"public-web.build.complete"');
-    const pageCount = Number(result.stdout.match(/"pageCount":(\d+)/)?.[1] ?? 0);
+    const pageCount = Number(
+      result.stdout.match(/"pageCount":(\d+)/)?.[1] ?? 0,
+    );
     expect(pageCount).toBeGreaterThanOrEqual(18);
     expect(result.stdout).toMatch(/"outputBytes":\d+/);
 
@@ -43,6 +47,7 @@ describe("public website build diagnostics", () => {
   it.each([
     "PUBLIC_SKEDULAR_APP_URL",
     "PUBLIC_SKEDULAR_SIGNUP_URL",
+    "PUBLIC_SKEDULAR_HOST_APP_URL",
     "PUBLIC_SKEDULAR_DEMO_URL",
     "PUBLIC_SKEDULAR_BECOME_HOST_URL",
     "PUBLIC_SKEDULAR_SLACK_INSTALL_URL",

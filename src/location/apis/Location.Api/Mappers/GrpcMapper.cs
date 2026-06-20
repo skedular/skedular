@@ -51,7 +51,8 @@ public class GrpcMapper : IGrpcMapper
             {
                 global::Api.Shared.Services.Models.LocationType.Private => LocationType.Private,
                 global::Api.Shared.Services.Models.LocationType.Marketplace => LocationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             OpeningHours = MapToGrpcResponse(src.OpeningHours),
             OrganizationId = src.Organization.Id,
@@ -120,7 +121,8 @@ public class GrpcMapper : IGrpcMapper
             {
                 LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Organization { Id = src.OrganizationId },
@@ -141,7 +143,8 @@ public class GrpcMapper : IGrpcMapper
             {
                 LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Organization { Id = src.OrganizationId },
@@ -162,7 +165,8 @@ public class GrpcMapper : IGrpcMapper
             {
                 LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Organization { Id = src.OrganizationId },
@@ -183,7 +187,8 @@ public class GrpcMapper : IGrpcMapper
             {
                 LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Organization { Id = src.OrganizationId },

@@ -36,7 +36,8 @@ public class EmailIntegrations(EmailConfiguration emailConfiguration, IRepositor
             FeedbackChannelTypeConstants.Web => "Web",
             FeedbackChannelTypeConstants.Slack => "Slack",
             FeedbackChannelTypeConstants.MsTeams => "MsTeams",
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(nameof(customerFeedback.Channel), customerFeedback.Channel,
+                $"Unexpected value for {nameof(customerFeedback.Channel)}: {customerFeedback.Channel}. Update enum mapping or caller input.")
         };
 
         html = html

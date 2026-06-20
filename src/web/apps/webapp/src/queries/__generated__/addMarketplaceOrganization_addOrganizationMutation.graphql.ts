@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e543e5a8c62d5e6c5c357a3e6685998a>>
+ * @generated SignedSource<<f7826ef5e94d46c53daf244e03c9970d>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
-export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
+export type OrganizationType = "HOST" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type AddOrganizationInput = {
   agreedToTermsOfUse: boolean;
   billingCycle: OrganizationBillingCycle;

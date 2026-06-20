@@ -843,7 +843,7 @@ Secondary references:
 - Nexudus
 - Archie
 - Optix
-- Deskbird
+- deskbird
 - Kadence
 - Officely
 - LiquidSpace

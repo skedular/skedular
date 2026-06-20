@@ -7,6 +7,7 @@ import {
   toSupportedMarketplaceBookingSubscriptionCancellationModeDetails,
 } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
+import { getResourceAssignmentPendingMessage } from '@/components/marketplaceProductSubscription/resource-assignment-status';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import {
@@ -76,10 +77,21 @@ const RootQuery = graphql`
     }
     marketplaceBookingSubscription(id: $subscriptionId) {
       id
+      failure {
+        category {
+          type
+          name
+        }
+        customerAction {
+          type
+          name
+        }
+      }
       startedAt
       nextRenewalAt
       autoRenew
       cancelAtPeriodEnd
+      weeklySelectedDays
       marketplaceBooking {
         id
         quantity
@@ -163,6 +175,16 @@ const RootQuery = graphql`
         id
         startDate
         endDate
+        failure {
+          category {
+            type
+            name
+          }
+          customerAction {
+            type
+            name
+          }
+        }
         marketplaceBooking {
           id
           quantity
@@ -228,6 +250,7 @@ const RelatedBookingsQuery = graphql`
           recurringBooking {
             id
           }
+          hasRecurringInstanceOverrides
           from
           until
           involvedLocations {
@@ -260,6 +283,7 @@ const SubscriptionUpdates = graphql`
       nextRenewalAt
       autoRenew
       cancelAtPeriodEnd
+      weeklySelectedDays
       marketplaceBooking {
         id
         quantity
@@ -445,6 +469,7 @@ const MarketplaceProductSubscriptionDetails = ({
     [relatedBookingsData.bookings?.edges],
   );
   const displayMarketplaceBooking = currentCycle?.marketplaceBooking ?? subscription?.marketplaceBooking ?? null;
+  const weeklySelectedDaysSummary = subscription?.weeklySelectedDays.length ? subscription.weeklySelectedDays.map(toDayLabel).join(', ') : null;
   const lifecycleDisplay = subscription
     ? toMarketplaceBookingSubscriptionLifecycleDisplay({
         autoRenew: subscription.autoRenew,
@@ -600,6 +625,7 @@ const MarketplaceProductSubscriptionDetails = ({
                   />
                   <DetailsRow label="Booked for" value={subscription.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
                   <DetailsRow label="Renewal" value={lifecycleDisplay?.renewalLabel ?? (subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period')} />
+                  {weeklySelectedDaysSummary ? <DetailsRow label="Weekly selected days (UTC)" value={weeklySelectedDaysSummary} /> : null}
                 </StackColumn>
               </CardContent>
             </Card>
@@ -687,6 +713,7 @@ const MarketplaceProductSubscriptionDetails = ({
                   <DetailsRow label="Quantity" value={`${displayMarketplaceBooking.quantity}`} />
                   <DetailsRow label="Booked for" value={subscription.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
                   <DetailsRow label="Renewal" value={lifecycleDisplay?.renewalLabel ?? (subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period')} />
+                  {weeklySelectedDaysSummary ? <DetailsRow label="Weekly selected days (UTC)" value={weeklySelectedDaysSummary} /> : null}
                   {productVersion ? (
                     <DetailsRow
                       label="Product"
@@ -760,6 +787,12 @@ const MarketplaceProductSubscriptionDetails = ({
                                   variant={isCurrentCycle && displayMarketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'filled' : 'outlined'}
                                 />
                               </StackRow>
+                              {recurringBooking.failure ? (
+                                <BodyIconTypography
+                                  label={`${recurringBooking.failure.category.name}: ${recurringBooking.failure.customerAction.name}`}
+                                  sx={{ mt: 0.75, color: 'warning.main' }}
+                                />
+                              ) : null}
                               {recurringBooking.marketplaceBooking?.invoiceUrl ? (
                                 <Link
                                   href={recurringBooking.marketplaceBooking.invoiceUrl}
@@ -798,6 +831,7 @@ const MarketplaceProductSubscriptionDetails = ({
                           const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, booking.id);
                           const locationLabel = booking.involvedLocations[0]?.name ?? 'Location to be confirmed';
                           const resourcesLabel = booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later';
+                          const isResourceAssignmentPending = booking.bookingResources.length === 0;
                           const isConfirmed = booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED';
                           const isTodayBooking = dayjs.utc(booking.from).isSame(dayjs.utc(today), 'day');
 
@@ -832,6 +866,8 @@ const MarketplaceProductSubscriptionDetails = ({
                                   </Box>
                                   <StackColumn spacing={0.75} sx={{ alignItems: 'flex-end' }}>
                                     {isTodayBooking ? <Chip size="small" label="Today" color="primary" /> : null}
+                                    {isResourceAssignmentPending ? <Chip size="small" label="Awaiting resource assignment" color="warning" variant="outlined" /> : null}
+                                    {booking.hasRecurringInstanceOverrides ? <Chip size="small" label="Individually updated" variant="outlined" /> : null}
                                     <Chip
                                       size="small"
                                       icon={<PaymentStatusIcon />}
@@ -855,6 +891,9 @@ const MarketplaceProductSubscriptionDetails = ({
                                     <ResourceIcon fontSize="small" />
                                     <BodyIconTypography label={resourcesLabel} sx={{ opacity: 0.88 }} />
                                   </StackRow>
+                                  {isResourceAssignmentPending ? (
+                                    <SmallIconTypography label={getResourceAssignmentPendingMessage(Boolean(booking.hasRecurringInstanceOverrides))} sx={{ opacity: 0.76 }} />
+                                  ) : null}
                                 </StackColumn>
                               </Box>
                             </Link>
@@ -934,6 +973,8 @@ const DetailsRow = ({ label, value }: { label: string; value: ReactNode }) => (
 );
 
 const toStoredDate = (date?: string | null) => (date ? dayjs.utc(date).format('dddd, Do MMM YYYY') : '');
+
+const toDayLabel = (day: string) => `${day.slice(0, 1)}${day.slice(1).toLowerCase()}`;
 
 const MemoMarketplaceProductSubscriptionDetails = memo(MarketplaceProductSubscriptionDetails);
 

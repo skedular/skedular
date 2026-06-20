@@ -159,34 +159,32 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
               </Box>
             </Box>
           )}
-          {rootData.me.isOnboardingDone &&
-            !rootData.organization?.isOwnershipVerified &&
-            (rootData.organization?.type.type === 'MARKETPLACE' || rootData.organization?.type.type === 'INDIVIDUAL') && (
-              <Box sx={{ display: 'flex', justifyContent: 'center', px: { xs: 1, sm: 2, md: 3 }, pt: 1.5 }}>
-                <Box
-                  sx={{
-                    width: '100%',
-                    maxWidth: 1200,
-                    mx: 'auto',
-                    borderRadius: 3,
-                    border: 1,
-                    borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(217, 119, 6, 0.18)' : 'rgba(251, 191, 36, 0.28)'),
-                    backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 251, 235, 0.92)' : 'rgba(120, 53, 15, 0.24)'),
-                    boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 20px rgba(120, 53, 15, 0.06)' : 'none'),
-                    px: 2,
-                    py: 1.5,
-                  }}
-                >
-                  <StackRow sx={{ alignItems: 'flex-start', gap: 1.5 }}>
-                    <InfoIcon color="warning" excludeTooltip sx={{ mt: 0.25 }} />
-                    <StackColumn sx={{ gap: 0.25 }}>
-                      <BodyIconTypography label="Ownership verification in progress" />
-                      <CaptionIconTypography label="We need to verify ownership for your organization. We will get back to you within 24 hours." />
-                    </StackColumn>
-                  </StackRow>
-                </Box>
+          {rootData.me.isOnboardingDone && !rootData.organization?.isOwnershipVerified && rootData.organization?.type.type === 'PRIVATE' && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', px: { xs: 1, sm: 2, md: 3 }, pt: 1.5 }}>
+              <Box
+                sx={{
+                  width: '100%',
+                  maxWidth: 1200,
+                  mx: 'auto',
+                  borderRadius: 3,
+                  border: 1,
+                  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(217, 119, 6, 0.18)' : 'rgba(251, 191, 36, 0.28)'),
+                  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 251, 235, 0.92)' : 'rgba(120, 53, 15, 0.24)'),
+                  boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 20px rgba(120, 53, 15, 0.06)' : 'none'),
+                  px: 2,
+                  py: 1.5,
+                }}
+              >
+                <StackRow sx={{ alignItems: 'flex-start', gap: 1.5 }}>
+                  <InfoIcon color="warning" excludeTooltip sx={{ mt: 0.25 }} />
+                  <StackColumn sx={{ gap: 0.25 }}>
+                    <BodyIconTypography label="Ownership verification in progress" />
+                    <CaptionIconTypography label="We need to verify ownership for your organization. We will get back to you within 24 hours." />
+                  </StackColumn>
+                </StackRow>
               </Box>
-            )}
+            </Box>
+          )}
           {rootData.me.isOnboardingDone && rootData.organization?.isSsoTokenValid && <>{children}</>}
         </Box>
       </Box>

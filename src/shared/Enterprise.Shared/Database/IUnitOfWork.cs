@@ -5,5 +5,6 @@ namespace Enterprise.Shared.Database;
 /// </summary>
 public interface IUnitOfWork : IDisposable
 {
+    bool HasActiveTransaction { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

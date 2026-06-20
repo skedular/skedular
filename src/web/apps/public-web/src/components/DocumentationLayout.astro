@@ -1,0 +1,15 @@
+---
+import DocumentationNavigation from "./DocumentationNavigation.astro";
+interface Props { breadcrumbs: Array<{ name: string; path: string }>; product?: "teams" | "spaces" | "host"; category?: string; shared?: boolean; currentArticleId?: string; }
+const { breadcrumbs, product, category, shared = false, currentArticleId } = Astro.props;
+---
+<div class="documentation-shell container">
+  <nav class="documentation-breadcrumbs" aria-label="Breadcrumb">{breadcrumbs.map((crumb: (typeof breadcrumbs)[number], index: number) => <>{index > 0 && <span aria-hidden="true">/</span>}{crumb.path ? <a href={crumb.path} aria-current={index === breadcrumbs.length - 1 ? "page" : undefined}>{crumb.name}</a> : <span aria-current={index === breadcrumbs.length - 1 ? "page" : undefined}>{crumb.name}</span>}</>)}</nav>
+  <div class="documentation-mobile-navigation">
+    <details>
+      <summary>Browse documentation</summary>
+      <DocumentationNavigation product={product} category={category} shared={shared} currentArticleId={currentArticleId} />
+    </details>
+  </div>
+  <div class="documentation-body"><aside class="documentation-sidebar"><DocumentationNavigation product={product} category={category} shared={shared} currentArticleId={currentArticleId} /></aside><div><slot /></div></div>
+</div>

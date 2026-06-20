@@ -32,7 +32,7 @@ pnpm --dir src/web/apps/public-web dev
 Expected local URL:
 
 ```text
-http://localhost:15006
+http://localhost:15008
 ```
 
 ## App-Local Validation

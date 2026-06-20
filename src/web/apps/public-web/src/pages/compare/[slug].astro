@@ -1,30 +1,89 @@
 ---
 import SiteLayout from "../../layouts/SiteLayout.astro";
-import FeatureComparisonSections from "../../components/FeatureComparisonSections.astro";
 import CtaLink from "../../components/CtaLink.astro";
 import { getCta } from "../../data/ctas";
 import { comparisonPages } from "../../data/comparison-pages";
+import { competitors, generateAllComparisonPageTargets } from "../../data/comparison";
+import ComparisonPage from "../../components/ComparisonPage.astro";
+import SupportingPage from "../../components/SupportingPage.astro";
 
 export function getStaticPaths() {
-  return comparisonPages.map((page) => ({
-    params: { slug: page.slug },
-    props: { page },
-  }));
+  const comparisonPaths = comparisonPages.flatMap((page) => {
+    const pageTargets = generateAllComparisonPageTargets();
+    const target = pageTargets.find((t) => t.slug === page.slug);
+    return [
+      {
+        params: { slug: page.slug },
+        props: {
+          pageType: "competitor-comparison",
+          title: page.title,
+          description: page.description,
+          pageTarget: target,
+          canonicalPath: page.path,
+        },
+      },
+    ];
+  });
+
+  return comparisonPaths;
 }
 
-const { page } = Astro.props;
+const { pageType, title, description, pageTarget, canonicalPath } = Astro.props;
+
+let heroTitle = "";
+let competitorName = "";
+
+if (pageType === "competitor-comparison") {
+  heroTitle = title ? title.split(" | ")[0].split(": ")[0] : "";
+  const competitor = competitors.find((product) => product.id === (pageTarget as any)?.competitorId);
+  competitorName = competitor?.name ?? heroTitle.replace("Skedular vs ", "");
+}
 ---
 
-<SiteLayout title={page.title} description={page.description} canonicalPath={page.path} structuredDataType="Product">
-  <section class="subpage-hero">
-    <div class="container">
-      <p class="eyebrow">Comparison</p>
-      <h1>{page.title}</h1>
-      <p>{page.description}</p>
-      <CtaLink cta={getCta(page.primaryCtaId as Parameters<typeof getCta>[0])} />
-    </div>
-  </section>
-  <div class="container">
-    <FeatureComparisonSections title={`How to think about ${page.competitorName}`} summary={page.skedularPositioning} items={page.claimList} />
-  </div>
+<SiteLayout title={title} description={description} canonicalPath={canonicalPath} structuredDataType={pageType === "competitor-comparison" ? "Product" : undefined}>
+  {pageType === "competitor-comparison" ? (
+    <section class="subpage-hero">
+      <div class="container">
+        <p class="eyebrow">Comparison</p>
+        <h1>{heroTitle}</h1>
+        <p>
+          Compare Skedular and {competitorName} across hybrid work management, desk and room booking, attendance coordination,
+          workplace analytics, utilization reporting, integrations, and operational workflows.
+        </p>
+        <p>
+          Both platforms support workspace booking and hybrid work environments. {competitorName} is best known for
+          attendance coordination, workplace visibility, utilization insights, and employee workplace experience, while Skedular
+          combines workspace booking with coworking operations, subscriptions, billing, invoicing, marketplace publishing,
+          workspace discovery, and workspace commerce.
+        </p>
+      </div>
+    </section>
+    <section class="page-section comparison-content-section">
+      <div class="container">
+        {pageTarget ? (
+          <ComparisonPage pageTarget={pageTarget as any} />
+        ) : (
+          <p>Page target not found for this comparison.</p>
+        )}
+      </div>
+    </section>
+  ) : (
+    <section class="subpage-hero">
+      <div class="container">
+        <p class="eyebrow">Comparison</p>
+        <h1>{title}</h1>
+        <p>{description}</p>
+        <CtaLink cta={getCta("book-demo")} />
+      </div>
+    </section>
+    <section class="page-section comparison-content-section">
+      <div class="container">
+        {pageTarget ? (
+          <SupportingPage pageTarget={pageTarget as any} />
+        ) : (
+          <p>Page target not found.</p>
+        )}
+      </div>
+    </section>
+  )}
 </SiteLayout>

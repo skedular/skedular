@@ -1,0 +1,28 @@
+---
+import ProductPageSections from "../components/ProductPageSections.astro";
+import { hostPage } from "../data/host-page";
+import { getPublicDestinationUrl } from "../data/public-destination-urls";
+import SiteLayout from "../layouts/SiteLayout.astro";
+
+const hostAppUrl = getPublicDestinationUrl("PUBLIC_SKEDULAR_HOST_APP_URL");
+---
+
+<SiteLayout
+  title="Skedular Host | Simple space rental management"
+  description="List a property, room, desk, studio, venue, or other place. Set flexible pricing and cancellation policies, accept card payments, and manage renters."
+  canonicalPath="/host"
+  structuredDataType="Product"
+>
+  <section class="subpage-hero">
+    <div class="container">
+      {hostPage.eyebrow && <p class="eyebrow">{hostPage.eyebrow}</p>}
+      <h1>{hostPage.heroHeading || hostPage.title}</h1>
+      <p>{hostPage.heroDescription || hostPage.summary}</p>
+      <div class="button-row">
+        <a href={hostAppUrl} class="button" data-cta-id="try-host">Try Host</a>
+        <a href="/pricing/host" class="text-link">View Host pricing</a>
+      </div>
+    </div>
+  </section>
+  <ProductPageSections page={hostPage} />
+</SiteLayout>

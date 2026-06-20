@@ -27,6 +27,21 @@ type InnerProps = {
 type TaxDetailsPatchField = 'IS_REGISTERED' | 'TAX_ID' | 'TAX_RATE_PERCENTAGE';
 
 const inlinePatchDebounceTimeout = 1000;
+const taxDetailsPatchFields: Record<TaxDetailsPatchField, keyof TaxDetails> = {
+  IS_REGISTERED: 'isRegistered',
+  TAX_ID: 'taxId',
+  TAX_RATE_PERCENTAGE: 'taxRatePercentage',
+};
+
+const getValidTaxDetailsPatchFields = (fieldsToUpdate: TaxDetailsPatchField[], values: TaxDetails): TaxDetailsPatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    try {
+      taxDetailsSchema.validateSyncAt(taxDetailsPatchFields[patchField], values);
+      return true;
+    } catch {
+      return false;
+    }
+  });
 
 const formatTaxRatePercentageFormValue = (taxRatePercentage: string | number | null | undefined) => {
   if (taxRatePercentage === null || taxRatePercentage === undefined) {
@@ -91,12 +106,8 @@ const OrganizationAdminTaxDetailsSectionContent = ({ organizationCustomDomain, q
 
   const commitTaxDetailsPatch = useCallback(
     (fieldsToUpdate: TaxDetailsPatchField[], { isRegistered, taxId, taxRatePercentage }: TaxDetails) => {
-      if (!organization || fieldsToUpdate.length === 0) {
-        return;
-      }
-
-      const hasValidTaxDetails = taxDetailsSchema.isValidSync({ isRegistered, taxId, taxRatePercentage });
-      if (!hasValidTaxDetails) {
+      const validFieldsToUpdate = getValidTaxDetailsPatchFields(fieldsToUpdate, { isRegistered, taxId, taxRatePercentage });
+      if (!organization || validFieldsToUpdate.length === 0) {
         return;
       }
 
@@ -108,7 +119,7 @@ const OrganizationAdminTaxDetailsSectionContent = ({ organizationCustomDomain, q
           input: {
             clientMutationId: uuid(),
             organizationCustomDomain,
-            fieldsToUpdate,
+            fieldsToUpdate: validFieldsToUpdate,
             isRegistered,
             taxId,
             taxRatePercentage: taxRatePercentageInput,

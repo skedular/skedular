@@ -119,7 +119,8 @@ public class OrganizationGrpcService(
                     MemberOrderField.MiddleName => OrganizationMemberOrderField.MiddleName,
                     MemberOrderField.FamilyName => OrganizationMemberOrderField.FamilyName,
                     MemberOrderField.PhoneNumber => OrganizationMemberOrderField.PhoneNumber,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
                 };
 
                 return new OrganizationMemberOrder(direction, field);

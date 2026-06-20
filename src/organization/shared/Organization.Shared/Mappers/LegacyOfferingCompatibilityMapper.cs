@@ -25,7 +25,7 @@ public class LegacyOfferingCompatibilityMapper : ILegacyOfferingCompatibilityMap
             organizationOffering.PurchasedUserCapacity,
             organizationOffering.PurchasedLocationCapacity,
             organizationOffering.PurchasedTeamCapacity,
-            organizationOffering.CatalogVersion ?? PricingCatalogConstants.CurrentTeamsCatalogVersion,
+            organizationOffering.CatalogVersion ?? organizationOffering.Code.GetCurrentCatalogVersion(),
             organizationOffering.Code.IsEarlyBirdOffering() ? OrganizationOfferingPlanStatus.Legacy : OrganizationOfferingPlanStatus.Active,
             organizationOffering.Start,
             organizationOffering.End,

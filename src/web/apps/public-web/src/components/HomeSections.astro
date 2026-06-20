@@ -1,7 +1,23 @@
 ---
 import CtaLink from "./CtaLink.astro";
 import { getCta } from "../data/ctas";
+import { generateAllComparisonPageTargets, competitors } from "../data/comparison";
 import { homePage } from "../data/home-page";
+import { routeFamilies } from "../data/routes";
+
+const featuredCompetitorIds = ["skedda", "gable", "officely", "robin", "envoy"];
+const comparisonTargets = generateAllComparisonPageTargets();
+const featuredComparisons = featuredCompetitorIds
+  .map((competitorId) => {
+    const target = comparisonTargets.find((t) => t.competitorId === competitorId);
+    const competitor = competitors.find((c) => c.id === competitorId);
+    return {
+      competitorId,
+      target,
+      summary: competitor?.summary ?? target?.description ?? "",
+    };
+  })
+  .filter((featured) => featured.target);
 ---
 
 <section id="workspace-discovery" class="page-section workspace-discovery" aria-labelledby="workspace-discovery-title">
@@ -30,9 +46,11 @@ import { homePage } from "../data/home-page";
           ))}
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="page-section page-section-quiet" aria-labelledby="audience-title">
+<section class="page-section page-section-quiet" aria-labelledby="audience-title">
   <div class="container">
     <div class="section-heading">
       <h2 id="audience-title">{homePage.audience.title}</h2>
@@ -66,7 +84,7 @@ import { homePage } from "../data/home-page";
   </div>
 </section>
 
-<section class="page-section" aria-labelledby="why-skedular-title">
+<section class="page-section why-skedular-section" aria-labelledby="why-skedular-title">
   <div class="container">
     <div class="section-heading">
       <h2 id="why-skedular-title">{homePage.whySkedular.title}</h2>
@@ -100,10 +118,13 @@ import { homePage } from "../data/home-page";
         </article>
       ))}
     </div>
+    <div class="button-row differentiation-cta-row">
+      <a class="text-link comparison-text-cta" href={routeFamilies.compare}>Compare Skedular with leading workspace software</a>
+    </div>
   </div>
 </section>
 
-<section class="page-section page-section-quiet" aria-labelledby="product-showcase-title">
+<section class="page-section product-showcase-section" aria-labelledby="product-showcase-title">
   <div class="container">
     <div class="section-heading">
       <h2 id="product-showcase-title">Solutions built around real workspace workflows</h2>
@@ -246,6 +267,32 @@ import { homePage } from "../data/home-page";
   </div>
 </section>
 
+<section class="page-section page-section-quiet homepage-comparison-section" aria-labelledby="homepage-comparison-title">
+  <div class="container">
+    <div class="section-heading">
+      <h2 id="homepage-comparison-title">Compare workspace software with confidence</h2>
+      <p>
+        Skedular helps organizations manage private workplaces and helps operators run commercial workspace businesses. It brings workplace booking, coworking operations, billing, subscriptions, workspace discovery, and integrations together in one platform. Comparing Skedular with alternatives helps buyers understand which solution best matches the way they manage workspace.
+      </p>
+      <p>
+        Choosing workspace software is not always straightforward. Some products focus on desk booking, others focus on coworking operations, visitor management, or workplace analytics. Comparing Skedular against leading alternatives makes it easier to understand the differences in workflows, capabilities, integrations, pricing models, and operational focus before making a decision.
+      </p>
+    </div>
+    <div class="homepage-comparison-grid" aria-label="Featured Skedular comparison pages">
+      {featuredComparisons.map((comparison) => (
+        <article class="homepage-comparison-card">
+          <h3>{comparison.target!.title.split(" | ")[0]}</h3>
+          <p>{comparison.summary}</p>
+          <a class="text-link" href={comparison.target!.path}>View comparison</a>
+        </article>
+      ))}
+    </div>
+    <div class="button-row homepage-comparison-cta-row">
+      <a class="button" href={routeFamilies.compare}>View all comparisons</a>
+    </div>
+  </div>
+</section>
+
 <section class="page-section page-section-quiet" aria-labelledby="faq-title">
   <div class="container faq-layout">
     <div class="section-heading">
@@ -272,6 +319,7 @@ import { homePage } from "../data/home-page";
         <CtaLink cta={getCta("book-demo")} variant="inverse" />
         <a class="text-link" href="/teams">Explore Teams</a>
         <a class="text-link" href="/spaces">Explore Spaces</a>
+        <a class="text-link" href="/host">Explore Host</a>
         <a class="text-link" href="/pricing">View Pricing</a>
       </div>
     </div>

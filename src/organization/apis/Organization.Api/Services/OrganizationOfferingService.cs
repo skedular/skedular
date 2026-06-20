@@ -7,6 +7,7 @@ using Organization.Api.Mappers;
 using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
+using Organization.Shared.Models.PricingCatalog;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
@@ -31,12 +32,16 @@ public interface IOrganizationOfferingService
     Task RerunAllOfferingsWorkflowsAsync(CancellationToken cancellationToken);
 
     Task SetEnterpriseOfferingAsync(
-        string organizationId,
+        string? organizationId,
+        string? customDomain,
+        OfferingCode offeringCode,
         int fixedPrice,
         Currency currency,
-        int purchasedUserCapacity,
-        int purchasedLocationCapacity,
-        int purchasedTeamCapacity,
+        int? purchasedUserCapacity,
+        int? purchasedLocationCapacity,
+        int? purchasedTeamCapacity,
+        int? monthlyBookingInstanceQuota,
+        int? discountPercentage,
         CancellationToken cancellationToken);
 }
 
@@ -60,7 +65,6 @@ public class OrganizationOfferingService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var offering = offeringCode.GetOffering();
         if (offeringCode.IsEnterpriseOffering())
         {
             throw new InvalidOperationException("Enterprise offering terms must be set by a Skedular admin.");
@@ -71,6 +75,7 @@ public class OrganizationOfferingService(
                                organizationUniqueAlphanumericName,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
+        offeringCode = ResolveOfferingCodeForOrganization(organization, offeringCode);
         if (!ignoreAuthorizationCheck)
         {
             var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
@@ -80,10 +85,7 @@ public class OrganizationOfferingService(
             }
         }
 
-        if (!ignoreAuthorizationCheck && offering.UnitPrice is > 0 && organization.OrganizationStripePaymentMethods.Count == 0)
-        {
-            throw new PaymentMethodRequired();
-        }
+        EnsurePaymentMethodIsPresentForChargeableOffering(organization, offeringCode);
 
         var activeOffering = organization.OrganizationOfferings.SingleOrDefault();
         if (activeOffering is not null && activeOffering.Code == offeringCode)
@@ -227,53 +229,73 @@ public class OrganizationOfferingService(
     }
 
     public async Task SetEnterpriseOfferingAsync(
-        string organizationId,
+        string? organizationId,
+        string? customDomain,
+        OfferingCode offeringCode,
         int fixedPrice,
         Currency currency,
-        int purchasedUserCapacity,
-        int purchasedLocationCapacity,
-        int purchasedTeamCapacity,
+        int? purchasedUserCapacity,
+        int? purchasedLocationCapacity,
+        int? purchasedTeamCapacity,
+        int? monthlyBookingInstanceQuota,
+        int? discountPercentage,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
         if (fixedPrice < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(fixedPrice), fixedPrice, "Enterprise offering fixed price must be zero or greater.");
+            throw new ArgumentOutOfRangeException(nameof(fixedPrice), fixedPrice, "Offering fixed price must be zero or greater.");
         }
 
-        if (purchasedUserCapacity <= 0)
+        if (purchasedUserCapacity is <= 0)
         {
             throw new ArgumentOutOfRangeException(
                 nameof(purchasedUserCapacity),
                 purchasedUserCapacity,
-                "Enterprise offering user capacity must be greater than zero.");
+                "Offering user capacity must be greater than zero.");
         }
 
-        if (purchasedLocationCapacity <= 0)
+        if (purchasedLocationCapacity is <= 0)
         {
             throw new ArgumentOutOfRangeException(
                 nameof(purchasedLocationCapacity),
                 purchasedLocationCapacity,
-                "Enterprise offering location capacity must be greater than zero.");
+                "Offering location capacity must be greater than zero.");
         }
 
-        if (purchasedTeamCapacity <= 0)
+        if (purchasedTeamCapacity is <= 0)
         {
             throw new ArgumentOutOfRangeException(
                 nameof(purchasedTeamCapacity),
                 purchasedTeamCapacity,
-                "Enterprise offering team capacity must be greater than zero.");
+                "Offering team capacity must be greater than zero.");
+        }
+
+        if (monthlyBookingInstanceQuota is <= 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(monthlyBookingInstanceQuota),
+                monthlyBookingInstanceQuota,
+                "Offering monthly booking instance quota must be greater than zero.");
+        }
+
+        if (discountPercentage is < 0 or > 100)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(discountPercentage),
+                discountPercentage,
+                "Offering discount percentage must be between 0 and 100.");
         }
 
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               null,
+                               customDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        var now = timeProvider.GetUtcNow();
+        EnsurePaymentMethodIsPresentForChargeableOffering(organization, offeringCode);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
+        var now = timeProvider.GetUtcNow();
         var activeOffering = organization.OrganizationOfferings.SingleOrDefault();
         if (activeOffering is null)
         {
@@ -285,12 +307,16 @@ public class OrganizationOfferingService(
                 End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
                 AutoRenew = true
             };
-            activeOffering.ApplyNegotiatedEnterpriseTerms(
+            activeOffering.ApplyNegotiatedOfferingTerms(
+                offeringCode,
                 fixedPrice,
                 currency,
                 purchasedUserCapacity,
                 purchasedLocationCapacity,
-                purchasedTeamCapacity);
+                purchasedTeamCapacity,
+                monthlyBookingInstanceQuota,
+                discountPercentage);
+            activeOffering.CatalogVersion = GetCatalogVersionForOrganization(organization);
             repositoryFactory.OrganizationOfferingRepository.Add(activeOffering);
             temporalOutboxService.StartWorkflowScheduleRenewOrganizationOffering(
                 new ScheduleRenewOrganizationOfferingInput(
@@ -301,12 +327,16 @@ public class OrganizationOfferingService(
         }
         else
         {
-            activeOffering.ApplyNegotiatedEnterpriseTerms(
+            activeOffering.ApplyNegotiatedOfferingTerms(
+                offeringCode,
                 fixedPrice,
                 currency,
                 purchasedUserCapacity,
                 purchasedLocationCapacity,
-                purchasedTeamCapacity);
+                purchasedTeamCapacity,
+                monthlyBookingInstanceQuota,
+                discountPercentage);
+            activeOffering.CatalogVersion = GetCatalogVersionForOrganization(organization);
             activeOffering.Start = now;
             activeOffering.End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd();
             activeOffering.AutoRenew = true;
@@ -315,7 +345,8 @@ public class OrganizationOfferingService(
 
         organizationOutboxPublisher.PublishOrganizations(
             [
-                graphQlMapper.MapTo(organization,
+                graphQlMapper.MapTo(
+                    organization,
                     organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))
             ],
             repositoryFactory.UnitOfWork);
@@ -323,6 +354,28 @@ public class OrganizationOfferingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
     }
+
+    private static void EnsurePaymentMethodIsPresentForChargeableOffering(
+        Shared.Database.Entities.Organization organization,
+        OfferingCode offeringCode)
+    {
+        if (!offeringCode.IsFreeOffering() && organization.OrganizationStripePaymentMethods.All(item => item.IsDeleted()))
+        {
+            throw new PaymentMethodRequired();
+        }
+    }
+
+    private static OfferingCode ResolveOfferingCodeForOrganization(
+        Shared.Database.Entities.Organization organization,
+        OfferingCode offeringCode) =>
+        organization.Type == OrganizationTypeConstants.Marketplace && offeringCode == OfferingCode.FreeTierV1
+            ? OfferingCode.SpacesFreeTierV1
+            : offeringCode;
+
+    private static string GetCatalogVersionForOrganization(Shared.Database.Entities.Organization organization) =>
+        organization.Type == OrganizationTypeConstants.Marketplace
+            ? PricingCatalogConstants.CurrentSpacesCatalogVersion
+            : PricingCatalogConstants.CurrentTeamsCatalogVersion;
 
     private static void ValidatePatchRequest(OrganizationOfferingPatchRequest request)
     {

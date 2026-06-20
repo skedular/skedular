@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0e20b0b822ef880147419f6df0011c0a>>
+ * @generated SignedSource<<a4ef8a027e5e90d689cfb46e2871f0e5>>
  * @lightSyntaxTransform
  */
 
@@ -55,7 +55,7 @@ export type addPrivateBookingPage_addPrivateRecurringBookingMutation$data = {
         readonly photoUrl: string | null | undefined;
       }>;
       readonly startDate: any;
-    };
+    } | null | undefined;
   };
 };
 export type addPrivateBookingPage_addPrivateRecurringBookingMutation = {

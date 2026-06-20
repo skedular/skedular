@@ -10,6 +10,8 @@ public interface IWorkflowIdService
     string RecomputeLocationBookingDerivedState(string locationId);
     string ComputeOrganizationLocationsAndProductsRelationships(string organizationId);
     string NewLocationJoined(string locationId);
+    string ProvisionHostLocation(string locationId);
+    string DeprovisionHostLocation(string locationId);
 }
 
 public class WorkflowIdService(ITemporalHelperService temporalHelperService) : IWorkflowIdService
@@ -28,4 +30,10 @@ public class WorkflowIdService(ITemporalHelperService temporalHelperService) : I
 
     public string NewLocationJoined(string locationId) =>
         temporalHelperService.ToId($"{Constants.NewLocationJoinedPrefix}-{locationId}");
+
+    public string ProvisionHostLocation(string locationId) =>
+        temporalHelperService.ToId($"{Constants.ProvisionHostLocationPrefix}-{locationId}");
+
+    public string DeprovisionHostLocation(string locationId) =>
+        temporalHelperService.ToId($"{Constants.DeprovisionHostLocationPrefix}-{locationId}");
 }

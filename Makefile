@@ -27,6 +27,7 @@ generate: ## Generate code
 	@./src/web/apps/webapp/scripts/generate.sh
 	@./src/web/apps/webapp-spaces/scripts/generate.sh
 	@./src/web/apps/webapp-teams/scripts/generate.sh
+	@./src/web/apps/webapp-host/scripts/generate.sh
 
 .PHONY: lint
 lint: ## run golanci-lint locally

@@ -15,7 +15,11 @@ public class PricingCatalogService(
 {
     public PricingCatalog GetCatalog(PricingCatalogProductOfferingCode? productOfferingCode)
     {
-        var offerings = new[] { TeamsPricingCatalogProvider.GetTeamsOffering(), SpacesPricingCatalogProvider.GetSpacesOffering() };
+        var offerings = new[]
+        {
+            TeamsPricingCatalogProvider.GetTeamsOffering(), SpacesPricingCatalogProvider.GetSpacesOffering(),
+            HostPricingCatalogProvider.GetHostOffering()
+        };
         var filteredOfferings = productOfferingCode is null or PricingCatalogProductOfferingCode.NotSet
             ? offerings
             : offerings.Where(offering => offering.Code == productOfferingCode.Value).ToArray();
@@ -28,8 +32,16 @@ public class PricingCatalogService(
 
         return new PricingCatalog(
             "skedular-pricing-catalog",
-            pricingCatalogVersionService.GetCurrentTeamsVersion(),
+            GetActiveVersion(productOfferingCode),
             filteredOfferings,
             timeProvider.GetUtcNow());
     }
+
+    private PricingCatalogVersion GetActiveVersion(PricingCatalogProductOfferingCode? productOfferingCode) =>
+        productOfferingCode switch
+        {
+            PricingCatalogProductOfferingCode.Spaces => pricingCatalogVersionService.GetCurrentSpacesVersion(),
+            PricingCatalogProductOfferingCode.Host => pricingCatalogVersionService.GetCurrentHostVersion(),
+            _ => pricingCatalogVersionService.GetCurrentTeamsVersion()
+        };
 }

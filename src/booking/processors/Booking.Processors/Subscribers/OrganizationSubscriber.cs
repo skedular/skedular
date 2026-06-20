@@ -1,13 +1,16 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Booking.Processors.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Kafka.Consume;
+using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
+using OrganizationType = Api.Shared.Services.Models.OrganizationType;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
 
 namespace Booking.Processors.Subscribers;
@@ -20,6 +23,12 @@ public class OrganizationSubscriber(
     ICachedOrganizationService cachedOrganizationService)
     : IEventSubscriber<Key, Event>
 {
+    private const int FreePlanCode = 1;
+    private const int LegacyEarlyBirdPlanCode = 4;
+    private const int GrowthPlanCode = 5;
+    private const int BusinessPlanCode = 6;
+    private const int ContactUsPlanCode = 7;
+
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
@@ -42,7 +51,7 @@ public class OrganizationSubscriber(
 
                     existingOrganization ??= await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
 
-                    await HandleOrganizationUpsertedEventAsync(organization, existingOrganization, existingOrganization.EventRaisedAt is null,
+                    await HandleOrganizationUpsertedEventAsync(organization, existingOrganization,
                         cancellationToken);
                 }
                 break;
@@ -82,33 +91,78 @@ public class OrganizationSubscriber(
     private async Task HandleOrganizationUpsertedEventAsync(
         Shared.Models.Organization organization,
         Organization existingOrganization,
-        bool isNewOrganization,
         CancellationToken cancellationToken)
     {
         var hadMarketplaceBillingWorkflow = existingOrganization.Type == OrganizationTypeConstants.Marketplace;
-        var billingCycleChanged = existingOrganization.BillingCycle != organization.BillingCycle.ToOrganizationBillingCycle();
 
         existingOrganization = repositoryFactory.OrganizationRepository.Update(eventMapper.MergeToEntity(organization, existingOrganization));
 
         existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
         existingOrganization = await RebuildOrganizationMembersAsync(organization, existingOrganization, cancellationToken);
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
+        SaveSpacesOfferingState(organization, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await QueueArrearsBillingWorkflowAsync(
             existingOrganization,
-            isNewOrganization,
             hadMarketplaceBillingWorkflow,
-            billingCycleChanged,
             cancellationToken);
         await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(existingOrganization.Id, existingOrganization.CustomDomain, cancellationToken);
     }
 
+    private void SaveSpacesOfferingState(
+        Shared.Models.Organization organization,
+        Organization existingOrganization)
+    {
+        if (organization.Type != OrganizationType.Marketplace || organization.Offering is null
+                                                              || !IsSpacesOffering(organization.Offering.Code))
+        {
+            return;
+        }
+
+        var existingOffering = existingOrganization.Offering ?? new Offering();
+        var planCode = GetPlanCode(organization.Offering.Code);
+        var quotaLimit = GetQuotaLimit(organization.Offering);
+        var customCapacity = organization.Offering.Code == OfferingCode.SpacesContactUsV1
+            ? organization.Offering.PurchasedTeamCapacity
+            : null;
+
+        existingOffering.SpacesPlanCode = planCode;
+        existingOffering.SpacesQuotaLimit = quotaLimit;
+        existingOffering.SpacesCustomCapacity = customCapacity;
+        existingOffering.SpacesPeriodStart = organization.Offering.Start;
+        existingOffering.SpacesPeriodEnd = organization.Offering.End;
+
+        existingOrganization.Offering = existingOffering;
+        repositoryFactory.OrganizationRepository.Update(existingOrganization);
+    }
+
+    private static bool IsSpacesOffering(OfferingCode offeringCode) =>
+        offeringCode is OfferingCode.EarlyBirdV1 or OfferingCode.SpacesFreeTierV1 or OfferingCode.SpacesGrowthV1
+            or OfferingCode.SpacesBusinessV1 or OfferingCode.SpacesContactUsV1;
+
+    private static int GetPlanCode(OfferingCode offeringCode) =>
+        offeringCode switch
+        {
+            OfferingCode.EarlyBirdV1 => LegacyEarlyBirdPlanCode,
+            OfferingCode.SpacesFreeTierV1 => FreePlanCode,
+            OfferingCode.SpacesGrowthV1 => GrowthPlanCode,
+            OfferingCode.SpacesBusinessV1 => BusinessPlanCode,
+            OfferingCode.SpacesContactUsV1 => ContactUsPlanCode,
+            _ => FreePlanCode
+        };
+
+    private static int? GetQuotaLimit(Offering offering) =>
+        offering.Code switch
+        {
+            OfferingCode.EarlyBirdV1 => null,
+            OfferingCode.SpacesContactUsV1 => offering.PurchasedTeamCapacity,
+            _ => offering.PurchasedTeamCapacity ?? offering.Code.GetOffering().MaxBookingInstanceCount
+        };
+
     private async Task QueueArrearsBillingWorkflowAsync(
         Organization organization,
-        bool isNewOrganization,
         bool hadMarketplaceBillingWorkflow,
-        bool billingCycleChanged,
         CancellationToken cancellationToken)
     {
         if (organization.Type != OrganizationTypeConstants.Marketplace)

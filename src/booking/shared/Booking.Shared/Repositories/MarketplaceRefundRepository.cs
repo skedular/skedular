@@ -11,6 +11,7 @@ public interface IMarketplaceRefundRepository : IRepository<MarketplaceRefund>
     MarketplaceRefund Add(MarketplaceRefund marketplaceRefund);
     MarketplaceRefund Update(MarketplaceRefund marketplaceRefund);
     Task<MarketplaceRefund?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<MarketplaceRefund?> GetByExternalPaymentRefundIdAsync(string externalRefundId, CancellationToken cancellationToken);
 
     Task<MarketplaceRefund?> GetByLocalEntityAsync(
         string organizationId,
@@ -46,6 +47,9 @@ public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvide
 
     public async Task<MarketplaceRefund?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.MarketplaceRefund.FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<MarketplaceRefund?> GetByExternalPaymentRefundIdAsync(string externalRefundId, CancellationToken cancellationToken) =>
+        await DbContext.MarketplaceRefund.FirstOrDefaultAsync(query => query.ExternalPaymentRefundId == externalRefundId, cancellationToken);
 
     public async Task<MarketplaceRefund?> GetByLocalEntityAsync(
         string organizationId,

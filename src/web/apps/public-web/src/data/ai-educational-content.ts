@@ -1,6 +1,8 @@
 import type { PublicPage } from "./content-types";
 
-export const aiEducationalContent: Array<PublicPage & { educationalType: string }> = [
+export const aiEducationalContent: Array<
+  PublicPage & { educationalType: string }
+> = [
   {
     id: "what-is-workspace-management",
     path: "/resources/what-is-workspace-management-software",
@@ -13,8 +15,8 @@ export const aiEducationalContent: Array<PublicPage & { educationalType: string 
     educationalType: "definition",
     primaryCtaId: "book-demo",
     canonicalPath: "/resources/what-is-workspace-management-software",
-    metadataStatus: "pending",
-    contentStatus: "drafted",
+    metadataStatus: "published",
+    contentStatus: "published",
     structuredDataTypes: ["Article", "BreadcrumbList"],
   },
   {
@@ -29,8 +31,8 @@ export const aiEducationalContent: Array<PublicPage & { educationalType: string 
     educationalType: "definition",
     primaryCtaId: "contact-sales",
     canonicalPath: "/resources/what-is-coworking-management-software",
-    metadataStatus: "pending",
-    contentStatus: "drafted",
+    metadataStatus: "published",
+    contentStatus: "published",
     structuredDataTypes: ["Article", "BreadcrumbList"],
   },
   {
@@ -45,8 +47,8 @@ export const aiEducationalContent: Array<PublicPage & { educationalType: string 
     educationalType: "workflow",
     primaryCtaId: "contact-sales",
     canonicalPath: "/resources/how-workspace-memberships-work",
-    metadataStatus: "pending",
-    contentStatus: "drafted",
+    metadataStatus: "published",
+    contentStatus: "published",
     structuredDataTypes: ["Article", "BreadcrumbList"],
   },
   {
@@ -61,14 +63,16 @@ export const aiEducationalContent: Array<PublicPage & { educationalType: string 
     educationalType: "workflow",
     primaryCtaId: "contact-sales",
     canonicalPath: "/resources/how-workspace-billing-works",
-    metadataStatus: "pending",
-    contentStatus: "drafted",
+    metadataStatus: "published",
+    contentStatus: "published",
     structuredDataTypes: ["Article", "BreadcrumbList"],
   },
 ];
 
 // Generate educational content with specific variations
-export const generateEducationalContent = (basePages: typeof aiEducationalContent) => {
+export const generateEducationalContent = (
+  basePages: typeof aiEducationalContent,
+) => {
   return basePages.map((page) => ({
     ...page,
     id: `${page.id}-ai`,

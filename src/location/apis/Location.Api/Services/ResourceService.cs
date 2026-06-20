@@ -77,6 +77,7 @@ public class ResourceService(
 
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
+        EnsureResourceIsUserManaged(existingLocation);
         if (!string.IsNullOrWhiteSpace(customerId) &&
             !await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
@@ -190,6 +191,7 @@ public class ResourceService(
         var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
+        EnsureResourceIsUserManaged(existingLocation);
         if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
@@ -232,6 +234,7 @@ public class ResourceService(
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
+        EnsureResourcesAreUserManaged(existingLocations);
 
         foreach (var existingLocation in existingLocations)
         {
@@ -287,6 +290,7 @@ public class ResourceService(
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
+        EnsureResourcesAreUserManaged(existingLocations);
 
         foreach (var existingLocation in existingLocations)
         {
@@ -346,6 +350,7 @@ public class ResourceService(
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
+        EnsureResourcesAreUserManaged(existingLocations);
 
         foreach (var existingLocation in existingLocations)
         {
@@ -471,6 +476,7 @@ public class ResourceService(
     {
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingResource.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
+        EnsureResourceIsUserManaged(existingLocation);
         if (!string.IsNullOrWhiteSpace(customerId) &&
             !await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
@@ -567,8 +573,25 @@ public class ResourceService(
                     resource.Tags = request.Resource.Tags;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
+                        $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.");
             }
+        }
+    }
+
+    private static void EnsureResourcesAreUserManaged(IEnumerable<Shared.Database.Entities.Location> locations)
+    {
+        foreach (var location in locations)
+        {
+            EnsureResourceIsUserManaged(location);
+        }
+    }
+
+    private static void EnsureResourceIsUserManaged(Shared.Database.Entities.Location location)
+    {
+        if (location.Organization.Type == OrganizationTypeConstants.Host)
+        {
+            throw new InvalidOperationException("Host resources are system managed and cannot be changed directly.");
         }
     }
 }

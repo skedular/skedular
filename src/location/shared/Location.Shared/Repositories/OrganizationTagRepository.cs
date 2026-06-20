@@ -11,6 +11,11 @@ public interface IOrganizationTagRepository : IRepository<OrganizationTag>
     Task<OrganizationTag> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<OrganizationTag?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
+    Task<OrganizationTag?> GetActiveByTypeForOrganizationAsync(
+        string organizationId,
+        string type,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<OrganizationTag>> GetActiveByIdsForOrganizationAsync(
         IReadOnlyList<string> ids,
         string? organizationId,
@@ -61,6 +66,19 @@ public class OrganizationTagRepository(LocationDbContext dbContext, TimeProvider
             .AsSingleQuery()
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<OrganizationTag?> GetActiveByTypeForOrganizationAsync(
+        string organizationId,
+        string type,
+        CancellationToken cancellationToken) =>
+        await DbContext.OrganizationTag
+            .Include(query => query.Organization)
+            .FirstOrDefaultAsync(
+                query =>
+                    !query.DeletedAt.HasValue &&
+                    query.Organization.Id == organizationId &&
+                    query.Type == type,
+                cancellationToken);
 
     /// <summary>
     ///     Returns the active organization tags that match the supplied identifiers and belong to the specified organization scope.

@@ -32,6 +32,8 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     /// <param name="unitOfWork">The unit of work for the operation.</param>
     void StartWorkflowPayBookingViaBankTransfer(PayBookingViaBankTransferInput args, IUnitOfWork unitOfWork);
 
+    void StartWorkflowNotifyMarketplaceBookingFailure(NotifyMarketplaceBookingFailureInput args, IUnitOfWork unitOfWork);
+
     /// <summary>
     ///     Starts a workflow to book private recurring resources.
     /// </summary>
@@ -140,6 +142,8 @@ public class TemporalOutboxService(
 
     private static readonly string s_generateInitialArrearsBookingInvoice = typeof(GenerateInitialArrearsBookingInvoice).ToWorkflowType();
 
+    private static readonly string s_notifyMarketplaceBookingFailure = typeof(NotifyMarketplaceBookingFailure).ToWorkflowType();
+
     private static readonly string s_payBookingViaCardSetPaymentStatusAsync =
         typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.SetPaymentStatusAsync))!.ToWorkflowSignalType();
 
@@ -200,6 +204,18 @@ public class TemporalOutboxService(
             new WorkflowOptions
             {
                 Id = workflowIdService.PayBookingViaBankTransfer(args.BookingId),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartWorkflowNotifyMarketplaceBookingFailure(NotifyMarketplaceBookingFailureInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<NotifyMarketplaceBookingFailure, NotifyMarketplaceBookingFailureInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = workflowIdService.NotifyMarketplaceBookingFailure(args.FailureId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -380,6 +396,22 @@ public class TemporalOutboxService(
 
                 _ = await temporalClient.StartWorkflowAsync(
                     (GenerateInitialArrearsBookingInvoice workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
+        else if (workflowType == s_notifyMarketplaceBookingFailure)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<NotifyMarketplaceBookingFailureInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync(
+                    (NotifyMarketplaceBookingFailure workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)

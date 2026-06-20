@@ -44,7 +44,8 @@ public static class Extensions
                 .AddScoped<IOrganizationXeroConnectionService, OrganizationXeroConnectionService>()
                 .AddScoped<IOrganizationOwnershipService, OrganizationOwnershipService>()
                 .AddScoped<IPricingCatalogService, PricingCatalogService>()
-                .AddScoped<IOrganizationTeamsSubscriptionService, OrganizationTeamsSubscriptionService>();
+                .AddScoped<IOrganizationTeamsSubscriptionService, OrganizationTeamsSubscriptionService>()
+                .AddScoped<IOrganizationSpacesSubscriptionService, OrganizationSpacesSubscriptionService>();
 
         public IServiceCollection AddJobs() =>
             services;

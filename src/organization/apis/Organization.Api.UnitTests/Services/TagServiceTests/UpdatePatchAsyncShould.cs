@@ -18,6 +18,23 @@ public class UpdatePatchAsyncShould
 {
     [Theory]
     [AutoFakeItEasyData]
+    public async Task Reject_System_Host_Location_Tags(
+        TagService sut,
+        CancellationToken cancellationToken)
+    {
+        var request = new OrganizationTagPatchRequest(
+            HostLocationSystemIds.ProductTag("location-1"),
+            OrganizationTagType.Product,
+            new HashSet<OrganizationTagPatchField> { OrganizationTagPatchField.Name },
+            "Changed",
+            null,
+            null);
+
+        await Should.ThrowAsync<UnauthorizedAccessException>(() => sut.UpdatePatchAsync(request, cancellationToken));
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public async Task Update_Only_Selected_Tag_Fields(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ITagRepository tagRepository,

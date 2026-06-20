@@ -90,6 +90,17 @@ module "webapp_teams" {
   environment       = var.environment
 }
 
+module "webapp_host" {
+  source = "../modules/webapp-host"
+
+  providers = {
+    aws = aws
+  }
+
+  organization_name = module.common.organization_name
+  environment       = var.environment
+}
+
 module "customer" {
   source = "../modules/customer"
 

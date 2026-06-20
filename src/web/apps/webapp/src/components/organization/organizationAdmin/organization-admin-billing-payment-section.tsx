@@ -35,6 +35,24 @@ type InnerProps = {
 type BillingDetailsPatchField = 'COMPANY_NAME' | 'EMAIL' | 'BILLING_ADDRESS';
 
 const inlinePatchDebounceTimeout = 1000;
+const billingPatchFieldNames: Record<BillingDetailsPatchField, ReadonlyArray<keyof BillingDetails>> = {
+  COMPANY_NAME: ['companyName'],
+  EMAIL: ['email'],
+  BILLING_ADDRESS: ['addressLine1', 'addressLine2', 'suburb', 'city', 'province', 'zipcode', 'countryCode'],
+};
+
+const getValidBillingDetailsPatchFields = (fieldsToUpdate: BillingDetailsPatchField[], values: BillingDetails): BillingDetailsPatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    try {
+      for (const formField of billingPatchFieldNames[patchField]) {
+        billingSchema.validateSyncAt(formField, values);
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
+  });
 
 const RootQuery = graphql`
   query organizationAdminBillingPaymentSectionQuery($organizationCustomDomain: String!) {
@@ -145,9 +163,8 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
   const submittedBillingAddressKey = useRef<string | null>(null);
 
   const commitBillingDetailsPatch = useCallback(
-    (
-      fieldsToUpdate: BillingDetailsPatchField[],
-      {
+    (fieldsToUpdate: BillingDetailsPatchField[], values: BillingDetails) => {
+      const {
         companyName,
         email,
         osmType,
@@ -164,13 +181,9 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
         province,
         zipcode,
         countryCode,
-      }: BillingDetails,
-    ) => {
-      if (
-        !organization ||
-        fieldsToUpdate.length === 0 ||
-        !billingSchema.isValidSync({ companyName, email, addressLine1, addressLine2, suburb, city, province, zipcode, countryCode })
-      ) {
+      } = values;
+      const validFieldsToUpdate = getValidBillingDetailsPatchFields(fieldsToUpdate, values);
+      if (!organization || validFieldsToUpdate.length === 0) {
         return;
       }
 
@@ -186,7 +199,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
           input: {
             clientMutationId: uuid(),
             organizationCustomDomain,
-            fieldsToUpdate,
+            fieldsToUpdate: validFieldsToUpdate,
             companyName,
             email,
             osmType,

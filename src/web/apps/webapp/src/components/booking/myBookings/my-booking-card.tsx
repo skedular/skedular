@@ -85,6 +85,14 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
         channel {
           channel
         }
+        failure {
+          category {
+            name
+          }
+          customerAction {
+            name
+          }
+        }
         involvedCustomers {
           id
           name
@@ -496,6 +504,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
               {recurringSeriesLabel ? (
                 <Tooltip title={`${recurringSeriesLabel}. ${recurringSeriesDateLabel ?? ''}`.trim()}>
                   <Chip label="Recurring" size="small" variant="outlined" />
+                </Tooltip>
+              ) : null}
+              {bookingDetails.failure ? (
+                <Tooltip title={bookingDetails.failure.customerAction.name}>
+                  <Chip label={bookingDetails.failure.category.name} size="small" color="warning" variant="outlined" />
                 </Tooltip>
               ) : null}
               {bookingDetails.marketplaceBooking?.isPaymentRequired ? (

@@ -21,15 +21,16 @@ public class RegenerateResourceAvailabilitySnapshotsShould(
         var locationId = await Nanoid.GenerateAsync();
         var now = timeProvider.GetUtcNow();
 
-        repositoryFactory.DbContext.Organization.Add(new Organization { Id = organizationId, CreatedAt = now });
-        repositoryFactory.DbContext.Location.Add(new LocationEntity
-        {
-            Id = locationId,
-            Name = "Backfill Test Location",
-            OrganizationId = organizationId,
-            Type = LocationTypeConstants.Private,
-            CreatedAt = now
-        });
+        await repositoryFactory.DbContext.Organization.AddAsync(new Organization { Id = organizationId, CreatedAt = now }, cancellationToken);
+        await repositoryFactory.DbContext.Location.AddAsync(
+            new LocationEntity
+            {
+                Id = locationId,
+                Name = "Backfill Test Location",
+                OrganizationId = organizationId,
+                Type = LocationTypeConstants.Private,
+                CreatedAt = now
+            }, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         return locationId;

@@ -1,17 +1,10 @@
 import { getPublicOrigin } from '@skedular/shared';
 import { authkit, handleAuthkitHeaders } from '@workos-inc/authkit-nextjs';
 import { NextRequest, NextResponse } from 'next/server';
+import { isUnauthenticatedPath } from './libs/auth/route-access';
 
 const getSessionCookieName = () => process.env.WORKOS_COOKIE_NAME || 'wos-session';
 const shouldBypassAuthForUiTests = () => process.env.SKEDULAR_UI_TEST_BYPASS_AUTH === 'true';
-
-const isUnauthenticatedPath = (pathname: string) => {
-  if (pathname === '/callback' || pathname === '/signin' || pathname === '/signup' || pathname.startsWith('/auth/')) {
-    return true;
-  }
-
-  return false;
-};
 
 const handlePublicPathWithoutSession = (request: NextRequest, redirectUri: string) => {
   const requestHeaders = new Headers(request.headers);

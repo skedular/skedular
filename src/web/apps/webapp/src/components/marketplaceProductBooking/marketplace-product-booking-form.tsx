@@ -1,5 +1,6 @@
 import { getMarketplaceProductBookingDetailsLink, getMarketplaceProductLink, getSignInLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
+import { getAvailableDaysGuidance, isDateAvailableForPrice } from '@/components/marketplaceProduct/available-days';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import type {
@@ -28,8 +29,11 @@ import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingSummary from './marketplace-product-booking-summary';
 import useKnownParams from '@/hooks/use-known-params';
+import { getFormFailureToastMessage } from './marketplace-booking-failure-eligibility';
 
 type Props = {
+  bookingAvailable: boolean;
+  bookingAvailabilityMessage: string;
   onDateChange: (value: Dayjs) => void;
   onTimeRangeChange: (value: DateRange<Dayjs>) => void;
   rootDataRelay: marketplaceProductBookingForm_query$key;
@@ -98,7 +102,7 @@ type AvailabilityQueryResponse = {
   }>;
 };
 
-const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDataRelay, selectedDate, timeRange }: Props) => {
+const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMessage, onDateChange, onTimeRangeChange, rootDataRelay, selectedDate, timeRange }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment marketplaceProductBookingForm_query on Query @argumentDefinitions(productId: { type: "String!" }) {
@@ -157,6 +161,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
             isTaxInclusive
             billingMode
             acceptedPaymentMethods
+            availableDays
           }
         }
       }
@@ -167,6 +172,20 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   const [commitAddBooking, isInFlight] = useMutation<marketplaceProductBookingForm_addMarketplaceBookingMutation>(graphql`
     mutation marketplaceProductBookingForm_addMarketplaceBookingMutation($input: AddMarketplaceBookingInput!) {
       addMarketplaceBooking(input: $input) {
+        accessError {
+          errorCode
+          message
+        }
+        failure {
+          category {
+            type
+            name
+          }
+          customerAction {
+            type
+            name
+          }
+        }
         booking {
           id
           from
@@ -536,6 +555,18 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
         }
 
         const booking = response.addMarketplaceBooking?.booking;
+        const accessError = response.addMarketplaceBooking?.accessError;
+        const failure = response.addMarketplaceBooking?.failure;
+        if (accessError) {
+          toast(<NotificationContent content="Bookings are currently unavailable for this workspace." />, errorNotificationOptions);
+          return;
+        }
+
+        if (failure) {
+          toast(<NotificationContent content={getFormFailureToastMessage(failure.category.type)} />, errorNotificationOptions);
+          return;
+        }
+
         if (!booking?.id) {
           toast(<NotificationContent content="The booking was created, but we couldn't open its details page." />, errorNotificationOptions);
           return;
@@ -616,7 +647,13 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
               ))}
             </TextField>
 
-            <DatePicker label="Booking date" value={selectedDate} onChange={(value) => value && onDateChange(value)} />
+            <DatePicker
+              label="Booking date"
+              value={selectedDate}
+              onChange={(value) => value && onDateChange(value)}
+              shouldDisableDate={(date) => !isDateAvailableForPrice(date, selectedPricingOption?.availableDays)}
+              slotProps={{ textField: { helperText: getAvailableDaysGuidance(selectedPricingOption?.availableDays) } }}
+            />
 
             <TimeRangePicker
               minutesStep={rootData.bookingSlotSizeInMinutes}
@@ -680,6 +717,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
               termsAndConditionsUrl={rootData.product.organization.customerFacingTermsAndConditionsUrl}
             />
 
+            {!bookingAvailable ? <Alert severity="info">{bookingAvailabilityMessage}</Alert> : null}
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.25, justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
               <Box>
                 <SubtitleIconTypography label={rootData.product.listingMetadata.title ?? ''} />
@@ -694,6 +732,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
                   onClick={handleSubmit}
                   disabled={
                     isInFlight ||
+                    !bookingAvailable ||
                     !selectedPricingOption ||
                     isCheckingAvailability ||
                     !dateRangeValidation.valid ||

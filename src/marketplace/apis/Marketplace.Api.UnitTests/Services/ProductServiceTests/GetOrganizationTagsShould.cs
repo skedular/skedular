@@ -20,6 +20,51 @@ public class GetOrganizationTagsShould
 {
     [Theory]
     [AutoFakeItEasyData]
+    public async Task Reject_Manual_Host_Product_Creation(
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] ICustomerService customerService,
+        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen] IOrganizationRepository organizationRepository,
+        [Frozen] IOrganizationTagRepository organizationTagRepository,
+        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen] IDbContextTransaction transaction,
+        ProductService sut,
+        CancellationToken cancellationToken)
+    {
+        var organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Host };
+        var productVersion = new ProductVersion
+        {
+            Type = ProductType.Event,
+            Currency = Currency.Nzd,
+            OrganizationTags = [new Shared.Models.OrganizationTag { Id = "host-location-other-org", Type = OrganizationTagType.Product }],
+            PricingOptions =
+            [
+                new ProductPricing(
+                    "pricing-1", 0, ListingMetadata.Empty, ProductPricingCadence.Daily, ProductPricingCadence.Daily,
+                    100m, true, false, [PaymentMethod.Card], ProductPricingBillingMode.Upfront, null, null, 30, 0, 1,
+                    ProductPricingCancellationPolicyType.NoCancellation, [])
+            ]
+        };
+        A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
+        A.CallTo(() => repositoryFactory.OrganizationTagRepository).Returns(organizationTagRepository);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
+            .Returns((new Customer { Id = "customer-1" }, new Shared.Database.Entities.Customer { Id = "customer-1" }));
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, cancellationToken)).Returns(organization);
+        A.CallTo(() => organizationAuthorizationService.CanModifyProductAsync("org-1", "customer-1", cancellationToken)).Returns(true);
+        A.CallTo(() => organizationTagRepository.GetActiveByIdsForOrganizationAsync(A<IReadOnlyList<string>>._, "org-1", null, cancellationToken))
+            .Returns([]);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
+
+        var exception =
+            await Should.ThrowAsync<InvalidOperationException>(() => sut.AddAsync(null, "org-1", null, productVersion, cancellationToken));
+
+        exception.Message.ShouldContain("provisioned automatically");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public async Task Load_Organization_Tags_Through_The_Repository_Method_When_Adding_A_Product(
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,

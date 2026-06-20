@@ -52,6 +52,8 @@ const runTests = (appName, args) => {
       ...process.env,
       PLAYWRIGHT_RECORD_VIDEO: recordVideo ? 'true' : 'false',
       PLAYWRIGHT_CAPTURE_SCREENSHOTS: captureScreenshots ? 'true' : 'false',
+      // Bypass AuthKit for UI tests
+      SKEDULAR_UI_TEST_BYPASS_AUTH: 'true',
     },
   });
   log('ui_test_suite_completed', { appId: appName });

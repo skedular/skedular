@@ -6,7 +6,7 @@ import { industryPages } from "../../data/industry-pages";
 
 export function getStaticPaths() {
   return industryPages.map((page) => ({
-    params: { slug: page.path.replace('/workspace-software-for-', '') },
+    params: { slug: page.path.split("/").pop() },
     props: { page },
   }));
 }

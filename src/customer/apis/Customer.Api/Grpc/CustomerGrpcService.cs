@@ -62,7 +62,8 @@ public class CustomerGrpcService(
                         FeedbackChannel.Web => FeedbackChannelType.Web,
                         FeedbackChannel.Slack => FeedbackChannelType.Slack,
                         FeedbackChannel.MsTeams => FeedbackChannelType.MsTeams,
-                        _ => throw new ArgumentOutOfRangeException()
+                        _ => throw new ArgumentOutOfRangeException(nameof(request.Channel), request.Channel,
+                            $"Unexpected value for {nameof(request.Channel)}: {request.Channel}. Update enum mapping or caller input.")
                     }
                 },
                 context.CancellationToken)).Id

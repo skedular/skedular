@@ -1,6 +1,7 @@
 ﻿using Booking.Shared.Database;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Booking.Shared.Repositories;
 
@@ -33,15 +34,20 @@ public interface IRepositoryFactory
     IOrganizationArrearsInvoiceRepository OrganizationArrearsInvoiceRepository { get; }
     IMarketplaceRefundRepository MarketplaceRefundRepository { get; }
     IMarketplaceRefundEventRepository MarketplaceRefundEventRepository { get; }
+    IMarketplaceBookingFailureRepository MarketplaceBookingFailureRepository { get; }
+    IMarketplaceBookingFailureEventRepository MarketplaceBookingFailureEventRepository { get; }
+    IMarketplaceBookingFailureDeliveryRepository MarketplaceBookingFailureDeliveryRepository { get; }
     IAccountingInvoiceExportLinkRepository AccountingInvoiceExportLinkRepository { get; }
     IAccountingInvoiceInstanceRepository AccountingInvoiceInstanceRepository { get; }
     IAccountingContactLinkRepository AccountingContactLinkRepository { get; }
     IAccountingPaymentEventRepository AccountingPaymentEventRepository { get; }
+    ISpacesBookingUsageRepository SpacesBookingUsageRepository { get; }
+    void ResetChangeTracker();
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(IDbContextFactory<BookingDbContext> dbContextFactory, TimeProvider timeProvider)
+    public RepositoryFactory(IDbContextFactory<BookingDbContext> dbContextFactory, TimeProvider timeProvider, ILoggerFactory loggerFactory)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
@@ -54,7 +60,7 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
-        ResourceRepository = new ResourceRepository(_dbContext, timeProvider);
+        ResourceRepository = new ResourceRepository(_dbContext, timeProvider, loggerFactory.CreateLogger<ResourceRepository>());
         ResourceBookingSlotRepository = new ResourceBookingSlotRepository(_dbContext, timeProvider);
         TeamRepository = new TeamRepository(_dbContext, timeProvider);
         TeamMemberRepository = new TeamMemberRepository(_dbContext, timeProvider);
@@ -70,11 +76,17 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         OrganizationArrearsInvoiceRepository = new OrganizationArrearsInvoiceRepository(_dbContext, timeProvider);
         MarketplaceRefundRepository = new MarketplaceRefundRepository(_dbContext, timeProvider);
         MarketplaceRefundEventRepository = new MarketplaceRefundEventRepository(_dbContext, timeProvider);
+        MarketplaceBookingFailureRepository = new MarketplaceBookingFailureRepository(_dbContext, timeProvider);
+        MarketplaceBookingFailureEventRepository = new MarketplaceBookingFailureEventRepository(_dbContext, timeProvider);
+        MarketplaceBookingFailureDeliveryRepository = new MarketplaceBookingFailureDeliveryRepository(_dbContext, timeProvider);
         AccountingInvoiceExportLinkRepository = new AccountingInvoiceExportLinkRepository(_dbContext, timeProvider);
         AccountingInvoiceInstanceRepository = new AccountingInvoiceInstanceRepository(_dbContext, timeProvider);
         AccountingContactLinkRepository = new AccountingContactLinkRepository(_dbContext, timeProvider);
         AccountingPaymentEventRepository = new AccountingPaymentEventRepository(_dbContext, timeProvider);
+        SpacesBookingUsageRepository = new SpacesBookingUsageRepository(_dbContext, timeProvider);
     }
+
+    public void ResetChangeTracker() => DbContext.ChangeTracker.Clear();
 
     public IMarketplaceBookingSubscriptionRepository MarketplaceBookingSubscriptionRepository { get; }
     public IRecurringBookingRepository RecurringBookingRepository { get; }
@@ -101,8 +113,12 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
     public IOrganizationArrearsInvoiceRepository OrganizationArrearsInvoiceRepository { get; }
     public IMarketplaceRefundRepository MarketplaceRefundRepository { get; }
     public IMarketplaceRefundEventRepository MarketplaceRefundEventRepository { get; }
+    public IMarketplaceBookingFailureRepository MarketplaceBookingFailureRepository { get; }
+    public IMarketplaceBookingFailureEventRepository MarketplaceBookingFailureEventRepository { get; }
+    public IMarketplaceBookingFailureDeliveryRepository MarketplaceBookingFailureDeliveryRepository { get; }
     public IAccountingInvoiceExportLinkRepository AccountingInvoiceExportLinkRepository { get; }
     public IAccountingInvoiceInstanceRepository AccountingInvoiceInstanceRepository { get; }
     public IAccountingContactLinkRepository AccountingContactLinkRepository { get; }
     public IAccountingPaymentEventRepository AccountingPaymentEventRepository { get; }
+    public ISpacesBookingUsageRepository SpacesBookingUsageRepository { get; }
 }

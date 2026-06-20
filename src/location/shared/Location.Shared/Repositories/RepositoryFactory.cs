@@ -16,6 +16,7 @@ public interface IRepositoryFactory
     IDailyBookingCountRecordingRepository DailyBookingCountRecordingRepository { get; }
     IDailyDeskBookingCountRecordingRepository DailyDeskBookingCountRecordingRepository { get; }
     IDailyRoomBookingCountRecordingRepository DailyRoomBookingCountRecordingRepository { get; }
+    ILocationBookingRecordingRepository LocationBookingRecordingRepository { get; }
     IResourceRepository ResourceRepository { get; }
     IIdentityRepository IdentityRepository { get; }
     ILocationRepository LocationRepository { get; }
@@ -46,6 +47,7 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
         DailyBookingCountRecordingRepository = new DailyBookingCountRecordingRepository(_dbContext, timeProvider);
         DailyDeskBookingCountRecordingRepository = new DailyDeskBookingCountRecordingRepository(_dbContext, timeProvider);
         DailyRoomBookingCountRecordingRepository = new DailyRoomBookingCountRecordingRepository(_dbContext, timeProvider);
+        LocationBookingRecordingRepository = new LocationBookingRecordingRepository(_dbContext, timeProvider);
         ResourceRepository = new ResourceRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
@@ -70,6 +72,7 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
     public IDailyBookingCountRecordingRepository DailyBookingCountRecordingRepository { get; }
     public IDailyDeskBookingCountRecordingRepository DailyDeskBookingCountRecordingRepository { get; }
     public IDailyRoomBookingCountRecordingRepository DailyRoomBookingCountRecordingRepository { get; }
+    public ILocationBookingRecordingRepository LocationBookingRecordingRepository { get; }
     public IResourceRepository ResourceRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public ILocationRepository LocationRepository { get; }

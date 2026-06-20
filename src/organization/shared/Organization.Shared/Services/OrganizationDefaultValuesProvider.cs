@@ -50,6 +50,14 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Type = OrganizationTagTypeConstants.ResourceOthers,
             Color = "#8A2BE2",
             Organization = organizationEntity
+        },
+        new()
+        {
+            Id = randomHelper.Generate(),
+            Name = OrganizationTagType.ResourceEntireLocation.ToOrganizationTagTypeName(),
+            Type = OrganizationTagTypeConstants.ResourceEntireLocation,
+            Color = "#4169E1",
+            Organization = organizationEntity
         }
     ];
 

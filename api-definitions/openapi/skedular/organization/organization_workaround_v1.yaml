@@ -15,7 +15,7 @@ servers:
     description: local
 
 paths:
-  /v1/organization/{organizationId}/republish:
+  /v1/organization/{customDomain}/republish:
     put:
       tags:
         - v1
@@ -25,7 +25,7 @@ paths:
       operationId: republish
       parameters:
         - in: path
-          name: organizationId
+          name: customDomain
           schema:
             type: string
           required: true
@@ -103,21 +103,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
-  /v1/organization/{organizationId}/enterprise-offering:
+  /v1/organization/enterprise-offering:
     put:
       tags:
         - v1
         - organization
         - offering
         - workaround
-      summary: set enterprise offering
+      summary: set negotiated organization offering
       operationId: setEnterpriseOffering
       parameters:
-        - in: path
-          name: organizationId
-          schema:
-            type: string
-          required: true
         - in: header
           name: X-API-Key
           schema:
@@ -133,7 +128,7 @@ paths:
 
       responses:
         "200":
-          description: the status of setting the enterprise offering
+          description: the status of setting the negotiated organization offering
 
         default:
           description: unexpected error
@@ -211,7 +206,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
-  /v1/organization/analytics/{organizationId}/regenerate-daily-analytics:
+  /v1/organization/analytics/{customDomain}/regenerate-daily-analytics:
     put:
       tags:
         - v1
@@ -222,7 +217,7 @@ paths:
       operationId: regenerateDailyAnalytics
       parameters:
         - in: path
-          name: organizationId
+          name: customDomain
           schema:
             type: string
           required: true
@@ -244,34 +239,70 @@ components:
       type: object
       additionalProperties: false
       required:
+        - offeringCode
         - fixedPrice
         - currency
-        - purchasedUserCapacity
-        - purchasedLocationCapacity
-        - purchasedTeamCapacity
       properties:
+        organizationId:
+          type: string
+          nullable: true
+        customDomain:
+          type: string
+          nullable: true
+        offeringCode:
+          $ref: "#/components/schemas/OfferingCode"
+          description: The organization offering code to assign.
         fixedPrice:
           type: integer
           format: int32
           minimum: 0
-          description: Fixed monthly price for the negotiated enterprise offering in minor currency units.
+          description: Fixed monthly price for the negotiated offering in minor currency units.
         currency:
           $ref: "#/components/schemas/Currency"
         purchasedUserCapacity:
           type: integer
           format: int32
           minimum: 1
-          description: Maximum monthly users allowed for the negotiated enterprise offering.
+          nullable: true
+          description: Optional maximum monthly users allowed for the negotiated offering. Omit for the offering default.
         purchasedLocationCapacity:
           type: integer
           format: int32
           minimum: 1
-          description: Maximum monthly locations allowed for the negotiated enterprise offering.
+          nullable: true
+          description: Optional maximum monthly locations allowed for the negotiated offering. Omit for the offering default.
         purchasedTeamCapacity:
           type: integer
           format: int32
           minimum: 1
-          description: Maximum monthly teams allowed for the negotiated enterprise offering.
+          nullable: true
+          description: Optional maximum monthly teams allowed for the negotiated offering. Omit for the offering default.
+        monthlyBookingInstanceQuota:
+          type: integer
+          format: int32
+          minimum: 1
+          nullable: true
+          description: Optional monthly booking instance quota for Spaces offerings. Omit for the offering default.
+        discountPercentage:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+          default: 0
+          description: Optional discount percentage to apply while billing this offering. It is copied to renewed offering periods until changed.
+
+    OfferingCode:
+      type: string
+      enum:
+        - EARLY_BIRD_V1
+        - FREE_TIER_V1
+        - PAY_AS_YOU_GO_V1
+        - ENTERPRISE_CUSTOM_V1
+        - SPACES_FREE_TIER_V1
+        - SPACES_GROWTH_V1
+        - SPACES_BUSINESS_V1
+        - SPACES_CONTACT_US_V1
+        - HOST_STANDARD_V1
 
     Currency:
       type: string

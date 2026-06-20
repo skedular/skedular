@@ -11,7 +11,6 @@ using Organization.Api.Mappers;
 using Organization.Api.Models;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
-using Organization.Shared.Models.PricingCatalog;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
@@ -150,7 +149,7 @@ public class OrganizationService(
         }
 
         var now = timeProvider.GetUtcNow();
-        var finalOfferingCode = string.IsNullOrWhiteSpace(offeringCode) ? OfferingCode.FreeTierV1 : offeringCode.ToOfferingCode();
+        var finalOfferingCode = string.IsNullOrWhiteSpace(offeringCode) ? GetDefaultOfferingCode(organization.Type) : offeringCode.ToOfferingCode();
         var organizationOffering = new OrganizationOffering
         {
             Id = randomHelper.Generate(),
@@ -159,9 +158,15 @@ public class OrganizationService(
             Start = now,
             End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
             AutoRenew = true,
-            Currency = PricingCatalogConstants.SkedularPricingCurrency
+            Currency = finalOfferingCode.GetOffering().Currency.ToCurrency()
         };
         organizationOffering.ApplyOfferingTemplate(finalOfferingCode);
+
+        if (organization.Type == OrganizationType.Marketplace &&
+            Offerings.SpacesOfferings.Contains(finalOfferingCode))
+        {
+            organizationEntity.SpacesTrialStartedAt = now;
+        }
 
         organizationEntity.OrganizationMembers = organizationMembers;
         organizationEntity.OrganizationOfferings = [organizationOffering];
@@ -197,6 +202,15 @@ public class OrganizationService(
         if (customer is not null)
         {
             await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync([customer.Id], cancellationToken);
+        }
+
+        if (organization.Type == OrganizationType.Host)
+        {
+            logger.LogInformation(
+                "Host organization created. OrganizationId: {OrganizationId}, CustomerId: {CustomerId}, CorrelationId: {CorrelationId}",
+                organization.Id,
+                customer?.Id,
+                context.GetCorrelationId());
         }
 
         return organization;
@@ -251,7 +265,7 @@ public class OrganizationService(
                             "Organization patch update hit a concurrency conflict and will retry against the latest organization. CustomerId: {CustomerId}, RetryAttempt: {RetryAttempt}",
                             customer.Id,
                             retryAttempt);
-                        repositoryFactory.DbContext.ChangeTracker.Clear();
+                        repositoryFactory.OrganizationRepository.ClearTrackedEntities();
                     })
                 .ExecuteAsync(async () =>
                 {
@@ -441,6 +455,15 @@ public class OrganizationService(
 
         return (paginatedInfo, mappedOrganizations, totalCount);
     }
+
+    private static OfferingCode GetDefaultOfferingCode(OrganizationType organizationType) =>
+        organizationType switch
+        {
+            OrganizationType.Private => OfferingCode.FreeTierV1,
+            OrganizationType.Marketplace => OfferingCode.SpacesFreeTierV1,
+            OrganizationType.Host => OfferingCode.HostStandardV1,
+            _ => OfferingCode.FreeTierV1
+        };
 
     private async Task<Shared.Models.Organization> UpdateInternalAsync(
         Shared.Models.Organization organization,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<48b0f3d8f2c688f2600723993599b76e>>
+ * @generated SignedSource<<e880293787f84618b1d75e31b676aed9>>
  * @lightSyntaxTransform
  */
 
@@ -201,6 +201,13 @@ return {
                     "kind": "ScalarField",
                     "name": "supportsSubscriptionAutoRenewal",
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "availableDays",
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -277,12 +284,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ae9fe5fb9b1b2ad7a4597b1bca71588f",
+    "cacheID": "1e3fe324b699848a10df671dc340f302",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontSelectedLocationProductsQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontSelectedLocationProductsQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    products {\n      id\n      pricingOptions {\n        index\n      }\n      ...guestStoreFrontProductCard_product\n    }\n    id\n  }\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n"
+    "text": "query guestStoreFrontSelectedLocationProductsQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    products {\n      id\n      pricingOptions {\n        index\n      }\n      ...guestStoreFrontProductCard_product\n    }\n    id\n  }\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n    availableDays\n  }\n}\n"
   }
 };
 })();

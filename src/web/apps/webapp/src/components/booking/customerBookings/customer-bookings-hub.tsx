@@ -64,6 +64,24 @@ type PendingCancellationConfirmation = {
 
 const RootQuery = graphql`
   query customerBookingsHub_rootQuery($today: DateTime!) {
+    marketplaceBookingFailures {
+      id
+      category {
+        type
+        name
+      }
+      scope {
+        type
+        name
+      }
+      finalizedAt
+      requestedFrom
+      requestedUntil
+      customerAction {
+        type
+        name
+      }
+    }
     marketplaceBookingSubscriptionCancellationModes {
       type
       name
@@ -359,6 +377,25 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
             </StackRow>
           </CardContent>
         </Card>
+
+        {rootData.marketplaceBookingFailures.length > 0 ? (
+          <Card sx={{ mt: 3, borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
+            <CardContent sx={{ p: { xs: 2, sm: 2.5 } }}>
+              <CaptionIconTypography label="Booking notifications" sx={{ textTransform: 'uppercase', opacity: 0.66 }} />
+              <SubtitleIconTypography label="Recent booking outcomes" sx={{ mt: 0.75 }} />
+              {rootData.marketplaceBookingFailures.map((failure) => (
+                <Box key={failure.id} sx={{ borderTop: 1, borderColor: 'divider', mt: 1.5, pt: 1.5 }}>
+                  <BodyIconTypography label={failure.category.name} />
+                  <SmallIconTypography label={`${failure.scope.name} · ${dayjs(failure.finalizedAt).format('MMM D, YYYY h:mm A')}`} sx={{ mt: 0.25, opacity: 0.72 }} />
+                  <BodyIconTypography
+                    label={failure.customerAction.type === 'Rebook' ? 'Please start a new booking from current availability.' : failure.customerAction.name}
+                    sx={{ mt: 0.5, opacity: 0.82 }}
+                  />
+                </Box>
+              ))}
+            </CardContent>
+          </Card>
+        ) : null}
 
         {totalCount === 0 ? (
           <Card sx={{ mt: 4, borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>

@@ -168,7 +168,8 @@ public class BookingService(
                 BookingCategory.Vacation => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.Vacation,
                 BookingCategory.TravelingForWork => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(booking.Category), booking.Category,
+                    $"Unexpected value for {nameof(booking.Category)}: {booking.Category}. Update enum mapping or caller input.")
             },
             Notes = booking.Notes.ToSafeString()
         };
@@ -208,7 +209,8 @@ public class BookingService(
                 BookingCategory.Vacation => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.Vacation,
                 BookingCategory.TravelingForWork => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(booking.Category), booking.Category,
+                    $"Unexpected value for {nameof(booking.Category)}: {booking.Category}. Update enum mapping or caller input.")
             },
             Notes = booking.Notes.ToSafeString()
         };

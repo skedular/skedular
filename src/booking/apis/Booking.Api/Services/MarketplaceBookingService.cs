@@ -3,7 +3,9 @@ using Api.Shared.Services.Models;
 using Booking.Api.Models;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Mappers;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Random;
@@ -11,9 +13,18 @@ using Customer = Booking.Shared.Database.Entities.Customer;
 
 namespace Booking.Api.Services;
 
+/// <summary>
+///     Result of a marketplace booking add operation; exactly one of <see cref="Booking" /> or
+///     <see cref="Failure" /> is non-null for a completed immediate submission.
+/// </summary>
+public sealed record MarketplaceBookingAddResult(
+    Shared.Models.Booking? Booking = null,
+    MarketplaceBookingFailureSummary? Failure = null);
+
 public interface IMarketplaceBookingService
 {
-    Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
+    Task<string?> GetBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken);
+    Task<MarketplaceBookingAddResult> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> UpdateAsync(MarketplaceBookingPatchRequest request, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken);
 }
@@ -28,7 +39,10 @@ public class MarketplaceBookingService(
     IEntityMapper entityMapper,
     ILogger<MarketplaceBookingService> logger) : IMarketplaceBookingService
 {
-    public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
+    public async Task<string?> GetBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken) =>
+        (await repositoryFactory.BookingRepository.GetByMarketplaceBookingIdAsync(marketplaceBookingId, cancellationToken))?.Id;
+
+    public async Task<MarketplaceBookingAddResult> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
         var marketplaceBooking = booking.MarketplaceBooking;
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
@@ -53,7 +67,8 @@ public class MarketplaceBookingService(
             var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
             if (existingBooking is not null)
             {
-                return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
+                var updated = await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
+                return new MarketplaceBookingAddResult(updated);
             }
         }
         else
@@ -83,6 +98,26 @@ public class MarketplaceBookingService(
 
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
+        if (productVersion.Product.Organization.Type == OrganizationTypeConstants.Host &&
+            productVersion.Type != ProductTypeConstants.Event)
+        {
+            logger.LogWarning(
+                "Host booking rejected because the Product is not configured for full-place booking. ProductId: {ProductId}, ProductVersionId: {ProductVersionId}",
+                productVersion.ProductId,
+                productVersion.Id);
+            throw new InvalidOperationException("Host products only support full-place booking.");
+        }
+
+        if (productVersion.Product.Organization.Type == OrganizationTypeConstants.Host &&
+            marketplaceBooking.PaymentMethod != PaymentMethod.Card)
+        {
+            logger.LogWarning(
+                "Host booking rejected because only Stripe card payments are supported. ProductId: {ProductId}, PaymentMethod: {PaymentMethod}",
+                productVersion.ProductId,
+                marketplaceBooking.PaymentMethod);
+            throw new InvalidOperationException("Host bookings currently support card payment only.");
+        }
+
         if (productVersion.Type == ProductTypeConstants.Event)
         {
             marketplaceBooking.Quantity = 1;
@@ -95,7 +130,32 @@ public class MarketplaceBookingService(
         marketplaceBooking.ProductPricing =
             productVersion.PricingOptions.ToSafeCollection().First(item => item.Id == marketplaceBooking.ProductPricing.Id);
 
-        return await sharedMarketplaceBookingService.AddAsync(booking, customer, organizations, teams, null, cancellationToken);
+        try
+        {
+            var added = await sharedMarketplaceBookingService.AddAsync(
+                booking,
+                customer,
+                organizations,
+                teams,
+                null,
+                true,
+                true,
+                false,
+                cancellationToken);
+            return new MarketplaceBookingAddResult(added);
+        }
+        catch (MarketplaceBookingAvailabilityConflict ex) when (!string.IsNullOrEmpty(ex.FailureId))
+        {
+            var failure = await repositoryFactory.MarketplaceBookingFailureRepository.GetByIdAsync(ex.FailureId, cancellationToken);
+            if (failure is null)
+            {
+                throw;
+            }
+
+            return new MarketplaceBookingAddResult(Failure: new MarketplaceBookingFailureSummary(
+                failure.Id, failure.Category, failure.Scope, failure.FinalizedAt, failure.RequestedFrom, failure.RequestedUntil,
+                failure.CustomerAction ?? string.Empty));
+        }
     }
 
     public async Task<Shared.Models.Booking> UpdateAsync(MarketplaceBookingPatchRequest request, CancellationToken cancellationToken)
@@ -205,6 +265,14 @@ public class MarketplaceBookingService(
         Customer callingCustomer,
         CancellationToken cancellationToken)
     {
+        // Marketplace subscription instances are reconciled by the scheduler until an
+        // administrator changes an individual occurrence. Keep that change local to
+        // the instance; the parent subscription's selected weekday pattern is unchanged.
+        if (existingBooking.RecurringBooking is not null && booking.HasRecurringInstanceOverrides != true)
+        {
+            booking.HasRecurringInstanceOverrides = true;
+        }
+
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
             booking.InvolvedOrganizations
                 .Where(item => !string.IsNullOrWhiteSpace(item.Id))
@@ -254,7 +322,8 @@ public class MarketplaceBookingService(
                     booking.Category = request.Booking.Category;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
+                        $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.");
             }
         }
     }

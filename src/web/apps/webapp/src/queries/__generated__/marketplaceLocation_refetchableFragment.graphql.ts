@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a806071c795fec85d82c7b6e949230d7>>
+ * @generated SignedSource<<cfdfd39aa333e03423fb2ffd330cf36f>>
  * @lightSyntaxTransform
  */
 
@@ -796,6 +796,13 @@ return {
                     "kind": "ScalarField",
                     "name": "supportsSubscriptionAutoRenewal",
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "availableDays",
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -902,16 +909,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a929838f0111148da9e756efd335f2c5",
+    "cacheID": "0de41aacc570dc17d6e1f4a1de952a05",
     "id": null,
     "metadata": {},
     "name": "marketplaceLocation_refetchableFragment",
     "operationKind": "query",
-    "text": "query marketplaceLocation_refetchableFragment(\n  $floorPlanSelected: Boolean = false\n  $locationId: String!\n  $selectedFloorPlanId: String\n) {\n  ...marketplaceLocation_query_4ndSC6\n}\n\nfragment marketplaceLocation_query_4ndSC6 on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n  floorPlans(where: {locationId: $locationId}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    edges {\n      node {\n        id\n        name\n        resourceCount\n        image {\n          original {\n            url\n            height\n            width\n          }\n        }\n        resourcePositions {\n          x\n          y\n          resource {\n            id\n          }\n          id\n        }\n      }\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  location(id: $locationId) {\n    id\n    name\n    organization {\n      customDomain\n      id\n    }\n    listingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    timezone\n    amenities {\n      id\n      name\n    }\n    extraMetadata {\n      contactDetails {\n        contactPeople\n        contactEmails\n        contactPhones\n      }\n      areaRange {\n        fromInSqm\n        toInSqm\n      }\n      peopleCapacity {\n        from\n        to\n      }\n      website\n      relatedImageLinks\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n      }\n    }\n    physicalAddress {\n      longitude\n      latitude\n      multilinesFormattedAddress\n      id\n    }\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n    products {\n      id\n      listingMetadata {\n        title\n        subTitle\n      }\n      productTags {\n        id\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      currency {\n        type\n      }\n      pricingOptions {\n        id\n        index\n        listingMetadata {\n          title\n        }\n        purchaseCadence\n        price\n        isTaxInclusive\n        supportsSubscriptionAutoRenewal\n      }\n      amenities {\n        id\n        name\n      }\n    }\n    resources(where: {floorPlanId: $selectedFloorPlanId}, orderBy: [{direction: ASCENDING, field: NAME}]) @include(if: $floorPlanSelected) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            type\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query marketplaceLocation_refetchableFragment(\n  $floorPlanSelected: Boolean = false\n  $locationId: String!\n  $selectedFloorPlanId: String\n) {\n  ...marketplaceLocation_query_4ndSC6\n}\n\nfragment marketplaceLocation_query_4ndSC6 on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n  floorPlans(where: {locationId: $locationId}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    edges {\n      node {\n        id\n        name\n        resourceCount\n        image {\n          original {\n            url\n            height\n            width\n          }\n        }\n        resourcePositions {\n          x\n          y\n          resource {\n            id\n          }\n          id\n        }\n      }\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  location(id: $locationId) {\n    id\n    name\n    organization {\n      customDomain\n      id\n    }\n    listingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    timezone\n    amenities {\n      id\n      name\n    }\n    extraMetadata {\n      contactDetails {\n        contactPeople\n        contactEmails\n        contactPhones\n      }\n      areaRange {\n        fromInSqm\n        toInSqm\n      }\n      peopleCapacity {\n        from\n        to\n      }\n      website\n      relatedImageLinks\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n      }\n    }\n    physicalAddress {\n      longitude\n      latitude\n      multilinesFormattedAddress\n      id\n    }\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n    products {\n      id\n      listingMetadata {\n        title\n        subTitle\n      }\n      productTags {\n        id\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      currency {\n        type\n      }\n      pricingOptions {\n        id\n        index\n        listingMetadata {\n          title\n        }\n        purchaseCadence\n        price\n        isTaxInclusive\n        supportsSubscriptionAutoRenewal\n        availableDays\n      }\n      amenities {\n        id\n        name\n      }\n    }\n    resources(where: {floorPlanId: $selectedFloorPlanId}, orderBy: [{direction: ASCENDING, field: NAME}]) @include(if: $floorPlanSelected) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            type\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ee7409b10e12d1c3c19f9c1287d24d21";
+(node as any).hash = "8bb095f1c32de2134b0cf5a45bc9a73f";
 
 export default node;

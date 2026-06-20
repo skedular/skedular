@@ -1,0 +1,60 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { resourceArticles } from "../../data/current-public-content";
+
+export function getStaticPaths() {
+  return resourceArticles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+
+const formatPublishedDate = (date: string) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${date}T00:00:00Z`));
+---
+
+<SiteLayout
+  title={article.seoTitle ?? article.title}
+  description={article.seoDescription ?? article.summary}
+  canonicalPath={article.destinationPath}
+  structuredDataType="BlogPosting"
+  breadcrumbs={[
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: article.title, path: article.destinationPath },
+  ]}
+>
+  <article class="article-page">
+    <div class="container">
+      <p class="eyebrow">{article.topicTags.join(" / ")}</p>
+      <h1>{article.title}</h1>
+      <time class="article-meta" datetime={article.publishedDate}>{formatPublishedDate(article.publishedDate)}</time>
+      <p class="article-summary">{article.summary}</p>
+      {article.body.map((paragraph: string) => <p set:html={paragraph} />)}
+      {
+        article.sections?.map((section: { heading: string; body: string[]; items?: string[] }) => (
+          <section class="article-section">
+            <h2>{section.heading}</h2>
+            {section.body.map((paragraph: string) => (
+              <p set:html={paragraph} />
+            ))}
+            {section.items && (
+              <ul>
+                {section.items.map((item: string) => (
+                  <li set:html={item} />
+                ))}
+              </ul>
+            )}
+          </section>
+        ))
+      }
+    </div>
+  </article>
+</SiteLayout>

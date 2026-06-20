@@ -21,7 +21,8 @@ public static class PersonalInformationVisibilityExtensions
             {
                 PersonalInformationVisibilityConstants.Visible => PersonalInformationVisibility.Visible,
                 PersonalInformationVisibilityConstants.Redacted => PersonalInformationVisibility.Redacted,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -32,7 +33,8 @@ public static class PersonalInformationVisibilityExtensions
             {
                 PersonalInformationVisibility.Visible => PersonalInformationVisibilityConstants.Visible,
                 PersonalInformationVisibility.Redacted => PersonalInformationVisibilityConstants.Redacted,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public string ToPersonalInformationVisibilityName() =>
@@ -40,7 +42,8 @@ public static class PersonalInformationVisibilityExtensions
             {
                 PersonalInformationVisibility.Visible => "Visible",
                 PersonalInformationVisibility.Redacted => "Redacted",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 }

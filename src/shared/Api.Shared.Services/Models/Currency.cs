@@ -23,7 +23,8 @@ public static class CurrencyExtensions
                 {
                     Currency.Nzd => CurrencyConstants.Nzd,
                     Currency.Usd => CurrencyConstants.Usd,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
                 };
     }
 
@@ -34,7 +35,8 @@ public static class CurrencyExtensions
             {
                 Currency.Nzd => CurrencyConstants.Nzd,
                 Currency.Usd => CurrencyConstants.Usd,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public string ToCurrencyName() =>
@@ -42,7 +44,8 @@ public static class CurrencyExtensions
             {
                 Currency.Nzd => "NZD - $",
                 Currency.Usd => "USD - $",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -53,7 +56,8 @@ public static class CurrencyExtensions
             {
                 CurrencyConstants.Nzd => "NZD",
                 CurrencyConstants.Usd => "USD",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public Currency ToCurrency() =>
@@ -61,7 +65,8 @@ public static class CurrencyExtensions
             {
                 CurrencyConstants.Nzd => Currency.Nzd,
                 CurrencyConstants.Usd => Currency.Usd,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -74,7 +79,8 @@ public static class CurrencyExtensions
                 {
                     CurrencyConstants.Nzd => Currency.Nzd,
                     CurrencyConstants.Usd => Currency.Usd,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
                 };
     }
 }

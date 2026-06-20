@@ -17,6 +17,7 @@ using Customer = Booking.Shared.Models.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
 using MarketplaceBookingSubscription = Booking.Shared.Models.MarketplaceBookingSubscription;
+using MarketplaceBookingFailureEntity = Booking.Shared.Database.Entities.MarketplaceBookingFailure;
 using Organization = Booking.Shared.Models.Organization;
 using OrganizationArrearsInvoice = Booking.Shared.Models.OrganizationArrearsInvoice;
 using OrganizationTag = Booking.Shared.Models.OrganizationTag;
@@ -31,6 +32,8 @@ namespace Booking.Api.Mappers;
 public interface IGraphQlMapper
 {
     BookingDetails MapTo(Shared.Models.Booking src);
+    MarketplaceBookingFailureDetails MapTo(MarketplaceBookingFailureEntity src);
+    MarketplaceBookingFailureDetails MapTo(MarketplaceBookingFailureSummary src);
     MarketplaceRefundDetails MapTo(MarketplaceRefund src);
     MarketplaceRefundEventDetails MapTo(MarketplaceRefundEvent src);
     OrganizationArrearsInvoiceDetails MapTo(OrganizationArrearsInvoice src);
@@ -55,6 +58,38 @@ public interface IGraphQlMapper
 
 public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 {
+    public MarketplaceBookingFailureDetails MapTo(MarketplaceBookingFailureEntity src) =>
+        new()
+        {
+            Id = src.Id,
+            Category =
+                new MarketplaceBookingFailureChoiceDetails { Type = src.Category, Name = src.Category.ToMarketplaceBookingFailureCategoryName() },
+            Scope = new MarketplaceBookingFailureChoiceDetails { Type = src.Scope, Name = src.Scope.ToMarketplaceBookingFailureScopeName() },
+            FinalizedAt = src.FinalizedAt,
+            RequestedFrom = src.RequestedFrom,
+            RequestedUntil = src.RequestedUntil,
+            CustomerAction = new MarketplaceBookingFailureChoiceDetails
+            {
+                Type = src.CustomerAction.ToSafeString(), Name = src.CustomerAction.ToSafeString().ToMarketplaceBookingFailureCustomerActionName()
+            }
+        };
+
+    public MarketplaceBookingFailureDetails MapTo(MarketplaceBookingFailureSummary src) =>
+        new()
+        {
+            Id = src.Id,
+            Category =
+                new MarketplaceBookingFailureChoiceDetails { Type = src.Category, Name = src.Category.ToMarketplaceBookingFailureCategoryName() },
+            Scope = new MarketplaceBookingFailureChoiceDetails { Type = src.Scope, Name = src.Scope.ToMarketplaceBookingFailureScopeName() },
+            FinalizedAt = src.FinalizedAt,
+            RequestedFrom = src.RequestedFrom,
+            RequestedUntil = src.RequestedUntil,
+            CustomerAction = new MarketplaceBookingFailureChoiceDetails
+            {
+                Type = src.CustomerAction, Name = src.CustomerAction.ToMarketplaceBookingFailureCustomerActionName()
+            }
+        };
+
     public BookingDetails MapTo(Shared.Models.Booking src) =>
         new()
         {
@@ -114,6 +149,11 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             ExternalRefundNumber = src.ExternalRefundNumber,
             LastProcessedAt = src.LastProcessedAt,
             LastError = src.LastError,
+            PaymentProvider = src.PaymentProvider,
+            ExternalPaymentRefundId = src.ExternalPaymentRefundId,
+            PaymentRefundStatus = src.PaymentRefundStatus,
+            PaymentRefundLastProcessedAt = src.PaymentRefundLastProcessedAt,
+            PaymentRefundLastError = src.PaymentRefundLastError,
             RequestedByCustomerId = src.RequestedByCustomerId
         };
     }
@@ -181,6 +221,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 },
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+            WeeklySelectedDays = src.WeeklySelectedDays?.ToList() ?? [],
             MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
             InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
             InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => (item.Id, item.CustomDomain.ToSafeString())),
@@ -285,6 +326,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             Status = MarketplaceBookingSubscriptionStatus.Active,
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+            WeeklySelectedDays = src.WeeklySelectedDays.ToSafeCollection().ToList(),
             InvolvedCustomers = customers,
             InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
                 .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
@@ -488,6 +530,10 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 TaxRatePercentage = src.TaxRatePercentage,
                 TaxRatePercentageToDisplay = src.TaxRatePercentage is null ? "N/A" : src.TaxRatePercentage.Value.ToRoundedDecimal(),
                 TotalAmount = src.TotalAmount,
+                HostCommissionRatePercentage = src.HostCommissionRatePercentage,
+                HostCommissionAmount = src.HostCommissionAmount,
+                HostPayoutAmount = src.HostPayoutAmount,
+                HostGrossProceedsAmount = src.HostPayoutAmount,
                 TotalAmountToDisplay = src.TotalAmount is null || src.Currency is null
                     ? "N/A"
                     : src.TotalAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.Value),

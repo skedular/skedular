@@ -179,6 +179,13 @@ public class LocationService(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(location.Organization.Id),
             repositoryFactory.UnitOfWork);
 
+        if (organization.Type == OrganizationTypeConstants.Host)
+        {
+            temporalOutboxService.StartProvisionHostLocation(
+                new ProvisionHostLocationInput(organization.Id, location.Id, location.Name),
+                repositoryFactory.UnitOfWork);
+        }
+
         if (organization.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName)
         {
             temporalOutboxService.StartWorkflowNewLocationJoined(new NewLocationJoinedInput(location.Id), repositoryFactory.UnitOfWork);
@@ -260,6 +267,13 @@ public class LocationService(
         temporalOutboxService.StartComputeOrganizationLocationsAndProductsRelationships(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
             repositoryFactory.UnitOfWork);
+
+        if (existingLocation.Organization.Type == OrganizationTypeConstants.Host)
+        {
+            temporalOutboxService.StartDeprovisionHostLocation(
+                new DeprovisionHostLocationInput(existingLocation.Organization.Id, existingLocation.Id),
+                repositoryFactory.UnitOfWork);
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -504,7 +518,8 @@ public class LocationService(
                     location.UniqueClaimCode = request.Location.UniqueClaimCode;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
+                        $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.");
             }
         }
     }

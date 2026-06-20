@@ -107,7 +107,8 @@ public class FloorPlanRepository(LocationDbContext dbContext, TimeProvider timeP
                     nameof(FloorPlan.Name),
                     query => query.Name,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

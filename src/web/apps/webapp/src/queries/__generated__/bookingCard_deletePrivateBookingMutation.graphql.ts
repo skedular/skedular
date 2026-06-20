@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<97e5de8e2d7e68f462bcdff89b1facb0>>
+ * @generated SignedSource<<1ba03ae4e6e449d5c8c5a9fc992ab8a2>>
  * @lightSyntaxTransform
  */
 
@@ -20,7 +20,7 @@ export type bookingCard_deletePrivateBookingMutation$data = {
   readonly deletePrivateBooking: {
     readonly booking: {
       readonly id: string;
-    };
+    } | null | undefined;
   };
 };
 export type bookingCard_deletePrivateBookingMutation = {

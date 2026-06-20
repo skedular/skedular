@@ -178,7 +178,8 @@ public class EditTeamButtonHandler(
                                         TeamMemberRole.Owner => TeamMemberRole.Owner,
                                         TeamMemberRole.Administrator => TeamMemberRole.Administrator,
                                         TeamMemberRole.Member => TeamMemberRole.Member,
-                                        _ => throw new ArgumentOutOfRangeException()
+                                        _ => throw new ArgumentOutOfRangeException(nameof(existingMember.Role), existingMember.Role,
+                                            $"Unexpected value for {nameof(existingMember.Role)}: {existingMember.Role}. Update enum mapping or caller input.")
                                     },
                                 Status = TeamMemberStatus.Active,
                                 Customer = new Customer { Id = customerId },

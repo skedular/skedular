@@ -103,6 +103,20 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
         result.RepresentativeMarketplaceBooking.InvoiceNumber.ShouldBe("INV-Q2");
     }
 
+    [Fact]
+    public void Return_Null_When_The_Subscription_Product_Graph_Is_Incomplete()
+    {
+        var subscription = CreateSubscription(
+            new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            OrganizationBillingCycle.Monthly,
+            []);
+        subscription.MarketplaceBooking.ProductVersion.Product = null!;
+
+        var result = subscription.ResolveCurrentBillingWindowPaymentProjection(DateTimeOffset.UtcNow);
+
+        result.ShouldBeNull();
+    }
+
     private static MarketplaceBookingSubscription CreateSubscription(
         DateTimeOffset startedAt,
         OrganizationBillingCycle organizationBillingCycle,

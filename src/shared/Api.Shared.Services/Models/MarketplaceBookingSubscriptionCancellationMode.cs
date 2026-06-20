@@ -15,7 +15,8 @@ public static class MarketplaceBookingSubscriptionCancellationModeExtensions
             {
                 MarketplaceBookingSubscriptionCancellationMode.Immediate => "Immediate",
                 MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd => "At Period End",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 }

@@ -4,14 +4,14 @@ public enum OrganizationType
 {
     Private,
     Marketplace,
-    Individual
+    Host
 }
 
 public static class OrganizationTypeConstants
 {
     public const string Private = "PRIVATE";
     public const string Marketplace = "MARKETPLACE";
-    public const string Individual = "INDIVIDUAL";
+    public const string Host = "HOST";
 }
 
 public static class OrganizationTypeExtensions
@@ -23,8 +23,9 @@ public static class OrganizationTypeExtensions
             {
                 OrganizationType.Private => OrganizationTypeConstants.Private,
                 OrganizationType.Marketplace => OrganizationTypeConstants.Marketplace,
-                OrganizationType.Individual => OrganizationTypeConstants.Individual,
-                _ => throw new ArgumentOutOfRangeException()
+                OrganizationType.Host => OrganizationTypeConstants.Host,
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public string ToOrganizationTypeName() =>
@@ -32,8 +33,9 @@ public static class OrganizationTypeExtensions
             {
                 OrganizationType.Private => "Private",
                 OrganizationType.Marketplace => "Marketplace",
-                OrganizationType.Individual => "Individual",
-                _ => throw new ArgumentOutOfRangeException()
+                OrganizationType.Host => "Host",
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -44,8 +46,9 @@ public static class OrganizationTypeExtensions
             {
                 OrganizationTypeConstants.Private => "Private",
                 OrganizationTypeConstants.Marketplace => "Marketplace",
-                OrganizationTypeConstants.Individual => "Individual",
-                _ => throw new ArgumentOutOfRangeException()
+                OrganizationTypeConstants.Host => "Host",
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public OrganizationType ToOrganizationType() =>
@@ -53,8 +56,9 @@ public static class OrganizationTypeExtensions
             {
                 OrganizationTypeConstants.Private => OrganizationType.Private,
                 OrganizationTypeConstants.Marketplace => OrganizationType.Marketplace,
-                OrganizationTypeConstants.Individual => OrganizationType.Individual,
-                _ => throw new ArgumentOutOfRangeException()
+                OrganizationTypeConstants.Host => OrganizationType.Host,
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 }

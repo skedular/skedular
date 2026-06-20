@@ -4,7 +4,11 @@ using Temporalio.Workflows;
 
 namespace Organization.Shared.Workflows;
 
-public record ScheduleRenewOrganizationOfferingInput(string OrganizationId, string OrganizationOfferingId, DateTimeOffset RenewalDate);
+public record ScheduleRenewOrganizationOfferingInput(
+    string OrganizationId,
+    string OrganizationOfferingId,
+    DateTimeOffset RenewalDate,
+    bool RenewBeforePayment = false);
 
 public record OrganizationOfferingState(bool IsCancelled);
 
@@ -24,26 +28,40 @@ public class ScheduleRenewOrganizationOffering
             return;
         }
 
-        await Workflow.ExecuteActivityAsync(
-            (OrganizationOfferings activity) =>
-                activity.PayForOrganizationOfferingAsync(new PayForOrganizationOffering(args.OrganizationOfferingId)),
-            new ActivityOptions
-            {
-                StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 6, MaximumInterval = TimeSpan.FromHours(4) }
-            });
+        var activityOptions = new ActivityOptions
+        {
+            StartToCloseTimeout = TimeSpan.FromSeconds(30),
+            TaskQueue = Workflow.Info.TaskQueue,
+            RetryPolicy = new RetryPolicy { MaximumAttempts = 6, MaximumInterval = TimeSpan.FromHours(4) }
+        };
+        var renewalActivityOptions = new ActivityOptions
+        {
+            StartToCloseTimeout = TimeSpan.FromSeconds(30),
+            TaskQueue = Workflow.Info.TaskQueue,
+            RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+        };
 
-        await Workflow.ExecuteActivityAsync(
-            (OrganizationOfferings activity) =>
-                activity.RenewAutoRenewableOrganizationOfferingAsync(
-                    new RenewAutoRenewableOrganizationOfferingAsyncInput(args.OrganizationId, args.OrganizationOfferingId)),
-            new ActivityOptions
-            {
-                StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
-            });
+        if (args.RenewBeforePayment)
+        {
+            await Workflow.ExecuteActivityAsync(
+                (OrganizationOfferings activity) =>
+                    activity.RenewAndPayAutoRenewableOrganizationOfferingAsync(
+                        new RenewAutoRenewableOrganizationOfferingAsyncInput(args.OrganizationId, args.OrganizationOfferingId)),
+                activityOptions);
+        }
+        else
+        {
+            await Workflow.ExecuteActivityAsync(
+                (OrganizationOfferings activity) =>
+                    activity.PayForOrganizationOfferingAsync(new PayForOrganizationOffering(args.OrganizationOfferingId)),
+                activityOptions);
+
+            await Workflow.ExecuteActivityAsync(
+                (OrganizationOfferings activity) =>
+                    activity.RenewAutoRenewableOrganizationOfferingAsync(
+                        new RenewAutoRenewableOrganizationOfferingAsyncInput(args.OrganizationId, args.OrganizationOfferingId)),
+                renewalActivityOptions);
+        }
     }
 
     [WorkflowSignal]

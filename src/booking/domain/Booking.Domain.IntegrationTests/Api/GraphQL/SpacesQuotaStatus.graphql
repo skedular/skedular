@@ -1,0 +1,21 @@
+query SpacesQuotaStatus($organizationId: String!) {
+    bookingSpacesQuotaStatus(organizationId: $organizationId) {
+        organizationId
+        planCode
+        currentUsage
+        quotaLimit
+        totalAttemptedInstanceCount
+        remainingQuota
+        quotaExceeded
+        reasonCode {
+            type
+            name
+        }
+        upgradePlans {
+            planCode
+            name
+            availability
+            priceDescription
+        }
+    }
+}

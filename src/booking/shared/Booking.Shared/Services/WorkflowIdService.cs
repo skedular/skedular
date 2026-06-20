@@ -16,8 +16,10 @@ public interface IWorkflowIdService
     string BookPrivateRecurringResources(string recurringBookingId);
     string BookMarketplaceBookingSubscriptionResources(string marketplaceBookingSubscriptionId);
     string RunOrganizationArrearsBilling(string organizationId);
+    string RolloverSpacesBookingUsage();
     string MaintainOrganizationArrearsInvoiceAccountingState(string organizationArrearsInvoiceId);
     string MaintainAccountingInvoiceState(string localEntityType, string localEntityId);
+    string NotifyMarketplaceBookingFailure(string failureId);
 }
 
 public class WorkflowIdService(ITemporalHelperService temporalHelperService) : IWorkflowIdService
@@ -55,10 +57,16 @@ public class WorkflowIdService(ITemporalHelperService temporalHelperService) : I
     public string RunOrganizationArrearsBilling(string organizationId) =>
         temporalHelperService.ToId($"{Constants.OrganizationArrearsBillingPrefix}-{organizationId}");
 
+    public string RolloverSpacesBookingUsage() =>
+        temporalHelperService.ToId(Constants.SpacesBookingUsageRolloverPrefix);
+
     public string MaintainOrganizationArrearsInvoiceAccountingState(string organizationArrearsInvoiceId) =>
         temporalHelperService.ToId(
             $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{organizationArrearsInvoiceId}");
 
     public string MaintainAccountingInvoiceState(string localEntityType, string localEntityId) =>
         temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{localEntityType}-{localEntityId}");
+
+    public string NotifyMarketplaceBookingFailure(string failureId) =>
+        temporalHelperService.ToId($"notify-marketplace-booking-failure-{failureId}");
 }

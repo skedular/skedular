@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<15406988215e320508803c8f7d011e9e>>
+ * @generated SignedSource<<9c8455dd7d6e7723bff045031a14ca13>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
+export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type guestStoreFrontProductCard_product$data = {
@@ -31,6 +32,7 @@ export type guestStoreFrontProductCard_product$data = {
     readonly title: string | null | undefined;
   };
   readonly pricingOptions: ReadonlyArray<{
+    readonly availableDays: ReadonlyArray<DayOfWeek> | null | undefined;
     readonly id: string;
     readonly index: number;
     readonly isTaxInclusive: boolean;
@@ -202,6 +204,13 @@ return {
           "kind": "ScalarField",
           "name": "supportsSubscriptionAutoRenewal",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "availableDays",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -212,6 +221,6 @@ return {
 };
 })();
 
-(node as any).hash = "23f235ab9b88406607e6b5ea4b3737e9";
+(node as any).hash = "f91bb0b2e554a956879c20145b4ae69d";
 
 export default node;

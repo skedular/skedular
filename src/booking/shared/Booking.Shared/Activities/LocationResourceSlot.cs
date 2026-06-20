@@ -146,7 +146,8 @@ public class LocationResourceSlot(
                 DayOfWeek.Friday => openingHours.WeekOpeningHours.Friday,
                 DayOfWeek.Saturday => openingHours.WeekOpeningHours.Saturday,
                 DayOfWeek.Sunday => openingHours.WeekOpeningHours.Sunday,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
 
     private static bool IsAvailable(TimeOnly start, OpeningHoursDetails openingHoursDetails) =>

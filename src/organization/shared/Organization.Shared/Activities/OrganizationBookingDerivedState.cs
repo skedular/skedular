@@ -6,7 +6,6 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
-using Microsoft.EntityFrameworkCore;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Mappers;
 using Organization.Shared.Publishers;
@@ -39,7 +38,7 @@ public class OrganizationBookingDerivedState(
             new BookingWhereInput { OrganizationId = organizationId },
             cancellationToken);
 
-        await ReplaceDailyBookingCountsAsync(organization, allBookings);
+        await ReplaceDailyBookingCountsAsync(organization, allBookings, cancellationToken);
         var activeMembersChanged = await ReplaceActiveMembersAsync(organization, cancellationToken);
 
         _ = repositoryFactory.OrganizationRepository.Update(organization);
@@ -53,21 +52,23 @@ public class OrganizationBookingDerivedState(
         }
     }
 
-    private async Task ReplaceDailyBookingCountsAsync(Database.Entities.Organization organization, List<BookingSnapshot> bookings)
+    private async Task ReplaceDailyBookingCountsAsync(
+        Database.Entities.Organization organization,
+        List<BookingSnapshot> bookings,
+        CancellationToken cancellationToken)
     {
-        var existingRecordings = await repositoryFactory.DbContext.DailyBookingCountRecording
-            .Where(item => item.Organization.Id == organization.Id)
-            .ToListAsync();
-
-        repositoryFactory.DbContext.DailyBookingCountRecording.RemoveRange(existingRecordings);
-
-        foreach (var groupedBooking in bookings.GroupBy(item => item.From.StartOfDay()))
-        {
-            _ = repositoryFactory.DbContext.DailyBookingCountRecording.Add(new DailyBookingCountRecording
+        var recordings = bookings
+            .GroupBy(item => item.From.StartOfDay())
+            .Select(groupedBooking => new DailyBookingCountRecording
             {
                 Id = randomHelper.Generate(), Date = groupedBooking.Key, Count = groupedBooking.Count(), Organization = organization
-            });
-        }
+            })
+            .ToList();
+
+        await repositoryFactory.DailyBookingCountRecordingRepository.ReplaceDailyRecordingsAsync(
+            organization.Id,
+            recordings,
+            cancellationToken);
     }
 
     private async Task<bool> ReplaceActiveMembersAsync(
@@ -83,18 +84,14 @@ public class OrganizationBookingDerivedState(
             return false;
         }
 
-        var existingActiveMembers = await repositoryFactory.DbContext.OrganizationOfferingActiveMember
-            .Include(item => item.OrganizationMember)
-            .Where(item => item.OrganizationOffering.Id == organizationOffering.Id)
-            .ToListAsync(cancellationToken);
+        var existingActiveMembers = await repositoryFactory.OrganizationOfferingActiveMemberRepository
+            .GetByOfferingIdAsync(organizationOffering.Id, cancellationToken);
 
         var existingOrganizationMemberIds = existingActiveMembers
             .Select(item => item.OrganizationMember.Id)
             .Distinct()
             .Order()
             .ToList();
-
-        repositoryFactory.DbContext.OrganizationOfferingActiveMember.RemoveRange(existingActiveMembers);
 
         var bookedCustomerIds = (await GetBookingsAsync(
                 new BookingWhereInput
@@ -113,13 +110,17 @@ public class OrganizationBookingDerivedState(
             .Where(item => item.IsNotDeleted() && bookedCustomerIds.Contains(item.Customer.Id))
             .ToList();
 
-        foreach (var organizationMember in nextOrganizationMembers)
-        {
-            _ = repositoryFactory.DbContext.OrganizationOfferingActiveMember.Add(new OrganizationOfferingActiveMember
+        var nextActiveMembers = nextOrganizationMembers
+            .Select(organizationMember => new OrganizationOfferingActiveMember
             {
                 Id = randomHelper.Generate(), OrganizationMember = organizationMember, OrganizationOffering = organizationOffering
-            });
-        }
+            })
+            .ToList();
+
+        await repositoryFactory.OrganizationOfferingActiveMemberRepository.ReplaceAsync(
+            existingActiveMembers,
+            nextActiveMembers,
+            cancellationToken);
 
         var nextOrganizationMemberIds = nextOrganizationMembers
             .Select(item => item.Id)

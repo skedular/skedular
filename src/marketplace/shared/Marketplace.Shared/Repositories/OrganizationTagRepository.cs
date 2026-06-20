@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Marketplace.Shared.Database;
@@ -16,6 +17,8 @@ public interface IOrganizationTagRepository : IRepository<OrganizationTag>
         string? organizationId,
         string? organizationCustomDomain,
         CancellationToken cancellationToken);
+
+    Task<OrganizationTag?> GetFirstActiveProductTagForOrganizationAsync(string organizationId, CancellationToken cancellationToken);
 
     OrganizationTag Add(OrganizationTag organizationTag);
     OrganizationTag Update(OrganizationTag organizationTag);
@@ -85,6 +88,15 @@ public class OrganizationTagRepository(MarketplaceDbContext dbContext, TimeProvi
 
         return await query.ToListAsync(cancellationToken);
     }
+
+    public async Task<OrganizationTag?> GetFirstActiveProductTagForOrganizationAsync(
+        string organizationId,
+        CancellationToken cancellationToken) =>
+        await DbContext.OrganizationTag
+            .AsNoTracking()
+            .Where(tag => !tag.DeletedAt.HasValue && tag.Organization.Id == organizationId && tag.Type == OrganizationTagTypeConstants.Product)
+            .OrderBy(tag => tag.CreatedAt)
+            .FirstOrDefaultAsync(cancellationToken);
 
     public OrganizationTag Add(OrganizationTag organizationTag)
     {

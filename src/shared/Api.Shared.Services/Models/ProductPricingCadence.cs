@@ -66,7 +66,8 @@ public static class ProductPricingCadenceExtensions
                 ProductPricingCadence.SixMonths => ProductPricingCadenceConstants.SixMonths,
                 ProductPricingCadence.Yearly => ProductPricingCadenceConstants.Yearly,
                 ProductPricingCadence.Fortnightly => ProductPricingCadenceConstants.Fortnightly,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
 
         public string ToProductPricingCadenceName() =>
@@ -89,7 +90,8 @@ public static class ProductPricingCadenceExtensions
                 ProductPricingCadence.SixMonths => "6-Monthly",
                 ProductPricingCadence.Yearly => "Yearly",
                 ProductPricingCadence.Fortnightly => "Fortnightly",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
 
         public string ToInvoicePriceUnitName() =>
@@ -112,7 +114,8 @@ public static class ProductPricingCadenceExtensions
                 ProductPricingCadence.SixMonths => "6-monthly",
                 ProductPricingCadence.Yearly => "yearly",
                 ProductPricingCadence.Fortnightly => "fortnightly",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
 
         public string ToStripePriceUnitName() =>
@@ -135,7 +138,8 @@ public static class ProductPricingCadenceExtensions
                 ProductPricingCadence.SixMonths => "6-Monthly",
                 ProductPricingCadence.Yearly => "Yearly",
                 ProductPricingCadence.Fortnightly => "Fortnightly",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 
@@ -161,7 +165,8 @@ public static class ProductPricingCadenceExtensions
                 ProductPricingCadenceConstants.SixMonths => ProductPricingCadence.SixMonths,
                 ProductPricingCadenceConstants.Yearly => ProductPricingCadence.Yearly,
                 ProductPricingCadenceConstants.Fortnightly => ProductPricingCadence.Fortnightly,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 }

@@ -1,0 +1,8 @@
+query MarketplaceBookingSubscriptionContract {
+    addMarketplaceBookingSubscriptionInput: __type(name: "AddMarketplaceBookingSubscriptionInput") {
+        inputFields { name }
+    }
+    marketplaceBookingSubscriptionDetails: __type(name: "MarketplaceBookingSubscriptionDetails") {
+        fields { name }
+    }
+}

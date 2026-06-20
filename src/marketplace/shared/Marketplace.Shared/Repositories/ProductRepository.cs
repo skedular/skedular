@@ -46,7 +46,10 @@ public static class ProductExtensions
         public IQueryable<Product> AddSearchCriteria(ProductSearchCriteria searchCriteria)
         {
             originalQuery = originalQuery.Where(item =>
-                !item.DeletedAt.HasValue && item.Organization.Type == OrganizationTypeConstants.Marketplace &&
+                !item.DeletedAt.HasValue &&
+                (item.Organization.Type == OrganizationTypeConstants.Marketplace ||
+                 (item.Organization.Type == OrganizationTypeConstants.Host &&
+                  (searchCriteria.IncludeUnverifiedHost || item.Organization.IsOwnershipVerified == true))) &&
                 (searchCriteria.IncludeInactive || !item.Inactive));
 
             if (searchCriteria.OrganizationIds.Count > 0)

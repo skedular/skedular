@@ -281,7 +281,8 @@ public class ResourceAvailabilityDayViewService(
                 DayOfWeek.Friday => openingHours.WeekOpeningHours.Friday,
                 DayOfWeek.Saturday => openingHours.WeekOpeningHours.Saturday,
                 DayOfWeek.Sunday => openingHours.WeekOpeningHours.Sunday,
-                _ => throw new ArgumentOutOfRangeException(nameof(dayStart), dayStart, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(dayStart), dayStart,
+                    $"Unexpected value for {nameof(dayStart)}: {dayStart}. Update enum mapping or caller input.")
             };
 
     private static BookingWindow ToBookingWindow(ResourceBookingWindowRow row)

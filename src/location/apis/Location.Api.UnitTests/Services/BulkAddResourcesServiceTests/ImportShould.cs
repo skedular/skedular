@@ -145,12 +145,13 @@ public class ImportShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
-            cachedCustomerService, organizationAuthorizationService, organizationOfferingService,
+            cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
             cancellationToken, [], "Desk");
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 3, [], [], []) };
@@ -176,12 +177,13 @@ public class ImportShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
-            cachedCustomerService, organizationAuthorizationService, organizationOfferingService,
+            cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
             cancellationToken, [], "Meeting Room");
 
         var rows = new List<BulkAddResourceRow>
@@ -210,13 +212,14 @@ public class ImportShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
         // Existing: Desk-1, Desk-3 → next should be Desk-4, Desk-5, Desk-6
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
-            cachedCustomerService, organizationAuthorizationService, organizationOfferingService,
+            cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
             cancellationToken, ["Desk-1", "Desk-3"], "Desk");
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 3, [], [], []) };
@@ -242,13 +245,14 @@ public class ImportShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
         // Two rows with same base name — names must not collide within the batch
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
-            cachedCustomerService, organizationAuthorizationService, organizationOfferingService,
+            cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
             cancellationToken, [], "Desk");
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 2, [], [], []), new("type-tag-1", "Desk", 1, [], [], []) };
@@ -276,6 +280,7 @@ public class ImportShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
@@ -283,7 +288,7 @@ public class ImportShould
         // Expected: Desk-3, Desk-4 for row 0 and Desk-5, Desk-6 for row 1.
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
-            cachedCustomerService, organizationAuthorizationService, organizationOfferingService,
+            cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
             cancellationToken, ["Desk-2"], "Desk");
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 2, [], [], []), new("type-tag-1", "Desk", 2, [], [], []) };
@@ -316,6 +321,7 @@ public class ImportShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
@@ -329,8 +335,8 @@ public class ImportShould
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => repositoryFactory.OrganizationTagRepository).Returns(organizationTagRepository);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(A.Fake<IUnitOfWork>());
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(A<IUnitOfWork>._, cancellationToken)).Returns(fakeTransaction);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(fakeTransaction);
         A.CallTo(() => locationRepository.GetByIdAsync("location-1", cancellationToken)).Returns(existingLocation);
         A.CallTo(() => organizationTagRepository.GetActiveByIdsForOrganizationAsync(
             A<IReadOnlyList<string>>._, "org-1", null, cancellationToken)).Returns([validTypeTag]);
@@ -384,12 +390,13 @@ public class ImportShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
-            cachedCustomerService, organizationAuthorizationService, organizationOfferingService,
+            cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
             cancellationToken, [], "Desk");
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 1, [], [], []) };
@@ -415,12 +422,13 @@ public class ImportShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
-            cachedCustomerService, organizationAuthorizationService, organizationOfferingService,
+            cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
             cancellationToken, [], "Desk");
 
         // All rows have quantity < 1 — nothing will be written
@@ -449,12 +457,13 @@ public class ImportShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
-            cachedCustomerService, organizationAuthorizationService, organizationOfferingService,
+            cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
             cancellationToken, [], "Desk");
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 1, [], [], []) };
@@ -490,6 +499,7 @@ public class ImportShould
         ICachedCustomerService cachedCustomerService,
         IOrganizationAuthorizationService organizationAuthorizationService,
         IOrganizationOfferingService organizationOfferingService,
+        IUnitOfWork unitOfWork,
         CancellationToken cancellationToken,
         IReadOnlyList<string> existingNames,
         string typeTagName)
@@ -502,8 +512,8 @@ public class ImportShould
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => repositoryFactory.OrganizationTagRepository).Returns(organizationTagRepository);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(A.Fake<IUnitOfWork>());
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(A<IUnitOfWork>._, cancellationToken)).Returns(fakeTransaction);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(fakeTransaction);
         A.CallTo(() => locationRepository.GetByIdAsync("location-1", cancellationToken)).Returns(existingLocation);
         A.CallTo(() => organizationTagRepository.GetActiveByIdsForOrganizationAsync(
             A<IReadOnlyList<string>>._, "org-1", null, cancellationToken)).Returns([validTypeTag]);

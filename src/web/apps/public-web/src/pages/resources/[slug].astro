@@ -2,74 +2,30 @@
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import CtaLink from "../../components/CtaLink.astro";
 import { getCta } from "../../data/ctas";
-import { categoryPages } from "../../data/category-pages";
-import { resourceArticles } from "../../data/current-public-content";
+import { aiEducationalContent } from "../../data/ai-educational-content";
 
 export function getStaticPaths() {
-  // Include both category pages and AI knowledge hub content
-  const paths = [
-    ...categoryPages.map((page) => ({
-      params: { slug: page.path.replace('/', '') },
-      props: { page, isCategory: true },
-    })),
-    ...resourceArticles.map((article) => ({
-      params: { slug: article.slug },
-      props: { article, isArticle: true },
-    })),
-    // Add AI educational content paths
-    { params: { slug: 'what-is-workspace-management-software' }, props: { 
-      page: {
-        title: "What Is Workspace Management Software?",
-        description: "Workspace management software helps teams coordinate who works where, when.",
-        path: "/resources/what-is-workspace-management-software"
-      },
-      isCategory: false,
-      educationalType: 'definition'
-    }},
-    { params: { slug: 'what-is-coworking-management-software' }, props: { 
-      page: {
-        title: "What Is Coworking Management Software?",
-        description: "Coworking management software helps workspace operators sell space and manage memberships.",
-        path: "/resources/what-is-coworking-management-software"
-      },
-      isCategory: false,
-      educationalType: 'definition'
-    }},
-  ];
-  
-  return paths;
+  return aiEducationalContent.map((page) => ({
+    params: { slug: page.path.split("/").pop() },
+    props: { page },
+  }));
 }
 
-const { page, article, isCategory, isArticle, educationalType } = Astro.props;
-const pageTitle = isArticle ? article.title : page!.title;
-const pageDescription = isArticle ? article.summary : page!.description;
-const pagePath = isArticle ? article.destinationPath : page!.path;
+const { page } = Astro.props;
+const pageTitle = page!.title;
+const pageDescription = page!.description;
+const pagePath = page!.path;
+const educationalType = page!.educationalType;
 ---
 
-<SiteLayout 
-  title={pageTitle} 
-  description={pageDescription} 
-  canonicalPath={pagePath} 
-  structuredDataType={isArticle ? "Article" : undefined}
->
-  {isArticle ? (
-    <article class="article-page">
-      <div class="container">
-        <p class="eyebrow">{article.topicTags.join(" / ")}</p>
-        <h1>{article.title}</h1>
-        <p class="article-summary">{article.summary}</p>
-        {article.body.map((paragraph: string) => <p>{paragraph}</p>)}
-        <CtaLink cta={getCta("book-demo")} />
-      </div>
-    </article>
-  ) : (
-    <>
+<SiteLayout title={pageTitle} description={pageDescription} canonicalPath={pagePath} structuredDataType={undefined}>
+  <>
       <section class="subpage-hero">
         <div class="container">
-          <p class="eyebrow">{isCategory ? 'Category' : 'Educational Content'}</p>
+          <p class="eyebrow">Educational Content</p>
           <h1>{pageTitle}</h1>
           <p>{pageDescription}</p>
-          <CtaLink cta={getCta(isCategory ? "book-demo" : "book-demo")} />
+          <CtaLink cta={getCta("book-demo")} />
         </div>
       </section>
 
@@ -89,19 +45,6 @@ const pagePath = isArticle ? article.destinationPath : page!.path;
             </>
           )}
           
-          {isCategory && (
-            <>
-              <h2 id="overview-title">{pageTitle}</h2>
-              <p>{pageDescription}</p>
-              
-              <h3>Who Should Use This?</h3>
-              <ul>
-                <li>Teams coordinating hybrid work</li>
-                <li>Workspace operators managing inventory</li>
-                <li>Organizations seeking flexible workspace</li>
-              </ul>
-            </>
-          )}
         </div>
       </section>
 
@@ -112,6 +55,5 @@ const pagePath = isArticle ? article.destinationPath : page!.path;
           <CtaLink cta={getCta("book-demo")} variant="inverse" />
         </div>
       </section>
-    </>
-  )}
+  </>
 </SiteLayout>

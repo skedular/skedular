@@ -55,7 +55,11 @@ public static class LocationExtensions
             .ThenInclude(query => query.Resource)
             .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.RestrictedInformation)
-            .Include(query => query.PrecomputedLocationProducts)
+            // Host locations use an inactive system-managed draft Product while pricing is being configured.
+            // Keep that draft in the Location projection so host pricing editors can load and update it;
+            // publication/customer-facing queries continue to apply their own active-product rules.
+            .Include(query => query.PrecomputedLocationProducts.Where(precomputedLocationProduct =>
+                !precomputedLocationProduct.Product.DeletedAt.HasValue))
             .ThenInclude(query => query.Product);
 
         public IQueryable<Database.Entities.Location> AddSearchCriteria(LocationSearchCriteria searchCriteria)
@@ -296,7 +300,8 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
                     nameof(Database.Entities.Location.Type),
                     query => query.Type,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

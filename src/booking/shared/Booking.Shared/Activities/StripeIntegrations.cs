@@ -49,7 +49,8 @@ public class StripeIntegrations(
     IRandomHelper randomHelper,
     IEntityMapper entityMapper,
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
-    IGraphQlTopicEventSender graphQlTopicEventSender)
+    IGraphQlTopicEventSender graphQlTopicEventSender,
+    IHostStripeApplicationFeeService hostStripeApplicationFeeService)
 {
     [Activity]
     public async Task<UpsertProductAndPricingResponse?> UpsertProductAndPricingAsync(UpsertProductAndPricingInput args)
@@ -236,7 +237,8 @@ public class StripeIntegrations(
                     Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 30 * marketplaceBooking.Quantity,
                 ProductPricingCadence.PerHour =>
                     Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 60 * marketplaceBooking.Quantity,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             }
         }).ToList();
 
@@ -250,21 +252,36 @@ public class StripeIntegrations(
         // session is created later inside a workflow, outside the original HTTP request.
         var checkoutReturnUrl = marketplaceBooking.CheckoutReturnUrl ?? applicationConfiguration.WebAppBaseDomain.ToString();
 
+        var sessionOptions = new SessionCreateOptions
+        {
+            Customer = args.StripeCustomerId,
+            LineItems = lineItems,
+            Mode = "payment",
+            UiMode = "hosted_page",
+            PaymentMethodTypes = ["card"],
+            ClientReferenceId = booking.Id,
+            SuccessUrl = checkoutReturnUrl,
+            CancelUrl = checkoutReturnUrl,
+            AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
+            CustomerUpdate = new SessionCustomerUpdateOptions { Address = "auto", Shipping = "auto" }
+        };
+        var hostPaymentIntentData = hostStripeApplicationFeeService.CreateDestinationCharge(
+            marketplaceBooking.ProductVersion.Product.Organization.Type,
+            args.StripeConnectAccountId,
+            marketplaceBooking.HostCommissionAmount);
+        if (hostPaymentIntentData is not null)
+        {
+            // Host charges belong to the platform so Booking can enforce its
+            // cancellation policy. Stripe routes the net proceeds to the Host.
+            sessionOptions.Customer = null;
+            sessionOptions.CustomerUpdate = null;
+            sessionOptions.PaymentIntentData = hostPaymentIntentData;
+            UseInlineHostPriceData(sessionOptions.LineItems, marketplaceBooking, productVersion);
+        }
+
         var session = await sessionCreateService.CreateAsync(
-            new SessionCreateOptions
-            {
-                Customer = args.StripeCustomerId,
-                LineItems = lineItems,
-                Mode = "payment",
-                UiMode = "hosted_page",
-                PaymentMethodTypes = ["card"],
-                ClientReferenceId = booking.Id,
-                SuccessUrl = checkoutReturnUrl,
-                CancelUrl = checkoutReturnUrl,
-                AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
-                CustomerUpdate = new SessionCustomerUpdateOptions { Address = "auto", Shipping = "auto" }
-            },
-            new RequestOptions { IdempotencyKey = booking.Id, StripeAccount = args.StripeConnectAccountId },
+            sessionOptions,
+            new RequestOptions { IdempotencyKey = booking.Id, StripeAccount = hostPaymentIntentData is null ? args.StripeConnectAccountId : null },
             cancellationToken);
 
         var stripeCustomer =
@@ -282,7 +299,8 @@ public class StripeIntegrations(
             "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
             "unpaid" => PaymentStatusConstants.Pending,
             "paid" => PaymentStatusConstants.Confirmed,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(null,
+                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
         };
 
         _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
@@ -365,21 +383,37 @@ public class StripeIntegrations(
             ];
         }
 
+        var sessionOptions = new SessionCreateOptions
+        {
+            Customer = args.StripeCustomerId,
+            LineItems = lineItems,
+            Mode = "payment",
+            UiMode = "hosted_page",
+            PaymentMethodTypes = ["card"],
+            ClientReferenceId = recurringBooking.Id,
+            SuccessUrl = checkoutReturnUrl,
+            CancelUrl = checkoutReturnUrl,
+            AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
+            CustomerUpdate = new SessionCustomerUpdateOptions { Address = "auto", Shipping = "auto" }
+        };
+        var hostPaymentIntentData = hostStripeApplicationFeeService.CreateDestinationCharge(
+            marketplaceBooking.ProductVersion.Product.Organization.Type,
+            args.StripeConnectAccountId,
+            marketplaceBooking.HostCommissionAmount);
+        if (hostPaymentIntentData is not null)
+        {
+            sessionOptions.Customer = null;
+            sessionOptions.CustomerUpdate = null;
+            sessionOptions.PaymentIntentData = hostPaymentIntentData;
+            UseInlineHostPriceData(sessionOptions.LineItems, marketplaceBooking, productVersion);
+        }
+
         var session = await sessionCreateService.CreateAsync(
-            new SessionCreateOptions
+            sessionOptions,
+            new RequestOptions
             {
-                Customer = args.StripeCustomerId,
-                LineItems = lineItems,
-                Mode = "payment",
-                UiMode = "hosted_page",
-                PaymentMethodTypes = ["card"],
-                ClientReferenceId = recurringBooking.Id,
-                SuccessUrl = checkoutReturnUrl,
-                CancelUrl = checkoutReturnUrl,
-                AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
-                CustomerUpdate = new SessionCustomerUpdateOptions { Address = "auto", Shipping = "auto" }
+                IdempotencyKey = recurringBooking.Id, StripeAccount = hostPaymentIntentData is null ? args.StripeConnectAccountId : null
             },
-            new RequestOptions { IdempotencyKey = recurringBooking.Id, StripeAccount = args.StripeConnectAccountId },
             cancellationToken);
 
         var stripeCustomer =
@@ -397,7 +431,8 @@ public class StripeIntegrations(
             "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
             "unpaid" => PaymentStatusConstants.Pending,
             "paid" => PaymentStatusConstants.Confirmed,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(null,
+                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
         };
 
         _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
@@ -412,5 +447,30 @@ public class StripeIntegrations(
         }
 
         return new CreateCheckoutSessionAsyncResponse(marketplaceBooking.PaymentStatus);
+    }
+
+    private static void UseInlineHostPriceData(
+        IEnumerable<SessionLineItemOptions> lineItems,
+        MarketplaceBooking marketplaceBooking,
+        ProductVersion productVersion)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(productVersion.Currency);
+        foreach (var lineItem in lineItems.Where(item => item.PriceData is null))
+        {
+            lineItem.Price = null;
+            lineItem.PriceData = new SessionLineItemPriceDataOptions
+            {
+                Currency = productVersion.Currency.ToLowerInvariant(),
+                UnitAmountDecimal = (marketplaceBooking.ProductPricing.Price * 100m).RoundedDecimal(),
+                TaxBehavior = marketplaceBooking.ProductPricing.IsTaxInclusive ? "inclusive" : "exclusive",
+                ProductData = new SessionLineItemPriceDataProductDataOptions
+                {
+                    TaxCode = "txcd_10103001",
+                    Name = marketplaceBooking.ProductPricing.ListingMetadata.Title ??
+                           productVersion.ListingMetadata?.Title ??
+                           "Host booking"
+                }
+            };
+        }
     }
 }

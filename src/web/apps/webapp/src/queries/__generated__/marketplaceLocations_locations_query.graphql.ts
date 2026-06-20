@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7dd701dbed70730a843fe34e8231e82f>>
+ * @generated SignedSource<<8ee2951b95ef0b89be231d146bbdb886>>
  * @lightSyntaxTransform
  */
 
@@ -8,6 +8,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationType = "HOST" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceLocations_locations_query$data = {
   readonly marketplaceLocations: {
@@ -16,6 +17,11 @@ export type marketplaceLocations_locations_query$data = {
       readonly node: {
         readonly id: string;
         readonly name: string;
+        readonly organization: {
+          readonly type: {
+            readonly type: OrganizationType;
+          };
+        };
         readonly physicalAddress: {
           readonly latitude: number | null | undefined;
           readonly longitude: number | null | undefined;
@@ -181,6 +187,35 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "OrganizationDetails",
+                  "kind": "LinkedField",
+                  "name": "organization",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "OrganizationTypeDetails",
+                      "kind": "LinkedField",
+                      "name": "type",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "type",
+                          "storageKey": null
+                        }
+                      ],
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "marketplaceLocationCard_LocationDetails"
@@ -251,6 +286,6 @@ return {
 };
 })();
 
-(node as any).hash = "6152d51ecf4ac3a45aafd0a36f9715b7";
+(node as any).hash = "46a053c3650f4efe8cfa42e0d7336261";
 
 export default node;

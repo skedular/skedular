@@ -138,7 +138,8 @@ public class GrpcMapper : IGrpcMapper
                 {
                     Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Guest => CustomerType.Guest,
                     Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered => CustomerType.Registered,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
+                        $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
                 }
             };
 
@@ -156,15 +157,17 @@ public class GrpcMapper : IGrpcMapper
             {
                 OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
-                OrganizationType.Individual => Api.Shared.Services.Models.OrganizationType.Individual,
-                _ => throw new ArgumentOutOfRangeException()
+                OrganizationType.Host => Api.Shared.Services.Models.OrganizationType.Host,
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
             },
             BillingCycle = src.BillingCycle switch
             {
                 OrganizationBillingCycle.Weekly => Api.Shared.Services.Models.OrganizationBillingCycle.Weekly,
                 OrganizationBillingCycle.Fortnightly => Api.Shared.Services.Models.OrganizationBillingCycle.Fortnightly,
                 OrganizationBillingCycle.Monthly => Api.Shared.Services.Models.OrganizationBillingCycle.Monthly,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.BillingCycle), src.BillingCycle,
+                    $"Unexpected value for {nameof(src.BillingCycle)}: {src.BillingCycle}. Update enum mapping or caller input.")
             },
             IsOwnershipVerified = src.IsOwnershipVerified,
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
@@ -185,7 +188,8 @@ public class GrpcMapper : IGrpcMapper
             {
                 LocationType.Private => Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => Api.Shared.Services.Models.LocationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
             },
             Resources = MapTo(src.Resources).ToList()
         };
@@ -234,13 +238,15 @@ public class GrpcMapper : IGrpcMapper
                 BookingCategory.Vacation => Api.Shared.Services.Models.BookingCategory.Vacation,
                 BookingCategory.TravelingForWork => Api.Shared.Services.Models.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => Api.Shared.Services.Models.BookingCategory.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Category), src.Category,
+                    $"Unexpected value for {nameof(src.Category)}: {src.Category}. Update enum mapping or caller input.")
             },
             Channel = src.Channel switch
             {
                 BookingChannel.Private => Api.Shared.Services.Models.BookingChannel.Private,
                 BookingChannel.Marketplace => Api.Shared.Services.Models.BookingChannel.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Channel), src.Channel,
+                    $"Unexpected value for {nameof(src.Channel)}: {src.Channel}. Update enum mapping or caller input.")
             },
             Resources = src.Resources.Select(item => new Resource { Id = item.Id }).ToList(),
             InvolvedCustomers = src.InvolvedCustomerIds.Select(item => new Customer { Id = item }).ToList(),
@@ -282,13 +288,15 @@ public class GrpcMapper : IGrpcMapper
                 OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
                 OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Role), src.Role,
+                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input.")
             },
             Status = src.Status switch
             {
                 OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Status), src.Status,
+                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input.")
             },
             Customer = new Customer { Id = src.CustomerId.ToSafeString() }
         };
@@ -399,13 +407,15 @@ public class GrpcMapper : IGrpcMapper
                 Role.Owner => TeamMemberRole.Owner,
                 Role.Administrator => TeamMemberRole.Administrator,
                 Role.Member => TeamMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Role), src.Role,
+                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input.")
             },
             Status = src.Status switch
             {
                 TeamMemberStatus.Active => Api.Shared.Services.Models.TeamMemberStatus.Active,
                 TeamMemberStatus.Inactive => Api.Shared.Services.Models.TeamMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Status), src.Status,
+                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input.")
             },
             Customer = new Customer { Id = src.CustomerId },
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)

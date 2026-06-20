@@ -1,3 +1,5 @@
+import { publicDestinationUrls } from "./public-destination-urls";
+
 type CustomerTestimonial = {
   quote: string;
   name: string;
@@ -23,7 +25,8 @@ type CustomerCaseStudy = {
 
 export const homePage = {
   title: "Skedular | Workspace booking and workspace management",
-  description: "Find workspace, book desks and meeting rooms, manage hybrid workplaces, and run coworking operations with Skedular.",
+  description:
+    "Find workspace, book desks and meeting rooms, manage hybrid workplaces, and run coworking operations with Skedular.",
   keywords: [
     "Workspace booking",
     "Desk booking",
@@ -45,9 +48,21 @@ export const homePage = {
     secondary: "explore-skedular",
   },
   trustStatement: "Built for every side of modern workspace",
-  trustSignals: ["People booking space", "Hybrid teams", "Workplace managers", "Coworking operators", "Flexible workspace providers"],
+  trustSignals: [
+    "People booking space",
+    "Hybrid teams",
+    "Workplace managers",
+    "Coworking operators",
+    "Flexible workspace providers",
+  ],
   searchFields: ["Location", "Date", "Resource type"],
-  resourceCategories: ["Desks", "Meeting rooms", "Event spaces", "Private offices", "Flexible workspaces"],
+  resourceCategories: [
+    "Desks",
+    "Meeting rooms",
+    "Event spaces",
+    "Private offices",
+    "Flexible workspaces",
+  ],
   discovery: {
     title: "Find workspace that fits the way you work",
     body: "Discover desks, meeting rooms, event spaces, private offices, and flexible workspaces from providers across the network.",
@@ -76,7 +91,11 @@ export const homePage = {
         ctaLabel: "Find workspace",
         href: "#workspace-discovery",
         accent: "emerald",
-        features: ["Workspace marketplace", "Map discovery", "Desk and room booking"],
+        features: [
+          "Workspace marketplace",
+          "Map discovery",
+          "Desk and room booking",
+        ],
       },
       {
         title: "I manage a workplace",
@@ -84,7 +103,11 @@ export const homePage = {
         ctaLabel: "Explore Teams",
         href: "/teams",
         accent: "aqua",
-        features: ["Private workplace booking", "Attendance and utilization", "Slack, Microsoft Teams, and SSO"],
+        features: [
+          "Private workplace booking",
+          "Attendance and utilization",
+          "Slack, Microsoft Teams, and SSO",
+        ],
       },
       {
         title: "I run a workspace business",
@@ -92,7 +115,23 @@ export const homePage = {
         ctaLabel: "Explore Spaces",
         href: "/spaces",
         accent: "violet",
-        features: ["Resource commerce", "Billing and invoicing", "Marketplace publishing"],
+        features: [
+          "Resource commerce",
+          "Billing and invoicing",
+          "Marketplace publishing",
+        ],
+      },
+      {
+        title: "I have a place to rent",
+        body: "List one whole place without managing coworking resources, product tags, or marketplace configuration.",
+        ctaLabel: "Explore Host",
+        href: "/host",
+        accent: "emerald",
+        features: [
+          "Automatic listing setup",
+          "Flexible pricing and policies",
+          "Card payments and connected payouts",
+        ],
       },
     ],
   },
@@ -106,6 +145,7 @@ export const homePage = {
       { label: "Innovation hubs" },
       { label: "Meeting room providers" },
       { label: "Event venues" },
+      { label: "Independent hosts" },
     ],
   },
   whySkedular: {
@@ -169,7 +209,7 @@ export const homePage = {
     supportingText:
       "Perfect for coworking operators, workspace providers, meeting room businesses, event venues, and organizations looking to monetize underutilized space.",
     ctaLabel: "Become a Host",
-    href: "/become-host",
+    href: publicDestinationUrls.becomeHost,
   },
   productShowcases: [
     {
@@ -179,7 +219,14 @@ export const homePage = {
       href: "/teams",
       ctaLabel: "Explore Teams",
       visualTitle: "Team workplace workflow",
-      visualStats: ["Desk booking", "Meeting rooms", "Floor plans", "Attendance", "Analytics", "SSO"],
+      visualStats: [
+        "Desk booking",
+        "Meeting rooms",
+        "Floor plans",
+        "Attendance",
+        "Analytics",
+        "SSO",
+      ],
       accent: "aqua",
     },
     {
@@ -189,8 +236,32 @@ export const homePage = {
       href: "/spaces",
       ctaLabel: "Explore Spaces",
       visualTitle: "Operator commerce workflow",
-      visualStats: ["Resources", "Products", "Marketplace", "Subscriptions", "Payments", "Invoices"],
+      visualStats: [
+        "Resources",
+        "Products",
+        "Marketplace",
+        "Subscriptions",
+        "Payments",
+        "Invoices",
+      ],
       accent: "violet",
+    },
+    {
+      productName: "Skedular Host",
+      title: "Rent out one place without running coworking software",
+      body: "Skedular Host prepares the private booking setup automatically, so independent hosts can focus on listing details, pricing, policies, renters, bookings, and payouts.",
+      href: "/host",
+      ctaLabel: "Explore Host",
+      visualTitle: "Independent Host workflow",
+      visualStats: [
+        "Places",
+        "Pricing tiers",
+        "Card payments",
+        "Renters",
+        "Bookings",
+        "Payouts",
+      ],
+      accent: "emerald",
     },
   ],
   featureHighlights: {
@@ -259,7 +330,14 @@ export const homePage = {
   integrations: {
     title: "Works with the tools your teams already use",
     body: "Connect Skedular to the tools your teams already use. Bring booking, workplace management, payments, accounting, maps, and calendars together through the integrations your business already relies on. Slack and Microsoft Teams support is available for private organizations using Skedular Teams.",
-    items: ["Slack", "Microsoft Teams", "Xero", "Stripe", "Google Maps", "Calendar integrations"],
+    items: [
+      "Slack",
+      "Microsoft Teams",
+      "Xero",
+      "Stripe",
+      "Google Maps",
+      "Calendar integrations",
+    ],
   },
   finalCta: {
     title: "Ready to simplify workspace?",
@@ -268,6 +346,7 @@ export const homePage = {
       { label: "Book demo", href: "book-demo", style: "inverse" },
       { label: "Explore Teams", href: "/teams", style: "text" },
       { label: "Explore Spaces", href: "/spaces", style: "text" },
+      { label: "Explore Host", href: "/host", style: "text" },
       { label: "View Pricing", href: "/pricing", style: "text" },
     ],
   },
@@ -284,7 +363,8 @@ export const homePage = {
     },
     {
       question: "Who is Skedular for?",
-      answer: "Skedular is for people who need workspace, organizations that manage private workplaces, and operators that run workspace businesses.",
+      answer:
+        "Skedular is for people who need workspace, organizations that manage private workplaces, and operators that run workspace businesses.",
     },
     {
       question: "How is Skedular different from other workspace tools?",
@@ -298,27 +378,33 @@ export const homePage = {
     },
     {
       question: "Does Skedular support recurring bookings?",
-      answer: "Yes. Organizations and operators can create recurring booking experiences for workspace resources and subscriptions.",
+      answer:
+        "Yes. Organizations and operators can create recurring booking experiences for workspace resources and subscriptions.",
     },
     {
       question: "Does Skedular integrate with Microsoft Teams?",
-      answer: "Yes. Skedular Teams supports Microsoft Teams integration for workplace booking and workplace coordination.",
+      answer:
+        "Yes. Skedular Teams supports Microsoft Teams integration for workplace booking and workplace coordination.",
     },
     {
       question: "Does Skedular integrate with Slack?",
-      answer: "Yes. Slack integration allows organizations to coordinate workplace attendance and booking workflows directly within Slack.",
+      answer:
+        "Yes. Slack integration allows organizations to coordinate workplace attendance and booking workflows directly within Slack.",
     },
     {
       question: "Does Skedular support subscriptions?",
-      answer: "Yes. Workspace operators can offer recurring subscriptions alongside one-time bookings.",
+      answer:
+        "Yes. Workspace operators can offer recurring subscriptions alongside one-time bookings.",
     },
     {
       question: "Does Skedular support invoicing?",
-      answer: "Yes. Skedular supports invoicing, billing workflows, subscriptions, and accounting integrations like Xero.",
+      answer:
+        "Yes. Skedular supports invoicing, billing workflows, subscriptions, and accounting integrations like Xero.",
     },
     {
       question: "Does Skedular support floor plans?",
-      answer: "Yes. Skedular supports interactive floor plans that allow users to visually browse and reserve desks, rooms, and workspace resources.",
+      answer:
+        "Yes. Skedular supports interactive floor plans that allow users to visually browse and reserve desks, rooms, and workspace resources.",
     },
     {
       question: "Does Skedular support Xero integration?",
@@ -327,7 +413,8 @@ export const homePage = {
     },
     {
       question: "Can I use my own domain with Skedular?",
-      answer: "Yes. Workspace operators can use a Skedular subdomain or configure a fully custom domain for a branded customer experience.",
+      answer:
+        "Yes. Workspace operators can use a Skedular subdomain or configure a fully custom domain for a branded customer experience.",
     },
   ],
 };

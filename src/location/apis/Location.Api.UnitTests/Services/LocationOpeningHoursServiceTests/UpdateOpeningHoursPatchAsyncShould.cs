@@ -23,6 +23,7 @@ public class UpdateOpeningHoursPatchAsyncShould
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] ILogger<LocationOpeningHoursService> logger,
+        [Frozen] IUnitOfWork unitOfWork,
         LocationOpeningHoursService sut,
         CancellationToken cancellationToken)
     {
@@ -36,15 +37,14 @@ public class UpdateOpeningHoursPatchAsyncShould
             new HashSet<LocationOpeningHoursPatchField> { LocationOpeningHoursPatchField.WeekOpeningHours });
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(A.Fake<IUnitOfWork>());
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => locationRepository.GetByIdAsync("location-1", cancellationToken)).Returns(locationEntity);
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("cust-1");
         A.CallTo(() => organizationOfferingService.IsMoreInteractionAllowedAsync("org-1", "cust-1", cancellationToken))
             .Returns(new ValueTask<bool>(true));
         A.CallTo(() => organizationAuthorizationService.CanModifyAsync("org-1", "cust-1", cancellationToken)).Returns(new ValueTask<bool>(false));
 
-        await Should.ThrowAsync<UnauthorizedAccessException>(() =>
-            sut.UpdateOpeningHoursAsync(request, cancellationToken));
+        await Should.ThrowAsync<UnauthorizedAccessException>(() => sut.UpdateOpeningHoursAsync(request, cancellationToken));
 
         LogAssertions.ACallToLog(logger, LogLevel.Warning)
             .Where(call => call.GetArgument<IReadOnlyList<KeyValuePair<string, object>>>(2)!.ToString()!.Contains("rejected by authorization"))

@@ -1,8 +1,10 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Booking.Api.Models;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Random;
 using Customer = Booking.Shared.Database.Entities.Customer;
@@ -12,6 +14,7 @@ namespace Booking.Api.Services;
 public interface IPrivateBookingService
 {
     Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
+    Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, DateOnly? fullOpeningHoursDate, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> UpdateAsync(PrivateBookingPatchRequest request, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken);
 }
@@ -23,14 +26,26 @@ public class PrivateBookingService(
     ITeamAuthorizationService teamAuthorizationService,
     IContext context,
     Shared.Services.IPrivateBookingService sharedPrivateBookingService,
+    IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
     IEntityMapper entityMapper,
     ILogger<PrivateBookingService> logger) : IPrivateBookingService
 {
-    public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
+    public Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken) =>
+        AddAsync(booking, null, cancellationToken);
+
+    public async Task<Shared.Models.Booking> AddAsync(
+        Shared.Models.Booking booking, 
+        DateOnly? fullOpeningHoursDate,
+        CancellationToken cancellationToken)
     {
         if (booking.InvolvedCustomers.Count == 0)
         {
             throw new ArgumentException(nameof(booking.InvolvedCustomers));
+        }
+
+        if (fullOpeningHoursDate.HasValue)
+        {
+            booking = await ResolveFullOpeningHoursBookingWindowAsync(booking, fullOpeningHoursDate.Value, cancellationToken);
         }
 
         var verifiableToken = context.GetVerifiableToken();
@@ -164,6 +179,44 @@ public class PrivateBookingService(
         return await sharedPrivateBookingService.DeleteAsync(existingBooking, customer, true, cancellationToken);
     }
 
+    private async Task<Shared.Models.Booking> ResolveFullOpeningHoursBookingWindowAsync(
+        Shared.Models.Booking booking,
+        DateOnly bookingDate,
+        CancellationToken cancellationToken)
+    {
+        var resourceIds = booking.Resources.Select(item => item.Resource.Id).Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
+        if (resourceIds.Count == 0)
+        {
+            throw new ArgumentException("Full opening-hours bookings require at least one resource.", nameof(booking.Resources));
+        }
+
+        var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(resourceIds, false, cancellationToken);
+        if (resources.Count != resourceIds.Count)
+        {
+            throw new ResourceNotFound();
+        }
+
+        var windows = resources
+            .Select(resource => marketplaceBookingOpeningHoursService.ResolveDailyBookingWindow(resource, bookingDate))
+            .ToList();
+        if (windows.Any(window => window is null))
+        {
+            throw new ResourceNotAvailable();
+        }
+
+        var firstWindow = windows.First()!.Value;
+        if (windows.Any(window => window!.Value.From != firstWindow.From || window.Value.Until != firstWindow.Until))
+        {
+            throw new ResourceNotAvailable();
+        }
+
+        booking.From = firstWindow.From;
+        booking.Until = firstWindow.Until;
+        booking.Schedules = [new BookingSchedule(firstWindow.From, firstWindow.Until)];
+
+        return booking;
+    }
+
     private async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
@@ -250,7 +303,8 @@ public class PrivateBookingService(
                     booking.Resources = request.Booking.Resources;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+                    throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
+                        $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.");
             }
         }
     }

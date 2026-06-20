@@ -1,0 +1,47 @@
+---
+import { documentationArticles, documentationCategories, getProductCategories, documentationProducts, getCategoryPath, getDocumentationPath, getProductPath } from "../data/documentation";
+interface Props { product?: "teams" | "spaces" | "host"; category?: string; shared?: boolean; currentArticleId?: string; }
+const { product, category, shared = false, currentArticleId } = Astro.props;
+---
+<nav class="documentation-navigation" aria-label="Documentation navigation">
+  <a href="/docs">Documentation home</a>
+  <a class="documentation-navigation-core" href="/docs/shared/core-concepts" aria-current={undefined}>Core Concepts</a>
+  {shared && <div class="documentation-category-links" aria-label="Skedular concept sections">
+    {documentationCategories.filter((item) => item.product === "shared").sort((a, b) => (a.id === "core-concepts" ? -2 : a.id === "administration" ? -1 : a.order) - (b.id === "core-concepts" ? -2 : b.id === "administration" ? -1 : b.order)).map((item) => <div class="documentation-category-group"><a href={item.id === "core-concepts" ? "/docs/shared/core-concepts/skedular-concepts" : getCategoryPath("shared", item.id)} aria-current={item.id === "core-concepts" ? currentArticleId === "shared-concepts" ? "page" : undefined : category === item.id ? "page" : undefined}>{item.id === "core-concepts" ? "Understanding Skedular" : item.label}</a>{item.id === "core-concepts" && <div class="documentation-article-links">{documentationArticles.filter((article) => article.product === "shared" && article.category === "core-concepts" && article.id !== "shared-concepts").map((article) => <a href={getDocumentationPath(article)} aria-current={article.id === currentArticleId ? "page" : undefined}>{article.title}</a>)}</div>}{item.id !== "core-concepts" && <div class="documentation-article-links">{documentationArticles.filter((article) => article.product === "shared" && article.category === item.id).map((article) => <a href={getDocumentationPath(article)} aria-current={article.id === currentArticleId ? "page" : undefined}>{article.title}</a>)}</div>}</div>)}
+  </div>}
+  {product ? <>
+    {documentationProducts.map((item) => <>
+      <a class="documentation-navigation-product" href={getProductPath(item)} aria-current={item === product && !category ? "page" : undefined}>Skedular {item[0].toUpperCase() + item.slice(1)}</a>
+      {item === product && item !== "host" && <div class="documentation-category-links" aria-label={`${item} documentation sections`}>
+        {item !== "spaces" && getProductCategories(item).map((categoryItem) => <div class="documentation-category-group">
+          <a href={getCategoryPath(item, categoryItem.id)} aria-current={category === categoryItem.id ? "page" : undefined}>{categoryItem.label}</a>
+          {(categoryItem.id === "workplace-setup" || categoryItem.id === "integrations") && <div class="documentation-article-links" aria-label={`${categoryItem.label} guides`}>
+            {documentationArticles.filter((article) => article.product === item && article.category === categoryItem.id).map((article) => <a href={getDocumentationPath(article)} aria-current={article.id === currentArticleId ? "page" : undefined}>{article.title}</a>)}
+          </div>}
+        </div>)}
+      {item === "spaces" && <div class="documentation-category-links documentation-spaces-workflows" aria-label="Spaces operator workflows">
+        <a href="/docs/spaces/getting-started">Getting Started</a>
+        <div class="documentation-category-group"><a href="/docs/spaces/workspace-setup">Set up your workspace</a><div class="documentation-article-links"><a href="/docs/spaces/workspace-setup/locations-and-resources">Locations and resources</a><a href="/docs/spaces/workspace-setup/zones-and-floor-plans">Zones and floor plans</a></div></div>
+        <div class="documentation-category-group"><a href="/docs/spaces/products-and-marketplace">Products and marketplace</a><div class="documentation-article-links"><a href="/docs/spaces/products-and-marketplace/marketplace-setup">Marketplace setup</a><a href="/docs/spaces/products-and-marketplace/products-and-pricing">Products and pricing</a></div></div>
+        <div class="documentation-category-group"><a href="/docs/spaces/bookings">Bookings</a><div class="documentation-article-links"><a href="/docs/spaces/bookings/subscriptions">Subscriptions</a></div></div>
+        <div class="documentation-category-group"><a href="/docs/spaces/billing-and-payments">Billing and payments</a><div class="documentation-article-links"><a href="/docs/spaces/billing-and-payments/payment-methods">Payment methods</a><a href="/docs/spaces/billing-and-payments/refunds">Refunds</a><a href="/docs/spaces/billing-and-payments/xero-accounting">Xero accounting</a></div></div>
+        <a href="/docs/spaces/analytics">Operator analytics</a>
+        <a href="/docs/spaces/faqs">FAQs</a>
+        <a href="/docs/spaces/best-practices">Best Practices</a>
+      </div>}
+      </div>}
+      {item === "host" && item === product && <div class="documentation-category-links documentation-spaces-workflows" aria-label="Host documentation guides">
+        <a href="/docs/host/getting-started">Getting Started</a>
+        <a href="/docs/host/your-place">Your place</a>
+        <a href="/docs/host/pricing-and-availability">Pricing and availability</a>
+        <a href="/docs/host/bookings-and-renters">Bookings and renters</a>
+        <a href="/docs/host/payments-and-refunds">Payments and refunds</a>
+        <a href="/docs/host/managing-your-listing">Managing your listing</a>
+        <a href="/docs/host/faqs">FAQs</a>
+        <a href="/docs/host/best-practices">Best Practices</a>
+      </div>}
+    </>)}
+  </> : <>
+    {documentationProducts.map((item) => <a href={getProductPath(item)}>Skedular {item[0].toUpperCase() + item.slice(1)}</a>)}
+  </>}
+</nav>

@@ -24,7 +24,7 @@ const barlow = localFont({
   adjustFontFallback: false,
 });
 
-const appDefinition = getProductAppDefinition('webapp');
+const appDefinition = getProductAppDefinition('webapp-teams');
 
 export const metadata: Metadata = {
   title: 'Skedular Teams',

@@ -6,7 +6,8 @@ public record ProductSearchCriteria(
     IReadOnlyList<string> OrganizationIds,
     IReadOnlyList<string> OrganizationCustomDomains,
     IReadOnlyList<string> ProductIds,
-    bool IncludeInactive);
+    bool IncludeInactive,
+    bool IncludeUnverifiedHost = false);
 
 public record ProductOrder(OrderDirection Direction, ProductOrderField Field);
 

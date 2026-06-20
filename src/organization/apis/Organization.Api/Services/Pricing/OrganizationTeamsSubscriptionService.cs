@@ -205,7 +205,7 @@ public class OrganizationTeamsSubscriptionService(
             offering.PurchasedUserCapacity,
             offering.PurchasedLocationCapacity,
             offering.PurchasedTeamCapacity,
-            offering.CatalogVersion ?? PricingCatalogConstants.CurrentTeamsCatalogVersion,
+            offering.CatalogVersion ?? offering.Code.GetCurrentCatalogVersion(),
             offering.Code.IsEarlyBirdOffering() ? OrganizationOfferingPlanStatus.Legacy : OrganizationOfferingPlanStatus.Active,
             offering.Start,
             offering.End,
@@ -225,7 +225,8 @@ public static class OrganizationTeamsSubscriptionServiceExtensions
                 PricingCatalogSubscriptionPlanCode.PayAsYouGo => OfferingCode.PayAsYouGoV1,
                 PricingCatalogSubscriptionPlanCode.EnterpriseCapacity => OfferingCode.EnterpriseCustomV1,
                 PricingCatalogSubscriptionPlanCode.LegacyEarlyBird => OfferingCode.EarlyBirdV1,
-                _ => throw new ArgumentOutOfRangeException(nameof(planCode), planCode, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(planCode), planCode,
+                    $"Unexpected value for {nameof(planCode)}: {planCode}. Update enum mapping or caller input.")
             };
     }
 }

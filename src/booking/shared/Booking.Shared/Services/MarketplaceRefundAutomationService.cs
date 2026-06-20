@@ -10,12 +10,18 @@ public interface IMarketplaceRefundAutomationService
         MarketplaceRefund refund,
         string? actorCustomerId,
         CancellationToken cancellationToken);
+
+    Task<MarketplaceRefund> ProjectAccountingAfterStripeAsync(
+        MarketplaceRefund refund,
+        string? actorCustomerId,
+        CancellationToken cancellationToken);
 }
 
 public class MarketplaceRefundAutomationService(
     IRepositoryFactory repositoryFactory,
     IMarketplaceRefundEventService marketplaceRefundEventService,
     IXeroRefundService xeroRefundService,
+    IStripeHostRefundService stripeHostRefundService,
     TimeProvider timeProvider) : IMarketplaceRefundAutomationService
 {
     public async Task<MarketplaceRefund> ProcessAfterRequestAsync(
@@ -28,6 +34,44 @@ public class MarketplaceRefundAutomationService(
             return refund;
         }
 
+        if (await stripeHostRefundService.IsHostRefundAsync(refund, cancellationToken))
+        {
+            if (!await stripeHostRefundService.CanProcessAsync(refund, cancellationToken))
+            {
+                refund.Status = MarketplaceRefundStatusConstants.ManualRequired;
+                refund.LastProcessedAt = timeProvider.GetUtcNow();
+                refund.LastError = "The Host card payment could not be correlated to a Stripe Checkout session.";
+                refund = repositoryFactory.MarketplaceRefundRepository.Update(refund);
+                marketplaceRefundEventService.Add(refund, MarketplaceRefundEventTypeConstants.ManualRequired, actorCustomerId,
+                    refund.LastProcessedAt);
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+                return refund;
+            }
+
+            refund = repositoryFactory.MarketplaceRefundRepository.Update(ToPendingAccounting(refund));
+            marketplaceRefundEventService.Add(refund, MarketplaceRefundEventTypeConstants.PendingAccounting, actorCustomerId, refund.LastProcessedAt);
+            refund = await stripeHostRefundService.ProcessAsync(refund, cancellationToken);
+            marketplaceRefundEventService.Add(refund, MapStatusToEventType(refund.Status), actorCustomerId, refund.LastProcessedAt);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            return refund.Status == MarketplaceRefundStatusConstants.Completed
+                ? await ProjectAccountingAfterStripeAsync(refund, actorCustomerId, cancellationToken)
+                : refund;
+        }
+
+        return await ProcessXeroProjectionAsync(refund, actorCustomerId, cancellationToken);
+    }
+
+    public Task<MarketplaceRefund> ProjectAccountingAfterStripeAsync(
+        MarketplaceRefund refund,
+        string? actorCustomerId,
+        CancellationToken cancellationToken) =>
+        ProcessXeroProjectionAsync(refund, actorCustomerId, cancellationToken);
+
+    private async Task<MarketplaceRefund> ProcessXeroProjectionAsync(
+        MarketplaceRefund refund,
+        string? actorCustomerId,
+        CancellationToken cancellationToken)
+    {
         var availability = await xeroRefundService.GetProcessingAvailabilityAsync(
             repositoryFactory.MarketplaceRefundRepository.Update(ToPendingAccounting(refund)),
             cancellationToken);

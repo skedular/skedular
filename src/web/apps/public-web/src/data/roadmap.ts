@@ -4,7 +4,13 @@ export interface RoadmapItem {
   id: string;
   title: string;
   description: string;
-  category: "category" | "industry" | "comparison" | "ai-knowledge" | "structured-data" | "eet";
+  category:
+    | "category"
+    | "industry"
+    | "comparison"
+    | "ai-knowledge"
+    | "structured-data"
+    | "eet";
   effort: "low" | "medium" | "high";
   seoimpact: "high" | "medium" | "low";
   aiimpact: "high" | "medium" | "low";
@@ -20,8 +26,10 @@ export interface Roadmap {
 const days30Items: RoadmapItem[] = [
   {
     id: "1",
-    title: "Add missing category pages for workspace management software, desk booking software, coworking management software",
-    description: "Create category pages targeting high-volume search terms with proper schema markup",
+    title:
+      "Add missing category pages for workspace management software, desk booking software, coworking management software",
+    description:
+      "Create category pages targeting high-volume search terms with proper schema markup",
     category: "category",
     effort: "medium",
     seoimpact: "high",
@@ -30,7 +38,8 @@ const days30Items: RoadmapItem[] = [
   {
     id: "2",
     title: "Expand FAQ sections on all product pages with long-tail queries",
-    description: "Add 5-8 additional FAQ entries per page targeting specific search intents",
+    description:
+      "Add 5-8 additional FAQ entries per page targeting specific search intents",
     category: "structured-data",
     effort: "low",
     seoimpact: "high",
@@ -39,7 +48,8 @@ const days30Items: RoadmapItem[] = [
   {
     id: "3",
     title: "Create comparison pages for top competitors (Skedda, Robin, Envoy)",
-    description: "Build comparison pages targeting competitor search traffic with neutral language",
+    description:
+      "Build comparison pages targeting competitor search traffic with neutral language",
     category: "comparison",
     effort: "medium",
     seoimpact: "high",
@@ -51,8 +61,10 @@ const days30Items: RoadmapItem[] = [
 const days60Items: RoadmapItem[] = [
   {
     id: "4",
-    title: "Create industry-specific pages (coworking spaces, shared offices, enterprise)",
-    description: "Build tailored content for each industry vertical with specific use cases",
+    title:
+      "Create industry-specific pages (coworking spaces, shared offices, enterprise)",
+    description:
+      "Build tailored content for each industry vertical with specific use cases",
     category: "industry",
     effort: "medium",
     seoimpact: "high",
@@ -61,7 +73,8 @@ const days60Items: RoadmapItem[] = [
   {
     id: "5",
     title: "Expand AI Knowledge Hub with educational articles",
-    description: "Create definition and workflow content for AI retrieval optimization",
+    description:
+      "Create definition and workflow content for AI retrieval optimization",
     category: "ai-knowledge",
     effort: "medium",
     seoimpact: "medium",
@@ -83,7 +96,8 @@ const days90Items: RoadmapItem[] = [
   {
     id: "7",
     title: "Create integration documentation pages",
-    description: "Build detailed integration guides for Slack, Teams, Xero, Stripe",
+    description:
+      "Build detailed integration guides for Slack, Teams, Xero, Stripe",
     category: "eet",
     effort: "medium",
     seoimpact: "high",
@@ -91,8 +105,10 @@ const days90Items: RoadmapItem[] = [
   },
   {
     id: "8",
-    title: "Add comparison pages for remaining competitors (Archie, OfficeSpace, Condeco)",
-    description: "Complete competitor coverage with neutral, factual comparisons",
+    title:
+      "Add comparison pages for remaining competitors (Archie, OfficeSpace, Condeco)",
+    description:
+      "Complete competitor coverage with neutral, factual comparisons",
     category: "comparison",
     effort: "medium",
     seoimpact: "medium",
@@ -101,7 +117,8 @@ const days90Items: RoadmapItem[] = [
   {
     id: "9",
     title: "Implement workflow documentation sections across site",
-    description: "Add reusable workflow patterns for AI understanding of business processes",
+    description:
+      "Add reusable workflow patterns for AI understanding of business processes",
     category: "ai-knowledge",
     effort: "high",
     seoimpact: "medium",

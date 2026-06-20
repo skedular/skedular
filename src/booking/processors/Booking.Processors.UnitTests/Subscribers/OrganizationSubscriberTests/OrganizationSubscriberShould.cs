@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Booking.Processors.Mappers;
 using Booking.Processors.Subscribers;
 using Booking.Shared.Models;
@@ -13,12 +14,60 @@ using OrganizationBillingCycleModel = Api.Shared.Services.Models.OrganizationBil
 using OrganizationTypeModel = Api.Shared.Services.Models.OrganizationType;
 using ValueMetadata = Api.Shared.Clients.Events.Skedular.Organization.V1.Metadata;
 using ValueType = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
+using OfferingModel = Api.Shared.Services.Models.Offering;
 
 namespace Booking.Processors.UnitTests.Subscribers.OrganizationSubscriberTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class OrganizationSubscriberShould
 {
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Clear_Booking_Quota_For_Early_Bird_Marketplace_Organization(
+        [Frozen] IEventMapper eventMapper,
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IOrganizationRepository organizationRepository,
+        [Frozen] EventContext eventContext,
+        OrganizationSubscriber sut,
+        string organizationId,
+        CancellationToken cancellationToken)
+    {
+        var incoming = new Shared.Models.Organization
+        {
+            Id = organizationId,
+            Type = OrganizationTypeModel.Marketplace,
+            BillingCycle = OrganizationBillingCycleModel.Monthly,
+            Offering = new OfferingModel
+            {
+                Code = OfferingCode.EarlyBirdV1,
+                PurchasedTeamCapacity = 100,
+                Start = DateTimeOffset.UtcNow,
+                End = DateTimeOffset.UtcNow.AddMonths(1)
+            }
+        };
+        var existing = new Organization
+        {
+            Id = organizationId,
+            Type = OrganizationTypeConstants.Marketplace,
+            BillingCycle = OrganizationBillingCycleConstants.Monthly,
+            Offering = new OfferingModel { SpacesQuotaLimit = 100 }
+        };
+        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.OrganizationUpserted } };
+
+        A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
+        A.CallTo(() => eventMapper.MapTo(@event)).Returns(incoming);
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(organizationId, null, true, true, cancellationToken)).Returns(existing);
+        A.CallTo(() => eventMapper.MergeToEntity(incoming, existing)).Returns(existing);
+        A.CallTo(() => organizationRepository.Update(existing)).Returns(existing);
+
+        var result = await sut.HandleAsync(eventContext, new Key(), @event, cancellationToken);
+
+        result.ShouldBe(EventSubscriberResults.Success);
+        existing.Offering.ShouldNotBeNull();
+        existing.Offering.SpacesPlanCode.ShouldBe(4);
+        existing.Offering.SpacesQuotaLimit.ShouldBeNull();
+    }
+
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Arrears_Billing_Workflow_For_New_Marketplace_Organization(

@@ -52,13 +52,15 @@ public class GrpcMapper : IGrpcMapper
                 BookingCategory.Vacation => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.Vacation,
                 BookingCategory.TravelingForWork => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             Channel = src.Channel switch
             {
                 BookingChannel.Private => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingChannel.Private,
                 BookingChannel.Marketplace => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingChannel.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             MarketplaceBooking = MapToGrpcResponse(src.MarketplaceBooking),
             CreatedByCustomerId = src.CreatedByCustomer is null ? string.Empty : src.CreatedByCustomer.Id.ToSafeString(),
@@ -111,15 +113,20 @@ public class GrpcMapper : IGrpcMapper
     public Shared.Models.Booking MapTo(UpdatePrivateInput src)
     {
         var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
+        var from = src.From;
+        var until = src.Until;
+        var hasSchedule = from is not null && until is not null;
 
         return new Shared.Models.Booking
         {
             Id = src.Id,
-            From = src.From.ToDateTimeOffset(),
-            Until = src.Until.ToDateTimeOffset(),
+            From = hasSchedule ? from!.ToDateTimeOffset() : default,
+            Until = hasSchedule ? until!.ToDateTimeOffset() : default,
             Notes = src.Notes.ToSafeString(),
             Category = MapToCategory(src.Category),
-            Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
+            Schedules = hasSchedule
+                ? new List<BookingSchedule> { new(from!.ToDateTimeOffset(), until!.ToDateTimeOffset()) }
+                : [],
             InvolvedCustomers = customers,
             InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds().Select(item => new Organization { Id = item }).ToList(),
             InvolvedLocations = [],
@@ -180,7 +187,8 @@ public class GrpcMapper : IGrpcMapper
                 PaymentStatus.Expired => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentStatus.Expired,
                 PaymentStatus.RecordNeverCreated => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentStatus.RecordNeverCreated,
                 PaymentStatus.NoPaymentRequired => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentStatus.NoPaymentRequired,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             IsPaymentRequired = src.IsPaymentRequired,
             PaidByCustomerId = src.PaidByCustomer is null ? string.Empty : src.PaidByCustomer.Id.ToSafeString(),
@@ -198,7 +206,8 @@ public class GrpcMapper : IGrpcMapper
             {
                 PaymentMethod.Card => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentMethod.Card,
                 PaymentMethod.BankTransfer => global::Api.Shared.Grpc.Skedular.Booking.Core.V1.PaymentMethod.BankAccount,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             Quantity = src.Quantity,
             ProductVersionId = src.ProductVersion.Id.ToSafeString()
@@ -222,6 +231,7 @@ public class GrpcMapper : IGrpcMapper
             global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.Vacation => BookingCategory.Vacation,
             global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork => BookingCategory.TravelingForWork,
             global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay => BookingCategory.NonWorkingDay,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(null,
+                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
         };
 }

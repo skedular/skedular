@@ -11,6 +11,8 @@ public abstract class RelationalDbContextBase<TDbContext>(
 {
     protected CustomDbContextOptions<TDbContext> CustomDbContextOptions { get; } = customDbContextOptions;
 
+    public bool HasActiveTransaction => Database.CurrentTransaction is not null;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         var contextAssembly = Assembly.GetAssembly(typeof(TDbContext));

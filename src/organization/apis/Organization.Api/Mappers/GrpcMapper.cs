@@ -79,8 +79,9 @@ public class GrpcMapper : IGrpcMapper
             {
                 OrganizationType.Private => global::Api.Shared.Services.Models.OrganizationType.Private,
                 OrganizationType.Marketplace => global::Api.Shared.Services.Models.OrganizationType.Marketplace,
-                OrganizationType.Individual => global::Api.Shared.Services.Models.OrganizationType.Individual,
-                _ => throw new ArgumentOutOfRangeException()
+                OrganizationType.Host => global::Api.Shared.Services.Models.OrganizationType.Host,
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
             },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
@@ -94,7 +95,8 @@ public class GrpcMapper : IGrpcMapper
                 OrganizationBillingCycle.Weekly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Weekly,
                 OrganizationBillingCycle.Fortnightly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Fortnightly,
                 OrganizationBillingCycle.Monthly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Monthly,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.BillingCycle), src.BillingCycle,
+                    $"Unexpected value for {nameof(src.BillingCycle)}: {src.BillingCycle}. Update enum mapping or caller input.")
             },
             InvoiceDueInDays = src.InvoiceDueInDays
         };
@@ -116,7 +118,8 @@ public class GrpcMapper : IGrpcMapper
             {
                 Currency.Nzd => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Currency.Nzd,
                 Currency.Usd => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Currency.Usd,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(organizationOffering.Currency), organizationOffering.Currency,
+                    $"Unexpected value for {nameof(organizationOffering.Currency)}: {organizationOffering.Currency}. Update enum mapping or caller input.")
             }
         };
         if (organizationOffering.UnitPrice.HasValue)
@@ -144,6 +147,8 @@ public class GrpcMapper : IGrpcMapper
             offering.PurchasedTeamCapacity = organizationOffering.PurchasedTeamCapacity.Value;
         }
 
+        offering.HostCommissionPercentage = decimal.ToDouble(organizationOffering.HostCommissionPercentage);
+
         var organization = new global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization
         {
             Id = src.Id,
@@ -156,8 +161,9 @@ public class GrpcMapper : IGrpcMapper
             {
                 global::Api.Shared.Services.Models.OrganizationType.Private => OrganizationType.Private,
                 global::Api.Shared.Services.Models.OrganizationType.Marketplace => OrganizationType.Marketplace,
-                global::Api.Shared.Services.Models.OrganizationType.Individual => OrganizationType.Individual,
-                _ => throw new ArgumentOutOfRangeException()
+                global::Api.Shared.Services.Models.OrganizationType.Host => OrganizationType.Host,
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
             },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
@@ -426,13 +432,15 @@ public class GrpcMapper : IGrpcMapper
                 global::Api.Shared.Services.Models.OrganizationMemberRole.Owner => OrganizationMemberRole.Owner,
                 global::Api.Shared.Services.Models.OrganizationMemberRole.Administrator => OrganizationMemberRole.Administrator,
                 global::Api.Shared.Services.Models.OrganizationMemberRole.Member => OrganizationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Role), src.Role,
+                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input.")
             },
             Status = src.Status switch
             {
                 OrganizationMemberStatus.Active => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Status), src.Status,
+                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input.")
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
             CustomerId = src.Customer.Id
@@ -449,13 +457,15 @@ public class GrpcMapper : IGrpcMapper
                 OrganizationMemberRole.Owner => global::Api.Shared.Services.Models.OrganizationMemberRole.Owner,
                 OrganizationMemberRole.Administrator => global::Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => global::Api.Shared.Services.Models.OrganizationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             Status = src.Status switch
             {
                 global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Active => OrganizationMemberStatus.Active,
                 global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Inactive => OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = new Customer { Id = src.CustomerId },

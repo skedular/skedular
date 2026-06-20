@@ -5,7 +5,7 @@
   "engines": {
     "node": "^22"
   },
-  "packageManager": "pnpm@11.6.0",
+  "packageManager": "pnpm@11.17.0",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -37,12 +37,6 @@
     "webapp#lint-fix": "turbo run webapp#lint-fix",
     "webapp#format": "turbo run webapp#format",
     "webapp#relay": "turbo run webapp#relay",
-    "webapp-help#build": "turbo run webapp-help#build",
-    "webapp-help#start": "turbo run webapp-help#start",
-    "webapp-help#lint": "turbo run webapp-help#lint",
-    "webapp-help#test": "turbo run webapp-help#test",
-    "webapp-help#lint-fix": "turbo run webapp-help#lint-fix",
-    "webapp-help#format": "turbo run webapp-help#format",
     "webapp-teams#build": "turbo run webapp-teams#build",
     "webapp-teams#start": "turbo run webapp-teams#start",
     "webapp-teams#lint": "turbo run webapp-teams#lint",
@@ -59,18 +53,14 @@
     "webapp-spaces#lint-fix": "turbo run webapp-spaces#lint-fix",
     "webapp-spaces#format": "turbo run webapp-spaces#format",
     "webapp-spaces#relay": "turbo run webapp-spaces#relay",
-    "webapp-teams-help#build": "turbo run webapp-teams-help#build",
-    "webapp-teams-help#start": "turbo run webapp-teams-help#start",
-    "webapp-teams-help#lint": "turbo run webapp-teams-help#lint",
-    "webapp-teams-help#test": "turbo run webapp-teams-help#test",
-    "webapp-teams-help#lint-fix": "turbo run webapp-teams-help#lint-fix",
-    "webapp-teams-help#format": "turbo run webapp-teams-help#format",
-    "webapp-spaces-help#build": "turbo run webapp-spaces-help#build",
-    "webapp-spaces-help#start": "turbo run webapp-spaces-help#start",
-    "webapp-spaces-help#lint": "turbo run webapp-spaces-help#lint",
-    "webapp-spaces-help#test": "turbo run webapp-spaces-help#test",
-    "webapp-spaces-help#lint-fix": "turbo run webapp-spaces-help#lint-fix",
-    "webapp-spaces-help#format": "turbo run webapp-spaces-help#format",
+    "webapp-host#build": "turbo run webapp-host#build",
+    "webapp-host#start": "turbo run webapp-host#start",
+    "webapp-host#lint": "turbo run webapp-host#lint",
+    "webapp-host#test": "turbo run webapp-host#test",
+    "webapp-host#test:watch": "turbo run webapp-host#test:watch",
+    "webapp-host#lint-fix": "turbo run webapp-host#lint-fix",
+    "webapp-host#format": "turbo run webapp-host#format",
+    "webapp-host#relay": "turbo run webapp-host#relay",
     "public-web#dev": "turbo run public-web#dev",
     "public-web#build": "turbo run public-web#build",
     "public-web#start": "turbo run public-web#start",
@@ -82,9 +72,9 @@
   "devDependencies": {
     "@types/relay-runtime": "^20.1.1",
     "eslint": "^9.39.2",
-    "eslint-plugin-turbo": "^2.9.18",
+    "eslint-plugin-turbo": "^2.10.6",
     "global": "^4.4.0",
-    "next": "^16.2.9",
-    "turbo": "^2.9.18"
+    "next": "^16.2.11",
+    "turbo": "^2.10.6"
   }
 }

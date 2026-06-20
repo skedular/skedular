@@ -1,8 +1,11 @@
 using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Microsoft.Graph.Models;
 using Organization.Shared.Models;
+using Organization.Shared.Models.PricingCatalog;
+using Organization.Shared.Services.Pricing;
 using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
 using Customer = Organization.Shared.Models.Customer;
 using CustomerType = Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType;
@@ -12,6 +15,7 @@ using PaymentMethod = Stripe.PaymentMethod;
 using PersonalInformationVisibility = Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
+using OrganizationSpacesSubscription = Organization.Shared.Models.PricingCatalog.OrganizationSpacesSubscription;
 using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
 
 namespace Organization.Shared.Mappers;
@@ -20,6 +24,7 @@ public interface IEntityMapper
 {
     OrganizationStripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Organization organization);
     Models.Organization MapTo(Database.Entities.Organization src);
+    OrganizationOffering MapTo(Database.Entities.OrganizationOffering src, Models.Organization organization);
     AzureTenantMember MapTo(User src);
     Database.Entities.AzureTenantMember MapTo(AzureTenantMember src, AzureTenant azureTenant);
     Database.Entities.AzureTenantMember MergeToEntity(AzureTenantMember src, Database.Entities.AzureTenantMember dest, AzureTenant azureTenant);
@@ -52,44 +57,7 @@ public class EntityMapper : IEntityMapper
             Organization = organization
         };
 
-    public Models.Organization MapTo(Database.Entities.Organization src)
-    {
-        var organization = new Models.Organization
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            CustomDomain = src.CustomDomain,
-            Name = src.Name,
-            MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
-            Website = src.Website,
-            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
-            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
-            LogoUrl = src.LogoUrl,
-            Type = src.Type.ToOrganizationType(),
-            BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
-            RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
-            IsOwnershipVerified = src.IsOwnershipVerified,
-            FeatureImages = src.FeatureImages.ToSafeCollection(),
-            TermsOfUse = MapTo(src.TermsOfUse),
-            IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList()
-        };
-
-        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
-        organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
-        organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
-        organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
-        organization.Tags = MapTo(src.Tags, organization).ToList();
-        organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
-        organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
-        organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
-        organization.OrganizationXeroConnection = MapTo(src.OrganizationXeroConnection, organization);
-
-        return organization;
-    }
+    public Models.Organization MapTo(Database.Entities.Organization src) => MapTo(src, true);
 
     public AzureTenantMember MapTo(User src) =>
         new()
@@ -159,6 +127,87 @@ public class EntityMapper : IEntityMapper
         Database.Entities.Organization organization,
         Database.Entities.Customer customer) =>
         MergeToEntity(src, new OrganizationMember(), organization, customer);
+
+    public OrganizationOffering MapTo(Database.Entities.OrganizationOffering src, Models.Organization organization)
+    {
+        var organizationOffering = new OrganizationOffering
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            Code = src.Code,
+            Start = src.Start,
+            End = src.End,
+            AutoRenew = src.AutoRenew,
+            UnitPrice = src.UnitPrice,
+            FixedPrice = src.FixedPrice,
+            Currency = src.Currency.ToCurrency(),
+            PurchasedUserCapacity = src.PurchasedUserCapacity,
+            PurchasedLocationCapacity = src.PurchasedLocationCapacity,
+            PurchasedTeamCapacity = src.PurchasedTeamCapacity,
+            DiscountPercentage = src.DiscountPercentage,
+            SpacesBillingStartsAt = src.SpacesBillingStartsAt,
+            Organization = organization
+        };
+
+        organizationOffering.OrganizationOfferingActiveMembers = src.OrganizationOfferingActiveMembers
+            .Select(item => new OrganizationOfferingActiveMember
+            {
+                Id = item.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                OrganizationMember = MapTo(item.OrganizationMember, organization),
+                OrganizationOffering = organizationOffering
+            })
+            .ToList();
+
+        return organizationOffering;
+    }
+
+    private Models.Organization MapTo(Database.Entities.Organization src, bool includeSpacesSubscription)
+    {
+        var organization = new Models.Organization
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            CustomDomain = src.CustomDomain,
+            Name = src.Name,
+            MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
+            Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
+            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
+            LogoUrl = src.LogoUrl,
+            Type = src.Type.ToOrganizationType(),
+            SpacesTrialStartedAt = src.SpacesTrialStartedAt,
+            BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
+            ContactEmail = src.ContactEmail,
+            ContactPhone = src.ContactPhone,
+            RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
+            IsOwnershipVerified = src.IsOwnershipVerified,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
+            TermsOfUse = MapTo(src.TermsOfUse),
+            IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList()
+        };
+
+        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
+        organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
+        organization.OrganizationSpacesSubscription = includeSpacesSubscription
+            ? src.OrganizationOfferings.Where(item => IsSpacesOffering(src, item)).Select(item => MapToSpacesSubscription(item, src))
+                .SingleOrDefault()
+            : null;
+        organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
+        organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
+        organization.Tags = MapTo(src.Tags, organization).ToList();
+        organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
+        organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
+        organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
+        organization.OrganizationXeroConnection = MapTo(src.OrganizationXeroConnection, organization);
+
+        return organization;
+    }
 
     private static OrganizationStripeConnectAccountAuthorization? MapTo(
         Database.Entities.OrganizationStripeConnectAccountAuthorization? src) =>
@@ -299,45 +348,48 @@ public class EntityMapper : IEntityMapper
             EmailVerified = src.EmailVerified
         };
 
-    private static IEnumerable<OrganizationOffering> MapTo(
+    private IEnumerable<OrganizationOffering> MapTo(
         IEnumerable<Database.Entities.OrganizationOffering> src,
         Models.Organization organization) =>
         src.Select(item => MapTo(item, organization));
 
-    private static OrganizationOffering MapTo(Database.Entities.OrganizationOffering src, Models.Organization organization)
-    {
-        var organizationOffering = new OrganizationOffering
+    private OrganizationSpacesSubscription MapToSpacesSubscription(
+        Database.Entities.OrganizationOffering src,
+        Database.Entities.Organization organization) =>
+        new()
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Code = src.Code,
-            Start = src.Start,
-            End = src.End,
-            AutoRenew = src.AutoRenew,
-            UnitPrice = src.UnitPrice,
-            FixedPrice = src.FixedPrice,
-            Currency = src.Currency.ToCurrency(),
-            PurchasedUserCapacity = src.PurchasedUserCapacity,
-            PurchasedLocationCapacity = src.PurchasedLocationCapacity,
-            PurchasedTeamCapacity = src.PurchasedTeamCapacity,
-            Organization = organization
+            Organization = MapTo(organization, false),
+            PlanCode = src.Code.ToPricingCatalogSubscriptionPlanCode(),
+            CommercialModel = GetSpacesCommercialModel(src.Code.ToPricingCatalogSubscriptionPlanCode()),
+            CurrentPeriodStart = src.Start,
+            CurrentPeriodEnd = src.End,
+            UsageLimit = src.Code == OfferingCode.EarlyBirdV1 ? null : src.PurchasedTeamCapacity,
+            RolloverDate = src.End,
+            CustomCapacity = src.Code == OfferingCode.SpacesContactUsV1 ? src.PurchasedTeamCapacity : null,
+            CatalogVersion = src.CatalogVersion ?? src.Code.GetCurrentCatalogVersion(),
+            Status = src.Code.IsEarlyBirdOffering() ? OrganizationOfferingPlanStatus.Legacy : OrganizationOfferingPlanStatus.Active
         };
 
-        organizationOffering.OrganizationOfferingActiveMembers = src.OrganizationOfferingActiveMembers
-            .Select(item => new OrganizationOfferingActiveMember
-            {
-                Id = item.Id,
-                CreatedAt = src.CreatedAt,
-                ModifiedAt = src.ModifiedAt,
-                OrganizationMember = MapTo(item.OrganizationMember, organization),
-                OrganizationOffering = organizationOffering
-            })
-            .ToList();
+    private static PricingCatalogCommercialModel GetSpacesCommercialModel(PricingCatalogSubscriptionPlanCode planCode) =>
+        planCode switch
+        {
+            PricingCatalogSubscriptionPlanCode.Free => PricingCatalogCommercialModel.Free,
+            PricingCatalogSubscriptionPlanCode.Growth or PricingCatalogSubscriptionPlanCode.Business => PricingCatalogCommercialModel.UsageBased,
+            PricingCatalogSubscriptionPlanCode.ContactUs => PricingCatalogCommercialModel.CapacityBased,
+            _ => PricingCatalogCommercialModel.Free
+        };
 
-        return organizationOffering;
-    }
+    private static bool IsSpacesOffering(Database.Entities.Organization organization, Database.Entities.OrganizationOffering offering) =>
+        organization.Type == OrganizationTypeConstants.Marketplace &&
+        !offering.DeletedAt.HasValue &&
+        offering.Code is OfferingCode.EarlyBirdV1
+            or OfferingCode.SpacesFreeTierV1
+            or OfferingCode.SpacesGrowthV1
+            or OfferingCode.SpacesBusinessV1
+            or OfferingCode.SpacesContactUsV1;
 
     private static IEnumerable<DailyMemberCountRecording> MapTo(
         IEnumerable<Database.Entities.DailyMemberCountRecording> src,

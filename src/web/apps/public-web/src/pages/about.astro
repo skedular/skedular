@@ -27,8 +27,13 @@ const structuredData = {
 };
 ---
 
-<SiteLayout title={aboutPage.title} description={aboutPage.description} canonicalPath={aboutPage.path} structuredDataType="Organization">
-  <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
+<SiteLayout
+  title={aboutPage.title}
+  description={aboutPage.description}
+  canonicalPath={aboutPage.path}
+  structuredDataType="Organization"
+  structuredData={structuredData}
+>
   <section class="subpage-hero">
     <div class="container">
       <p class="eyebrow">{aboutPage.hero.eyebrow}</p>

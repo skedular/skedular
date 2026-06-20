@@ -76,6 +76,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
           from
           until
           notes
+          hasRecurringInstanceOverrides
           category {
             category
           }
@@ -519,6 +520,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
   const paymentStatusColor =
     booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED' ? 'success' : booking.marketplaceBooking?.paymentStatus.type === 'PENDING' ? 'warning' : 'default';
   const primaryCustomer = booking.involvedCustomers[0];
+  const isResourceAssignmentPending = !!recurringBooking && booking.bookingResources.length === 0;
 
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pt: { xs: 2, md: 3 }, pb: defaultPadding }}>
@@ -569,7 +571,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
 
                 <StackColumn spacing={1}>
                   <SubtitleIconTypography label="Cancellation" />
-                  {recurringBooking?.marketplaceBooking ? (
+                  {recurringBooking?.marketplaceBooking && !isResourceAssignmentPending ? (
                     <Button color="error" variant="outlined" onClick={handleRemoveRecurringSeriesClick} sx={{ alignSelf: 'flex-start' }}>
                       Cancel Series
                     </Button>
@@ -600,6 +602,21 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
                     <SmallIconTypography label="Recurring Series" sx={{ opacity: 0.68, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
                     <SubtitleIconTypography label={recurringSeriesLabel} />
                     {recurringSeriesDateLabel ? <BodyIconTypography label={recurringSeriesDateLabel} sx={{ opacity: 0.78 }} /> : null}
+                  </StackColumn>
+                ) : null}
+
+                {isResourceAssignmentPending ? (
+                  <StackColumn spacing={0.4}>
+                    <SmallIconTypography label="Resource Assignment" sx={{ opacity: 0.68, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
+                    <Chip label="Awaiting resource assignment" color="warning" size="small" sx={{ alignSelf: 'flex-start' }} />
+                    <BodyIconTypography
+                      label={
+                        booking.hasRecurringInstanceOverrides
+                          ? 'This individual booking was updated by an operator and will not be changed automatically.'
+                          : 'Skedular will keep trying to assign a compatible resource on this booking date.'
+                      }
+                      sx={{ opacity: 0.78 }}
+                    />
                   </StackColumn>
                 ) : null}
 

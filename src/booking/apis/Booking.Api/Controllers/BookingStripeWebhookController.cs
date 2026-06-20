@@ -38,8 +38,9 @@ public class BookingStripeWebhookController(
                 logger.LogInformation("Stripe Platform account event JSON logged to file: {FilePath}", tempFilePath);
             }
 
-            _ = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.BookingPlatformAccountWebhookKey,
+            var stripeEvent = EventUtility.ConstructEvent(json, stripe_Signature, stripeConfiguration.BookingPlatformAccountWebhookKey,
                 throwOnApiVersionMismatch: false);
+            await PublishBookingEventAsync(stripeEvent, json, cancellationToken);
 
             return Ok();
         }
@@ -82,16 +83,7 @@ public class BookingStripeWebhookController(
                 stripe_Signature,
                 stripeConfiguration.BookingConnectAccountWebhookKey,
                 throwOnApiVersionMismatch: false);
-            switch (stripeEvent.Type)
-            {
-                case EventTypes.CheckoutSessionCompleted:
-                case EventTypes.CheckoutSessionExpired:
-                    var session = stripeEvent.Data.Object as Session;
-                    ArgumentNullException.ThrowIfNull(session);
-
-                    await bookingInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(session.Id, json, cancellationToken);
-                    break;
-            }
+            await PublishBookingEventAsync(stripeEvent, json, cancellationToken);
 
             return Ok();
         }
@@ -106,6 +98,29 @@ public class BookingStripeWebhookController(
             logger.LogError(ex, "Failed to process Stripe event.");
 
             return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+    }
+
+    private async Task PublishBookingEventAsync(
+        Event stripeEvent,
+        string json,
+        CancellationToken cancellationToken)
+    {
+        var eventObjectId = stripeEvent.Type switch
+        {
+            EventTypes.CheckoutSessionCompleted or EventTypes.CheckoutSessionExpired
+                when stripeEvent.Data.Object is Session session => session.Id,
+            "refund.created" or "refund.updated"
+                when stripeEvent.Data.Object is Refund refund => refund.Id,
+            _ => null
+        };
+
+        if (!string.IsNullOrWhiteSpace(eventObjectId))
+        {
+            await bookingInternalPublisher.PublishStripeConnectAccountWebhookEventReceivedAsync(
+                eventObjectId,
+                json,
+                cancellationToken);
         }
     }
 }

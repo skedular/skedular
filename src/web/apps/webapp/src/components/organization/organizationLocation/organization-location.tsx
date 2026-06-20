@@ -236,6 +236,26 @@ const getChangedRestrictedInformationFields = (left: RestrictedInformationDetail
     .filter((field) => JSON.stringify(left[field]) !== JSON.stringify(right[field]))
     .map((field) => restrictedInformationPatchFields[field]);
 
+const getValidRestrictedInformationPatchFields = (
+  fieldsToUpdate: LocationRestrictedInformationPatchField[],
+  values: RestrictedInformationDetails,
+): LocationRestrictedInformationPatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    const formField = (Object.entries(restrictedInformationPatchFields) as [keyof RestrictedInformationDetails, LocationRestrictedInformationPatchField][]).find(
+      ([, field]) => field === patchField,
+    )?.[0];
+    if (!formField) {
+      return false;
+    }
+
+    try {
+      restrictedInformationSchema.validateSyncAt(formField, values);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCustomDomain, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
@@ -1111,12 +1131,10 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     });
   };
 
-  function handleUpdateRestrictedInformationClick(
-    id: string,
-    fieldsToUpdate: LocationRestrictedInformationPatchField[],
-    { title, category, content, active, sortOrder }: RestrictedInformationDetails,
-  ) {
-    if (!restrictedInformationSchema.isValidSync({ title, category, content, active, sortOrder })) {
+  function handleUpdateRestrictedInformationClick(id: string, fieldsToUpdate: LocationRestrictedInformationPatchField[], values: RestrictedInformationDetails) {
+    const { title, category, content, active, sortOrder } = values;
+    const validFieldsToUpdate = getValidRestrictedInformationPatchFields(fieldsToUpdate, values);
+    if (validFieldsToUpdate.length === 0) {
       return;
     }
 
@@ -1125,7 +1143,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         input: {
           clientMutationId: uuid(),
           id,
-          fieldsToUpdate,
+          fieldsToUpdate: validFieldsToUpdate,
           title,
           category,
           content,

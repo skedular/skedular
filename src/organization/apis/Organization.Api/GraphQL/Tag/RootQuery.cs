@@ -24,6 +24,9 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     public OrganizationTagType OtherResourceType() => OrganizationTagType.ResourceOthers;
 
     [UseResolverScope]
+    public OrganizationTagType EntireLocationResourceType() => OrganizationTagType.ResourceEntireLocation;
+
+    [UseResolverScope]
     public async Task<OrganizationTagDetails?> CustomTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await tagService.GetByIdAsync(id, false, cancellationToken));
 

@@ -4,10 +4,19 @@ export default defineConfig({
   output: "static",
   redirects: {
     "/company": "/about",
-    "/blog/hybrid-workplace-planning": "/resources/hybrid-workplace-planning",
-    "/blog/workspace-payments-invoicing": "/resources/workspace-payments-invoicing",
-    "/blog/slack-microsoft-teams-workplace": "/resources/slack-microsoft-teams-workplace",
-    "/support/getting-started": "/support/getting-started-with-skedular",
-    "/support/booking-workspace": "/support/booking-workspace-from-public-site",
+    "/creating-a-productive-and-flexible-workplace-a-guide-for-modern-offices":
+      "/blog/creating-a-productive-and-flexible-workplace-a-guide-for-modern-offices",
+    "/the-smart-workplace-of-2025-rethinking-office-strategy-for-the-hybrid-era":
+      "/blog/the-smart-workplace-of-2025-rethinking-office-strategy-for-the-hybrid-era",
+    "/how-to-create-a-high-performance-office-a-modern-space-planning-guide":
+      "/blog/how-to-create-a-high-performance-office-a-modern-space-planning-guide",
+    "/how-to-determine-the-right-amount-of-office-space-for-your-team":
+      "/blog/how-to-determine-the-right-amount-of-office-space-for-your-team",
+    "/desk-sharing-with-skedular-the-future-of-flexible-workspaces":
+      "/blog/desk-sharing-with-skedular-the-future-of-flexible-workspaces",
+    "/boosting-workplace-visibility-keeping-hybrid-teams-connected-and-engaged":
+      "/blog/boosting-workplace-visibility-keeping-hybrid-teams-connected-and-engaged",
+    "/learn-to-manage-your-time-better":
+      "/blog/learn-to-manage-your-time-better",
   },
 });

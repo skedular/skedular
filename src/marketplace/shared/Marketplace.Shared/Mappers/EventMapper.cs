@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Marketplace.V1.CdnFile;
@@ -77,11 +78,13 @@ public class EventMapper : IEventMapper
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             CancellationPolicyType = MapTo(src.CancellationPolicyType),
-            BillingMode = MapTo(src.BillingMode)
+            BillingMode = MapTo(src.BillingMode),
+            RequiredDaysPerWeek = src.RequiredDaysPerWeek.ToNullInt()
         };
 
         productPricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));
         productPricing.CancellationRefundRules.AddRange(MapTo(src.CancellationRefundRules));
+        productPricing.AvailableDays.AddRange((src.AvailableDays ?? []).Select(item => item.ToDayOfWeek()));
 
         return productPricing;
     }
@@ -101,7 +104,8 @@ public class EventMapper : IEventMapper
         {
             Api.Shared.Services.Models.PaymentMethod.Card => PaymentMethod.Card,
             Api.Shared.Services.Models.PaymentMethod.BankTransfer => PaymentMethod.BankTransfer,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
         };
 
     private static Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence MapTo(ProductPricingCadence src) =>
@@ -124,7 +128,8 @@ public class EventMapper : IEventMapper
             ProductPricingCadence.FiveMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.FiveMonths,
             ProductPricingCadence.SixMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.SixMonths,
             ProductPricingCadence.Yearly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Yearly,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(null,
+                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
         };
 
     private static ProductPricingBillingMode MapTo(Api.Shared.Services.Models.ProductPricingBillingMode src) =>
@@ -133,7 +138,8 @@ public class EventMapper : IEventMapper
             Api.Shared.Services.Models.ProductPricingBillingMode.NotSet => ProductPricingBillingMode.NotSet,
             Api.Shared.Services.Models.ProductPricingBillingMode.Upfront => ProductPricingBillingMode.Upfront,
             Api.Shared.Services.Models.ProductPricingBillingMode.InArrears => ProductPricingBillingMode.InArrears,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
         };
 
     private static ProductPricingCancellationPolicyType MapTo(Api.Shared.Services.Models.ProductPricingCancellationPolicyType src) =>
@@ -144,7 +150,8 @@ public class EventMapper : IEventMapper
             Api.Shared.Services.Models.ProductPricingCancellationPolicyType.FullRefundBeforeCutoff => ProductPricingCancellationPolicyType
                 .FullRefundBeforeCutoff,
             Api.Shared.Services.Models.ProductPricingCancellationPolicyType.TieredRefund => ProductPricingCancellationPolicyType.TieredRefund,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
         };
 
     private static Currency MapTo(Api.Shared.Services.Models.Currency src) =>
@@ -152,7 +159,8 @@ public class EventMapper : IEventMapper
         {
             Api.Shared.Services.Models.Currency.Nzd => Currency.Nzd,
             Api.Shared.Services.Models.Currency.Usd => Currency.Usd,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
         };
 
     private static ListingMetadata MapTo(Api.Shared.Services.Models.ListingMetadata src)
@@ -172,6 +180,7 @@ public class EventMapper : IEventMapper
         {
             Api.Shared.Services.Models.ProductType.Resource => ProductType.Resource,
             Api.Shared.Services.Models.ProductType.Event => ProductType.Event,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
         };
 }

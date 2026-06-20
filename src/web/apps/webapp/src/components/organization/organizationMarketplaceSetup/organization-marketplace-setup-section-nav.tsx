@@ -17,12 +17,7 @@ import NextLink from 'next/link';
 import { memo, useState, type MouseEvent } from 'react';
 
 export type OrganizationMarketplaceSetupSection =
-  | 'marketplace-listing'
-  | 'billing-cycle'
-  | 'xero-setup'
-  | 'stripe-connect-accounts-setup'
-  | 'bank-accounts-setup'
-  | 'product-tags-setup';
+  'marketplace-listing' | 'billing-cycle' | 'xero-setup' | 'stripe-connect-accounts-setup' | 'bank-accounts-setup' | 'product-tags-setup';
 
 type Props = {
   activeSection: OrganizationMarketplaceSetupSection;

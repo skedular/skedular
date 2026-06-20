@@ -36,8 +36,8 @@ public class LocationDeskAvailabilityAnalyticsShould(
             Type = LocationTypeConstants.Private,
             CreatedAt = now
         };
-        repositoryFactory.DbContext.Organization.Add(organization);
-        repositoryFactory.DbContext.Location.Add(location);
+        await repositoryFactory.DbContext.Organization.AddAsync(organization, cancellationToken);
+        await repositoryFactory.DbContext.Location.AddAsync(location, cancellationToken);
 
         for (var d = 0; d < dayCount; d++)
         {
@@ -55,17 +55,18 @@ public class LocationDeskAvailabilityAnalyticsShould(
                 Location = location,
                 OrganizationTags = [deskTag]
             };
-            repositoryFactory.DbContext.Resource.Add(resource);
-            repositoryFactory.DbContext.DailyResourceAvailabilitySnapshot.Add(new DailyResourceAvailabilitySnapshot
-            {
-                Id = await Nanoid.GenerateAsync(),
-                LocationId = locationId,
-                ResourceId = resourceId,
-                Resource = resource,
-                Date = snapshotDate,
-                Classification = ResourceAvailabilityClassificationConstants.Available,
-                CreatedAt = now
-            });
+            await repositoryFactory.DbContext.Resource.AddAsync(resource, cancellationToken);
+            await repositoryFactory.DbContext.DailyResourceAvailabilitySnapshot.AddAsync(
+                new DailyResourceAvailabilitySnapshot
+                {
+                    Id = await Nanoid.GenerateAsync(),
+                    LocationId = locationId,
+                    ResourceId = resourceId,
+                    Resource = resource,
+                    Date = snapshotDate,
+                    Classification = ResourceAvailabilityClassificationConstants.Available,
+                    CreatedAt = now
+                }, cancellationToken);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

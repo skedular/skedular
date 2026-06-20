@@ -45,7 +45,8 @@ public static class BookingCategoryExtensions
                 BookingCategoryConstants.Vacation => BookingCategory.Vacation,
                 BookingCategoryConstants.TravelingForWork => BookingCategory.TravelingForWork,
                 BookingCategoryConstants.NonWorkingDay => BookingCategory.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public string ToBookingCategoryName() =>
@@ -61,7 +62,8 @@ public static class BookingCategoryExtensions
                 BookingCategoryConstants.Vacation => "Vacation",
                 BookingCategoryConstants.TravelingForWork => "Traveling for work",
                 BookingCategoryConstants.NonWorkingDay => "Non working day",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -82,7 +84,8 @@ public static class BookingCategoryExtensions
                     BookingCategoryConstants.Vacation => BookingCategory.Vacation,
                     BookingCategoryConstants.TravelingForWork => BookingCategory.TravelingForWork,
                     BookingCategoryConstants.NonWorkingDay => BookingCategory.NonWorkingDay,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
                 };
     }
 
@@ -101,7 +104,8 @@ public static class BookingCategoryExtensions
                 BookingCategory.Vacation => BookingCategoryConstants.Vacation,
                 BookingCategory.TravelingForWork => BookingCategoryConstants.TravelingForWork,
                 BookingCategory.NonWorkingDay => BookingCategoryConstants.NonWorkingDay,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public string ToBookingCategoryName() =>
@@ -117,7 +121,8 @@ public static class BookingCategoryExtensions
                 BookingCategory.Vacation => "Vacation",
                 BookingCategory.TravelingForWork => "Traveling for work",
                 BookingCategory.NonWorkingDay => "Non working day",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -138,7 +143,8 @@ public static class BookingCategoryExtensions
                     BookingCategory.Vacation => BookingCategoryConstants.Vacation,
                     BookingCategory.TravelingForWork => BookingCategoryConstants.TravelingForWork,
                     BookingCategory.NonWorkingDay => BookingCategoryConstants.NonWorkingDay,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
                 };
     }
 }

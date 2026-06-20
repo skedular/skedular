@@ -140,7 +140,7 @@ public class OrganizationSsoService(
                 _ => TimeSpan.Zero,
                 (_, _, _, _) =>
                 {
-                    repositoryFactory.DbContext.ChangeTracker.Clear();
+                    repositoryFactory.OrganizationRepository.ClearTrackedEntities();
                 })
             .ExecuteAsync(async () =>
             {

@@ -12,7 +12,7 @@ import Box from '@mui/system/Box';
 import { endOfDay, startOfDay } from '@skedular/shared';
 import { defaultPadding, emerald, flame, GridContainer, maxScreenWidth, StackColumn } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
-import { memo, useCallback, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 // import { CustomTagSelector } from '@/components/organization/customTagSelector';
 // import { OrganizationUserSelector } from '@/components/organization/organizationUserSelector';
@@ -118,6 +118,14 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
   );
 
   const [, startTransition] = useTransition();
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
   const resources = useMemo(
     () => (rootDataFloorPlan.location && rootDataFloorPlan.location.resources ? rootDataFloorPlan.location.resources.edges.map(({ node }) => node) : []),
     [rootDataFloorPlan.location],
@@ -141,7 +149,15 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
 
   const handleRefetchFloorPlan = useCallback(
     (floorPlanId: string) => {
+      if (!mountedRef.current) {
+        return;
+      }
+
       startTransition(() => {
+        if (!mountedRef.current) {
+          return;
+        }
+
         refetchFloorPlan(
           {
             floorPlanId,
@@ -158,7 +174,15 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
 
   const handleRefetchBookings = useCallback(
     (date: Dayjs) => {
+      if (!mountedRef.current) {
+        return;
+      }
+
       startTransition(() => {
+        if (!mountedRef.current) {
+          return;
+        }
+
         refetchBookings(
           {
             bookingsSearchCriteriaFrom: date.toISOString(),
@@ -199,6 +223,10 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
 
   const handleReloadRequired = () => {
     startTransition(() => {
+      if (!mountedRef.current) {
+        return;
+      }
+
       handlePopoverClose();
       handleRefetchBookings(date);
       onReloadRequired();

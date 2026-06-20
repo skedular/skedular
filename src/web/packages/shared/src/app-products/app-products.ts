@@ -1,8 +1,8 @@
-export const productAppIds = ['webapp', 'webapp-teams', 'webapp-spaces'] as const;
+export const productAppIds = ['webapp', 'webapp-teams', 'webapp-spaces', 'webapp-host'] as const;
 
 export type ProductAppId = (typeof productAppIds)[number];
 
-export const organisationTypes = ['private', 'marketplace'] as const;
+export const organisationTypes = ['private', 'marketplace', 'host'] as const;
 
 export type OrganisationType = (typeof organisationTypes)[number];
 
@@ -42,6 +42,14 @@ export const productAppDefinitions = {
     shortName: 'Teams',
     purpose: 'Private organization and team workflows.',
     allowedOrganisationTypes: ['private'],
+    customerEntryTypes: [],
+  },
+  'webapp-host': {
+    id: 'webapp-host',
+    name: 'Skedular Host',
+    shortName: 'Host',
+    purpose: 'Individual host listing and management workflows.',
+    allowedOrganisationTypes: ['host'],
     customerEntryTypes: [],
   },
 } as const satisfies Record<ProductAppId, ProductAppDefinition>;

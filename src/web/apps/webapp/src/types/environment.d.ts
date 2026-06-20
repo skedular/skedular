@@ -14,6 +14,7 @@ declare global {
       NEXT_PUBLIC_SKEDULAR_APP_URL?: string;
       NEXT_PUBLIC_SKEDULAR_TEAMS_APP_URL?: string;
       NEXT_PUBLIC_SKEDULAR_SPACES_APP_URL?: string;
+      NEXT_PUBLIC_SKEDULAR_HOST_APP_URL?: string;
       COGNITO_DOMAIN: string;
       COGNITO_CLIENT_ID: string;
       COGNITO_CLIENT_SECRET: string;

@@ -10,19 +10,19 @@ export class OrganizationService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * republish organization
-     * @param organizationId
+     * @param customDomain
      * @returns any the status of organization republishing
      * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public republish(
-        organizationId: string,
+        customDomain: string,
     ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/v1/organization/{organizationId}/republish',
+            url: '/v1/organization/{customDomain}/republish',
             path: {
-                'organizationId': organizationId,
+                'customDomain': customDomain,
             },
         });
     }
@@ -63,25 +63,20 @@ export class OrganizationService {
         });
     }
     /**
-     * set enterprise offering
-     * @param organizationId
+     * set negotiated organization offering
      * @param xApiKey API Key
      * @param requestBody
-     * @returns any the status of setting the enterprise offering
+     * @returns any the status of setting the negotiated organization offering
      * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public setEnterpriseOffering(
-        organizationId: string,
         xApiKey: string,
         requestBody: SetEnterpriseOfferingRequest,
     ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/v1/organization/{organizationId}/enterprise-offering',
-            path: {
-                'organizationId': organizationId,
-            },
+            url: '/v1/organization/enterprise-offering',
             headers: {
                 'X-API-Key': xApiKey,
             },
@@ -133,19 +128,19 @@ export class OrganizationService {
     }
     /**
      * regenerate organization daily analytics
-     * @param organizationId
+     * @param customDomain
      * @returns any the status of regenerating organization daily analytics
      * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public regenerateDailyAnalytics(
-        organizationId: string,
+        customDomain: string,
     ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/v1/organization/analytics/{organizationId}/regenerate-daily-analytics',
+            url: '/v1/organization/analytics/{customDomain}/regenerate-daily-analytics',
             path: {
-                'organizationId': organizationId,
+                'customDomain': customDomain,
             },
         });
     }

@@ -24,5 +24,6 @@ public class AddMarketplaceBookingSubscriptionInput
     [GraphQLName("quantity")] public int Quantity { get; set; }
     [GraphQLName("productVersionId")] public string ProductVersionId { get; set; } = string.Empty;
     [GraphQLName("pricingId")] public string PricingId { get; set; } = string.Empty;
+    [GraphQLName("weeklySelectedDays")] public IEnumerable<DayOfWeek>? WeeklySelectedDays { get; set; }
     [GraphQLName("checkoutReturnUrl")] public string? CheckoutReturnUrl { get; set; }
 }

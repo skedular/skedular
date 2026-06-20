@@ -1,0 +1,12 @@
+SKEDULAR
+Booking failure alert
+
+Hello {{RECIPIENT_NAME}},
+
+{{SUMMARY}}
+
+Action required
+Review the affected booking in Skedular to help the customer if needed.
+
+---
+Powered by Skedular

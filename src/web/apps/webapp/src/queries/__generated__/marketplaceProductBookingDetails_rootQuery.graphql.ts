@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3b033a8a0a4c85c86c73898a911a991c>>
+ * @generated SignedSource<<1be875d680b8feb52abd7082ed568fc4>>
  * @lightSyntaxTransform
  */
 
@@ -48,6 +48,18 @@ export type marketplaceProductBookingDetails_rootQuery$data = {
     readonly marketplaceBooking: {
       readonly bookingCheckoutSession: {
         readonly checkoutUrl: string;
+      } | null | undefined;
+      readonly failure: {
+        readonly category: {
+          readonly name: string;
+          readonly type: string;
+        };
+        readonly customerAction: {
+          readonly name: string;
+          readonly type: string;
+        };
+        readonly finalizedAt: any;
+        readonly id: string;
       } | null | undefined;
       readonly id: string;
       readonly invoiceNumber: string | null | undefined;
@@ -274,39 +286,78 @@ v11 = [
 v12 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "refundAmount",
+  "concreteType": "MarketplaceBookingFailureDetails",
+  "kind": "LinkedField",
+  "name": "failure",
+  "plural": false,
+  "selections": [
+    (v2/*:: as any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "MarketplaceBookingFailureChoiceDetails",
+      "kind": "LinkedField",
+      "name": "category",
+      "plural": false,
+      "selections": (v11/*:: as any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "finalizedAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "MarketplaceBookingFailureChoiceDetails",
+      "kind": "LinkedField",
+      "name": "customerAction",
+      "plural": false,
+      "selections": (v11/*:: as any*/),
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "currencyToDisplay",
+  "name": "refundAmount",
   "storageKey": null
 },
 v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "reason",
+  "name": "currencyToDisplay",
   "storageKey": null
 },
 v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "lastError",
+  "name": "reason",
   "storageKey": null
 },
 v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "externalRefundNumber",
+  "name": "lastError",
   "storageKey": null
 },
 v17 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "externalRefundNumber",
+  "storageKey": null
+},
+v18 = {
   "alias": null,
   "args": null,
   "concreteType": "MarketplaceRefundDetails",
@@ -348,7 +399,7 @@ v17 = {
       "name": "lastProcessedAt",
       "storageKey": null
     },
-    (v12/*:: as any*/),
+    (v13/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -356,10 +407,10 @@ v17 = {
       "name": "refundPercentage",
       "storageKey": null
     },
-    (v13/*:: as any*/),
     (v14/*:: as any*/),
     (v15/*:: as any*/),
     (v16/*:: as any*/),
+    (v17/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -393,11 +444,11 @@ v17 = {
           "name": "occurredAt",
           "storageKey": null
         },
-        (v12/*:: as any*/),
         (v13/*:: as any*/),
         (v14/*:: as any*/),
         (v15/*:: as any*/),
         (v16/*:: as any*/),
+        (v17/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -411,35 +462,35 @@ v17 = {
   ],
   "storageKey": null
 },
-v18 = {
+v19 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "invoiceUrl",
   "storageKey": null
 },
-v19 = {
+v20 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "invoiceNumber",
   "storageKey": null
 },
-v20 = {
+v21 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isPaymentRequired",
   "storageKey": null
 },
-v21 = {
+v22 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "paymentExpiry",
   "storageKey": null
 },
-v22 = {
+v23 = {
   "alias": null,
   "args": null,
   "concreteType": "ProductTypeDetails",
@@ -449,7 +500,7 @@ v22 = {
   "selections": (v11/*:: as any*/),
   "storageKey": null
 },
-v23 = {
+v24 = {
   "alias": null,
   "args": null,
   "concreteType": "ListingMetadata",
@@ -488,7 +539,7 @@ v23 = {
   ],
   "storageKey": null
 },
-v24 = {
+v25 = {
   "alias": null,
   "args": null,
   "concreteType": "CdnImageFile",
@@ -517,7 +568,7 @@ v24 = {
   ],
   "storageKey": null
 },
-v25 = {
+v26 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingCheckoutSessionDetails",
@@ -535,7 +586,7 @@ v25 = {
   ],
   "storageKey": null
 },
-v26 = {
+v27 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentMethodTypeDetails",
@@ -545,7 +596,7 @@ v26 = {
   "selections": (v11/*:: as any*/),
   "storageKey": null
 },
-v27 = {
+v28 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentStatusDetails",
@@ -555,7 +606,7 @@ v27 = {
   "selections": (v11/*:: as any*/),
   "storageKey": null
 },
-v28 = {
+v29 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationArrearsInvoiceDetails",
@@ -563,8 +614,8 @@ v28 = {
   "name": "arrearsInvoices",
   "plural": true,
   "selections": [
+    (v20/*:: as any*/),
     (v19/*:: as any*/),
-    (v18/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -614,11 +665,12 @@ return {
             "selections": [
               (v2/*:: as any*/),
               (v10/*:: as any*/),
-              (v17/*:: as any*/),
+              (v12/*:: as any*/),
               (v18/*:: as any*/),
               (v19/*:: as any*/),
               (v20/*:: as any*/),
               (v21/*:: as any*/),
+              (v22/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -627,19 +679,19 @@ return {
                 "name": "productVersion",
                 "plural": false,
                 "selections": [
-                  (v22/*:: as any*/),
                   (v23/*:: as any*/),
-                  (v24/*:: as any*/)
+                  (v24/*:: as any*/),
+                  (v25/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v25/*:: as any*/),
               (v26/*:: as any*/),
-              (v27/*:: as any*/)
+              (v27/*:: as any*/),
+              (v28/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v28/*:: as any*/)
+          (v29/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -678,11 +730,12 @@ return {
             "selections": [
               (v2/*:: as any*/),
               (v10/*:: as any*/),
-              (v17/*:: as any*/),
+              (v12/*:: as any*/),
               (v18/*:: as any*/),
               (v19/*:: as any*/),
               (v20/*:: as any*/),
               (v21/*:: as any*/),
+              (v22/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -691,36 +744,36 @@ return {
                 "name": "productVersion",
                 "plural": false,
                 "selections": [
-                  (v22/*:: as any*/),
                   (v23/*:: as any*/),
                   (v24/*:: as any*/),
+                  (v25/*:: as any*/),
                   (v2/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v25/*:: as any*/),
               (v26/*:: as any*/),
-              (v27/*:: as any*/)
+              (v27/*:: as any*/),
+              (v28/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v28/*:: as any*/)
+          (v29/*:: as any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "2d33f822510f92c0fe549a38f1ba35df",
+    "cacheID": "de98330cb2865848bdf95536b3429d4a",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBookingDetails_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductBookingDetails_rootQuery(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    deletedByCustomer {\n      id\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n      }\n    }\n    marketplaceBooking {\n      id\n      quantity\n      refund {\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        events {\n          id\n          eventType {\n            type\n            name\n          }\n          occurredAt\n          refundAmount\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          actorName\n        }\n      }\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        type {\n          type\n          name\n        }\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        id\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
+    "text": "query marketplaceProductBookingDetails_rootQuery(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    deletedByCustomer {\n      id\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n      }\n    }\n    marketplaceBooking {\n      id\n      quantity\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        finalizedAt\n        customerAction {\n          type\n          name\n        }\n      }\n      refund {\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        events {\n          id\n          eventType {\n            type\n            name\n          }\n          occurredAt\n          refundAmount\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          actorName\n        }\n      }\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        type {\n          type\n          name\n        }\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        id\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1b66aa7616751316aea48ae6fd4c13e0";
+(node as any).hash = "024f96ef77332c858dfd10da704c6e3e";
 
 export default node;

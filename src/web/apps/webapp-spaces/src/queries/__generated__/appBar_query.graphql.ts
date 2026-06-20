@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75c19174ed06ffcb9c054be6fd003bbb>>
+ * @generated SignedSource<<4cb4fccfe3b99229f7f917d49a871b87>>
  * @lightSyntaxTransform
  */
 
@@ -106,8 +106,7 @@ const node: ReaderFragment = {
           "kind": "Literal",
           "name": "types",
           "value": [
-            "MARKETPLACE",
-            "INDIVIDUAL"
+            "MARKETPLACE"
           ]
         }
       ],
@@ -145,7 +144,7 @@ const node: ReaderFragment = {
           "storageKey": null
         }
       ],
-      "storageKey": "myOrganizations(types:[\"MARKETPLACE\",\"INDIVIDUAL\"])"
+      "storageKey": "myOrganizations(types:[\"MARKETPLACE\"])"
     },
     {
       "args": null,
@@ -162,6 +161,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "3cfd407e30934bb0ed8fa3a2250b81ff";
+(node as any).hash = "27de0bf4eb6b8c6f546030d55ae8f599";
 
 export default node;

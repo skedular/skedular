@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2a5b568ac6a405079d6338f1e2e0d8b3>>
+ * @generated SignedSource<<cc1abcf1932c012eb2ff563fc1baa5cb>>
  * @lightSyntaxTransform
  */
 
@@ -35,6 +35,10 @@ export type marketplaceProductBookingForm_addMarketplaceBookingMutation$variable
 };
 export type marketplaceProductBookingForm_addMarketplaceBookingMutation$data = {
   readonly addMarketplaceBooking: {
+    readonly accessError: {
+      readonly errorCode: string;
+      readonly message: string;
+    } | null | undefined;
     readonly booking: {
       readonly from: any;
       readonly id: string;
@@ -58,7 +62,17 @@ export type marketplaceProductBookingForm_addMarketplaceBookingMutation$data = {
         readonly totalAmountToDisplay: string;
       } | null | undefined;
       readonly until: any;
-    };
+    } | null | undefined;
+    readonly failure: {
+      readonly category: {
+        readonly name: string;
+        readonly type: string;
+      };
+      readonly customerAction: {
+        readonly name: string;
+        readonly type: string;
+      };
+    } | null | undefined;
   };
 };
 export type marketplaceProductBookingForm_addMarketplaceBookingMutation = {
@@ -78,7 +92,7 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "type",
   "storageKey": null
 },
 v2 = {
@@ -88,14 +102,18 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = {
+v3 = [
+  (v1/*:: as any*/),
+  (v2/*:: as any*/)
+],
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "id",
   "storageKey": null
 },
-v4 = [
+v5 = [
   {
     "alias": null,
     "args": [
@@ -113,12 +131,68 @@ v4 = [
       {
         "alias": null,
         "args": null,
+        "concreteType": "SpacesAccessErrorDetails",
+        "kind": "LinkedField",
+        "name": "accessError",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "errorCode",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "message",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "MarketplaceBookingFailureDetails",
+        "kind": "LinkedField",
+        "name": "failure",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "MarketplaceBookingFailureChoiceDetails",
+            "kind": "LinkedField",
+            "name": "category",
+            "plural": false,
+            "selections": (v3/*:: as any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "MarketplaceBookingFailureChoiceDetails",
+            "kind": "LinkedField",
+            "name": "customerAction",
+            "plural": false,
+            "selections": (v3/*:: as any*/),
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
         "concreteType": "BookingDetails",
         "kind": "LinkedField",
         "name": "booking",
         "plural": false,
         "selections": [
-          (v1/*:: as any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -148,7 +222,7 @@ v4 = [
                 "name": "isPaymentRequired",
                 "storageKey": null
               },
-              (v1/*:: as any*/),
+              (v4/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -204,7 +278,7 @@ v4 = [
                 "plural": false,
                 "selections": [
                   (v2/*:: as any*/),
-                  (v3/*:: as any*/)
+                  (v1/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -215,10 +289,7 @@ v4 = [
                 "kind": "LinkedField",
                 "name": "paymentStatus",
                 "plural": false,
-                "selections": [
-                  (v3/*:: as any*/),
-                  (v2/*:: as any*/)
-                ],
+                "selections": (v3/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -237,7 +308,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductBookingForm_addMarketplaceBookingMutation",
-    "selections": (v4/*:: as any*/),
+    "selections": (v5/*:: as any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -246,19 +317,19 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductBookingForm_addMarketplaceBookingMutation",
-    "selections": (v4/*:: as any*/)
+    "selections": (v5/*:: as any*/)
   },
   "params": {
-    "cacheID": "faef7b90286017d48ccc900b7cc7ad08",
+    "cacheID": "92a4681ba8e8eb15ed809fe283396879",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBookingForm_addMarketplaceBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation marketplaceProductBookingForm_addMarketplaceBookingMutation(\n  $input: AddMarketplaceBookingInput!\n) {\n  addMarketplaceBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      marketplaceBooking {\n        isPaymentRequired\n        id\n        paymentExpiry\n        invoiceUrl\n        invoiceNumber\n        totalAmountToDisplay\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          name\n          type\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation marketplaceProductBookingForm_addMarketplaceBookingMutation(\n  $input: AddMarketplaceBookingInput!\n) {\n  addMarketplaceBooking(input: $input) {\n    accessError {\n      errorCode\n      message\n    }\n    failure {\n      category {\n        type\n        name\n      }\n      customerAction {\n        type\n        name\n      }\n    }\n    booking {\n      id\n      from\n      until\n      marketplaceBooking {\n        isPaymentRequired\n        id\n        paymentExpiry\n        invoiceUrl\n        invoiceNumber\n        totalAmountToDisplay\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          name\n          type\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4e17c2fa177958f33cb41036f939d47b";
+(node as any).hash = "fe9f8e8987a85599c6b78fa2e4b2096e";
 
 export default node;

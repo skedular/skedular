@@ -5,7 +5,7 @@ import type { floorPlanSelector_allFloorPlans_query$key } from '@/queries/__gene
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 type Props = {
@@ -35,19 +35,21 @@ const FloorPlanSelector = ({ rootDataRelay, onChange }: Props) => {
   const allItems = useMemo(() => (rootData.floorPlans?.edges ? rootData.floorPlans.edges.map(({ node }) => node) : []), [rootData.floorPlans]);
   const defaultId = allItems.length > 0 ? allItems[0].id : null;
   const [userSelectedId, setUserSelectedId] = useState<string | null>(null);
+  const lastEmittedIdRef = useRef<string | null>(null);
   const id = userSelectedId ?? defaultId;
 
   useEffect(() => {
-    if (defaultId !== null) {
+    if (defaultId !== null && userSelectedId === null && lastEmittedIdRef.current !== defaultId) {
+      lastEmittedIdRef.current = defaultId;
       onChange(defaultId);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultId]);
+  }, [defaultId, onChange, userSelectedId]);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {
     const newId = event.target.value as string;
 
     setUserSelectedId(newId);
+    lastEmittedIdRef.current = newId;
     onChange(newId);
   };
 

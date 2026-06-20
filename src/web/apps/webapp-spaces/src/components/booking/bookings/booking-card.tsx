@@ -24,6 +24,7 @@ import type { bookingCard_makeBookingPaymentNotRequiredMutation } from '@/querie
 import type { bookingCard_query$key } from '@/queries/__generated__/bookingCard_query.graphql';
 import type { bookingCard_rejectBookingPaymentMutation } from '@/queries/__generated__/bookingCard_rejectBookingPaymentMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -62,7 +63,7 @@ type ZoneDetails = {
   color?: string | null | undefined;
 };
 
-type PendingRecurringDeleteAction = 'occurrence' | 'series' | null;
+type PendingDeleteAction = 'booking' | 'occurrence' | 'series' | null;
 
 const isConfirmedPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'CONFIRMED' || paymentStatusType === 'PAID';
 const isPendingPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'PENDING';
@@ -352,7 +353,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
-  const [pendingRecurringDeleteAction, setPendingRecurringDeleteAction] = useState<PendingRecurringDeleteAction>(null);
+  const [pendingDeleteAction, setPendingDeleteAction] = useState<PendingDeleteAction>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const shortDateFormatFrom = toShortDate(bookingDetails.from);
   const refund = bookingDetails.marketplaceBooking?.refund;
@@ -378,31 +379,31 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
   const recurringOccurrenceDeleteConfirmationMessage = canDeleteRecurringOccurrence
     ? 'Only this booking will be removed. The rest of the recurring series will stay active.'
     : null;
-  const recurringDeleteDialogTitle = pendingRecurringDeleteAction === 'occurrence' ? 'Remove This Booking' : 'Remove Recurring Series';
-  const recurringDeleteDialogDescription = pendingRecurringDeleteAction === 'occurrence' ? recurringOccurrenceDeleteConfirmationMessage : recurringDeleteConfirmationMessage;
-  const recurringDeleteDialogPrimaryLabel =
-    pendingRecurringDeleteAction === 'occurrence' ? 'Remove this booking' : isMarketplaceRecurringBooking ? 'Cancel series' : 'Remove series';
+  const bookingDeleteConfirmationMessage =
+    bookingDetails.channel.channel === 'MARKETPLACE' ? 'This booking will be canceled and removed from the calendar.' : 'This booking will be removed from the calendar.';
+  const deleteDialogTitle = pendingDeleteAction === 'series' ? (isMarketplaceRecurringBooking ? 'Cancel Recurring Series' : 'Remove Recurring Series') : 'Remove This Booking';
+  const deleteDialogDescription =
+    pendingDeleteAction === 'occurrence'
+      ? recurringOccurrenceDeleteConfirmationMessage
+      : pendingDeleteAction === 'series'
+        ? recurringDeleteConfirmationMessage
+        : bookingDeleteConfirmationMessage;
+  const deleteDialogPrimaryLabel =
+    pendingDeleteAction === 'series'
+      ? isMarketplaceRecurringBooking
+        ? 'Cancel series'
+        : 'Remove series'
+      : bookingDetails.channel.channel === 'MARKETPLACE'
+        ? 'Cancel booking'
+        : 'Remove booking';
+  const visibleViewDetailsLabel = canEditRecurringSeries ? 'View occurrence details' : 'View details';
+  const visibleRemoveBookingLabel =
+    recurringOccurrenceActionLabel ?? (!recurringBooking ? (bookingDetails.channel.channel === 'MARKETPLACE' ? 'Cancel booking' : 'Remove booking') : null);
 
-  const moreActionsOption: MoreActionsMenuItemType[] = [
-    canEditRecurringSeries
-      ? {
-          ...moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking],
-          label: 'Edit this occurrence',
-        }
-      : moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking],
-  ];
+  const moreActionsOption: MoreActionsMenuItemType[] = [];
 
   if (canEditRecurringSeries) {
     moreActionsOption.push(moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditRecurringBooking]);
-  }
-
-  if (recurringOccurrenceActionLabel) {
-    moreActionsOption.push({
-      ...moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteBooking],
-      label: recurringOccurrenceActionLabel,
-    });
-  } else if (!recurringBooking) {
-    moreActionsOption.push(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteBooking]);
   }
 
   if (recurringBooking && recurringSeriesActionLabel) {
@@ -429,6 +430,10 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
+  };
+
+  const handleViewBookingDetailsClick = () => {
+    router.push(getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id));
   };
 
   const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
@@ -467,22 +472,22 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
 
   const handleRemoveBookingClick = () => {
     if (recurringOccurrenceDeleteConfirmationMessage) {
-      setPendingRecurringDeleteAction('occurrence');
+      setPendingDeleteAction('occurrence');
       return;
     }
 
-    removeBooking();
+    setPendingDeleteAction('booking');
   };
 
   const handleCancelRecurringDeleteClick = () => {
-    setPendingRecurringDeleteAction(null);
+    setPendingDeleteAction(null);
   };
 
   const handleConfirmRecurringDeleteClick = () => {
-    const action = pendingRecurringDeleteAction;
-    setPendingRecurringDeleteAction(null);
+    const action = pendingDeleteAction;
+    setPendingDeleteAction(null);
 
-    if (action === 'occurrence') {
+    if (action === 'booking' || action === 'occurrence') {
       removeBooking();
       return;
     }
@@ -536,7 +541,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       return;
     }
 
-    setPendingRecurringDeleteAction('series');
+    setPendingDeleteAction('series');
   };
 
   const removeRecurringBooking = () => {
@@ -898,6 +903,17 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
               </Tooltip>
             </StackRow>
 
+            <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
+              <Button variant="contained" size="small" onClick={handleViewBookingDetailsClick} sx={{ textTransform: 'none' }}>
+                {visibleViewDetailsLabel}
+              </Button>
+              {visibleRemoveBookingLabel ? (
+                <Button variant="outlined" color="error" size="small" onClick={handleRemoveBookingClick} sx={{ textTransform: 'none' }}>
+                  {visibleRemoveBookingLabel}
+                </Button>
+              ) : null}
+            </StackRow>
+
             {canManageRefund && refund ? (
               <Box sx={sectionSx}>
                 <MarketplaceRefundAdminPanel entityLabel={refundEntityLabel} refund={refund} />
@@ -923,12 +939,12 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
 
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
 
-      {recurringDeleteDialogDescription ? (
+      {pendingDeleteAction && deleteDialogDescription ? (
         <RecurringBookingDeleteConfirmationDialog
-          open={pendingRecurringDeleteAction !== null}
-          title={recurringDeleteDialogTitle}
-          description={recurringDeleteDialogDescription}
-          confirmLabel={recurringDeleteDialogPrimaryLabel}
+          open={pendingDeleteAction !== null}
+          title={deleteDialogTitle}
+          description={deleteDialogDescription}
+          confirmLabel={deleteDialogPrimaryLabel}
           onConfirm={handleConfirmRecurringDeleteClick}
           onCancel={handleCancelRecurringDeleteClick}
         />

@@ -22,9 +22,21 @@ public class EvaluateLocationCreationShould
     [AutoFakeItEasyData]
     public void Allow_Enterprise_Location_Creation(PricingEntitlementEvaluator sut)
     {
-        var offering = new SharedOffering { Code = OfferingCode.EnterpriseCustomV1, PurchasedLocationCapacity = -1 };
+        var offering = new SharedOffering { Code = OfferingCode.EnterpriseCustomV1, PurchasedLocationCapacity = null };
 
         var result = sut.EvaluateLocationCreation(offering, 25);
+
+        result.IsAllowed.ShouldBeTrue();
+        result.ReasonCode.ShouldBe(EntitlementReasonCode.Allowed);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Allow_Early_Bird_Location_Creation_Despite_Persisted_Capacity(PricingEntitlementEvaluator sut)
+    {
+        var offering = new SharedOffering { Code = OfferingCode.EarlyBirdV1, PurchasedLocationCapacity = 1 };
+
+        var result = sut.EvaluateLocationCreation(offering, 100);
 
         result.IsAllowed.ShouldBeTrue();
         result.ReasonCode.ShouldBe(EntitlementReasonCode.Allowed);

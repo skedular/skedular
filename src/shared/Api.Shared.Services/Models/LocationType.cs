@@ -23,7 +23,8 @@ public static class LocationTypeExtensions
                 {
                     LocationType.Private => LocationTypeConstants.Private,
                     LocationType.Marketplace => LocationTypeConstants.Marketplace,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
                 };
     }
 
@@ -34,7 +35,8 @@ public static class LocationTypeExtensions
             {
                 LocationType.Private => LocationTypeConstants.Private,
                 LocationType.Marketplace => LocationTypeConstants.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public string ToLocationTypeName() =>
@@ -42,7 +44,8 @@ public static class LocationTypeExtensions
             {
                 LocationType.Private => "Private",
                 LocationType.Marketplace => "Marketplace",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -55,7 +58,8 @@ public static class LocationTypeExtensions
                 {
                     LocationTypeConstants.Private => LocationType.Private,
                     LocationTypeConstants.Marketplace => LocationType.Marketplace,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
                 };
     }
 
@@ -66,7 +70,8 @@ public static class LocationTypeExtensions
             {
                 LocationTypeConstants.Private => "Private",
                 LocationTypeConstants.Marketplace => "Marketplace",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public LocationType ToLocationType() =>
@@ -74,7 +79,8 @@ public static class LocationTypeExtensions
             {
                 LocationTypeConstants.Private => LocationType.Private,
                 LocationTypeConstants.Marketplace => LocationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 }

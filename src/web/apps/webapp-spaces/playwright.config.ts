@@ -27,6 +27,11 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    env: {
+      ...process.env,
+      // Bypass AuthKit for UI tests
+      SKEDULAR_UI_TEST_BYPASS_AUTH: 'true',
+    },
   },
   projects: [
     {

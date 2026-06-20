@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Data;
+using System.Linq.Expressions;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Booking.Shared.Database.Entities;
@@ -6,11 +7,14 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ResourceAvailabilityClassification = Booking.Shared.Models.ResourceAvailabilityClassification;
 using ResourceAvailabilityOrder = Booking.Shared.Models.ResourceAvailabilityOrder;
 using ResourceAvailabilityOrderByField = Booking.Shared.Models.ResourceAvailabilityOrderByField;
 using ResourceAvailabilityResourceRow = Booking.Shared.Models.ResourceAvailabilityResourceRow;
 using ResourceBookingWindowRow = Booking.Shared.Models.ResourceBookingWindowRow;
+using ResourceSlotClaimResult = Booking.Shared.Models.ResourceSlotClaimResult;
+using BookingEntity = Booking.Shared.Database.Entities.Booking;
 
 namespace Booking.Shared.Repositories;
 
@@ -54,11 +58,158 @@ public interface IResourceRepository : IRepository<Resource>
         IReadOnlyList<string> tagIds,
         IReadOnlyList<string> tagTypes,
         CancellationToken cancellationToken);
+
+    Task<ResourceSlotClaimResult> TryClaimCompleteSlotSetAsync(
+        BookingEntity booking,
+        IReadOnlyCollection<string> resourceIds,
+        CancellationToken cancellationToken);
+
+    Task ReleaseClaimAsync(string bookingId, CancellationToken cancellationToken);
 }
 
-public class ResourceRepository(BookingDbContext dbContext, TimeProvider timeProvider)
+public class ResourceRepository(BookingDbContext dbContext, TimeProvider timeProvider, ILogger<ResourceRepository> logger)
     : RepositoryBase<BookingDbContext, Resource>(dbContext, timeProvider), IResourceRepository
 {
+    private const int ClaimRetryLimit = 3;
+
+    public async Task<ResourceSlotClaimResult> TryClaimCompleteSlotSetAsync(
+        BookingEntity booking,
+        IReadOnlyCollection<string> resourceIds,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
+        if (resourceIds.Count == 0)
+        {
+            return ResourceSlotClaimResult.Success();
+        }
+
+        var distinctResourceIds = resourceIds.Distinct().ToList();
+        if (DbContext.Database.CurrentTransaction is not null)
+        {
+            return await TryClaimWithinCurrentTransactionAsync(booking, distinctResourceIds, cancellationToken);
+        }
+
+        var claimBooking = booking;
+        for (var attempt = 1; attempt <= ClaimRetryLimit; attempt++)
+        {
+            logger.LogInformation("Attempting atomic resource-slot claim. BookingId={BookingId}, ResourceCount={ResourceCount}, Attempt={Attempt}",
+                booking.Id, distinctResourceIds.Count, attempt);
+            await using var transaction = await DbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
+            try
+            {
+                var slotStates = await DbContext.ResourceBookingSlot
+                    .Where(item => distinctResourceIds.Contains(item.ResourceId) && item.Start >= claimBooking.From &&
+                                   item.Start < claimBooking.Until)
+                    .Select(item => new
+                    {
+                        item.Id, item.ResourceId, item.Available, IsBooked = item.Bookings.Any(existing => existing.DeletedByCustomer == null)
+                    })
+                    .ToListAsync(cancellationToken);
+
+                var unavailableResourceIds = distinctResourceIds
+                    .Where(resourceId =>
+                    {
+                        var claimedSlots = slotStates.Where(slot => slot.ResourceId == resourceId).ToList();
+                        return claimedSlots.Count == 0 || claimedSlots.Any(slot => !slot.Available || slot.IsBooked);
+                    })
+                    .ToList();
+                if (unavailableResourceIds.Count != 0)
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                    logger.LogInformation(
+                        "Atomic resource-slot claim found unavailable resources. BookingId={BookingId}, UnavailableResourceCount={UnavailableResourceCount}, Attempt={Attempt}",
+                        booking.Id, unavailableResourceIds.Count, attempt);
+                    return ResourceSlotClaimResult.Conflict(unavailableResourceIds);
+                }
+
+                var slots = await DbContext.ResourceBookingSlot
+                    .Where(item => slotStates.Select(state => state.Id).Contains(item.Id))
+                    .ToListAsync(cancellationToken);
+                foreach (var slot in slots)
+                {
+                    if (slot.Bookings.All(existing => existing.Id != claimBooking.Id))
+                    {
+                        slot.Bookings.Add(claimBooking);
+                    }
+
+                    foreach (var customer in claimBooking.InvolvedCustomers)
+                    {
+                        if (slot.Customers.All(existing => existing.Id != customer.Id))
+                        {
+                            slot.Customers.Add(customer);
+                        }
+                    }
+
+                    slot.ModifiedAt = TimeProvider.GetUtcNow();
+                }
+
+                await DbContext.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+                logger.LogInformation("Atomic resource-slot claim succeeded. BookingId={BookingId}, ResourceCount={ResourceCount}, Attempt={Attempt}",
+                    booking.Id, distinctResourceIds.Count, attempt);
+                return ResourceSlotClaimResult.Success();
+            }
+            catch (DbUpdateException exception) when (IsSerializableConflict(exception) && attempt < ClaimRetryLimit)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                DbContext.ChangeTracker.Clear();
+                claimBooking = await DbContext.Booking.FirstAsync(item => item.Id == booking.Id, cancellationToken);
+                logger.LogWarning("Retrying atomic resource-slot claim after a serialization conflict. BookingId={BookingId}, Attempt={Attempt}",
+                    booking.Id, attempt);
+            }
+            catch (DbUpdateException exception) when (IsSerializableConflict(exception))
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                logger.LogWarning("Atomic resource-slot claim exhausted serialization retries. BookingId={BookingId}, ResourceCount={ResourceCount}",
+                    booking.Id, distinctResourceIds.Count);
+                return ResourceSlotClaimResult.Conflict(distinctResourceIds, true);
+            }
+            catch (InvalidOperationException exception) when (IsSerializableConflict(exception))
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                logger.LogWarning("Atomic resource-slot claim exhausted serialization retries. BookingId={BookingId}, ResourceCount={ResourceCount}",
+                    booking.Id, distinctResourceIds.Count);
+                return ResourceSlotClaimResult.Conflict(distinctResourceIds, true);
+            }
+        }
+
+        return ResourceSlotClaimResult.Conflict(distinctResourceIds, true);
+    }
+
+    public async Task ReleaseClaimAsync(string bookingId, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(bookingId);
+        for (var attempt = 1; attempt <= ClaimRetryLimit; attempt++)
+        {
+            logger.LogInformation("Releasing atomic resource-slot claim. BookingId={BookingId}, Attempt={Attempt}", bookingId, attempt);
+            await using var transaction = await DbContext.Database.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
+            try
+            {
+                var slots = await DbContext.ResourceBookingSlot
+                    .Where(slot => slot.Bookings.Any(booking => booking.Id == bookingId))
+                    .Include(slot => slot.Bookings.Where(booking => booking.Id == bookingId))
+                    .ToListAsync(cancellationToken);
+                foreach (var slot in slots)
+                {
+                    slot.Bookings.Clear();
+                    slot.ModifiedAt = TimeProvider.GetUtcNow();
+                }
+
+                await DbContext.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+                logger.LogInformation("Released atomic resource-slot claim. BookingId={BookingId}, Attempt={Attempt}", bookingId, attempt);
+                return;
+            }
+            catch (DbUpdateException exception) when (IsSerializableConflict(exception) && attempt < ClaimRetryLimit)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                DbContext.ChangeTracker.Clear();
+                logger.LogWarning("Retrying atomic resource-slot release after a serialization conflict. BookingId={BookingId}, Attempt={Attempt}",
+                    bookingId, attempt);
+            }
+        }
+    }
+
     public async Task<Resource> UpsertNakedAsync(string id, Location? location, CancellationToken cancellationToken)
     {
         await UpsertNakedAsync<Location>(id, location, cancellationToken);
@@ -302,7 +453,8 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                     .Where(organizationTag => organizationTag.Type == OrganizationTagTypeConstants.Zone)
                     .Select(organizationTag => organizationTag.Name)
                     .FirstOrDefault(),
-            _ => throw new ArgumentOutOfRangeException(nameof(field), field, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(field), field,
+                $"Unexpected value for {nameof(field)}: {field}. Update enum mapping or caller input.")
         };
 
     private static IQueryable<Resource> ApplyAvailabilityStatusPrefilter(
@@ -393,5 +545,67 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .GroupBy(slot => slot.Resource.Id)
             .Select(item => item.Key)
             .ToList();
+    }
+
+    private static bool IsSerializableConflict(Exception exception)
+    {
+        for (var current = exception; current is not null; current = current.InnerException)
+        {
+            if (current.Message.Contains("40001", StringComparison.Ordinal))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private async Task<ResourceSlotClaimResult> TryClaimWithinCurrentTransactionAsync(
+        BookingEntity booking,
+        IReadOnlyCollection<string> resourceIds,
+        CancellationToken cancellationToken)
+    {
+        var slotStates = await DbContext.ResourceBookingSlot
+            .Where(item => resourceIds.Contains(item.ResourceId) && item.Start >= booking.From && item.Start < booking.Until)
+            .Select(item => new
+            {
+                item.Id, item.ResourceId, item.Available, IsBooked = item.Bookings.Any(existing => existing.DeletedByCustomer == null)
+            })
+            .ToListAsync(cancellationToken);
+        var unavailableResourceIds = resourceIds
+            .Where(resourceId =>
+            {
+                var claimedSlots = slotStates.Where(slot => slot.ResourceId == resourceId).ToList();
+                return claimedSlots.Count == 0 || claimedSlots.Any(slot => !slot.Available || slot.IsBooked);
+            })
+            .ToList();
+        if (unavailableResourceIds.Count != 0)
+        {
+            logger.LogInformation(
+                "Atomic resource-slot claim found unavailable resources in the caller transaction. BookingId={BookingId}, UnavailableResourceCount={UnavailableResourceCount}",
+                booking.Id, unavailableResourceIds.Count);
+            return ResourceSlotClaimResult.Conflict(unavailableResourceIds);
+        }
+
+        var slots = await DbContext.ResourceBookingSlot
+            .Where(item => slotStates.Select(state => state.Id).Contains(item.Id))
+            .ToListAsync(cancellationToken);
+        foreach (var slot in slots)
+        {
+            slot.Bookings.Add(booking);
+            foreach (var customer in booking.InvolvedCustomers)
+            {
+                if (slot.Customers.All(existing => existing.Id != customer.Id))
+                {
+                    slot.Customers.Add(customer);
+                }
+            }
+
+            slot.ModifiedAt = TimeProvider.GetUtcNow();
+        }
+
+        logger.LogInformation("Atomic resource-slot claim attached to the caller transaction. BookingId={BookingId}, ResourceCount={ResourceCount}",
+            booking.Id, resourceIds.Count);
+        return ResourceSlotClaimResult.Success();
     }
 }

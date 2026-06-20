@@ -43,15 +43,26 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
-        /// change organization offering
+        /// change organization offering by Id
         /// </summary>
         /// <param name="x_API_Key">API Key</param>
         /// <returns>the status of changing organization offering</returns>
 
-        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/offering/{offeringCode}")]
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/changeOrganizationOfferingById/{offeringCode}")]
         [ModelContextProtocol.Server.McpServerTool]
-        [System.ComponentModel.Description("change organization offering")]
-        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ChangeOrganizationOffering(string organizationId, string offeringCode, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        [System.ComponentModel.Description("change organization offering by Id")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ChangeOrganizationOfferingById(string organizationId, OfferingCode offeringCode, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// change organization offering by custom domain
+        /// </summary>
+        /// <param name="x_API_Key">API Key</param>
+        /// <returns>the status of changing organization offering</returns>
+
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{customDomain}/changeOrganizationOfferingByCustomDomain/{offeringCode}")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("change organization offering by custom domain")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ChangeOrganizationOfferingByCustomDomain(string customDomain, OfferingCode offeringCode, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// verify organization ownership by id
@@ -176,6 +187,39 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("Xero OAuth callback")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> XeroOAuthCallback([Microsoft.AspNetCore.Mvc.FromQuery] string code, [Microsoft.AspNetCore.Mvc.FromQuery] string state, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.7.1.0 (NJsonSchema v11.6.1.0 (Newtonsoft.Json v13.0.0.0))")]
+    public enum OfferingCode
+    {
+
+        [System.Runtime.Serialization.EnumMember(Value = @"EARLY_BIRD_V1")]
+        EARLY_BIRD_V1 = 0,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"FREE_TIER_V1")]
+        FREE_TIER_V1 = 1,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"PAY_AS_YOU_GO_V1")]
+        PAY_AS_YOU_GO_V1 = 2,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"ENTERPRISE_CUSTOM_V1")]
+        ENTERPRISE_CUSTOM_V1 = 3,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_FREE_TIER_V1")]
+        SPACES_FREE_TIER_V1 = 4,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_GROWTH_V1")]
+        SPACES_GROWTH_V1 = 5,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_BUSINESS_V1")]
+        SPACES_BUSINESS_V1 = 6,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"SPACES_CONTACT_US_V1")]
+        SPACES_CONTACT_US_V1 = 7,
+
+        [System.Runtime.Serialization.EnumMember(Value = @"HOST_STANDARD_V1")]
+        HOST_STANDARD_V1 = 8,
 
     }
 

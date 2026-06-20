@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<57f26b868ce55b9bd8b84a45f13c7b28>>
+ * @generated SignedSource<<fe43d009e76341e4cc5a16bf90982732>>
  * @lightSyntaxTransform
  */
 
@@ -39,6 +39,14 @@ export type bookingCard_BookingDetails$data = {
     readonly channel: BookingChannel;
     readonly name: string;
   };
+  readonly failure: {
+    readonly category: {
+      readonly name: string;
+    };
+    readonly customerAction: {
+      readonly name: string;
+    };
+  } | null | undefined;
   readonly from: any;
   readonly id: string;
   readonly involvedCustomers: ReadonlyArray<{
@@ -127,21 +135,24 @@ v1 = {
   "storageKey": null
 },
 v2 = [
+  (v1/*:: as any*/)
+],
+v3 = [
   (v0/*:: as any*/)
 ],
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v4 = [
+v5 = [
   (v0/*:: as any*/),
   (v1/*:: as any*/),
-  (v3/*:: as any*/)
+  (v4/*:: as any*/)
 ],
-v5 = [
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -220,6 +231,37 @@ return {
     {
       "alias": null,
       "args": null,
+      "concreteType": "MarketplaceBookingFailureDetails",
+      "kind": "LinkedField",
+      "name": "failure",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceBookingFailureChoiceDetails",
+          "kind": "LinkedField",
+          "name": "category",
+          "plural": false,
+          "selections": (v2/*:: as any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceBookingFailureChoiceDetails",
+          "kind": "LinkedField",
+          "name": "customerAction",
+          "plural": false,
+          "selections": (v2/*:: as any*/),
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "CustomerDetails",
       "kind": "LinkedField",
       "name": "involvedCustomers",
@@ -265,7 +307,7 @@ return {
       "kind": "LinkedField",
       "name": "involvedOrganizations",
       "plural": true,
-      "selections": (v2/*:: as any*/),
+      "selections": (v3/*:: as any*/),
       "storageKey": null
     },
     {
@@ -318,7 +360,7 @@ return {
           "selections": [
             (v0/*:: as any*/),
             (v1/*:: as any*/),
-            (v3/*:: as any*/),
+            (v4/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -326,7 +368,7 @@ return {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v4/*:: as any*/),
+              "selections": (v5/*:: as any*/),
               "storageKey": null
             },
             {
@@ -336,7 +378,7 @@ return {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v4/*:: as any*/),
+              "selections": (v5/*:: as any*/),
               "storageKey": null
             }
           ],
@@ -368,7 +410,7 @@ return {
           "kind": "LinkedField",
           "name": "paymentStatus",
           "plural": false,
-          "selections": (v5/*:: as any*/),
+          "selections": (v6/*:: as any*/),
           "storageKey": null
         },
         {
@@ -394,7 +436,7 @@ return {
               "kind": "LinkedField",
               "name": "currency",
               "plural": false,
-              "selections": (v5/*:: as any*/),
+              "selections": (v6/*:: as any*/),
               "storageKey": null
             },
             {
@@ -404,7 +446,7 @@ return {
               "kind": "LinkedField",
               "name": "status",
               "plural": false,
-              "selections": (v5/*:: as any*/),
+              "selections": (v6/*:: as any*/),
               "storageKey": null
             },
             {
@@ -520,9 +562,7 @@ return {
           "kind": "LinkedField",
           "name": "frequency",
           "plural": false,
-          "selections": [
-            (v1/*:: as any*/)
-          ],
+          "selections": (v2/*:: as any*/),
           "storageKey": null
         },
         {
@@ -532,7 +572,7 @@ return {
           "kind": "LinkedField",
           "name": "marketplaceBooking",
           "plural": false,
-          "selections": (v2/*:: as any*/),
+          "selections": (v3/*:: as any*/),
           "storageKey": null
         }
       ],
@@ -544,6 +584,6 @@ return {
 };
 })();
 
-(node as any).hash = "66dec22a599ae3e91e37983937f63b8c";
+(node as any).hash = "15c900e8a206cec058db5618f75a5d7a";
 
 export default node;

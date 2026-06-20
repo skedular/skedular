@@ -10,6 +10,9 @@ using Location.Shared.Services.Cache;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BookingService = Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingService;
+using LocationGraphqlService = Api.Shared.Grpc.Skedular.Location.Graphql.V1.LocationGraphqlService;
+using MarketplaceService = Api.Shared.Grpc.Skedular.Marketplace.Core.V1.MarketplaceService;
+using OrganizationTagsService = Api.Shared.Grpc.Skedular.Organization.Tags.V1.OrganizationTagsService;
 
 namespace Location.Shared;
 
@@ -37,6 +40,7 @@ public static class Extensions
                 .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalService, TemporalService>()
+                .AddScoped<IAutoResourceService, AutoResourceService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
                 .AddScoped<ICachedLocationService, CachedLocationService>()
@@ -65,7 +69,13 @@ public static class Extensions
                 .AddScoped<IProductVersionRepository, ProductVersionRepository>()
                 .AddScoped<IPrecomputedLocationProductRepository, PrecomputedLocationProductRepository>()
                 .AddScoped<ILocationRestrictedInformationRepository, LocationRestrictedInformationRepository>()
-                .AddScoped<ILocationBookingAccessRepository, LocationBookingAccessRepository>();
+                .AddScoped<ILocationBookingAccessRepository, LocationBookingAccessRepository>()
+                .AddScoped<ILocationBookingRecordingRepository, LocationBookingRecordingRepository>()
+                .AddScoped<IDailyResourceAvailabilitySnapshotRepository, DailyResourceAvailabilitySnapshotRepository>()
+                .AddScoped<IResourcePositionRepository, ResourcePositionRepository>()
+                .AddScoped<IDailyBookingCountRecordingRepository, DailyBookingCountRecordingRepository>()
+                .AddScoped<IDailyDeskBookingCountRecordingRepository, DailyDeskBookingCountRecordingRepository>()
+                .AddScoped<IDailyRoomBookingCountRecordingRepository, DailyRoomBookingCountRecordingRepository>();
 
         public IServiceCollection AddPublishers() =>
             services
@@ -85,7 +95,29 @@ public static class Extensions
 
             services.AddGrpcClient<BookingService.BookingServiceClient>(GrpcClients.ConfigureBooking);
 
-            return services.AddSingleton(bookingConfiguration);
+            var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
+            ArgumentNullException.ThrowIfNull(organizationConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
+            ArgumentNullException.ThrowIfNull(organizationConfiguration.GrpcUrl);
+            services.AddGrpcClient<OrganizationTagsService.OrganizationTagsServiceClient>(GrpcClients.ConfigureOrganization);
+
+            var marketplaceConfiguration = configuration.GetSection(MarketplaceConfiguration.Key).Get<MarketplaceConfiguration>();
+            ArgumentNullException.ThrowIfNull(marketplaceConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(marketplaceConfiguration.ApiKey);
+            ArgumentNullException.ThrowIfNull(marketplaceConfiguration.GrpcUrl);
+            services.AddGrpcClient<MarketplaceService.MarketplaceServiceClient>(GrpcClients.ConfigureMarketplace);
+
+            var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
+            ArgumentNullException.ThrowIfNull(locationConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
+            ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
+            services.AddGrpcClient<LocationGraphqlService.LocationGraphqlServiceClient>(GrpcClients.ConfigureLocation);
+
+            return services
+                .AddSingleton(bookingConfiguration)
+                .AddSingleton(organizationConfiguration)
+                .AddSingleton(marketplaceConfiguration)
+                .AddSingleton(locationConfiguration);
         }
     }
 }

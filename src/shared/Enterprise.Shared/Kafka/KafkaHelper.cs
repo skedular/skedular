@@ -178,6 +178,7 @@ public class KafkaHelper : IKafkaHelper
         {
             MessageComponentType.Key => $"{topic}-key",
             MessageComponentType.Value => $"{topic}-value",
-            _ => throw new ArgumentOutOfRangeException(nameof(componentType), componentType, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(componentType), componentType,
+                $"Unexpected value for {nameof(componentType)}: {componentType}. Update enum mapping or caller input.")
         };
 }

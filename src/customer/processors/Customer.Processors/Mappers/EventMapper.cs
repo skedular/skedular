@@ -75,8 +75,9 @@ public class EventMapper : IEventMapper
             {
                 OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
-                OrganizationType.Individual => Api.Shared.Services.Models.OrganizationType.Individual,
-                _ => throw new ArgumentOutOfRangeException()
+                OrganizationType.Host => Api.Shared.Services.Models.OrganizationType.Host,
+                _ => throw new ArgumentOutOfRangeException(nameof(organizationAfterState.Type), organizationAfterState.Type,
+                    $"Unexpected value for {nameof(organizationAfterState.Type)}: {organizationAfterState.Type}. Update enum mapping or caller input.")
             },
             IsOwnershipVerified = organizationAfterState.IsOwnershipVerified
         };
@@ -90,13 +91,15 @@ public class EventMapper : IEventMapper
                 OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
                 OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
+                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input.")
             },
             Status = item.Status switch
             {
                 OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
+                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input.")
             },
             Customer = new Shared.Models.Customer { Id = item.CustomerId },
             Organization = organization
@@ -144,7 +147,8 @@ public class EventMapper : IEventMapper
             {
                 LocationType.Private => Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => Api.Shared.Services.Models.LocationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(locationAfterState.Type), locationAfterState.Type,
+                    $"Unexpected value for {nameof(locationAfterState.Type)}: {locationAfterState.Type}. Update enum mapping or caller input.")
             }
         };
 

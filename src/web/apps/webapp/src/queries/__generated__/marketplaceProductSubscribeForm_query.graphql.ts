@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e18594782b496591bdd1a32d146702df>>
+ * @generated SignedSource<<46ad29df2f593ae0ad8a02401920c5cf>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
+export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
@@ -43,6 +44,7 @@ export type marketplaceProductSubscribeForm_query$data = {
     };
     readonly pricingOptions: ReadonlyArray<{
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+      readonly availableDays: ReadonlyArray<DayOfWeek> | null | undefined;
       readonly billingMode: ProductPricingBillingMode;
       readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
       readonly cancellationRefundRules: ReadonlyArray<{
@@ -59,6 +61,7 @@ export type marketplaceProductSubscribeForm_query$data = {
       readonly numberOfResourcesToBook: number;
       readonly price: any;
       readonly purchaseCadence: ProductPricingCadence;
+      readonly requiredDaysPerWeek: number | null | undefined;
       readonly supportsSubscriptionAutoRenewal: boolean;
     }>;
     readonly type: {
@@ -322,6 +325,20 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "availableDays",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "requiredDaysPerWeek",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "numberOfResourcesToBook",
               "storageKey": null
             },
@@ -369,6 +386,6 @@ return {
 };
 })();
 
-(node as any).hash = "3dc521d013a885be35b9367c790389b0";
+(node as any).hash = "d7f6ec5cb978a26ca930ff5f9d63bfe4";
 
 export default node;

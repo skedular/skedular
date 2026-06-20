@@ -21,19 +21,19 @@ export class AnalyticsService {
     }
     /**
      * regenerate organization daily analytics
-     * @param organizationId
+     * @param customDomain
      * @returns any the status of regenerating organization daily analytics
      * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public regenerateDailyAnalytics(
-        organizationId: string,
+        customDomain: string,
     ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/v1/organization/analytics/{organizationId}/regenerate-daily-analytics',
+            url: '/v1/organization/analytics/{customDomain}/regenerate-daily-analytics',
             path: {
-                'organizationId': organizationId,
+                'customDomain': customDomain,
             },
         });
     }

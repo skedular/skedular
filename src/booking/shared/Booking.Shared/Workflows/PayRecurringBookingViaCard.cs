@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
+using Booking.Shared.Models;
 using Temporalio.Common;
 using Temporalio.Exceptions;
 using Temporalio.Workflows;
@@ -95,7 +96,8 @@ public class PayRecurringBookingViaCard
             {
                 await Workflow.ExecuteActivityAsync(
                     (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
-                        new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId)),
+                        new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId,
+                            MarketplaceBookingFailureCategoryConstants.PaymentExpired)),
                     new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
 
                 return;
@@ -111,7 +113,7 @@ public class PayRecurringBookingViaCard
             {
                 await Workflow.ExecuteActivityAsync(
                     (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
-                        new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId)),
+                        new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
                     new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
 
                 return;
@@ -121,7 +123,7 @@ public class PayRecurringBookingViaCard
         {
             await Workflow.ExecuteActivityAsync(
                 (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
-                    new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId)),
+                    new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
                 new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
 
             return;

@@ -33,6 +33,7 @@ public static class Extensions
                 .AddScoped<IPrivateBookingService, PrivateBookingService>()
                 .AddScoped<IPrivateRecurringBookingService, PrivateRecurringBookingService>()
                 .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>()
+                .AddScoped<IMarketplaceBookingFailureReadService, MarketplaceBookingFailureReadService>()
                 .AddScoped<IMarketplaceBookingSubscriptionService, MarketplaceBookingSubscriptionService>()
                 .AddScoped<IResourceService, ResourceService>()
                 .AddScoped<IGraphQlTopicEventSender, GraphQlTopicEventSender>()

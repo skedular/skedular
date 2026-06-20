@@ -242,7 +242,8 @@ public class RecurringBookingRepository(BookingDbContext dbContext, TimeProvider
                     nameof(RecurringBooking.Channel),
                     query => query.Channel,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

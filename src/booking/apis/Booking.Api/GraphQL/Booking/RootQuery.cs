@@ -1,7 +1,10 @@
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
+using Booking.Shared.Services;
+using Booking.Shared.Services.Cache;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
@@ -16,6 +19,17 @@ namespace Booking.Api.GraphQL.Booking;
 [QueryType]
 public class RootQuery(IGraphQlMapper graphQlMapper)
 {
+    [UseResolverScope]
+    public async Task<IReadOnlyList<MarketplaceBookingFailureDetails>> MarketplaceBookingFailuresAsync(
+        [Service] ICachedCustomerService cachedCustomerService,
+        [Service] IMarketplaceBookingFailureReadService failureReadService,
+        CancellationToken cancellationToken)
+    {
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var failures = await failureReadService.GetVisibleToCustomerAsync(customerId, cancellationToken);
+        return failures.Select(item => graphQlMapper.MapTo(item)).ToList();
+    }
+
     [UseResolverScope]
     public IEnumerable<BookingCategoryDetails> BookingCategories() =>
     [
@@ -52,6 +66,52 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         graphQlMapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
+    public async Task<BookingSpacesQuotaStatusDetails> BookingSpacesQuotaStatusAsync(
+        string organizationId,
+        [Service] ISpacesBookingQuotaService spacesBookingQuotaService,
+        CancellationToken cancellationToken)
+    {
+        var decision = await spacesBookingQuotaService.GetQuotaStatusAsync(organizationId, cancellationToken);
+
+        return new BookingSpacesQuotaStatusDetails
+        {
+            OrganizationId = organizationId,
+            CurrentPeriodStartUtc = decision.CurrentPeriodStartUtc,
+            CurrentPeriodEndUtc = decision.CurrentPeriodEndUtc,
+            PlanCode = decision.PlanCode,
+            QuotaLimit = decision.PlanCode == 4 ? null : decision.QuotaLimit,
+            CurrentUsage = decision.CurrentUsage,
+            AttemptedCurrentPeriodCount = decision.AttemptedCurrentPeriodCount,
+            ExcludedOutOfPeriodCount = decision.ExcludedOutOfPeriodCount,
+            TotalAttemptedInstanceCount = decision.TotalAttemptedInstanceCount,
+            RemainingQuota = decision.PlanCode == 4 ? null : decision.RemainingQuota,
+            QuotaExceeded = !decision.CanCreate && decision.ReasonCode != SpacesQuotaReasonCode.MissingOfferingState,
+            ReasonCode =
+                new SpacesQuotaReasonCodeDetails { Type = decision.ReasonCode, Name = decision.ReasonCode.ToSpacesQuotaReasonCodeName() },
+            UpgradePlans = decision.UpgradePlans.Select(upgrade => new UpgradePlanDetails
+            {
+                PlanCode = upgrade.PlanCode, Name = upgrade.Name, Availability = upgrade.Availability, PriceDescription = upgrade.PriceDescription
+            }).ToList()
+        };
+    }
+
+    [UseResolverScope]
+    public async Task<SpacesPublicBookingAvailabilityDetails> SpacesPublicBookingAvailabilityAsync(
+        string organizationId,
+        [Service] ISpacesBookingQuotaService spacesBookingQuotaService,
+        CancellationToken cancellationToken)
+    {
+        var decision = await spacesBookingQuotaService.GetQuotaStatusAsync(organizationId, cancellationToken);
+        return new SpacesPublicBookingAvailabilityDetails
+        {
+            Available = decision.CanCreate,
+            Message = decision.CanCreate
+                ? "Bookings are available."
+                : "Bookings are currently unavailable for this workspace."
+        };
+    }
+
+    [UseResolverScope]
     [Lookup]
     [Internal]
     public async Task<BookingDetails?> BookingByIdAsync(
@@ -59,6 +119,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken) =>
         await BookingAsync(id, bookingService, cancellationToken);
+
+    [Lookup]
+    [Internal]
+    public OrganizationDetails? OrganizationById([ID] string id) => new(id, string.Empty);
 
     [UseResolverScope]
     public async Task<Connection<BookingEdge>> BookingsAsync(

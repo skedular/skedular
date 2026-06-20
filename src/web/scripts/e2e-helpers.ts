@@ -2,7 +2,7 @@ import { expect, type Page, type TestInfo } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 
-export type WebAppId = 'webapp' | 'webapp-spaces' | 'webapp-teams';
+export type WebAppId = 'webapp' | 'webapp-spaces' | 'webapp-teams' | 'webapp-host';
 
 type MockOptions = {
   appId: WebAppId;
@@ -62,6 +62,91 @@ const getGraphqlResponse = (operationName: string | undefined, appId: WebAppId) 
         },
       },
     };
+  }
+
+  if (operationName === 'dashboardHostOrganizationQuery') {
+    return { data: { myOrganizations: [{ uniqueId: 'host-org-1', name: 'Garden Studio' }] } };
+  }
+
+  if (operationName === 'dashboardHostDataQuery') {
+    return {
+      data: {
+        myLocations: [{ id: 'location-1' }],
+        products: { totalCount: 2 },
+        bookings: {
+          totalCount: 1,
+          edges: [{
+            node: {
+              id: 'booking-1',
+              from: '2026-07-10T09:00:00Z',
+              until: '2026-07-10T17:00:00Z',
+              involvedLocations: [{ id: 'booking-location-1', name: 'Garden Studio' }],
+              marketplaceBooking: {
+                id: 'marketplace-booking-1',
+                paymentStatus: { name: 'Confirmed' },
+                totalAmount: 100,
+                hostCommissionRatePercentage: 5,
+                hostCommissionAmount: 5,
+                hostGrossProceedsAmount: 95,
+              },
+            },
+          }],
+        },
+      },
+    };
+  }
+
+  if (operationName === 'createHostLocationOrganizationQuery') {
+    return { data: { myOrganizations: [{ uniqueId: 'host-org-1' }] } };
+  }
+
+  if (operationName === 'createHostProductOrganizationQuery') {
+    return {
+      data: {
+        myOrganizations: [{ uniqueId: 'host-org-1' }],
+        location: { productTags: [{ id: 'host-location-location-1' }] },
+      },
+    };
+  }
+
+  if (operationName === 'createHostLocationMutation') {
+    return { data: { addLocation: { location: { id: 'location-created', name: 'Garden Studio' } } } };
+  }
+
+  if (operationName === 'createHostProductMutation') {
+    return { data: { addProduct: { product: { id: 'product-created' } } } };
+  }
+
+  if (operationName === 'locationsHostOrganizationQuery') {
+    return { data: { myOrganizations: [{ uniqueId: 'host-org-1' }] } };
+  }
+
+  if (operationName === 'locationsHostDataQuery') {
+    return { data: { myLocations: [{ id: 'location-1', name: 'Garden Studio', timezone: 'Pacific/Auckland', physicalAddress: { multilinesFormattedAddress: '1 Garden Lane, Auckland' }, products: [{ id: 'product-1' }] }] } };
+  }
+
+  if (operationName === 'hostLocationDetailsQuery') {
+    return { data: { location: { id: 'location-1', name: 'Garden Studio', timezone: 'Pacific/Auckland', type: { name: 'Marketplace' }, physicalAddress: { multilinesFormattedAddress: '1 Garden Lane, Auckland', latitude: -36.85, longitude: 174.76 }, extraMetadata: { peopleCapacity: { from: 1, to: 10 }, contactDetails: { contactEmails: [], contactPhones: [] } }, products: [{ id: 'product-1', inactive: false, listingMetadata: { title: 'Full-Day Studio Workshop' }, pricingOptions: [{ price: 120, bookingCadence: 'DAILY' }], currency: { name: 'USD' } }] } } };
+  }
+
+  if (operationName === 'hostLocationProductsQuery') {
+    return { data: { location: { id: 'location-1', name: 'Garden Studio', products: [{ id: 'product-1', inactive: false, type: { name: 'Event' }, currency: { name: 'USD' }, listingMetadata: { title: 'Full-Day Studio Workshop', about: 'Entire place' }, pricingOptions: [{ id: 'pricing-1', price: 120, bookingCadence: 'DAILY' }] }] } } };
+  }
+
+  if (operationName === 'hostProductDetailsQuery') {
+    return { data: { product: { id: 'product-1', inactive: false, type: { name: 'Event' }, currency: { name: 'USD' }, listingMetadata: { title: 'Full-Day Studio Workshop', subTitle: '', about: 'Entire place', includedFeatures: [] }, pricingOptions: [{ id: 'pricing-1', price: 120, bookingCadence: 'DAILY', purchaseCadence: 'DAILY', acceptedPaymentMethods: ['CARD'] }] } } };
+  }
+
+  if (operationName === 'editHostLocationQuery') {
+    return { data: { location: { id: 'location-1', name: 'Garden Studio', timezone: 'Pacific/Auckland', physicalAddress: { addressLine1: '1 Garden Lane', city: 'Auckland', province: '', country: 'New Zealand', zipcode: '', latitude: -36.85, longitude: 174.76 } } } };
+  }
+
+  if (operationName === 'editHostLocationMutation') {
+    return { data: { updateLocation: { location: { id: 'location-1', name: 'Updated Garden Studio' } } } };
+  }
+
+  if (operationName === 'editHostLocationAddressMutation') {
+    return { data: { updateLocationPhysicalAddress: { location: { id: 'location-1', physicalAddress: { multilinesFormattedAddress: '1 Garden Lane, Auckland' } } } } };
   }
 
   if (operationName.includes('noOrganizationLandingPage')) {

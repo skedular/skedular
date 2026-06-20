@@ -10,9 +10,11 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export { OfferingCode } from './models/OfferingCode';
 export type { ProblemDetails } from './models/ProblemDetails';
 export type { Version } from './models/Version';
 
+export { $OfferingCode } from './schemas/$OfferingCode';
 export { $ProblemDetails } from './schemas/$ProblemDetails';
 export { $Version } from './schemas/$Version';
 

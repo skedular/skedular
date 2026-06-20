@@ -11,10 +11,12 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export { Currency } from './models/Currency';
+export { OfferingCode } from './models/OfferingCode';
 export type { ProblemDetails } from './models/ProblemDetails';
 export type { SetEnterpriseOfferingRequest } from './models/SetEnterpriseOfferingRequest';
 
 export { $Currency } from './schemas/$Currency';
+export { $OfferingCode } from './schemas/$OfferingCode';
 export { $ProblemDetails } from './schemas/$ProblemDetails';
 export { $SetEnterpriseOfferingRequest } from './schemas/$SetEnterpriseOfferingRequest';
 

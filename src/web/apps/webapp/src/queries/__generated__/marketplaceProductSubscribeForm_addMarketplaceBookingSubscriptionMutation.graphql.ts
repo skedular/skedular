@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cf420393e26d51f93437bf16aaa15392>>
+ * @generated SignedSource<<25bc6261d2fa3bb59bb14870e759440a>>
  * @lightSyntaxTransform
  */
 
@@ -8,6 +8,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PAUSED" | "RENEWAL_FAILED" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
@@ -29,12 +30,17 @@ export type AddMarketplaceBookingSubscriptionInput = {
   requestedResourceIds?: ReadonlyArray<string> | null | undefined;
   startedAt: any;
   teamIds?: ReadonlyArray<string> | null | undefined;
+  weeklySelectedDays?: ReadonlyArray<DayOfWeek> | null | undefined;
 };
 export type marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation$variables = {
   input: AddMarketplaceBookingSubscriptionInput;
 };
 export type marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation$data = {
   readonly addMarketplaceBookingSubscription: {
+    readonly accessError: {
+      readonly message: string;
+      readonly upgradeRequired: boolean;
+    } | null | undefined;
     readonly marketplaceBookingSubscription: {
       readonly autoRenew: boolean;
       readonly id: string;
@@ -89,7 +95,7 @@ export type marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMut
         readonly name: string;
         readonly type: MarketplaceBookingSubscriptionStatus;
       };
-    };
+    } | null | undefined;
   };
 };
 export type marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation = {
@@ -115,32 +121,57 @@ v1 = [
 v2 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "id",
+  "concreteType": "SpacesAccessErrorDetails",
+  "kind": "LinkedField",
+  "name": "accessError",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "message",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "upgradeRequired",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "startedAt",
+  "name": "id",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "nextRenewalAt",
+  "name": "startedAt",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "nextRenewalAt",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "autoRenew",
   "storageKey": null
 },
-v6 = [
+v7 = [
   {
     "alias": null,
     "args": null,
@@ -156,38 +187,38 @@ v6 = [
     "storageKey": null
   }
 ],
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "MarketplaceBookingSubscriptionStatusDetails",
   "kind": "LinkedField",
   "name": "status",
   "plural": false,
-  "selections": (v6/*:: as any*/),
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "startDate",
+  "selections": (v7/*:: as any*/),
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isPaymentRequired",
+  "name": "startDate",
   "storageKey": null
 },
 v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "paymentExpiry",
+  "name": "isPaymentRequired",
   "storageKey": null
 },
 v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "paymentExpiry",
+  "storageKey": null
+},
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingCheckoutSessionDetails",
@@ -205,57 +236,38 @@ v11 = {
   ],
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentStatusDetails",
   "kind": "LinkedField",
   "name": "paymentStatus",
   "plural": false,
-  "selections": (v6/*:: as any*/),
-  "storageKey": null
-},
-v13 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "quantity",
+  "selections": (v7/*:: as any*/),
   "storageKey": null
 },
 v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "invoiceUrl",
+  "name": "quantity",
   "storageKey": null
 },
 v15 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "invoiceUrl",
+  "storageKey": null
+},
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentMethodTypeDetails",
   "kind": "LinkedField",
   "name": "paymentMethod",
   "plural": false,
-  "selections": (v6/*:: as any*/),
-  "storageKey": null
-},
-v16 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "MarketplaceBookingDetails",
-  "kind": "LinkedField",
-  "name": "marketplaceBooking",
-  "plural": false,
-  "selections": [
-    (v2/*:: as any*/),
-    (v9/*:: as any*/),
-    (v10/*:: as any*/),
-    (v11/*:: as any*/),
-    (v12/*:: as any*/),
-    (v13/*:: as any*/),
-    (v14/*:: as any*/),
-    (v15/*:: as any*/)
-  ],
+  "selections": (v7/*:: as any*/),
   "storageKey": null
 },
 v17 = {
@@ -266,13 +278,32 @@ v17 = {
   "name": "marketplaceBooking",
   "plural": false,
   "selections": [
-    (v2/*:: as any*/),
-    (v9/*:: as any*/),
+    (v3/*:: as any*/),
     (v10/*:: as any*/),
     (v11/*:: as any*/),
     (v12/*:: as any*/),
     (v13/*:: as any*/),
     (v14/*:: as any*/),
+    (v15/*:: as any*/),
+    (v16/*:: as any*/)
+  ],
+  "storageKey": null
+},
+v18 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "MarketplaceBookingDetails",
+  "kind": "LinkedField",
+  "name": "marketplaceBooking",
+  "plural": false,
+  "selections": [
+    (v3/*:: as any*/),
+    (v10/*:: as any*/),
+    (v11/*:: as any*/),
+    (v12/*:: as any*/),
+    (v13/*:: as any*/),
+    (v14/*:: as any*/),
+    (v15/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -308,7 +339,7 @@ v17 = {
       "name": "billingMode",
       "storageKey": null
     },
-    (v15/*:: as any*/),
+    (v16/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -334,6 +365,7 @@ return {
         "name": "addMarketplaceBookingSubscription",
         "plural": false,
         "selections": [
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -342,11 +374,11 @@ return {
             "name": "marketplaceBookingSubscription",
             "plural": false,
             "selections": [
-              (v2/*:: as any*/),
               (v3/*:: as any*/),
               (v4/*:: as any*/),
               (v5/*:: as any*/),
-              (v7/*:: as any*/),
+              (v6/*:: as any*/),
+              (v8/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -355,12 +387,12 @@ return {
                 "name": "recurringBookings",
                 "plural": true,
                 "selections": [
-                  (v8/*:: as any*/),
-                  (v16/*:: as any*/)
+                  (v9/*:: as any*/),
+                  (v17/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v17/*:: as any*/)
+              (v18/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -385,6 +417,7 @@ return {
         "name": "addMarketplaceBookingSubscription",
         "plural": false,
         "selections": [
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -393,11 +426,11 @@ return {
             "name": "marketplaceBookingSubscription",
             "plural": false,
             "selections": [
-              (v2/*:: as any*/),
               (v3/*:: as any*/),
               (v4/*:: as any*/),
               (v5/*:: as any*/),
-              (v7/*:: as any*/),
+              (v6/*:: as any*/),
+              (v8/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -406,13 +439,13 @@ return {
                 "name": "recurringBookings",
                 "plural": true,
                 "selections": [
-                  (v8/*:: as any*/),
-                  (v16/*:: as any*/),
-                  (v2/*:: as any*/)
+                  (v9/*:: as any*/),
+                  (v17/*:: as any*/),
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v17/*:: as any*/)
+              (v18/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -422,16 +455,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "636f15724553a207ab9a7c319d162a9a",
+    "cacheID": "61249a6c4da54d2361e2ca471c8dffa0",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation",
     "operationKind": "mutation",
-    "text": "mutation marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation(\n  $input: AddMarketplaceBookingSubscriptionInput!\n) {\n  addMarketplaceBookingSubscription(input: $input) {\n    marketplaceBookingSubscription {\n      id\n      startedAt\n      nextRenewalAt\n      autoRenew\n      status {\n        type\n        name\n      }\n      recurringBookings {\n        startDate\n        marketplaceBooking {\n          id\n          isPaymentRequired\n          paymentExpiry\n          bookingCheckoutSession {\n            checkoutUrl\n          }\n          paymentStatus {\n            type\n            name\n          }\n          quantity\n          invoiceUrl\n          paymentMethod {\n            type\n            name\n          }\n        }\n        id\n      }\n      marketplaceBooking {\n        id\n        isPaymentRequired\n        paymentExpiry\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentStatus {\n          type\n          name\n        }\n        quantity\n        invoiceUrl\n        invoiceNumber\n        totalAmountToDisplay\n        totalAmountExcludeTaxToDisplay\n        taxAmountToDisplay\n        billingMode\n        paymentMethod {\n          type\n          name\n        }\n        invoiceEmailList\n      }\n    }\n  }\n}\n"
+    "text": "mutation marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation(\n  $input: AddMarketplaceBookingSubscriptionInput!\n) {\n  addMarketplaceBookingSubscription(input: $input) {\n    accessError {\n      message\n      upgradeRequired\n    }\n    marketplaceBookingSubscription {\n      id\n      startedAt\n      nextRenewalAt\n      autoRenew\n      status {\n        type\n        name\n      }\n      recurringBookings {\n        startDate\n        marketplaceBooking {\n          id\n          isPaymentRequired\n          paymentExpiry\n          bookingCheckoutSession {\n            checkoutUrl\n          }\n          paymentStatus {\n            type\n            name\n          }\n          quantity\n          invoiceUrl\n          paymentMethod {\n            type\n            name\n          }\n        }\n        id\n      }\n      marketplaceBooking {\n        id\n        isPaymentRequired\n        paymentExpiry\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentStatus {\n          type\n          name\n        }\n        quantity\n        invoiceUrl\n        invoiceNumber\n        totalAmountToDisplay\n        totalAmountExcludeTaxToDisplay\n        taxAmountToDisplay\n        billingMode\n        paymentMethod {\n          type\n          name\n        }\n        invoiceEmailList\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7b06493743dd88dfdd080248eb5c996d";
+(node as any).hash = "9f36feba4f7f408aca29914870d0a881";
 
 export default node;

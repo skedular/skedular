@@ -15,6 +15,26 @@ public class FilterBySubscriptionStatusShould(
 {
     [Theory]
     [AutoFakeItEasyData([typeof(SubscriptionFilterScenarioFixtureCustomizer)])]
+    public async Task Persist_And_Reload_Weekly_Selected_Days(
+        SubscriptionFilterScenario scenario,
+        CancellationToken cancellationToken)
+    {
+        await infrastructureTestClient.ResetAsync(new ResetInput(), cancellationToken: cancellationToken);
+        await SubscriptionFilterScenarioSeeder.SeedAsync(repositoryFactory, scenario, cancellationToken);
+
+        scenario.ActivePending.Subscription.WeeklySelectedDays = [DayOfWeekConstants.Tuesday, DayOfWeekConstants.Thursday];
+        repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(scenario.ActivePending.Subscription);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        var reloaded = await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdUntrackedAsync(
+            scenario.ActivePending.Subscription.Id,
+            cancellationToken);
+
+        reloaded.ShouldNotBeNull().WeeklySelectedDays.ShouldBe([DayOfWeekConstants.Tuesday, DayOfWeekConstants.Thursday]);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData([typeof(SubscriptionFilterScenarioFixtureCustomizer)])]
     public async Task Return_Only_Active_Subscriptions_When_Active_Status_Filter_Applied(
         SubscriptionFilterScenario scenario,
         CancellationToken cancellationToken)

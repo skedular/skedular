@@ -2,11 +2,13 @@ import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toShortDate, u
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
+import { getAvailableDaysGuidance, isDateAvailableForPrice } from '@/components/marketplaceProduct/available-days';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
+import { isWeeklySelectionComplete, toggleWeeklySelectedDay, toWeeklySelectedDaysInput } from '@/components/marketplaceProductSubscription/weekly-selection';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 
 import type { marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation.graphql';
-import type { marketplaceProductSubscribeForm_query$key, PaymentMethod } from '@/queries/__generated__/marketplaceProductSubscribeForm_query.graphql';
+import type { DayOfWeek, marketplaceProductSubscribeForm_query$key, PaymentMethod } from '@/queries/__generated__/marketplaceProductSubscribeForm_query.graphql';
 import Alert from '@mui/material/Alert';
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
@@ -29,10 +31,12 @@ import MarketplaceProductSubscribeSummary from './marketplace-product-subscribe-
 import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
+  bookingAvailable: boolean;
+  bookingAvailabilityMessage: string;
   rootDataRelay: marketplaceProductSubscribeForm_query$key;
 };
 
-const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
+const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailabilityMessage, rootDataRelay }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment marketplaceProductSubscribeForm_query on Query @argumentDefinitions(productId: { type: "String!" }) {
@@ -82,6 +86,8 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
             supportsSubscriptionAutoRenewal
             billingMode
             acceptedPaymentMethods
+            availableDays
+            requiredDaysPerWeek
             numberOfResourcesToBook
             cancellationPolicyType
             cancellationRefundRules {
@@ -98,6 +104,10 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
   const [commitAddSubscription, isInFlight] = useMutation<marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation>(graphql`
     mutation marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation($input: AddMarketplaceBookingSubscriptionInput!) {
       addMarketplaceBookingSubscription(input: $input) {
+        accessError {
+          message
+          upgradeRequired
+        }
         marketplaceBookingSubscription {
           id
           startedAt
@@ -183,6 +193,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | ''>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>(() => [...(rootData.me?.emails ?? [])]);
   const [autoRenew, setAutoRenew] = useState(true);
+  const [weeklySelectedDays, setWeeklySelectedDays] = useState<DayOfWeek[]>([]);
   const [hasAcceptedTermsAndConditions, setHasAcceptedTermsAndConditions] = useState(false);
 
   const effectiveSelectedPricingId = useMemo(() => {
@@ -231,6 +242,12 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
     ? (rootData.productPricingCadences.find((item) => item.type === selectedPricingOption.purchaseCadence)?.name ?? selectedPricingOption.purchaseCadence)
     : '';
   const billingModeLabel = selectedPricingOption?.billingMode === 'IN_ARREARS' ? 'First invoice due now, later cycles billed in arrears' : 'Payment due at checkout';
+  const requiredDaysPerWeek = selectedPricingOption?.requiredDaysPerWeek ?? 0;
+  const weeklySelectionRequired = selectedPricingOption?.purchaseCadence === 'WEEKLY' && selectedPricingOption?.requiredDaysPerWeek != null;
+  const eligibleSelectedDays = (
+    selectedPricingOption?.availableDays?.length ? selectedPricingOption.availableDays : ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']
+  ) as DayOfWeek[];
+  const weeklySelectionGuidance = weeklySelectionRequired ? `Choose exactly ${requiredDaysPerWeek} days per week.` : null;
 
   const handleSubmit = () => {
     if (!rootData.product || !selectedPricingOption) {
@@ -239,6 +256,11 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
 
     if (!effectivePaymentMethod) {
       toast.error(<NotificationContent content="Select a payment method to continue." />);
+      return;
+    }
+
+    if (!isWeeklySelectionComplete(weeklySelectionRequired, weeklySelectedDays, requiredDaysPerWeek)) {
+      toast.error(<NotificationContent content={weeklySelectionGuidance ?? 'Choose the required days per week to continue.'} />);
       return;
     }
 
@@ -267,12 +289,19 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
           quantity,
           productVersionId: rootData.product.latestProductVersionId,
           pricingId: selectedPricingOption.id,
+          weeklySelectedDays: toWeeklySelectedDaysInput(weeklySelectionRequired, weeklySelectedDays),
           checkoutReturnUrl: new URL(subscriptionDetailsLink, window.location.origin).toString(),
         },
       },
       onCompleted: (response, errors) => {
         if (errors?.length) {
           toast(<NotificationContent content={`We couldn't start this plan. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+          return;
+        }
+
+        const accessError = response.addMarketplaceBookingSubscription?.accessError;
+        if (accessError) {
+          toast(<NotificationContent content={accessError.message} />, errorNotificationOptions);
           return;
         }
 
@@ -341,6 +370,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
               onChange={(event) => {
                 setSelectedPricingId(event.target.value);
                 setPaymentMethod('');
+                setWeeklySelectedDays([]);
               }}
             >
               {pricingChoices.map((choice) => (
@@ -351,8 +381,40 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
             </TextField>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-              <DatePicker label="Start date" value={startedAt} onChange={(value) => value && setStartedAt(value)} sx={{ flex: 1 }} />
+              <DatePicker
+                label="Start date"
+                value={startedAt}
+                onChange={(value) => value && setStartedAt(value)}
+                shouldDisableDate={(date) => !isDateAvailableForPrice(date, selectedPricingOption?.availableDays)}
+                slotProps={{ textField: { helperText: getAvailableDaysGuidance(selectedPricingOption?.availableDays) } }}
+                sx={{ flex: 1 }}
+              />
             </Stack>
+
+            {weeklySelectionRequired ? (
+              <Box>
+                <BodyIconTypography label={weeklySelectionGuidance ?? ''} sx={{ mb: 1 }} />
+                <StackRow spacing={1} sx={{ flexWrap: 'wrap' }}>
+                  {eligibleSelectedDays.map((day) => {
+                    const selected = weeklySelectedDays.includes(day);
+                    const atMaximum = weeklySelectedDays.length >= requiredDaysPerWeek;
+
+                    return (
+                      <Button
+                        key={day}
+                        size="small"
+                        variant={selected ? 'contained' : 'outlined'}
+                        disabled={!selected && atMaximum}
+                        onClick={() => setWeeklySelectedDays((current) => toggleWeeklySelectedDay(current, day, requiredDaysPerWeek))}
+                        sx={{ textTransform: 'none' }}
+                      >
+                        {day.charAt(0) + day.slice(1).toLowerCase()}
+                      </Button>
+                    );
+                  })}
+                </StackRow>
+              </Box>
+            ) : null}
 
             <TextField
               label="Quantity"
@@ -422,13 +484,20 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
                 <Button
                   variant="contained"
                   onClick={handleSubmit}
-                  disabled={isInFlight || !selectedPricingOption || (!!rootData.product.organization.customerFacingTermsAndConditionsUrl && !hasAcceptedTermsAndConditions)}
+                  disabled={
+                    !bookingAvailable ||
+                    isInFlight ||
+                    !selectedPricingOption ||
+                    !isWeeklySelectionComplete(weeklySelectionRequired, weeklySelectedDays, requiredDaysPerWeek) ||
+                    (!!rootData.product.organization.customerFacingTermsAndConditionsUrl && !hasAcceptedTermsAndConditions)
+                  }
                   sx={{ textTransform: 'none' }}
                 >
                   Start plan
                 </Button>
               </StackRow>
             </Box>
+            {!bookingAvailable ? <Alert severity="info">{bookingAvailabilityMessage}</Alert> : null}
           </StackColumn>
         </CardContent>
       </Card>

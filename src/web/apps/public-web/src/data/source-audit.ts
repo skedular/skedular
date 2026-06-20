@@ -4,48 +4,47 @@ export const sourceAudit = [
     sourceType: "draft",
     urlOrPath: "src/web/apps/public-web/public-website-content-draft.md",
     reviewedAt: "2026-06-05",
-    evidenceNotes: "Primary source for homepage, product pages, pricing, feature inventory, future items, SEO, accessibility, and performance.",
+    evidenceNotes:
+      "Primary source for homepage, product pages, pricing, feature inventory, future items, SEO, accessibility, and performance.",
   },
   {
     id: "current-public-blog",
     sourceType: "current-public-url",
     urlOrPath: "https://getskedular.com/blog/*",
     reviewedAt: "2026-06-05",
-    evidenceNotes: "Represented by current-public-content.ts migration inventory; exact live crawl should be refreshed before launch.",
-  },
-  {
-    id: "current-public-support",
-    sourceType: "current-public-url",
-    urlOrPath: "https://getskedular.com/support/*",
-    reviewedAt: "2026-06-05",
-    evidenceNotes: "Represented by support article migration inventory; exact live crawl should be refreshed before launch.",
+    evidenceNotes:
+      "Represented by current-public-content.ts migration inventory; exact live crawl should be refreshed before launch.",
   },
   {
     id: "current-company-page",
     sourceType: "current-public-url",
     urlOrPath: "https://getskedular.com/company/",
     reviewedAt: "2026-06-05",
-    evidenceNotes: "Source for the migrated About Skedular company story, timeline, founder context, and support contact.",
+    evidenceNotes:
+      "Source for the migrated About Skedular company story, timeline, founder context, and support contact.",
   },
   {
     id: "current-terms-of-service",
     sourceType: "current-public-url",
     urlOrPath: "https://getskedular.com/terms-of-service/",
     reviewedAt: "2026-06-05",
-    evidenceNotes: "Source for the legal terms summary page; exact terms require business or legal owner review before production launch.",
+    evidenceNotes:
+      "Source for the legal terms summary page; exact terms require business or legal owner review before production launch.",
   },
   {
     id: "current-privacy-policy",
     sourceType: "current-public-url",
     urlOrPath: "https://getskedular.com/privacy-policy/",
     reviewedAt: "2026-06-05",
-    evidenceNotes: "Source for the privacy summary page; exact policy requires business or privacy owner review before production launch.",
+    evidenceNotes:
+      "Source for the privacy summary page; exact policy requires business or privacy owner review before production launch.",
   },
   {
     id: "comparison-references",
     sourceType: "competitor-reference",
     urlOrPath: "Draft-listed comparison alternatives",
     reviewedAt: "2026-06-05",
-    evidenceNotes: "Use as positioning context only; do not copy wording, claims, or layouts.",
+    evidenceNotes:
+      "Use as positioning context only; do not copy wording, claims, or layouts.",
   },
 ];

@@ -35,7 +35,8 @@ public class EventMapper : IEventMapper
             {
                 LocationType.Private => Api.Shared.Clients.Events.Skedular.Location.V1.LocationType.Private,
                 LocationType.Marketplace => Api.Shared.Clients.Events.Skedular.Location.V1.LocationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             OrganizationId = src.Organization.Id,
             OpeningHours = MapTo(src.OpeningHours),

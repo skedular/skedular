@@ -25,6 +25,7 @@ public class Organization : EntityBaseWithDeleted
     public ListingMetadata? MarketplaceListingMetadata { get; set; }
     public string BillingCycle { get; set; }
     public int InvoiceDueInDays { get; set; }
+    public DateTimeOffset? SpacesTrialStartedAt { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
@@ -80,5 +81,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasIndex(item => item.IsOwnershipVerified);
         builder.HasIndex(item => item.BillingCycle);
         builder.HasIndex(item => item.InvoiceDueInDays);
+        builder.HasIndex(item => item.SpacesTrialStartedAt);
     }
 }

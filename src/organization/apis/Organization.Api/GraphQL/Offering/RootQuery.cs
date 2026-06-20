@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using HotChocolate.Types;
 using Organization.Api.Mappers;
@@ -21,7 +22,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
             IsEnterprise = matchedOffering.IsEnterpriseOffering(),
             Name = offering.Name,
             UnitPrice = offering.UnitPrice,
-            FixedPrice = matchedOffering.IsPayAsYouGoOffering() ? null : 0,
+            Currency = new CurrencyDetails { Type = offering.Currency, Name = offering.Currency.ToCurrencyName() },
+            FixedPrice = offering.FixedPrice,
             FeatureSet = graphQlMapper.MapTo(offering).ToArray(),
             UnderPriceLines = offering.UnderPriceLines.ToArray(),
             Free = matchedOffering.IsFreeOffering(),

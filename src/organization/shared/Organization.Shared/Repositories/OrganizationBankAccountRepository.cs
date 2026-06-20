@@ -70,14 +70,16 @@ public static class OrganizationBankAccountExtensions
                 OrganizationBankAccountOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                     ? originalQuery.OrderBy(x => x.Name)
                     : originalQuery.OrderByDescending(x => x.Name),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             }, (query, orderField) =>
                 orderField.Field switch
                 {
                     OrganizationBankAccountOrderField.Name => orderField.Direction == OrderDirection.Ascending
                         ? query.ThenBy(x => x.Name)
                         : query.ThenByDescending(x => x.Name),
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(null,
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
                 }).ThenBy(query => query.Id);
         }
     }
@@ -155,7 +157,8 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
                     nameof(OrganizationBankAccount.Name),
                     query => query.Name,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

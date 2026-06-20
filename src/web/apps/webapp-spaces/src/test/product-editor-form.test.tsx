@@ -123,6 +123,8 @@ const baseProps = {
         maxAllowedResourcesLockTimePaidViaBankTransfer: '1',
         billingMode: 'UPFRONT',
         acceptedPaymentMethods: ['CARD'],
+        availableDays: [],
+        requiredDaysPerWeek: '',
       },
     ],
   },

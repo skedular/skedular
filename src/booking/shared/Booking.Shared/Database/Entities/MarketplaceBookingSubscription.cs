@@ -15,6 +15,8 @@ public class MarketplaceBookingSubscription : EntityBaseWithDeleted
     public string Status { get; set; }
     public bool AutoRenew { get; set; }
     public bool CancelAtPeriodEnd { get; set; }
+    public ICollection<string> WeeklySelectedDays { get; set; } = [];
+
     public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
     public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];
     public virtual ICollection<Team> InvolvedTeams { get; set; } = [];
@@ -36,6 +38,9 @@ public class MarketplaceBookingSubscriptionConfiguration : IEntityTypeConfigurat
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Status).HasMaxLength(Constants.MaxMarketplaceBookingSubscriptionStatusLength);
+        builder.Property(item => item.AutoRenew);
+        builder.Property(item => item.CancelAtPeriodEnd);
+        builder.Property(item => item.WeeklySelectedDays).HasColumnType("jsonb");
 
         builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedMarketplaceBookingSubscription);
         builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedMarketplaceBookingSubscription);
@@ -50,7 +55,5 @@ public class MarketplaceBookingSubscriptionConfiguration : IEntityTypeConfigurat
         builder.HasIndex(item => item.CancelledAt);
         builder.HasIndex(item => item.NextRenewalAt);
         builder.HasIndex(item => item.Status);
-        builder.Property(item => item.AutoRenew);
-        builder.Property(item => item.CancelAtPeriodEnd);
     }
 }

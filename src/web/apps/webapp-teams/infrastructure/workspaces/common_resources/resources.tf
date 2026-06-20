@@ -58,6 +58,10 @@ locals {
       value = "https://${module.shared_common.webapp_spaces_domain_name}"
     },
     {
+      key   = "NEXT_PUBLIC_SKEDULAR_HOST_APP_URL"
+      value = "https://${module.shared_common.webapp_host_domain_name}"
+    },
+    {
       key   = "NEXT_PUBLIC_MICROANALYTICS_APP_ID"
       value = module.shared_common.microanalytics_webapp_app_id
     },

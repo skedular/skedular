@@ -324,7 +324,8 @@ public class CustomerService(
                         patch.EmailVerified = request.Identity.EmailVerified;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+                        throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
+                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.");
                 }
             }
 

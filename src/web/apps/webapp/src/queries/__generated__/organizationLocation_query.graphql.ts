@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5cfcbc0b775a4572c90e6164d97f95ca>>
+ * @generated SignedSource<<8c9959f746ecc816cde05c937e1a5bd6>>
  * @lightSyntaxTransform
  */
 
@@ -10,7 +10,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type LocationRestrictedInformationCategory = "ACCESS" | "ACCESSIBILITY" | "AFTER_HOURS" | "CHECK_IN" | "CHECK_OUT" | "CLEANING" | "DELIVERIES" | "EQUIPMENT" | "EVACUATION" | "GUESTS" | "HOUSE_RULES" | "KITCHEN" | "MAINTENANCE" | "MEETING_ROOMS" | "NOISE" | "OTHER" | "PARKING" | "PETS" | "SECURITY" | "SMOKING" | "STORAGE" | "WASTE" | "WIFI" | "%future added value";
 export type LocationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
-export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
+export type OrganizationType = "HOST" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationLocation_query$data = {
   readonly emailsToShowLatestCapabilities: ReadonlyArray<string>;

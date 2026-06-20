@@ -20,6 +20,9 @@ public class MarketplaceBooking : EntityBase
     public decimal? TaxAmount { get; set; }
     public decimal? TaxRatePercentage { get; set; }
     public decimal? TotalAmount { get; set; }
+    public decimal? HostCommissionRatePercentage { get; set; }
+    public decimal? HostCommissionAmount { get; set; }
+    public decimal? HostPayoutAmount { get; set; }
     public string? Currency { get; set; }
     public string? InvoiceUrl { get; set; }
     public string? InvoiceNumber { get; set; }
@@ -64,6 +67,9 @@ public class MarketplaceBookingConfiguration : IEntityTypeConfiguration<Marketpl
         builder.Property(item => item.TaxAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.TaxRatePercentage).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.TotalAmount).HasColumnType("DECIMAL(18,4)");
+        builder.Property(item => item.HostCommissionRatePercentage).HasColumnType("DECIMAL(18,4)");
+        builder.Property(item => item.HostCommissionAmount).HasColumnType("DECIMAL(18,4)");
+        builder.Property(item => item.HostPayoutAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(item => item.InvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.InvoiceNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8bcd67f04bfcb4d01d622fc72615c48f>>
+ * @generated SignedSource<<9f8bfbc695557cfba16e94ea98812859>>
  * @lightSyntaxTransform
  */
 
@@ -26,7 +26,7 @@ export type payMarketplaceBooking_makeBookingPaymentNotRequiredMutation$data = {
           readonly type: PaymentStatus;
         };
       } | null | undefined;
-    };
+    } | null | undefined;
   };
 };
 export type payMarketplaceBooking_makeBookingPaymentNotRequiredMutation$rawResponse = {
@@ -40,7 +40,7 @@ export type payMarketplaceBooking_makeBookingPaymentNotRequiredMutation$rawRespo
           readonly type: PaymentStatus;
         };
       } | null | undefined;
-    };
+    } | null | undefined;
   };
 };
 export type payMarketplaceBooking_makeBookingPaymentNotRequiredMutation = {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c39f105eb235d820c1247cd255b2c09c>>
+ * @generated SignedSource<<f85d9728a51079b5630a19ea874da74a>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
+export type OrganizationType = "HOST" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type rootShell_rootQuery$variables = {
   organizationCustomDomain: string;
 };

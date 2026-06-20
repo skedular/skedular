@@ -1,51 +1,32 @@
+import { generateAllComparisonPageTargets } from "./comparison";
 import type { ComparisonPage } from "./content-types";
 
-export const comparisonPages: ComparisonPage[] = [
-  {
-    id: "skedular-vs-skedda",
-    slug: "skedular-vs-skedda",
-    path: "/compare/skedular-vs-skedda",
-    competitorName: "Skedda",
-    title: "Skedular vs Skedda | Workspace booking and operations",
-    description: "Compare Skedular's workspace discovery, Teams, Spaces, payments, and operator workflows with Skedda alternatives.",
+// Generate comparison pages from shared data
+// This replaces the legacy one-off comparison implementation with no redirect or alias
+// Full comparison pages are generated from evidence-based shared data
+
+const generatedTargets = generateAllComparisonPageTargets();
+
+export const comparisonPages: ComparisonPage[] = generatedTargets.map(
+  (target) => ({
+    id: target.id,
+    slug: target.slug,
+    path: target.path,
+    competitorName:
+      target.competitorId.charAt(0).toUpperCase() +
+      target.competitorId.slice(1), // Capitalize competitor ID
+    title: target.title,
+    description: target.description,
     searchIntent: "Visitors comparing workspace booking software.",
-    skedularPositioning:
-      "Skedular is positioned for public workspace discovery, private workplace management, and operator commerce in one product family.",
+    skedularPositioning: target.whySkedular,
     claimList: [
-      "Use neutral language unless a competitor claim is verified.",
-      "Emphasize Skedular's Teams and Spaces distinction.",
-      "Do not copy competitor wording or layouts.",
+      target.overview,
+      target.pricingComparison,
+      target.integrationComparison,
     ],
-    primaryCtaId: "book-demo",
-    metadataStatus: "published",
+    primaryCtaId: target.primaryCtaId,
+    metadataStatus:
+      target.publicationStatus === "published" ? "published" : "drafted",
     competitorReviewStatus: "pending",
-  },
-  {
-    id: "skedular-vs-robin",
-    slug: "skedular-vs-robin",
-    path: "/compare/skedular-vs-robin",
-    competitorName: "Robin",
-    title: "Skedular vs Robin | Hybrid workplace and workspace operations",
-    description: "Compare Skedular's hybrid workplace and operator workflow direction with Robin alternatives.",
-    searchIntent: "Organization buyers comparing hybrid workplace platforms.",
-    skedularPositioning: "Skedular speaks to organization teams and workspace operators without forcing every visitor into one buyer category.",
-    claimList: ["Keep booking language simple.", "Separate Teams from Spaces.", "Use reviewed product capability claims only."],
-    primaryCtaId: "book-demo",
-    metadataStatus: "published",
-    competitorReviewStatus: "pending",
-  },
-  {
-    id: "skedular-vs-envoy",
-    slug: "skedular-vs-envoy",
-    path: "/compare/skedular-vs-envoy",
-    competitorName: "Envoy",
-    title: "Skedular vs Envoy | Workplace booking and flexible space management",
-    description: "Compare Skedular's workspace booking, team coordination, and operator commerce model with Envoy alternatives.",
-    searchIntent: "Teams evaluating workplace experience platforms.",
-    skedularPositioning: "Skedular combines public-facing discovery, private workplace management, and operator-facing workspace commerce messaging.",
-    claimList: ["Avoid unsupported security comparisons.", "Use plain buyer-specific value.", "Route next steps through configured URLs."],
-    primaryCtaId: "book-demo",
-    metadataStatus: "published",
-    competitorReviewStatus: "pending",
-  },
-];
+  }),
+);

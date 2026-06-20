@@ -103,6 +103,21 @@ const getChangedTeamFields = (left: TeamDetails | null, right: TeamDetails): Tea
   return (Object.keys(teamPatchFields) as (keyof TeamDetails)[]).filter((field) => left[field] !== right[field]).map((field) => teamPatchFields[field]);
 };
 
+const getValidTeamPatchFields = (fieldsToUpdate: TeamPatchField[], values: TeamDetails): TeamPatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    const formField = (Object.entries(teamPatchFields) as [keyof TeamDetails, TeamPatchField][]).find(([, field]) => field === patchField)?.[0];
+    if (!formField) {
+      return false;
+    }
+
+    try {
+      teamSchema.validateSyncAt(formField, values);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembersRelay, organizationCustomDomain, teamId }: Props) => {
   const rootData = useFragment<organizationTeam_query$key>(
     graphql`
@@ -406,9 +421,11 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
     setSelectedMemberIds((current) => (current.includes(memberId) ? current.filter((id) => id !== memberId) : current.concat(memberId)));
   };
 
-  const handleTeamDetailUpdateClick = (fieldsToUpdate: TeamPatchField[], { name, about, timezone, primaryLocationId }: TeamDetails) => {
+  const handleTeamDetailUpdateClick = (fieldsToUpdate: TeamPatchField[], values: TeamDetails) => {
+    const { name, about, timezone, primaryLocationId } = values;
     const team = rootData.team;
-    if (!team || !teamSchema.isValidSync({ name, about, timezone, primaryLocationId })) {
+    const validFieldsToUpdate = getValidTeamPatchFields(fieldsToUpdate, values);
+    if (!team || validFieldsToUpdate.length === 0) {
       return;
     }
 
@@ -422,7 +439,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         input: {
           clientMutationId: uuid(),
           id: team.id,
-          fieldsToUpdate,
+          fieldsToUpdate: validFieldsToUpdate,
           name,
           about,
           timezone,

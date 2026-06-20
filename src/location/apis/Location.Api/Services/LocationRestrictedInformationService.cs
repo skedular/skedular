@@ -138,7 +138,8 @@ public class LocationRestrictedInformationService(
                         existing.SortOrder = request.RestrictedInformation.SortOrder;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null);
+                        throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
+                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.");
                 }
             }
 

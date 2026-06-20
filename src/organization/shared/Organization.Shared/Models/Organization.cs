@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Models;
+using Organization.Shared.Models.PricingCatalog;
 
 namespace Organization.Shared.Models;
 
@@ -25,6 +26,7 @@ public class Organization : ModelBaseWithDeleted
     public IReadOnlyList<OrganizationMember> OrganizationMembers { get; set; } = [];
     public TermsOfUse? TermsOfUse { get; set; }
     public IReadOnlyList<OrganizationOffering> OrganizationOfferings { get; set; } = [];
+    public OrganizationSpacesSubscription? OrganizationSpacesSubscription { get; set; }
     public IReadOnlyList<DailyMemberCountRecording> DailyMemberCountRecordings { get; set; } = [];
     public IReadOnlyList<IndustrySubCategory> IndustrySubCategories { get; set; } = [];
     public IReadOnlyList<JoinInvitation> JoinInvitations { get; set; } = [];
@@ -49,4 +51,6 @@ public class Organization : ModelBaseWithDeleted
 
     public OrganizationBillingCycle BillingCycle { get; set; }
     public int InvoiceDueInDays { get; set; }
+    public DateTimeOffset? SpacesTrialStartedAt { get; set; }
+    public DateTimeOffset? SpacesTrialEndsAt => SpacesTrialStartedAt?.AddDays(14);
 }

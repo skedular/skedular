@@ -74,7 +74,8 @@ public class TeamGrpcService(
                 {
                     TeamOrderField.Name => Shared.Models.TeamOrderField.Name,
                     TeamOrderField.About => Shared.Models.TeamOrderField.About,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
                 };
 
                 var direction = item.Direction == OrderDirection.Ascending
@@ -151,7 +152,8 @@ public class TeamGrpcService(
                 TeamPatchField.Timezone => Models.TeamPatchField.Timezone,
                 TeamPatchField.PrimaryLocation => Models.TeamPatchField.PrimaryLocation,
                 TeamPatchField.FeatureImages => Models.TeamPatchField.FeatureImages,
-                _ => throw new ArgumentOutOfRangeException(nameof(f), f, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(f), f,
+                    $"Unexpected value for {nameof(f)}: {f}. Update enum mapping or caller input.")
             })
             .ToHashSet();
         var hasMembers = protoFields.Contains(TeamPatchField.Members);

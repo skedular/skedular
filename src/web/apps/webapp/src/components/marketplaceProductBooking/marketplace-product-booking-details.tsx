@@ -72,6 +72,18 @@ const RootQuery = graphql`
       marketplaceBooking {
         id
         quantity
+        failure {
+          id
+          category {
+            type
+            name
+          }
+          finalizedAt
+          customerAction {
+            type
+            name
+          }
+        }
         refund {
           currency {
             type
@@ -156,6 +168,18 @@ const BookingSubscription = graphql`
       }
       marketplaceBooking {
         id
+        failure {
+          id
+          category {
+            type
+            name
+          }
+          finalizedAt
+          customerAction {
+            type
+            name
+          }
+        }
         refund {
           currency {
             type
@@ -367,6 +391,18 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                   </Alert>
                 ) : null}
 
+                {marketplaceBooking.failure ? (
+                  <Alert severity="warning" sx={{ mt: 3, borderRadius: 3 }}>
+                    <SubtitleIconTypography label={marketplaceBooking.failure.category.name} />
+                    <BodyIconTypography label={getMarketplaceBookingFailureMessage(marketplaceBooking.failure.category.type)} sx={{ mt: 0.5 }} />
+                    {marketplaceBooking.failure.customerAction.type === 'Rebook' ? (
+                      <Button onClick={() => router.back()} sx={{ mt: 1, textTransform: 'none' }} variant="outlined">
+                        Start a new booking
+                      </Button>
+                    ) : null}
+                  </Alert>
+                ) : null}
+
                 {marketplaceBooking.refund ? (
                   <MarketplaceRefundStatusCard
                     entityLabel="booking"
@@ -506,6 +542,17 @@ const toMarketplaceBookingCancellationErrorMessage = (message: string) => {
   }
 
   return message;
+};
+
+const getMarketplaceBookingFailureMessage = (category: string) => {
+  switch (category) {
+    case 'AvailabilityConflict':
+      return 'The requested time is no longer available. Please start a new booking to check the latest availability.';
+    case 'PaymentExpired':
+      return 'Your payment window expired, so the reserved capacity was released. Please start a new booking to check availability again.';
+    default:
+      return 'We could not complete your payment, so the reserved capacity was released. Please start a new booking to check availability again.';
+  }
 };
 
 const MemoMarketplaceProductBookingDetails = memo(MarketplaceProductBookingDetails);

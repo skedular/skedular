@@ -1,0 +1,18 @@
+---
+import DocumentationCardGrid from "../../components/DocumentationCardGrid.astro";
+import DocumentationLayout from "../../components/DocumentationLayout.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { documentationProducts, getProductPath } from "../../data/documentation";
+
+const products = {
+  teams: { title: "Skedular Teams", description: "Private workplace coordination for organizations managing desks, rooms, people, and availability." },
+  spaces: { title: "Skedular Spaces", description: "Commercial workspace operations for operators selling and managing bookable workspace." },
+  host: { title: "Skedular Host", description: "Simple, place-first rental management for independent hosts." },
+};
+---
+<SiteLayout bodyClass="documentation-page" title="Skedular Documentation | Product guides and practical help" description="Practical Skedular documentation for Teams, Spaces, and Host." canonicalPath="/docs" structuredDataType="BreadcrumbList" breadcrumbs={[{ name: "Home", path: "/" }, { name: "Documentation", path: "/docs" }]}>
+  <DocumentationLayout breadcrumbs={[{ name: "Documentation", path: "/docs" }]}>
+    <section class="documentation-hero"><p class="eyebrow">Skedular Documentation</p><h1>Find the right guide for the way you work</h1><p class="lead">Teams supports private workplaces. Spaces supports commercial workspace operators. Host keeps independent place rental simple.</p></section>
+    <DocumentationCardGrid items={[{ title: "Core concepts", description: "A shared glossary for organizations, locations, resources, bookings, availability, and the boundaries between products.", href: "/docs/shared/core-concepts/skedular-concepts", eyebrow: "Shared documentation" }, ...documentationProducts.map((product) => ({ ...products[product], href: getProductPath(product), eyebrow: "Product documentation" }))]} />
+  </DocumentationLayout>
+</SiteLayout>

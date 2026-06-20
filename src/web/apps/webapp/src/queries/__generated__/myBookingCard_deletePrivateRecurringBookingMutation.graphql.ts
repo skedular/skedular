@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4474425a025df1f8665ee98e053419dd>>
+ * @generated SignedSource<<f3ab200f9ad5331047caa2e395d38c86>>
  * @lightSyntaxTransform
  */
 
@@ -19,7 +19,7 @@ export type myBookingCard_deletePrivateRecurringBookingMutation$data = {
   readonly deletePrivateRecurringBooking: {
     readonly recurringBooking: {
       readonly id: string;
-    };
+    } | null | undefined;
   };
 };
 export type myBookingCard_deletePrivateRecurringBookingMutation = {

@@ -173,7 +173,8 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
                     nameof(JoinInvitation.Status),
                     query => query.Status,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

@@ -1,0 +1,16 @@
+---
+import SpacesBillingLanding from "../../../components/SpacesBillingLanding.astro";
+import DocumentationLayout from "../../../components/DocumentationLayout.astro";
+import SiteLayout from "../../../layouts/SiteLayout.astro";
+
+const breadcrumbs = [
+  { name: "Documentation", path: "/docs" },
+  { name: "Skedular Spaces", path: "/docs/spaces" },
+  { name: "Billing and payments", path: "/docs/spaces/billing-and-payments" },
+];
+---
+<SiteLayout bodyClass="documentation-page" title="Billing and payments | Skedular Spaces documentation" description="Configure how customer purchases are billed, paid, invoiced, and recorded in Skedular Spaces." canonicalPath="/docs/spaces/billing-and-payments" structuredDataType="BreadcrumbList" breadcrumbs={breadcrumbs}>
+  <DocumentationLayout breadcrumbs={breadcrumbs} product="spaces" category="billing-and-payments">
+    <SpacesBillingLanding />
+  </DocumentationLayout>
+</SiteLayout>

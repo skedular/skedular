@@ -109,6 +109,33 @@ const getLockfileVersions = (lockText, packageName) => {
   return versions;
 };
 
+const getImporterBlock = (lockText, importerName) => {
+  const escapedImporter = importerName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp(`^  ${escapedImporter}:\\n([\\s\\S]*?)(?=^  \\S|^packages:|^snapshots:)`, 'm');
+  return pattern.exec(lockText)?.[1] ?? null;
+};
+
+const getDependencySectionBlock = (importerBlock, section) => {
+  const pattern = new RegExp(`^    ${section}:\\n([\\s\\S]*?)(?=^    \\S|^  \\S|^packages:|^snapshots:)`, 'm');
+  return pattern.exec(importerBlock)?.[1] ?? null;
+};
+
+const getDirectLockfileVersion = (lockText, usage, packageName) => {
+  const importerBlock = getImporterBlock(lockText, usage.workspaceName);
+  if (!importerBlock) return null;
+
+  const sectionBlock = getDependencySectionBlock(importerBlock, usage.section);
+  if (!sectionBlock) return null;
+
+  const escapedPackage = packageName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const packagePattern = new RegExp(`^      '${escapedPackage}':\\n([\\s\\S]*?)(?=^      \\S|^    \\S|^  \\S|^packages:|^snapshots:)`, 'm');
+  const packageBlock = packagePattern.exec(sectionBlock)?.[1];
+  if (!packageBlock) return null;
+
+  const version = /^        version: (.+)$/m.exec(packageBlock)?.[1]?.trim();
+  return version?.split('(')[0] ?? null;
+};
+
 const findLockfileMismatches = (lockText, packageToSpecs) => {
   const mismatches = [];
 
@@ -116,7 +143,7 @@ const findLockfileMismatches = (lockText, packageToSpecs) => {
     const workspacesUsingPackage = new Set(usages.map((usage) => usage.workspaceName));
     if (workspacesUsingPackage.size < 2) continue;
 
-    const versions = getLockfileVersions(lockText, packageName);
+    const versions = new Set(usages.map((usage) => getDirectLockfileVersion(lockText, usage, packageName)).filter(Boolean));
     if (versions.size <= 1) continue;
 
     mismatches.push({ packageName, versions: Array.from(versions).sort() });

@@ -94,7 +94,8 @@ public class BookingPaymentService(
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.");
         }
 
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);

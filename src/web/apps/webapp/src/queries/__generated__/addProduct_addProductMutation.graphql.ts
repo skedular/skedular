@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7732061af696d196f414100a8aa2d846>>
+ * @generated SignedSource<<e5e680bfbc62cab3dcea9dd963139d87>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
+export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
@@ -43,6 +44,7 @@ export type ListingMetadataInput = {
 };
 export type ProductPricingInput = {
   acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+  availableDays?: ReadonlyArray<DayOfWeek> | null | undefined;
   billingMode: ProductPricingBillingMode;
   bookingCadence: ProductPricingCadence;
   cancellationPolicyType: ProductPricingCancellationPolicyType;
@@ -58,6 +60,7 @@ export type ProductPricingInput = {
   numberOfResourcesToBook: number;
   price: any;
   purchaseCadence: ProductPricingCadence;
+  requiredDaysPerWeek?: number | null | undefined;
   supportsSubscriptionAutoRenewal: boolean;
 };
 export type ProductPricingCancellationRefundRuleInput = {

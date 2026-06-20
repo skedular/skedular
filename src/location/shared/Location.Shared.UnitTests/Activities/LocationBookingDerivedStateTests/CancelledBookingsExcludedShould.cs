@@ -1,16 +1,14 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services.Models;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Location.Shared.Activities;
-using Location.Shared.Database;
+using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
-using Microsoft.EntityFrameworkCore;
 using Temporalio.Testing;
 using BookingProto = Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking;
 using LocationEntity = Location.Shared.Database.Entities.Location;
@@ -26,14 +24,6 @@ namespace Location.Shared.UnitTests.Activities.LocationBookingDerivedStateTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class CancelledBookingsExcludedShould
 {
-    private static LocationDbContext CreateInMemoryContext()
-    {
-        var options = new DbContextOptionsBuilder<LocationDbContext>()
-            .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
-            .Options;
-        return new TestLocationDbContext(options, new CustomDbContextOptions<LocationDbContext> { IsPooled = false });
-    }
-
     private static AsyncUnaryCall<T> CreateGrpcResponse<T>(T response) where T : class =>
         new(
             Task.FromResult(response),
@@ -57,6 +47,7 @@ public class CancelledBookingsExcludedShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IResourceRepository resourceRepository,
+        [Frozen] ILocationBookingRecordingRepository locationBookingRecordingRepository,
         [Frozen] BookingConfiguration bookingConfiguration,
         [Frozen] CallInvoker callInvoker,
         [Frozen] IRandomHelper randomHelper,
@@ -76,14 +67,20 @@ public class CancelledBookingsExcludedShould
             Id = LocationId, Name = "Test Office", OrganizationId = "org-test", Type = LocationTypeConstants.Private
         };
 
-        await using var dbContext = CreateInMemoryContext();
-
         var counter = 0;
+        IReadOnlyList<DailyBookingCountRecording> recordings = [];
         A.CallTo(() => randomHelper.Generate()).ReturnsLazily(() => $"id-{++counter}");
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(dbContext);
+        A.CallTo(() => repositoryFactory.LocationBookingRecordingRepository).Returns(locationBookingRecordingRepository);
+        A.CallTo(() => locationBookingRecordingRepository.ReplaceDailyRecordingsAsync(
+                LocationId,
+                A<IReadOnlyList<DailyBookingCountRecording>>._,
+                A<IReadOnlyList<DailyDeskBookingCountRecording>>._,
+                A<IReadOnlyList<DailyRoomBookingCountRecording>>._,
+                A<CancellationToken>._))
+            .Invokes(call => recordings = call.GetArgument<IReadOnlyList<DailyBookingCountRecording>>(1)!.ToList())
+            .Returns(Task.CompletedTask);
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(A<IReadOnlyList<string>>._, A<CancellationToken>._))
@@ -107,7 +104,6 @@ public class CancelledBookingsExcludedShould
         await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
 
         // Assert – only 2 day records, matching the 2 distinct booking days the server returned
-        var recordings = await dbContext.DailyBookingCountRecording.Include(r => r.Location).ToListAsync(TestContext.Current.CancellationToken);
         recordings.Count.ShouldBe(2);
         recordings.ShouldContain(r => r.Date == day1.StartOfDay() && r.Count == 2);
         recordings.ShouldContain(r => r.Date == day2.StartOfDay() && r.Count == 1);
@@ -119,6 +115,7 @@ public class CancelledBookingsExcludedShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IResourceRepository resourceRepository,
+        [Frozen] ILocationBookingRecordingRepository locationBookingRecordingRepository,
         [Frozen] BookingConfiguration bookingConfiguration,
         [Frozen] CallInvoker callInvoker,
         [Frozen] IRandomHelper randomHelper,
@@ -138,14 +135,20 @@ public class CancelledBookingsExcludedShould
             Id = LocationId, Name = "Empty Office", OrganizationId = "org-empty", Type = LocationTypeConstants.Private
         };
 
-        await using var dbContext = CreateInMemoryContext();
-
         var counter = 0;
+        IReadOnlyList<DailyBookingCountRecording> recordings = [];
         A.CallTo(() => randomHelper.Generate()).ReturnsLazily(() => $"id-{++counter}");
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(dbContext);
+        A.CallTo(() => repositoryFactory.LocationBookingRecordingRepository).Returns(locationBookingRecordingRepository);
+        A.CallTo(() => locationBookingRecordingRepository.ReplaceDailyRecordingsAsync(
+                LocationId,
+                A<IReadOnlyList<DailyBookingCountRecording>>._,
+                A<IReadOnlyList<DailyDeskBookingCountRecording>>._,
+                A<IReadOnlyList<DailyRoomBookingCountRecording>>._,
+                A<CancellationToken>._))
+            .Invokes(call => recordings = call.GetArgument<IReadOnlyList<DailyBookingCountRecording>>(1)!.ToList())
+            .Returns(Task.CompletedTask);
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(
@@ -165,7 +168,6 @@ public class CancelledBookingsExcludedShould
         await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
 
         // Assert
-        var recordings = await dbContext.DailyBookingCountRecording.ToListAsync(TestContext.Current.CancellationToken);
         recordings.ShouldBeEmpty();
     }
 }

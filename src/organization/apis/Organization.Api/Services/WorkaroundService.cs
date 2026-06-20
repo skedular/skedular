@@ -9,12 +9,12 @@ namespace Organization.Api.Services;
 
 public interface IWorkaroundService
 {
-    Task RepublishOrganizationAsync(string organizationId, CancellationToken cancellationToken);
+    Task RepublishOrganizationAsync(string customDomain, CancellationToken cancellationToken);
     Task RepublishAllOrganizationsAsync(CancellationToken cancellationToken);
     Task ReSyncAzureTenantAsync(string tenantId, CancellationToken cancellationToken);
     Task ReSyncAllAzureTenantsAsync(CancellationToken cancellationToken);
     Task RegenerateAllDailyAnalyticsAsync(CancellationToken cancellationToken);
-    Task RegenerateDailyAnalyticsAsync(string organizationId, CancellationToken cancellationToken);
+    Task RegenerateDailyAnalyticsAsync(string customDomain, CancellationToken cancellationToken);
 }
 
 public class WorkaroundService(
@@ -25,12 +25,9 @@ public class WorkaroundService(
     ITemporalService temporalService)
     : IWorkaroundService
 {
-    public async Task RepublishOrganizationAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task RepublishOrganizationAsync(string customDomain, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-            organizationId,
-            null,
-            cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(null, customDomain, cancellationToken);
         if (organization is null)
         {
             return;
@@ -83,12 +80,9 @@ public class WorkaroundService(
         }
     }
 
-    public async Task RegenerateDailyAnalyticsAsync(string organizationId, CancellationToken cancellationToken)
+    public async Task RegenerateDailyAnalyticsAsync(string customDomain, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-            organizationId,
-            null,
-            cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(null, customDomain, cancellationToken);
         if (organization is null || organization.IsDeleted())
         {
             return;

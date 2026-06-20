@@ -6,19 +6,21 @@ export const teamsPage: ProductPageContent = {
   title: "Workplace Management Software for Hybrid Teams & Enterprises",
   summary:
     "Desk booking software with hybrid team coordination. Manage workplace attendance, desk usage, and team presence for enterprises, government teams, and corporate offices.",
-  audience: "Enterprises, government teams, hybrid workplaces, facilities teams, executive assistants, and corporate offices.",
+  audience:
+    "Enterprises, government teams, hybrid workplaces, facilities teams, executive assistants, and corporate offices.",
 
   // Hero section content
   heroHeading: "Workplace Management Software for Hybrid Teams",
   heroDescription:
     "Help employees find the right place to work while giving workplace teams the visibility they need to coordinate attendance, manage space, and support hybrid work.",
-  heroCTAPrimary: { label: "Book a demo", href: "/contact" },
+  heroCTAPrimary: { label: "Try Teams", href: "PUBLIC_SKEDULAR_TEAMS_APP_URL" },
   heroCTASecondary: { label: "View Teams pricing", href: "/pricing/teams" },
 
   // What Is Workplace Management Software Section
   workplaceManagementDefinition: {
     heading: "What is workplace management software?",
-    subtitle: "Workplace management helps teams coordinate who works where and when.",
+    subtitle:
+      "Workplace management helps teams coordinate who works where and when.",
     description:
       "Workplace management software helps teams coordinate hybrid work by showing who will be in the office, which desks and rooms are available, and how space is being used. It replaces spreadsheets and manual coordination with a central system for attendance tracking and resource booking.",
     features: [
@@ -45,19 +47,23 @@ export const teamsPage: ProductPageContent = {
     cards: [
       {
         title: "See who is coming to the office",
-        description: "Help teams coordinate in-person work by knowing which colleagues will be onsite.",
+        description:
+          "Help teams coordinate in-person work by knowing which colleagues will be onsite.",
       },
       {
         title: "Understand how office space is being used",
-        description: "Track which desks and rooms are in demand and make better decisions about office layout.",
+        description:
+          "Track which desks and rooms are in demand and make better decisions about office layout.",
       },
       {
         title: "Support hybrid work without spreadsheets",
-        description: "Manage flexible workplace policies and coordinate who comes to the office without manual tracking.",
+        description:
+          "Manage flexible workplace policies and coordinate who comes to the office without manual tracking.",
       },
       {
         title: "Give workplace teams the tools they need",
-        description: "Help facilities and workplace teams manage office resources without chasing spreadsheets.",
+        description:
+          "Help facilities and workplace teams manage office resources without chasing spreadsheets.",
       },
     ],
   },
@@ -68,7 +74,8 @@ export const teamsPage: ProductPageContent = {
     steps: [
       {
         title: "Open Slack, Microsoft Teams, or Skedular",
-        description: "Employees access workplace tools from the applications they use daily.",
+        description:
+          "Employees access workplace tools from the applications they use daily.",
       },
       {
         title: "View attendance and team presence",
@@ -76,7 +83,8 @@ export const teamsPage: ProductPageContent = {
       },
       {
         title: "Book workspace resources",
-        description: "Reserve desks, rooms, parking spaces, or equipment in seconds.",
+        description:
+          "Reserve desks, rooms, parking spaces, or equipment in seconds.",
       },
       {
         title: "Find your space with maps",
@@ -92,7 +100,8 @@ export const teamsPage: ProductPageContent = {
       },
       {
         title: "Teams gain visibility",
-        description: "Workplace managers see attendance trends and utilization insights.",
+        description:
+          "Workplace managers see attendance trends and utilization insights.",
       },
     ],
   },
@@ -105,25 +114,39 @@ export const teamsPage: ProductPageContent = {
       featureBlocks: [
         {
           title: "Book the resources employees need",
-          description: "Make everyday workplace resources easier to find and reserve.",
+          description:
+            "Make everyday workplace resources easier to find and reserve.",
           items: ["Desks", "Meeting rooms", "Parking spaces", "Equipment"],
           accent: "emerald",
         },
         {
           title: "Help employees plan better office days",
-          description: "Help people plan office days with enough context to make the trip worthwhile.",
-          items: ["See who is coming in", "Interactive floor plans", "Office maps", "When space is available"],
+          description:
+            "Help people plan office days with enough context to make the trip worthwhile.",
+          items: [
+            "See who is coming in",
+            "Interactive floor plans",
+            "Office maps",
+            "When space is available",
+          ],
           accent: "aqua",
         },
         {
           title: "Keep teams connected",
-          description: "Keep workspace activity close to the tools teams already use.",
-          items: ["Slack", "Microsoft Teams", "Notifications", "Team booking views"],
+          description:
+            "Keep workspace activity close to the tools teams already use.",
+          items: [
+            "Slack",
+            "Microsoft Teams",
+            "Notifications",
+            "Team booking views",
+          ],
           accent: "violet",
         },
         {
           title: "Built for workplace operations",
-          description: "Support organizations that need control, reporting, and identity-aware access.",
+          description:
+            "Support organizations that need control, reporting, and identity-aware access.",
           items: ["Analytics", "SSO", "Permissions", "Reporting"],
           accent: "sunbeam",
         },
@@ -137,19 +160,23 @@ export const teamsPage: ProductPageContent = {
     cards: [
       {
         title: "One place for workplace coordination",
-        description: "Manage attendance, desks, rooms, and parking from one platform instead of juggling multiple tools.",
+        description:
+          "Manage attendance, desks, rooms, and parking from one platform instead of juggling multiple tools.",
       },
       {
         title: "Work where employees already work",
-        description: "Slack and Microsoft Teams integrations mean employees can book workspace without leaving the tools they use daily.",
+        description:
+          "Slack and Microsoft Teams integrations mean employees can book workspace without leaving the tools they use daily.",
       },
       {
         title: "Built for hybrid work",
-        description: "Support flexible workplace policies and coordinate who comes to the office without manual spreadsheets.",
+        description:
+          "Support flexible workplace policies and coordinate who comes to the office without manual spreadsheets.",
       },
       {
         title: "Enterprise ready",
-        description: "SSO, permissions, and reporting built in for organizations that need control and security.",
+        description:
+          "SSO, permissions, and reporting built in for organizations that need control and security.",
       },
     ],
   },
@@ -159,25 +186,32 @@ export const teamsPage: ProductPageContent = {
     {
       id: "interactive-floor-plans",
       heading: "Interactive floor plans",
-      subheading: "Help employees find desks, rooms, parking spaces, and workplace resources visually.",
+      subheading:
+        "Help employees find desks, rooms, parking spaces, and workplace resources visually.",
+      imageSrc: "/images/screenshots/skedular-teams/interactive-floor-plan.png",
       placeholderText: "Interactive Floor Plans Screenshot",
     },
     {
       id: "attendance-visibility",
       heading: "Attendance and workplace visibility",
-      subheading: "Understand who is coming to the office and help teams coordinate in-person work.",
+      subheading:
+        "Understand who is coming to the office and help teams coordinate in-person work.",
+      imageSrc: "/images/screenshots/skedular-teams/attendance-dashboard.png",
       placeholderText: "Attendance Dashboard Screenshot",
     },
     {
       id: "desk-room-booking",
       heading: "Desk and room booking",
       subheading: "Book desks, rooms, parking, and equipment in seconds.",
+      imageSrc: "/images/screenshots/skedular-teams/booking-interface.png",
       placeholderText: "Booking Interface Screenshot",
     },
     {
       id: "workplace-analytics",
       heading: "Workplace analytics",
-      subheading: "Track attendance, utilization, and workplace trends over time.",
+      subheading:
+        "Track attendance, utilization, and workplace trends over time.",
+      imageSrc: "/images/screenshots/skedular-teams/analytics-dashboard.png",
       placeholderText: "Analytics Dashboard Screenshot",
     },
   ],
@@ -301,7 +335,7 @@ export const teamsPage: ProductPageContent = {
     heading: "Ready to simplify workplace coordination?",
     description:
       "See how Skedular Teams helps organizations manage attendance, workplace visibility, desk booking, room booking, and hybrid work from a single platform.",
-    primaryCTA: { label: "Book a demo", href: "/contact" },
+    primaryCTA: { label: "Try Teams", href: "PUBLIC_SKEDULAR_TEAMS_APP_URL" },
     secondaryCTA: { label: "View Teams pricing", href: "/pricing/teams" },
   },
 };

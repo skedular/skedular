@@ -54,7 +54,7 @@ const AppBar = ({ rootDataRelay }: Props) => {
           familyName
           photoUrl
         }
-        myOrganizations(types: [MARKETPLACE, INDIVIDUAL]) {
+        myOrganizations(types: [MARKETPLACE]) {
           uniqueId
           customDomain
           logoUrl

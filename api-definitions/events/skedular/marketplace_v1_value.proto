@@ -121,6 +121,8 @@ message ProductPricing {
   bool                                          supportsSubscriptionAutoRenewal                = 16;
   ProductPricingCancellationPolicyType          cancellationPolicyType                         = 17;
   repeated ProductPricingCancellationRefundRule cancellationRefundRules                        = 18;
+  repeated string                                availableDays                                 = 19;
+  int32                                          requiredDaysPerWeek                           = 20;
 }
 
 message ProductPricingCancellationRefundRule {

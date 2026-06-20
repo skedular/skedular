@@ -17,6 +17,7 @@ public class AddPrivateBookingInput
     [GraphQLName("teamIds")] public IEnumerable<string>? TeamIds { get; set; } = [];
     [GraphQLName("from")] public DateTimeOffset From { get; set; }
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
+    [GraphQLName("fullOpeningHoursDate")] public DateOnly? FullOpeningHoursDate { get; set; }
     [GraphQLName("notes")] public string? Notes { get; set; }
     [GraphQLName("category")] public BookingCategory? Category { get; set; }
     [GraphQLName("resourceIds")] public IEnumerable<string>? ResourceIds { get; set; } = [];

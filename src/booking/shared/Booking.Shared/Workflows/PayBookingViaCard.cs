@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
+using Booking.Shared.Models;
 using Temporalio.Common;
 using Temporalio.Exceptions;
 using Temporalio.Workflows;
@@ -93,7 +94,7 @@ public class PayBookingViaCard
             {
                 await Workflow.ExecuteActivityAsync(
                     (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
-                        new ReleaseBookingResourcesInput(args.BookingId)),
+                        new ReleaseBookingResourcesInput(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentExpired)),
                     new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
 
                 return;
@@ -105,7 +106,7 @@ public class PayBookingViaCard
             {
                 await Workflow.ExecuteActivityAsync(
                     (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
-                        new ReleaseBookingResourcesInput(args.BookingId)),
+                        new ReleaseBookingResourcesInput(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
                     new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
             }
         }
@@ -113,7 +114,7 @@ public class PayBookingViaCard
         {
             await Workflow.ExecuteActivityAsync(
                 (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
-                    new ReleaseBookingResourcesInput(args.BookingId)),
+                    new ReleaseBookingResourcesInput(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
                 new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
         }
     }

@@ -12,7 +12,10 @@ export const spacesPage: ProductPageContent = {
   heroHeading: "Coworking Management Software for Workspace Operators",
   heroDescription:
     "Coworking management software for selling workspace, managing memberships, automating billing, publishing availability, and supporting customers. Whether you operate a coworking space, serviced office, meeting room business, or flexible workspace network, Skedular Spaces helps you spend less time on administration and more time growing your business.",
-  heroCTAPrimary: { label: "Book a demo", href: "/contact" },
+  heroCTAPrimary: {
+    label: "Try Spaces",
+    href: "PUBLIC_SKEDULAR_SPACES_APP_URL",
+  },
   heroCTASecondary: { label: "View Spaces pricing", href: "/pricing/spaces" },
 
   // Why Not Spreadsheets Section
@@ -48,11 +51,13 @@ export const spacesPage: ProductPageContent = {
       },
       {
         title: "Reduce administration",
-        description: "Automate billing, invoicing, payments, and recurring subscriptions.",
+        description:
+          "Automate billing, invoicing, payments, and recurring subscriptions.",
       },
       {
         title: "Increase visibility",
-        description: "Publish inventory through marketplaces, branded listings, and custom domains.",
+        description:
+          "Publish inventory through marketplaces, branded listings, and custom domains.",
       },
       {
         title: "Support growth",
@@ -69,11 +74,13 @@ export const spacesPage: ProductPageContent = {
       },
       {
         title: "Configure products and pricing",
-        description: "Create hourly bookings, day passes, memberships, and subscriptions.",
+        description:
+          "Create hourly bookings, day passes, memberships, and subscriptions.",
       },
       {
         title: "Publish inventory",
-        description: "Make workspace discoverable through marketplaces and custom domains.",
+        description:
+          "Make workspace discoverable through marketplaces and custom domains.",
       },
       {
         title: "Accept bookings",
@@ -104,34 +111,62 @@ export const spacesPage: ProductPageContent = {
 
   features: [
     {
-      title: "Manage every resource your customers can book from a single platform",
+      title:
+        "Manage every resource your customers can book from a single platform",
       body: "Model desks, meeting rooms, private offices, event spaces, parking, equipment, and shared resources in a way that reflects how your business operates.",
       featureBlocks: [
         {
           title: "Resource management",
           description: "Model the spaces and resources customers can book.",
-          items: ["Desks", "Rooms", "Event spaces", "Private offices", "Equipment", "Zones and tags"],
+          items: [
+            "Desks",
+            "Rooms",
+            "Event spaces",
+            "Private offices",
+            "Equipment",
+            "Zones and tags",
+          ],
           accent: "emerald",
         },
         {
           title: "Product management",
           description:
             "Create products that match real customer demand including hourly bookings, day passes, memberships, subscriptions, and recurring access.",
-          items: ["Product catalog", "Dynamic product matching", "Images", "Amenities", "Visibility controls"],
+          items: [
+            "Product catalog",
+            "Dynamic product matching",
+            "Images",
+            "Amenities",
+            "Visibility controls",
+          ],
           accent: "aqua",
         },
         {
           title: "Payments and billing",
           description:
             "Handle billing, invoicing, payments, and subscriptions without manual work. Manage billing cycles, invoices, tax, and cancellation policies from one place.",
-          items: ["Card payments", "Tax handling", "Billing cadence", "Invoicing", "Subscriptions", "Cancellation policies"],
+          items: [
+            "Card payments",
+            "Tax handling",
+            "Billing cadence",
+            "Invoicing",
+            "Subscriptions",
+            "Cancellation policies",
+          ],
           accent: "violet",
         },
         {
           title: "Publishing and brand",
           description:
             "Publish inventory through marketplaces, custom domains, branded listings, maps, and discovery experiences while maintaining ownership of your customer relationships.",
-          items: ["Marketplace publishing", "Host model", "Custom domains", "Branded listings", "Opening hours", "Maps"],
+          items: [
+            "Marketplace publishing",
+            "Host model",
+            "Custom domains",
+            "Branded listings",
+            "Opening hours",
+            "Maps",
+          ],
           accent: "sunbeam",
         },
       ],
@@ -146,15 +181,18 @@ export const spacesPage: ProductPageContent = {
       },
       {
         title: "Reduce administration",
-        description: "Automate billing, invoicing, subscriptions, and payments.",
+        description:
+          "Automate billing, invoicing, subscriptions, and payments.",
       },
       {
         title: "Support multiple business models",
-        description: "Hourly bookings, day passes, memberships, subscriptions, and recurring bookings.",
+        description:
+          "Hourly bookings, day passes, memberships, subscriptions, and recurring bookings.",
       },
       {
         title: "Keep your brand",
-        description: "Use custom domains and branded experiences while benefiting from marketplace visibility.",
+        description:
+          "Use custom domains and branded experiences while benefiting from marketplace visibility.",
       },
     ],
   },
@@ -163,7 +201,14 @@ export const spacesPage: ProductPageContent = {
     heading: "One platform instead of multiple tools",
     description:
       "Many workspace operators rely on separate systems for bookings, invoicing, payments, subscriptions, marketplace publishing, customer management, and reporting. As the business grows, those systems become increasingly difficult to manage. Skedular Spaces brings those workflows together into a single platform so operators can spend less time managing software and more time growing their business.",
-    withoutSkedular: ["Booking software", "Payment software", "Invoicing software", "Marketplace software", "Spreadsheets", "Manual administration"],
+    withoutSkedular: [
+      "Booking software",
+      "Payment software",
+      "Invoicing software",
+      "Marketplace software",
+      "Spreadsheets",
+      "Manual administration",
+    ],
     withSkedular: [
       "Inventory management",
       "Product management",
@@ -185,31 +230,41 @@ export const spacesPage: ProductPageContent = {
     {
       id: "resource-management",
       heading: "Resource management",
-      subheading: "Show locations, desks, rooms, offices, and workspace inventory.",
+      subheading:
+        "Show locations, desks, rooms, offices, and workspace inventory.",
+      imageSrc: "/images/screenshots/skedular-spaces/resource-management.png",
       placeholderText: "Resource Management Screenshot",
     },
     {
       id: "product-configuration",
       heading: "Product configuration",
       subheading: "Show products, memberships, pricing, and subscriptions.",
+      imageSrc: "/images/screenshots/skedular-spaces/product-configuration.png",
       placeholderText: "Product Configuration Screenshot",
     },
     {
       id: "billing-invoicing",
       heading: "Billing and invoicing",
-      subheading: "Show invoices, billing schedules, subscriptions, and payment activity.",
+      subheading:
+        "Show invoices, billing schedules, subscriptions, and payment activity.",
+      imageSrc: "/images/screenshots/skedular-spaces/billing-and-invoicing.png",
       placeholderText: "Billing and Invoicing Screenshot",
     },
     {
       id: "marketplace-publishing",
       heading: "Marketplace publishing",
-      subheading: "Show listings, custom domains, and branded workspace experiences.",
+      subheading:
+        "Show listings, custom domains, and branded workspace experiences.",
+      imageSrc:
+        "/images/screenshots/skedular-spaces/marketplace-publishing.png",
       placeholderText: "Marketplace Publishing Screenshot",
     },
     {
       id: "operator-analytics",
       heading: "Operator analytics",
-      subheading: "Show occupancy, utilization, bookings, revenue, and subscription trends.",
+      subheading:
+        "Show occupancy, utilization, bookings, revenue, and subscription trends.",
+      imageSrc: "/images/screenshots/skedular-spaces/operator-analytics.png",
       placeholderText: "Operator Analytics Screenshot",
     },
   ],
@@ -217,7 +272,13 @@ export const spacesPage: ProductPageContent = {
   integrations: {
     heading: "Benefit from marketplace discovery without giving up your brand",
     body: "List workspace on the Skedular marketplace, publish through a custom domain, or support both approaches at the same time. You maintain ownership of your brand while making inventory discoverable.",
-    integrations: ["Marketplace publishing", "Custom domains", "Branded listings", "Search visibility", "Maps and discovery"],
+    integrations: [
+      "Marketplace publishing",
+      "Custom domains",
+      "Branded listings",
+      "Search visibility",
+      "Maps and discovery",
+    ],
   },
 
   commsIntegration: {
@@ -316,7 +377,8 @@ export const spacesPage: ProductPageContent = {
         "Workspace memberships allow customers to have guaranteed access to your space. Coworking management software handles membership tiers, billing cycles, and automatic renewal with credit card or invoice payment options.",
     },
     {
-      question: "Can I use spreadsheets instead of coworking management software?",
+      question:
+        "Can I use spreadsheets instead of coworking management software?",
       answer:
         "You can start with spreadsheets for a single location, but they become difficult to manage as you add locations, members, and bookings. Coworking management software automates billing, publishing availability, and customer communication at scale.",
     },
@@ -327,10 +389,11 @@ export const spacesPage: ProductPageContent = {
     },
   ],
   finalCTA: {
-    heading: "Reduce administration. Automate billing. Sell workspace more easily.",
+    heading:
+      "Reduce administration. Automate billing. Sell workspace more easily.",
     description:
       "Support customers from one platform. See how Skedular Spaces helps operators manage inventory, publish workspace, automate billing, and grow occupancy.",
-    primaryCTA: { label: "Book a demo", href: "/contact" },
+    primaryCTA: { label: "Try Spaces", href: "PUBLIC_SKEDULAR_SPACES_APP_URL" },
     secondaryCTA: { label: "View Spaces pricing", href: "/pricing/spaces" },
   },
 };

@@ -1,9 +1,9 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Organization.Shared.Models.PricingCatalog;
 
 namespace Organization.Shared.Database.Entities;
 
@@ -22,6 +22,9 @@ public class OrganizationOffering : EntityBaseWithDeleted
     public int? PurchasedLocationCapacity { get; set; }
     public int? PurchasedTeamCapacity { get; set; }
     public string? CatalogVersion { get; set; }
+    public int DiscountPercentage { get; set; }
+    public decimal HostCommissionPercentage { get; set; }
+    public DateTimeOffset? SpacesBillingStartsAt { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? OrganizationStripePaymentIntentId { get; set; }
@@ -38,10 +41,10 @@ public class OrganizationOfferingConfiguration : IEntityTypeConfiguration<Organi
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder.Property(item => item.Currency)
-            .HasMaxLength(Constants.MaxCurrencyLength)
-            .HasDefaultValue(PricingCatalogConstants.SkedularPricingCurrency);
+        builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength).HasDefaultValue(CurrencyConstants.Usd);
         builder.Property(item => item.CatalogVersion).HasMaxLength(Constants.MaxCatalogVersionLength);
+        builder.Property(item => item.DiscountPercentage).HasDefaultValue(0);
+        builder.Property(item => item.HostCommissionPercentage).HasColumnType("DECIMAL(5,2)").HasDefaultValue(5m);
 
         builder.HasOne(item => item.Organization).WithMany(item => item.OrganizationOfferings);
         builder
@@ -61,5 +64,8 @@ public class OrganizationOfferingConfiguration : IEntityTypeConfiguration<Organi
         builder.HasIndex(item => item.PurchasedLocationCapacity);
         builder.HasIndex(item => item.PurchasedTeamCapacity);
         builder.HasIndex(item => item.CatalogVersion);
+        builder.HasIndex(item => item.DiscountPercentage);
+        builder.HasIndex(item => item.HostCommissionPercentage);
+        builder.HasIndex(item => item.SpacesBillingStartsAt);
     }
 }

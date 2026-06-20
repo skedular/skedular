@@ -45,7 +45,8 @@ public static class ResourceAvailabilityClassificationExtensions
                 ResourceAvailabilityClassification.FullyBooked => "Fully Booked",
                 ResourceAvailabilityClassification.Occupied => "Occupied",
                 ResourceAvailabilityClassification.Blocked => "Blocked",
-                _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 }

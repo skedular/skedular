@@ -28,6 +28,8 @@ public static class MarketplaceBookingExtensions
             .Include(query => query.ProductVersion)
             .ThenInclude(query => query.Product)
             .ThenInclude(query => query.Organization)
+            .Include(query => query.StripeCheckoutSession)
+            .ThenInclude(query => query!.StripeCustomer)
             .Include(query => query.StripeCheckoutSession);
     }
 }

@@ -21,7 +21,8 @@ public static class OrganizationMemberStatusExtensions
             {
                 OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
                 OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -32,7 +33,8 @@ public static class OrganizationMemberStatusExtensions
             {
                 OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
                 OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public string ToOrganizationMemberStatusName() =>
@@ -40,7 +42,8 @@ public static class OrganizationMemberStatusExtensions
             {
                 OrganizationMemberStatus.Active => "Active",
                 OrganizationMemberStatus.Inactive => "Inactive",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 }

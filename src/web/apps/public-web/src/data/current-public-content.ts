@@ -1,92 +1,22 @@
 import type { ResourceArticle } from "./content-types";
+import { skedularEvolutionArticle } from "./blog-post-skedular-evolution";
+import { howToDetermineTheRightAmountOfOfficeSpaceForYourTeamArticle } from "./blog-post-how-to-determine-the-right-amount-of-office-space-for-your-team";
+import { howToCreateAHighPerformanceOfficeAModernSpacePlanningGuideArticle } from "./blog-post-how-to-create-a-high-performance-office-a-modern-space-planning-guide";
+import { theSmartWorkplaceOf2025RethinkingOfficeStrategyForTheHybridEraArticle } from "./blog-post-the-smart-workplace-of-2025-rethinking-office-strategy-for-the-hybrid-era";
+import { creatingAProductiveAndFlexibleWorkplaceAGuideForModernOfficesArticle } from "./blog-post-creating-a-productive-and-flexible-workplace-a-guide-for-modern-offices";
+import { boostingWorkplaceVisibilityKeepingHybridTeamsConnectedAndEngagedArticle } from "./blog-post-boosting-workplace-visibility-keeping-hybrid-teams-connected-and-engaged";
+import { deskSharingWithSkedularTheFutureOfFlexibleWorkspacesArticle } from "./blog-post-desk-sharing-with-skedular-the-future-of-flexible-workspaces";
+import { unityhubBecomesSkedularArticle } from "./blog-post-unityhub-becomes-skedular";
+import { unifiedHostExperienceArticle } from "./blog-post-unified-host-experience";
 
 export const resourceArticles: ResourceArticle[] = [
-  {
-    id: "hybrid-workplace-planning",
-    slug: "hybrid-workplace-planning",
-    sourceUrl: "https://getskedular.com/blog/hybrid-workplace-planning",
-    destinationPath: "/resources/hybrid-workplace-planning",
-    title: "Hybrid workplace planning, attendance tracking, and desk booking",
-    summary: "How to connect desk booking, room booking, team attendance, and real workspace demand.",
-    publishedDate: "2026-06-05",
-    topicTags: ["hybrid work", "workspace planning", "desk booking"],
-    migrationDecision: "rewrite",
-    contentStatus: "published",
-    claimReviewStatus: "pending",
-    body: [
-      "Hybrid work works best when people can see the practical details before they leave home. A useful plan answers where people can sit, which rooms are free, who else will be in, and what happens when demand changes.",
-      "Skedular brings resource booking, attendance context, floor plans, and reporting into a calmer workflow so workplace teams can improve the office without asking employees to guess.",
-    ],
-  },
-  {
-    id: "workspace-payments-invoicing",
-    slug: "workspace-payments-invoicing",
-    sourceUrl: "https://getskedular.com/blog/workspace-payments-invoicing",
-    destinationPath: "/resources/workspace-payments-invoicing",
-    title: "Workspace payments, billing, invoicing, subscriptions, and accounting workflows",
-    summary: "A practical guide to payment, tax, billing cadence, invoice, and Xero workflows for flexible workspace.",
-    publishedDate: "2026-06-05",
-    topicTags: ["payments", "billing", "invoicing", "Xero"],
-    migrationDecision: "rewrite",
-    contentStatus: "published",
-    claimReviewStatus: "pending",
-    body: [
-      "Workspace operators often sell a mix of one-off bookings, recurring products, and customer-specific agreements. That mix becomes easier to manage when pricing, tax, billing cadence, invoice state, and accounting exports are treated as one workflow.",
-      "Skedular Spaces is planned around that operating reality, with public copy kept careful until every payment, invoice, Xero, and subscription claim is reviewed against the current product.",
-    ],
-  },
-  {
-    id: "slack-microsoft-teams-workplace",
-    slug: "slack-microsoft-teams-workplace",
-    sourceUrl: "https://getskedular.com/blog/slack-microsoft-teams-workplace",
-    destinationPath: "/resources/slack-microsoft-teams-workplace",
-    title: "Slack and Microsoft Teams integration for workplace coordination",
-    summary: "How collaboration tools can make desk booking, room booking, and office attendance easier to follow.",
-    publishedDate: "2026-06-05",
-    topicTags: ["Slack", "Microsoft Teams", "hybrid work"],
-    migrationDecision: "rewrite",
-    contentStatus: "published",
-    claimReviewStatus: "pending",
-    body: [
-      "People should not need to leave their daily communication tools just to understand who is in the office or what spaces are available.",
-      "Skedular's public content should describe Slack and Microsoft Teams support plainly, with the exact current capability checked before launch.",
-    ],
-  },
-];
-
-export const supportArticles: ResourceArticle[] = [
-  {
-    id: "getting-started-with-skedular",
-    slug: "getting-started-with-skedular",
-    sourceUrl: "https://getskedular.com/support/getting-started",
-    destinationPath: "/support/getting-started-with-skedular",
-    title: "Getting started with Skedular - orientation for users and buyers",
-    summary: "A short orientation for public visitors, team buyers, and workspace operators.",
-    publishedDate: "2026-06-05",
-    topicTags: ["support", "getting started"],
-    migrationDecision: "rewrite",
-    contentStatus: "published",
-    claimReviewStatus: "not-required",
-    body: [
-      "Use the public website to understand Skedular, compare Teams and Spaces, review pricing, and continue to the app or demo flow through the configured destination links.",
-      "Direct booking does not happen on the public website in this release. Booking and application actions forward to the separate Skedular app.",
-    ],
-  },
-  {
-    id: "booking-workspace-from-public-site",
-    slug: "booking-workspace-from-public-site",
-    sourceUrl: "https://getskedular.com/support/booking-workspace",
-    destinationPath: "/support/booking-workspace-from-public-site",
-    title: "Booking workspace from the public website - discovery to application flow",
-    summary: "What happens when a visitor starts a search or booking action on the public site.",
-    publishedDate: "2026-06-05",
-    topicTags: ["support", "booking"],
-    migrationDecision: "rewrite",
-    contentStatus: "published",
-    claimReviewStatus: "not-required",
-    body: [
-      "Search and booking calls-to-action on the public website send visitors to the separate application website.",
-      "That keeps the public website focused on discovery and education while the application handles availability, checkout, accounts, and booking details.",
-    ],
-  },
+  unifiedHostExperienceArticle,
+  skedularEvolutionArticle,
+  howToDetermineTheRightAmountOfOfficeSpaceForYourTeamArticle,
+  howToCreateAHighPerformanceOfficeAModernSpacePlanningGuideArticle,
+  theSmartWorkplaceOf2025RethinkingOfficeStrategyForTheHybridEraArticle,
+  creatingAProductiveAndFlexibleWorkplaceAGuideForModernOfficesArticle,
+  boostingWorkplaceVisibilityKeepingHybridTeamsConnectedAndEngagedArticle,
+  deskSharingWithSkedularTheFutureOfFlexibleWorkspacesArticle,
+  unityhubBecomesSkedularArticle,
 ];

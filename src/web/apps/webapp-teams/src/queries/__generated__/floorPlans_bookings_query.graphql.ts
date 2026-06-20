@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f72ca6310eab478b6571cbf749ee86ce>>
+ * @generated SignedSource<<3c80bacb12b84080dfa84a289e82e7cb>>
  * @lightSyntaxTransform
  */
 
@@ -19,10 +19,20 @@ export type floorPlans_bookings_query$data = {
             readonly id: string;
           };
         }>;
+        readonly category: {
+          readonly name: string;
+        };
+        readonly from: any;
         readonly id: string;
         readonly involvedCustomers: ReadonlyArray<{
+          readonly familyName: string | null | undefined;
+          readonly givenName: string | null | undefined;
           readonly id: string;
+          readonly middleName: string | null | undefined;
+          readonly name: string | null | undefined;
+          readonly photoUrl: string | null | undefined;
         }>;
+        readonly until: any;
         readonly " $fragmentSpreads": FragmentRefs<"bookingCard_BookingDetails">;
       };
     }>;
@@ -48,9 +58,13 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
-  (v1/*:: as any*/)
-];
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -168,7 +182,64 @@ return {
                   "kind": "LinkedField",
                   "name": "involvedCustomers",
                   "plural": true,
-                  "selections": (v2/*:: as any*/),
+                  "selections": [
+                    (v1/*:: as any*/),
+                    (v2/*:: as any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "givenName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "middleName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "familyName",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "photoUrl",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "from",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "until",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "BookingCategoryDetails",
+                  "kind": "LinkedField",
+                  "name": "category",
+                  "plural": false,
+                  "selections": [
+                    (v2/*:: as any*/)
+                  ],
                   "storageKey": null
                 },
                 {
@@ -186,7 +257,9 @@ return {
                       "kind": "LinkedField",
                       "name": "resource",
                       "plural": false,
-                      "selections": (v2/*:: as any*/),
+                      "selections": [
+                        (v1/*:: as any*/)
+                      ],
                       "storageKey": null
                     }
                   ],
@@ -263,6 +336,6 @@ return {
 };
 })();
 
-(node as any).hash = "d6fdaa896360779039d39b7869728546";
+(node as any).hash = "92a46f8479609065267f07c144470eab";
 
 export default node;

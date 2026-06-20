@@ -50,13 +50,15 @@ public class OrganizationMemberService(
                         OrganizationMemberRole.Administrator => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberRole
                             .Administrator,
                         OrganizationMemberRole.Member => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberRole.Member,
-                        _ => throw new ArgumentOutOfRangeException()
+                        _ => throw new ArgumentOutOfRangeException(nameof(organizationMember.Role), organizationMember.Role,
+                            $"Unexpected value for {nameof(organizationMember.Role)}: {organizationMember.Role}. Update enum mapping or caller input.")
                     },
                     Status = organizationMember.Status switch
                     {
                         OrganizationMemberStatus.Active => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Active,
                         OrganizationMemberStatus.Inactive => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Inactive,
-                        _ => throw new ArgumentOutOfRangeException()
+                        _ => throw new ArgumentOutOfRangeException(nameof(organizationMember.Status), organizationMember.Status,
+                            $"Unexpected value for {nameof(organizationMember.Status)}: {organizationMember.Status}. Update enum mapping or caller input.")
                     }
                 }
             },

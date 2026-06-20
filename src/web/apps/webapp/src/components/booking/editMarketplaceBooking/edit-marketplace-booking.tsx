@@ -102,6 +102,27 @@ const getChangedMarketplaceBookingFields = (left: BookingDetails | null, right: 
   return changed;
 };
 
+const marketplaceBookingFieldGroups: ReadonlyArray<[MarketplaceBookingPatchField, ReadonlyArray<keyof BookingDetails>]> = [
+  ['PARTICIPANTS', ['member', 'team']],
+  ['NOTES', ['notes']],
+  ['CATEGORY', ['category']],
+];
+
+const getValidMarketplaceBookingPatchFields = (fieldsToUpdate: MarketplaceBookingPatchField[], values: BookingDetails): MarketplaceBookingPatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    const formFields = marketplaceBookingFieldGroups.find(([field]) => field === patchField)?.[1] ?? [];
+
+    try {
+      for (const formField of formFields) {
+        bookingSchema.validateSyncAt(formField, values);
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay }: Props) => {
   const rootData = useFragment<editMarketplaceBooking_query$key>(
     graphql`
@@ -370,11 +391,13 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     router.back();
   };
 
-  const handleBookingDetailUpdateClick = (fieldsToUpdate: MarketplaceBookingPatchField[], { member: memberId, notes, team: teamId, category }: BookingDetails) => {
+  const handleBookingDetailUpdateClick = (fieldsToUpdate: MarketplaceBookingPatchField[], values: BookingDetails) => {
+    const { member: memberId, notes, team: teamId, category } = values;
     const booking = rootDataBooking.booking;
+    const validFieldsToUpdate = getValidMarketplaceBookingPatchFields(fieldsToUpdate, values);
     if (
       !booking ||
-      !bookingSchema.isValidSync({ member: memberId, notes, team: teamId, category }) ||
+      validFieldsToUpdate.length === 0 ||
       (booking.marketplaceBooking?.paymentStatus.type !== 'NO_PAYMENT_REQUIRED' && booking.marketplaceBooking?.paymentStatus.type !== 'CONFIRMED')
     ) {
       return;
@@ -387,12 +410,12 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
         input: {
           clientMutationId: uuid(),
           id: booking.id,
-          fieldsToUpdate,
+          fieldsToUpdate: validFieldsToUpdate,
           notes,
           category: category as BookingCategory,
-          customerIds: [memberId],
+          customerIds: validFieldsToUpdate.includes('PARTICIPANTS') ? [memberId] : booking.involvedCustomers.map(({ id }) => id),
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
-          teamIds: teamId ? [teamId] : [],
+          teamIds: validFieldsToUpdate.includes('PARTICIPANTS') ? (teamId ? [teamId] : []) : booking.involvedTeams.map(({ id }) => id),
         },
       },
       onCompleted: (_, errors) => {

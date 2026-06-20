@@ -1,5 +1,6 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
@@ -7,6 +8,7 @@ using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Random;
+using Microsoft.Extensions.Logging;
 using Constants = Booking.Shared.GraphQL.Constants;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
@@ -46,7 +48,11 @@ public class MarketplaceBookingSubscriptionService(
     MarketplaceRefundPolicyService marketplaceRefundPolicyService,
     IMarketplaceRefundService marketplaceRefundService,
     IMarketplaceRefundAutomationService marketplaceRefundAutomationService,
-    IMarketplaceRefundNotificationService marketplaceRefundNotificationService) : IMarketplaceBookingSubscriptionService
+    IMarketplaceRefundNotificationService marketplaceRefundNotificationService,
+    ISpacesBookingQuotaService spacesBookingQuotaService,
+    IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
+    IMarketplaceBookingWeeklyDaySelectionService marketplaceBookingWeeklyDaySelectionService,
+    ILogger<MarketplaceBookingSubscriptionService> logger) : IMarketplaceBookingSubscriptionService
 {
     public async Task<MarketplaceBookingSubscription> AddAsync(
         MarketplaceBookingSubscription subscription,
@@ -91,9 +97,57 @@ public class MarketplaceBookingSubscriptionService(
         marketplaceBooking.ProductPricing =
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions.ToList(), marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
+        try
+        {
+            subscription.WeeklySelectedDays = marketplaceBookingWeeklyDaySelectionService.Validate(
+                marketplaceBooking.ProductPricing,
+                subscription.WeeklySelectedDays);
+        }
+        catch (MarketplaceBookingWeeklyDaySelectionInvalid exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Rejected marketplace subscription weekly-day selection. ProductVersionId: {ProductVersionId}, PricingId: {PricingId}, StartedAt: {StartedAt}, WeeklySelectedDays: {WeeklySelectedDays}",
+                productVersion.Id,
+                marketplaceBooking.ProductPricing.Id,
+                subscription.StartedAt,
+                subscription.WeeklySelectedDays);
+            throw;
+        }
+
         marketplaceBooking.Currency ??= productVersion.Currency.ToNullableCurrency();
-        await EnsureRequestedResourceCanBeBookedAsync(subscription, productVersion, marketplaceBooking, marketplaceBookingOpeningHoursService,
-            cancellationToken);
+        // A fixed weekly selection owns the booking dates. Its membership in the price's
+        // available-day pool was validated above, so the arbitrary subscription start date
+        // must not reject checkout or preflight a requested resource on an unselected day.
+        // Reconciliation will evaluate each selected date and create a shell when it cannot
+        // assign the requested/compatible resources on that date.
+        var hasFixedWeeklySelection = MarketplaceBookingWeeklyDaySelectionService.UsesFixedWeeklySchedule(
+            marketplaceBooking.ProductPricing,
+            subscription.WeeklySelectedDays);
+        if (!hasFixedWeeklySelection && !marketplaceBookingAvailableDaysService.IsAvailable(
+                marketplaceBooking.ProductPricing,
+                subscription.StartedAt,
+                out var localDate))
+        {
+            logger.LogWarning(
+                "Rejected marketplace subscription for unavailable price day. ProductVersionId: {ProductVersionId}, PricingId: {PricingId}, StartedAt: {StartedAt}, LocalDate: {LocalDate}",
+                productVersion.Id,
+                marketplaceBooking.ProductPricing.Id,
+                subscription.StartedAt,
+                localDate);
+            throw new MarketplaceBookingDateUnavailable();
+        }
+
+        if (!hasFixedWeeklySelection)
+        {
+            await EnsureRequestedResourceCanBeBookedAsync(
+                subscription,
+                productVersion,
+                marketplaceBooking,
+                marketplaceBookingOpeningHoursService,
+                cancellationToken);
+        }
+
         // Subscription checkout also happens asynchronously later in Temporal, so the initial
         // marketplace-booking template must carry the storefront URL that Stripe should return
         // the customer to after hosted checkout finishes or is cancelled.
@@ -101,6 +155,19 @@ public class MarketplaceBookingSubscriptionService(
         // Subscriptions should be manageable by the coworking-space owner organization too,
         // so the product owner's organization is always merged into involved organizations.
         organizations = MergeOrganizationsWithProductOwner(organizations, productVersion);
+        foreach (var organization in organizations
+                     .Where(item => item.Type == OrganizationTypeConstants.Marketplace)
+                     .DistinctBy(item => item.Id))
+        {
+            var decision = await spacesBookingQuotaService.EvaluateAccessAsync(
+                organization.Id,
+                SpacesAccessAction.CreateOrModify,
+                cancellationToken);
+            if (!decision.Allowed)
+            {
+                throw new SpacesAccessDenied(decision);
+            }
+        }
 
         if (subscription.AutoRenew && !marketplaceBooking.ProductPricing.SupportsSubscriptionAutoRenewal)
         {
@@ -321,6 +388,7 @@ public class MarketplaceBookingSubscriptionService(
             ProductPricingCadence.FiveMonths => startedAt.AddMonths(5),
             ProductPricingCadence.SixMonths => startedAt.AddMonths(6),
             ProductPricingCadence.Yearly => startedAt.AddYears(1),
-            _ => throw new ArgumentOutOfRangeException(nameof(cadence), cadence, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(cadence), cadence,
+                $"Unexpected value for {nameof(cadence)}: {cadence}. Update enum mapping or caller input.")
         };
 }

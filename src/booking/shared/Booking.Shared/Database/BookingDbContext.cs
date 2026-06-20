@@ -37,6 +37,9 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     public DbSet<OrganizationArrearsInvoiceLine> OrganizationArrearsInvoiceLine { get; set; }
     public DbSet<MarketplaceRefund> MarketplaceRefund { get; set; }
     public DbSet<MarketplaceRefundEvent> MarketplaceRefundEvent { get; set; }
+    public DbSet<MarketplaceBookingFailure> MarketplaceBookingFailure { get; set; }
+    public DbSet<MarketplaceBookingFailureEvent> MarketplaceBookingFailureEvent { get; set; }
+    public DbSet<MarketplaceBookingFailureDelivery> MarketplaceBookingFailureDelivery { get; set; }
     public DbSet<AccountingInvoiceExportLink> AccountingInvoiceExportLink { get; set; }
     public DbSet<AccountingInvoiceInstance> AccountingInvoiceInstance { get; set; }
     public DbSet<AccountingContactLink> AccountingContactLink { get; set; }

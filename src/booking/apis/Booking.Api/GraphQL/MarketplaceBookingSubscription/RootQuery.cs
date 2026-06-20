@@ -51,8 +51,6 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
             })
             .ToList();
 
-        logger.LogInformation("MarketplaceBookingSubscriptionStatuses resolved {Count} subscription status options", statuses.Count);
-
         return statuses;
     }
 
@@ -66,8 +64,6 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
             }
             .Select(status => new MarketplaceBookingPaymentStatusDetails { Type = status, Name = status.ToMarketplaceBookingPaymentStatusName() })
             .ToList();
-
-        logger.LogInformation("MarketplaceBookingPaymentStatuses resolved {Count} payment status options", statuses.Count);
 
         return statuses;
     }

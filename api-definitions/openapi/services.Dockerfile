@@ -2,8 +2,16 @@
 ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk:10.0
 ARG NSWAG_VERSION=latest
 
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dotnet8
+
 FROM $BUILD_IMAGE AS build
 LABEL maintainer="morteza.alizadeh@gmail.com"
+
+# Keep .NET 10 for the build and make the .NET 8 runtimes available to NSwag.
+COPY --from=dotnet8 /usr/share/dotnet/shared/Microsoft.NETCore.App/ \
+  /usr/share/dotnet/shared/Microsoft.NETCore.App/
+COPY --from=dotnet8 /usr/share/dotnet/shared/Microsoft.AspNetCore.App/ \
+  /usr/share/dotnet/shared/Microsoft.AspNetCore.App/
 
 RUN apt-get update -y && \
   apt-get install npm -y && \

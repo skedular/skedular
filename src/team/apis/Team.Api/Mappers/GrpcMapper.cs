@@ -91,13 +91,15 @@ public class GrpcMapper : IGrpcMapper
                 TeamMemberRole.Owner => Role.Owner,
                 TeamMemberRole.Administrator => Role.Administrator,
                 TeamMemberRole.Member => Role.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Role), src.Role,
+                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input.")
             },
             Status = src.Status switch
             {
                 TeamMemberStatus.Active => global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active,
                 TeamMemberStatus.Inactive => global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Status), src.Status,
+                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input.")
             },
             CustomerId = src.Customer.Id.ToSafeString(),
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
@@ -110,7 +112,8 @@ public class GrpcMapper : IGrpcMapper
                         OrganizationMemberRole.Owner => Role.Owner,
                         OrganizationMemberRole.Administrator => Role.Administrator,
                         OrganizationMemberRole.Member => Role.Member,
-                        _ => throw new ArgumentOutOfRangeException()
+                        _ => throw new ArgumentOutOfRangeException(nameof(src.OrganizationMember.Role), src.OrganizationMember.Role,
+                            $"Unexpected value for {nameof(src.OrganizationMember.Role)}: {src.OrganizationMember.Role}. Update enum mapping or caller input.")
                     },
                     CustomerId = src.OrganizationMember.Customer.Id.ToSafeString()
                 }
@@ -125,13 +128,15 @@ public class GrpcMapper : IGrpcMapper
                 Role.Owner => TeamMemberRole.Owner,
                 Role.Administrator => TeamMemberRole.Administrator,
                 Role.Member => TeamMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Role), src.Role,
+                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input.")
             },
             Status = src.Status switch
             {
                 global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active => TeamMemberStatus.Active,
                 global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive => TeamMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Status), src.Status,
+                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input.")
             },
             Customer = new Customer { Id = src.CustomerId },
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)

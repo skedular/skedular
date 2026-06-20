@@ -22,7 +22,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [
         new() { Type = OrganizationType.Private, Name = OrganizationTypeConstants.Private.ToOrganizationTypeName() },
         new() { Type = OrganizationType.Marketplace, Name = OrganizationTypeConstants.Marketplace.ToOrganizationTypeName() },
-        new() { Type = OrganizationType.Individual, Name = OrganizationTypeConstants.Individual.ToOrganizationTypeName() }
+        new() { Type = OrganizationType.Host, Name = OrganizationTypeConstants.Host.ToOrganizationTypeName() }
     ];
 
     [UseResolverScope]

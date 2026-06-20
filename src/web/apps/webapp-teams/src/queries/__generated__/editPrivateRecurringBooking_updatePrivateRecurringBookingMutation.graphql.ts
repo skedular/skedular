@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5fce99c9d58d5ca2e5657a5d9a30fe2f>>
+ * @generated SignedSource<<416fca2b49bd7fbac1317d2bcb54db78>>
  * @lightSyntaxTransform
  */
 
@@ -49,7 +49,7 @@ export type editPrivateRecurringBooking_updatePrivateRecurringBookingMutation$da
       };
       readonly id: string;
       readonly startDate: any;
-    };
+    } | null | undefined;
   };
 };
 export type editPrivateRecurringBooking_updatePrivateRecurringBookingMutation = {

@@ -7,6 +7,10 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Temporalio.Testing;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
+using MarketplaceBookingFailure = Booking.Shared.Database.Entities.MarketplaceBookingFailure;
+using MarketplaceBookingFailureCategoryConstants = Booking.Shared.Models.MarketplaceBookingFailureCategoryConstants;
+using MarketplaceBookingFailureFinalization = Booking.Shared.Models.MarketplaceBookingFailureFinalization;
+using MarketplaceBookingFailureScopeConstants = Booking.Shared.Models.MarketplaceBookingFailureScopeConstants;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.UnitTests.Activities.MarketplaceBookingSubscriptionIntegrationsTests;
@@ -23,6 +27,7 @@ public class ReleaseRecurringBookingResourcesAsyncShould
         [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
         [Frozen] IMarketplaceBookingService marketplaceBookingService,
         [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen] IMarketplaceBookingFailureService marketplaceBookingFailureService,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] TimeProvider timeProvider,
         MarketplaceBookingSubscriptionIntegrations sut,
@@ -48,6 +53,9 @@ public class ReleaseRecurringBookingResourcesAsyncShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingRepository).Returns(marketplaceBookingRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
+        A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(A<MarketplaceBookingFailureFinalization>._,
+                environment.CancellationTokenSource.Token))
+            .Returns(new MarketplaceBookingFailure());
         A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, environment.CancellationTokenSource.Token))
             .Returns(recurringBooking);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(
@@ -58,7 +66,9 @@ public class ReleaseRecurringBookingResourcesAsyncShould
             .Returns(new List<BookingEntity> { existingBooking });
 
         await environment.RunAsync(() =>
-            sut.ReleaseRecurringBookingResourcesAsync(new ReleaseRecurringBookingResourcesInput(recurringBookingId)));
+            sut.ReleaseRecurringBookingResourcesAsync(new ReleaseRecurringBookingResourcesInput(
+                recurringBookingId,
+                MarketplaceBookingFailureCategoryConstants.PaymentFailed)));
 
         A.CallTo(() => accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
@@ -73,6 +83,13 @@ public class ReleaseRecurringBookingResourcesAsyncShould
         A.CallTo(() => marketplaceBookingService.DeleteAsync(existingBooking, null, false, false, environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(
+                A<MarketplaceBookingFailureFinalization>.That.Matches(item =>
+                    item.Category == MarketplaceBookingFailureCategoryConstants.PaymentFailed &&
+                    item.Scope == MarketplaceBookingFailureScopeConstants.RecurringCycle &&
+                    item.RecurringBookingId == recurringBookingId),
+                environment.CancellationTokenSource.Token))
+            .MustHaveHappenedOnceExactly();
     }
 
     [Theory]

@@ -4,12 +4,15 @@
 
 ## Required Public URLs
 
-The build requires five public destination URL variables:
+The build requires the public site URL plus public destination URL variables:
 
 | Variable                            | Purpose                                          |
 | ----------------------------------- | ------------------------------------------------ |
+| `PUBLIC_WEB_SITE_URL`               | Canonical public site URL for SEO files          |
 | `PUBLIC_SKEDULAR_APP_URL`           | Search, booking, and app-forwarding actions      |
 | `PUBLIC_SKEDULAR_SIGNUP_URL`        | Login, sign-up, and get-started actions          |
+| `PUBLIC_SKEDULAR_TEAMS_APP_URL`     | Try Teams actions                                |
+| `PUBLIC_SKEDULAR_SPACES_APP_URL`    | Try Spaces actions                               |
 | `PUBLIC_SKEDULAR_DEMO_URL`          | Demo, contact sales, and contact support actions |
 | `PUBLIC_SKEDULAR_BECOME_HOST_URL`   | Become-a-host actions                            |
 | `PUBLIC_SKEDULAR_SLACK_INSTALL_URL` | Slack install actions for Skedular Teams         |
@@ -29,23 +32,29 @@ pnpm install
 From the repository root:
 
 ```bash
+PUBLIC_WEB_SITE_URL=https://www.example.test \
 PUBLIC_SKEDULAR_APP_URL=https://app.example.test \
 PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up \
+PUBLIC_SKEDULAR_TEAMS_APP_URL=https://teams.example.test \
+PUBLIC_SKEDULAR_SPACES_APP_URL=https://spaces.example.test \
 PUBLIC_SKEDULAR_DEMO_URL=https://demo.example.test/book \
 PUBLIC_SKEDULAR_BECOME_HOST_URL=https://host.example.test/start \
 PUBLIC_SKEDULAR_SLACK_INSTALL_URL=https://slack.example.test/install \
 pnpm --dir src/web/apps/public-web dev
 ```
 
-Astro serves the site at `http://localhost:15006`.
+Astro serves the site at `http://localhost:15008`.
 
 ## Validate
 
 Run app-local validation:
 
 ```bash
+PUBLIC_WEB_SITE_URL=https://www.example.test \
 PUBLIC_SKEDULAR_APP_URL=https://app.example.test \
 PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up \
+PUBLIC_SKEDULAR_TEAMS_APP_URL=https://teams.example.test \
+PUBLIC_SKEDULAR_SPACES_APP_URL=https://spaces.example.test \
 PUBLIC_SKEDULAR_DEMO_URL=https://demo.example.test/book \
 PUBLIC_SKEDULAR_BECOME_HOST_URL=https://host.example.test/start \
 PUBLIC_SKEDULAR_SLACK_INSTALL_URL=https://slack.example.test/install \
@@ -53,8 +62,11 @@ pnpm --dir src/web/apps/public-web test
 ```
 
 ```bash
+PUBLIC_WEB_SITE_URL=https://www.example.test \
 PUBLIC_SKEDULAR_APP_URL=https://app.example.test \
 PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up \
+PUBLIC_SKEDULAR_TEAMS_APP_URL=https://teams.example.test \
+PUBLIC_SKEDULAR_SPACES_APP_URL=https://spaces.example.test \
 PUBLIC_SKEDULAR_DEMO_URL=https://demo.example.test/book \
 PUBLIC_SKEDULAR_BECOME_HOST_URL=https://host.example.test/start \
 PUBLIC_SKEDULAR_SLACK_INSTALL_URL=https://slack.example.test/install \
@@ -66,8 +78,11 @@ pnpm --dir src/web/apps/public-web lint
 ```
 
 ```bash
+PUBLIC_WEB_SITE_URL=https://www.example.test \
 PUBLIC_SKEDULAR_APP_URL=https://app.example.test \
 PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up \
+PUBLIC_SKEDULAR_TEAMS_APP_URL=https://teams.example.test \
+PUBLIC_SKEDULAR_SPACES_APP_URL=https://spaces.example.test \
 PUBLIC_SKEDULAR_DEMO_URL=https://demo.example.test/book \
 PUBLIC_SKEDULAR_BECOME_HOST_URL=https://host.example.test/start \
 PUBLIC_SKEDULAR_SLACK_INSTALL_URL=https://slack.example.test/install \
@@ -88,35 +103,48 @@ The production build writes static output to `dist/` and emits a JSON build summ
 - `/privacy-policy`
 - `/resources`
 - `/resources/<resource-slug>`
-- `/support`
-- `/support/<support-slug>`
-- `/features/<feature-slug>`
 - `/compare/<comparison-slug>`
 
-Current public blog and support URLs are represented in `src/data/current-public-content.ts` and redirected through `astro.config.mjs`. Current Skedular company, terms, and privacy URLs are represented in `src/data/company-page.ts`, `src/data/legal-pages.ts`, and `src/data/source-audit.ts`.
+Current public blog URLs are represented in `src/data/current-public-content.ts` and redirected through `astro.config.mjs`. Current Skedular company, terms, and privacy URLs are represented in `src/data/company-page.ts`, `src/data/legal-pages.ts`, and `src/data/source-audit.ts`.
 
 ## Content Inventory Workflow
 
 Review these data files before launch:
 
-- `src/data/current-public-content.ts` for migrated blog and support content.
+- `src/data/current-public-content.ts` for migrated blog content.
 - `src/data/company-page.ts` for the migrated About Skedular page.
 - `src/data/legal-pages.ts` for Terms of Service and Privacy Policy summary content awaiting owner review.
 - `src/data/draft-coverage.ts` for every major draft heading and bullet group.
 - `src/data/claim-review.ts` for capability, pricing, and competitor claims.
 - `src/data/launch-review.ts` for human-quality copy, accessibility, SEO, pricing, and participant review evidence.
 - `src/data/source-audit.ts` for source/reference inputs and review dates.
-- `src/data/analytics-readiness.ts` for privacy-safe future measurement metadata.
 
 ## Cloudflare Pages
 
 Infrastructure lives under `infrastructure/workspaces/staging` and `infrastructure/workspaces/production`. The CI/CD pipeline applies each workspace, builds the static site with environment-specific public URL values, and uploads `dist/` with Wrangler.
 
+## Cloudflare Web Analytics
+
+Public-site measurement uses Cloudflare Web Analytics instead of Google Analytics. Web Analytics is enabled manually in Cloudflare, not through Terraform, because Cloudflare's RUM/Web Analytics API endpoint can reject the existing deployment token even when normal Pages/DNS permissions work. Do not add Google Analytics, Google Tag Manager, or a manual Cloudflare beacon snippet to the Astro layout unless the analytics provider decision changes.
+
+To enable it manually:
+
+1. In Cloudflare, open Workers & Pages.
+2. Select the public-web Pages project for staging or production.
+3. Open Metrics.
+4. Select Enable under Web Analytics.
+5. Redeploy the site so Cloudflare injects the beacon.
+
+Review consent, regional privacy rules, and legal-page wording before adding advertising pixels or a second analytics provider.
+
 For a manual direct upload after the Pages project exists:
 
 ```bash
+PUBLIC_WEB_SITE_URL=https://www.example.test \
 PUBLIC_SKEDULAR_APP_URL=https://app.example.test \
 PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up \
+PUBLIC_SKEDULAR_TEAMS_APP_URL=https://teams.example.test \
+PUBLIC_SKEDULAR_SPACES_APP_URL=https://spaces.example.test \
 PUBLIC_SKEDULAR_DEMO_URL=https://demo.example.test/book \
 PUBLIC_SKEDULAR_BECOME_HOST_URL=https://host.example.test/start \
 PUBLIC_SKEDULAR_SLACK_INSTALL_URL=https://slack.example.test/install \

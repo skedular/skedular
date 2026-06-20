@@ -12,31 +12,46 @@ export const schemaTypes: SchemaType[] = [
     type: "Organization",
     description: "Brand identity and contact information",
     适用场景: ["Homepage", "About page"],
-    aiBenefits: ["AI assistants can extract brand name, logo, and contact details", "Search engines understand organization context"],
+    aiBenefits: [
+      "AI assistants can extract brand name, logo, and contact details",
+      "Search engines understand organization context",
+    ],
   },
   {
     type: "SoftwareApplication",
     description: "Product capabilities and features",
     适用场景: ["Category pages", "Feature pages"],
-    aiBenefits: ["AI systems can identify product category and functionality", "Knowledge graphs can link to related products"],
+    aiBenefits: [
+      "AI systems can identify product category and functionality",
+      "Knowledge graphs can link to related products",
+    ],
   },
   {
     type: "FAQPage",
     description: "Structured frequently asked questions",
     适用场景: ["Product pages", "Category pages"],
-    aiBenefits: ["Google AI Overviews can extract direct answers", "ChatGPT, Claude, Gemini can retrieve specific information"],
+    aiBenefits: [
+      "Google AI Overviews can extract direct answers",
+      "ChatGPT, Claude, Gemini can retrieve specific information",
+    ],
   },
   {
     type: "Article",
     description: "Educational content and guides",
     适用场景: ["Resources pages"],
-    aiBenefits: ["AI systems can understand educational intent", "Knowledge base entries for retrieval"],
+    aiBenefits: [
+      "AI systems can understand educational intent",
+      "Knowledge base entries for retrieval",
+    ],
   },
   {
     type: "BreadcrumbList",
     description: "Site hierarchy navigation",
     适用场景: ["All pages"],
-    aiBenefits: ["AI understands page location in site structure", "Better context for content relationships"],
+    aiBenefits: [
+      "AI understands page location in site structure",
+      "Better context for content relationships",
+    ],
   },
 ];
 
@@ -51,7 +66,12 @@ export interface SchemaRecommendation {
 export const schemaRecommendations: SchemaRecommendation[] = [
   {
     pageType: "Homepage",
-    schemaTypes: ["Organization", "SoftwareApplication", "FAQPage", "BreadcrumbList"],
+    schemaTypes: [
+      "Organization",
+      "SoftwareApplication",
+      "FAQPage",
+      "BreadcrumbList",
+    ],
     priority: "high",
     implementationNotes: "Core schema for brand and product identification",
   },
@@ -92,15 +112,18 @@ export const implementationPhases: SchemaImplementationPhase[] = [
     name: "Phase 1 - Core Schema",
     items: [
       { type: "Organization", pages: ["/"], estimatedEffort: "low" },
-      { type: "SoftwareApplication", pages: ["/", "/teams", "/spaces"], estimatedEffort: "medium" },
+      {
+        type: "SoftwareApplication",
+        pages: ["/", "/teams", "/spaces", "/host"],
+        estimatedEffort: "medium",
+      },
       { type: "FAQPage", pages: ["/", "/pricing"], estimatedEffort: "low" },
     ],
   },
   {
     phase: 2,
-    name: "Phase 2 - Category and Educational Schema",
+    name: "Phase 2 - Educational and Product Schema",
     items: [
-      { type: "SoftwareApplication", pages: ["/workspace-management-software", "/coworking-management-software"], estimatedEffort: "medium" },
       { type: "Article", pages: ["/resources/*"], estimatedEffort: "low" },
       { type: "Product", pages: ["/pricing/*"], estimatedEffort: "medium" },
     ],

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
@@ -5,8 +6,11 @@ using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Random;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
+using IMarketplaceBookingOpeningHoursService = Booking.Shared.Services.IMarketplaceBookingOpeningHoursService;
+using LocationEntity = Booking.Shared.Database.Entities.Location;
 using IPrivateBookingService = Booking.Shared.Services.IPrivateBookingService;
 using Organization = Booking.Shared.Database.Entities.Organization;
+using ResourceEntity = Booking.Shared.Database.Entities.Resource;
 using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.UnitTests.Services.PrivateBookingServiceTests;
@@ -63,6 +67,79 @@ public class AddAsyncShould
             .Returns(expected);
 
         var result = await sut.AddAsync(booking, cancellationToken);
+
+        result.ShouldBe(expected);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Resolve_Full_Opening_Hours_Date_Before_Creating_Booking(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IResourceRepository resourceRepository,
+        [Frozen] ICustomerRepository customerRepository,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] IContext context,
+        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen] ITeamAuthorizationService teamAuthorizationService,
+        [Frozen] IMarketplaceBookingOpeningHoursService openingHoursService,
+        [Frozen] IPrivateBookingService sharedPrivateBookingService,
+        PrivateBookingService sut,
+        string verifiableToken,
+        string generatedBookingId,
+        CancellationToken cancellationToken)
+    {
+        var bookingDate = new DateOnly(2026, 4, 13);
+        var placeholderFrom = new DateTimeOffset(2026, 4, 13, 0, 0, 0, TimeSpan.Zero);
+        var placeholderUntil = placeholderFrom.AddDays(1);
+        var resolvedFrom = new DateTimeOffset(2026, 4, 13, 8, 30, 0, TimeSpan.Zero);
+        var resolvedUntil = new DateTimeOffset(2026, 4, 13, 17, 0, 0, TimeSpan.Zero);
+        var customer = new CustomerEntity { Id = "customer-1" };
+        var resource = new ResourceEntity { Id = "resource-1", Location = new LocationEntity { Id = "location-1" } };
+        var booking = new Shared.Models.Booking
+        {
+            From = placeholderFrom,
+            Until = placeholderUntil,
+            Schedules = [new BookingSchedule(placeholderFrom, placeholderUntil)],
+            InvolvedCustomers = [new Customer { Id = customer.Id }],
+            Resources = [new ResourceCustomersPair(new Resource { Id = resource.Id }, [new Customer { Id = customer.Id }])]
+        };
+        var expected = new Shared.Models.Booking { Id = generatedBookingId };
+        IReadOnlyList<string> emptyIds = [];
+        IReadOnlyList<Organization> emptyOrganizations = [];
+        IReadOnlyList<Team> emptyTeams = [];
+
+        A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => resourceRepository.GetByIdsAsync(
+                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { resource.Id })),
+                false,
+                cancellationToken))
+            .Returns([resource]);
+        A.CallTo(() => openingHoursService.ResolveDailyBookingWindow(resource, bookingDate)).Returns((resolvedFrom, resolvedUntil));
+        A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
+        A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken)).Returns(customer);
+        A.CallTo(() => randomHelper.Generate()).Returns(generatedBookingId);
+        A.CallTo(() => organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(emptyIds, emptyIds, customer.Id, false,
+                cancellationToken))
+            .Returns(emptyOrganizations);
+        A.CallTo(() => teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(emptyIds, customer.Id, false, cancellationToken))
+            .Returns(emptyTeams);
+        A.CallTo(() => sharedPrivateBookingService.AddAsync(
+                A<Shared.Models.Booking>.That.Matches(model =>
+                    model.Id == generatedBookingId &&
+                    model.From == resolvedFrom &&
+                    model.Until == resolvedUntil &&
+                    model.Schedules.Count == 1 &&
+                    model.Schedules[0].From == resolvedFrom &&
+                    model.Schedules[0].Until == resolvedUntil),
+                A<CustomerEntity>.That.Matches(model => model.Id == customer.Id),
+                A<IReadOnlyList<Organization>>.That.Matches(items => items.Count == 0),
+                A<IReadOnlyList<Team>>.That.Matches(items => items.Count == 0),
+                null,
+                cancellationToken))
+            .Returns(expected);
+
+        var result = await sut.AddAsync(booking, bookingDate, cancellationToken);
 
         result.ShouldBe(expected);
     }

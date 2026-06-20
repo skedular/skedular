@@ -72,6 +72,10 @@ public class TagService(
         if (!ignoreAuthorizationCheck)
         {
             (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+            if (!string.IsNullOrWhiteSpace(tag.Id) && HostLocationSystemIds.IsProductTag(tag.Id))
+            {
+                throw new UnauthorizedAccessException("Host Location Product tags are system managed.");
+            }
         }
 
         if (string.IsNullOrWhiteSpace(tag.Id))
@@ -141,6 +145,7 @@ public class TagService(
     public async Task<Tag> UpdatePatchAsync(OrganizationTagPatchRequest request, CancellationToken cancellationToken)
     {
         ValidatePatchRequest(request);
+        EnsureUserManagedTag(request.Id);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingTag = await repositoryFactory.TagRepository.GetByIdAsync(request.Id, cancellationToken) ?? throw new OrganizationTagNotFound();
@@ -192,6 +197,7 @@ public class TagService(
     public async Task<Tag> DeleteAsync(string tagId, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
+        EnsureUserManagedTag(tagId);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
@@ -226,6 +232,11 @@ public class TagService(
 
     public async Task<IReadOnlyList<Tag>> DeleteAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
     {
+        foreach (var id in ids)
+        {
+            EnsureUserManagedTag(id);
+        }
+
         if (ids.Count == 0)
         {
             return [];
@@ -306,6 +317,14 @@ public class TagService(
                         organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)))
                 .ToList(),
             totalCount);
+    }
+
+    private static void EnsureUserManagedTag(string id)
+    {
+        if (HostLocationSystemIds.IsProductTag(id))
+        {
+            throw new UnauthorizedAccessException("Host Location Product tags are system managed.");
+        }
     }
 
     private async Task<Tag> UpdateInternalAsync(

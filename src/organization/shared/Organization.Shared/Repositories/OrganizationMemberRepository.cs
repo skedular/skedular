@@ -179,7 +179,8 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
                     nameof(Customer.PhoneNumber),
                     query => query.Customer.PhoneNumber,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

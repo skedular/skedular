@@ -1,0 +1,81 @@
+import { RelayError, startOfDay, toRootError } from '@skedular/shared';
+import { AnalyticsInsightCard } from '@/components/analytics';
+
+import type { locationBookingInsightRoot_rootQuery } from '@/queries/__generated__/locationBookingInsightRoot_rootQuery.graphql';
+import Skeleton from '@mui/material/Skeleton';
+import { memo, useEffect, useState, useTransition } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { v7 as uuid } from 'uuid';
+import LocationBookingInsight from './location-booking-insight';
+
+type Props = {
+  queryReference: PreloadedQuery<locationBookingInsightRoot_rootQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
+};
+
+const RootQuery = graphql`
+  query locationBookingInsightRoot_rootQuery($locationId: String!, $from: DateTime!, $to: DateTime!) {
+    ...locationBookingInsight_query
+    ...locationBookingInsight_locationAnalytics_query
+  }
+`;
+
+const LocationBookingInsightRoot = ({ queryReference }: Props) => {
+  const rootData = usePreloadedQuery<locationBookingInsightRoot_rootQuery>(RootQuery, queryReference);
+
+  return <LocationBookingInsight rootDataRelay={rootData} rootDataLocationAnalyticsRelay={rootData} />;
+};
+
+const MemoLocationBookingInsightRoot = memo(LocationBookingInsightRoot);
+
+type RelayProps = {
+  onReloadRequired: () => void;
+  locationId: string;
+};
+
+const LocationBookingInsightRootWithRelay = ({ onReloadRequired, locationId }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<locationBookingInsightRoot_rootQuery>(RootQuery);
+  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
+  const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    const to = startOfDay();
+    const from = to.subtract(30, 'days');
+
+    loadQuery(
+      {
+        locationId,
+        from: from.toISOString(),
+        to: to.toISOString(),
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [loadQuery, triggerReloadId, locationId]);
+
+  const handleReloadRequired = () => {
+    startTransition(() => {
+      setTriggerReloadId(uuid());
+
+      onReloadRequired();
+    });
+  };
+
+  if (!queryReference) {
+    return (
+      <AnalyticsInsightCard title="Booking Insights">
+        <Skeleton variant="rounded" width="100%" height={350} />
+      </AnalyticsInsightCard>
+    );
+  }
+
+  return (
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
+      <MemoLocationBookingInsightRoot queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+    </ErrorBoundary>
+  );
+};
+
+export default memo(LocationBookingInsightRootWithRelay);

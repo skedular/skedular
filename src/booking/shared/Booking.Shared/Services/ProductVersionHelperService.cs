@@ -18,8 +18,7 @@ public interface IProductVersionHelperService
     ProductPricing? FindMatchingPricing(IEnumerable<ProductPricing> pricingOptions, ProductPricing pricing);
 
     /// <summary>
-    ///     Finds a matching Stripe product from a collection based on the provided pricing.
-    ///     First tries to match by ID, then by pricing properties.
+    ///     Finds the Stripe product provisioned for the provided pricing option.
     /// </summary>
     /// <param name="stripeProducts">The collection of Stripe products to search in.</param>
     /// <param name="pricing">The pricing to match against.</param>
@@ -45,7 +44,8 @@ public class ProductVersionHelperService : IProductVersionHelperService
             item.PurchaseCadence == pricing.PurchaseCadence &&
             item.BookingCadence == pricing.BookingCadence &&
             item.NumberOfResourcesToBook == pricing.NumberOfResourcesToBook &&
-            item.BillingMode == pricing.BillingMode);
+            item.BillingMode == pricing.BillingMode &&
+            item.RequiredDaysPerWeek == pricing.RequiredDaysPerWeek);
 
     /// <summary>
     ///     Finds a matching Stripe product from a collection based on the provided pricing.
@@ -55,9 +55,5 @@ public class ProductVersionHelperService : IProductVersionHelperService
     /// <param name="pricing">The pricing to match against.</param>
     /// <returns>The matching Stripe product, or null if not found.</returns>
     public StripeProduct? FindMatchingPricing(IEnumerable<StripeProduct> stripeProducts, ProductPricing pricing) =>
-        stripeProducts.FirstOrDefault(item => item.Id == pricing.Id) ??
-        stripeProducts.FirstOrDefault(item =>
-            item.PricingCadence.ToProductPricingCadence() == pricing.PurchaseCadence &&
-            item.BillingMode.ToProductPricingBillingMode() == pricing.BillingMode &&
-            item.NumberOfResourcesToBook == pricing.NumberOfResourcesToBook);
+        stripeProducts.FirstOrDefault(item => item.ProductPricingId == pricing.Id);
 }

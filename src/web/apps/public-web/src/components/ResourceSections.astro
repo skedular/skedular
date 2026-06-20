@@ -6,15 +6,27 @@ interface Props {
 }
 
 const { articles } = Astro.props;
+
+const sortedArticles = [...articles].sort((a, b) =>
+  b.publishedDate.localeCompare(a.publishedDate)
+);
+
+const formatPublishedDate = (date: string) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${date}T00:00:00Z`));
 ---
 
 <div class="resource-list">
-  {articles.map((article) => (
+  {sortedArticles.map((article) => (
     <article class="resource-card">
       <p class="eyebrow">{article.topicTags.join(" / ")}</p>
+      <time class="article-meta" datetime={article.publishedDate}>{formatPublishedDate(article.publishedDate)}</time>
       <h2><a href={article.destinationPath}>{article.title}</a></h2>
       <p>{article.summary}</p>
-      <small>Migration: {article.migrationDecision} from {article.sourceUrl}</small>
     </article>
   ))}
 </div>

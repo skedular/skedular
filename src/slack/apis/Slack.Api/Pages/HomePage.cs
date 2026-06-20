@@ -120,7 +120,8 @@ public class HomePage(
                 break;
 
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(appHomeOpenedEvent.Tab), appHomeOpenedEvent.Tab,
+                    $"Unexpected value for {nameof(appHomeOpenedEvent.Tab)}: {appHomeOpenedEvent.Tab}. Update enum mapping or caller input.");
         }
     }
 

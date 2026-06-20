@@ -9,12 +9,13 @@ describe('app-switcher-model', () => {
         webapp: 'https://app.skedular.test/',
         'webapp-teams': 'https://teams.skedular.test/',
         'webapp-spaces': 'https://spaces.skedular.test/',
+        'webapp-host': 'https://host.skedular.test/',
       },
     });
 
-    expect(model.destinations.map((destination) => destination.displayName)).toEqual(['Skedular', 'Skedular Teams', 'Skedular Spaces']);
-    expect(model.destinations.map((destination) => destination.availability)).toEqual(['current', 'available', 'available']);
-    expect(model.availableDestinationCount).toBe(2);
+    expect(model.destinations.map((destination) => destination.displayName)).toEqual(['Skedular', 'Skedular Teams', 'Skedular Spaces', 'Skedular Host']);
+    expect(model.destinations.map((destination) => destination.availability)).toEqual(['current', 'available', 'available', 'available']);
+    expect(model.availableDestinationCount).toBe(3);
     expect(model.hasSwitchTargets).toBe(true);
   });
 
@@ -25,6 +26,7 @@ describe('app-switcher-model', () => {
         webapp: 'https://app.skedular.test/',
         'webapp-teams': 'https://teams.skedular.test/',
         'webapp-spaces': 'https://spaces.skedular.test/',
+        'webapp-host': 'https://host.skedular.test/',
       },
     });
 
@@ -33,7 +35,7 @@ describe('app-switcher-model', () => {
       isCurrent: true,
       availability: 'current',
     });
-    expect(getAvailableAppSwitcherDestinations(model).map((destination) => destination.appId)).toEqual(['webapp', 'webapp-spaces']);
+    expect(getAvailableAppSwitcherDestinations(model).map((destination) => destination.appId)).toEqual(['webapp', 'webapp-spaces', 'webapp-host']);
   });
 
   it('marks missing, malformed, and unsupported URLs unavailable without blocking valid destinations', () => {
@@ -50,6 +52,7 @@ describe('app-switcher-model', () => {
       ['webapp', 'missing-url'],
       ['webapp-teams', 'invalid-url'],
       ['webapp-spaces', 'current'],
+      ['webapp-host', 'missing-url'],
     ]);
     expect(model.hasSwitchTargets).toBe(false);
   });

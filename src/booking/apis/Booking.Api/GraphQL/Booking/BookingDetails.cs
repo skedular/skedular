@@ -73,4 +73,14 @@ public static partial class BookingDetailsType
 
     public static IEnumerable<TeamDetails> GetInvolvedTeams([Parent] BookingDetails item) =>
         item.InvolvedTeamIds.Select(id => new TeamDetails(id));
+
+    public static async Task<MarketplaceBookingFailureDetails?> GetFailureAsync(
+        [Service] IGraphQlMapper graphQlMapper,
+        [Service] IMarketplaceBookingFailureReadService failureReadService,
+        [Parent] BookingDetails item,
+        CancellationToken cancellationToken)
+    {
+        var failure = await failureReadService.GetByBookingIdAsync(item.Id, cancellationToken);
+        return failure is null ? null : graphQlMapper.MapTo(failure);
+    }
 }

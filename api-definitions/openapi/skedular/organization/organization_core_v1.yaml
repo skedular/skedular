@@ -38,14 +38,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
-  /v1/organization/{organizationId}/offering/{offeringCode}:
+  /v1/organization/{organizationId}/changeOrganizationOfferingById/{offeringCode}:
     put:
       tags:
         - v1
         - organization
         - offering
-      summary: change organization offering
-      operationId: changeOrganizationOffering
+      summary: change organization offering by Id
+      operationId: changeOrganizationOfferingById
       parameters:
         - in: path
           name: organizationId
@@ -55,7 +55,44 @@ paths:
         - in: path
           name: offeringCode
           schema:
+            $ref: "#/components/schemas/OfferingCode"
+          required: true
+        - in: header
+          name: X-API-Key
+          schema:
             type: string
+          required: true
+          description: API Key
+
+      responses:
+        "200":
+          description: the status of changing organization offering
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/{customDomain}/changeOrganizationOfferingByCustomDomain/{offeringCode}:
+    put:
+      tags:
+        - v1
+        - organization
+        - offering
+      summary: change organization offering by custom domain
+      operationId: changeOrganizationOfferingByCustomDomain
+      parameters:
+        - in: path
+          name: customDomain
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: offeringCode
+          schema:
+            $ref: "#/components/schemas/OfferingCode"
           required: true
         - in: header
           name: X-API-Key
@@ -430,6 +467,19 @@ paths:
 
 components:
   schemas:
+    OfferingCode:
+      type: string
+      enum:
+        - EARLY_BIRD_V1
+        - FREE_TIER_V1
+        - PAY_AS_YOU_GO_V1
+        - ENTERPRISE_CUSTOM_V1
+        - SPACES_FREE_TIER_V1
+        - SPACES_GROWTH_V1
+        - SPACES_BUSINESS_V1
+        - SPACES_CONTACT_US_V1
+        - HOST_STANDARD_V1
+
     ProblemDetails:
       type: object
       additionalProperties: { }

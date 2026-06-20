@@ -80,7 +80,8 @@ public class KafkaActivityStarter(IActivityAccessor activityAccessor, ILogger<Ka
     {
         KafkaOperationType.Provide => "send",
         KafkaOperationType.Consume => "receive",
-        _ => throw new ArgumentOutOfRangeException(nameof(kafkaOperationType), kafkaOperationType, null)
+        _ => throw new ArgumentOutOfRangeException(nameof(kafkaOperationType), kafkaOperationType,
+            $"Unexpected value for {nameof(kafkaOperationType)}: {kafkaOperationType}. Update enum mapping or caller input.")
     };
 
     private static IDictionary<string, object?> BuildKafkaTags(string topic, int? partition)

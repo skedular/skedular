@@ -89,7 +89,8 @@ public class LocationGrpcService(
                 {
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private => LocationType.Private,
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace => LocationType.Marketplace,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(null,
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
                 }).ToList(),
                 null,
                 request.Where.NotContactedYet,
@@ -105,7 +106,8 @@ public class LocationGrpcService(
                 {
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationOrderField.Name => LocationOrderField.Name,
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationOrderField.Timezone => LocationOrderField.Timezone,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(null,
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
                 };
 
                 return new LocationOrder(direction, field);
@@ -157,7 +159,8 @@ public class LocationGrpcService(
                 {
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private => LocationType.Private,
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace => LocationType.Marketplace,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(null,
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
                 }).ToList(),
                 null,
                 request.Where.NotContactedYet,
@@ -172,7 +175,8 @@ public class LocationGrpcService(
                 var field = item.Field switch
                 {
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationOrderField.Name => LocationOrderField.Name,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(null,
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
                 };
 
                 return new LocationOrder(direction, field);
@@ -258,6 +262,7 @@ public class LocationGrpcService(
                 LocationPatchField.PhysicalAddress,
             global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.UniqueClaimCode =>
                 LocationPatchField.UniqueClaimCode,
-            _ => throw new ArgumentOutOfRangeException(nameof(fields), field, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(fields), field,
+                $"Unexpected value for {nameof(fields)}: {field}. Update enum mapping or caller input.")
         }).ToHashSet();
 }

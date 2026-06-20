@@ -14,7 +14,12 @@ public static class OfferingPricingCatalogMappingExtensions
                 OfferingCode.FreeTierV1 => PricingCatalogSubscriptionPlanCode.Free,
                 OfferingCode.PayAsYouGoV1 => PricingCatalogSubscriptionPlanCode.PayAsYouGo,
                 OfferingCode.EnterpriseCustomV1 => PricingCatalogSubscriptionPlanCode.EnterpriseCapacity,
-                _ => throw new ArgumentOutOfRangeException(nameof(offeringCode), offeringCode, null)
+                OfferingCode.SpacesFreeTierV1 => PricingCatalogSubscriptionPlanCode.Free,
+                OfferingCode.SpacesGrowthV1 => PricingCatalogSubscriptionPlanCode.Growth,
+                OfferingCode.SpacesBusinessV1 => PricingCatalogSubscriptionPlanCode.Business,
+                OfferingCode.SpacesContactUsV1 => PricingCatalogSubscriptionPlanCode.ContactUs,
+                _ => throw new ArgumentOutOfRangeException(nameof(offeringCode), offeringCode,
+                    $"Unexpected value for {nameof(offeringCode)}: {offeringCode}. Update enum mapping or caller input.")
             };
     }
 }

@@ -18,7 +18,11 @@ public class OrganizationOffering : ModelBaseWithDeleted
     public int? PurchasedLocationCapacity { get; set; }
     public int? PurchasedTeamCapacity { get; set; }
     public CatalogVersion? CatalogVersion { get; set; }
+    public int DiscountPercentage { get; set; }
+    public decimal HostCommissionPercentage { get; set; }
+    public DateTimeOffset? SpacesBillingStartsAt { get; set; }
     public Organization Organization { get; set; } = new();
     public IReadOnlyList<OrganizationOfferingActiveMember> OrganizationOfferingActiveMembers { get; set; } = [];
     public OrganizationStripePaymentIntent? OrganizationStripePaymentIntent { get; set; }
+    public bool IsComplimentaryBridge => SpacesBillingStartsAt.HasValue && SpacesBillingStartsAt.Value > Start;
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7301bff5d3a25a97e8d11f84bded4de0>>
+ * @generated SignedSource<<d7143eae4dc07db37c2e20e85ea802ad>>
  * @lightSyntaxTransform
  */
 
@@ -22,7 +22,7 @@ export type marketplaceProductBookingDetails_deleteMarketplaceBookingMutation$da
         readonly id: string;
       } | null | undefined;
       readonly id: string;
-    };
+    } | null | undefined;
   };
 };
 export type marketplaceProductBookingDetails_deleteMarketplaceBookingMutation = {

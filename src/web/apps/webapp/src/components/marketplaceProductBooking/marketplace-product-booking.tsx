@@ -26,7 +26,13 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query marketplaceProductBooking_rootQuery($productId: String!) {
+  query marketplaceProductBooking_rootQuery($productId: String!, $organizationCustomDomain: String!) {
+    organization(customDomain: $organizationCustomDomain) {
+      spacesPublicBookingAvailability {
+        available
+        message
+      }
+    }
     product(id: $productId) {
       ...marketplaceProductBookingHero_product
     }
@@ -58,6 +64,8 @@ const MarketplaceProductBooking = ({ queryReference, selectedDate, setSelectedDa
         {rootData.product ? <MarketplaceProductBookingHero productRelay={rootData.product} /> : null}
         <Box sx={{ mt: 1 }}>
           <MarketplaceProductBookingForm
+            bookingAvailable={rootData.organization?.spacesPublicBookingAvailability.available ?? false}
+            bookingAvailabilityMessage={rootData.organization?.spacesPublicBookingAvailability.message ?? 'Bookings are currently unavailable for this workspace.'}
             onDateChange={setSelectedDate}
             onTimeRangeChange={setTimeRange}
             rootDataRelay={rootData}
@@ -74,24 +82,25 @@ const MemoMarketplaceProductBooking = memo(MarketplaceProductBooking);
 
 const MarketplaceProductBookingWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<marketplaceProductBooking_rootQuery>(RootQuery);
-  const { productId } = useKnownParams();
+  const { productId, organizationCustomDomain } = useKnownParams();
   const [selectedDate, setSelectedDate] = useState<Dayjs>(startOfDay());
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('09:00'), toOpeningHoursFromTime('10:00')]);
 
-  if (!productId) {
-    throw new Error('productId is required');
+  if (!productId || !organizationCustomDomain) {
+    throw new Error('productId and organizationCustomDomain are required');
   }
 
   useEffect(() => {
     loadQuery(
       {
         productId,
+        organizationCustomDomain,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, productId]);
+  }, [loadQuery, organizationCustomDomain, productId]);
 
   if (!queryReference) {
     return <Loading />;

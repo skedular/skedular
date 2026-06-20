@@ -1,0 +1,36 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import CtaLink from "../../components/CtaLink.astro";
+import { getCta } from "../../data/ctas";
+import ComparisonHub from "../../components/ComparisonHub.astro";
+---
+
+<SiteLayout title="Compare Skedular with Alternatives" description="Compare Skedular with leading workspace booking and management software alternatives." canonicalPath="/compare">
+  <section class="subpage-hero">
+    <div class="container">
+      <p class="eyebrow">Comparison</p>
+      <h1>Compare Skedular with Alternatives</h1>
+      <p>
+        Choosing workspace software is difficult because many products solve overlapping problems while serving
+        different audiences. Some focus on workplace booking, some on coworking operations, some on visitor management,
+        and others on hybrid work coordination or workspace discovery.
+      </p>
+      <p>
+        This comparison hub helps buyers evaluate Skedular alongside leading workplace management, desk booking,
+        coworking management, hybrid workplace, and workspace operations platforms.
+      </p>
+      <p>
+        Skedular combines workplace booking, coworking operations, workspace commerce, subscriptions, billing,
+        invoicing, marketplace discovery, and enterprise integrations in a single platform.
+      </p>
+    </div>
+  </section>
+  <section class="page-section comparison-hub-section">
+    <div class="container">
+      <ComparisonHub />
+      <div class="button-row comparison-hub-cta-row">
+        <CtaLink cta={getCta("book-demo")} />
+      </div>
+    </div>
+  </section>
+</SiteLayout>

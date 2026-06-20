@@ -80,7 +80,8 @@ public class BookingGrpcService(
                     global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Notes => BookingOrderField.Notes,
                     global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Category => BookingOrderField.Category,
                     global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Channel => BookingOrderField.Channel,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(null,
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
                 };
 
                 return new BookingOrder(direction, field);
@@ -144,7 +145,8 @@ public class BookingGrpcService(
                     global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Notes => BookingOrderField.Notes,
                     global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Category => BookingOrderField.Category,
                     global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Channel => BookingOrderField.Channel,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(null,
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
                 };
 
                 return new BookingOrder(direction, field);
@@ -235,7 +237,8 @@ public class BookingGrpcService(
                             Models.PrivateBookingPatchField.Category,
                         PrivateBookingPatchField.Resources =>
                             Models.PrivateBookingPatchField.Resources,
-                        _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null)
+                        _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
+                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.")
                     }).ToHashSet()),
                 context.CancellationToken));
     }

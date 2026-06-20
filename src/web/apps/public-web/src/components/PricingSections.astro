@@ -8,8 +8,7 @@ interface Props {
 }
 
 const { productId } = Astro.props;
-const productPricingModels = pricingPage.models.filter((model) => model.id === "teams" || model.id === "spaces");
-const hostPricingModel = pricingPage.models.find((model) => model.id === "hosts");
+const productPricingModels = pricingPage.models.filter((model) => model.id === "teams" || model.id === "spaces" || model.id === "host");
 const selectedModel = productPricingModels.find((model) => model.id === productId);
 ---
 
@@ -37,22 +36,59 @@ const selectedModel = productPricingModels.find((model) => model.id === productI
               <strong>{tier.name}</strong>
               <span>{tier.price}</span>
               <p>{tier.summary}</p>
+              <p class="tier-best-for">{tier.bestFor}</p>
+              <ul>
+                {tier.highlights.map((highlight) => (
+                  <li>{highlight}</li>
+                ))}
+              </ul>
+              {tier.price === "Contact Us" && (
+                <a class="tier-contact-link" href="mailto:support@getskedular.com">
+                  Contact us
+                </a>
+              )}
             </div>
           ))}
         </div>
 
-        {selectedModel.id === "spaces" && hostPricingModel && (
-          <div class="pricing-marketplace-note">
-            <strong>{hostPricingModel.name}</strong>
-            <span>{hostPricingModel.basis}</span>
-            <p>
-              {hostPricingModel.tiers[0]?.price}. {hostPricingModel.tiers[0]?.summary}
-            </p>
-          </div>
-        )}
+        <div class="pricing-marketplace-note">
+          <strong>How billing works</strong>
+          <span>{selectedModel.basis}</span>
+          <p>{selectedModel.buyingNote}</p>
+        </div>
 
-        <CtaLink cta={getCta(selectedModel.ctaId as Parameters<typeof getCta>[0])} />
+        <div class="pricing-card-cta">
+          <CtaLink cta={getCta(selectedModel.ctaId as Parameters<typeof getCta>[0])} />
+        </div>
       </article>
+
+      {selectedModel.explanationTitle && selectedModel.explanationBody && (
+        <section class="pricing-detail-section" aria-labelledby={`${selectedModel.id}-explanation-title`}>
+          <h2 id={`${selectedModel.id}-explanation-title`}>{selectedModel.explanationTitle}</h2>
+          <p>{selectedModel.explanationBody}</p>
+        </section>
+      )}
+
+      <section class="pricing-detail-section" aria-labelledby={`${selectedModel.id}-included-title`}>
+        <h2 id={`${selectedModel.id}-included-title`}>{selectedModel.includedTitle}</h2>
+        <ul class="pricing-included-list">
+          {selectedModel.includedItems.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="pricing-detail-section" aria-labelledby={`${selectedModel.id}-faq-title`}>
+        <h2 id={`${selectedModel.id}-faq-title`}>Pricing FAQ</h2>
+        <div class="pricing-faq-list">
+          {selectedModel.faq.map((item) => (
+            <details>
+              <summary>{item.question}</summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
     </div>
   ) : (
     <div class="pricing-selector-grid">
@@ -61,6 +97,7 @@ const selectedModel = productPricingModels.find((model) => model.id === productI
           <span>{model.basis}</span>
           <strong>{model.name}</strong>
           <p>{model.audience}</p>
+          <p>{model.intro}</p>
           <em>View {model.name} pricing</em>
         </a>
       ))}
@@ -68,12 +105,14 @@ const selectedModel = productPricingModels.find((model) => model.id === productI
   )
 }
 
-<div class="pricing-review-note">
-  <div>
-    <p class="eyebrow">Pricing review</p>
-    <h2>Final pricing should be approved before launch</h2>
-  </div>
-  <p>
-    Pricing is separated by product so buyers only see the model that matches their job. The business approval status is <strong>{pricingPage.reviewStatus}</strong>.
-  </p>
-</div>
+{
+  !selectedModel && (
+    <div class="pricing-review-note">
+      <div>
+        <p class="eyebrow">Pricing note</p>
+        <h2>Choose the pricing model that matches how you operate</h2>
+      </div>
+      <p>{pricingPage.note}</p>
+    </div>
+  )
+}

@@ -69,6 +69,21 @@ const customTagSchema = object({
   description: string().nullable(),
 });
 
+const getValidTagPatchFields = (fieldsToUpdate: TagPatchField[], values: CustomTagPatchDetails): TagPatchField[] =>
+  fieldsToUpdate.filter((field) => {
+    if (field === 'COLOR') {
+      return true;
+    }
+
+    const formField = field === 'NAME' ? 'name' : 'description';
+    try {
+      customTagSchema.validateSyncAt(formField, values);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const EditOrganizationCustomTagPageComponent = ({ queryReference, customTagId, onCancel }: Props) => {
   const rootData = usePreloadedQuery<editOrganizationCustomTagDialog_rootQuery>(RootQuery, queryReference);
   const [commitUpdateCustomTagPatch] = useMutation<editOrganizationCustomTagDialog_updateCustomTagMutation>(graphql`
@@ -103,12 +118,13 @@ const EditOrganizationCustomTagPageComponent = ({ queryReference, customTagId, o
   const commitCustomTagPatch = useCallback(
     (fieldsToUpdate: TagPatchField[], values: CustomTagPatchDetails) => {
       const customTag = rootData.customTag;
-      if (!customTag || fieldsToUpdate.length === 0 || !customTagSchema.isValidSync({ name: values.name, description: values.description })) {
+      const validFieldsToUpdate = getValidTagPatchFields(fieldsToUpdate, values);
+      if (!customTag || validFieldsToUpdate.length === 0) {
         return;
       }
 
       const previousValues = submittedCustomTagValues.current;
-      if (getChangedTagFields(previousValues, values).length === 0) {
+      if (getChangedTagFields(previousValues, values).filter((field) => validFieldsToUpdate.includes(field)).length === 0) {
         return;
       }
       submittedCustomTagValues.current = values;
@@ -118,7 +134,7 @@ const EditOrganizationCustomTagPageComponent = ({ queryReference, customTagId, o
           input: {
             clientMutationId: uuid(),
             id: customTagId,
-            fieldsToUpdate,
+            fieldsToUpdate: validFieldsToUpdate,
             name: values.name,
             description: values.description,
             color: values.color,

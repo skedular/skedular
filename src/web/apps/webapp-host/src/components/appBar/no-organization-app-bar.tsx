@@ -1,0 +1,392 @@
+import { createHostAppSwitcherModel } from '@/app/app-switcher-config';
+import AppSwitcher from '@skedular/ui/app-shell/app-switcher';
+import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
+import { NewFeedbackDialog } from '@/components/feedback';
+import { AddIcon, FeedbackIcon, HamburgerMenuIcon, OrganizationIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
+import { getOrganizationBaseLink, getOrganizationSetupLink, getSignOutReturnToLink } from '@/components/links';
+import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
+import type { noOrganizationAppBar_query$key } from '@/queries/__generated__/noOrganizationAppBar_query.graphql';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import MuiAppBar from '@mui/material/AppBar';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import type { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
+import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/system/Box';
+import { getCustomerFullName, localNow, PaletteModeContext, SelectedPaletteModeContext, toLongDateTime, UpdatePaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { useAuth } from '@workos-inc/authkit-nextjs/components';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { memo, useContext, useMemo, useState } from 'react';
+import { graphql, useFragment } from 'react-relay';
+import { useInterval } from 'usehooks-ts';
+
+type Props = {
+  rootDataRelay: noOrganizationAppBar_query$key;
+  showLogo?: boolean;
+  hideOrganizationSelector?: boolean;
+};
+
+const createOrganizationId = '76eZvntIX6YA5FboBJlRk';
+
+const NoOrganizationAppBar = ({ rootDataRelay, showLogo, hideOrganizationSelector }: Props) => {
+  const rootData = useFragment<noOrganizationAppBar_query$key>(
+    graphql`
+      fragment noOrganizationAppBar_query on Query {
+        me {
+          id
+          email
+          emails
+          givenName
+          middleName
+          familyName
+          photoUrl
+        }
+        myOrganizations(types: [HOST]) {
+          uniqueId
+          customDomain
+          logoUrl
+          name
+        }
+        ...newFeedbackDialog_query
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const { integratedPlatform } = useIntegratedPlatform();
+  const { signOut } = useAuth();
+  const router = useRouter();
+  const [currentTime, setCurrentTime] = useState(localNow());
+  const selectedThemeMode = useContext(SelectedPaletteModeContext);
+  const paletteMode = useContext(PaletteModeContext);
+  const updatePaletteMode = useContext(UpdatePaletteModeContext);
+  const [themeMenuAnchorEl, setThemeMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
+  const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const appSwitcher = useMemo(() => createHostAppSwitcherModel({ logConfiguration: false }), []);
+
+  useInterval(() => setCurrentTime(localNow()), 1000);
+
+  const handleSelectedOrganizationChange = (event: SelectChangeEvent<unknown>) => {
+    const id = event.target.value as string;
+
+    if (id === createOrganizationId) {
+      router.push(getOrganizationSetupLink(integratedPlatform));
+    } else {
+      router.push(getOrganizationBaseLink(integratedPlatform, id));
+    }
+  };
+
+  const handleProfileMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
+    setProfileOpenAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuCloseClick = () => {
+    setProfileOpenAnchorEl(null);
+  };
+
+  const handleSignOutClick = async () => {
+    setProfileOpenAnchorEl(null);
+    await signOut({ returnTo: getSignOutReturnToLink() });
+  };
+
+  const handleSubmitFeedbackClicked = () => {
+    setProfileOpenAnchorEl(null);
+    setSubmitFeedbackDialogOpen(true);
+  };
+
+  const handleSubmitFeedbackSendClick = () => {
+    setSubmitFeedbackDialogOpen(false);
+  };
+
+  const handleSubmitFeedbackCancelClick = () => {
+    setSubmitFeedbackDialogOpen(false);
+  };
+
+  const handleThemeMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
+    setThemeMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleThemeMenuCloseClick = () => {
+    setThemeMenuAnchorEl(null);
+  };
+
+  const handleThemeModeSelected = (mode: 'light' | 'dark' | 'system') => {
+    updatePaletteMode(mode);
+    handleThemeMenuCloseClick();
+  };
+
+  const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
+    setMobileDrawerOpen(newOpen);
+  };
+
+  const customerName = getCustomerFullName({
+    name: null,
+    givenName: rootData.me?.givenName,
+    middleName: rootData.me?.middleName,
+    familyName: rootData.me?.familyName,
+  });
+
+  const selectedThemeIcon =
+    selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
+  const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
+  const originalLogoWidth = 779;
+  const originalLogoHeight = 163;
+  const logoWidth = 230;
+  const logoHeight = (originalLogoHeight * logoWidth) / originalLogoWidth;
+
+  return (
+    <>
+      <MuiAppBar position="sticky" className="app-bar">
+        <Toolbar
+          sx={{
+            backgroundColor: (theme) => theme.palette.background.paper,
+            borderBottom: paletteMode === 'dark' ? 1 : undefined,
+            borderColor: (theme) => theme.palette.divider,
+          }}
+        >
+          {showLogo && <Image src={logoUrl} width={logoWidth} height={logoHeight} unoptimized alt="Skedular" />}
+          {showLogo && hideOrganizationSelector && <Divider orientation="vertical" flexItem sx={{ ml: 2, mr: 2 }} />}
+
+          {!hideOrganizationSelector && (
+            <>
+              <Select
+                onChange={handleSelectedOrganizationChange}
+                displayEmpty
+                sx={{
+                  '& fieldset': {
+                    border: 0,
+                    borderRight: 0,
+                    borderRadius: 0,
+                  },
+                }}
+                renderValue={(selectedId) => {
+                  if (!rootData.myOrganizations) {
+                    return (
+                      <>
+                        <BodyIconTypography
+                          label="Please select an organization"
+                          sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        />
+                        <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
+                      </>
+                    );
+                  }
+
+                  const selectedItem = rootData.myOrganizations.find((item) => item.customDomain === selectedId);
+                  if (!selectedItem) {
+                    return (
+                      <>
+                        <BodyIconTypography
+                          label="Please select an organization"
+                          sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        />
+                        <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
+                      </>
+                    );
+                  }
+
+                  return (
+                    <>
+                      <Box sx={{ display: { xs: 'none', sm: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <LeadIconTypography
+                          label={selectedItem.name}
+                          sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                          startElement={<OrganizationAvatar name={{ name: selectedItem.name }} photo={{ url: selectedItem.logoUrl }} />}
+                        />
+                      </Box>
+
+                      <Box sx={{ display: { xs: 'block', sm: 'none' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <LeadIconTypography label={selectedItem.name} sx={{ width: 150, overflow: 'hidden', textOverflow: 'ellipsis' }} />
+                      </Box>
+                    </>
+                  );
+                }}
+              >
+                {rootData.myOrganizations.map((organization) => (
+                  <MenuItem key={organization.uniqueId} value={organization.customDomain ?? ''}>
+                    <StackRow>
+                      <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
+                      <StackColumn spacing={-0.5}>
+                        <LeadIconTypography label={organization.name} />
+                        <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
+                      </StackColumn>
+                    </StackRow>
+                  </MenuItem>
+                ))}
+
+                {rootData.myOrganizations.length !== 0 && <Divider />}
+
+                <MenuItem value={createOrganizationId}>
+                  <LeadIconTypography label="Create organization" startElement={<AddIcon />} />
+                </MenuItem>
+              </Select>
+
+              {rootData.myOrganizations.length !== 0 && <Divider orientation="vertical" flexItem />}
+            </>
+          )}
+          <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingLeft: hideOrganizationSelector ? 0 : 2 }} />
+
+          <PushToRight />
+
+          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingRight: 2 }} />
+          <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
+
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+            <IconButton
+              onClick={handleThemeMenuOpenClick}
+              sx={{
+                ml: 1,
+                border: 1,
+                borderColor: (theme) => theme.palette.divider,
+                borderRadius: 3,
+                width: 40,
+                height: 40,
+                color: (theme) => theme.palette.text.primary,
+                '&:hover': {
+                  backgroundColor: (theme) => theme.palette.action.hover,
+                },
+              }}
+            >
+              {selectedThemeIcon}
+            </IconButton>
+
+            <Menu
+              anchorEl={themeMenuAnchorEl}
+              open={Boolean(themeMenuAnchorEl)}
+              onClose={handleThemeMenuCloseClick}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              sx={{ mt: 1 }}
+            >
+              <MenuItem selected={selectedThemeMode === 'light'} onClick={() => handleThemeModeSelected('light')}>
+                <BodyIconTypography startElement={<LightModeIcon fontSize="small" />} label="Light" spacing={2} />
+              </MenuItem>
+              <MenuItem selected={selectedThemeMode === 'dark'} onClick={() => handleThemeModeSelected('dark')}>
+                <BodyIconTypography startElement={<DarkModeIcon fontSize="small" />} label="Dark" spacing={2} />
+              </MenuItem>
+              <MenuItem selected={selectedThemeMode === 'system'} onClick={() => handleThemeModeSelected('system')}>
+                <BodyIconTypography startElement={<SystemModeIcon fontSize="small" />} label="System" spacing={2} />
+              </MenuItem>
+            </Menu>
+          </Box>
+
+          <IconButton onClick={handleProfileMenuOpenClick}>
+            <CustomerAvatar
+              name={{
+                name: null,
+                givenName: rootData.me?.givenName,
+                middleName: rootData.me?.middleName,
+                familyName: rootData.me?.familyName,
+              }}
+              photo={{
+                url: rootData.me?.photoUrl,
+              }}
+            />
+          </IconButton>
+
+          <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
+            <HamburgerMenuIcon />
+          </IconButton>
+
+          <Menu
+            sx={{ marginTop: 4 }}
+            anchorEl={profileOpenAnchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(profileOpenAnchorEl)}
+            onClose={handleProfileMenuCloseClick}
+            slotProps={{ paper: { sx: { borderRadius: 2, boxShadow: 3 } } }}
+          >
+            <MenuItem>
+              <StackColumn>
+                <LeadIconTypography label={customerName} />
+                <CaptionIconTypography label={rootData.me?.email} />
+              </StackColumn>
+            </MenuItem>
+
+            <Divider />
+
+            <AppSwitcher model={appSwitcher} buttonMode="menu-item" />
+
+            <Divider />
+
+            {/* Theme mode — shown in profile menu on mobile only */}
+            <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+              <MenuItem
+                selected={selectedThemeMode === 'light'}
+                onClick={() => {
+                  handleThemeModeSelected('light');
+                  handleProfileMenuCloseClick();
+                }}
+              >
+                <SmallIconTypography startElement={<LightModeIcon fontSize="small" />} label="Light mode" />
+              </MenuItem>
+              <MenuItem
+                selected={selectedThemeMode === 'dark'}
+                onClick={() => {
+                  handleThemeModeSelected('dark');
+                  handleProfileMenuCloseClick();
+                }}
+              >
+                <SmallIconTypography startElement={<DarkModeIcon fontSize="small" />} label="Dark mode" />
+              </MenuItem>
+              <MenuItem
+                selected={selectedThemeMode === 'system'}
+                onClick={() => {
+                  handleThemeModeSelected('system');
+                  handleProfileMenuCloseClick();
+                }}
+              >
+                <SmallIconTypography startElement={<SystemModeIcon fontSize="small" />} label="System theme" />
+              </MenuItem>
+
+              <Divider />
+            </Box>
+
+            <MenuItem onClick={handleSubmitFeedbackClicked}>
+              <SmallIconTypography startElement={<FeedbackIcon />} label="Send us feedback" />
+            </MenuItem>
+
+            <Divider />
+
+            <MenuItem onClick={async () => await handleSignOutClick()}>
+              <SmallIconTypography startElement={<SignOutIcon />} label="Sign out" />
+            </MenuItem>
+          </Menu>
+
+          <NoOrganizationMobileLeftSideNavigationMenu open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
+        </Toolbar>
+      </MuiAppBar>
+
+      <NewFeedbackDialog
+        rootDataRelay={rootData}
+        isDialogOpen={submitFeedbackDialogOpen}
+        onSendClicked={handleSubmitFeedbackSendClick}
+        onCancel={handleSubmitFeedbackCancelClick}
+      />
+    </>
+  );
+};
+
+export default memo(NoOrganizationAppBar);

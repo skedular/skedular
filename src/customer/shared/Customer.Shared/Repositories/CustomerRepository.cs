@@ -237,7 +237,8 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                     nameof(Database.Entities.Customer.PhoneNumber),
                     query => query.PhoneNumber,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(orderField.Field), orderField.Field,
+                    $"Unexpected value for {nameof(orderField.Field)}: {orderField.Field}. Update enum mapping or caller input.")
             })
             .ToList();
     }

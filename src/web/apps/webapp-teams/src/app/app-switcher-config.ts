@@ -10,6 +10,7 @@ type AppSwitcherEnvironment = {
   NEXT_PUBLIC_SKEDULAR_APP_URL?: string;
   NEXT_PUBLIC_SKEDULAR_TEAMS_APP_URL?: string;
   NEXT_PUBLIC_SKEDULAR_SPACES_APP_URL?: string;
+  NEXT_PUBLIC_SKEDULAR_HOST_APP_URL?: string;
 };
 
 export type CreateAppSwitcherModelOptions = {
@@ -23,6 +24,7 @@ const getDefaultAppSwitcherEnvironment = (): AppSwitcherEnvironment => ({
   NEXT_PUBLIC_SKEDULAR_APP_URL: process.env.NEXT_PUBLIC_SKEDULAR_APP_URL,
   NEXT_PUBLIC_SKEDULAR_TEAMS_APP_URL: process.env.NEXT_PUBLIC_SKEDULAR_TEAMS_APP_URL,
   NEXT_PUBLIC_SKEDULAR_SPACES_APP_URL: process.env.NEXT_PUBLIC_SKEDULAR_SPACES_APP_URL,
+  NEXT_PUBLIC_SKEDULAR_HOST_APP_URL: process.env.NEXT_PUBLIC_SKEDULAR_HOST_APP_URL,
 });
 
 export const createTeamsAppSwitcherModel = ({
@@ -36,6 +38,7 @@ export const createTeamsAppSwitcherModel = ({
       webapp: env.NEXT_PUBLIC_SKEDULAR_APP_URL,
       'webapp-teams': env.NEXT_PUBLIC_SKEDULAR_TEAMS_APP_URL ?? env.NEXT_PUBLIC_SITE_URL,
       'webapp-spaces': env.NEXT_PUBLIC_SKEDULAR_SPACES_APP_URL,
+      'webapp-host': env.NEXT_PUBLIC_SKEDULAR_HOST_APP_URL,
     },
   });
 

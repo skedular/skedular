@@ -1,0 +1,2925 @@
+---
+import { competitors, featureSupport, normalizedFeatures } from "../data/comparison";
+import type { ComparisonPageTarget, ComparisonProduct, SupportState } from "../data/content-types";
+
+interface Props {
+  pageTarget: ComparisonPageTarget;
+}
+
+const { pageTarget } = Astro.props;
+
+const competitor = competitors.find((product) => product.id === pageTarget.competitorId);
+
+const featureIds = [
+  "desk-booking",
+  "room-booking",
+  "floor-plans",
+  "booking-rules",
+  "resource-permissions",
+  "member-management",
+  "billing",
+  "invoicing",
+  "subscription-management",
+  "stripe",
+  "xero",
+  "public-listings",
+  "workspace-discovery",
+  "slack",
+  "teams",
+  "sso",
+  "custom-domains",
+  "api",
+];
+
+const categoryLabels: Record<string, string> = {
+  "workplace-management": "workplace management",
+  "coworking-management": "coworking management",
+  "hybrid-workplace": "hybrid workplace coordination",
+  "workplace-operations": "workplace operations",
+  "marketplace-workspace-network": "workspace marketplace and discovery",
+};
+
+const supportLabels: Record<SupportState, string> = {
+  supported: "Supported",
+  "partially-supported": "Partial Support",
+  "not-supported": "Not Supported",
+  unknown: "Needs review",
+  "not-applicable": "Not Supported",
+};
+
+const supportClasses: Record<SupportState, string> = {
+  supported: "comparison-support-supported",
+  "partially-supported": "comparison-support-partial",
+  "not-supported": "comparison-support-missing",
+  unknown: "comparison-support-unknown",
+  "not-applicable": "comparison-support-unknown",
+};
+
+const getSupport = (productId: string, featureId: string) =>
+  featureSupport.find((support) => support.productId === productId && support.featureId === featureId);
+
+const featureRows = featureIds
+  .map((featureId) => {
+    const feature = normalizedFeatures.find((item) => item.id === featureId);
+    if (!feature) {
+      return null;
+    }
+
+    const skedularSupport = getSupport("skedular", featureId);
+    const competitorSupport = competitor ? getSupport(competitor.id, featureId) : undefined;
+
+    return {
+      feature,
+      skedularState: skedularSupport?.state ?? "unknown",
+      skedularNote: skedularSupport?.note,
+      competitorState: competitorSupport?.state ?? "unknown",
+      competitorNote: competitorSupport?.note,
+    };
+  })
+  .filter(Boolean);
+
+const skeddaFeatureRows = [
+  {
+    feature: { name: "Desk Booking", description: "Book desks for workplace and shared space use" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Core Skedda capability for workplace and shared space booking.",
+  },
+  {
+    feature: { name: "Room Booking", description: "Book meeting rooms and shared resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Core Skedda capability for meeting rooms and shared resources.",
+  },
+  {
+    feature: { name: "Floor Plans", description: "Visual booking through floor plans" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Interactive floor plans are one of Skedda's primary strengths.",
+  },
+  {
+    feature: { name: "Booking Rules", description: "Policies, restrictions, approvals, and scheduling controls" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote:
+      "Skedda supports booking rules, quotas, booking windows, restrictions, approval workflows, eligibility rules, and scheduling controls.",
+  },
+  {
+    feature: { name: "Resource Permissions", description: "Control who can book specific spaces or resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Skedda supports role-based access and booking restrictions by user, role, group, team, and resource.",
+  },
+  {
+    feature: { name: "Utilization Analytics", description: "Workspace utilization and occupancy insight" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Skedda provides utilization analytics and workplace insights.",
+  },
+  {
+    feature: { name: "Visitor Management", description: "Visitor workflows connected to workplace booking" },
+    skedularState: "partially-supported",
+    skedularNote:
+      "Visitor workflows can be supported as part of broader workspace operations, but visitor management is not currently a primary product focus in the same way it is for dedicated visitor management platforms.",
+    competitorState: "supported",
+    competitorNote:
+      "Skedda supports visitor management, including visitor arrival notifications through Slack and Microsoft Teams when visitor management is enabled. In some Skedda materials, visitor management is positioned as an add-on.",
+  },
+  {
+    feature: { name: "Member Management", description: "Users, groups, access, and member-style workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Skedda/AllBooked supports users, groups, permissions, access controls, and membership tags. It should not be described as a full coworking CRM without additional evidence.",
+  },
+  {
+    feature: { name: "Billing", description: "Chargeable bookings and billing workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Skedda/AllBooked supports chargeable bookings and online payments through Stripe. The workflow appears more booking/payment oriented than a full workspace operations billing platform.",
+  },
+  {
+    feature: { name: "Invoicing", description: "Invoice collection and broader invoicing workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "AllBooked supports sending Stripe invoices for unpaid bookings, including individual and batch invoicing. This is booking invoice collection rather than a broader native invoicing and accounting workflow.",
+  },
+  {
+    feature: { name: "Subscription Management", description: "Recurring memberships and subscription workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "AllBooked supports membership tags connected to Stripe subscriptions, including membership purchase links, Stripe product sync, assignment, cancellation, and automatic tag application or removal.",
+  },
+  {
+    feature: { name: "Stripe", description: "Online payments and Stripe-connected payment workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Skedda/AllBooked supports online payments through Stripe and Stripe Connect.",
+  },
+  {
+    feature: { name: "Xero", description: "Accounting and finance integration" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Skedda lists Xero as a third-party finance integration. Skedular may be broader when booking, invoicing, billing, and accounting workflows need to operate together.",
+  },
+  {
+    feature: { name: "Public Listings", description: "Customer-facing availability and booking" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Skedda can be embedded into an existing website for public or customer-facing booking, but it is not positioned as a workspace marketplace or discovery network.",
+  },
+  {
+    feature: { name: "Workspace Discovery", description: "Public discovery network or marketplace search" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote:
+      "Skedda supports booking and availability inside a venue's own booking experience, not a public workspace discovery marketplace comparable to Skedular.",
+  },
+  {
+    feature: { name: "Marketplace Publishing", description: "Publish inventory into a marketplace model" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote:
+      "Skedda is not positioned as a marketplace publishing platform comparable to Skedular's public workspace discovery and marketplace model.",
+  },
+  {
+    feature: { name: "Slack", description: "Slack booking and workplace notifications" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote:
+      "Skedda provides a Slack app for booking notifications, visitor notifications, check-in reminders, attendance visibility, and recurring office attendance reports.",
+  },
+  {
+    feature: { name: "Microsoft Teams", description: "Microsoft Teams booking and coordination" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote:
+      "Skedda lets users book desks from Teams, access floor plans, receive booking notifications, see who is coming into the office, and receive visitor notifications when visitor management is enabled.",
+  },
+  {
+    feature: { name: "Microsoft 365 / Outlook Calendar Sync", description: "Microsoft calendar and workplace integration" },
+    skedularState: "partially-supported",
+    skedularNote: "Basic calendar sync is available, with fuller calendar integration in progress.",
+    competitorState: "supported",
+    competitorNote: "Skedda supports Microsoft 365 and Outlook calendar sync.",
+  },
+  {
+    feature: { name: "Google Workspace / Google Calendar Sync", description: "Google calendar and workspace integration" },
+    skedularState: "partially-supported",
+    skedularNote: "Basic calendar sync is available, with fuller calendar integration in progress.",
+    competitorState: "supported",
+    competitorNote: "Skedda supports Google Workspace integration, including calendar and sign-on related workflows.",
+  },
+  {
+    feature: { name: "SSO", description: "Enterprise identity and provisioning" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote:
+      "Skedda supports enterprise identity integrations including Microsoft Entra ID, Okta, SAML SSO, OneLogin, JumpCloud, and SCIM through Microsoft Entra ID and Okta.",
+  },
+  {
+    feature: { name: "Custom Domains / Branding", description: "Branding, embedding, and domain-related publishing" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Skedda supports branding and embedding into an existing website, but this is not the same as white-label marketplace storefronts or custom-domain workspace publishing.",
+  },
+  {
+    feature: { name: "API", description: "Programmatic access and extensibility" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Zapier and webhooks are available, but Skedda support states there is no open API and integrations are one-way from Skedda to external apps.",
+  },
+] satisfies Array<{
+  feature: { name: string; description: string };
+  skedularState: SupportState;
+  skedularLabel?: string;
+  skedularNote?: string;
+  competitorState: SupportState;
+  competitorNote?: string;
+}>;
+
+const officerndFeatureRows = [
+  {
+    feature: { name: "Desk Booking", description: "Book desks for workplace and shared space use" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Core OfficeRnD Workplace capability.",
+  },
+  {
+    feature: { name: "Room Booking", description: "Book meeting rooms and shared resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Core OfficeRnD Workplace capability.",
+  },
+  {
+    feature: { name: "Floor Plans", description: "Visual booking through floor plans" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Interactive floor plans and visual booking are core Workplace features.",
+  },
+  {
+    feature: { name: "Booking Rules", description: "Policies, restrictions, approvals, and scheduling controls" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Policies, restrictions, workplace rules, booking controls, and scheduling governance are supported.",
+  },
+  {
+    feature: { name: "Resource Permissions", description: "Control who can book specific spaces or resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "OfficeRnD supports role-based permissions and workplace access controls.",
+  },
+  {
+    feature: { name: "Visitor Management", description: "Visitor workflows connected to workplace booking" },
+    skedularState: "partially-supported",
+    skedularNote:
+      "Visitor workflows can be supported as part of broader workspace operations, but visitor management is not currently a primary product focus in the same way it is for dedicated visitor management platforms.",
+    competitorState: "supported",
+    competitorNote: "OfficeRnD Workplace includes visitor management capabilities.",
+  },
+  {
+    feature: { name: "Utilization Analytics", description: "Workplace utilization reporting and analytics" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Workplace utilization reporting and analytics are among OfficeRnD's strongest capabilities.",
+  },
+  {
+    feature: { name: "Member Management", description: "Members, profiles, contracts, and customer administration" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "OfficeRnD Flex includes member management, member profiles, memberships, contracts, and customer administration.",
+  },
+  {
+    feature: { name: "Billing", description: "Recurring billing and customer billing workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "OfficeRnD Flex supports recurring billing and customer billing workflows.",
+  },
+  {
+    feature: { name: "Invoicing", description: "Invoice generation and invoice management" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "OfficeRnD Flex supports invoice generation and invoice management.",
+  },
+  {
+    feature: { name: "Subscription Management", description: "Recurring memberships and subscription workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Membership plans, recurring subscriptions, recurring contracts, and membership management are core Flex capabilities.",
+  },
+  {
+    feature: { name: "Stripe", description: "Online payments and Stripe-connected payment workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "OfficeRnD supports Stripe integration for payments.",
+  },
+  {
+    feature: { name: "Xero", description: "Accounting and finance integration" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "OfficeRnD provides Xero integration.",
+  },
+  {
+    feature: { name: "Public Listings", description: "Customer-facing availability and booking" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "OfficeRnD is not positioned as a public workspace marketplace or discovery platform.",
+  },
+  {
+    feature: { name: "Workspace Discovery", description: "Public discovery network or marketplace search" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "OfficeRnD is not positioned around a public workspace discovery marketplace comparable to Skedular.",
+  },
+  {
+    feature: { name: "Slack", description: "Slack booking and workplace notifications" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "OfficeRnD integrates strongly with workplace tools, but Slack is not a primary differentiator in the way Teams and workplace apps are.",
+  },
+  {
+    feature: { name: "Microsoft Teams", description: "Microsoft Teams booking and coordination" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Microsoft Teams integrations and workplace workflows are supported.",
+  },
+  {
+    feature: { name: "SSO", description: "Enterprise identity and provisioning" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Enterprise SSO support is available.",
+  },
+  {
+    feature: { name: "Custom Domains / Branding", description: "Branding, customization, and domain-related publishing" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Branding and customization are supported, but not marketplace-style publishing and custom-domain workspace storefronts.",
+  },
+  {
+    feature: { name: "API", description: "Programmatic access and extensibility" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "OfficeRnD provides developer APIs and integration capabilities.",
+  },
+] satisfies Array<{
+  feature: { name: string; description: string };
+  skedularState: SupportState;
+  skedularLabel?: string;
+  skedularNote?: string;
+  competitorState: SupportState;
+  competitorNote?: string;
+}>;
+
+const nexudusFeatureRows = [
+  {
+    feature: { name: "Desk Booking", description: "Book desks for workplace and shared space use" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Core Nexudus capability.",
+  },
+  {
+    feature: { name: "Room Booking", description: "Book meeting rooms and shared resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Core Nexudus capability.",
+  },
+  {
+    feature: { name: "Floor Plans", description: "Visual booking through floor plans" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Interactive floor plans and visual booking are supported.",
+  },
+  {
+    feature: { name: "Booking Rules", description: "Policies, restrictions, approvals, and scheduling controls" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Booking policies, restrictions, approvals, and scheduling controls are supported.",
+  },
+  {
+    feature: { name: "Resource Permissions", description: "Control who can book specific spaces or resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Role-based access controls and resource permissions are supported.",
+  },
+  {
+    feature: { name: "Visitor Management", description: "Visitor workflows connected to workplace booking" },
+    skedularState: "partially-supported",
+    skedularNote:
+      "Visitor workflows can be supported as part of broader workspace operations, but visitor management is not currently a primary product focus in the same way it is for dedicated visitor management platforms.",
+    competitorState: "supported",
+    competitorNote: "Visitor management is supported as part of workspace operations.",
+  },
+  {
+    feature: { name: "Utilization Analytics", description: "Workspace reporting and operational analytics" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Workspace reporting and operational analytics are supported.",
+  },
+  {
+    feature: { name: "Member Management", description: "Members, profiles, contracts, and customer administration" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Member profiles, memberships, contracts, and customer administration are core Nexudus capabilities.",
+  },
+  {
+    feature: { name: "Billing", description: "Recurring billing and workspace billing workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Recurring billing and workspace billing workflows are supported.",
+  },
+  {
+    feature: { name: "Invoicing", description: "Invoice generation and invoice management" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Invoice generation and invoice management are supported.",
+  },
+  {
+    feature: { name: "Subscription Management", description: "Recurring memberships and subscription workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Recurring memberships and subscription workflows are supported.",
+  },
+  {
+    feature: { name: "Stripe", description: "Online payments and Stripe-connected payment workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Stripe payment processing is supported.",
+  },
+  {
+    feature: { name: "Xero", description: "Accounting and finance integration" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Xero integration is supported.",
+  },
+  {
+    feature: { name: "Public Listings", description: "Customer-facing availability and booking" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Nexudus supports customer-facing booking experiences and public availability presentation, but it is not positioned as a public workspace marketplace.",
+  },
+  {
+    feature: { name: "Workspace Discovery", description: "Public discovery network or marketplace search" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No public workspace discovery marketplace comparable to Skedular was identified.",
+  },
+  {
+    feature: { name: "Slack", description: "Slack booking and workplace notifications" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Slack integration capabilities exist, but Slack is not a primary product differentiator.",
+  },
+  {
+    feature: { name: "Microsoft Teams", description: "Microsoft Teams booking and coordination" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Microsoft Teams integrations and workplace workflows are supported.",
+  },
+  {
+    feature: { name: "SSO", description: "Enterprise identity and provisioning" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Enterprise SSO support is available.",
+  },
+  {
+    feature: { name: "Custom Domains / Branding", description: "Branding, customization, and domain-related publishing" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Branding and customer-facing workspace customization are supported.",
+  },
+  {
+    feature: { name: "API", description: "Programmatic access and extensibility" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Developer APIs and integration capabilities are available.",
+  },
+  {
+    feature: { name: "Community Management", description: "Community engagement and member workflows" },
+    skedularState: "partially-supported",
+    competitorState: "supported",
+    competitorNote: "Community management, member engagement, and community workflows are notable Nexudus strengths.",
+  },
+  {
+    feature: { name: "Member Portal", description: "Self-service member portal workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Self-service member portals are supported.",
+  },
+  {
+    feature: { name: "Contracts and Membership Plans", description: "Membership plans, agreements, and contract workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Membership plans, recurring agreements, and contract workflows are supported.",
+  },
+] satisfies Array<{
+  feature: { name: string; description: string };
+  skedularState: SupportState;
+  skedularLabel?: string;
+  skedularNote?: string;
+  competitorState: SupportState;
+  competitorNote?: string;
+}>;
+
+const gableFeatureRows = [
+  {
+    feature: { name: "Desk Booking", description: "Book desks for workplace and shared space use" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Room Booking", description: "Book meeting rooms and shared resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Gable supports meeting room and workspace reservations through its workspace network.",
+  },
+  {
+    feature: { name: "Floor Plans", description: "Visual booking through floor plans" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Floor plans are not a primary Gable differentiator.",
+  },
+  {
+    feature: { name: "Booking Rules", description: "Policies, restrictions, approvals, and scheduling controls" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Workplace policies and booking controls are supported.",
+  },
+  {
+    feature: { name: "Resource Permissions", description: "Control who can book specific spaces or resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Role-based access controls and workplace permissions are supported.",
+  },
+  {
+    feature: { name: "Member Management", description: "Members, profiles, contracts, and customer administration" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Supports employee management, team management, workplace administration, permissions, and HRIS-connected user management workflows. However, Gable is not designed around coworking memberships, tenant contracts, recurring member billing, or customer administration in the same way as coworking management platforms.",
+  },
+  {
+    feature: { name: "Billing", description: "Billing and purchasing workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Billing exists around workspace purchasing and company spending workflows, but not coworking-style billing operations.",
+  },
+  {
+    feature: { name: "Invoicing", description: "Invoice generation and invoice management" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Expense and purchasing workflows exist, but not coworking-style invoicing workflows.",
+  },
+  {
+    feature: { name: "Subscription Management", description: "Recurring memberships and subscription workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Subscription-style purchasing workflows exist, but not workspace membership administration.",
+  },
+  {
+    feature: { name: "Stripe", description: "Online payments and Stripe-connected payment workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Payment workflows exist, but Stripe-specific capabilities should not be positioned as a core differentiator.",
+  },
+  {
+    feature: { name: "Xero", description: "Accounting and finance integration" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No significant Xero-focused workflow identified.",
+  },
+  {
+    feature: { name: "Public Listings", description: "Customer-facing availability and booking" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Gable operates a public workspace network and marketplace-style workspace access model.",
+  },
+  {
+    feature: { name: "Workspace Discovery", description: "Public discovery network or marketplace search" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Workspace discovery is one of Gable's strongest capabilities.",
+  },
+  {
+    feature: { name: "Visitor Management", description: "Visitor workflows connected to workplace booking" },
+    skedularState: "partially-supported",
+    skedularNote:
+      "Visitor workflows can be supported as part of broader workspace operations, but visitor management is not currently a primary product focus in the same way it is for dedicated visitor management platforms.",
+    competitorState: "supported",
+    competitorNote:
+      "Visitor registration, visitor notifications, workplace visitor workflows, and dedicated visitor management capabilities are supported.",
+  },
+  {
+    feature: { name: "Slack", description: "Slack booking and workplace notifications" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Slack workflows support hybrid workplace coordination.",
+  },
+  {
+    feature: { name: "Microsoft Teams", description: "Microsoft Teams booking and coordination" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Enterprise workplace integrations are supported.",
+  },
+  {
+    feature: { name: "SSO", description: "Enterprise identity and provisioning" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Enterprise identity support is available.",
+  },
+  {
+    feature: { name: "Custom Domains / Branding", description: "Branding, customization, and domain-related publishing" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Not a primary Gable capability.",
+  },
+  {
+    feature: { name: "API", description: "Programmatic access and extensibility" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Integration capabilities exist, but API capabilities should not be overstated.",
+  },
+  {
+    feature: { name: "Workspace Marketplace", description: "Marketplace-style workspace access and publishing" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "One of Gable's strongest differentiators.",
+  },
+  {
+    feature: { name: "Workspace Network", description: "Access to a distributed workspace network" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Core Gable capability.",
+  },
+  {
+    feature: { name: "Employee Workspace Benefits", description: "Employee access to distributed workspace options" },
+    skedularState: "partially-supported",
+    competitorState: "supported",
+    competitorNote: "Gable strongly positions around employee access to distributed workspaces.",
+  },
+  {
+    feature: { name: "Coworking Operations", description: "Memberships, billing, products, and operator workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Gable supports workspace access, coworking bookings, workspace purchasing, workplace coordination, and workspace network workflows. However, it is not designed around memberships, recurring contracts, tenant billing, invoicing, coworking CRM workflows, or coworking operator administration.",
+  },
+  {
+    feature: { name: "Community Management", description: "Community engagement and member workflows" },
+    skedularState: "partially-supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Gable supports team coordination, workplace collaboration, gathering visibility, attendance workflows, and workplace engagement features. However, it is not positioned around coworking community management, member directories, events, or community-focused operator workflows.",
+  },
+] satisfies Array<{
+  feature: { name: string; description: string };
+  skedularState: SupportState;
+  skedularLabel?: string;
+  skedularNote?: string;
+  competitorState: SupportState;
+  competitorNote?: string;
+}>;
+
+const robinFeatureRows = [
+  {
+    feature: { name: "Desk Booking", description: "Book desks for workplace and shared space use" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Core Robin capability.",
+  },
+  {
+    feature: { name: "Room Booking", description: "Book meeting rooms and shared resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Core Robin capability.",
+  },
+  {
+    feature: { name: "Floor Plans", description: "Visual booking through floor plans" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Interactive floor plans and visual booking are supported.",
+  },
+  {
+    feature: { name: "Booking Rules", description: "Policies, restrictions, approvals, and scheduling controls" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Booking policies, workplace rules, approvals, and restrictions are supported.",
+  },
+  {
+    feature: { name: "Resource Permissions", description: "Control who can book specific spaces or resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Role-based access controls and booking permissions are supported.",
+  },
+  {
+    feature: { name: "Workplace Analytics", description: "Workplace analytics and office utilization reporting" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Workplace analytics and office utilization reporting are among Robin's strongest capabilities.",
+  },
+  {
+    feature: { name: "Visitor Management", description: "Visitor workflows connected to workplace booking" },
+    skedularState: "partially-supported",
+    skedularNote:
+      "Visitor workflows can be supported as part of broader workspace operations, but visitor management is not currently a primary product focus in the same way it is for dedicated visitor management platforms.",
+    competitorState: "partially-supported",
+    competitorNote: "Visitor-related workflows exist, but visitor management is not Robin's primary product focus.",
+  },
+  {
+    feature: { name: "Member Management", description: "Members, profiles, contracts, and customer administration" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Robin supports employee management, workplace users, permissions, and workplace administration. It is not designed around coworking memberships, contracts, tenant administration, or recurring member billing.",
+  },
+  {
+    feature: { name: "Billing", description: "Billing and purchasing workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Robin is not positioned as a billing platform.",
+  },
+  {
+    feature: { name: "Invoicing", description: "Invoice generation and invoice management" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Robin is not positioned as an invoicing platform.",
+  },
+  {
+    feature: { name: "Subscription Management", description: "Recurring memberships and subscription workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Robin is not designed around memberships or recurring subscription administration.",
+  },
+  {
+    feature: { name: "Stripe", description: "Online payments and Stripe-connected payment workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No Stripe-focused commerce workflow identified.",
+  },
+  {
+    feature: { name: "Xero", description: "Accounting and finance integration" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No Xero-focused accounting workflow identified.",
+  },
+  {
+    feature: { name: "Public Listings", description: "Customer-facing availability and booking" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Robin is not positioned as a public workspace marketplace.",
+  },
+  {
+    feature: { name: "Workspace Discovery", description: "Public discovery network or marketplace search" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No public workspace discovery network identified.",
+  },
+  {
+    feature: { name: "Slack", description: "Slack booking and workplace notifications" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Slack integrations support workplace coordination workflows.",
+  },
+  {
+    feature: { name: "Microsoft Teams", description: "Microsoft Teams booking and coordination" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Microsoft Teams integrations are supported.",
+  },
+  {
+    feature: { name: "SSO", description: "Enterprise identity and provisioning" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Enterprise SSO support is available.",
+  },
+  {
+    feature: { name: "Custom Domains / Branding", description: "Branding, customization, and domain-related publishing" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Branding and enterprise customization exist, but public marketplace publishing and custom-domain workspace storefronts are not a primary focus.",
+  },
+  {
+    feature: { name: "API", description: "Programmatic access and extensibility" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Developer APIs and integration capabilities are available.",
+  },
+  {
+    feature: { name: "Hybrid Workplace Management", description: "Hybrid workplace planning and management" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "One of Robin's strongest capabilities.",
+  },
+  {
+    feature: { name: "Office Attendance Coordination", description: "Coordinate office attendance and hybrid schedules" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Robin strongly focuses on coordinating office attendance and hybrid work schedules.",
+  },
+  {
+    feature: { name: "Workplace Experience", description: "Employee workplace experience workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Employee workplace experience is a major Robin focus area.",
+  },
+  {
+    feature: { name: "Coworking Operations", description: "Memberships, billing, products, and operator workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Robin is not designed as a coworking operations platform.",
+  },
+] satisfies Array<{
+  feature: { name: string; description: string };
+  skedularState: SupportState;
+  skedularLabel?: string;
+  skedularNote?: string;
+  competitorState: SupportState;
+  competitorNote?: string;
+}>;
+
+const officelyFeatureRows = [
+  {
+    feature: { name: "Desk Booking", description: "Book desks for workplace and shared space use" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Desk booking is one of Officely's core capabilities.",
+  },
+  {
+    feature: { name: "Room Booking", description: "Book meeting rooms and shared resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Meeting room booking and workplace resource scheduling are supported.",
+  },
+  {
+    feature: { name: "Floor Plans", description: "Visual booking through floor plans" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Office maps and floor-plan based booking workflows are supported.",
+  },
+  {
+    feature: { name: "Booking Rules", description: "Policies, restrictions, approvals, and scheduling controls" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Booking policies, workplace rules, approvals, and restrictions are supported.",
+  },
+  {
+    feature: { name: "Resource Permissions", description: "Control who can book specific spaces or resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Role-based booking permissions and workplace access controls are supported.",
+  },
+  {
+    feature: { name: "Member Management", description: "Users, groups, access, and member-style workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Officely supports employees, workplace users, teams, and workplace administration. It is not designed around coworking memberships, tenant management, recurring member billing, or customer contracts.",
+  },
+  {
+    feature: { name: "Billing", description: "Chargeable bookings and billing workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Officely is not positioned as a billing platform.",
+  },
+  {
+    feature: { name: "Invoicing", description: "Invoice collection and broader invoicing workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Officely is not positioned as an invoicing platform.",
+  },
+  {
+    feature: { name: "Subscription Management", description: "Recurring memberships and subscription workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Officely is not designed around recurring subscriptions, memberships, or customer billing workflows.",
+  },
+  {
+    feature: { name: "Stripe", description: "Online payments and Stripe-connected payment workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No Stripe-focused commerce workflow identified.",
+  },
+  {
+    feature: { name: "Xero", description: "Accounting and finance integration" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No Xero-focused accounting workflow identified.",
+  },
+  {
+    feature: { name: "Public Listings", description: "Customer-facing availability and booking" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Officely is not positioned as a public workspace marketplace.",
+  },
+  {
+    feature: { name: "Workspace Discovery", description: "Public discovery network or marketplace search" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No public workspace discovery network identified.",
+  },
+  {
+    feature: { name: "Slack", description: "Slack booking and workplace notifications" },
+    skedularState: "supported",
+    skedularNote: "Slack supports workplace booking, desk booking, room booking, notifications, and workplace workflows.",
+    competitorState: "supported",
+    competitorNote: "Slack integration is one of Officely's strongest differentiators and serves as the primary workplace experience.",
+  },
+  {
+    feature: { name: "Microsoft Teams", description: "Microsoft Teams booking and coordination" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Teams-related support exists, but Officely is primarily a Slack-first platform.",
+  },
+  {
+    feature: { name: "SSO", description: "Enterprise identity and provisioning" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Enterprise identity and SSO support are available.",
+  },
+  {
+    feature: { name: "Custom Domains / Branding", description: "Branding, customization, and domain-related publishing" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Branding and workplace customization exist, although marketplace publishing and custom-domain workspace storefronts are not a primary focus.",
+  },
+  {
+    feature: { name: "API", description: "Programmatic access and extensibility" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Integration capabilities exist, but API capabilities should not be overstated.",
+  },
+  {
+    feature: { name: "Hybrid Workplace Management", description: "Hybrid workplace planning and management" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Hybrid workplace coordination is one of Officely's strongest capabilities.",
+  },
+  {
+    feature: { name: "Office Attendance Coordination", description: "Coordinate office attendance and hybrid schedules" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Office attendance visibility and coordination are major Officely strengths.",
+  },
+  {
+    feature: { name: "Slack-Native Experience", description: "Slack-first workplace workflows" },
+    skedularState: "supported",
+    skedularNote:
+      "Workspace booking, desk booking, room booking, workplace notifications, and private workplace workflows can be accessed through Slack. Slack is one of several supported user experiences alongside the web application, Microsoft Teams integration, and administrative tools.",
+    competitorState: "supported",
+    competitorNote: "Officely is designed around Slack-first workplace workflows and uses Slack as the primary employee experience.",
+  },
+  {
+    feature: { name: "Coworking Operations", description: "Memberships, billing, products, and operator workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Officely is not designed around memberships, billing, invoicing, subscriptions, or coworking operator workflows.",
+  },
+] satisfies Array<{
+  feature: { name: string; description: string };
+  skedularState: SupportState;
+  skedularLabel?: string;
+  skedularNote?: string;
+  competitorState: SupportState;
+  competitorNote?: string;
+}>;
+
+const envoyFeatureRows = [
+  {
+    feature: { name: "Desk Booking", description: "Book desks for workplace and shared space use" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Desk booking is a core Envoy capability.",
+  },
+  {
+    feature: { name: "Room Booking", description: "Book meeting rooms and shared resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Meeting room scheduling is supported.",
+  },
+  {
+    feature: { name: "Floor Plans", description: "Visual booking through floor plans" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Interactive office maps and floor-plan based booking workflows are supported.",
+  },
+  {
+    feature: { name: "Booking Rules", description: "Policies, restrictions, approvals, and scheduling controls" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Booking policies, workplace rules, and restrictions are supported.",
+  },
+  {
+    feature: { name: "Resource Permissions", description: "Control who can book specific spaces or resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Role-based permissions and workplace controls are supported.",
+  },
+  {
+    feature: { name: "Visitor Management", description: "Visitor registration, check-in, and access workflows" },
+    skedularState: "partially-supported",
+    skedularNote:
+      "Visitor workflows can be supported as part of broader workspace operations, but visitor management is not currently a primary product focus.",
+    competitorState: "supported",
+    competitorNote: "Visitor management is one of Envoy's strongest and most recognized capabilities.",
+  },
+  {
+    feature: { name: "Workplace Analytics", description: "Workplace reporting and utilization insights" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Workplace reporting and utilization insights are supported.",
+  },
+  {
+    feature: { name: "Member Management", description: "Users, groups, access, and member-style workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Envoy supports employee administration, workplace users, permissions, and workplace coordination. It is not designed around coworking memberships, contracts, or recurring member billing.",
+  },
+  {
+    feature: { name: "Billing", description: "Chargeable bookings and billing workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Envoy is not positioned as a billing platform.",
+  },
+  {
+    feature: { name: "Invoicing", description: "Invoice collection and broader invoicing workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Envoy is not positioned as an invoicing platform.",
+  },
+  {
+    feature: { name: "Subscription Management", description: "Recurring memberships and subscription workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Envoy is not designed around recurring subscriptions or coworking memberships.",
+  },
+  {
+    feature: { name: "Stripe", description: "Online payments and Stripe-connected payment workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No Stripe-focused commerce workflow identified.",
+  },
+  {
+    feature: { name: "Xero", description: "Accounting and finance integration" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No Xero-focused accounting workflow identified.",
+  },
+  {
+    feature: { name: "Public Listings", description: "Customer-facing availability and booking" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Envoy is not positioned as a public workspace marketplace.",
+  },
+  {
+    feature: { name: "Workspace Discovery", description: "Public discovery network or marketplace search" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No public workspace discovery network identified.",
+  },
+  {
+    feature: { name: "Slack", description: "Slack booking and workplace notifications" },
+    skedularState: "supported",
+    skedularNote: "Slack supports workplace booking, desk booking, room booking, notifications, and workplace workflows.",
+    competitorState: "supported",
+    competitorNote: "Slack integrations support workplace workflows and notifications.",
+  },
+  {
+    feature: { name: "Microsoft Teams", description: "Microsoft Teams booking and coordination" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Microsoft Teams integrations are supported.",
+  },
+  {
+    feature: { name: "SSO", description: "Enterprise identity and provisioning" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Enterprise SSO support is available.",
+  },
+  {
+    feature: { name: "Custom Domains / Branding", description: "Branding, customization, and domain-related publishing" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Branding and enterprise customization are supported, although marketplace publishing and workspace storefronts are not a primary focus.",
+  },
+  {
+    feature: { name: "API", description: "Programmatic access and extensibility" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Developer APIs and integration capabilities are available.",
+  },
+  {
+    feature: { name: "Workplace Experience", description: "Workplace experience and employee engagement" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Workplace experience is one of Envoy's strongest focus areas.",
+  },
+  {
+    feature: { name: "Visitor Management Platform", description: "Comprehensive visitor management system" },
+    skedularState: "partially-supported",
+    skedularNote:
+      "Visitor workflows can be supported as part of broader workspace operations, but visitor management is not currently a primary product focus.",
+    competitorState: "supported",
+    competitorNote: "Visitor management is a major Envoy differentiator.",
+  },
+  {
+    feature: { name: "Delivery Management", description: "Workplace delivery and mailroom workflows" },
+    skedularState: "partially-supported",
+    skedularNote:
+      "Operational workflows can be managed through broader workspace and resource-management capabilities, although delivery management is not currently positioned as a dedicated product capability.",
+    competitorState: "supported",
+    competitorNote: "Envoy supports workplace delivery and mailroom workflows.",
+  },
+  {
+    feature: { name: "Workplace Security", description: "Visitor access and workplace security workflows" },
+    skedularState: "partially-supported",
+    skedularNote:
+      "Workplace access controls and operational governance can be managed through broader workspace workflows, although workplace security is not currently positioned as a dedicated product capability.",
+    competitorState: "supported",
+    competitorNote: "Visitor access and workplace security workflows are a core Envoy capability.",
+  },
+  {
+    feature: { name: "Coworking Operations", description: "Memberships, billing, products, and operator workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Envoy is not positioned as a coworking operations platform.",
+  },
+] satisfies Array<{
+  feature: { name: string; description: string };
+  skedularState: SupportState;
+  skedularLabel?: string;
+  skedularNote?: string;
+  competitorState: SupportState;
+  competitorNote?: string;
+}>;
+
+const kadenceFeatureRows = [
+  {
+    feature: { name: "Desk Booking", description: "Book desks for workplace and shared space use" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Room Booking", description: "Book meeting rooms and shared resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Floor Plans", description: "Visual booking through floor plans" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Booking Rules", description: "Policies, restrictions, approvals, and scheduling controls" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Resource Permissions", description: "Control who can book specific spaces or resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Workplace Analytics", description: "Workplace reporting and utilization insights" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote:
+      "Workplace analytics, workplace visibility, office occupancy reporting, and space utilization insights are among Kadence's strongest capabilities.",
+  },
+  {
+    feature: { name: "Workplace Utilization", description: "Office occupancy and space utilization reporting" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote:
+      "Workplace utilization reporting, office occupancy insights, and space usage visibility are among Kadence's strongest capabilities.",
+  },
+  {
+    feature: { name: "Office Attendance Coordination", description: "Coordinate office attendance and hybrid schedules" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Office attendance planning and workplace visibility are major Kadence strengths.",
+  },
+  {
+    feature: { name: "Hybrid Workplace Management", description: "Hybrid workplace planning and management" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Hybrid workplace coordination is a core Kadence capability.",
+  },
+  {
+    feature: { name: "Member Management", description: "Users, groups, access, and member-style workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Supports workplace users, employees, permissions, and workplace administration. Not designed around coworking memberships or recurring member billing.",
+  },
+  {
+    feature: { name: "Billing", description: "Chargeable bookings and billing workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Kadence is not positioned as a billing platform.",
+  },
+  {
+    feature: { name: "Invoicing", description: "Invoice collection and broader invoicing workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Kadence is not positioned as an invoicing platform.",
+  },
+  {
+    feature: { name: "Subscription Management", description: "Recurring memberships and subscription workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Kadence is not designed around recurring subscriptions or coworking memberships.",
+  },
+  {
+    feature: { name: "Stripe", description: "Online payments and Stripe-connected payment workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No Stripe-focused commerce workflow identified.",
+  },
+  {
+    feature: { name: "Xero", description: "Accounting and finance integration" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "No Xero-focused accounting workflow identified.",
+  },
+  {
+    feature: { name: "Public Listings", description: "Customer-facing availability and booking" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Kadence is not positioned as a public workspace marketplace.",
+  },
+  {
+    feature: { name: "Workspace Discovery", description: "Public discovery network or marketplace search" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Kadence is not positioned as a public workspace discovery network.",
+  },
+  {
+    feature: { name: "Slack", description: "Slack booking and workplace notifications" },
+    skedularState: "supported",
+    skedularNote: "Slack supports workplace booking, desk booking, room booking, notifications, and workplace workflows.",
+    competitorState: "supported",
+    competitorNote: "Slack integrations support workplace coordination, attendance visibility, and workplace booking workflows.",
+  },
+  {
+    feature: { name: "Microsoft Teams", description: "Microsoft Teams booking and coordination" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "SSO", description: "Enterprise identity and provisioning" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Custom Domains / Branding", description: "Branding, customization, and domain-related publishing" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Branding and enterprise customization are supported, although marketplace publishing and workspace storefronts are not a primary focus.",
+  },
+  {
+    feature: { name: "API", description: "Programmatic access and extensibility" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Coworking Operations", description: "Memberships, billing, products, and operator workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Kadence is not positioned as a coworking operations platform.",
+  },
+] satisfies Array<{
+  feature: { name: string; description: string };
+  skedularState: SupportState;
+  skedularLabel?: string;
+  skedularNote?: string;
+  competitorState: SupportState;
+  competitorNote?: string;
+}>;
+
+const archieFeatureRows = [
+  {
+    feature: { name: "Desk Booking", description: "Book desks for workplace and shared space use" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Room Booking", description: "Book meeting rooms and shared resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Floor Plans", description: "Visual booking through floor plans" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Visual workspace management and floor plans are supported.",
+  },
+  {
+    feature: { name: "Booking Rules", description: "Policies, restrictions, approvals, and scheduling controls" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Resource Permissions", description: "Control who can book specific spaces or resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+  },
+  {
+    feature: { name: "Member Management", description: "Users, groups, access, and member-style workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Member management is one of Archie's strongest capabilities.",
+  },
+  {
+    feature: { name: "Billing", description: "Chargeable bookings and billing workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Billing and workspace charges are core Archie capabilities.",
+  },
+  {
+    feature: { name: "Invoicing", description: "Invoice collection and broader invoicing workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Invoice generation and payment collection are supported.",
+  },
+  {
+    feature: { name: "Subscription Management", description: "Recurring memberships and subscription workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Recurring memberships and subscriptions are supported.",
+  },
+  {
+    feature: { name: "Contracts & Agreements", description: "Membership agreements, contracts, and recurring workspace commitments" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Contract and agreement workflows are supported as part of coworking and flexible workspace operations.",
+  },
+  {
+    feature: { name: "Stripe", description: "Online payments and Stripe-connected payment workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Stripe payment workflows are supported.",
+  },
+  {
+    feature: { name: "Xero", description: "Accounting and finance integration" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Accounting integrations may vary by deployment and workflow.",
+  },
+  {
+    feature: { name: "Public Listings", description: "Customer-facing availability and booking" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Customer-facing booking and availability workflows are supported, although Archie is not designed as a marketplace publishing platform.",
+  },
+  {
+    feature: { name: "Workspace Discovery", description: "Public discovery network or marketplace search" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Archie is not positioned as a public workspace marketplace or workspace discovery platform.",
+  },
+  {
+    feature: { name: "Slack", description: "Slack booking and workplace notifications" },
+    skedularState: "supported",
+    skedularNote: "Slack supports workplace booking, desk booking, room booking, notifications, and workplace workflows.",
+    competitorState: "partially-supported",
+    competitorNote: "Slack integrations are available, but Slack is not a primary user experience or product differentiator.",
+  },
+  {
+    feature: { name: "Microsoft Teams", description: "Microsoft Teams booking and coordination" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Microsoft Teams integrations may be available depending on deployment requirements, but Teams is not a primary Archie differentiator.",
+  },
+  {
+    feature: { name: "SSO", description: "Enterprise identity and provisioning" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Enterprise identity support may depend on plan and deployment.",
+  },
+  {
+    feature: { name: "Custom Domains / Branding", description: "Branding, customization, and domain-related publishing" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Branding and customer-facing customization are supported.",
+  },
+  {
+    feature: { name: "API", description: "Programmatic access and extensibility" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Developer APIs and integration capabilities are available.",
+  },
+  {
+    feature: { name: "Coworking Operations", description: "Memberships, billing, products, and operator workflows" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Coworking operations are a core capability of both platforms.",
+  },
+  {
+    feature: { name: "Private Workplace Management", description: "Private organization workplace management" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Archie is primarily designed around coworking operations rather than broader workplace-management deployments.",
+  },
+  {
+    feature: { name: "Marketplace Publishing", description: "Marketplace listings and inventory publishing" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "Marketplace publishing is not a primary Archie capability.",
+  },
+] satisfies Array<{
+  feature: { name: string; description: string };
+  skedularState: SupportState;
+  skedularLabel?: string;
+  skedularNote?: string;
+  competitorState: SupportState;
+  competitorNote?: string;
+}>;
+
+const deskbirdFeatureRows = [
+  {
+    feature: { name: "Desk Booking", description: "Book desks for workplace and shared space use" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Desk booking is one of deskbird's core capabilities.",
+  },
+  {
+    feature: { name: "Room Booking", description: "Book meeting rooms and shared resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Meeting room booking is supported.",
+  },
+  {
+    feature: { name: "Floor Plans", description: "Visual booking through floor plans" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Interactive office maps and floor-plan based booking workflows are supported.",
+  },
+  {
+    feature: { name: "Booking Rules", description: "Policies, restrictions, approvals, and scheduling controls" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Booking policies, workplace rules, and restrictions are supported.",
+  },
+  {
+    feature: { name: "Resource Permissions", description: "Control who can book specific spaces or resources" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Role-based booking permissions and workplace controls are supported.",
+  },
+  {
+    feature: { name: "Workplace Analytics", description: "Workplace reporting and utilization insights" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote:
+      "Workplace analytics, attendance insights, workplace visibility, and utilization reporting are among deskbird's strongest capabilities.",
+  },
+  {
+    feature: { name: "Workplace Utilization", description: "Office occupancy and space utilization reporting" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Workplace utilization reporting, office occupancy insights, and space usage visibility are key deskbird capabilities.",
+  },
+  {
+    feature: { name: "Office Attendance Coordination", description: "Coordinate office attendance and hybrid schedules" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Office attendance planning and workplace visibility are major deskbird strengths.",
+  },
+  {
+    feature: { name: "Hybrid Workplace Management", description: "Hybrid work coordination and workplace management" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Hybrid workplace coordination is a core deskbird capability.",
+  },
+  {
+    feature: { name: "Member Management", description: "Users, groups, access, and member-style workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "deskbird supports employees, workplace users, permissions, and workplace administration. It is not designed around coworking memberships, tenant administration, or recurring member billing.",
+  },
+  {
+    feature: { name: "Billing", description: "Chargeable bookings and billing workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "deskbird is not positioned as a billing platform.",
+  },
+  {
+    feature: { name: "Invoicing", description: "Invoice collection and broader invoicing workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "deskbird is not positioned as an invoicing platform.",
+  },
+  {
+    feature: { name: "Subscription Management", description: "Recurring memberships and subscription workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "deskbird is not designed around recurring subscriptions or coworking memberships.",
+  },
+  {
+    feature: { name: "Stripe", description: "Online payments and Stripe-connected payment workflows" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Payment-related integrations may exist, but Stripe is not positioned as a primary product capability.",
+  },
+  {
+    feature: { name: "Xero", description: "Accounting and finance integration" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Accounting-related integrations may exist, but Xero is not positioned as a primary product capability.",
+  },
+  {
+    feature: { name: "Public Listings", description: "Customer-facing availability and booking" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote:
+      "Employees can discover and reserve available workplace resources internally, although deskbird is not designed as a public workspace marketplace.",
+  },
+  {
+    feature: { name: "Workspace Discovery", description: "Public discovery network or marketplace search" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "deskbird is not positioned as a workspace discovery network.",
+  },
+  {
+    feature: { name: "Slack", description: "Slack booking and workplace notifications" },
+    skedularState: "supported",
+    skedularNote: "Slack supports workplace booking, desk booking, room booking, notifications, and workplace workflows.",
+    competitorState: "supported",
+    competitorNote: "Slack integrations support workplace coordination and attendance workflows.",
+  },
+  {
+    feature: { name: "Microsoft Teams", description: "Microsoft Teams booking and coordination" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Microsoft Teams integrations support workplace coordination and workplace booking workflows.",
+  },
+  {
+    feature: { name: "SSO", description: "Enterprise identity and provisioning" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Enterprise SSO support is available.",
+  },
+  {
+    feature: { name: "Custom Domains / Branding", description: "Branding, customization, and domain-related publishing" },
+    skedularState: "supported",
+    competitorState: "partially-supported",
+    competitorNote: "Branding and enterprise customization are available, although public marketplace publishing is not a primary focus.",
+  },
+  {
+    feature: { name: "API", description: "Programmatic access and extensibility" },
+    skedularState: "supported",
+    competitorState: "supported",
+    competitorNote: "Developer APIs and integration capabilities are available.",
+  },
+  {
+    feature: { name: "Coworking Operations", description: "Memberships, billing, products, and operator workflows" },
+    skedularState: "supported",
+    competitorState: "not-supported",
+    competitorNote: "deskbird is not designed around memberships, billing, invoicing, subscriptions, or coworking operator workflows.",
+  },
+] satisfies Array<{
+  feature: { name: string; description: string };
+  skedularState: SupportState;
+  skedularLabel?: string;
+  skedularNote?: string;
+  competitorState: SupportState;
+  competitorNote?: string;
+}>;
+
+const productFocus = (product: ComparisonProduct | undefined) =>
+  product ? (categoryLabels[product.category] ?? product.category.replaceAll("-", " ")) : "workspace software";
+
+const formatList = (items: string[] | undefined, fallback: string) => (items && items.length > 0 ? items : [fallback]);
+
+const skedularUseCases = [
+  "You need workplace booking and coworking operations in one platform.",
+  "You manage private workplace workflows and commercial workspace operations together.",
+  "You need subscriptions, billing, invoicing, payments, and workspace products to sit alongside booking.",
+  "You want public workspace discovery, marketplace publishing, or operator-facing workspace commerce.",
+  "You need to support teams, operators, resources, products, subscriptions, and customer workflows from one platform.",
+  "You want workspace booking to connect directly to billing, invoicing, Xero, Stripe, and marketplace workflows.",
+];
+
+const competitorUseCases = [competitor?.bestFor, ...(competitor?.strengths ?? []).slice(0, 3)].filter((item): item is string => Boolean(item));
+
+const skeddaUseCases = [
+  "Your primary requirement is workplace booking, desk booking, meeting room booking, or resource scheduling.",
+  "You need strong interactive floor plans and booking governance.",
+  "You want advanced rules, permissions, quotas, approvals, and booking restrictions.",
+  "You operate a hybrid workplace and want booking to work inside Slack, Microsoft Teams, Microsoft 365, or Google Workspace.",
+  "You need visitor management as part of a workplace booking setup.",
+  "You want Stripe-supported booking payments or membership payments, but do not need a broader marketplace or workspace commerce platform.",
+  "Public workspace discovery, marketplace publishing, and operator-led commerce workflows are not central requirements.",
+];
+
+const officerndUseCases = [
+  "You are primarily focused on hybrid workplace management.",
+  "You need strong workplace analytics and utilization reporting.",
+  "You require desk booking, room booking, floor plans, and workplace coordination.",
+  "You want a mature workplace management platform for enterprise environments.",
+  "You run a coworking or flexible workspace business and need memberships, billing, invoicing, contracts, and member management.",
+  "Public workspace discovery and marketplace publishing are not core requirements.",
+];
+
+const nexudusUseCases = [
+  "You operate a coworking space or flexible workspace business.",
+  "You need strong member management and customer administration.",
+  "You require recurring billing, invoicing, memberships, and contract management.",
+  "You want community management and member engagement capabilities.",
+  "You need booking, billing, memberships, and workspace operations in a mature coworking platform.",
+  "Public workspace discovery and marketplace publishing are not primary requirements.",
+];
+
+const gableUseCases = [
+  "You support distributed or hybrid teams.",
+  "You want employees to access third-party workspaces.",
+  "You need a workspace network rather than managing a coworking business.",
+  "Workspace discovery and flexible access are more important than coworking operations.",
+  "You want workplace benefits tied to flexible workspace access.",
+  "Billing, memberships, and coworking administration are not primary requirements.",
+];
+
+const robinUseCases = [
+  "You are primarily focused on hybrid workplace management.",
+  "You need strong workplace analytics and office utilization reporting.",
+  "You want desk booking, room booking, floor plans, and workplace coordination.",
+  "You need office attendance coordination and workplace planning.",
+  "Employee workplace experience is a major priority.",
+  "Coworking operations, memberships, subscriptions, billing, and marketplace workflows are not primary requirements.",
+];
+
+const officelyUseCases = [
+  "Your organization uses Slack as its primary collaboration platform.",
+  "You want employees to book desks and coordinate office attendance directly from Slack.",
+  "You need workplace booking without implementing a broader workplace operations platform.",
+  "Hybrid workplace coordination is more important than coworking operations.",
+  "Billing, memberships, subscriptions, invoicing, and marketplace workflows are not core requirements.",
+];
+
+const envoyUseCases = [
+  "Visitor management is a major requirement.",
+  "You need workplace security and visitor access workflows.",
+  "You want desk booking, room booking, and workplace coordination.",
+  "Workplace experience and workplace operations are priorities.",
+  "You need delivery management and workplace administration.",
+  "Coworking memberships, subscriptions, billing, invoicing, and marketplace workflows are not core requirements.",
+];
+
+const kadenceUseCases = [
+  "You are primarily focused on hybrid workplace management.",
+  "You need strong workplace analytics and space utilization reporting.",
+  "You want desk booking, room booking, and office attendance coordination.",
+  "You need workplace visibility and hybrid work planning.",
+  "Workplace analytics are more important than coworking operations.",
+  "Billing, subscriptions, invoicing, memberships, and marketplace workflows are not core requirements.",
+];
+
+const archieUseCases = [
+  "You operate a coworking space or flexible workspace business.",
+  "Member management is a major requirement.",
+  "You need recurring memberships and subscription billing.",
+  "You want billing, invoicing, payments, and flexible workspace administration in one platform.",
+  "Marketplace publishing and public workspace discovery are not primary requirements.",
+  "Your focus is coworking operations rather than broader workplace-management workflows.",
+];
+
+const deskbirdUseCases = [
+  "You are primarily focused on hybrid work coordination.",
+  "You need strong utilization insights and workplace visibility.",
+  "You want desk booking, room booking, and office attendance planning.",
+  "You need occupancy reporting and utilization insights.",
+  "Employee workplace experience is a major priority.",
+  "Billing, subscriptions, invoicing, memberships, and marketplace workflows are not core requirements.",
+];
+
+const differenceCards = [
+  {
+    title: "Primary focus",
+    body: `Skedular is positioned around booking, operations, billing, subscriptions, and workspace commerce. ${competitor?.name ?? "The alternative"} is positioned around ${productFocus(competitor)}.`,
+  },
+  {
+    title: "Operations model",
+    body: `${competitor?.name ?? "The alternative"} may fit teams whose requirements match its core workflow. Skedular is broader when teams also need operator workflows, memberships, and billing in the same system.`,
+  },
+  {
+    title: "Commerce and marketplace",
+    body: "Skedular includes public listings, workspace discovery, public booking pages, and payment workflows. Review the table for the alternative's current marketplace support state.",
+  },
+  {
+    title: "Integrations",
+    body: "Both products may support common workplace integrations depending on plan and configuration. The comparison table separates known support from items that still need review.",
+  },
+];
+
+const skeddaDifferenceCards = [
+  {
+    title: "Where they overlap",
+    body: "Both platforms support workplace booking, desk booking, meeting room booking, floor plans, booking rules, permissions, enterprise identity, Slack, Microsoft Teams, and workplace coordination.",
+  },
+  {
+    title: "Primary scope",
+    body: "Skedda is strongest as a workplace booking and space management platform. Skedular is broader across workplace booking, coworking operations, workspace commerce, subscriptions, billing, invoicing, and public workspace discovery.",
+  },
+  {
+    title: "Payments and billing",
+    body: "Skedda supports Stripe-based booking payments, invoicing for unpaid bookings, and membership subscriptions through AllBooked and Stripe. Skedular is broader when booking, products, subscriptions, invoicing, billing, accounting, and workspace commerce need to work together.",
+  },
+  {
+    title: "Marketplace and discovery",
+    body: "Skedda can support customer-facing booking through website embedding, but it is not positioned as a public workspace marketplace. Skedular supports marketplace publishing and public workspace discovery workflows.",
+  },
+  {
+    title: "Integrations and extensibility",
+    body: "Both platforms support common workplace integrations. Skedda supports Slack, Microsoft Teams, Microsoft 365, Google Workspace, SSO providers, Zapier, webhooks, Stripe, and Xero, but Skedda support states there is no open API and integrations are one-way from Skedda to external apps.",
+  },
+];
+
+const officerndDifferenceCards = [
+  {
+    title: "Where they overlap",
+    body: "Both platforms support workplace booking, desk booking, room booking, floor plans, permissions, coworking operations, billing, invoicing, subscriptions, payments, enterprise identity, and integrations.",
+  },
+  {
+    title: "Primary scope",
+    body: "OfficeRnD focuses on workplace management and coworking operations through its Workplace and Flex products. Skedular combines workplace booking, coworking operations, subscriptions, billing, invoicing, workspace commerce, marketplace publishing, and public workspace discovery in a single platform.",
+  },
+  {
+    title: "Marketplace and discovery",
+    body: "OfficeRnD is not positioned as a public workspace marketplace. Skedular includes public listings, workspace discovery, public booking experiences, and marketplace workflows.",
+  },
+  {
+    title: "Workplace analytics",
+    body: "OfficeRnD has a particularly strong reputation for workplace analytics, workplace utilization reporting, and hybrid workplace management.",
+  },
+  {
+    title: "Product architecture",
+    body: "OfficeRnD separates workplace management and coworking operations into Workplace and Flex products. Skedular combines these workflows into a single platform.",
+  },
+];
+
+const nexudusDifferenceCards = [
+  {
+    title: "Where they overlap",
+    body: "Both platforms support coworking operations, workplace booking, desk booking, meeting room booking, memberships, billing, invoicing, payments, member management, enterprise identity, and integrations.",
+  },
+  {
+    title: "Primary scope",
+    body: "Nexudus focuses on coworking and flexible workspace operations. Skedular combines workplace booking, coworking operations, workspace commerce, subscriptions, billing, marketplace publishing, and public workspace discovery.",
+  },
+  {
+    title: "Marketplace and discovery",
+    body: "Nexudus supports customer-facing booking experiences but is not positioned as a public workspace marketplace. Skedular includes marketplace publishing, public workspace discovery, and workspace commerce workflows.",
+  },
+  {
+    title: "Community management",
+    body: "Nexudus includes stronger community management and member engagement capabilities.",
+  },
+  {
+    title: "Product philosophy",
+    body: "Nexudus is centered around coworking operations and member administration. Skedular combines workplace management and workspace operations with marketplace and commerce workflows.",
+  },
+];
+
+const gableDifferenceCards = [
+  {
+    title: "Where they overlap",
+    body: "Both platforms support workplace booking, workspace access, hybrid work workflows, enterprise identity, and workplace integrations.",
+  },
+  {
+    title: "Primary scope",
+    body: "Gable focuses on workplace management, hybrid work coordination, office operations, visitor management, and access to a distributed network of workspaces. Skedular combines workplace booking, coworking operations, subscriptions, billing, invoicing, marketplace publishing, workspace discovery, and workspace commerce.",
+  },
+  {
+    title: "Workspace marketplace",
+    body: "Both platforms support workspace discovery and marketplace-style workflows. Gable is primarily focused on helping organizations consume workspace inventory, while Skedular supports both consumption and operation of workspace inventory.",
+  },
+  {
+    title: "Coworking operations",
+    body: "Both platforms support workplace booking and access to shared workspaces. Skedular includes memberships, subscriptions, billing, invoicing, products, and operator workflows designed for coworking and flexible workspace operators. Gable focuses more on helping organizations consume workspace inventory and coordinate distributed workforces.",
+  },
+  {
+    title: "Visitor management",
+    body: "Gable includes dedicated visitor management capabilities alongside workplace management workflows. Skedular can support visitor-related workflows as part of broader workspace operations, but visitor management is not currently positioned as a primary product capability.",
+  },
+  {
+    title: "Product philosophy",
+    body: "Gable focuses on workforce flexibility and workspace access. Skedular combines workplace management, coworking operations, marketplace publishing, and workspace commerce in a single platform.",
+  },
+];
+
+const robinDifferenceCards = [
+  {
+    title: "Where they overlap",
+    body: "Both platforms support workplace booking, desk booking, room booking, floor plans, workplace coordination, enterprise identity, and integrations.",
+  },
+  {
+    title: "Primary scope",
+    body: "Robin focuses on hybrid workplace management, workplace experience, office coordination, and workplace analytics. Skedular combines workplace booking, coworking operations, subscriptions, billing, invoicing, marketplace publishing, workspace discovery, and workspace commerce.",
+  },
+  {
+    title: "Workplace analytics",
+    body: "Robin has a particularly strong reputation for workplace analytics, workplace utilization reporting, and hybrid workplace planning.",
+  },
+  {
+    title: "Coworking operations",
+    body: "Skedular supports memberships, subscriptions, billing, invoicing, products, and operator workflows. Robin is not positioned as a coworking management platform.",
+  },
+  {
+    title: "Marketplace and discovery",
+    body: "Robin is not positioned as a workspace marketplace or public workspace discovery network. Skedular includes marketplace publishing, public workspace discovery, and workspace commerce workflows.",
+  },
+];
+
+const officelyDifferenceCards = [
+  {
+    title: "Where they overlap",
+    body: "Both platforms support workplace booking, desk booking, workplace coordination, and hybrid work workflows.",
+  },
+  {
+    title: "Primary scope",
+    body: "Officely focuses on Slack-first workplace management and hybrid workplace coordination. Skedular combines workplace booking, coworking operations, subscriptions, billing, invoicing, marketplace publishing, workspace discovery, and workspace commerce.",
+  },
+  {
+    title: "Slack experience",
+    body: "Both platforms support Slack-based workplace workflows. The difference is that Officely is designed as a Slack-first product, while Skedular supports Slack alongside its web platform, Microsoft Teams integration, marketplace capabilities, and workspace administration tools.",
+  },
+  {
+    title: "Coworking operations",
+    body: "Skedular supports memberships, subscriptions, billing, invoicing, products, and operator workflows. Officely is not positioned as a coworking operations platform.",
+  },
+  {
+    title: "Marketplace and discovery",
+    body: "Officely is not positioned as a workspace marketplace or public workspace discovery network. Skedular includes marketplace publishing, public workspace discovery, and workspace commerce workflows.",
+  },
+];
+
+const envoyDifferenceCards = [
+  {
+    title: "Where they overlap",
+    body: "Both platforms support workplace booking, desk booking, room booking, workplace coordination, enterprise identity, and integrations.",
+  },
+  {
+    title: "Primary scope",
+    body: "Envoy focuses on workplace experience, visitor management, workplace security, and office operations. Skedular combines workplace booking, coworking operations, subscriptions, billing, invoicing, marketplace publishing, workspace discovery, and workspace commerce.",
+  },
+  {
+    title: "Visitor management",
+    body: "Visitor management is one of Envoy's strongest capabilities and a major reason organizations choose the platform.",
+  },
+  {
+    title: "Coworking operations",
+    body: "Skedular supports memberships, subscriptions, billing, invoicing, products, and operator workflows. Envoy is not positioned as a coworking management platform.",
+  },
+  {
+    title: "Marketplace and discovery",
+    body: "Envoy is not positioned as a workspace marketplace or public workspace discovery network. Skedular includes marketplace publishing, public workspace discovery, and workspace commerce workflows.",
+  },
+];
+
+const kadenceDifferenceCards = [
+  {
+    title: "Where they overlap",
+    body: "Both platforms support desk booking, room booking, workplace coordination, enterprise identity, and integrations.",
+  },
+  {
+    title: "Primary scope",
+    body: "Kadence focuses on hybrid workplace management, office attendance coordination, workplace analytics, and space utilization. Skedular combines workplace booking, coworking operations, subscriptions, billing, invoicing, marketplace publishing, workspace discovery, and workspace commerce.",
+  },
+  {
+    title: "Workplace analytics",
+    body: "Workplace analytics, workplace visibility, office occupancy reporting, and space utilization insights are among Kadence's strongest capabilities.",
+  },
+  {
+    title: "Coworking operations",
+    body: "Skedular supports memberships, subscriptions, billing, invoicing, products, and operator workflows. Kadence is not positioned as a coworking operations platform.",
+  },
+  {
+    title: "Marketplace and discovery",
+    body: "Kadence is not positioned as a workspace marketplace or public workspace discovery network. Skedular includes marketplace publishing, public workspace discovery, and workspace commerce workflows.",
+  },
+];
+
+const archieDifferenceCards = [
+  {
+    title: "Where they overlap",
+    body: "Both platforms support coworking operations, member management, workspace booking, billing, invoicing, subscriptions, payments, and workspace administration.",
+  },
+  {
+    title: "Primary scope",
+    body: "Archie focuses on coworking operations, memberships, contracts, billing, invoicing, subscriptions, payments, and workspace administration. Skedular combines coworking operations with private workplace management, marketplace publishing, workspace discovery, and workspace commerce.",
+  },
+  {
+    title: "Marketplace and discovery",
+    body: "Archie is not positioned as a public workspace marketplace or workspace discovery platform. Skedular includes marketplace publishing, public workspace discovery, customer-facing inventory, and workspace commerce workflows.",
+  },
+  {
+    title: "Private workplace management",
+    body: "Skedular supports both private organizations and coworking operators. Archie is primarily focused on coworking and flexible workspace operators.",
+  },
+  {
+    title: "Product philosophy",
+    body: "Archie focuses on coworking administration and workspace operations. Skedular combines workplace management, coworking operations, marketplace publishing, workspace discovery, subscriptions, billing, and workspace commerce in a single platform.",
+  },
+];
+
+const deskbirdDifferenceCards = [
+  {
+    title: "Where they overlap",
+    body: "Both platforms support workplace booking, desk booking, room booking, workplace coordination, enterprise identity, and integrations.",
+  },
+  {
+    title: "Primary scope",
+    body: "deskbird focuses on hybrid workplace management, attendance coordination, workplace analytics, workplace visibility, and employee workplace experience. Skedular combines workplace booking, coworking operations, subscriptions, billing, invoicing, marketplace publishing, workspace discovery, and workspace commerce.",
+  },
+  {
+    title: "Workplace analytics",
+    body: "Workplace analytics, workplace visibility, attendance insights, and utilization reporting are among deskbird's strongest capabilities.",
+  },
+  {
+    title: "Coworking operations",
+    body: "Skedular supports memberships, subscriptions, billing, invoicing, products, and operator workflows. deskbird is not positioned as a coworking management platform.",
+  },
+  {
+    title: "Marketplace and discovery",
+    body: "deskbird is not positioned as a workspace marketplace or workspace discovery network. Skedular includes marketplace publishing, public workspace discovery, and workspace commerce workflows.",
+  },
+];
+
+const competitorName = competitor?.name ?? "the alternative";
+const competitorCategory = productFocus(competitor);
+const isSkedda = competitor?.id === "skedda";
+const isOfficeRnD = competitor?.id === "officernd";
+const isNexudus = competitor?.id === "nexudus";
+const isGable = competitor?.id === "gable";
+const isRobin = competitor?.id === "robin";
+const isOfficely = competitor?.id === "officely";
+const isEnvoy = competitor?.id === "envoy";
+const isKadence = competitor?.id === "kadence";
+const isArchie = competitor?.id === "archie";
+const isDiskbird = competitor?.id === "deskbird";
+const visibleCompetitorUseCases = isSkedda
+  ? skeddaUseCases
+  : isOfficeRnD
+    ? officerndUseCases
+    : isNexudus
+      ? nexudusUseCases
+      : isGable
+        ? gableUseCases
+        : isRobin
+          ? robinUseCases
+          : isOfficely
+            ? officelyUseCases
+            : isEnvoy
+              ? envoyUseCases
+              : isKadence
+                ? kadenceUseCases
+                : isArchie
+                  ? archieUseCases
+                  : isDiskbird
+                    ? deskbirdUseCases
+                    : competitorUseCases;
+const visibleDifferenceCards = isSkedda
+  ? skeddaDifferenceCards
+  : isOfficeRnD
+    ? officerndDifferenceCards
+    : isNexudus
+      ? nexudusDifferenceCards
+      : isGable
+        ? gableDifferenceCards
+        : isRobin
+          ? robinDifferenceCards
+          : isOfficely
+            ? officelyDifferenceCards
+            : isEnvoy
+              ? envoyDifferenceCards
+              : isKadence
+                ? kadenceDifferenceCards
+                : isArchie
+                  ? archieDifferenceCards
+                  : isDiskbird
+                    ? deskbirdDifferenceCards
+                    : differenceCards;
+const visibleFeatureRows = isSkedda
+  ? skeddaFeatureRows
+  : isOfficeRnD
+    ? officerndFeatureRows
+    : isNexudus
+      ? nexudusFeatureRows
+      : isGable
+        ? gableFeatureRows
+        : isRobin
+          ? robinFeatureRows
+          : isOfficely
+            ? officelyFeatureRows
+            : isEnvoy
+              ? envoyFeatureRows
+              : isKadence
+                ? kadenceFeatureRows
+                : isArchie
+                  ? archieFeatureRows
+                  : isDiskbird
+                    ? deskbirdFeatureRows
+                    : featureRows;
+---
+
+<section class="comparison-section comparison-product-summary" aria-labelledby="what-is-skedular-title">
+  <h2 id="what-is-skedular-title">What is Skedular?</h2>
+  {
+    isGable || isRobin || isOfficely || isEnvoy || isKadence || isArchie || isDiskbird ? (
+      <p>
+        Skedular is a workspace platform for organizations managing private workplaces and operators running coworking, flexible workspace, and
+        commercial workspace businesses. It combines workplace booking, coworking operations, subscriptions, billing, invoicing, marketplace
+        publishing, workspace discovery, and enterprise integrations in a single platform.
+      </p>
+    ) : (
+      <p>
+        Skedular is a workspace platform for organizations managing private workplaces and operators running commercial workspace businesses. It
+        supports workplace booking, workplace management, coworking operations, billing, subscriptions, marketplace discovery, and integrations.
+      </p>
+    )
+  }
+  <p>
+    The platform is designed for organizations and workspace operators that need workplace booking, coworking operations, memberships, payments,
+    invoicing, subscriptions, and public workspace workflows from a single system.
+  </p>
+</section>
+
+{
+  competitor && (
+    <section class="comparison-section comparison-product-summary" aria-labelledby="what-is-competitor-title">
+      <h2 id="what-is-competitor-title">What is {competitor.name}?</h2>
+      {isSkedda ? (
+        <>
+          <p>
+            Skedda is a workplace booking platform focused on desk booking, meeting room booking, interactive floor plans, resource scheduling,
+            visitor management, and workplace coordination. It is commonly used by organizations, shared workplaces, and coworking operators that need
+            a focused booking experience with strong governance, permissions, scheduling controls, and collaboration integrations.
+          </p>
+          <p>
+            Skedda's strengths include interactive floor plans, booking rules, resource permissions, desk and room reservations, utilization
+            analytics, Microsoft 365 and Google Workspace integrations, Slack, Microsoft Teams, SSO, and visitor management.
+          </p>
+        </>
+      ) : isOfficeRnD ? (
+        <>
+          <p>OfficeRnD provides software for both workplace management and flexible workspace operations.</p>
+          <p>
+            Its Workplace product focuses on hybrid work, desk booking, room booking, workplace coordination, office utilization, visitor management,
+            analytics, and employee workplace experience.
+          </p>
+          <p>
+            Its Flex product focuses on coworking and flexible workspace operations, including memberships, billing, invoicing, subscriptions, member
+            management, resource management, and workspace administration.
+          </p>
+          <p>
+            OfficeRnD is commonly used by enterprises managing hybrid workplaces and by coworking operators running flexible workspace businesses.
+          </p>
+        </>
+      ) : isNexudus ? (
+        <>
+          <p>
+            Nexudus is a coworking and flexible workspace management platform designed for operators managing shared workspaces, serviced offices, and
+            flexible work environments.
+          </p>
+          <p>
+            The platform includes desk booking, meeting room booking, resource management, member management, billing, invoicing, memberships,
+            payments, visitor management, community management, and operational workflows for workspace operators.
+          </p>
+          <p>
+            Nexudus is commonly used by coworking operators that need detailed member administration, recurring billing, invoicing, booking
+            management, and workspace operations in a single system.
+          </p>
+        </>
+      ) : isGable ? (
+        <>
+          <p>
+            Gable is a workplace platform focused on hybrid work, office management, and access to distributed workspaces. Rather than operating as a
+            coworking management platform, Gable helps organizations manage workplace attendance, office operations, workspace access, visitor
+            workflows, and employee access to a network of workspaces.
+          </p>
+          <p>
+            The platform combines workplace booking, hybrid work coordination, visitor management, workplace analytics, workspace discovery, employee
+            workplace benefits, and access to third-party workspace providers.
+          </p>
+          <p>
+            Gable is commonly used by organizations supporting distributed teams that need flexible access to workspaces across multiple locations
+            while maintaining workplace coordination and visibility.
+          </p>
+        </>
+      ) : isRobin ? (
+        <>
+          <p>
+            Robin is a workplace management platform focused on hybrid work, office coordination, desk booking, meeting room scheduling, workplace
+            analytics, and employee workplace experience.
+          </p>
+          <p>
+            The platform helps organizations coordinate when employees come into the office, manage workplace capacity, reserve desks and rooms,
+            analyze office utilization, and improve workplace planning.
+          </p>
+          <p>
+            Robin is commonly used by enterprises adopting hybrid work models and organizations focused on workplace experience, office attendance,
+            and workplace analytics.
+          </p>
+        </>
+      ) : isOfficely ? (
+        <>
+          <p>
+            Officely is a workplace management platform designed for organizations running hybrid work environments. The platform is built around
+            Slack and helps teams coordinate office attendance, reserve desks, book meeting rooms, manage workplace capacity, and improve office
+            visibility.
+          </p>
+          <p>
+            Officely is commonly used by organizations that already rely heavily on Slack and want workplace booking and office coordination workflows
+            to happen directly inside the tools employees already use.
+          </p>
+          <p>
+            Its strengths include Slack-native workflows, desk booking, workplace coordination, office attendance visibility, and lightweight hybrid
+            workplace management.
+          </p>
+        </>
+      ) : isEnvoy ? (
+        <>
+          <p>
+            Envoy is a workplace management platform focused on visitor management, workplace coordination, workplace security, desk booking, room
+            booking, and workplace experience.
+          </p>
+          <p>
+            The platform helps organizations manage visitors, coordinate office attendance, reserve desks and meeting rooms, handle workplace
+            deliveries, improve office operations, and provide a better workplace experience for employees and guests.
+          </p>
+          <p>
+            Envoy is commonly used by enterprises that want strong visitor management capabilities alongside workplace booking and workplace
+            coordination tools.
+          </p>
+        </>
+      ) : isKadence ? (
+        <>
+          <p>
+            Kadence is a workplace management platform focused on hybrid work, workplace coordination, desk booking, room booking, office attendance
+            planning, workplace analytics, and space utilization.
+          </p>
+          <p>
+            The platform helps organizations coordinate when employees come into the office, manage desk and room reservations, improve workplace
+            visibility, and understand how office space is being used.
+          </p>
+          <p>
+            Kadence is commonly used by organizations adopting hybrid work models that need workplace booking, attendance coordination, workplace
+            analytics, and office utilization reporting.
+          </p>
+        </>
+      ) : isArchie ? (
+        <>
+          <p>
+            Archie is a coworking and flexible workspace management platform designed for coworking operators, shared offices, and flexible workspace
+            providers.
+          </p>
+          <p>
+            The platform combines member management, desk booking, room booking, invoicing, billing, contracts, payments, subscriptions, and workspace
+            operations in a single system.
+          </p>
+          <p>
+            Archie is commonly used by coworking operators that need memberships, recurring billing, workspace reservations, and day-to-day coworking
+            administration.
+          </p>
+        </>
+      ) : isDiskbird ? (
+        <>
+          <p>
+            deskbird is a workplace management platform focused on hybrid work, desk booking, room booking, office attendance coordination, workplace
+            visibility, and workplace analytics.
+          </p>
+          <p>
+            The platform helps organizations coordinate office attendance, manage workplace capacity, reserve desks and meeting rooms, and improve
+            visibility into how office space is used.
+          </p>
+          <p>
+            deskbird is commonly used by organizations adopting hybrid work models that need workplace booking, attendance coordination, workplace
+            analytics, and employee workplace experience capabilities.
+          </p>
+        </>
+      ) : (
+        <>
+          <p>{competitor.summary}</p>
+          <p>
+            It is typically a fit for {competitor.bestFor.toLowerCase()}. Its main strengths include {competitor.strengths.join(", ").toLowerCase()}.
+          </p>
+        </>
+      )}
+    </section>
+  )
+}
+
+<section class="comparison-section" aria-labelledby="feature-comparison-title">
+  <h2 id="feature-comparison-title">Feature comparison</h2>
+  {
+    isSkedda ? (
+      <p>
+        Both platforms support workplace booking, desk booking, room booking, floor plans, permissions, and enterprise integrations. The main
+        difference is scope. Skedda is strongest as a workplace booking and space management platform, while Skedular extends further into coworking
+        operations, workspace commerce, subscriptions, billing, invoicing, marketplace publishing, and public workspace discovery.
+      </p>
+    ) : isOfficeRnD ? (
+      <p>
+        Both platforms support workplace booking, room booking, floor plans, permissions, coworking operations, billing, invoicing, subscriptions,
+        payments, and enterprise identity. The main difference is product scope and intended workflow, especially around public workspace discovery
+        and marketplace publishing.
+      </p>
+    ) : isNexudus ? (
+      <p>
+        Both platforms support workplace booking, coworking operations, memberships, billing, invoicing, payments, and workspace administration. The
+        biggest differences are around marketplace publishing, public workspace discovery, and how each platform approaches workspace commerce.
+      </p>
+    ) : isGable ? (
+      <p>
+        Both platforms support workplace booking and flexible workspace access, but they approach the problem differently. Gable focuses on helping
+        organizations access and coordinate distributed workspaces, while Skedular combines workplace booking, coworking operations, workspace
+        commerce, subscriptions, billing, marketplace publishing, and workspace discovery.
+      </p>
+    ) : isRobin ? (
+      <p>
+        Both platforms support workplace booking and workplace management workflows. The biggest differences are that Robin focuses on hybrid
+        workplace coordination and workplace experience, while Skedular extends into coworking operations, subscriptions, billing, invoicing,
+        marketplace publishing, and workspace discovery.
+      </p>
+    ) : isOfficely ? (
+      <p>
+        Both platforms support workplace booking and workplace management workflows. The biggest differences are that Officely focuses on Slack-first
+        workplace coordination and hybrid workplace management, while Skedular extends into coworking operations, subscriptions, billing, invoicing,
+        marketplace publishing, workspace discovery, and workspace commerce.
+      </p>
+    ) : isEnvoy ? (
+      <p>
+        Both platforms support workplace booking and workplace management workflows. The biggest differences are that Envoy focuses on visitor
+        management, workplace experience, and workplace operations, while Skedular extends into coworking operations, subscriptions, billing,
+        invoicing, marketplace publishing, workspace discovery, and workspace commerce.
+      </p>
+    ) : isKadence ? (
+      <p>
+        Both platforms support workplace booking and workplace management workflows. The biggest differences are that Kadence focuses on hybrid
+        workplace management, office attendance coordination, and workplace analytics, while Skedular extends into coworking operations,
+        subscriptions, billing, invoicing, marketplace publishing, workspace discovery, and workspace commerce.
+      </p>
+    ) : isArchie ? (
+      <p>
+        Both platforms support coworking operations and workspace booking workflows. The biggest differences are that Archie focuses on coworking
+        administration, memberships, billing, invoicing, and workspace operations, while Skedular extends into marketplace publishing, workspace
+        discovery, private workplace management, and workspace commerce.
+      </p>
+    ) : isDiskbird ? (
+      <p>
+        Both platforms support workplace booking and workplace management workflows. The biggest differences are that deskbird focuses on hybrid
+        workplace management, attendance coordination, workplace visibility, and workplace analytics, while Skedular extends into coworking
+        operations, subscriptions, billing, invoicing, marketplace publishing, workspace discovery, and workspace commerce.
+      </p>
+    ) : (
+      <p>
+        This table compares known support states from the shared comparison dataset. “Needs review” means the current dataset does not have enough
+        approved evidence to make a stronger claim.
+      </p>
+    )
+  }
+  <div class="comparison-table-wrap">
+    <table class="comparison-feature-table">
+      <thead>
+        <tr>
+          <th scope="col">Capability</th>
+          <th scope="col">Skedular</th>
+          <th scope="col">{competitorName}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          visibleFeatureRows.map(
+            (row) =>
+              row && (
+                <tr>
+                  <th scope="row">
+                    <span>{row.feature.name}</span>
+                    <small>{row.feature.description}</small>
+                  </th>
+                  <td>
+                    <span class:list={["comparison-support", supportClasses[row.skedularState]]}>
+                      {"skedularLabel" in row && row.skedularLabel ? row.skedularLabel : supportLabels[row.skedularState]}
+                    </span>
+                    {"skedularNote" in row && row.skedularNote && <small>{row.skedularNote}</small>}
+                  </td>
+                  <td>
+                    <span class:list={["comparison-support", supportClasses[row.competitorState]]}>{supportLabels[row.competitorState]}</span>
+                    {row.competitorNote && <small>{row.competitorNote}</small>}
+                  </td>
+                </tr>
+              ),
+          )
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="comparison-decision-grid" aria-label="Decision guidance">
+  <article>
+    <h2>Choose Skedular if</h2>
+    <ul>
+      {skedularUseCases.map((item) => <li>{item}</li>)}
+    </ul>
+  </article>
+  <article>
+    <h2>Choose {competitorName} if</h2>
+    <ul>
+      {
+        formatList(
+          visibleCompetitorUseCases,
+          `Your requirements fit a ${competitorCategory} product and you do not need broader workspace commerce workflows.`,
+        ).map((item) => <li>{item}</li>)
+      }
+    </ul>
+  </article>
+</section>
+
+<section class="comparison-section" aria-labelledby="key-differences-title">
+  <h2 id="key-differences-title">Key differences</h2>
+  <div class="comparison-difference-grid">
+    {
+      visibleDifferenceCards.map((card) => (
+        <article>
+          <h3>{card.title}</h3>
+          <p>{card.body}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<section class="comparison-section">
+  <h2>Comparison FAQ</h2>
+  <div class="faq-list">
+    {
+      isSkedda ? (
+        <>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and Skedda?</h3>
+            <p>
+              Skedda is strongest as a workplace booking and space management platform for desks, rooms, floor plans, booking rules, permissions, and
+              workplace coordination. Skedular is broader across workplace booking, coworking operations, workspace commerce, subscriptions, billing,
+              invoicing, marketplace publishing, and public workspace discovery.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Skedda support floor plans?</h3>
+            <p>Yes. Interactive floor plans are one of Skedda's core strengths.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Skedda support Microsoft Teams?</h3>
+            <p>
+              Yes. Skedda supports Microsoft Teams. Users can book desks from Teams, access floor plans, receive booking notifications, see who is
+              coming into the office, and receive visitor notifications when visitor management is enabled.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Skedda support Slack?</h3>
+            <p>
+              Yes. Skedda supports Slack for booking notifications, check-in reminders, visitor notifications, attendance visibility, and recurring
+              reports showing who is coming into the office.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Skedda support billing and invoicing?</h3>
+            <p>
+              Partially. Skedda/AllBooked supports Stripe-based booking payments and invoicing for unpaid bookings. Buyers should compare whether they
+              need simple booking payment workflows or a broader workspace commerce, billing, invoicing, and accounting workflow.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Skedda support subscriptions?</h3>
+            <p>
+              Partially. Skedda/AllBooked supports membership tags connected to Stripe subscriptions. This can support membership access and recurring
+              membership payments, but it should not be described as the same as a broader workspace subscription product model unless the exact buyer
+              workflow matches that structure.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Skedda support Stripe?</h3>
+            <p>Yes. Skedda/AllBooked supports online payments through Stripe and Stripe Connect.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Skedda support Xero?</h3>
+            <p>
+              Partially. Skedda lists Xero as a third-party finance integration. Buyers should compare whether that integration is sufficient for
+              their accounting workflow.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Skedda have an API?</h3>
+            <p>
+              Partially. Skedda supports Zapier and webhooks, but Skedda support states that there is currently no open API and that integrations are
+              one-way from Skedda to external apps.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Can Skedda be used by coworking spaces?</h3>
+            <p>
+              Yes. Skedda can support coworking and shared workspace environments, especially where the primary requirements are booking, floor plans,
+              resource scheduling, permissions, and payments. Coworking operators that need deeper workspace commerce, marketplace publishing,
+              subscriptions, invoicing, and operator workflows should compare the products carefully.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Is Skedda a coworking management platform?</h3>
+            <p>
+              Skedda can support coworking and shared workspace environments, particularly for booking desks, rooms, and shared resources.
+              Organizations requiring broader coworking operations such as subscriptions, invoicing, workspace commerce, marketplace publishing, and
+              operator workflows may compare it with platforms designed specifically for coworking management.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Skedda support marketplace publishing?</h3>
+            <p>
+              No. Skedda can be embedded into an existing website for customer-facing booking, but that is different from operating a public workspace
+              marketplace or discovery network.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Which platform is better for private organizations?</h3>
+            <p>
+              Skedda is a strong fit for private organizations that mainly need desk booking, meeting room booking, floor plans, workplace scheduling,
+              visitor management, and workplace coordination. Skedular is broader when private workplace workflows also need to connect to coworking
+              operations, billing, subscriptions, workspace products, marketplace publishing, or operator workflows.
+            </p>
+          </div>
+          <p class="comparison-review-note">This comparison is based on market research and product documentation available in June 2026.</p>
+        </>
+      ) : isOfficeRnD ? (
+        <>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and OfficeRnD?</h3>
+            <p>
+              OfficeRnD separates workplace management and coworking operations into Workplace and Flex products. Skedular combines workplace booking,
+              coworking operations, subscriptions, billing, invoicing, workspace commerce, marketplace publishing, and public workspace discovery in a
+              single platform.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Which platform supports subscriptions and billing?</h3>
+            <p>
+              Both platforms support subscriptions, billing, invoicing, and payment workflows. OfficeRnD provides these capabilities primarily through
+              OfficeRnD Flex, while Skedular includes them within its unified platform.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does OfficeRnD support coworking spaces?</h3>
+            <p>Yes. OfficeRnD Flex is specifically designed for coworking and flexible workspace operators.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does OfficeRnD support billing and invoicing?</h3>
+            <p>Yes. OfficeRnD Flex includes recurring billing, invoicing, memberships, contracts, and subscription workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does OfficeRnD support desk booking?</h3>
+            <p>Yes. OfficeRnD Workplace supports desk booking, room booking, floor plans, workplace coordination, and hybrid work workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does OfficeRnD support Microsoft Teams?</h3>
+            <p>Yes. OfficeRnD supports Microsoft Teams and enterprise workplace integrations.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What is the difference between OfficeRnD Workplace and OfficeRnD Flex?</h3>
+            <p>
+              OfficeRnD Workplace focuses on hybrid workplace management, desk booking, room booking, analytics, and workplace coordination. OfficeRnD
+              Flex focuses on coworking operations, memberships, contracts, subscriptions, billing, invoicing, and workspace administration.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does OfficeRnD support marketplace publishing?</h3>
+            <p>
+              No. OfficeRnD is not positioned as a public workspace marketplace. Skedular includes public listings, workspace discovery, public
+              booking experiences, and marketplace workflows.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Which platform is better for private organizations?</h3>
+            <p>
+              OfficeRnD is a strong fit for private organizations focused on hybrid workplace management, desk booking, room booking, floor plans,
+              workplace analytics, and workplace coordination. Skedular is broader when those workflows also need marketplace publishing, workspace
+              discovery, commerce, billing, and operator workflows in one platform.
+            </p>
+          </div>
+          <p class="comparison-review-note">This comparison is based on market research and product documentation available in June 2026.</p>
+        </>
+      ) : isNexudus ? (
+        <>
+          <div class="faq-item">
+            <h3>Does Nexudus support coworking spaces?</h3>
+            <p>Yes. Nexudus is specifically designed for coworking and flexible workspace operators.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Nexudus support billing and invoicing?</h3>
+            <p>Yes. Nexudus supports recurring billing, invoicing, memberships, contracts, and workspace payments.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Nexudus support desk booking?</h3>
+            <p>Yes. Desk booking, room booking, and resource booking are core Nexudus capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Nexudus support community management?</h3>
+            <p>Yes. Community engagement and member management are among Nexudus's notable strengths.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Nexudus support Stripe?</h3>
+            <p>Yes. Nexudus supports Stripe payment processing.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Nexudus support Xero?</h3>
+            <p>Yes. Nexudus supports Xero integration.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Nexudus support marketplace publishing?</h3>
+            <p>
+              Nexudus supports customer-facing booking experiences, but it is not positioned as a public workspace marketplace or workspace discovery
+              platform.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and Nexudus?</h3>
+            <p>
+              Both products support coworking operations, memberships, billing, invoicing, and workspace management. Nexudus is primarily focused on
+              coworking operations and member administration, while Skedular combines workplace booking, coworking operations, marketplace publishing,
+              workspace discovery, subscriptions, billing, and workspace commerce workflows in a single platform.
+            </p>
+          </div>
+          <p class="comparison-review-note">This comparison is based on market research and product documentation available in June 2026.</p>
+        </>
+      ) : isGable ? (
+        <>
+          <div class="faq-item">
+            <h3>Does Gable support workspace discovery?</h3>
+            <p>Yes. Workspace discovery and access to distributed workspaces are among Gable's strongest capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Gable support coworking operations?</h3>
+            <p>
+              Partially. Gable supports access to coworking spaces and flexible workspaces through its workspace network. However, it is not
+              positioned as a coworking operations platform with memberships, contracts, recurring billing, and operator administration.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Gable support visitor management?</h3>
+            <p>Yes. Gable includes visitor management capabilities as part of its workplace and office management platform.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Gable support employee management?</h3>
+            <p>
+              Partially. Gable supports employee administration, team management, workplace policies, permissions, and HRIS-connected workflows. It is
+              not designed as a coworking membership management platform.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Gable support coworking spaces?</h3>
+            <p>
+              Partially. Gable supports access to coworking spaces and flexible workspaces through its workspace network. However, it is not
+              positioned as a coworking operations platform with memberships, contracts, recurring billing, and operator administration.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Gable operate a workspace marketplace?</h3>
+            <p>Yes. Gable provides access to a network of workspaces and flexible work environments.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and Gable?</h3>
+            <p>
+              Both support workspace discovery and flexible workplace access. Gable focuses on helping organizations access third-party workspaces,
+              while Skedular combines workplace booking, coworking operations, marketplace publishing, subscriptions, billing, and workspace commerce
+              in a single platform.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Which platform is better for coworking operators?</h3>
+            <p>
+              Skedular is the stronger fit for coworking operators that need memberships, billing, invoicing, subscriptions, products, and workspace
+              administration.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Which platform is better for distributed teams?</h3>
+            <p>
+              Gable is particularly strong for organizations that want employees to access a distributed network of workspaces across multiple cities
+              and locations.
+            </p>
+          </div>
+          <p class="comparison-review-note">This comparison is based on market research and product documentation available in June 2026.</p>
+        </>
+      ) : isRobin ? (
+        <>
+          <div class="faq-item">
+            <h3>Does Robin support desk booking?</h3>
+            <p>Yes. Desk booking is one of Robin's core capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Robin support hybrid workplace management?</h3>
+            <p>Yes. Hybrid workplace management, workplace coordination, and office attendance planning are among Robin's strongest capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Robin support workplace analytics?</h3>
+            <p>Yes. Robin provides workplace analytics and workplace utilization reporting.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Robin support Microsoft Teams?</h3>
+            <p>Yes. Robin supports Microsoft Teams integrations and workplace workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Robin support coworking operations?</h3>
+            <p>
+              No. Robin is not positioned as a coworking management platform with memberships, billing, invoicing, subscriptions, and operator
+              workflows.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Robin support marketplace publishing?</h3>
+            <p>No. Robin is focused on workplace management rather than marketplace publishing and public workspace discovery.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and Robin?</h3>
+            <p>
+              Both products support workplace booking and workplace management. Robin focuses on hybrid work coordination, workplace experience, and
+              workplace analytics, while Skedular combines workplace booking, coworking operations, subscriptions, billing, invoicing, marketplace
+              publishing, and workspace commerce in a single platform.
+            </p>
+          </div>
+          <p class="comparison-review-note">This comparison is based on market research and product documentation available in June 2026.</p>
+        </>
+      ) : isOfficely ? (
+        <>
+          <div class="faq-item">
+            <h3>Does Skedular support Slack?</h3>
+            <p>
+              Yes. Skedular supports workplace booking, desk booking, room booking, notifications, and workplace workflows through Slack. Unlike
+              Slack-first products, Slack is one of several user experiences available within the broader Skedular platform.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Officely support desk booking?</h3>
+            <p>Yes. Desk booking is one of Officely's core capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Officely support meeting room booking?</h3>
+            <p>Yes. Officely supports meeting room booking and workplace resource scheduling.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Officely work inside Slack?</h3>
+            <p>
+              Yes. Slack integration is one of Officely's primary differentiators and many workplace workflows can be completed directly inside Slack.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Officely support hybrid workplace management?</h3>
+            <p>
+              Yes. Hybrid workplace coordination, workplace visibility, and office attendance planning are among Officely's strongest capabilities.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Officely support coworking operations?</h3>
+            <p>No. Officely is not designed around memberships, billing, invoicing, subscriptions, or coworking operator workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Officely support marketplace publishing?</h3>
+            <p>No. Officely focuses on workplace management rather than marketplace publishing and workspace discovery.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and Officely?</h3>
+            <p>
+              Both platforms support workplace booking and workplace management. Officely focuses on Slack-first workplace coordination and hybrid
+              work management, while Skedular combines workplace booking, coworking operations, subscriptions, billing, invoicing, marketplace
+              publishing, and workspace commerce in a single platform.
+            </p>
+          </div>
+          <p class="comparison-review-note">This comparison is based on market research and product documentation available in June 2026.</p>
+        </>
+      ) : isEnvoy ? (
+        <>
+          <div class="faq-item">
+            <h3>Is Envoy primarily a visitor management platform?</h3>
+            <p>
+              Yes. While Envoy includes desk booking, room booking, workplace coordination, workplace operations, and workplace experience
+              capabilities, visitor management remains one of its strongest and most widely recognized product areas.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Envoy support desk booking?</h3>
+            <p>Yes. Desk booking is one of Envoy's core workplace capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Envoy support visitor management?</h3>
+            <p>Yes. Visitor management is one of Envoy's strongest and most recognized capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Envoy support workplace security?</h3>
+            <p>Yes. Envoy includes visitor access, workplace security, and workplace operations workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Envoy support Microsoft Teams?</h3>
+            <p>Yes. Envoy supports Microsoft Teams integrations and workplace workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Envoy support coworking operations?</h3>
+            <p>No. Envoy is not designed around memberships, billing, invoicing, subscriptions, or coworking operator workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Envoy support marketplace publishing?</h3>
+            <p>No. Envoy focuses on workplace management rather than marketplace publishing and workspace discovery.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and Envoy?</h3>
+            <p>
+              Both platforms support workplace booking and workplace management. Envoy focuses on visitor management, workplace experience, workplace
+              security, and office operations, while Skedular combines workplace booking, coworking operations, subscriptions, billing, invoicing,
+              marketplace publishing, and workspace commerce in a single platform.
+            </p>
+          </div>
+          <p class="comparison-review-note">This comparison is based on market research and product documentation available in June 2026.</p>
+        </>
+      ) : isKadence ? (
+        <>
+          <div class="faq-item">
+            <h3>Is Kadence primarily a hybrid workplace platform?</h3>
+            <p>
+              Yes. Kadence is primarily focused on hybrid workplace management, office attendance coordination, workplace analytics, workplace
+              visibility, and space utilization. These capabilities are among the platform's strongest differentiators.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Kadence support desk booking?</h3>
+            <p>Yes. Desk booking is one of Kadence's core capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Kadence support hybrid workplace management?</h3>
+            <p>Yes. Hybrid workplace management and office attendance coordination are among Kadence's strongest capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Kadence support workplace analytics?</h3>
+            <p>Yes. Workplace analytics and space utilization reporting are major Kadence strengths.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Kadence support Microsoft Teams?</h3>
+            <p>Yes. Kadence supports Microsoft Teams integrations and workplace workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Kadence support coworking operations?</h3>
+            <p>No. Kadence is not designed around memberships, billing, invoicing, subscriptions, or coworking operator workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Kadence support marketplace publishing?</h3>
+            <p>No. Kadence focuses on workplace management rather than marketplace publishing and workspace discovery.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and Kadence?</h3>
+            <p>
+              Both platforms support workplace booking and workplace management. Kadence focuses on hybrid workplace management, office attendance
+              coordination, and workplace analytics, while Skedular combines workplace booking, coworking operations, subscriptions, billing,
+              invoicing, marketplace publishing, and workspace commerce in a single platform.
+            </p>
+          </div>
+          <p class="comparison-review-note">This comparison is based on market research and product documentation available in June 2026.</p>
+        </>
+      ) : isArchie ? (
+        <>
+          <div class="faq-item">
+            <h3>Does Archie support coworking management?</h3>
+            <p>Yes. Coworking management is one of Archie's primary use cases.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Archie support member management?</h3>
+            <p>Yes. Member management is one of Archie's strongest capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Archie support contracts and membership agreements?</h3>
+            <p>
+              Yes. Archie supports contract-based coworking operations, membership agreements, recurring memberships, billing, invoicing, and
+              workspace administration workflows.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Archie support billing and invoicing?</h3>
+            <p>Yes. Archie supports recurring billing, invoicing, payments, and membership administration workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Archie support workspace booking?</h3>
+            <p>Yes. Desk booking and room booking are supported.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does Archie support marketplace publishing?</h3>
+            <p>No. Archie is not positioned as a workspace marketplace or workspace discovery platform.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Can Archie be used by private organizations?</h3>
+            <p>Archie can support workplace booking workflows, but it is primarily designed around coworking and flexible workspace operations.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and Archie?</h3>
+            <p>
+              Both platforms support coworking operations, member management, billing, invoicing, subscriptions, and workspace booking. Archie focuses
+              on coworking administration, while Skedular extends into private workplace management, marketplace publishing, workspace discovery, and
+              workspace commerce.
+            </p>
+          </div>
+          <p class="comparison-review-note">This comparison is based on market research and product documentation available in June 2026.</p>
+        </>
+      ) : isDiskbird ? (
+        <>
+          <div class="faq-item">
+            <h3>Does deskbird support desk booking?</h3>
+            <p>Yes. Desk booking is one of deskbird's core capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does deskbird support office attendance planning?</h3>
+            <p>Yes. Office attendance planning, workplace visibility, and hybrid work coordination are among deskbird's strongest capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does deskbird support hybrid workplace management?</h3>
+            <p>Yes. Hybrid workplace management and attendance coordination are among deskbird's strongest capabilities.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does deskbird support workplace analytics?</h3>
+            <p>Yes. Workplace analytics, workplace visibility, and utilization reporting are major deskbird strengths.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does deskbird support Microsoft Teams?</h3>
+            <p>Yes. deskbird supports Microsoft Teams integrations and workplace workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is deskbird primarily a hybrid workplace platform?</h3>
+            <p>
+              Yes. deskbird is primarily focused on hybrid workplace management, workplace visibility, attendance coordination, and workplace
+              analytics.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does deskbird support coworking operations?</h3>
+            <p>No. deskbird is not designed around memberships, billing, invoicing, subscriptions, or coworking operator workflows.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and deskbird?</h3>
+            <p>
+              Both platforms support workplace booking and workplace management. deskbird focuses on hybrid workplace management, workplace analytics,
+              attendance coordination, workplace visibility, and employee workplace experience, while Skedular combines workplace booking with
+              coworking operations, billing, subscriptions, marketplace publishing, workspace discovery, and workspace commerce.
+            </p>
+          </div>
+          <p class="comparison-review-note">This comparison is based on market research and product documentation available in June 2026.</p>
+        </>
+      ) : (
+        <>
+          <div class="faq-item">
+            <h3>What is the difference between Skedular and {competitorName}?</h3>
+            <p>
+              Skedular combines booking, operations, billing, subscriptions, marketplace discovery, and integrations. {competitorName}
+              is primarily positioned around {competitorCategory}, so the better fit depends on which workflow matters most.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Which platform is better for coworking spaces?</h3>
+            <p>
+              Skedular is designed for coworking operations when billing, memberships, subscriptions, invoicing, and marketplace publishing need to
+              work together. {competitorName} may be a better fit if its core strengths match a narrower coworking or workplace requirement.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Which platform supports subscriptions and billing?</h3>
+            <p>
+              Skedular supports subscriptions, billing, invoicing, and payment workflows in the shared feature matrix. For
+              {competitorName}, review the feature table because support varies by product and the dataset marks uncertain items as needing review.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does {competitorName} support marketplace publishing?</h3>
+            <p>
+              Marketplace support differs by product. Skedular includes public listings, workspace discovery, public booking pages, and marketplace
+              inventory workflows. The table shows the current dataset state for {competitorName}.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Which platform is better for private organizations?</h3>
+            <p>
+              Private organizations should compare desk booking, meeting room booking, permissions, analytics, identity, and collaboration
+              integrations. Skedular is broader when those needs also connect to operator, billing, or workspace commerce workflows.
+            </p>
+          </div>
+        </>
+      )
+    }
+  </div>
+</section>

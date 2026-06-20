@@ -6,6 +6,7 @@ import type { newLocationButton_query$key } from '@/queries/__generated__/newLoc
 import Button from '@mui/material/Button';
 import { memo } from 'react';
 import { graphql, useFragment } from 'react-relay';
+import { useSpacesSubscription } from '@/components/rootShell/spaces-subscription-context';
 
 type Props = {
   rootDataRelay: newLocationButton_query$key;
@@ -32,6 +33,8 @@ const NewLocationButton = ({ rootDataRelay, organizationCustomDomain, fullWidth,
   );
 
   const { integratedPlatform } = useIntegratedPlatform();
+  const subscription = useSpacesSubscription();
+  const blocked = subscription?.canUseProduct === false;
 
   if (!rootData.organization) {
     return null;
@@ -46,6 +49,8 @@ const NewLocationButton = ({ rootDataRelay, organizationCustomDomain, fullWidth,
       }
       variant={variant ?? 'text'}
       fullWidth={fullWidth}
+      disabled={blocked}
+      title={blocked ? 'Upgrade to continue adding locations.' : undefined}
     >
       {size === 'small' && <SmallIconTypography label={label ?? 'Add Location'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
       {size === 'medium' && <BodyIconTypography label={label ?? 'Add Location'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}

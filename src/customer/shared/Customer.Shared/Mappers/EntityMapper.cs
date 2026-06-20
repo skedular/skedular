@@ -144,7 +144,8 @@ public class EntityMapper : IEntityMapper
                 FeedbackChannelTypeConstants.Web => FeedbackChannelType.Web,
                 FeedbackChannelTypeConstants.Slack => FeedbackChannelType.Slack,
                 FeedbackChannelTypeConstants.MsTeams => FeedbackChannelType.MsTeams,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Channel), src.Channel,
+                    $"Unexpected value for {nameof(src.Channel)}: {src.Channel}. Update enum mapping or caller input.")
             },
             Customer = MapTo(src.Customer)
         };
@@ -159,7 +160,8 @@ public class EntityMapper : IEntityMapper
                 FeedbackChannelType.Web => FeedbackChannelTypeConstants.Web,
                 FeedbackChannelType.Slack => FeedbackChannelTypeConstants.Slack,
                 FeedbackChannelType.MsTeams => FeedbackChannelTypeConstants.MsTeams,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src.Channel), src.Channel,
+                    $"Unexpected value for {nameof(src.Channel)}: {src.Channel}. Update enum mapping or caller input.")
             },
             Customer = customer
         };

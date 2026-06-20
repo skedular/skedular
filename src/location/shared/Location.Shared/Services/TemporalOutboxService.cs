@@ -19,6 +19,8 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
         IUnitOfWork unitOfWork);
 
     void StartWorkflowNewLocationJoined(NewLocationJoinedInput args, IUnitOfWork unitOfWork);
+    void StartProvisionHostLocation(ProvisionHostLocationInput args, IUnitOfWork unitOfWork);
+    void StartDeprovisionHostLocation(DeprovisionHostLocationInput args, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxService(
@@ -33,6 +35,8 @@ public class TemporalOutboxService(
         typeof(ComputeOrganizationLocationsAndProductsRelationships).ToWorkflowType();
 
     private static readonly string s_newLocationJoined = typeof(NewLocationJoined).ToWorkflowType();
+    private static readonly string s_provisionHostLocation = typeof(ProvisionHostLocation).ToWorkflowType();
+    private static readonly string s_deprovisionHostLocation = typeof(DeprovisionHostLocation).ToWorkflowType();
 
     public void StartWorkflowLocationDailyAnalytics(GenerateLocationDailyAnalyticsInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxWorkflowExecutor.Execute<GenerateLocationDailyAnalytics, GenerateLocationDailyAnalyticsInput>(
@@ -69,6 +73,30 @@ public class TemporalOutboxService(
             new WorkflowOptions
             {
                 Id = workflowIdService.NewLocationJoined(args.LocationId),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartProvisionHostLocation(ProvisionHostLocationInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<ProvisionHostLocation, ProvisionHostLocationInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = workflowIdService.ProvisionHostLocation(args.LocationId),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartDeprovisionHostLocation(DeprovisionHostLocationInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<DeprovisionHostLocation, DeprovisionHostLocationInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = workflowIdService.DeprovisionHostLocation(args.LocationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -124,6 +152,38 @@ public class TemporalOutboxService(
                 ArgumentNullException.ThrowIfNull(input);
 
                 _ = await temporalClient.StartWorkflowAsync((NewLocationJoined workflow) => workflow.ExecuteAsync(input), workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
+        else if (workflowType == s_provisionHostLocation)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<ProvisionHostLocationInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync(
+                    (ProvisionHostLocation workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
+        else if (workflowType == s_deprovisionHostLocation)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<DeprovisionHostLocationInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync(
+                    (DeprovisionHostLocation workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)
             {

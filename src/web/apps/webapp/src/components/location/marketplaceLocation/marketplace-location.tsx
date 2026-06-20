@@ -65,6 +65,7 @@ type PricingRow = {
   id: string;
   taxLabel: string;
   title: string;
+  availableDays: readonly string[];
 };
 
 type FloorPlanProduct = {
@@ -312,6 +313,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
               price
               isTaxInclusive
               supportsSubscriptionAutoRenewal
+              availableDays
             }
             amenities {
               id
@@ -444,6 +446,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
           amountLabel: formatPriceForDisplay(currencyLabel, option.price, option.purchaseCadence),
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
+          availableDays: option.availableDays ?? [],
         }));
 
       return {
@@ -498,6 +501,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
             amountLabel: formatPriceForDisplay(currencyLabel, option.price, option.purchaseCadence),
             taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
+            availableDays: option.availableDays ?? [],
             bookingLabel: isSubscriptionCadence(option.purchaseCadence) ? 'Choose plan' : 'Book this option',
           })),
       };

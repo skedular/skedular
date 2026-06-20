@@ -25,6 +25,11 @@ public class MarketplaceRefund : EntityBase
     public string? ExternalRefundNumber { get; set; }
     public DateTimeOffset? LastProcessedAt { get; set; }
     public string? LastError { get; set; }
+    public string? PaymentProvider { get; set; }
+    public string? ExternalPaymentRefundId { get; set; }
+    public string? PaymentRefundStatus { get; set; }
+    public DateTimeOffset? PaymentRefundLastProcessedAt { get; set; }
+    public string? PaymentRefundLastError { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
@@ -55,6 +60,10 @@ public class MarketplaceRefundConfiguration : IEntityTypeConfiguration<Marketpla
         builder.Property(item => item.ExternalRefundId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
         builder.Property(item => item.ExternalRefundNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
         builder.Property(item => item.LastError).HasMaxLength(Constants.MaxAccountingErrorLength);
+        builder.Property(item => item.PaymentProvider).HasMaxLength(Constants.MaxAccountingProviderLength);
+        builder.Property(item => item.ExternalPaymentRefundId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.PaymentRefundStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.PaymentRefundLastError).HasMaxLength(Constants.MaxAccountingErrorLength);
 
         builder.HasOne(item => item.Organization).WithMany().HasForeignKey(item => item.OrganizationId);
         builder.HasOne(item => item.RequestedByCustomer).WithMany().HasForeignKey(item => item.RequestedByCustomerId);
@@ -63,5 +72,6 @@ public class MarketplaceRefundConfiguration : IEntityTypeConfiguration<Marketpla
         builder.HasIndex(item => item.Status);
         builder.HasIndex(item => new { item.OrganizationId, item.LocalEntityType, item.LocalEntityId }).IsUnique();
         builder.HasIndex(item => new { item.AccountingProvider, item.ExternalRefundId }).IsUnique();
+        builder.HasIndex(item => new { item.PaymentProvider, item.ExternalPaymentRefundId }).IsUnique();
     }
 }

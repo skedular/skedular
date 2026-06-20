@@ -244,6 +244,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Status = src.Status.ToMarketplaceBookingSubscriptionStatus(),
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+            WeeklySelectedDays = src.WeeklySelectedDays.Select(item => item.ToDayOfWeek()).ToList(),
             MarketplaceBooking = marketplaceBooking,
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
@@ -529,6 +530,9 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 TaxAmount = src.TaxAmount,
                 TaxRatePercentage = src.TaxRatePercentage,
                 TotalAmount = src.TotalAmount,
+                HostCommissionRatePercentage = src.HostCommissionRatePercentage,
+                HostCommissionAmount = src.HostCommissionAmount,
+                HostPayoutAmount = src.HostPayoutAmount,
                 Currency = src.Currency.ToNullableCurrency(),
                 InvoiceUrl = src.InvoiceUrl,
                 InvoiceNumber = src.InvoiceNumber,
@@ -588,6 +592,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Status = src.Status.ToMarketplaceBookingSubscriptionStatus(),
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+            WeeklySelectedDays = src.WeeklySelectedDays.Select(item => item.ToDayOfWeek()).ToList(),
             MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
             RequestedResources = MapTo(src.RequestedResources).ToList()
         };
@@ -637,6 +642,9 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
         src.TaxAmount = marketplaceBooking.TaxAmount;
         src.TaxRatePercentage = marketplaceBooking.TaxRatePercentage;
         src.TotalAmount = marketplaceBooking.TotalAmount;
+        src.HostCommissionRatePercentage = marketplaceBooking.HostCommissionRatePercentage;
+        src.HostCommissionAmount = marketplaceBooking.HostCommissionAmount;
+        src.HostPayoutAmount = marketplaceBooking.HostPayoutAmount;
         src.Currency = marketplaceBooking.Currency;
         src.InvoiceUrl = marketplaceBooking.InvoiceUrl;
         src.InvoiceNumber = marketplaceBooking.InvoiceNumber;
@@ -671,6 +679,9 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
         dest.TaxAmount = src.TaxAmount;
         dest.TaxRatePercentage = src.TaxRatePercentage;
         dest.TotalAmount = src.TotalAmount;
+        dest.HostCommissionRatePercentage = src.HostCommissionRatePercentage;
+        dest.HostCommissionAmount = src.HostCommissionAmount;
+        dest.HostPayoutAmount = src.HostPayoutAmount;
         dest.Currency = src.Currency.ToNullableCurrency();
         dest.InvoiceUrl = src.InvoiceUrl;
         dest.InvoiceNumber = src.InvoiceNumber;
@@ -701,6 +712,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
         dest.Status = src.Status.ToMarketplaceBookingSubscriptionStatus();
         dest.AutoRenew = src.AutoRenew;
         dest.CancelAtPeriodEnd = src.CancelAtPeriodEnd;
+        dest.WeeklySelectedDays = src.WeeklySelectedDays.Select(item => item.ToDayOfWeek()).ToList();
         dest.InvolvedCustomers = involvedCustomers.ToList();
         dest.InvolvedOrganizations = involvedOrganizations.ToList();
         dest.InvolvedTeams = involvedTeams.ToList();

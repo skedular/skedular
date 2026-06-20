@@ -1,12 +1,17 @@
-using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Organization.Shared.Models.PricingCatalog;
 
 namespace Organization.Shared.Services.Pricing;
 
 public class TeamsPricingCatalogProvider
 {
-    public static ProductOffering GetTeamsOffering() =>
-        new(
+    public static ProductOffering GetTeamsOffering()
+    {
+        var freeTierOffering = OfferingCode.FreeTierV1.GetOffering();
+        var payAsYouGoOffering = OfferingCode.PayAsYouGoV1.GetOffering();
+        var enterpriseCustomOffering = OfferingCode.EnterpriseCustomV1.GetOffering();
+
+        return new ProductOffering(
             PricingCatalogProductOfferingCode.Teams,
             "Skedular Teams",
             "Private workplace management for employees, workplace teams, and shared resources.",
@@ -23,11 +28,34 @@ public class TeamsPricingCatalogProvider
                         new PlanFeature("locations", "One location", 3)
                     ],
                     [
-                        new PlanLimit("monthly-active-users", "Monthly active users", PricingCatalogConstants.FreeActiveUserLimit, false),
-                        new PlanLimit("teams", "Teams", PricingCatalogConstants.FreeTeamLimit, false),
-                        new PlanLimit("locations", "Locations", PricingCatalogConstants.FreeLocationLimit, false)
+                        new PlanLimit(
+                            "monthly-active-users",
+                            "Monthly active users",
+                            freeTierOffering.MaxUserCount,
+                            !freeTierOffering.MaxUserCount.HasValue),
+                        new PlanLimit(
+                            "teams",
+                            "Teams",
+                            freeTierOffering.MaxTeamCount,
+                            !freeTierOffering.MaxTeamCount.HasValue),
+                        new PlanLimit(
+                            "locations",
+                            "Locations",
+                            freeTierOffering.MaxLocationCount,
+                            !freeTierOffering.MaxLocationCount.HasValue),
+                        new PlanLimit(
+                            "resources",
+                            "Resources",
+                            freeTierOffering.MaxResourceCount,
+                            !freeTierOffering.MaxResourceCount.HasValue),
+                        new PlanLimit(
+                            "booking-instances",
+                            "Booking instances",
+                            freeTierOffering.MaxBookingInstanceCount,
+                            !freeTierOffering.MaxBookingInstanceCount.HasValue)
                     ],
-                    [new PlanPrice(PricingCatalogConstants.SkedularPricingCurrency.ToCurrency(), 0, "month", false)],
+                    // ReSharper disable once PossibleLossOfFraction
+                    [new PlanPrice(freeTierOffering.Currency, (freeTierOffering.UnitPrice ?? 0) / 100, "month", false)],
                     [],
                     PricingCatalogPlanAvailability.SelfService,
                     false,
@@ -43,11 +71,34 @@ public class TeamsPricingCatalogProvider
                         new PlanFeature("active-user-billing", "Monthly active-user billing", 3)
                     ],
                     [
-                        new PlanLimit("monthly-active-users", "Monthly active users", null, true),
-                        new PlanLimit("teams", "Teams", null, true),
-                        new PlanLimit("locations", "Locations", null, true)
+                        new PlanLimit(
+                            "monthly-active-users",
+                            "Monthly active users",
+                            payAsYouGoOffering.MaxUserCount,
+                            !payAsYouGoOffering.MaxUserCount.HasValue),
+                        new PlanLimit(
+                            "teams",
+                            "Teams",
+                            payAsYouGoOffering.MaxTeamCount,
+                            !payAsYouGoOffering.MaxTeamCount.HasValue),
+                        new PlanLimit(
+                            "locations",
+                            "Locations",
+                            payAsYouGoOffering.MaxLocationCount,
+                            !payAsYouGoOffering.MaxLocationCount.HasValue),
+                        new PlanLimit(
+                            "resources",
+                            "Resources",
+                            payAsYouGoOffering.MaxResourceCount,
+                            !payAsYouGoOffering.MaxResourceCount.HasValue),
+                        new PlanLimit(
+                            "booking-instances",
+                            "Booking instances",
+                            payAsYouGoOffering.MaxBookingInstanceCount,
+                            !payAsYouGoOffering.MaxBookingInstanceCount.HasValue)
                     ],
-                    [new PlanPrice(PricingCatalogConstants.SkedularPricingCurrency.ToCurrency(), 3, "active user/month", false)],
+                    // ReSharper disable once PossibleLossOfFraction
+                    [new PlanPrice(payAsYouGoOffering.Currency, (payAsYouGoOffering.UnitPrice ?? 0) / 100, "active user/month", false)],
                     [],
                     PricingCatalogPlanAvailability.SelfService,
                     true,
@@ -63,9 +114,31 @@ public class TeamsPricingCatalogProvider
                         new PlanFeature("support", "Priority support", 3)
                     ],
                     [
-                        new PlanLimit("monthly-active-users", "Monthly active users", null, false),
-                        new PlanLimit("teams", "Teams", null, true),
-                        new PlanLimit("locations", "Locations", null, true)
+                        new PlanLimit(
+                            "monthly-active-users",
+                            "Monthly active users",
+                            enterpriseCustomOffering.MaxUserCount,
+                            false),
+                        new PlanLimit(
+                            "teams",
+                            "Teams",
+                            enterpriseCustomOffering.MaxTeamCount,
+                            !enterpriseCustomOffering.MaxTeamCount.HasValue),
+                        new PlanLimit(
+                            "locations",
+                            "Locations",
+                            enterpriseCustomOffering.MaxLocationCount,
+                            !enterpriseCustomOffering.MaxLocationCount.HasValue),
+                        new PlanLimit(
+                            "resources",
+                            "Resources",
+                            enterpriseCustomOffering.MaxResourceCount,
+                            !enterpriseCustomOffering.MaxResourceCount.HasValue),
+                        new PlanLimit(
+                            "booking-instances",
+                            "Booking instances",
+                            enterpriseCustomOffering.MaxBookingInstanceCount,
+                            !enterpriseCustomOffering.MaxBookingInstanceCount.HasValue)
                     ],
                     [],
                     [new CapacityOption("teams-custom", null, "Contact Us", null, PricingCatalogPlanAvailability.ContactUs, 1)],
@@ -73,4 +146,5 @@ public class TeamsPricingCatalogProvider
                     false,
                     3)
             ]);
+    }
 }

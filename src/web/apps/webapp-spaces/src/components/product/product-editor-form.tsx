@@ -11,7 +11,15 @@ import {
   SingleChoiceProductType,
 } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
-import { createCancellationRefundRule, createPricingOption, isEventType, PricingOptionForm, ProductDetails } from '@/components/product/product-editor-shared';
+import CalendarDayPicker from '@/components/product/calendar-day-picker';
+import {
+  createCancellationRefundRule,
+  createPricingOption,
+  isEventType,
+  PricingOptionForm,
+  ProductDetails,
+  sanitizeWeeklyRequiredDays,
+} from '@/components/product/product-editor-shared';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -37,7 +45,7 @@ import {
   StickyReviewRail,
 } from '@skedular/ui';
 import { Switches, TextField } from 'mui-rff';
-import { memo, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 
 type Props = {
@@ -197,6 +205,14 @@ const ProductEditorForm = ({
     form.change(path, value);
   };
 
+  useEffect(() => {
+    values.pricingOptions.forEach((pricingOption, index) => {
+      if (pricingOption.cadence !== 'WEEKLY' && pricingOption.requiredDaysPerWeek) {
+        form.change(`pricingOptions[${index}].requiredDaysPerWeek`, '');
+      }
+    });
+  }, [form, values.pricingOptions]);
+
   const addOffer = (cadence: string) => {
     const nextOffer = {
       ...createPricingOption(rootDataRelay.defaultMaxAllowedResourcesLockTimePaidViaCard, rootDataRelay.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer),
@@ -234,6 +250,7 @@ const ProductEditorForm = ({
       </SettingsSectionCard>
 
       <SettingsSectionCard title="Booking Rules" description="Define how much of the product is reserved each time this offer is purchased.">
+        <CalendarDayPicker availableDays={pricingOption.availableDays} onChange={(availableDays) => changeNestedField(`pricingOptions[${index}].availableDays`, availableDays)} />
         <FormFieldLabel label="Number of Resources to Book">
           <TextField
             name={`pricingOptions[${index}].numberOfResourcesToBook`}
@@ -248,6 +265,18 @@ const ProductEditorForm = ({
         <FormFieldLabel label="Maximum Duration (minutes)">
           <TextField name={`pricingOptions[${index}].maxDurationMinutes`} required />
         </FormFieldLabel>
+        {pricingOption.cadence === 'WEEKLY' ? (
+          <FormFieldLabel label="Required selected days per week">
+            <TextField
+              name={`pricingOptions[${index}].requiredDaysPerWeek`}
+              type="text"
+              slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
+              fieldProps={{ parse: sanitizeWeeklyRequiredDays }}
+              helperText={`Leave empty for unrestricted weekly booking; choose 1 to ${pricingOption.availableDays.length || 7}.`}
+            />
+          </FormFieldLabel>
+        ) : null}
+        {pricingOption.cadence === 'WEEKLY' ? <SmallIconTypography label="Leave this field empty to keep the existing unrestricted weekly booking behavior." /> : null}
       </SettingsSectionCard>
 
       <SettingsSectionCard title="Payments" description="Describe how this offer is paid for and which payment paths you support.">

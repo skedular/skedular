@@ -132,6 +132,16 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose,
       fragment marketplaceLocationCard_LocationDetails on LocationDetails {
         id
         name
+        organization {
+          type {
+            type
+            name
+          }
+          spacesPublicBookingAvailability {
+            available
+            message
+          }
+        }
         extraMetadata {
           areaRange {
             fromInSqm
@@ -156,6 +166,8 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose,
     `,
     locationDetailsRelay,
   );
+
+  const isHost = locationDetails.organization.type.type === 'HOST';
 
   const [commitAddCustomerFavouriteLocation] = useMutation<marketplaceLocationCard_addCustomerFavouriteLocationMutation>(graphql`
     mutation marketplaceLocationCard_addCustomerFavouriteLocationMutation($input: AddCustomerFavouriteLocationInput!) {
@@ -200,6 +212,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose,
   );
   const canShare = typeof navigator !== 'undefined' && typeof navigator.canShare === 'function' && navigator.canShare({ url: shareUrl });
   const isPopupCard = Boolean(onClose);
+  const bookingAvailability = locationDetails.organization?.spacesPublicBookingAvailability;
 
   const capacity = useMemo(() => {
     if (!locationDetails.extraMetadata?.peopleCapacity) {
@@ -440,6 +453,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose,
                     whiteSpace: 'nowrap',
                   }}
                 />
+                {isHost ? <SmallIconTypography label="Hosted place" sx={{ color: 'primary.main', fontWeight: 700 }} /> : null}
               </Box>
 
               <StackRow sx={{ flexShrink: 0, gap: 0.75 }}>
@@ -485,6 +499,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose,
                 />
               </Box>
             ) : null}
+            {bookingAvailability?.available === false ? <SmallIconTypography label={bookingAvailability.message} sx={{ color: 'text.secondary' }} /> : null}
           </StackColumn>
 
           {capacity || areaSize ? (

@@ -64,7 +64,8 @@ public static class OpenTelemetryExtensions
             LogsOtlpSignalName => "v1/logs",
             MetricsOtlpSignalName => "v1/metrics",
             TracesOtlpSignalName => "v1/traces",
-            _ => throw new ArgumentOutOfRangeException(nameof(signalName), signalName, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(signalName), signalName,
+                $"Unexpected value for {nameof(signalName)}: {signalName}. Update enum mapping or caller input.")
         };
 
         return new Uri($"{endpoint.ToString().TrimEnd('/')}/{signalPath}");

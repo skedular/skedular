@@ -1,5 +1,6 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
@@ -8,6 +9,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore.Storage;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
+using ResourceSlotClaimResult = Booking.Shared.Models.ResourceSlotClaimResult;
+using Offering = Api.Shared.Services.Models.Offering;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
 
 namespace Booking.Shared.UnitTests.Services.MarketplaceBookingServiceTests;
@@ -24,8 +27,6 @@ public class MarketplaceBookingServiceShould
         CancellationToken cancellationToken)
     {
         // Arrange
-        var organizations = new List<Organization>();
-        var teams = new List<Team>();
         var customer = new Customer();
         var booking = new Shared.Models.Booking
         {
@@ -38,7 +39,7 @@ public class MarketplaceBookingServiceShould
 
         // Act & Assert
         await Should.ThrowAsync<CustomerNotFound>(() =>
-            sut.AddAsync(booking, customer, organizations, teams, null, cancellationToken));
+            sut.AddAsync(booking, customer, [], [], null, true, true, false, cancellationToken));
     }
 
     [Theory]
@@ -51,8 +52,6 @@ public class MarketplaceBookingServiceShould
         CancellationToken cancellationToken)
     {
         // Arrange
-        var organizations = new List<Organization>();
-        var teams = new List<Team>();
         var customer = new Customer();
         var booking = new Shared.Models.Booking
         {
@@ -68,7 +67,202 @@ public class MarketplaceBookingServiceShould
 
         // Act & Assert
         await Should.ThrowAsync<ProductVersionNotFound>(() =>
-            sut.AddAsync(booking, customer, organizations, teams, null, cancellationToken));
+            sut.AddAsync(booking, customer, [], [], null, true, true, false, cancellationToken));
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task AddAsync_Throws_SpacesBookingQuotaExceeded_When_Quota_Blocked(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IMarketplaceEventResourceService marketplaceEventResourceService,
+        [Frozen] IProductVersionHelperService productVersionHelperService,
+        [Frozen] ISpacesBookingQuotaService spacesBookingQuotaService,
+        [Frozen] IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
+        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen] IDbContextTransaction transaction,
+        MarketplaceBookingService sut,
+        ICustomerRepository customerRepository,
+        IProductVersionRepository productVersionRepository,
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        IBookingRepository bookingRepository,
+        IResourceRepository resourceRepository,
+        CancellationToken cancellationToken)
+    {
+        var from = new DateTimeOffset(2026, 6, 15, 9, 0, 0, TimeSpan.Zero);
+        var organization = new Organization
+        {
+            Id = "org-1", Type = OrganizationTypeConstants.Marketplace, Offering = new Offering { Code = OfferingCode.SpacesFreeTierV1 }
+        };
+        var customer = new Customer { Id = "customer-1" };
+        var pricing = ProductPricing.Empty("pricing-1") with
+        {
+            PurchaseCadence = ProductPricingCadence.OneTime,
+            BookingCadence = ProductPricingCadence.OneTime,
+            AcceptedPaymentMethods = [PaymentMethod.Card],
+            BillingMode = ProductPricingBillingMode.Upfront,
+            MaxAllowedResourcesLockTimePaidViaCard = 15,
+            NumberOfResourcesToBook = 1
+        };
+        var booking = new Shared.Models.Booking
+        {
+            From = from,
+            Until = from.AddHours(1),
+            InvolvedCustomers = [new Shared.Models.Customer { Id = customer.Id }],
+            Resources = [],
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                ProductVersion = new ProductVersion { Id = "product-version-1" }, ProductPricing = pricing, PaymentMethod = PaymentMethod.Card
+            }
+        };
+        var productVersion = new Database.Entities.ProductVersion
+        {
+            Id = "product-version-1",
+            Type = ProductTypeConstants.Event,
+            PricingOptions = [pricing],
+            OrganizationTags = [new OrganizationTag { Type = OrganizationTagTypeConstants.Product }],
+            Product = new Product { Organization = organization },
+            Currency = CurrencyConstants.Nzd
+        };
+        var marketplaceBookingEntity = new Database.Entities.MarketplaceBooking { Id = "marketplace-booking-1" };
+        var bookingEntity = new Database.Entities.Booking { Id = "booking-1" };
+
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
+        A.CallTo(() => repositoryFactory.MarketplaceBookingRepository).Returns(marketplaceBookingRepository);
+        A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
+        A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
+        A.CallTo(() => customerRepository.GetByIdsAsync(A<IReadOnlyList<string>>.That.Contains(customer.Id), true, cancellationToken))
+            .Returns([customer]);
+        A.CallTo(() => productVersionRepository.GetByIdAsync(productVersion.Id, cancellationToken)).Returns(productVersion);
+        A.CallTo(() => productVersionHelperService.FindMatchingPricing(A<IReadOnlyList<ProductPricing>>._, pricing)).Returns(pricing);
+        var selectedBookingDate = default(DateOnly);
+        A.CallTo(() => marketplaceBookingAvailableDaysService.IsAvailable(
+                A<ProductPricing>._,
+                A<DateTimeOffset>._,
+                out selectedBookingDate))
+            .Returns(true);
+        A.CallTo(() => marketplaceEventResourceService.PickEventResourcesAsync(from, from.AddHours(1), productVersion, cancellationToken))
+            .Returns([]);
+        A.CallTo(() => entityMapper.MapTo(A<MarketplaceBooking>._, customer, null, productVersion, null)).Returns(marketplaceBookingEntity);
+        A.CallTo(() => marketplaceBookingRepository.Add(marketplaceBookingEntity)).Returns(marketplaceBookingEntity);
+        A.CallTo(() => entityMapper.MapTo(
+                booking,
+                A<IReadOnlyList<Customer>>._,
+                A<IReadOnlyList<Organization>>.That.Matches(items => items.Any(item => item.Id == organization.Id)),
+                A<IReadOnlyList<Location>>._,
+                A<IReadOnlyList<Team>>._,
+                A<IReadOnlyList<Resource>>._,
+                customer,
+                null,
+                null,
+                marketplaceBookingEntity,
+                null))
+            .Returns(bookingEntity);
+        A.CallTo(() => bookingRepository.Add(bookingEntity)).Returns(bookingEntity);
+        A.CallTo(() => resourceRepository.TryClaimCompleteSlotSetAsync(bookingEntity, A<IReadOnlyCollection<string>>._, cancellationToken))
+            .Returns(ResourceSlotClaimResult.Success());
+        A.CallTo(() => spacesBookingQuotaService.TryReserveBookingInstancesAsync(
+                organization.Id,
+                A<IReadOnlyList<DateTimeOffset>>.That.Matches(values => values.Single() == from.ToUniversalTime()),
+                cancellationToken))
+            .Returns(new SpacesQuotaDecision(
+                false,
+                SpacesQuotaReasonCode.FreeTierLimitExceeded,
+                1,
+                100,
+                100,
+                1,
+                0,
+                0,
+                new DateTimeOffset(2026, 6, 1, 0, 0, 0, TimeSpan.Zero),
+                new DateTimeOffset(2026, 7, 1, 0, 0, 0, TimeSpan.Zero)));
+
+        await Should.ThrowAsync<SpacesBookingQuotaExceeded>(() =>
+            sut.AddAsync(booking, customer, [], [], null, true, true, false, cancellationToken));
+
+        A.CallTo(() => unitOfWork.SaveChangesAsync(A<CancellationToken>._)).MustNotHaveHappened();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task AdjustRequiredResourcesAsync_Only_Queries_Resources_Compatible_With_The_Product(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IMarketplaceBookingPreferenceService marketplaceBookingPreferenceService,
+        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen] IDbContextTransaction transaction,
+        MarketplaceBookingService sut,
+        ICustomerRepository customerRepository,
+        IProductVersionRepository productVersionRepository,
+        IResourceRepository resourceRepository,
+        IBookingRepository bookingRepository,
+        CancellationToken cancellationToken)
+    {
+        var customer = new Customer { Id = "customer-1" };
+        var productTag = new OrganizationTag { Id = "product-tag-1", Type = OrganizationTagTypeConstants.Product };
+        var requestedResource = new Resource { Id = "requested-resource-1" };
+        var pricing = ProductPricing.Empty("pricing-1") with { NumberOfResourcesToBook = 1 };
+        var productVersion = new Database.Entities.ProductVersion
+        {
+            Id = "product-version-1", Type = ProductTypeConstants.Resource, PricingOptions = [pricing], OrganizationTags = [productTag]
+        };
+        var booking = new Database.Entities.Booking
+        {
+            Id = "booking-1",
+            From = new DateTimeOffset(2026, 6, 15, 9, 0, 0, TimeSpan.Zero),
+            Until = new DateTimeOffset(2026, 6, 15, 10, 0, 0, TimeSpan.Zero),
+            InvolvedCustomers = [customer],
+            MarketplaceBooking = new Database.Entities.MarketplaceBooking { ProductVersion = productVersion, ProductPricing = pricing },
+            RecurringBooking = new RecurringBooking { RequestedResources = [requestedResource] }
+        };
+
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
+        A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
+        A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
+        A.CallTo(() => customerRepository.GetByIdsAsync(new[] { customer.Id }, true, cancellationToken)).Returns([customer]);
+        A.CallTo(() => productVersionRepository.GetByIdAsync(productVersion.Id, cancellationToken)).Returns(productVersion);
+        A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
+                null,
+                null,
+                booking.From,
+                booking.Until,
+                A<IReadOnlyList<string>>.That.Matches(resourceIds => resourceIds.SequenceEqual(new[] { requestedResource.Id })),
+                A<IReadOnlyList<string>>.That.Matches(tagIds => tagIds.SequenceEqual(new[] { productTag.Id })),
+                Array.Empty<string>(),
+                cancellationToken))
+            .Returns([]);
+        A.CallTo(() => marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                customer,
+                booking.From,
+                booking.Until,
+                productVersion,
+                1,
+                cancellationToken))
+            .Returns([]);
+        A.CallTo(() => entityMapper.MapTo(booking)).Returns(new Shared.Models.Booking { Id = booking.Id });
+        A.CallTo(() => bookingRepository.Update(booking)).Returns(booking);
+        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
+
+        await sut.AdjustRequiredResourcesAsync(booking, cancellationToken);
+
+        A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
+                null,
+                null,
+                booking.From,
+                booking.Until,
+                A<IReadOnlyList<string>>.That.Matches(resourceIds => resourceIds.SequenceEqual(new[] { requestedResource.Id })),
+                A<IReadOnlyList<string>>.That.Matches(tagIds => tagIds.SequenceEqual(new[] { productTag.Id })),
+                Array.Empty<string>(),
+                cancellationToken))
+            .MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -79,14 +273,12 @@ public class MarketplaceBookingServiceShould
     {
         // Arrange
         var booking = new Shared.Models.Booking();
-        var organizations = new List<Organization>();
-        var teams = new List<Team>();
         var lastModifiedByCustomer = new Customer();
         var existingBooking = new Database.Entities.Booking { Channel = BookingChannelConstants.Private };
 
         // Act & Assert
         await Should.ThrowAsync<BookingIsNotMarketplace>(() =>
-            sut.UpdateAsync(booking, existingBooking, lastModifiedByCustomer, organizations, teams, null, false, cancellationToken));
+            sut.UpdateAsync(booking, existingBooking, lastModifiedByCustomer, [], [], null, false, cancellationToken));
     }
 
     [Theory]

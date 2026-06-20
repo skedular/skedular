@@ -15,6 +15,7 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
     public MarketplaceBookingSubscriptionStatus Status { get; set; }
     public bool AutoRenew { get; set; }
     public bool CancelAtPeriodEnd { get; set; }
+    public IReadOnlyList<DayOfWeek> WeeklySelectedDays { get; set; } = [];
     public MarketplaceBooking MarketplaceBooking { get; set; } = new();
     public IReadOnlyList<Customer> InvolvedCustomers { get; set; } = [];
     public IReadOnlyList<Organization> InvolvedOrganizations { get; set; } = [];
@@ -27,7 +28,13 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
 
     public MarketplaceBookingPaymentProjection? ResolveCurrentBillingWindowPaymentProjection(DateTimeOffset now)
     {
-        var organizationBillingCycle = MarketplaceBooking.ProductVersion.Product.Organization.BillingCycle;
+        var organization = MarketplaceBooking?.ProductVersion?.Product?.Organization;
+        if (organization is null)
+        {
+            return null;
+        }
+
+        var organizationBillingCycle = organization.BillingCycle;
         var recurringBookingsInWindow = RecurringBookings
             .Where(item => !item.IsDeleted() && item.MarketplaceBooking is not null)
             .Where(item => IntersectsBillingWindow(item, now, organizationBillingCycle))

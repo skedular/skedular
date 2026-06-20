@@ -23,7 +23,8 @@ export const legalPages: LegalPage[] = [
     sourceUrl: "https://getskedular.com/terms-of-service/",
     reviewStatus: "pending",
     lastSourceReview: "2026-06-05",
-    heroSummary: "These Terms of Service are migrated from the current Skedular legal source and preserve the source legal document wording.",
+    heroSummary:
+      "These Terms of Service are migrated from the current Skedular legal source and preserve the source legal document wording.",
     notice:
       "Legal document migrated from the current Skedular Terms of Service source. Do not rewrite or summarize this content without business or legal approval.",
     html: String.raw`<h3>SKEDULAR ORDER FORM</h3>
@@ -164,11 +165,13 @@ export const legalPages: LegalPage[] = [
     id: "privacy-policy",
     path: "/privacy-policy",
     title: "Privacy Policy | Skedular",
-    description: "Review Skedular's Privacy Policy for how personal data is collected, used, disclosed, secured, retained, and protected.",
+    description:
+      "Review Skedular's Privacy Policy for how personal data is collected, used, disclosed, secured, retained, and protected.",
     sourceUrl: "https://getskedular.com/privacy-policy/",
     reviewStatus: "pending",
     lastSourceReview: "2026-06-05",
-    heroSummary: "This Privacy Policy is migrated from the current Skedular legal source and preserves the source legal document wording.",
+    heroSummary:
+      "This Privacy Policy is migrated from the current Skedular legal source and preserves the source legal document wording.",
     notice:
       "Legal document migrated from the current Skedular Privacy Policy source. Do not rewrite or summarize this content without business or legal approval.",
     html: String.raw`<p><span>Welcome to our privacy policy. We respect your privacy and are committed to protecting your personal data. This privacy policy lets you know how we look after your personal data when you visit our website (regardless of where you visit it from) or access our services, and tells you about your privacy rights and how the law protects you.</span></p>

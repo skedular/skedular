@@ -9,7 +9,6 @@ using Enterprise.Shared.Time;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
-using Microsoft.EntityFrameworkCore;
 using Temporalio.Activities;
 using LocationEntity = Location.Shared.Database.Entities.Location;
 using ResourceEntity = Location.Shared.Database.Entities.Resource;
@@ -54,30 +53,19 @@ public class LocationBookingDerivedState(
         Dictionary<string, ResourceEntity> resources,
         CancellationToken cancellationToken)
     {
-        var existingDailyBookings = await repositoryFactory.DbContext.DailyBookingCountRecording
-            .Where(item => item.Location.Id == location.Id)
-            .ToListAsync(cancellationToken);
-        var existingDeskBookings = await repositoryFactory.DbContext.DailyDeskBookingCountRecording
-            .Where(item => item.Location.Id == location.Id)
-            .ToListAsync(cancellationToken);
-        var existingRoomBookings = await repositoryFactory.DbContext.DailyRoomBookingCountRecording
-            .Where(item => item.Location.Id == location.Id)
-            .ToListAsync(cancellationToken);
-
-        repositoryFactory.DbContext.DailyBookingCountRecording.RemoveRange(existingDailyBookings);
-        repositoryFactory.DbContext.DailyDeskBookingCountRecording.RemoveRange(existingDeskBookings);
-        repositoryFactory.DbContext.DailyRoomBookingCountRecording.RemoveRange(existingRoomBookings);
-
+        var dailyBookingRecordings = new List<DailyBookingCountRecording>();
+        var dailyDeskBookingRecordings = new List<DailyDeskBookingCountRecording>();
+        var dailyRoomBookingRecordings = new List<DailyRoomBookingCountRecording>();
         foreach (var groupedBooking in bookings.GroupBy(item => item.From.StartOfDay()))
         {
             var dayBookings = groupedBooking.ToList();
 
-            _ = repositoryFactory.DbContext.DailyBookingCountRecording.Add(new DailyBookingCountRecording
+            dailyBookingRecordings.Add(new DailyBookingCountRecording
             {
                 Id = randomHelper.Generate(), Date = groupedBooking.Key, Count = dayBookings.Count, Location = location
             });
 
-            _ = repositoryFactory.DbContext.DailyDeskBookingCountRecording.Add(new DailyDeskBookingCountRecording
+            dailyDeskBookingRecordings.Add(new DailyDeskBookingCountRecording
             {
                 Id = randomHelper.Generate(),
                 Date = groupedBooking.Key,
@@ -88,7 +76,7 @@ public class LocationBookingDerivedState(
                 Location = location
             });
 
-            _ = repositoryFactory.DbContext.DailyRoomBookingCountRecording.Add(new DailyRoomBookingCountRecording
+            dailyRoomBookingRecordings.Add(new DailyRoomBookingCountRecording
             {
                 Id = randomHelper.Generate(),
                 Date = groupedBooking.Key,
@@ -99,6 +87,13 @@ public class LocationBookingDerivedState(
                 Location = location
             });
         }
+
+        await repositoryFactory.LocationBookingRecordingRepository.ReplaceDailyRecordingsAsync(
+            location.Id,
+            dailyBookingRecordings,
+            dailyDeskBookingRecordings,
+            dailyRoomBookingRecordings,
+            cancellationToken);
     }
 
     private async Task<List<BookingSnapshot>> GetBookingsAsync(string locationId, CancellationToken cancellationToken)

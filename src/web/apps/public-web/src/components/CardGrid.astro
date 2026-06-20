@@ -10,18 +10,18 @@ interface Props {
   items: Item[];
 }
 
-const { items } = Astro.props;
+const { items } = Astro.props as Props;
 ---
 
 <div class="card-grid">
   {
-    items.map((item) => (
+    items.map((item: Item) => (
       <article class="content-card">
         <h3>{item.title}</h3>
         {(item.body || item.description) && <p>{item.body ?? item.description}</p>}
         {item.items && (
           <ul>
-            {item.items.map((entry) => (
+            {item.items.map((entry: string) => (
               <li>{entry}</li>
             ))}
           </ul>

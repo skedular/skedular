@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<57232ddb3a858ff37bb8b8ecc73c86e8>>
+ * @generated SignedSource<<6780d63d7e9996b43f5cfa29819de852>>
  * @lightSyntaxTransform
  */
 
@@ -28,7 +28,7 @@ export type marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscr
         readonly name: string;
         readonly type: MarketplaceBookingSubscriptionStatus;
       };
-    };
+    } | null | undefined;
   };
 };
 export type marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation = {

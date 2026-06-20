@@ -20,7 +20,10 @@
     "LOCATION_ENDPOINT",
     "SLACK_ENDPOINT",
     "PAYMENT_ENDPOINT",
-    "BILLING_ENDPOINT"
+    "BILLING_ENDPOINT",
+    "PUBLIC_WEB_SITE_URL",
+    "PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID",
+    "PUBLIC_LOGROCKET_APP_ID"
   ],
   "tasks": {
     "dev": {
@@ -85,22 +88,6 @@
     "webapp#relay": {
       "dependsOn": ["^relay"]
     },
-    "webapp-help#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
-    },
-    "webapp-help#start": {
-      "dependsOn": ["^start"]
-    },
-    "webapp-help#lint": {
-      "dependsOn": ["^lint"]
-    },
-    "webapp-help#lint-fix": {
-      "dependsOn": ["^lint-fix"]
-    },
-    "webapp-help#format": {
-      "dependsOn": ["^format"]
-    },
     "webapp-teams#build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
@@ -155,40 +142,9 @@
     "webapp-spaces#relay": {
       "dependsOn": ["^relay"]
     },
-    "webapp-teams-help#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
-    },
-    "webapp-teams-help#start": {
-      "dependsOn": ["^start"]
-    },
-    "webapp-teams-help#lint": {
-      "dependsOn": ["^lint"]
-    },
-    "webapp-teams-help#lint-fix": {
-      "dependsOn": ["^lint-fix"]
-    },
-    "webapp-teams-help#format": {
-      "dependsOn": ["^format"]
-    },
-    "webapp-spaces-help#build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
-    },
-    "webapp-spaces-help#start": {
-      "dependsOn": ["^start"]
-    },
-    "webapp-spaces-help#lint": {
-      "dependsOn": ["^lint"]
-    },
-    "webapp-spaces-help#lint-fix": {
-      "dependsOn": ["^lint-fix"]
-    },
-    "webapp-spaces-help#format": {
-      "dependsOn": ["^format"]
-    },
     "public-web#build": {
       "dependsOn": ["^build"],
+      "env": ["PUBLIC_WEB_SITE_URL", "PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID", "PUBLIC_LOGROCKET_APP_ID"],
       "outputs": ["dist/**"]
     },
     "public-web#start": {
@@ -196,6 +152,7 @@
     },
     "public-web#test": {
       "dependsOn": ["^test"],
+      "env": ["PUBLIC_WEB_SITE_URL", "PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID", "PUBLIC_LOGROCKET_APP_ID"],
       "outputs": []
     },
     "public-web#lint": {

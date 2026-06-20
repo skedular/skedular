@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<433c676a34cac6600ec33a6292dd827d>>
+ * @generated SignedSource<<9b30e5082d27dcdf71e2121b2697d2af>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,7 @@ export type AddPrivateBookingInput = {
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
   from: any;
+  fullOpeningHoursDate?: any | null | undefined;
   id?: string | null | undefined;
   notes?: string | null | undefined;
   organizationCustomDomains?: ReadonlyArray<string> | null | undefined;
@@ -53,7 +54,7 @@ export type addPrivateBookingPage_addPrivateBookingMutation$data = {
         readonly uniqueId: string;
       }>;
       readonly until: any;
-    };
+    } | null | undefined;
   };
 };
 export type addPrivateBookingPage_addPrivateBookingMutation = {

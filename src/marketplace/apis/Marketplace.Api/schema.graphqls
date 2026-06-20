@@ -140,6 +140,8 @@ type ProductPricing @shareable {
   numberOfResourcesToBook: Int!
   cancellationPolicyType: ProductPricingCancellationPolicyType!
   cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
+  availableDays: [DayOfWeek!]
+  requiredDaysPerWeek: Int
 }
 
 type ProductPricingBillingModeDetails {
@@ -265,6 +267,8 @@ input ProductPricingInput {
   numberOfResourcesToBook: Int!
   cancellationPolicyType: ProductPricingCancellationPolicyType!
   cancellationRefundRules: [ProductPricingCancellationRefundRuleInput!]!
+  availableDays: [DayOfWeek!]
+  requiredDaysPerWeek: Int
 }
 
 input ProductWhereInput {
@@ -291,6 +295,16 @@ enum Currency {
   USD
 }
 
+enum DayOfWeek {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
 enum OrderDirection {
   ASCENDING
   DESCENDING
@@ -304,6 +318,7 @@ enum OrganizationTagType {
   RESOURCE_ROOM
   RESOURCE_PARKING
   RESOURCE_OTHERS
+  RESOURCE_ENTIRE_LOCATION
   LOCATION_SPACE_TYPE_CAR_PARK_SPACE
   LOCATION_SPACE_TYPE_EVENT_SPACE
   LOCATION_SPACE_TYPE_MEETING_SPACE

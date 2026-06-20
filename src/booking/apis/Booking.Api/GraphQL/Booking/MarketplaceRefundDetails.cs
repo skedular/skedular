@@ -33,6 +33,19 @@ public class MarketplaceRefundDetails
     [GraphQLName("externalRefundNumber")] public string? ExternalRefundNumber { get; set; }
     [GraphQLName("lastProcessedAt")] public DateTimeOffset? LastProcessedAt { get; set; }
     [GraphQLName("lastError")] public string? LastError { get; set; }
+    [GraphQLName("paymentProvider")] public string? PaymentProvider { get; set; }
+
+    [GraphQLName("externalPaymentRefundId")]
+    public string? ExternalPaymentRefundId { get; set; }
+
+    [GraphQLName("paymentRefundStatus")] public string? PaymentRefundStatus { get; set; }
+
+    [GraphQLName("paymentRefundLastProcessedAt")]
+    public DateTimeOffset? PaymentRefundLastProcessedAt { get; set; }
+
+    [GraphQLName("paymentRefundLastError")]
+    public string? PaymentRefundLastError { get; set; }
+
     [GraphQLName("canProcessInXero")] public bool CanProcessInXero { get; set; }
     [GraphQLName("events")] public IEnumerable<MarketplaceRefundEventDetails> Events { get; set; } = [];
     [GraphQLName("requestedByCustomerId")] public string? RequestedByCustomerId { get; set; }

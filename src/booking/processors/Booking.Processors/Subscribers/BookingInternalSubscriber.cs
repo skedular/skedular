@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.BookingInternal.V1;
 using Api.Shared.Services.Models;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows;
@@ -18,6 +19,8 @@ public class BookingInternalSubscriber(
     IRepositoryFactory repositoryFactory,
     ITemporalService temporalService,
     IXeroWebhookService xeroWebhookService,
+    IStripeHostRefundService stripeHostRefundService,
+    IMarketplaceRefundAutomationService marketplaceRefundAutomationService,
     IGraphQlTopicEventSender graphQlTopicEventSender) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -49,6 +52,18 @@ public class BookingInternalSubscriber(
             case EventTypes.CheckoutSessionExpired:
                 await HandleCheckoutSessionExpiredAsync(stripeEvent, cancellationToken);
                 break;
+            case "refund.created":
+            case "refund.updated":
+                if (stripeEvent.Data.Object is Refund refund)
+                {
+                    var localRefund = await stripeHostRefundService.ReconcileAsync(refund, cancellationToken);
+                    if (localRefund?.Status == MarketplaceRefundStatusConstants.Completed)
+                    {
+                        await marketplaceRefundAutomationService.ProjectAccountingAfterStripeAsync(localRefund, null, cancellationToken);
+                    }
+                }
+
+                break;
         }
     }
 
@@ -71,7 +86,8 @@ public class BookingInternalSubscriber(
             "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
             "paid" => PaymentStatusConstants.Confirmed,
             "unpaid" => PaymentStatusConstants.Rejected,
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(nameof(session.PaymentStatus), session.PaymentStatus,
+                $"Unexpected value for {nameof(session.PaymentStatus)}: {session.PaymentStatus}. Update enum mapping or caller input.")
         };
 
         if (marketplaceBooking.RecurringBooking?.MarketplaceBookingSubscription is null)

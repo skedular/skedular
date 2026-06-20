@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <!-- Build Tools / gRPC (Client) -->
-        <PackageReference Include="Grpc.Tools" Version="2.81.1">
+        <PackageReference Include="Grpc.Tools" Version="2.83.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -26,10 +26,10 @@
         <PackageReference Include="Grpc.Net.Client" Version="2.80.0"/>
 
         <!-- Test Framework -->
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.6.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1"/>
 
         <!-- GraphQL Testing (StrawberryShake) -->
-        <PackageReference Include="StrawberryShake.Server" Version="16.1.3"/>
+        <PackageReference Include="StrawberryShake.Server" Version="16.5.1"/>
 
         <!-- Code Coverage -->
         <PackageReference Include="coverlet.collector" Version="10.0.1">
@@ -38,7 +38,7 @@
         </PackageReference>
 
         <!-- Analyzers -->
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.7.23">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -70,6 +70,9 @@
             <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
         <GraphQL Update="Api/GraphQL/BookingMutationContract.graphql">
+            <Generator>MSBuild:GenerateGraphQLCode</Generator>
+        </GraphQL>
+        <GraphQL Update="Api/GraphQL/SpacesQuotaStatus.graphql">
             <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
         <GraphQL Update="Api/GraphQL/UpdatePrivateBookingPatchSave.graphql">

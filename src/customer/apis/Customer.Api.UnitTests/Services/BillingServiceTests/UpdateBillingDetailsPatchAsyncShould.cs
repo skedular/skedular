@@ -25,6 +25,7 @@ public class UpdateBillingDetailsPatchAsyncShould
         [Frozen] IEntityMapper entityMapper,
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IDbContextTransaction transaction,
+        [Frozen] IUnitOfWork unitOfWork,
         BillingService sut,
         CancellationToken cancellationToken)
     {
@@ -41,16 +42,12 @@ public class UpdateBillingDetailsPatchAsyncShould
             new HashSet<CustomerBillingDetailsPatchField> { CustomerBillingDetailsPatchField.CompanyName });
 
         A.CallTo(() => repositoryFactory.CustomerBillingDetailsRepository).Returns(billingDetailsRepository);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(A.Fake<IUnitOfWork>());
-        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
-            .Returns((customerModel, customerEntity));
-        A.CallTo(() => billingDetailsRepository.GetByIdAsync("billing-1", cancellationToken))
-            .Returns(existingBillingEntity);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken)).Returns((customerModel, customerEntity));
+        A.CallTo(() => billingDetailsRepository.GetByIdAsync("billing-1", cancellationToken)).Returns(existingBillingEntity);
         A.CallTo(() => entityMapper.MapTo(existingBillingEntity)).Returns(existingBillingModel);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(A<IUnitOfWork>._, cancellationToken))
-            .Returns(transaction);
-        A.CallTo(() => entityMapper.MergeToEntity(A<CustomerBillingDetails>._, existingBillingEntity, customerEntity))
-            .Returns(existingBillingEntity);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
+        A.CallTo(() => entityMapper.MergeToEntity(A<CustomerBillingDetails>._, existingBillingEntity, customerEntity)).Returns(existingBillingEntity);
         A.CallTo(() => entityMapper.MapTo(customerEntity)).Returns(updatedCustomerModel);
 
         var result = await sut.UpdateAsync(request, cancellationToken);
@@ -70,6 +67,7 @@ public class UpdateBillingDetailsPatchAsyncShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IDbContextTransaction transaction,
         [Frozen] ILogger<BillingService> logger,
+        [Frozen] IUnitOfWork unitOfWork,
         BillingService sut,
         CancellationToken cancellationToken)
     {
@@ -82,25 +80,18 @@ public class UpdateBillingDetailsPatchAsyncShould
             new HashSet<CustomerBillingDetailsPatchField> { CustomerBillingDetailsPatchField.CompanyName });
 
         A.CallTo(() => repositoryFactory.CustomerBillingDetailsRepository).Returns(billingDetailsRepository);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(A.Fake<IUnitOfWork>());
-        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
-            .Returns((customerModel, customerEntity));
-        A.CallTo(() => billingDetailsRepository.GetByIdAsync("billing-1", cancellationToken))
-            .Returns(existingBillingEntity);
-        A.CallTo(() => entityMapper.MapTo(existingBillingEntity))
-            .Returns(new CustomerBillingDetails { Id = "billing-1" });
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(A<IUnitOfWork>._, cancellationToken))
-            .Returns(transaction);
-        A.CallTo(() => entityMapper.MergeToEntity(A<CustomerBillingDetails>._, existingBillingEntity, customerEntity))
-            .Returns(existingBillingEntity);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken)).Returns((customerModel, customerEntity));
+        A.CallTo(() => billingDetailsRepository.GetByIdAsync("billing-1", cancellationToken)).Returns(existingBillingEntity);
+        A.CallTo(() => entityMapper.MapTo(existingBillingEntity)).Returns(new CustomerBillingDetails { Id = "billing-1" });
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
+        A.CallTo(() => entityMapper.MergeToEntity(A<CustomerBillingDetails>._, existingBillingEntity, customerEntity)).Returns(existingBillingEntity);
         A.CallTo(() => entityMapper.MapTo(customerEntity)).Returns(updatedCustomerModel);
 
         await sut.UpdateAsync(request, cancellationToken);
 
-        LogAssertions.ACallToLogInfoContaining(logger, "Customer billing details patch autosave started")
-            .MustHaveHappenedOnceExactly();
-        LogAssertions.ACallToLogInfoContaining(logger, "Customer billing details patch autosave completed")
-            .MustHaveHappenedOnceExactly();
+        LogAssertions.ACallToLogInfoContaining(logger, "Customer billing details patch autosave started").MustHaveHappenedOnceExactly();
+        LogAssertions.ACallToLogInfoContaining(logger, "Customer billing details patch autosave completed").MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -121,10 +112,8 @@ public class UpdateBillingDetailsPatchAsyncShould
             new HashSet<CustomerBillingDetailsPatchField> { CustomerBillingDetailsPatchField.CompanyName });
 
         A.CallTo(() => repositoryFactory.CustomerBillingDetailsRepository).Returns(billingDetailsRepository);
-        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
-            .Returns((customerModel, customerEntity));
-        A.CallTo(() => billingDetailsRepository.GetByIdAsync("billing-1", cancellationToken))
-            .Returns(existingBillingEntity);
+        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken)).Returns((customerModel, customerEntity));
+        A.CallTo(() => billingDetailsRepository.GetByIdAsync("billing-1", cancellationToken)).Returns(existingBillingEntity);
 
         await Should.ThrowAsync<UnauthorizedAccessException>(() => sut.UpdateAsync(request, cancellationToken));
 
@@ -143,6 +132,7 @@ public class UpdateBillingDetailsPatchAsyncShould
         [Frozen] IEntityMapper entityMapper,
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] ILogger<BillingService> logger,
+        [Frozen] IUnitOfWork unitOfWork,
         BillingService sut,
         CancellationToken cancellationToken)
     {
@@ -154,14 +144,11 @@ public class UpdateBillingDetailsPatchAsyncShould
             new HashSet<CustomerBillingDetailsPatchField> { CustomerBillingDetailsPatchField.CompanyName });
 
         A.CallTo(() => repositoryFactory.CustomerBillingDetailsRepository).Returns(billingDetailsRepository);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(A.Fake<IUnitOfWork>());
-        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
-            .Returns((customerModel, customerEntity));
-        A.CallTo(() => billingDetailsRepository.GetByIdAsync("billing-1", cancellationToken))
-            .Returns(existingBillingEntity);
-        A.CallTo(() => entityMapper.MapTo(existingBillingEntity))
-            .Returns(new CustomerBillingDetails { Id = "billing-1" });
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(A<IUnitOfWork>._, cancellationToken))
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => customerService.GetCustomerAsync(cancellationToken)).Returns((customerModel, customerEntity));
+        A.CallTo(() => billingDetailsRepository.GetByIdAsync("billing-1", cancellationToken)).Returns(existingBillingEntity);
+        A.CallTo(() => entityMapper.MapTo(existingBillingEntity)).Returns(new CustomerBillingDetails { Id = "billing-1" });
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken))
             .ThrowsAsync(new InvalidOperationException("transaction failed"));
 
         await Should.ThrowAsync<InvalidOperationException>(() => sut.UpdateAsync(request, cancellationToken));

@@ -15,6 +15,33 @@ public class TemporalServiceShould
 {
     [Theory]
     [AutoFakeItEasyData]
+    public async Task Start_Workflow_Rollover_Spaces_Booking_Usage_With_Correct_Options(
+        [Frozen] TemporalConfiguration temporalConfiguration,
+        [Frozen] ITemporalClient temporalClient,
+        [Frozen] IWorkflowIdService workflowIdService,
+        WorkflowHandle<RolloverSpacesBookingUsage> workflowHandle,
+        TemporalService sut,
+        string expectedId,
+        CancellationToken cancellationToken)
+    {
+        A.CallTo(() => workflowIdService.RolloverSpacesBookingUsage()).Returns(expectedId);
+        A.CallTo(() => temporalClient.StartWorkflowAsync(
+                A<Expression<Func<RolloverSpacesBookingUsage, Task>>>._,
+                A<WorkflowOptions>.That.Matches(options =>
+                    options.Id == expectedId &&
+                    options.TaskQueue == temporalConfiguration.Worker.TaskQueue &&
+                    options.IdConflictPolicy == WorkflowIdConflictPolicy.UseExisting)))
+            .Returns(workflowHandle);
+
+        await sut.StartWorkflowRolloverSpacesBookingUsageAsync(cancellationToken);
+
+        A.CallTo(() => temporalClient.StartWorkflowAsync(
+            A<Expression<Func<RolloverSpacesBookingUsage, Task>>>._,
+            A<WorkflowOptions>._)).MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public async Task Start_Workflow_Generate_Location_Resources_Slots_With_Correct_Options(
         [Frozen] TemporalConfiguration temporalConfiguration,
         [Frozen] ITemporalClient temporalClient,

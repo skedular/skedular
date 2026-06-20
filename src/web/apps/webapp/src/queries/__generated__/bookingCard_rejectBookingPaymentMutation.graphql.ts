@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<962830bf32363f394bb29043dcb1bd4e>>
+ * @generated SignedSource<<ae71691095f290a00ba41c4393259fed>>
  * @lightSyntaxTransform
  */
 
@@ -27,7 +27,7 @@ export type bookingCard_rejectBookingPaymentMutation$data = {
           readonly type: PaymentStatus;
         };
       } | null | undefined;
-    };
+    } | null | undefined;
   };
 };
 export type bookingCard_rejectBookingPaymentMutation$rawResponse = {
@@ -41,7 +41,7 @@ export type bookingCard_rejectBookingPaymentMutation$rawResponse = {
           readonly type: PaymentStatus;
         };
       } | null | undefined;
-    };
+    } | null | undefined;
   };
 };
 export type bookingCard_rejectBookingPaymentMutation = {

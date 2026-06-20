@@ -61,7 +61,7 @@ message Organization {
 enum OrganizationType {
   OrganizationType_Private     = 0;
   OrganizationType_Marketplace = 1;
-  OrganizationType_Individual  = 2;
+  OrganizationType_Host        = 2;
 }
 
 enum OrganizationBillingCycle {
@@ -105,6 +105,11 @@ message Offering {
   string                    currentActiveUserCount    = 14;
   bool                      isInteractionAllowed      = 15;
   string                    entitlementReasonCode     = 16;
+  google.protobuf.Timestamp spacesTrialStartedAt      = 17;
+  google.protobuf.Timestamp spacesTrialEndsAt         = 18;
+  bool                      spacesProductEnabled      = 19;
+  google.protobuf.Timestamp spacesNextBillingAt       = 20;
+  double                    hostCommissionPercentage  = 21;
 }
 
 message Tag {

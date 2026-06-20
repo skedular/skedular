@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<53220d7d1f2e1d87e200e4f3bb7ec418>>
+ * @generated SignedSource<<eb684f715ec2252777d6b95a1c9c0665>>
  * @lightSyntaxTransform
  */
 
@@ -301,6 +301,13 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "availableDays",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "acceptedPaymentMethods",
                 "storageKey": null
               },
@@ -439,12 +446,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fe7e3ef3f068afedb32fd7c6f5ef0c32",
+    "cacheID": "4c189483006a81b915071d8c7547149f",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductDetail_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductDetail_rootQuery(\n  $productId: String!\n) {\n  ...marketplaceProductDetailOverview_query_2SWcqy\n  ...marketplaceProductDetailBookingCard_query_2SWcqy\n}\n\nfragment marketplaceProductDetailBookingCard_product on ProductDetails {\n  id\n  organization {\n    customerFacingTermsAndConditionsUrl\n  }\n  type {\n    type\n    name\n  }\n  listingMetadata {\n    about\n    title\n    subTitle\n    includedFeatures\n  }\n  amenities {\n    id\n    name\n    color\n  }\n  currency {\n    type\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n    acceptedPaymentMethods\n    minDurationMinutes\n    maxDurationMinutes\n    numberOfResourcesToBook\n    cancellationPolicyType\n    cancellationRefundRules {\n      minutesBefore\n      refundPercentage\n    }\n  }\n}\n\nfragment marketplaceProductDetailBookingCard_query_2SWcqy on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  product(id: $productId) {\n    ...marketplaceProductDetailBookingCard_product\n    id\n  }\n  marketplaceLocations(where: {productIds: [$productId]}) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment marketplaceProductDetailOverview_product on ProductDetails {\n  type {\n    type\n    name\n  }\n  listingMetadata {\n    title\n    subTitle\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n    thumbnail {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n    color\n  }\n}\n\nfragment marketplaceProductDetailOverview_query_2SWcqy on Query {\n  product(id: $productId) {\n    ...marketplaceProductDetailOverview_product\n    id\n  }\n}\n"
+    "text": "query marketplaceProductDetail_rootQuery(\n  $productId: String!\n) {\n  ...marketplaceProductDetailOverview_query_2SWcqy\n  ...marketplaceProductDetailBookingCard_query_2SWcqy\n}\n\nfragment marketplaceProductDetailBookingCard_product on ProductDetails {\n  id\n  organization {\n    customerFacingTermsAndConditionsUrl\n  }\n  type {\n    type\n    name\n  }\n  listingMetadata {\n    about\n    title\n    subTitle\n    includedFeatures\n  }\n  amenities {\n    id\n    name\n    color\n  }\n  currency {\n    type\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n    availableDays\n    acceptedPaymentMethods\n    minDurationMinutes\n    maxDurationMinutes\n    numberOfResourcesToBook\n    cancellationPolicyType\n    cancellationRefundRules {\n      minutesBefore\n      refundPercentage\n    }\n  }\n}\n\nfragment marketplaceProductDetailBookingCard_query_2SWcqy on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  product(id: $productId) {\n    ...marketplaceProductDetailBookingCard_product\n    id\n  }\n  marketplaceLocations(where: {productIds: [$productId]}) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment marketplaceProductDetailOverview_product on ProductDetails {\n  type {\n    type\n    name\n  }\n  listingMetadata {\n    title\n    subTitle\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n    thumbnail {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n    color\n  }\n}\n\nfragment marketplaceProductDetailOverview_query_2SWcqy on Query {\n  product(id: $productId) {\n    ...marketplaceProductDetailOverview_product\n    id\n  }\n}\n"
   }
 };
 })();

@@ -109,6 +109,21 @@ const profilePatchFields: Record<keyof ProfileDetailsDetails, CustomerDetailsPat
 const getChangedProfileFields = (left: ProfileDetailsDetails, right: ProfileDetailsDetails) =>
   (Object.keys(profilePatchFields) as (keyof ProfileDetailsDetails)[]).filter((field) => left[field] !== right[field]).map((field) => profilePatchFields[field]);
 
+const getValidProfilePatchFields = (fieldsToUpdate: CustomerDetailsPatchField[], values: ProfileDetailsDetails): CustomerDetailsPatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    const formField = (Object.entries(profilePatchFields) as [keyof ProfileDetailsDetails, CustomerDetailsPatchField][]).find(([, field]) => field === patchField)?.[0];
+    if (!formField) {
+      return false;
+    }
+
+    try {
+      profileDetailsSchema.validateSyncAt(formField, values);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const MySettings = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<mySettings_rootQuery>(RootQuery, queryReference);
 
@@ -159,12 +174,13 @@ const MySettings = ({ queryReference }: Props) => {
 
   const commitProfilePatch = useCallback(
     (fieldsToUpdate: CustomerDetailsPatchField[], values: ProfileDetailsDetails) => {
-      if (fieldsToUpdate.length === 0 || !profileDetailsSchema.isValidSync(values)) {
+      const validFieldsToUpdate = getValidProfilePatchFields(fieldsToUpdate, values);
+      if (validFieldsToUpdate.length === 0) {
         return;
       }
 
       const previousValues = submittedProfileValues.current;
-      if (getChangedProfileFields(previousValues, values).length === 0) {
+      if (getChangedProfileFields(previousValues, values).filter((field) => validFieldsToUpdate.includes(field)).length === 0) {
         return;
       }
 
@@ -175,7 +191,7 @@ const MySettings = ({ queryReference }: Props) => {
           input: {
             clientMutationId: uuid(),
             id: me.id,
-            fieldsToUpdate,
+            fieldsToUpdate: validFieldsToUpdate,
             ...values,
             personalInformationVisibility: values.personalInformationVisibility as PersonalInformationVisibility,
           },

@@ -11,12 +11,14 @@ describe('createSpacesAppSwitcherModel', () => {
         NEXT_PUBLIC_SKEDULAR_APP_URL: 'https://app.skedular.test/',
         NEXT_PUBLIC_SKEDULAR_TEAMS_APP_URL: 'https://teams.skedular.test/',
         NEXT_PUBLIC_SITE_URL: 'https://spaces.skedular.test/',
+        NEXT_PUBLIC_SKEDULAR_HOST_APP_URL: 'https://host.skedular.test/',
       } as NodeJS.ProcessEnv,
     });
 
     expect(model.currentAppId).toBe('webapp-spaces');
     expect(model.destinations.find((destination) => destination.appId === 'webapp-spaces')).toMatchObject({ availability: 'current' });
-    expect(model.availableDestinationCount).toBe(2);
+    expect(model.destinations.find((destination) => destination.appId === 'webapp-host')).toMatchObject({ availability: 'available', href: 'https://host.skedular.test/' });
+    expect(model.availableDestinationCount).toBe(3);
     expect(logger.info).toHaveBeenCalledWith(
       expect.objectContaining({ event: 'web_app_switcher_configuration', currentAppId: 'webapp-spaces' }),
       'Web app switcher configuration resolved',

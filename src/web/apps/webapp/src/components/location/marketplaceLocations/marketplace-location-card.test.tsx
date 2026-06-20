@@ -28,6 +28,13 @@ const locationFragmentData = {
     multilinesFormattedAddress: '10 Main St\nAuckland',
   },
   featureImages: [],
+  organization: {
+    type: {
+      type: 'MARKETPLACE',
+      name: 'Marketplace',
+    },
+    spacesPublicBookingAvailability: null,
+  },
 };
 
 const partialLocationFragmentData = {

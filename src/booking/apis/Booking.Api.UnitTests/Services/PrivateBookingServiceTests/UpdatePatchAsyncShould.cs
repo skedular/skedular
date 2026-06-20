@@ -78,6 +78,64 @@ public class UpdatePatchAsyncShould
 
     [Theory]
     [AutoFakeItEasyData]
+    public async Task Update_Existing_Booking_Without_Quota_Reservation(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IBookingRepository bookingRepository,
+        [Frozen] ICustomerRepository customerRepository,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IContext context,
+        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen] ITeamAuthorizationService teamAuthorizationService,
+        [Frozen] SharedPrivateBookingService sharedPrivateBookingService,
+        PrivateBookingService sut,
+        string verifiableToken,
+        CancellationToken cancellationToken)
+    {
+        var existingEntity = new Shared.Database.Entities.Booking { Id = "booking-1", InvolvedOrganizations = [], InvolvedTeams = [] };
+        var mappedBooking = new Shared.Models.Booking
+        {
+            Id = "booking-1",
+            Category = BookingCategory.WorkingFromOffice,
+            InvolvedCustomers = [],
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
+            Resources = []
+        };
+        var request = new PrivateBookingPatchRequest(
+            new Shared.Models.Booking { Id = "booking-1", Notes = "changed" },
+            new HashSet<PrivateBookingPatchField> { PrivateBookingPatchField.Notes });
+        var updatedBooking = new Shared.Models.Booking { Id = "booking-1", Notes = "changed" };
+        IReadOnlyList<string> emptyIds = [];
+        IReadOnlyList<Organization> emptyOrganizations = [];
+        IReadOnlyList<Team> emptyTeams = [];
+
+        A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => bookingRepository.GetByIdAsync("booking-1", cancellationToken)).Returns(existingEntity);
+        A.CallTo(() => entityMapper.MapTo(existingEntity)).Returns(mappedBooking);
+        A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
+        A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken))
+            .Returns(new CustomerEntity { Id = "customer-1" });
+        A.CallTo(() => organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
+                emptyIds, emptyIds, "customer-1", true, cancellationToken))
+            .Returns(emptyOrganizations);
+        A.CallTo(() => teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
+                emptyIds, "customer-1", true, cancellationToken))
+            .Returns(emptyTeams);
+        A.CallTo(() => sharedPrivateBookingService.UpdateAsync(
+                A<Shared.Models.Booking>._, existingEntity, A<CustomerEntity>._, emptyOrganizations, emptyTeams, null, false, cancellationToken))
+            .Returns(updatedBooking);
+
+        var result = await sut.UpdateAsync(request, cancellationToken);
+
+        result.ShouldBe(updatedBooking);
+        A.CallTo(() => sharedPrivateBookingService.UpdateAsync(
+                A<Shared.Models.Booking>._, existingEntity, A<CustomerEntity>._, emptyOrganizations, emptyTeams, null, false, cancellationToken))
+            .MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public async Task Log_Autosave_Started_And_Completed(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IBookingRepository bookingRepository,

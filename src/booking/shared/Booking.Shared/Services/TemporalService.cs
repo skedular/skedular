@@ -66,6 +66,8 @@ public interface ITemporalService
     /// </summary>
     Task StartWorkflowRunOrganizationArrearsBillingAsync(RunOrganizationArrearsBillingInput args, CancellationToken cancellationToken);
 
+    Task StartWorkflowRolloverSpacesBookingUsageAsync(CancellationToken cancellationToken);
+
     /// <summary>
     ///     Updates the organization in-arrears billing workflow configuration.
     /// </summary>
@@ -250,6 +252,18 @@ public class TemporalService(
         await temporalClient.StartWorkflowAsync(
             (RunOrganizationArrearsBilling workflow) => workflow.ExecuteAsync(args),
             ToOrganizationArrearsBillingWorkflowOptions(args.Configuration.OrganizationId, cancellationToken));
+
+    public async Task StartWorkflowRolloverSpacesBookingUsageAsync(CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync(
+            (RolloverSpacesBookingUsage workflow) => workflow.ExecuteAsync(),
+            new WorkflowOptions
+            {
+                Id = workflowIdService.RolloverSpacesBookingUsage(),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdConflictPolicy = WorkflowIdConflictPolicy.UseExisting,
+                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+            });
 
     public async Task SignalRunOrganizationArrearsBillingWorkflowUpdateConfigurationAsync(
         string organizationId,

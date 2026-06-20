@@ -1,12 +1,14 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services.Cache;
+using static Testing.Shared.Assertions.LogAssertions;
 
 namespace Organization.Api.UnitTests.Services.OrganizationOwnershipServiceTests;
 
@@ -25,6 +27,7 @@ public class VerifyAsyncShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
+        [Frozen] ILogger<OrganizationOwnershipService> logger,
         OrganizationOwnershipService sut,
         CancellationToken cancellationToken)
     {
@@ -74,5 +77,6 @@ public class VerifyAsyncShould
                 A<IReadOnlyList<string>>.That.Matches(customerIds => customerIds.SequenceEqual(new[] { "customer-1", "customer-2" })),
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
+        ACallToLog(logger, LogLevel.Information).MustHaveHappenedOnceExactly();
     }
 }

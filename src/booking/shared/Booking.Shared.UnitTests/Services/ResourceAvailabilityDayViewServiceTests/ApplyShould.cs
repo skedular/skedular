@@ -90,9 +90,9 @@ public class ApplyShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Redact_Detail_Fields_For_Individual_Regular_Member(ResourceDayViewBookingVisibilityFilter sut)
+    public void Redact_Detail_Fields_For_Host_Regular_Member(ResourceDayViewBookingVisibilityFilter sut)
     {
-        var result = sut.Apply([s_sampleView], OrganizationTypeConstants.Individual, ["MEMBER"]);
+        var result = sut.Apply([s_sampleView], OrganizationTypeConstants.Host, ["MEMBER"]);
 
         var window = result[0].BookingWindows[0];
         window.BookedByName.ShouldBeNull();

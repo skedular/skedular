@@ -1,0 +1,89 @@
+---
+import type { SupportingPageTarget } from "../data/content-types";
+import { comparisonFAQs, competitors, featureCategories } from "../data/comparison";
+
+interface Props {
+  pageTarget: SupportingPageTarget;
+}
+
+const { pageTarget } = Astro.props as Props;
+
+const faqs = comparisonFAQs.filter((faq) => pageTarget.faqIds.includes(faq.id));
+const includedProducts = pageTarget.includedProductIds
+  .map((productId) => competitors.find((product) => product.id === productId))
+  .filter(Boolean);
+const focusCategories = pageTarget.focusCategoryIds
+  .map((categoryId) => featureCategories.find((category) => category.id === categoryId))
+  .filter(Boolean)
+  .slice(0, 6);
+const hasSpecificSelectionCriteria = !/^Software is evaluated based on feature completeness/i.test(pageTarget.selectionCriteria);
+---
+
+<section class="supporting-verdict" aria-labelledby="supporting-verdict-title">
+  <p class="eyebrow">Buying guide</p>
+  <h2 id="supporting-verdict-title">Use this guide to compare alternatives through a Skedular lens.</h2>
+  <p>{pageTarget.intro}</p>
+</section>
+
+<section class="supporting-guide-grid" aria-label="Alternative buying guide">
+  {hasSpecificSelectionCriteria && (
+    <article>
+      <h2>How to evaluate options</h2>
+      <p>{pageTarget.selectionCriteria}</p>
+    </article>
+  )}
+  <article>
+    <h2>What Skedular emphasizes</h2>
+    <ul>
+      <li>Workspace discovery and public booking flows</li>
+      <li>Teams and operator workflows in one platform</li>
+      <li>Billing, subscriptions, invoicing, and payments</li>
+    </ul>
+  </article>
+  <article>
+    <h2>Compare next</h2>
+    <p>Start with the direct Skedular comparison pages when a specific product is already on your shortlist.</p>
+  </article>
+</section>
+
+<section class="supporting-page-criteria">
+  <h2>Key evaluation areas</h2>
+  <div class="supporting-category-grid">
+    {focusCategories.map((category) => (
+      <article>
+        <h3>{category!.name}</h3>
+        <p>{category!.description}</p>
+      </article>
+    ))}
+  </div>
+</section>
+
+<section class="supporting-page-criteria">
+  <h2>Direct comparison pages</h2>
+  <div class="supporting-product-grid">
+    {includedProducts.slice(0, 10).map((product) => (
+      <a href={`/compare/skedular-vs-${product!.slug}`}>
+        <strong>Skedular vs {product!.name}</strong>
+        <span>{product!.summary}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+{faqs.length > 0 && (
+  <section class="supporting-page-faqs">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+      {faqs.map((faq) => (
+        <div class="faq-item">
+          <h3>{faq.question}</h3>
+          <p>{faq.answer}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+<p class="comparison-review-note">
+  This comparison is based on market research and product documentation available in June 2026.
+</p>

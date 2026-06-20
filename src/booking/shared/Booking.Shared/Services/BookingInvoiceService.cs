@@ -380,7 +380,9 @@ public class BookingInvoiceService(
                 ProductPricingCadence.Per15Minutes => marketplaceBooking.Quantity * (totalMinutes / 15m),
                 ProductPricingCadence.Per30Minutes => marketplaceBooking.Quantity * (totalMinutes / 30m),
                 ProductPricingCadence.PerHour => marketplaceBooking.Quantity * (totalMinutes / 60m),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(marketplaceBooking.ProductPricing),
+                    marketplaceBooking.ProductPricing,
+                    $"Unexpected value for {nameof(marketplaceBooking.ProductPricing)}: {marketplaceBooking.ProductPricing}. Update enum mapping or caller input.")
             };
         }
 

@@ -1,6 +1,7 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services.Models;
+using Api.Shared.Services.Offering;
+using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
@@ -10,12 +11,18 @@ using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Grpc;
+using Microsoft.Extensions.Logging;
 using Temporalio.Activities;
 using Constants = Booking.Shared.GraphQL.Constants;
+using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
+using MarketplaceBookingFailureCategoryConstants = Booking.Shared.Models.MarketplaceBookingFailureCategoryConstants;
+using MarketplaceBookingFailureCustomerActionConstants = Booking.Shared.Models.MarketplaceBookingFailureCustomerActionConstants;
+using MarketplaceBookingFailureFinalization = Booking.Shared.Models.MarketplaceBookingFailureFinalization;
+using MarketplaceBookingFailureScopeConstants = Booking.Shared.Models.MarketplaceBookingFailureScopeConstants;
 
 namespace Booking.Shared.Activities;
 
-public record ReleaseBookingResourcesInput(string BookingId);
+public record ReleaseBookingResourcesInput(string BookingId, string? FailureCategory = null);
 
 public record CalculateBookingDifferentAmountsInput(string BookingId);
 
@@ -32,7 +39,11 @@ public class BookingIntegrations(
     IBookingOutboxPublisher bookingOutboxPublisher,
     ICachedBookingService cachedBookingService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
-    IAccountingInvoiceCancellationService accountingInvoiceCancellationService)
+    IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+    IMarketplaceBookingFailureService marketplaceBookingFailureService,
+    IHostCommissionService hostCommissionService,
+    TimeProvider timeProvider,
+    ILogger<BookingIntegrations> logger)
 {
     [Activity]
     public async Task CalculateBookingDifferentAmountsAsync(CalculateBookingDifferentAmountsInput args)
@@ -73,7 +84,8 @@ public class BookingIntegrations(
                 marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 30m),
             ProductPricingCadence.PerHour =>
                 marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 60m),
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(null,
+                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
         };
 
         marketplaceBooking.Currency = marketplaceBooking.ProductVersion.Currency;
@@ -83,7 +95,7 @@ public class BookingIntegrations(
             marketplaceBooking.TotalAmountExcludeTax = totalPrice;
             marketplaceBooking.TaxAmount = 0.00m;
             marketplaceBooking.TaxRatePercentage = 0.00m;
-            marketplaceBooking.TaxAmount = marketplaceBooking.TotalAmountExcludeTax;
+            marketplaceBooking.TotalAmount = totalPrice.RoundedDecimal();
         }
         else
         {
@@ -106,6 +118,10 @@ public class BookingIntegrations(
                     (marketplaceBooking.TotalAmountExcludeTax.Value + marketplaceBooking.TaxAmount.Value).RoundedDecimal();
             }
         }
+
+        var commissionRate = organization.Offering.Code.ToOfferingCode().GetEffectiveHostCommissionPercentage(
+            Convert.ToDecimal(organization.Offering.HostCommissionPercentage));
+        ApplyHostCommission(marketplaceBooking, commissionRate);
 
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
         bookingOutboxPublisher.PublishBookings([entityMapper.MapTo(booking)], repositoryFactory.UnitOfWork);
@@ -164,6 +180,7 @@ public class BookingIntegrations(
             marketplaceBooking.TaxRatePercentage = 0.00m;
             marketplaceBooking.TotalAmount = totalPrice;
         }
+
         else
         {
             var isPriceTaxInclusive = marketplaceBooking.ProductPricing.IsTaxInclusive;
@@ -185,6 +202,10 @@ public class BookingIntegrations(
                     (marketplaceBooking.TotalAmountExcludeTax.Value + marketplaceBooking.TaxAmount.Value).RoundedDecimal();
             }
         }
+
+        var commissionRate = organization.Offering.Code.ToOfferingCode().GetEffectiveHostCommissionPercentage(
+            Convert.ToDecimal(organization.Offering.HostCommissionPercentage));
+        ApplyHostCommission(marketplaceBooking, commissionRate);
 
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -212,6 +233,25 @@ public class BookingIntegrations(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var marketplaceBooking = booking.MarketplaceBooking;
+        var failureCategory = args.FailureCategory ?? MarketplaceBookingFailureCategoryConstants.PaymentExpired;
+        await marketplaceBookingFailureService.FinalizeAsync(
+            new MarketplaceBookingFailureFinalization(
+                null,
+                failureCategory,
+                MarketplaceBookingFailureScopeConstants.OneTimeBooking,
+                timeProvider.GetUtcNow(),
+                booking.Id,
+                null,
+                null,
+                booking.From,
+                booking.Until,
+                booking.InvolvedResources.Select(item => item.Id).ToList(),
+                MarketplaceBookingFailureCustomerActionConstants.Rebook,
+                null,
+                "Payment was not completed before the booking resources were released.",
+                booking.CreatedByCustomer?.Id,
+                []),
+            cancellationToken);
         marketplaceBooking.PaymentStatus = marketplaceBooking.StripeCheckoutSession is null
             ? PaymentStatusConstants.RecordNeverCreated
             : PaymentStatusConstants.Expired;
@@ -231,8 +271,39 @@ public class BookingIntegrations(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+        logger.LogInformation(
+            "Released marketplace booking resources after terminal payment outcome. BookingId={BookingId}, FailureCategory={FailureCategory}",
+            booking.Id,
+            failureCategory);
     }
 
     private static bool IsRegisteredForTax(TaxDetails? taxDetails) =>
         taxDetails is { IsRegistered: true };
+
+    private void ApplyHostCommission(MarketplaceBooking marketplaceBooking, decimal commissionRatePercentage)
+    {
+        var result = hostCommissionService.Calculate(
+            marketplaceBooking.ProductVersion.Product.Organization.Type,
+            commissionRatePercentage,
+            marketplaceBooking.TotalAmount ?? 0m);
+        if (result is null)
+        {
+            marketplaceBooking.HostCommissionRatePercentage = null;
+            marketplaceBooking.HostCommissionAmount = null;
+            marketplaceBooking.HostPayoutAmount = null;
+            return;
+        }
+
+        marketplaceBooking.HostCommissionRatePercentage = result.RatePercentage;
+        marketplaceBooking.HostCommissionAmount = result.Amount;
+        marketplaceBooking.HostPayoutAmount = result.HostPayoutAmount;
+        logger.LogInformation(
+            "Host commission calculated. BookingId: {BookingId}, MarketplaceBookingId: {MarketplaceBookingId}, RatePercentage: {RatePercentage}, CommissionAmount: {CommissionAmount}, HostPayoutAmount: {HostPayoutAmount}",
+            marketplaceBooking.BookingId,
+            marketplaceBooking.Id,
+            result.RatePercentage,
+            result.Amount,
+            marketplaceBooking.HostPayoutAmount);
+    }
 }

@@ -73,12 +73,12 @@ public class BulkAddResourcesShould(
             CreatedAt = now
         };
 
-        repositoryFactory.DbContext.Organization.Add(organization);
-        repositoryFactory.DbContext.Location.Add(location);
-        repositoryFactory.DbContext.OrganizationTag.Add(resourceTypeTag);
-        repositoryFactory.DbContext.Customer.Add(customer);
-        repositoryFactory.DbContext.Identity.Add(identity);
-        repositoryFactory.DbContext.OrganizationMember.Add(member);
+        await repositoryFactory.DbContext.Organization.AddAsync(organization, cancellationToken);
+        await repositoryFactory.DbContext.Location.AddAsync(location, cancellationToken);
+        await repositoryFactory.DbContext.OrganizationTag.AddAsync(resourceTypeTag, cancellationToken);
+        await repositoryFactory.DbContext.Customer.AddAsync(customer, cancellationToken);
+        await repositoryFactory.DbContext.Identity.AddAsync(identity, cancellationToken);
+        await repositoryFactory.DbContext.OrganizationMember.AddAsync(member, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return (locationId, tagId, verifiableToken);
@@ -115,8 +115,8 @@ public class BulkAddResourcesShould(
             OrganizationTags = [tag]
         };
 
-        repositoryFactory.DbContext.OrganizationTag.Add(tag);
-        repositoryFactory.DbContext.Resource.Add(resource);
+        await repositoryFactory.DbContext.OrganizationTag.AddAsync(tag, cancellationToken);
+        await repositoryFactory.DbContext.Resource.AddAsync(resource, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
@@ -330,7 +330,7 @@ public class BulkAddResourcesShould(
         var result = await bulkAddResourcesMutation.ExecuteAsync(locationId, rows, cancellationToken);
 
         // Mutation should fail due to total quantity exceeding 100
-        var hasError = result.Errors?.Count > 0 || result.Data is null;
+        var hasError = result.Errors is { Count: > 0 } || result.Data is null;
         hasError.ShouldBeTrue();
 
         result.Errors.ShouldNotBeNull();

@@ -8,12 +8,6 @@ This directory contains all web products in the monorepo.
 - `webapp-teams` - teams variant (scaffolded, landing-page-only route).
 - `webapp-spaces` - spaces variant (scaffolded, landing-page-only route).
 
-## Help Products
-
-- `webapphelp` - baseline help/docs app.
-- `webapp-teams-help` - teams help/docs companion.
-- `webapp-spaces-help` - spaces help/docs companion.
-
 ## Public Website
 
 - `public-web` - static Astro public website for Skedular. It is a marketing and public-information surface, not an authenticated product app.

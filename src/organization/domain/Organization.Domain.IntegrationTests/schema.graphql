@@ -61,11 +61,15 @@ type Query {
   pricingCatalog(productOfferingCode: PricingCatalogProductOfferingCode): PricingCatalogDetails!
   organizationTeamsSubscription(organizationId: String!): OrganizationTeamsSubscriptionDetails
     @cost(weight: "10")
+  organizationSpacesSubscription(organizationId: String!): OrganizationSpacesSubscriptionDetails
+    @cost(weight: "10")
   pricingCatalogProductOfferings: [PricingCatalogProductOfferingDetails!]!
   pricingCatalogSubscriptionPlans: [PricingCatalogSubscriptionPlanDetails!]!
   pricingCatalogPlanAvailabilities: [PricingCatalogPlanAvailabilityDetails!]!
   organizationOfferingPlanStatuses: [OrganizationOfferingPlanStatusDetails!]!
   pricingEntitlementReasonCodes: [PricingEntitlementReasonCodeDetails!]!
+  spacesSubscriptionStatuses: [SpacesSubscriptionStatusDetails!]!
+  spacesAccessReasons: [SpacesAccessReasonDetails!]!
   organizationVersion: Version!
   bookingSlotSizeInMinutes: Int!
   resourceTypes: [OrganizationTagTypeDetails!]!
@@ -90,6 +94,7 @@ type Query {
   roomResourceType: OrganizationTagType!
   parkingResourceType: OrganizationTagType!
   otherResourceType: OrganizationTagType!
+  entireLocationResourceType: OrganizationTagType!
   customTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   customTagById(id: ID!): OrganizationTagDetails
     @lookup
@@ -161,6 +166,9 @@ type Mutation {
   updateOrganizationTeamsSubscription(
     input: UpdateOrganizationTeamsSubscriptionInput!
   ): UpdateOrganizationTeamsSubscriptionPayload! @cost(weight: "10")
+  updateOrganizationSpacesSubscription(
+    input: UpdateOrganizationSpacesSubscriptionInput!
+  ): UpdateOrganizationSpacesSubscriptionPayload! @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload!
     @cost(weight: "10")
   removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationPayload!
@@ -335,6 +343,7 @@ type OrganizationActiveOfferingDetails {
   end: DateTime!
   unitPrice: Int
   fixedPrice: Int
+  discountPercentage: Int!
   currency: CurrencyDetails!
   catalogVersion: CatalogVersionDetails
   purchasedUserCapacity: Int
@@ -560,7 +569,7 @@ type OrganizationOfferingDetails {
   name: String!
   unitPrice: Int
   fixedPrice: Int
-  currency: Currency!
+  currency: CurrencyDetails!
   purchasedUserCapacity: Int
   purchasedLocationCapacity: Int
   purchasedTeamCapacity: Int
@@ -568,6 +577,7 @@ type OrganizationOfferingDetails {
   featureSet: [String!]!
   free: Boolean!
   earlyBird: Boolean!
+  hostCommissionPercentage: Decimal!
 }
 
 type OrganizationOfferingPlanStatusDetails {
@@ -645,6 +655,33 @@ type OrganizationPublicDetails {
   amenities: [OrganizationTagDetails!]!
   featureImages: [CdnImageFile!]!
   marketplaceListingMetadata: ListingMetadata!
+}
+
+type OrganizationSpacesSubscriptionDetails {
+  id: String!
+  organizationId: String!
+  planCode: PricingCatalogSubscriptionPlanCode!
+  commercialModel: PricingCatalogCommercialModel!
+  currentPeriodStartUtc: DateTime!
+  currentPeriodEndUtc: DateTime!
+  usageLimit: Int
+  rolloverDate: DateTime
+  customCapacity: Int
+  catalogVersionCode: String!
+  status: OrganizationOfferingPlanStatus!
+  subscriptionStatus: SpacesSubscriptionStatus!
+  accessReason: SpacesAccessReasonCode!
+  trialStartedAt: DateTime
+  trialEndsAt: DateTime
+  remainingTrialDays: Int!
+  canUseProduct: Boolean!
+  canAcceptBookings: Boolean!
+  canProtectExistingCommitments: Boolean!
+  upgradeRequired: Boolean!
+  isComplimentaryBridge: Boolean!
+  nextBillingAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type OrganizationSsoSettingsDetails {
@@ -882,8 +919,23 @@ type RemoveOrganizationPaymentMethodPayload {
   clientMutationId: String
 }
 
+type SpacesAccessReasonDetails {
+  type: SpacesAccessReasonCode!
+  name: String!
+}
+
+type SpacesSubscriptionStatusDetails {
+  type: SpacesSubscriptionStatus!
+  name: String!
+}
+
 type UpdateOrganizationOfferingPayload {
   clientMutationId: String
+}
+
+type UpdateOrganizationSpacesSubscriptionPayload {
+  clientMutationId: String
+  organizationSpacesSubscription: OrganizationSpacesSubscriptionDetails!
 }
 
 type UpdateOrganizationTeamsSubscriptionPayload {
@@ -1279,6 +1331,13 @@ input UpdateOrganizationOfferingInput {
   offeringCode: String
 }
 
+input UpdateOrganizationSpacesSubscriptionInput {
+  clientMutationId: String
+  organizationId: String!
+  planCode: PricingCatalogSubscriptionPlanCode!
+  customCapacity: Int
+}
+
 input UpdateOrganizationSsoSettingsInput {
   clientMutationId: String
   organizationId: String
@@ -1351,6 +1410,8 @@ input ZoneOrganizationTagWhereInput {
 
 enum CatalogVersion {
   TEAMS_V1
+  SPACES_V1
+  HOST_V1
 }
 
 enum Currency {
@@ -1369,6 +1430,8 @@ enum EntitlementReasonCode {
   OFFERING_NOT_EFFECTIVE
   CONTACT_US_REQUIRED
   LEGACY_OFFERING_UNCHANGED
+  SPACES_BOOKING_QUOTA_REACHED
+  SPACES_OFFERING_STATE_MISSING
 }
 
 enum InvitationStatus {
@@ -1501,6 +1564,7 @@ enum OrganizationTagType {
   RESOURCE_ROOM
   RESOURCE_PARKING
   RESOURCE_OTHERS
+  RESOURCE_ENTIRE_LOCATION
   LOCATION_SPACE_TYPE_CAR_PARK_SPACE
   LOCATION_SPACE_TYPE_EVENT_SPACE
   LOCATION_SPACE_TYPE_MEETING_SPACE
@@ -1674,7 +1738,7 @@ enum OrganizationTaxDetailsPatchField {
 enum OrganizationType {
   PRIVATE
   MARKETPLACE
-  INDIVIDUAL
+  HOST
 }
 
 enum OrganizationXeroBillingMode {
@@ -1719,6 +1783,7 @@ enum PricingCatalogProductOfferingCode {
   NOT_SET
   TEAMS
   SPACES
+  HOST
 }
 
 enum PricingCatalogSubscriptionPlanCode {
@@ -1727,6 +1792,9 @@ enum PricingCatalogSubscriptionPlanCode {
   PAY_AS_YOU_GO
   ENTERPRISE_CAPACITY
   LEGACY_EARLY_BIRD
+  GROWTH
+  BUSINESS
+  CONTACT_US
 }
 
 enum PricingCatalogVersionStatus {
@@ -1744,6 +1812,32 @@ enum ScalarSerializationType {
   FLOAT
   OBJECT
   LIST
+}
+
+enum SpacesAccessReasonCode {
+  NOT_SET
+  ALLOWED_TRIAL
+  ALLOWED_PAID
+  ALLOWED_COMPLIMENTARY_BRIDGE
+  ALLOWED_PROTECTIVE_ACTION
+  ALLOWED_READ_OR_RECOVERY
+  TRIAL_EXPIRED
+  PAID_INACTIVE
+  MISSING_TRIAL_STATE
+  MISSING_OFFERING_STATE
+  ACTION_NOT_ALLOWED
+}
+
+enum SpacesSubscriptionStatus {
+  NOT_SET
+  TRIAL_ACTIVE
+  TRIAL_EXPIRING
+  TRIAL_EXPIRED
+  COMPLIMENTARY_BRIDGE
+  PAID_ACTIVE
+  PAID_INACTIVE
+  LEGACY_ACTIVE
+  MISSING_STATE
 }
 
 "The `DateTime` scalar type represents a date and time with time zone offset information."

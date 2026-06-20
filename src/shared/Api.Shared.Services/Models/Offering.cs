@@ -15,4 +15,14 @@ public class Offering
     public bool? IsInteractionAllowed { get; set; }
     public string? EntitlementReasonCode { get; set; }
     public IReadOnlyList<string> ActiveCustomerIds { get; set; } = [];
+    public int? SpacesPlanCode { get; set; }
+    public int? SpacesQuotaLimit { get; set; }
+    public int? SpacesCustomCapacity { get; set; }
+    public DateTimeOffset? SpacesPeriodStart { get; set; }
+    public DateTimeOffset? SpacesPeriodEnd { get; set; }
+    public DateTimeOffset? SpacesTrialStartedAt { get; set; }
+    public DateTimeOffset? SpacesTrialEndsAt { get; set; }
+    public bool? SpacesProductEnabled { get; set; }
+    public DateTimeOffset? SpacesNextBillingAt { get; set; }
+    public decimal HostCommissionPercentage { get; set; }
 }

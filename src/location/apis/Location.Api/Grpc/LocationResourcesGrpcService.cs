@@ -38,7 +38,8 @@ public class LocationResourcesGrpcService(
                 var field = item.Field switch
                 {
                     ResourceOrderField.ResourceName => Shared.Models.ResourceOrderField.Name,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(null,
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
                 };
 
                 return new ResourceOrder(direction, field);
@@ -104,7 +105,8 @@ public class LocationResourcesGrpcService(
                             Models.ResourcePatchField.Color,
                         ResourcePatchField.Capacity =>
                             Models.ResourcePatchField.Capacity,
-                        _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null)
+                        _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
+                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.")
                     }).ToHashSet()),
                 context.CancellationToken));
     }

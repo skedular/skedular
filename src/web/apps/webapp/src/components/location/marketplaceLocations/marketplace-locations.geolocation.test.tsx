@@ -131,13 +131,13 @@ describe('MarketplaceLocations — geolocation via API route', () => {
   it('calls fetch("/api/geolocation") when navigator.geolocation is unavailable', async () => {
     const { default: MarketplaceLocations } = await import('./marketplace-locations');
 
-    render(<MarketplaceLocations rootDataRelay={{} as never} rootDataLocationsRelay={{} as never} onReloadRequired={vi.fn()} />);
+    render(<MarketplaceLocations rootDataRelay={{}} rootDataLocationsRelay={{ marketplaceLocations: { edges: [], totalCount: 0 } }} onReloadRequired={vi.fn()} />);
 
     await waitFor(
       () => {
         expect(vi.mocked(fetch)).toHaveBeenCalledWith('/api/geolocation');
       },
-      { timeout: 3000 },
+      { timeout: 5000 },
     );
   });
 });

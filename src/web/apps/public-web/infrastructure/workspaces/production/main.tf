@@ -11,5 +11,7 @@ module "common_resources" {
     cloudflare = cloudflare
   }
 
-  environment = local.environment
+  environment                     = local.environment
+  google_analytics_measurement_id = local.google_analytics_measurement_id
+  logrocket_app_id                = local.logrocket_app_id
 }

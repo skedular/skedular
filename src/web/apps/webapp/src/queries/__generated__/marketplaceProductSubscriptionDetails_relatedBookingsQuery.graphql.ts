@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afcc9684b860f364e927767a4fc50625>>
+ * @generated SignedSource<<9f7451416292bfbc70a9f9bf1ed23bd6>>
  * @lightSyntaxTransform
  */
 
@@ -26,6 +26,7 @@ export type marketplaceProductSubscriptionDetails_relatedBookingsQuery$data = {
           };
         }>;
         readonly from: any;
+        readonly hasRecurringInstanceOverrides: boolean | null | undefined;
         readonly id: string;
         readonly involvedLocations: ReadonlyArray<{
           readonly name: string;
@@ -152,24 +153,31 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "from",
+  "name": "hasRecurringInstanceOverrides",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "until",
+  "name": "from",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "until",
   "storageKey": null
 },
 v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v9 = {
   "alias": null,
   "args": null,
   "concreteType": "Booking_LocationDetails",
@@ -177,11 +185,11 @@ v8 = {
   "name": "involvedLocations",
   "plural": true,
   "selections": [
-    (v7/*:: as any*/)
+    (v8/*:: as any*/)
   ],
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingResourceDetails",
@@ -198,21 +206,21 @@ v9 = {
       "plural": false,
       "selections": [
         (v3/*:: as any*/),
-        (v7/*:: as any*/)
+        (v8/*:: as any*/)
       ],
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "quantity",
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentStatusDetails",
@@ -227,7 +235,7 @@ v11 = {
       "name": "type",
       "storageKey": null
     },
-    (v7/*:: as any*/)
+    (v8/*:: as any*/)
   ],
   "storageKey": null
 };
@@ -267,8 +275,9 @@ return {
                   (v4/*:: as any*/),
                   (v5/*:: as any*/),
                   (v6/*:: as any*/),
-                  (v8/*:: as any*/),
+                  (v7/*:: as any*/),
                   (v9/*:: as any*/),
+                  (v10/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -277,8 +286,8 @@ return {
                     "name": "marketplaceBooking",
                     "plural": false,
                     "selections": [
-                      (v10/*:: as any*/),
-                      (v11/*:: as any*/)
+                      (v11/*:: as any*/),
+                      (v12/*:: as any*/)
                     ],
                     "storageKey": null
                   }
@@ -330,8 +339,9 @@ return {
                   (v4/*:: as any*/),
                   (v5/*:: as any*/),
                   (v6/*:: as any*/),
-                  (v8/*:: as any*/),
+                  (v7/*:: as any*/),
                   (v9/*:: as any*/),
+                  (v10/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -340,8 +350,8 @@ return {
                     "name": "marketplaceBooking",
                     "plural": false,
                     "selections": [
-                      (v10/*:: as any*/),
                       (v11/*:: as any*/),
+                      (v12/*:: as any*/),
                       (v3/*:: as any*/)
                     ],
                     "storageKey": null
@@ -358,16 +368,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "258846ee0b3f2a714185ca23a88af8de",
+    "cacheID": "4e3cdbaeb70cf6c5a98b2ae91773b4fd",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscriptionDetails_relatedBookingsQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductSubscriptionDetails_relatedBookingsQuery(\n  $organizationCustomDomain: String!\n  $recurringBookingIds: [String!]\n  $relatedBookingsFirst: Int!\n  $today: DateTime!\n) {\n  bookings(first: $relatedBookingsFirst, where: {includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, channel: MARKETPLACE, recurringBookingIds: $recurringBookingIds, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        recurringBooking {\n          id\n        }\n        from\n        until\n        involvedLocations {\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query marketplaceProductSubscriptionDetails_relatedBookingsQuery(\n  $organizationCustomDomain: String!\n  $recurringBookingIds: [String!]\n  $relatedBookingsFirst: Int!\n  $today: DateTime!\n) {\n  bookings(first: $relatedBookingsFirst, where: {includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, channel: MARKETPLACE, recurringBookingIds: $recurringBookingIds, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        recurringBooking {\n          id\n        }\n        hasRecurringInstanceOverrides\n        from\n        until\n        involvedLocations {\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "eb23147e358b3020db76e63ff420cd1c";
+(node as any).hash = "e3b49129b9cac9a838fede2a66c57007";
 
 export default node;

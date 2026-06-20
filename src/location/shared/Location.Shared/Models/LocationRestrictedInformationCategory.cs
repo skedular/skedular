@@ -84,7 +84,8 @@ public static class LocationRestrictedInformationCategoryExtensions
                 LocationRestrictedInformationCategory.Pets => LocationRestrictedInformationCategoryConstants.Pets,
                 LocationRestrictedInformationCategory.Smoking => LocationRestrictedInformationCategoryConstants.Smoking,
                 LocationRestrictedInformationCategory.HouseRules => LocationRestrictedInformationCategoryConstants.HouseRules,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
 
         public string ToLocationRestrictedInformationCategoryName() =>
@@ -113,7 +114,8 @@ public static class LocationRestrictedInformationCategoryExtensions
                 LocationRestrictedInformationCategory.Pets => "Pets",
                 LocationRestrictedInformationCategory.Smoking => "Smoking",
                 LocationRestrictedInformationCategory.HouseRules => "House rules",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 
@@ -145,7 +147,8 @@ public static class LocationRestrictedInformationCategoryExtensions
                 LocationRestrictedInformationCategoryConstants.Pets => LocationRestrictedInformationCategory.Pets,
                 LocationRestrictedInformationCategoryConstants.Smoking => LocationRestrictedInformationCategory.Smoking,
                 LocationRestrictedInformationCategoryConstants.HouseRules => LocationRestrictedInformationCategory.HouseRules,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 }

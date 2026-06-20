@@ -33,25 +33,20 @@ export class OfferingService {
         });
     }
     /**
-     * set enterprise offering
-     * @param organizationId
+     * set negotiated organization offering
      * @param xApiKey API Key
      * @param requestBody
-     * @returns any the status of setting the enterprise offering
+     * @returns any the status of setting the negotiated organization offering
      * @returns ProblemDetails unexpected error
      * @throws ApiError
      */
     public setEnterpriseOffering(
-        organizationId: string,
         xApiKey: string,
         requestBody: SetEnterpriseOfferingRequest,
     ): CancelablePromise<any | ProblemDetails> {
         return this.httpRequest.request({
             method: 'PUT',
-            url: '/v1/organization/{organizationId}/enterprise-offering',
-            path: {
-                'organizationId': organizationId,
-            },
+            url: '/v1/organization/enterprise-offering',
             headers: {
                 'X-API-Key': xApiKey,
             },

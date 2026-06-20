@@ -159,6 +159,11 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
                 longitude
                 latitude
               }
+              organization {
+                type {
+                  type
+                }
+              }
               ...marketplaceLocationCard_LocationDetails
             }
           }
@@ -263,7 +268,7 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setPageIndex(0);
-  }, [desktopPageSize, isMobileOrTablet, locations.length]);
+  }, [desktopPageSize, locations.length, isMobileOrTablet]);
 
   useEffect(() => {
     logAggregateMarketplaceDiscoveryCompleted({ logger, eligibleLocationCount: locations.length, isEmptyState: locations.length === 0 });
@@ -276,9 +281,9 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
 
     const start = pageIndex * desktopPageSize;
     return locations.slice(start, start + desktopPageSize);
-  }, [desktopPageSize, isMobileOrTablet, locations, pageIndex]);
+  }, [desktopPageSize, locations, isMobileOrTablet, pageIndex]);
 
-  const pageCount = useMemo(() => (isMobileOrTablet ? 1 : Math.max(1, Math.ceil(locations.length / desktopPageSize))), [desktopPageSize, isMobileOrTablet, locations.length]);
+  const pageCount = useMemo(() => (isMobileOrTablet ? 1 : Math.max(1, Math.ceil(locations.length / desktopPageSize))), [desktopPageSize, locations.length, isMobileOrTablet]);
 
   const handleRefetch = useCallback(
     (nextSearchBoundaries: LatLngBounds | null, resourceType: string | null | undefined) => {
@@ -349,6 +354,16 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
               <Marker
                 key={item.id}
                 position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}
+                {...(item.organization.type.type === 'HOST'
+                  ? {
+                      icon: L.divIcon({
+                        className: 'host-location-marker',
+                        html: '<span aria-label="Hosted place" style="display:grid;place-items:center;width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#7c3aed;color:white;font-weight:800;border:2px solid white;box-shadow:0 2px 8px #0005"><span style="transform:rotate(45deg)">H</span></span>',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32],
+                      }),
+                    }
+                  : {})}
                 eventHandlers={{
                   click: () => {
                     setSelectedLocationId(item.id);

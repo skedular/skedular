@@ -186,7 +186,8 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
                     nameof(Tag.Type),
                     query => query.Type,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             })
             .ToList();
     }

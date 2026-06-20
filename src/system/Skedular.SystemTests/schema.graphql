@@ -1,4 +1,8 @@
-schema {
+schema
+  @fusion__execution(
+    nodeResolution: GATEWAY
+    shareableFieldRuntimeTypeRouting: SOURCE_LOCAL
+  ) {
   query: Query
   mutation: Mutation
   subscription: Subscription
@@ -74,6 +78,12 @@ type Query
     @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
   bookingSlotSizeInMinutes: Int! @fusion__field(schema: ORGANIZATION_API)
+  bookingSpacesQuotaStatus(
+    organizationId: String! @fusion__inputField(schema: BOOKING_API)
+  ): BookingSpacesQuotaStatusDetails!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   bookingVersion: Version! @fusion__field(schema: BOOKING_API)
   coreVersion: Version! @fusion__field(schema: CORE_API)
   currencies: [CurrencyDetails!]! @fusion__field(schema: MARKETPLACE_API)
@@ -121,6 +131,8 @@ type Query
   emailsToIgnoreObservability: [String!]!
     @fusion__field(schema: ORGANIZATION_API)
   emailsToShowLatestCapabilities: [String!]!
+    @fusion__field(schema: ORGANIZATION_API)
+  entireLocationResourceType: OrganizationTagType!
     @fusion__field(schema: ORGANIZATION_API)
   floorPlan(id: String! @fusion__inputField(schema: LOCATION_API)): FloorPlanDetails
     @cost(weight: "10")
@@ -172,6 +184,10 @@ type Query
   locationTypes: [LocationTypeDetails!]! @fusion__field(schema: LOCATION_API)
   locationVersion: Version! @fusion__field(schema: LOCATION_API)
   marketplaceBookingCategories: [BookingCategoryDetails!]!
+    @fusion__field(schema: BOOKING_API)
+  marketplaceBookingFailures: [MarketplaceBookingFailureDetails!]!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
   marketplaceBookingPaymentStatuses: [MarketplaceBookingPaymentStatusDetails!]!
     @fusion__field(schema: BOOKING_API)
@@ -352,6 +368,12 @@ type Query
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
+  organizationSpacesSubscription(
+    organizationId: String! @fusion__inputField(schema: ORGANIZATION_API)
+  ): OrganizationSpacesSubscriptionDetails
+    @cost(weight: "10")
+    @fusion__cost(schema: ORGANIZATION_API, weight: "10")
+    @fusion__field(schema: ORGANIZATION_API)
   organizationStripeConnectAccount(
     id: String! @fusion__inputField(schema: ORGANIZATION_API)
   ): OrganizationStripeConnectAccountDetails
@@ -473,6 +495,16 @@ type Query
   roomResourceType: OrganizationTagType!
     @fusion__field(schema: ORGANIZATION_API)
   slackVersion: Version! @fusion__field(schema: SLACK_API)
+  spacesAccessReasons: [SpacesAccessReasonDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
+  spacesPublicBookingAvailability(
+    organizationId: String! @fusion__inputField(schema: BOOKING_API)
+  ): SpacesPublicBookingAvailabilityDetails!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
+  spacesSubscriptionStatuses: [SpacesSubscriptionStatusDetails!]!
+    @fusion__field(schema: ORGANIZATION_API)
   team(id: String! @fusion__inputField(schema: TEAM_API)): TeamDetails
     @cost(weight: "10")
     @fusion__cost(schema: TEAM_API, weight: "10")
@@ -1203,6 +1235,12 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
+  updateOrganizationSpacesSubscription(
+    input: UpdateOrganizationSpacesSubscriptionInput! @fusion__inputField(schema: ORGANIZATION_API)
+  ): UpdateOrganizationSpacesSubscriptionPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: ORGANIZATION_API, weight: "10")
+    @fusion__field(schema: ORGANIZATION_API)
   updateOrganizationSsoSettings(
     input: UpdateOrganizationSsoSettingsInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): OrganizationPayload!
@@ -1293,9 +1331,14 @@ type Mutation
     @fusion__field(schema: ORGANIZATION_API)
 }
 
-type Subscription @fusion__type(schema: BOOKING_API) {
+type Subscription
+  @fusion__type(schema: BOOKING_API)
+  @fusion__type(schema: LOCATION_API) {
   booking(id: String! @fusion__inputField(schema: BOOKING_API)): BookingDetails!
     @fusion__field(schema: BOOKING_API)
+  listingProductReady(
+    locationId: String! @fusion__inputField(schema: LOCATION_API)
+  ): HostListingProductReady! @fusion__field(schema: LOCATION_API)
   marketplaceBookingSubscription(
     id: String! @fusion__inputField(schema: BOOKING_API)
   ): MarketplaceBookingSubscriptionDetails! @fusion__field(schema: BOOKING_API)
@@ -1326,6 +1369,11 @@ type AreaRange @fusion__type(schema: LOCATION_API) {
 type Booking_LocationDetails @fusion__type(schema: BOOKING_API) {
   name: String! @fusion__field(schema: BOOKING_API)
   uniqueId: String! @fusion__field(schema: BOOKING_API)
+}
+
+type BookingAvailabilityErrorDetails @fusion__type(schema: BOOKING_API) {
+  message: String! @fusion__field(schema: BOOKING_API)
+  unavailableResourceIds: [String!]! @fusion__field(schema: BOOKING_API)
 }
 
 type BookingCategoryDetails @fusion__type(schema: BOOKING_API) {
@@ -1363,6 +1411,10 @@ type BookingDetails
   channel: BookingChannelDetails! @fusion__field(schema: BOOKING_API)
   createdByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
   deletedByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
+  failure: MarketplaceBookingFailureDetails
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   from: DateTime! @fusion__field(schema: BOOKING_API)
   hasRecurringInstanceOverrides: Boolean @fusion__field(schema: BOOKING_API)
   id: ID! @fusion__field(schema: BOOKING_API)
@@ -1391,8 +1443,13 @@ type BookingFrequencyDetails @fusion__type(schema: BOOKING_API) {
 }
 
 type BookingPayload @fusion__type(schema: BOOKING_API) {
-  booking: BookingDetails! @fusion__field(schema: BOOKING_API)
+  accessError: SpacesAccessErrorDetails @fusion__field(schema: BOOKING_API)
+  availabilityError: BookingAvailabilityErrorDetails
+    @fusion__field(schema: BOOKING_API)
+  booking: BookingDetails @fusion__field(schema: BOOKING_API)
   clientMutationId: String @fusion__field(schema: BOOKING_API)
+  failure: MarketplaceBookingFailureDetails @fusion__field(schema: BOOKING_API)
+  quotaError: BookingSpacesQuotaErrorDetails @fusion__field(schema: BOOKING_API)
 }
 
 type BookingRecurrenceEndTypeDetails @fusion__type(schema: BOOKING_API) {
@@ -1404,6 +1461,34 @@ type BookingResourceDetails @fusion__type(schema: BOOKING_API) {
   customers: [CustomerDetails!]! @fusion__field(schema: BOOKING_API)
   location: Booking_LocationDetails @fusion__field(schema: BOOKING_API)
   resource: ResourceDetails! @fusion__field(schema: BOOKING_API)
+}
+
+type BookingSpacesQuotaErrorDetails @fusion__type(schema: BOOKING_API) {
+  attemptedCurrentPeriodCount: Int! @fusion__field(schema: BOOKING_API)
+  currentUsage: Int! @fusion__field(schema: BOOKING_API)
+  errorCode: String! @fusion__field(schema: BOOKING_API)
+  excludedOutOfPeriodCount: Int! @fusion__field(schema: BOOKING_API)
+  quotaLimit: Int! @fusion__field(schema: BOOKING_API)
+  reasonCode: SpacesQuotaReasonCodeDetails @fusion__field(schema: BOOKING_API)
+  remainingQuota: Int! @fusion__field(schema: BOOKING_API)
+  totalAttemptedInstanceCount: Int! @fusion__field(schema: BOOKING_API)
+  upgradePlans: [UpgradePlanDetails!]! @fusion__field(schema: BOOKING_API)
+}
+
+type BookingSpacesQuotaStatusDetails @fusion__type(schema: BOOKING_API) {
+  attemptedCurrentPeriodCount: Int! @fusion__field(schema: BOOKING_API)
+  currentPeriodEndUtc: DateTime! @fusion__field(schema: BOOKING_API)
+  currentPeriodStartUtc: DateTime! @fusion__field(schema: BOOKING_API)
+  currentUsage: Int! @fusion__field(schema: BOOKING_API)
+  excludedOutOfPeriodCount: Int! @fusion__field(schema: BOOKING_API)
+  organizationId: String! @fusion__field(schema: BOOKING_API)
+  planCode: Int @fusion__field(schema: BOOKING_API)
+  quotaExceeded: Boolean! @fusion__field(schema: BOOKING_API)
+  quotaLimit: Int @fusion__field(schema: BOOKING_API)
+  reasonCode: SpacesQuotaReasonCodeDetails @fusion__field(schema: BOOKING_API)
+  remainingQuota: Int @fusion__field(schema: BOOKING_API)
+  totalAttemptedInstanceCount: Int! @fusion__field(schema: BOOKING_API)
+  upgradePlans: [UpgradePlanDetails!]! @fusion__field(schema: BOOKING_API)
 }
 
 type BookingWindowDetails @fusion__type(schema: BOOKING_API) {
@@ -1758,6 +1843,16 @@ type FloorPlanPayload @fusion__type(schema: LOCATION_API) {
   floorPlan: FloorPlanDetails! @fusion__field(schema: LOCATION_API)
 }
 
+type HostListingProductReady @fusion__type(schema: LOCATION_API) {
+  locationId: String! @fusion__field(schema: LOCATION_API)
+  product: HostListingProductReadyProduct @fusion__field(schema: LOCATION_API)
+}
+
+type HostListingProductReadyProduct @fusion__type(schema: LOCATION_API) {
+  id: String! @fusion__field(schema: LOCATION_API)
+  inactive: Boolean! @fusion__field(schema: LOCATION_API)
+}
+
 type InvitationsToJoinOrganizationPayload
   @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__field(schema: ORGANIZATION_API)
@@ -1892,6 +1987,7 @@ type LocationDetails
   physicalAddress: LocationPhysicalAddressDetails
     @fusion__field(schema: LOCATION_API)
   products: [ProductDetails!]! @fusion__field(schema: LOCATION_API)
+  productTags: [OrganizationTagDetails!]! @fusion__field(schema: LOCATION_API)
   resources(
     after: String @fusion__inputField(schema: LOCATION_API)
     before: String @fusion__inputField(schema: LOCATION_API)
@@ -1993,6 +2089,14 @@ type MarketplaceBookingDetails @fusion__type(schema: BOOKING_API) {
     @fusion__field(schema: BOOKING_API)
   currency: CurrencyDetails @fusion__field(schema: BOOKING_API)
   currencyToDisplay: String! @fusion__field(schema: BOOKING_API)
+  failure: MarketplaceBookingFailureDetails
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
+  hostCommissionAmount: Decimal @fusion__field(schema: BOOKING_API)
+  hostCommissionRatePercentage: Decimal @fusion__field(schema: BOOKING_API)
+  hostGrossProceedsAmount: Decimal @fusion__field(schema: BOOKING_API)
+  hostPayoutAmount: Decimal @fusion__field(schema: BOOKING_API)
   id: ID! @fusion__field(schema: BOOKING_API)
   invoiceEmailList: [String!]! @fusion__field(schema: BOOKING_API)
   invoiceNumber: String @fusion__field(schema: BOOKING_API)
@@ -2018,6 +2122,24 @@ type MarketplaceBookingDetails @fusion__type(schema: BOOKING_API) {
   totalAmountExcludeTax: Decimal @fusion__field(schema: BOOKING_API)
   totalAmountExcludeTaxToDisplay: String! @fusion__field(schema: BOOKING_API)
   totalAmountToDisplay: String! @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceBookingFailureChoiceDetails @fusion__type(schema: BOOKING_API) {
+  name: String! @fusion__field(schema: BOOKING_API)
+  type: String! @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceBookingFailureDetails @fusion__type(schema: BOOKING_API) {
+  category: MarketplaceBookingFailureChoiceDetails!
+    @fusion__field(schema: BOOKING_API)
+  customerAction: MarketplaceBookingFailureChoiceDetails!
+    @fusion__field(schema: BOOKING_API)
+  finalizedAt: DateTime! @fusion__field(schema: BOOKING_API)
+  id: String! @fusion__field(schema: BOOKING_API)
+  requestedFrom: DateTime @fusion__field(schema: BOOKING_API)
+  requestedUntil: DateTime @fusion__field(schema: BOOKING_API)
+  scope: MarketplaceBookingFailureChoiceDetails!
+    @fusion__field(schema: BOOKING_API)
 }
 
 type MarketplaceBookingPaymentStatusDetails @fusion__type(schema: BOOKING_API) {
@@ -2051,6 +2173,10 @@ type MarketplaceBookingSubscriptionDetails
   cancelledAt: DateTime @fusion__field(schema: BOOKING_API)
   createdByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
   deletedByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
+  failure: MarketplaceBookingFailureDetails
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   id: ID! @fusion__field(schema: BOOKING_API)
   involvedCustomers: [CustomerDetails!]! @fusion__field(schema: BOOKING_API)
   involvedOrganizations: [OrganizationDetails!]!
@@ -2069,6 +2195,7 @@ type MarketplaceBookingSubscriptionDetails
   startedAt: DateTime! @fusion__field(schema: BOOKING_API)
   status: MarketplaceBookingSubscriptionStatusDetails!
     @fusion__field(schema: BOOKING_API)
+  weeklySelectedDays: [DayOfWeek!]! @fusion__field(schema: BOOKING_API)
 }
 
 type MarketplaceBookingSubscriptionEdge @fusion__type(schema: BOOKING_API) {
@@ -2078,8 +2205,9 @@ type MarketplaceBookingSubscriptionEdge @fusion__type(schema: BOOKING_API) {
 }
 
 type MarketplaceBookingSubscriptionPayload @fusion__type(schema: BOOKING_API) {
+  accessError: SpacesAccessErrorDetails @fusion__field(schema: BOOKING_API)
   clientMutationId: String @fusion__field(schema: BOOKING_API)
-  marketplaceBookingSubscription: MarketplaceBookingSubscriptionDetails!
+  marketplaceBookingSubscription: MarketplaceBookingSubscriptionDetails
     @fusion__field(schema: BOOKING_API)
 }
 
@@ -2098,6 +2226,7 @@ type MarketplaceRefundDetails @fusion__type(schema: BOOKING_API) {
   currency: CurrencyDetails @fusion__field(schema: BOOKING_API)
   currencyToDisplay: String! @fusion__field(schema: BOOKING_API)
   events: [MarketplaceRefundEventDetails!]! @fusion__field(schema: BOOKING_API)
+  externalPaymentRefundId: String @fusion__field(schema: BOOKING_API)
   externalRefundId: String @fusion__field(schema: BOOKING_API)
   externalRefundNumber: String @fusion__field(schema: BOOKING_API)
   id: String! @fusion__field(schema: BOOKING_API)
@@ -2105,6 +2234,10 @@ type MarketplaceRefundDetails @fusion__type(schema: BOOKING_API) {
   lastProcessedAt: DateTime @fusion__field(schema: BOOKING_API)
   localEntityId: String! @fusion__field(schema: BOOKING_API)
   localEntityType: String! @fusion__field(schema: BOOKING_API)
+  paymentProvider: String @fusion__field(schema: BOOKING_API)
+  paymentRefundLastError: String @fusion__field(schema: BOOKING_API)
+  paymentRefundLastProcessedAt: DateTime @fusion__field(schema: BOOKING_API)
+  paymentRefundStatus: String @fusion__field(schema: BOOKING_API)
   reason: String @fusion__field(schema: BOOKING_API)
   referenceTime: DateTime! @fusion__field(schema: BOOKING_API)
   refundAmount: Decimal @fusion__field(schema: BOOKING_API)
@@ -2195,6 +2328,7 @@ type OrganizationActiveOfferingDetails @fusion__type(schema: ORGANIZATION_API) {
   catalogVersion: CatalogVersionDetails @fusion__field(schema: ORGANIZATION_API)
   code: String! @fusion__field(schema: ORGANIZATION_API)
   currency: CurrencyDetails! @fusion__field(schema: ORGANIZATION_API)
+  discountPercentage: Int! @fusion__field(schema: ORGANIZATION_API)
   earlyBird: Boolean! @fusion__field(schema: ORGANIZATION_API)
   end: DateTime! @fusion__field(schema: ORGANIZATION_API)
   featureSet: [String!]! @fusion__field(schema: ORGANIZATION_API)
@@ -2318,6 +2452,14 @@ type OrganizationDetails
   @fusion__type(schema: ORGANIZATION_API)
   @fusion__type(schema: TEAM_API)
   @fusion__lookup(
+    schema: BOOKING_API
+    key: "id"
+    field: "organizationById(id: ID!): OrganizationDetails"
+    map: ["id"]
+    path: null
+    internal: true
+  )
+  @fusion__lookup(
     schema: ORGANIZATION_API
     key: "id"
     field: "organizationById(id: ID!): OrganizationDetails"
@@ -2419,6 +2561,10 @@ type OrganizationDetails
   refundNotificationEmails: [String!]! @fusion__field(schema: ORGANIZATION_API)
   resourceTypes: [OrganizationTagDetails!]!
     @fusion__field(schema: ORGANIZATION_API)
+  spacesPublicBookingAvailability: SpacesPublicBookingAvailabilityDetails!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   ssoLoginUrl(
     redirectUrl: String! @fusion__inputField(schema: ORGANIZATION_API)
   ): String!
@@ -2527,11 +2673,12 @@ type OrganizationMemberStatusDetails @fusion__type(schema: ORGANIZATION_API) {
 
 type OrganizationOfferingDetails @fusion__type(schema: ORGANIZATION_API) {
   code: String! @fusion__field(schema: ORGANIZATION_API)
-  currency: Currency! @fusion__field(schema: ORGANIZATION_API)
+  currency: CurrencyDetails! @fusion__field(schema: ORGANIZATION_API)
   earlyBird: Boolean! @fusion__field(schema: ORGANIZATION_API)
   featureSet: [String!]! @fusion__field(schema: ORGANIZATION_API)
   fixedPrice: Int @fusion__field(schema: ORGANIZATION_API)
   free: Boolean! @fusion__field(schema: ORGANIZATION_API)
+  hostCommissionPercentage: Decimal! @fusion__field(schema: ORGANIZATION_API)
   isEnterprise: Boolean! @fusion__field(schema: ORGANIZATION_API)
   name: String! @fusion__field(schema: ORGANIZATION_API)
   purchasedLocationCapacity: Int @fusion__field(schema: ORGANIZATION_API)
@@ -2629,6 +2776,39 @@ type OrganizationPublicDetails @fusion__type(schema: ORGANIZATION_API) {
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
+}
+
+type OrganizationSpacesSubscriptionDetails
+  @fusion__type(schema: ORGANIZATION_API) {
+  accessReason: SpacesAccessReasonCode! @fusion__field(schema: ORGANIZATION_API)
+  canAcceptBookings: Boolean! @fusion__field(schema: ORGANIZATION_API)
+  canProtectExistingCommitments: Boolean!
+    @fusion__field(schema: ORGANIZATION_API)
+  canUseProduct: Boolean! @fusion__field(schema: ORGANIZATION_API)
+  catalogVersionCode: String! @fusion__field(schema: ORGANIZATION_API)
+  commercialModel: PricingCatalogCommercialModel!
+    @fusion__field(schema: ORGANIZATION_API)
+  createdAt: DateTime! @fusion__field(schema: ORGANIZATION_API)
+  currentPeriodEndUtc: DateTime! @fusion__field(schema: ORGANIZATION_API)
+  currentPeriodStartUtc: DateTime! @fusion__field(schema: ORGANIZATION_API)
+  customCapacity: Int @fusion__field(schema: ORGANIZATION_API)
+  id: String! @fusion__field(schema: ORGANIZATION_API)
+  isComplimentaryBridge: Boolean! @fusion__field(schema: ORGANIZATION_API)
+  nextBillingAt: DateTime @fusion__field(schema: ORGANIZATION_API)
+  organizationId: String! @fusion__field(schema: ORGANIZATION_API)
+  planCode: PricingCatalogSubscriptionPlanCode!
+    @fusion__field(schema: ORGANIZATION_API)
+  remainingTrialDays: Int! @fusion__field(schema: ORGANIZATION_API)
+  rolloverDate: DateTime @fusion__field(schema: ORGANIZATION_API)
+  status: OrganizationOfferingPlanStatus!
+    @fusion__field(schema: ORGANIZATION_API)
+  subscriptionStatus: SpacesSubscriptionStatus!
+    @fusion__field(schema: ORGANIZATION_API)
+  trialEndsAt: DateTime @fusion__field(schema: ORGANIZATION_API)
+  trialStartedAt: DateTime @fusion__field(schema: ORGANIZATION_API)
+  updatedAt: DateTime! @fusion__field(schema: ORGANIZATION_API)
+  upgradeRequired: Boolean! @fusion__field(schema: ORGANIZATION_API)
+  usageLimit: Int @fusion__field(schema: ORGANIZATION_API)
 }
 
 type OrganizationSsoSettingsDetails @fusion__type(schema: ORGANIZATION_API) {
@@ -3048,6 +3228,9 @@ type ProductPricing
   acceptedPaymentMethods: [PaymentMethod!]!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
+  availableDays: [DayOfWeek!]
+    @fusion__field(schema: BOOKING_API)
+    @fusion__field(schema: MARKETPLACE_API)
   billingMode: ProductPricingBillingMode!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
@@ -3091,6 +3274,9 @@ type ProductPricing
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
   purchaseCadence: ProductPricingCadence!
+    @fusion__field(schema: BOOKING_API)
+    @fusion__field(schema: MARKETPLACE_API)
+  requiredDaysPerWeek: Int
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
   supportsSubscriptionAutoRenewal: Boolean!
@@ -3181,6 +3367,10 @@ type RecurringBookingDetails
   deletedByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
   endDate: DateTime @fusion__field(schema: BOOKING_API)
   endType: BookingRecurrenceEndTypeDetails! @fusion__field(schema: BOOKING_API)
+  failure: MarketplaceBookingFailureDetails
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   frequency: BookingFrequencyDetails! @fusion__field(schema: BOOKING_API)
   from: DateTime! @fusion__field(schema: BOOKING_API)
   id: ID! @fusion__field(schema: BOOKING_API)
@@ -3205,8 +3395,9 @@ type RecurringBookingEdge @fusion__type(schema: BOOKING_API) {
 }
 
 type RecurringBookingPayload @fusion__type(schema: BOOKING_API) {
+  accessError: SpacesAccessErrorDetails @fusion__field(schema: BOOKING_API)
   clientMutationId: String @fusion__field(schema: BOOKING_API)
-  recurringBooking: RecurringBookingDetails! @fusion__field(schema: BOOKING_API)
+  recurringBooking: RecurringBookingDetails @fusion__field(schema: BOOKING_API)
 }
 
 type RemoveCustomerPaymentMethodPayload @fusion__type(schema: CUSTOMER_API) {
@@ -3336,6 +3527,34 @@ type RoomsOccupancyPercentage @fusion__type(schema: LOCATION_API) {
   percentage: Float! @fusion__field(schema: LOCATION_API)
 }
 
+type SpacesAccessErrorDetails @fusion__type(schema: BOOKING_API) {
+  errorCode: String! @fusion__field(schema: BOOKING_API)
+  message: String! @fusion__field(schema: BOOKING_API)
+  reasonCode: SpacesAccessReasonCode! @fusion__field(schema: BOOKING_API)
+  status: SpacesSubscriptionStatus! @fusion__field(schema: BOOKING_API)
+  upgradeRequired: Boolean! @fusion__field(schema: BOOKING_API)
+}
+
+type SpacesAccessReasonDetails @fusion__type(schema: ORGANIZATION_API) {
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  type: SpacesAccessReasonCode! @fusion__field(schema: ORGANIZATION_API)
+}
+
+type SpacesPublicBookingAvailabilityDetails @fusion__type(schema: BOOKING_API) {
+  available: Boolean! @fusion__field(schema: BOOKING_API)
+  message: String! @fusion__field(schema: BOOKING_API)
+}
+
+type SpacesQuotaReasonCodeDetails @fusion__type(schema: BOOKING_API) {
+  name: String! @fusion__field(schema: BOOKING_API)
+  type: SpacesQuotaReasonCode! @fusion__field(schema: BOOKING_API)
+}
+
+type SpacesSubscriptionStatusDetails @fusion__type(schema: ORGANIZATION_API) {
+  name: String! @fusion__field(schema: ORGANIZATION_API)
+  type: SpacesSubscriptionStatus! @fusion__field(schema: ORGANIZATION_API)
+}
+
 type SubmitCustomerFeedbackPayload @fusion__type(schema: CUSTOMER_API) {
   clientMutationId: String @fusion__field(schema: CUSTOMER_API)
   id: ID! @fusion__field(schema: CUSTOMER_API)
@@ -3449,11 +3668,25 @@ type UpdateOrganizationOfferingPayload @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__field(schema: ORGANIZATION_API)
 }
 
+type UpdateOrganizationSpacesSubscriptionPayload
+  @fusion__type(schema: ORGANIZATION_API) {
+  clientMutationId: String @fusion__field(schema: ORGANIZATION_API)
+  organizationSpacesSubscription: OrganizationSpacesSubscriptionDetails!
+    @fusion__field(schema: ORGANIZATION_API)
+}
+
 type UpdateOrganizationTeamsSubscriptionPayload
   @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__field(schema: ORGANIZATION_API)
   organizationTeamsSubscription: OrganizationTeamsSubscriptionDetails!
     @fusion__field(schema: ORGANIZATION_API)
+}
+
+type UpgradePlanDetails @fusion__type(schema: BOOKING_API) {
+  availability: String! @fusion__field(schema: BOOKING_API)
+  name: String! @fusion__field(schema: BOOKING_API)
+  planCode: Int! @fusion__field(schema: BOOKING_API)
+  priceDescription: String @fusion__field(schema: BOOKING_API)
 }
 
 type VariedDateOpeningHours @fusion__type(schema: LOCATION_API) {
@@ -3671,6 +3904,7 @@ input AddMarketplaceBookingSubscriptionInput @fusion__type(schema: BOOKING_API) 
   requestedResourceIds: [String!] @fusion__inputField(schema: BOOKING_API)
   startedAt: DateTime! @fusion__inputField(schema: BOOKING_API)
   teamIds: [String!] @fusion__inputField(schema: BOOKING_API)
+  weeklySelectedDays: [DayOfWeek!] @fusion__inputField(schema: BOOKING_API)
 }
 
 input AddMyBillingDetailsInput @fusion__type(schema: CUSTOMER_API) {
@@ -3750,6 +3984,7 @@ input AddPrivateBookingInput @fusion__type(schema: BOOKING_API) {
   clientMutationId: String @fusion__inputField(schema: BOOKING_API)
   customerIds: [String!]! @fusion__inputField(schema: BOOKING_API)
   from: DateTime! @fusion__inputField(schema: BOOKING_API)
+  fullOpeningHoursDate: LocalDate @fusion__inputField(schema: BOOKING_API)
   id: String @fusion__inputField(schema: BOOKING_API)
   notes: String @fusion__inputField(schema: BOOKING_API)
   organizationCustomDomains: [String!] @fusion__inputField(schema: BOOKING_API)
@@ -4484,6 +4719,7 @@ input ProductPricingCancellationRefundRuleInput
 
 input ProductPricingInput @fusion__type(schema: MARKETPLACE_API) {
   acceptedPaymentMethods: [PaymentMethod!]! @fusion__inputField(schema: MARKETPLACE_API)
+  availableDays: [DayOfWeek!] @fusion__inputField(schema: MARKETPLACE_API)
   billingMode: ProductPricingBillingMode! @fusion__inputField(schema: MARKETPLACE_API)
   bookingCadence: ProductPricingCadence! @fusion__inputField(schema: MARKETPLACE_API)
   cancellationPolicyType: ProductPricingCancellationPolicyType! @fusion__inputField(schema: MARKETPLACE_API)
@@ -4499,6 +4735,7 @@ input ProductPricingInput @fusion__type(schema: MARKETPLACE_API) {
   numberOfResourcesToBook: Int! @fusion__inputField(schema: MARKETPLACE_API)
   price: Decimal! @fusion__inputField(schema: MARKETPLACE_API)
   purchaseCadence: ProductPricingCadence! @fusion__inputField(schema: MARKETPLACE_API)
+  requiredDaysPerWeek: Int @fusion__inputField(schema: MARKETPLACE_API)
   supportsSubscriptionAutoRenewal: Boolean! @fusion__inputField(schema: MARKETPLACE_API)
 }
 
@@ -4915,6 +5152,14 @@ input UpdateOrganizationOfferingInput @fusion__type(schema: ORGANIZATION_API) {
   organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
 }
 
+input UpdateOrganizationSpacesSubscriptionInput
+  @fusion__type(schema: ORGANIZATION_API) {
+  clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
+  customCapacity: Int @fusion__inputField(schema: ORGANIZATION_API)
+  organizationId: String! @fusion__inputField(schema: ORGANIZATION_API)
+  planCode: PricingCatalogSubscriptionPlanCode! @fusion__inputField(schema: ORGANIZATION_API)
+}
+
 input UpdateOrganizationSsoSettingsInput @fusion__type(schema: ORGANIZATION_API) {
   appFederationMetadataUrl: String! @fusion__inputField(schema: ORGANIZATION_API)
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
@@ -5139,6 +5384,8 @@ enum BookingOrderField @fusion__type(schema: BOOKING_API) {
 
 enum CatalogVersion @fusion__type(schema: ORGANIZATION_API) {
   TEAMS_V1 @fusion__enumValue(schema: ORGANIZATION_API)
+  SPACES_V1 @fusion__enumValue(schema: ORGANIZATION_API)
+  HOST_V1 @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum Currency
@@ -5190,14 +5437,30 @@ enum CustomerType @fusion__type(schema: CUSTOMER_API) {
   REGISTERED @fusion__enumValue(schema: CUSTOMER_API)
 }
 
-enum DayOfWeek @fusion__type(schema: BOOKING_API) {
-  SUNDAY @fusion__enumValue(schema: BOOKING_API)
-  MONDAY @fusion__enumValue(schema: BOOKING_API)
-  TUESDAY @fusion__enumValue(schema: BOOKING_API)
-  WEDNESDAY @fusion__enumValue(schema: BOOKING_API)
-  THURSDAY @fusion__enumValue(schema: BOOKING_API)
-  FRIDAY @fusion__enumValue(schema: BOOKING_API)
-  SATURDAY @fusion__enumValue(schema: BOOKING_API)
+enum DayOfWeek
+  @fusion__type(schema: BOOKING_API)
+  @fusion__type(schema: MARKETPLACE_API) {
+  SUNDAY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  MONDAY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  TUESDAY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  WEDNESDAY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  THURSDAY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  FRIDAY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  SATURDAY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
 }
 
 enum EntitlementReasonCode @fusion__type(schema: ORGANIZATION_API) {
@@ -5211,6 +5474,8 @@ enum EntitlementReasonCode @fusion__type(schema: ORGANIZATION_API) {
   OFFERING_NOT_EFFECTIVE @fusion__enumValue(schema: ORGANIZATION_API)
   CONTACT_US_REQUIRED @fusion__enumValue(schema: ORGANIZATION_API)
   LEGACY_OFFERING_UNCHANGED @fusion__enumValue(schema: ORGANIZATION_API)
+  SPACES_BOOKING_QUOTA_REACHED @fusion__enumValue(schema: ORGANIZATION_API)
+  SPACES_OFFERING_STATE_MISSING @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum FeedbackChannelType @fusion__type(schema: CUSTOMER_API) {
@@ -5229,6 +5494,11 @@ enum FloorPlanPatchField @fusion__type(schema: LOCATION_API) {
   RESOURCE_POSITIONS @fusion__enumValue(schema: LOCATION_API)
 }
 
+enum fusion__NodeResolution {
+  GATEWAY
+  SOURCE_SCHEMA
+}
+
 "The fusion__Schema enum is a generated type used within an execution schema document to refer to a source schema in a type-safe manner."
 enum fusion__Schema {
   BOOKING_API @fusion__schema_metadata(name: "booking-api")
@@ -5240,6 +5510,11 @@ enum fusion__Schema {
   ORGANIZATION_API @fusion__schema_metadata(name: "organization-api")
   SLACK_API @fusion__schema_metadata(name: "slack-api")
   TEAM_API @fusion__schema_metadata(name: "team-api")
+}
+
+enum fusion__ShareableFieldRuntimeTypeRouting {
+  SOURCE_LOCAL
+  COMMON_RUNTIME_TYPES
 }
 
 enum InvitationStatus
@@ -5544,6 +5819,12 @@ enum OrganizationTagType
     @fusion__enumValue(schema: MARKETPLACE_API)
     @fusion__enumValue(schema: ORGANIZATION_API)
   RESOURCE_OTHERS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: CUSTOMER_API)
+    @fusion__enumValue(schema: LOCATION_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  RESOURCE_ENTIRE_LOCATION
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: CUSTOMER_API)
     @fusion__enumValue(schema: LOCATION_API)
@@ -6532,7 +6813,7 @@ enum OrganizationTaxDetailsPatchField @fusion__type(schema: ORGANIZATION_API) {
 enum OrganizationType @fusion__type(schema: ORGANIZATION_API) {
   PRIVATE @fusion__enumValue(schema: ORGANIZATION_API)
   MARKETPLACE @fusion__enumValue(schema: ORGANIZATION_API)
-  INDIVIDUAL @fusion__enumValue(schema: ORGANIZATION_API)
+  HOST @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum OrganizationXeroBillingMode @fusion__type(schema: ORGANIZATION_API) {
@@ -6604,6 +6885,7 @@ enum PricingCatalogProductOfferingCode @fusion__type(schema: ORGANIZATION_API) {
   NOT_SET @fusion__enumValue(schema: ORGANIZATION_API)
   TEAMS @fusion__enumValue(schema: ORGANIZATION_API)
   SPACES @fusion__enumValue(schema: ORGANIZATION_API)
+  HOST @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum PricingCatalogSubscriptionPlanCode @fusion__type(schema: ORGANIZATION_API) {
@@ -6612,6 +6894,9 @@ enum PricingCatalogSubscriptionPlanCode @fusion__type(schema: ORGANIZATION_API) 
   PAY_AS_YOU_GO @fusion__enumValue(schema: ORGANIZATION_API)
   ENTERPRISE_CAPACITY @fusion__enumValue(schema: ORGANIZATION_API)
   LEGACY_EARLY_BIRD @fusion__enumValue(schema: ORGANIZATION_API)
+  GROWTH @fusion__enumValue(schema: ORGANIZATION_API)
+  BUSINESS @fusion__enumValue(schema: ORGANIZATION_API)
+  CONTACT_US @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
 enum PricingCatalogVersionStatus @fusion__type(schema: ORGANIZATION_API) {
@@ -6835,6 +7120,87 @@ enum ScalarSerializationType
     @fusion__enumValue(schema: ORGANIZATION_API)
 }
 
+enum SpacesAccessReasonCode
+  @fusion__type(schema: BOOKING_API)
+  @fusion__type(schema: ORGANIZATION_API) {
+  NOT_SET
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  ALLOWED_TRIAL
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  ALLOWED_PAID
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  ALLOWED_COMPLIMENTARY_BRIDGE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  ALLOWED_PROTECTIVE_ACTION
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  ALLOWED_READ_OR_RECOVERY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  TRIAL_EXPIRED
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  PAID_INACTIVE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  MISSING_TRIAL_STATE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  MISSING_OFFERING_STATE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  ACTION_NOT_ALLOWED
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
+enum SpacesQuotaReasonCode @fusion__type(schema: BOOKING_API) {
+  NOT_SET @fusion__enumValue(schema: BOOKING_API)
+  WITHIN_QUOTA @fusion__enumValue(schema: BOOKING_API)
+  FREE_TIER_LIMIT_EXCEEDED @fusion__enumValue(schema: BOOKING_API)
+  PAID_TIER_LIMIT_EXCEEDED @fusion__enumValue(schema: BOOKING_API)
+  CUSTOM_CAPACITY_EXCEEDED @fusion__enumValue(schema: BOOKING_API)
+  MISSING_OFFERING_STATE @fusion__enumValue(schema: BOOKING_API)
+  OUT_OF_PERIOD_EXCLUDED @fusion__enumValue(schema: BOOKING_API)
+  TRIAL_EXPIRED @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum SpacesSubscriptionStatus
+  @fusion__type(schema: BOOKING_API)
+  @fusion__type(schema: ORGANIZATION_API) {
+  NOT_SET
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  TRIAL_ACTIVE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  TRIAL_EXPIRING
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  TRIAL_EXPIRED
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  COMPLIMENTARY_BRIDGE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  PAID_ACTIVE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  PAID_INACTIVE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  LEGACY_ACTIVE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+  MISSING_STATE
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: ORGANIZATION_API)
+}
+
 enum TeamAndMembersPatchField @fusion__type(schema: TEAM_API) {
   TEAM @fusion__enumValue(schema: TEAM_API)
   MEMBERS @fusion__enumValue(schema: TEAM_API)
@@ -6932,12 +7298,6 @@ directive @cost(weight: String!) on
   | ENUM
   | INPUT_FIELD_DEFINITION
 
-"The @fusion__connector directive declares which connector kind handles a source schema."
-directive @fusion__connector(
-  "The kind of connector that handles the source schema represented by this enum value."
-  kind: String!
-) on ENUM_VALUE
-
 "The @fusion__cost directive specifies cost metadata for each source schema."
 directive @fusion__cost(
   "The name of the source schema that defined the cost metadata."
@@ -6958,6 +7318,20 @@ directive @fusion__enumValue(
   schema: fusion__Schema!
 ) repeatable on ENUM_VALUE
 
+directive @fusion__eventStream(
+  broker: String
+  cursorArgument: String
+  cursorField: String
+  message: fusion__FieldSelectionSet!
+  schema: fusion__Schema!
+  topics: [String!]
+) on FIELD_DEFINITION
+
+directive @fusion__execution(
+  nodeResolution: fusion__NodeResolution! = GATEWAY
+  shareableFieldRuntimeTypeRouting: fusion__ShareableFieldRuntimeTypeRouting! = SOURCE_LOCAL
+) on SCHEMA
+
 "The @fusion__field directive specifies which source schema provides a field in a composite type and what execution behavior it has."
 directive @fusion__field(
   "Indicates that this field is only partially provided and must be combined with `provides`."
@@ -6966,9 +7340,14 @@ directive @fusion__field(
   provides: fusion__FieldSelectionSet
   "The name of the source schema that originally provided this field."
   schema: fusion__Schema!
+  "Indicates that the source field was declared as external before connector preprocessing."
+  sourceExternal: Boolean! = false
   "The field type in the source schema if it differs in nullability or structure."
   sourceType: String
 ) repeatable on FIELD_DEFINITION
+
+"The @fusion__gateway_field directive marks a field that is implemented by the gateway itself rather than resolved from an underlying source schema, such as the global object identification node field."
+directive @fusion__gateway_field on FIELD_DEFINITION
 
 "The @fusion__implements directive specifies on which source schema an interface is implemented by an object or interface type."
 directive @fusion__implements(
@@ -6998,6 +7377,12 @@ directive @fusion__inputField(
   "The field type in the source schema if it differs in nullability or structure."
   sourceType: String
 ) repeatable on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+"The @fusion__interfaceObject directive specifies the source schemas that expose an interface as an @interfaceObject stand-in, so values of the interface produced by those schemas are opaque."
+directive @fusion__interfaceObject(
+  "The name of the source schema that exposes this interface as an @interfaceObject stand-in."
+  schema: fusion__Schema!
+) repeatable on INTERFACE
 
 "The @fusion__listSize directive specifies list size metadata for each source schema."
 directive @fusion__listSize(
@@ -7045,6 +7430,8 @@ directive @fusion__requires(
 
 "The @fusion__schema_metadata directive is used to provide additional metadata for a source schema."
 directive @fusion__schema_metadata(
+  allowNonResolvableInterfaceObjects: Boolean
+  kind: String
   "The name of the source schema."
   name: String!
 ) on ENUM_VALUE

@@ -104,6 +104,21 @@ const profilePatchFields: Record<keyof ProfileDetailsDetails, CustomerDetailsPat
 const getChangedProfileFields = (left: ProfileDetailsDetails, right: ProfileDetailsDetails) =>
   (Object.keys(profilePatchFields) as (keyof ProfileDetailsDetails)[]).filter((field) => left[field] !== right[field]).map((field) => profilePatchFields[field]);
 
+const getValidProfilePatchFields = (fieldsToUpdate: CustomerDetailsPatchField[], values: ProfileDetailsDetails): CustomerDetailsPatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    const formField = (Object.entries(profilePatchFields) as [keyof ProfileDetailsDetails, CustomerDetailsPatchField][]).find(([, field]) => field === patchField)?.[0];
+    if (!formField) {
+      return false;
+    }
+
+    try {
+      profileDetailsSchema.validateSyncAt(formField, values);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+
 const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId }: Props) => {
   const rootData = useFragment<organizationUser_query$key>(
     graphql`
@@ -306,12 +321,13 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
   const submittedProfileValues = useRef(initialProfileValues);
   const commitProfilePatch = useCallback(
     (fieldsToUpdate: CustomerDetailsPatchField[], values: ProfileDetailsDetails) => {
-      if (!rootData.customer || rootData.customer.id !== rootData.me?.id || fieldsToUpdate.length === 0 || !profileDetailsSchema.isValidSync(values)) {
+      const validFieldsToUpdate = getValidProfilePatchFields(fieldsToUpdate, values);
+      if (!rootData.customer || rootData.customer.id !== rootData.me?.id || validFieldsToUpdate.length === 0) {
         return;
       }
 
       const previousValues = submittedProfileValues.current;
-      if (!previousValues || getChangedProfileFields(previousValues, values).length === 0) {
+      if (!previousValues || getChangedProfileFields(previousValues, values).filter((field) => validFieldsToUpdate.includes(field)).length === 0) {
         return;
       }
       submittedProfileValues.current = values;
@@ -321,7 +337,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
           input: {
             clientMutationId: uuid(),
             id: customerId,
-            fieldsToUpdate,
+            fieldsToUpdate: validFieldsToUpdate,
             ...values,
             personalInformationVisibility: values.personalInformationVisibility as PersonalInformationVisibility,
           },

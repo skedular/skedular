@@ -20,7 +20,9 @@ async function collectFiles(directory) {
 }
 
 const files = await collectFiles(outputDirectory);
-const sizes = await Promise.all(files.map(async (file) => (await stat(file)).size));
+const sizes = await Promise.all(
+  files.map(async (file) => (await stat(file)).size),
+);
 const metadata = {
   event: "public-web.build.complete",
   pageCount: files.filter((file) => file.endsWith(".html")).length,

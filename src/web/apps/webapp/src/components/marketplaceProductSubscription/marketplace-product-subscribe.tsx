@@ -19,7 +19,13 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query marketplaceProductSubscribe_rootQuery($productId: String!) {
+  query marketplaceProductSubscribe_rootQuery($productId: String!, $organizationCustomDomain: String!) {
+    organization(customDomain: $organizationCustomDomain) {
+      spacesPublicBookingAvailability {
+        available
+        message
+      }
+    }
     product(id: $productId) {
       ...marketplaceProductSubscribeHero_product
     }
@@ -50,7 +56,11 @@ const MarketplaceProductSubscribe = ({ queryReference }: Props) => {
 
         {rootData.product ? <MarketplaceProductSubscribeHero productRelay={rootData.product} /> : null}
         <Box sx={{ mt: 3 }}>
-          <MarketplaceProductSubscribeForm rootDataRelay={rootData} />
+          <MarketplaceProductSubscribeForm
+            bookingAvailable={rootData.organization?.spacesPublicBookingAvailability.available ?? false}
+            bookingAvailabilityMessage={rootData.organization?.spacesPublicBookingAvailability.message ?? 'Bookings are currently unavailable for this workspace.'}
+            rootDataRelay={rootData}
+          />
         </Box>
       </Container>
     </Box>
@@ -61,22 +71,23 @@ const MemoMarketplaceProductSubscribe = memo(MarketplaceProductSubscribe);
 
 const MarketplaceProductSubscribeWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<marketplaceProductSubscribe_rootQuery>(RootQuery);
-  const { productId } = useKnownParams();
+  const { productId, organizationCustomDomain } = useKnownParams();
 
-  if (!productId) {
-    throw new Error('productId is required');
+  if (!productId || !organizationCustomDomain) {
+    throw new Error('productId and organizationCustomDomain are required');
   }
 
   useEffect(() => {
     loadQuery(
       {
         productId,
+        organizationCustomDomain,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, productId]);
+  }, [loadQuery, organizationCustomDomain, productId]);
 
   if (!queryReference) {
     return <Loading />;

@@ -72,7 +72,7 @@ message Admin_AddInput {
 enum OrganizationType {
   OrganizationType_Private     = 0;
   OrganizationType_Marketplace = 1;
-  OrganizationType_Individual  = 2;
+  OrganizationType_Host        = 2;
 }
 
 enum OrganizationBillingCycle {
@@ -137,6 +137,7 @@ message Offering {
   optional int32            purchasedLocationCapacity = 11;
   optional int32            purchasedTeamCapacity     = 12;
   optional int32            fixedPrice                = 13;
+  double                    hostCommissionPercentage  = 14;
 }
 
 message Admin_GetInput {

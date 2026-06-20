@@ -11,13 +11,14 @@ public class GetVersionShould
     [AutoFakeItEasyData]
     public async Task Log_information_for_get_version(
         [Frozen] IVersionService versionService,
-        [Frozen] ILogger<TeamCoreController> logger)
+        [Frozen] ILogger<TeamCoreController> logger,
+        CancellationToken cancellationToken)
     {
         A.CallTo(() => versionService.GetVersion()).Returns(new Version(1, 2, 3, 4));
 
         var sut = new TeamCoreController(versionService, logger);
 
-        await sut.GetVersion(CancellationToken.None);
+        await sut.GetVersion(cancellationToken);
 
         var logCalls = Fake.GetCalls(logger).Where(call => call.Method.Name == nameof(ILogger.Log)).ToList();
 

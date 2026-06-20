@@ -60,6 +60,15 @@ public interface IMarketplaceBookingOpeningHoursService
     /// <param name="cadence">The product pricing cadence to evaluate.</param>
     /// <returns>True if location opening hours window should be used, false otherwise.</returns>
     bool ShouldUseLocationOpeningHoursWindow(ProductPricingCadence cadence);
+
+    /// <summary>
+    ///     Resolves the effective daily opening-hours booking window for a specific resource.
+    ///     Resource-level available-hours overrides take precedence over the parent location.
+    /// </summary>
+    /// <param name="resource">The resource to evaluate.</param>
+    /// <param name="bookingDay">The day to book.</param>
+    /// <returns>The effective opening-hours window, or null when the resource/location is closed.</returns>
+    (DateTimeOffset From, DateTimeOffset Until)? ResolveDailyBookingWindow(Resource resource, DateOnly bookingDay);
 }
 
 /// <summary>
@@ -216,6 +225,9 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
             ProductPricingCadence.SixMonths or
             ProductPricingCadence.Yearly;
 
+    public (DateTimeOffset From, DateTimeOffset Until)? ResolveDailyBookingWindow(Resource resource, DateOnly bookingDay) =>
+        ResolveBookingWindow(resource, bookingDay);
+
     /// <summary>
     ///     Resolves the booking window for a location on a specific booking day.
     ///     Determines the available time window based on the location's opening hours and pricing cadence.
@@ -288,6 +300,18 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
 
         // Otherwise the booking falls back to the location opening hours.
         return ResolveBookingWindow(resource.Location, bookingDay, pricing);
+    }
+
+    private (DateTimeOffset From, DateTimeOffset Until)? ResolveBookingWindow(Resource resource, DateOnly bookingDay)
+    {
+        if (resource.IsAvailableHoursOverridden.HasValue && resource.IsAvailableHoursOverridden.Value && resource.AvailableHours is not null)
+        {
+            return ResolveOpeningHoursWindow(resource.AvailableHours, bookingDay);
+        }
+
+        ArgumentNullException.ThrowIfNull(resource.Location);
+
+        return ResolveOpeningHoursWindow(resource.Location.OpeningHours ?? OpeningHours.Default, bookingDay);
     }
 
     /// <summary>
@@ -370,7 +394,8 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
                 DayOfWeek.Friday => openingHours.WeekOpeningHours.Friday,
                 DayOfWeek.Saturday => openingHours.WeekOpeningHours.Saturday,
                 DayOfWeek.Sunday => openingHours.WeekOpeningHours.Sunday,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
 
     /// <summary>
@@ -389,6 +414,35 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
         {
             return (dayStart, ResolveFallbackUntil(dayStart, pricing.BookingCadence));
         }
+
+        if (openingHours.ClosedDates.Any(item => item.StartOfDay() == dayStart))
+        {
+            return null;
+        }
+
+        var openingHoursDetails = GetOpeningHoursDetails(openingHours, dayStart);
+        if (openingHoursDetails.Closed)
+        {
+            return null;
+        }
+
+        if (openingHoursDetails.OpenAllDay)
+        {
+            return (dayStart, dayEndExclusive);
+        }
+
+        ArgumentNullException.ThrowIfNull(openingHoursDetails.From);
+        ArgumentNullException.ThrowIfNull(openingHoursDetails.Until);
+
+        return (
+            bookingDay.ToDateTimeOffset(openingHoursDetails.From.Value.ToTimeSpan()),
+            bookingDay.ToDateTimeOffset(openingHoursDetails.Until.Value.ToTimeSpan()));
+    }
+
+    private static (DateTimeOffset From, DateTimeOffset Until)? ResolveOpeningHoursWindow(OpeningHours openingHours, DateOnly bookingDay)
+    {
+        var dayStart = new DateTimeOffset(bookingDay.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), TimeSpan.Zero);
+        var dayEndExclusive = dayStart.AddDays(1);
 
         if (openingHours.ClosedDates.Any(item => item.StartOfDay() == dayStart))
         {

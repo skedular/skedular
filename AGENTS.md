@@ -90,6 +90,15 @@ This file applies to the whole repository.
 - Repository methods may exist specifically to support integration-test assertions; that is preferable to leaking EF
   into tests.
 
+## Repository Persistence Boundary
+
+- Application services, activities, workflows, processors, and API resolvers must not access `DbContext`, `DbSet`,
+  change tracking, or Entity Framework query APIs directly.
+- All persistence queries and mutations belong in repository implementations, including bulk replacement and retry
+  tracking-reset operations.
+- Service-layer code may coordinate repository calls and construct domain/entity values, but it must not reach through
+  `IRepositoryFactory.DbContext`.
+
 ## Shared Xero Wiring
 
 - Reusable Xero configuration and Enterprise-level service registration live in
@@ -307,9 +316,26 @@ This file applies to the whole repository.
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
+at specs/035-weekly-day-selection/plan.md
 <!-- SPECKIT END -->
 
 ## Active Technologies
+
+- C# .NET 10 backend; `Api.Shared.Services` remains `netstandard2.0`; TypeScript 6.0.3, React 19.2.6, Next.js 16.2.6 App
+  Router; Astro public website + EF Core/PostgreSQL, HotChocolate/Fusion GraphQL, Kafka/protobuf Organization events,
+  Temporal offering renewal/payment workflows, Stripe payment methods/payment intents, Relay 21, `react-relay`, MUI 9,
+  `@skedular/ui`, `@skedular/shared`, Vitest, React Testing Library (030-spaces-free-trial)
+- Organization-owned PostgreSQL adds durable `SpacesTrialStartedAt` on Organization and nullable `SpacesBillingStartsAt`
+  on OrganizationOffering; Booking and Location retain trial/access metadata inside their existing replicated
+  Organization/Offering JSON state; no booking usage table or new customer-data store (030-spaces-free-trial)
+
+- C# .NET 10 backend; TypeScript 6.0.3, React 19.2.6, Next.js 16.2.6 App Router frontend + HotChocolate/Fusion GraphQL,
+  REST/OpenAPI definitions where needed, EF Core/PostgreSQL, Temporal workflows, Kafka/protobuf organization events if
+  subscription state changes need projection, Relay 21, `react-relay`, MUI 9, `@skedular/ui`, `@skedular/shared`,
+  existing Organization pricing catalog services, existing Booking private/recurring booking workflows (
+  028-skedular-spaces-pricing)
+- PostgreSQL via Organization-owned EF Core persistence for subscription/catalog state and Booking-owned EF Core
+  persistence for monthly booking-instance usage/quota records (028-skedular-spaces-pricing)
 
 - TypeScript 6.0.3, React 19.2.6, Next.js 16.2.6 App Router, MDX content + Nextra 4.6.1, `nextra-theme-docs`, React,
   Next.js, existing help app package scripts (021-help-webapps-docs)

@@ -1,8 +1,11 @@
+using Api.Shared.Services;
+using Booking.Shared.Logging;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
+using Microsoft.Extensions.Logging;
 using Temporalio.Activities;
 
 namespace Booking.Shared.Activities;
@@ -19,7 +22,8 @@ public class PrivateRecurringBookingIntegrations(
     IRecurringBookingScheduleService recurringBookingScheduleService,
     IPrivateBookingService privateBookingService,
     IEntityMapper entityMapper,
-    IRandomHelper randomHelper)
+    IRandomHelper randomHelper,
+    ILogger<PrivateRecurringBookingIntegrations> logger)
 {
     [Activity]
     public async Task<AdjustRequiredResourcesForPrivateRecurringBookingAsyncResponse> AdjustRequiredResourcesForPrivateRecurringBookingAsync(
@@ -94,13 +98,56 @@ public class PrivateRecurringBookingIntegrations(
         {
             booking.Id = randomHelper.Generate();
 
-            await privateBookingService.AddAsync(
-                booking,
-                recurringBooking.InvolvedCustomers.First(),
-                recurringBooking.InvolvedOrganizations.ToList(),
-                recurringBooking.InvolvedTeams.ToList(),
-                recurringBooking,
-                cancellationToken);
+            try
+            {
+                await privateBookingService.AddAsync(
+                    booking,
+                    recurringBooking.InvolvedCustomers.First(),
+                    recurringBooking.InvolvedOrganizations.ToList(),
+                    recurringBooking.InvolvedTeams.ToList(),
+                    recurringBooking,
+                    cancellationToken);
+
+                logger.LogInformation(
+                    "{EventId}: recurring Spaces booking instance allowed. RecurringBookingId: {RecurringBookingId}, BookingId: {BookingId}, From: {From}",
+                    SpacesPricingLogEvents.RecurringBookingInstanceAllowed,
+                    recurringBooking.Id,
+                    booking.Id,
+                    booking.From);
+            }
+            catch (SpacesBookingQuotaExceeded exception)
+            {
+                logger.LogInformation(
+                    exception,
+                    "{EventId}: recurring Spaces booking instance blocked by quota. RecurringBookingId: {RecurringBookingId}, BookingId: {BookingId}, From: {From}, CurrentUsage: {CurrentUsage}, QuotaLimit: {QuotaLimit}",
+                    SpacesPricingLogEvents.RecurringBookingInstanceBlocked,
+                    recurringBooking.Id,
+                    booking.Id,
+                    booking.From,
+                    exception.CurrentUsage,
+                    exception.QuotaLimit);
+            }
+            catch (SpacesAccessDenied exception)
+            {
+                logger.LogInformation(
+                    exception,
+                    "{EventId}: recurring Spaces booking instance suppressed by access policy. RecurringBookingId: {RecurringBookingId}, BookingId: {BookingId}, Status: {Status}, ReasonCode: {ReasonCode}",
+                    SpacesTrialLogEvents.RecurringCommitmentSuppressed,
+                    recurringBooking.Id,
+                    booking.Id,
+                    exception.Status,
+                    exception.ReasonCode);
+            }
+            catch (SpacesOfferingStateMissing exception)
+            {
+                logger.LogWarning(
+                    exception,
+                    "{EventId}: recurring Spaces booking instance blocked because offering state is missing. RecurringBookingId: {RecurringBookingId}, BookingId: {BookingId}, From: {From}",
+                    SpacesPricingLogEvents.RecurringBookingInstanceBlocked,
+                    recurringBooking.Id,
+                    booking.Id,
+                    booking.From);
+            }
         }
 
         // If recurrence has no future valid booking days, the workflow can terminate.

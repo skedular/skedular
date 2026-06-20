@@ -1,6 +1,6 @@
 locals {
-  custom_domains_all_environments = toset(["skedularmarketplacetrial", "assemble"])
-  custom_domains_production_only  = toset([])
+  custom_domains_all_environments = toset(["skedularmarketplacetrial"])
+  custom_domains_production_only  = toset(["wisecounselingcollective", "assemble"])
   custom_domains = (
     local.is_staging
     ? local.custom_domains_all_environments

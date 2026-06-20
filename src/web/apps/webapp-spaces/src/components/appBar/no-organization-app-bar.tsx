@@ -47,7 +47,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo, hideOrganizationSelecto
           familyName
           photoUrl
         }
-        myOrganizations(types: [MARKETPLACE, INDIVIDUAL]) {
+        myOrganizations(types: [MARKETPLACE]) {
           uniqueId
           customDomain
           logoUrl

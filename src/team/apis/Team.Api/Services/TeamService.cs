@@ -541,7 +541,8 @@ public class TeamService(
                     patchedTeam.FeatureImages = requestedTeam.FeatureImages;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(fieldsToUpdate), field, null);
+                    throw new ArgumentOutOfRangeException(nameof(fieldsToUpdate), field,
+                        $"Unexpected value for {nameof(fieldsToUpdate)}: {field}. Update enum mapping or caller input.");
             }
         }
     }

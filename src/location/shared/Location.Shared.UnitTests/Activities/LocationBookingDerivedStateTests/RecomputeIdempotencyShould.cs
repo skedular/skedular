@@ -1,16 +1,13 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services.Models;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Location.Shared.Activities;
-using Location.Shared.Database;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
-using Microsoft.EntityFrameworkCore;
 using Temporalio.Testing;
 using BookingProto = Api.Shared.Grpc.Skedular.Booking.Core.V1.Booking;
 using LocationEntity = Location.Shared.Database.Entities.Location;
@@ -22,14 +19,6 @@ namespace Location.Shared.UnitTests.Activities.LocationBookingDerivedStateTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class RecomputeIdempotencyShould
 {
-    private static LocationDbContext CreateInMemoryContext()
-    {
-        var options = new DbContextOptionsBuilder<LocationDbContext>()
-            .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
-            .Options;
-        return new TestLocationDbContext(options, new CustomDbContextOptions<LocationDbContext> { IsPooled = false });
-    }
-
     private static AsyncUnaryCall<T> CreateGrpcResponse<T>(T response) where T : class =>
         new(
             Task.FromResult(response),
@@ -44,6 +33,7 @@ public class RecomputeIdempotencyShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IResourceRepository resourceRepository,
+        [Frozen] ILocationBookingRecordingRepository locationBookingRecordingRepository,
         [Frozen] BookingConfiguration bookingConfiguration,
         [Frozen] CallInvoker callInvoker,
         [Frozen] IRandomHelper randomHelper,
@@ -63,14 +53,20 @@ public class RecomputeIdempotencyShould
             Id = LocationId, Name = "Idempotent Office", OrganizationId = "org-idempotent", Type = LocationTypeConstants.Private
         };
 
-        await using var dbContext = CreateInMemoryContext();
-
         var counter = 0;
+        var capturedRecordings = new List<IReadOnlyList<DailyBookingCountRecording>>();
         A.CallTo(() => randomHelper.Generate()).ReturnsLazily(() => $"id-{++counter}");
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(dbContext);
+        A.CallTo(() => repositoryFactory.LocationBookingRecordingRepository).Returns(locationBookingRecordingRepository);
+        A.CallTo(() => locationBookingRecordingRepository.ReplaceDailyRecordingsAsync(
+                LocationId,
+                A<IReadOnlyList<DailyBookingCountRecording>>._,
+                A<IReadOnlyList<DailyDeskBookingCountRecording>>._,
+                A<IReadOnlyList<DailyRoomBookingCountRecording>>._,
+                A<CancellationToken>._))
+            .Invokes(call => capturedRecordings.Add(call.GetArgument<IReadOnlyList<DailyBookingCountRecording>>(1)!.ToList()))
+            .Returns(Task.CompletedTask);
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(
@@ -97,7 +93,6 @@ public class RecomputeIdempotencyShould
 
         // Act – first invocation
         await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
-        var afterFirst = await dbContext.DailyBookingCountRecording.Include(r => r.Location).ToListAsync(TestContext.Current.CancellationToken);
 
         // Reset gRPC call counter to allow the second invocation to re-use the same mock
         A.CallTo(() => callInvoker.AsyncUnaryCall(
@@ -109,9 +104,11 @@ public class RecomputeIdempotencyShould
 
         // Act – second invocation with identical input
         await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
-        var afterSecond = await dbContext.DailyBookingCountRecording.Include(r => r.Location).ToListAsync(TestContext.Current.CancellationToken);
 
         // Assert – exactly 1 record per day after both invocations (no duplication)
+        capturedRecordings.Count.ShouldBe(2);
+        var afterFirst = capturedRecordings[0];
+        var afterSecond = capturedRecordings[1];
         afterFirst.Count.ShouldBe(1);
         afterSecond.Count.ShouldBe(1);
         afterSecond[0].Count.ShouldBe(afterFirst[0].Count);
@@ -124,6 +121,7 @@ public class RecomputeIdempotencyShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] ILocationRepository locationRepository,
         [Frozen] IResourceRepository resourceRepository,
+        [Frozen] ILocationBookingRecordingRepository locationBookingRecordingRepository,
         [Frozen] BookingConfiguration bookingConfiguration,
         [Frozen] CallInvoker callInvoker,
         [Frozen] IRandomHelper randomHelper,
@@ -150,14 +148,20 @@ public class RecomputeIdempotencyShould
             OrganizationTags = [new OrganizationTag { Id = "tag-desk", Type = OrganizationTagTypeConstants.ResourceDesk }]
         };
 
-        await using var dbContext = CreateInMemoryContext();
-
         var counter = 0;
+        IReadOnlyList<DailyDeskBookingCountRecording> deskRecordings = [];
         A.CallTo(() => randomHelper.Generate()).ReturnsLazily(() => $"id-{++counter}");
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(dbContext);
+        A.CallTo(() => repositoryFactory.LocationBookingRecordingRepository).Returns(locationBookingRecordingRepository);
+        A.CallTo(() => locationBookingRecordingRepository.ReplaceDailyRecordingsAsync(
+                LocationId,
+                A<IReadOnlyList<DailyBookingCountRecording>>._,
+                A<IReadOnlyList<DailyDeskBookingCountRecording>>._,
+                A<IReadOnlyList<DailyRoomBookingCountRecording>>._,
+                A<CancellationToken>._))
+            .Invokes(call => deskRecordings = call.GetArgument<IReadOnlyList<DailyDeskBookingCountRecording>>(2)!.ToList())
+            .Returns(Task.CompletedTask);
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(
@@ -198,8 +202,6 @@ public class RecomputeIdempotencyShould
         await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
 
         // Assert – desk booking count is 1, not 2
-        var deskRecordings = await dbContext.DailyDeskBookingCountRecording.Include(r => r.Location)
-            .ToListAsync(TestContext.Current.CancellationToken);
         deskRecordings.Count.ShouldBe(1);
         deskRecordings[0].Count.ShouldBe(1);
     }

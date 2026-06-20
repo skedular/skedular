@@ -72,6 +72,18 @@ const productFieldGroups: ReadonlyArray<[ProductPatchField, ReadonlyArray<keyof 
   ['PRICING_OPTIONS', ['pricingOptions']],
 ];
 
+const getComparableProductFieldValue = (productDetails: ProductDetails, field: keyof ProductDetails) => {
+  if (field === 'pricingOptions') {
+    return productDetails.pricingOptions.map(({ id, ...pricingOption }) => {
+      void id;
+
+      return pricingOption;
+    });
+  }
+
+  return productDetails[field];
+};
+
 const getChangedProductFields = (
   left: ProductDetails | null,
   right: ProductDetails,
@@ -81,13 +93,36 @@ const getChangedProductFields = (
   if (!left) return [];
   const changed: ProductPatchField[] = [];
   for (const [patchField, formFields] of productFieldGroups) {
-    if (formFields.some((f) => JSON.stringify(left[f]) !== JSON.stringify(right[f]))) {
+    if (formFields.some((f) => JSON.stringify(getComparableProductFieldValue(left, f)) !== JSON.stringify(getComparableProductFieldValue(right, f)))) {
       changed.push(patchField);
     }
   }
   if (JSON.stringify(leftFeatureImages) !== JSON.stringify(rightFeatureImages)) changed.push('FEATURE_IMAGES');
   return changed;
 };
+
+const getValidProductPatchFields = (
+  productDetailsSchema: ReturnType<typeof productSchema>,
+  fieldsToUpdate: ProductPatchField[],
+  productDetails: ProductDetails,
+): ProductPatchField[] =>
+  fieldsToUpdate.filter((patchField) => {
+    if (patchField === 'FEATURE_IMAGES') {
+      return true;
+    }
+
+    const formFields = productFieldGroups.find(([field]) => field === patchField)?.[1] ?? [];
+
+    try {
+      for (const formField of formFields) {
+        productDetailsSchema.validateSyncAt(formField, productDetails);
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
+  });
 
 const cancellationRefundRuleSchema = object({
   minutesBefore: string()
@@ -610,12 +645,11 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   const previousProductValues = useRef<ProductDetails | null>(initialProductValues);
   const previousFeatureImages = useRef<FileUploadResponse[]>(featureImages);
 
-  const handleProductDetailUpdateClick = (
-    fieldsToUpdate: ProductPatchField[],
-    { title, subTitle, includedFeatures, type, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails,
-  ) => {
+  const handleProductDetailUpdateClick = (fieldsToUpdate: ProductPatchField[], productDetails: ProductDetails) => {
+    const { title, subTitle, includedFeatures, type, currency, productTagIds, amenityIds, pricingOptions } = productDetails;
     const product = rootData.product;
-    if (!product || !productDetailsSchema.isValidSync({ title, subTitle, includedFeatures, type, currency, productTagIds, amenityIds, pricingOptions })) {
+    const validFieldsToUpdate = getValidProductPatchFields(productDetailsSchema, fieldsToUpdate, productDetails);
+    if (!product || validFieldsToUpdate.length === 0) {
       return;
     }
 
@@ -635,7 +669,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         input: {
           clientMutationId: uuid(),
           id: product.id,
-          fieldsToUpdate,
+          fieldsToUpdate: validFieldsToUpdate,
           listingMetadata: {
             about: '',
             title: title ?? '',

@@ -14,6 +14,7 @@ public interface IRepositoryFactory
     IAzureTenantRepository AzureTenantRepository { get; }
     IAzureTenantMemberRepository AzureTenantMemberRepository { get; }
     ICustomerRepository CustomerRepository { get; }
+    IDailyBookingCountRecordingRepository DailyBookingCountRecordingRepository { get; }
     IDailyMemberCountRecordingRepository DailyMemberCountRecordingRepository { get; }
     IIdentityRepository IdentityRepository { get; }
     IIndustryMainCategoryRepository IndustryMainCategoryRepository { get; }
@@ -49,6 +50,7 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
         AzureTenantRepository = new AzureTenantRepository(_dbContext, timeProvider);
         AzureTenantMemberRepository = new AzureTenantMemberRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
+        DailyBookingCountRecordingRepository = new DailyBookingCountRecordingRepository(_dbContext, timeProvider);
         DailyMemberCountRecordingRepository = new DailyMemberCountRecordingRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         IndustryMainCategoryRepository = new IndustryMainCategoryRepository(_dbContext, timeProvider);
@@ -79,6 +81,7 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
     public IAzureTenantRepository AzureTenantRepository { get; }
     public IAzureTenantMemberRepository AzureTenantMemberRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
+    public IDailyBookingCountRecordingRepository DailyBookingCountRecordingRepository { get; }
     public IDailyMemberCountRecordingRepository DailyMemberCountRecordingRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public IIndustryMainCategoryRepository IndustryMainCategoryRepository { get; }

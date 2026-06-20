@@ -24,7 +24,8 @@ public static class ResourceAvailabilityClassificationExtensions
                 ResourceAvailabilityClassification.Available => ResourceAvailabilityClassificationConstants.Available,
                 ResourceAvailabilityClassification.Unavailable => ResourceAvailabilityClassificationConstants.Unavailable,
                 ResourceAvailabilityClassification.Booked => ResourceAvailabilityClassificationConstants.Booked,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 
@@ -36,7 +37,8 @@ public static class ResourceAvailabilityClassificationExtensions
                 ResourceAvailabilityClassificationConstants.Available => ResourceAvailabilityClassification.Available,
                 ResourceAvailabilityClassificationConstants.Unavailable => ResourceAvailabilityClassification.Unavailable,
                 ResourceAvailabilityClassificationConstants.Booked => ResourceAvailabilityClassification.Booked,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             };
     }
 }

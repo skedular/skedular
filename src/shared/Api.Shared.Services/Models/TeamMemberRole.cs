@@ -24,7 +24,8 @@ public static class TeamMemberRoleExtensions
                 TeamMemberRoleConstants.Owner => TeamMemberRole.Owner,
                 TeamMemberRoleConstants.Administrator => TeamMemberRole.Administrator,
                 TeamMemberRoleConstants.Member => TeamMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -36,7 +37,8 @@ public static class TeamMemberRoleExtensions
                 TeamMemberRole.Owner => TeamMemberRoleConstants.Owner,
                 TeamMemberRole.Administrator => TeamMemberRoleConstants.Administrator,
                 TeamMemberRole.Member => TeamMemberRoleConstants.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
 
         public string ToTeamMemberRoleName() =>
@@ -45,7 +47,8 @@ public static class TeamMemberRoleExtensions
                 TeamMemberRole.Owner => "Owner",
                 TeamMemberRole.Administrator => "Administrator",
                 TeamMemberRole.Member => "Member",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
             };
     }
 
@@ -59,7 +62,8 @@ public static class TeamMemberRoleExtensions
                     TeamMemberRole.Owner => TeamMemberRoleConstants.Owner,
                     TeamMemberRole.Administrator => TeamMemberRoleConstants.Administrator,
                     TeamMemberRole.Member => TeamMemberRoleConstants.Member,
-                    _ => throw new ArgumentOutOfRangeException()
+                    _ => throw new ArgumentOutOfRangeException(nameof(src), src,
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
                 };
     }
 }

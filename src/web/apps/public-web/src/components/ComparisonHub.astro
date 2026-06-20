@@ -1,0 +1,45 @@
+---
+import { competitors, generateAllComparisonPageTargets } from "../data/comparison";
+
+const pageTargets = generateAllComparisonPageTargets();
+
+const popularComparisons = pageTargets.filter((pageTarget) =>
+  ["skedda", "officernd", "nexudus", "gable"].includes(pageTarget.competitorId)
+);
+---
+
+<section class="comparison-hub">
+  <div class="competitor-grid">
+    {pageTargets.map((pageTarget) => {
+      const competitor = competitors.find((c) => c.id === pageTarget.competitorId);
+      return (
+        <article class="competitor-card">
+          <h3>Skedular vs {competitor?.name ?? pageTarget.competitorId}</h3>
+          <p>{competitor?.summary ?? pageTarget.description}</p>
+          <a href={pageTarget.path} class="comparison-link">
+            View comparison →
+          </a>
+        </article>
+      );
+    })}
+  </div>
+
+  <section class="popular-comparisons" aria-labelledby="popular-comparisons-title">
+    <h2 id="popular-comparisons-title">Popular comparisons</h2>
+    <div class="popular-comparison-links">
+      {popularComparisons.map((pageTarget) => {
+        const competitor = competitors.find((c) => c.id === pageTarget.competitorId);
+        return (
+          <a href={pageTarget.path}>
+            Skedular vs {competitor?.name ?? pageTarget.competitorId}
+          </a>
+        );
+      })}
+    </div>
+  </section>
+
+  <p class="comparison-review-note">
+    Comparison pages are reviewed and updated as products evolve. Features, integrations, and positioning may change
+    over time, so we recommend reviewing the vendor documentation alongside these comparisons.
+  </p>
+</section>

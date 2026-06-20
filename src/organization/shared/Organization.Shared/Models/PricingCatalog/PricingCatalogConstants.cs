@@ -1,12 +1,11 @@
-using Api.Shared.Services.Models;
-
 namespace Organization.Shared.Models.PricingCatalog;
 
 public enum PricingCatalogProductOfferingCode
 {
     NotSet = 0,
     Teams = 1,
-    Spaces = 2
+    Spaces = 2,
+    Host = 3
 }
 
 public enum PricingCatalogVersionStatus
@@ -25,7 +24,10 @@ public enum PricingCatalogSubscriptionPlanCode
     Free = 1,
     PayAsYouGo = 2,
     EnterpriseCapacity = 3,
-    LegacyEarlyBird = 4
+    LegacyEarlyBird = 4,
+    Growth = 5,
+    Business = 6,
+    ContactUs = 7
 }
 
 public enum PricingCatalogCommercialModel
@@ -60,10 +62,8 @@ public enum OrganizationOfferingPlanStatus
 public static class PricingCatalogConstants
 {
     public const string CurrentTeamsCatalogVersion = CatalogVersionConstants.TeamsV1;
-    public const string SkedularPricingCurrency = CurrencyConstants.Usd;
-    public const int FreeActiveUserLimit = 10;
-    public const int FreeTeamLimit = 1;
-    public const int FreeLocationLimit = 1;
+    public const string CurrentSpacesCatalogVersion = CatalogVersionConstants.SpacesV1;
+    public const string CurrentHostCatalogVersion = CatalogVersionConstants.HostV1;
 }
 
 public static class PricingCatalogNameExtensions
@@ -75,8 +75,10 @@ public static class PricingCatalogNameExtensions
             {
                 PricingCatalogProductOfferingCode.Teams => "Teams",
                 PricingCatalogProductOfferingCode.Spaces => "Spaces",
+                PricingCatalogProductOfferingCode.Host => "Host",
                 PricingCatalogProductOfferingCode.NotSet => "Not set",
-                _ => throw new ArgumentOutOfRangeException(nameof(code), code, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(code), code,
+                    $"Unexpected value for {nameof(code)}: {code}. Update enum mapping or caller input.")
             };
     }
 
@@ -89,8 +91,12 @@ public static class PricingCatalogNameExtensions
                 PricingCatalogSubscriptionPlanCode.PayAsYouGo => "Pay As You Go",
                 PricingCatalogSubscriptionPlanCode.EnterpriseCapacity => "Enterprise Capacity",
                 PricingCatalogSubscriptionPlanCode.LegacyEarlyBird => "Early Bird",
+                PricingCatalogSubscriptionPlanCode.Growth => "Growth",
+                PricingCatalogSubscriptionPlanCode.Business => "Business",
+                PricingCatalogSubscriptionPlanCode.ContactUs => "Contact Us",
                 PricingCatalogSubscriptionPlanCode.NotSet => "Not set",
-                _ => throw new ArgumentOutOfRangeException(nameof(code), code, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(code), code,
+                    $"Unexpected value for {nameof(code)}: {code}. Update enum mapping or caller input.")
             };
     }
 
@@ -106,7 +112,8 @@ public static class PricingCatalogNameExtensions
                 PricingCatalogPlanAvailability.Unavailable => "Unavailable",
                 PricingCatalogPlanAvailability.ExistingCustomersOnly => "Existing customers only",
                 PricingCatalogPlanAvailability.NotSet => "Not set",
-                _ => throw new ArgumentOutOfRangeException(nameof(availability), availability, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(availability), availability,
+                    $"Unexpected value for {nameof(availability)}: {availability}. Update enum mapping or caller input.")
             };
     }
 
@@ -122,7 +129,8 @@ public static class PricingCatalogNameExtensions
                 OrganizationOfferingPlanStatus.Expired => "Expired",
                 OrganizationOfferingPlanStatus.Legacy => "Legacy",
                 OrganizationOfferingPlanStatus.NotSet => "Not set",
-                _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(status), status,
+                    $"Unexpected value for {nameof(status)}: {status}. Update enum mapping or caller input.")
             };
     }
 }

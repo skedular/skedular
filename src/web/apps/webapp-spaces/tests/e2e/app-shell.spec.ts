@@ -19,6 +19,9 @@ test.describe('webapp-spaces core UI flows', () => {
     await page.goto('/');
 
     await expectAppShell(page, 'webapp-spaces', 'spaces-entry');
+    await expect(page.getByRole('heading', { name: 'Welcome to Skedular Spaces' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Create account' })).toHaveAttribute('href', '/signup');
+    await expect(page.getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', '/signin');
     await captureStepScreenshot(page, testInfo, 'webapp-spaces', 'login-flow', 'entry-shell');
   });
 });

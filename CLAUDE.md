@@ -1,6 +1,9 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
+
+Current feature: 032-unified-host-listing (Unified Host Listing Experience)
+Plan: specs/032-unified-host-listing/plan.md
 <!-- SPECKIT END -->
 
 ## Active Technologies
@@ -8,6 +11,7 @@ shell commands, and other important information, read the current plan
 - PostgreSQL via EF Core — no new migration required for the query path; the existing `DailyResourceAvailabilitySnapshot` table (from 006) supports analytics but the dashboard queries live booking data at request time via gRPC (007-resource-availability-dashboard)
 
 ## Recent Changes
+- 032-unified-host-listing: Plan created for unified Host Location/Product experience (Phase 1 complete)
 - 007-resource-availability-dashboard: Added C# .NET 10 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend)
 
 ## graphify

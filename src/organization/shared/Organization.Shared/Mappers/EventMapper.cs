@@ -62,11 +62,14 @@ public class EventMapper : IEventMapper
             CurrentActiveUserCount = activeCustomerIds.Length.ToString(CultureInfo.InvariantCulture),
             IsInteractionAllowed = entitlementDecision.IsAllowed,
             EntitlementReasonCode = entitlementDecision.ReasonCode.ToString(),
+            HostCommissionPercentage = decimal.ToDouble(organizationOffering.HostCommissionPercentage),
+            SpacesProductEnabled = src.Type == OrganizationType.Marketplace && IsSpacesOffering(organizationOffering.Code),
             Currency = organizationOffering.Currency switch
             {
                 Currency.Nzd => Api.Shared.Clients.Events.Skedular.Organization.V1.Currency.Nzd,
                 Currency.Usd => Api.Shared.Clients.Events.Skedular.Organization.V1.Currency.Usd,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             }
         };
         if (organizationOffering.UnitPrice.HasValue)
@@ -94,6 +97,22 @@ public class EventMapper : IEventMapper
             eventOffering.PurchasedTeamCapacity = organizationOffering.PurchasedTeamCapacity.Value;
         }
 
+        var spacesTrialStartedAt = src.SpacesTrialStartedAt ??
+                                   (src.Type == OrganizationType.Marketplace &&
+                                    organizationOffering.Code == OfferingCode.SpacesFreeTierV1
+                                       ? src.CreatedAt
+                                       : null);
+        if (spacesTrialStartedAt.HasValue)
+        {
+            eventOffering.SpacesTrialStartedAt = spacesTrialStartedAt.Value.ToTimestamp();
+            eventOffering.SpacesTrialEndsAt = spacesTrialStartedAt.Value.AddDays(14).ToTimestamp();
+        }
+
+        if (organizationOffering.SpacesBillingStartsAt.HasValue)
+        {
+            eventOffering.SpacesNextBillingAt = organizationOffering.SpacesBillingStartsAt.Value.ToTimestamp();
+        }
+
         var organization = new Api.Shared.Clients.Events.Skedular.Organization.V1.Organization
         {
             Id = src.Id,
@@ -108,15 +127,17 @@ public class EventMapper : IEventMapper
             {
                 OrganizationType.Private => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType.Private,
                 OrganizationType.Marketplace => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType.Marketplace,
-                OrganizationType.Individual => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType.Individual,
-                _ => throw new ArgumentOutOfRangeException()
+                OrganizationType.Host => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType.Host,
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             BillingCycle = src.BillingCycle switch
             {
                 OrganizationBillingCycle.Weekly => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle.Weekly,
                 OrganizationBillingCycle.Fortnightly => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle.Fortnightly,
                 OrganizationBillingCycle.Monthly => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle.Monthly,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
@@ -151,13 +172,15 @@ public class EventMapper : IEventMapper
                 OrganizationMemberRole.Owner => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole.Owner,
                 OrganizationMemberRole.Administrator => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             },
             Status = item.Status switch
             {
                 OrganizationMemberStatus.Active => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(null,
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
             }
         }));
 
@@ -165,6 +188,13 @@ public class EventMapper : IEventMapper
 
         return organization;
     }
+
+    private static bool IsSpacesOffering(OfferingCode offeringCode) =>
+        offeringCode is OfferingCode.EarlyBirdV1 or
+            OfferingCode.SpacesFreeTierV1 or
+            OfferingCode.SpacesGrowthV1 or
+            OfferingCode.SpacesBusinessV1 or
+            OfferingCode.SpacesContactUsV1;
 
     private static Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationSsoSettings? MapTo(OrganizationSsoSettings? src) =>
         src is null

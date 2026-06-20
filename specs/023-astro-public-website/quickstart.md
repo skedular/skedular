@@ -160,7 +160,7 @@ Validated on 2026-06-04:
 - `PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up pnpm --dir src/web/apps/public-web build` passed and emitted `{"event":"public-web.build.complete","pageCount":1,"outputBytes":16983}`.
 - `PUBLIC_SKEDULAR_SIGNUP_URL=https://app.example.test/sign-up pnpm --dir src/web/apps/public-web test` passed 4 tests, including structured build metadata, missing CTA configuration failure, configured CTA links, semantic landmarks, and critical axe violations.
 - `pnpm --dir src/web/apps/public-web lint` passed.
-- Production preview served the static page successfully at `http://localhost:15006/`.
+- Production preview served the static page successfully at `http://localhost:15008/`.
 - Astro dev-server hot reload was verified by changing home-page copy, observing the updated browser DOM without restarting the process, and reverting the temporary change.
 - Browser review confirmed one `h1`, semantic header/main/footer landmarks, useful content without client JavaScript, descriptive CTA links, and no horizontal overflow at a 375px client width.
 - `pnpm --dir src/web check:workspace-version-sync` passed. The existing version-sync tool reports clear failures when shared dependency versions or required lockfile versions diverge.

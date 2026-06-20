@@ -149,7 +149,8 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
                     nameof(JoinInvitation.Status),
                     query => query.Status,
                     orderField.Direction),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(orderField.Field), orderField.Field,
+                    $"Unexpected value for {nameof(orderField.Field)}: {orderField.Field}. Update enum mapping or caller input.")
             })
             .ToList();
     }

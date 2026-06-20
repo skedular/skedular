@@ -83,7 +83,8 @@ public class CustomerAdminGrpcService(
                     {
                         IdentityPatchField.Email => CustomerIdentityPatchField.Email,
                         IdentityPatchField.EmailVerified => CustomerIdentityPatchField.EmailVerified,
-                        _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field, null)
+                        _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
+                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.")
                     }).ToHashSet()),
                 context.CancellationToken));
     }

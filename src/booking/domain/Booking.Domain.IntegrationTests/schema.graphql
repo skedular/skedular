@@ -13,10 +13,17 @@ type Query {
   marketplaceRefunds(organizationCustomDomain: String!, statuses: [String!]): [MarketplaceRefundDetails!]!
     @cost(weight: "10")
   marketplaceRefundStatuses: [MarketplaceRefundStatusDetails!]!
+  marketplaceBookingFailures: [MarketplaceBookingFailureDetails!]!
+    @cost(weight: "10")
   bookingCategories: [BookingCategoryDetails!]!
   marketplaceBookingCategories: [BookingCategoryDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
+  bookingSpacesQuotaStatus(organizationId: String!): BookingSpacesQuotaStatusDetails!
+    @cost(weight: "10")
+  spacesPublicBookingAvailability(organizationId: String!): SpacesPublicBookingAvailabilityDetails!
+    @cost(weight: "10")
   bookingById(id: ID!): BookingDetails @lookup @internal @cost(weight: "10")
+  organizationById(id: ID!): OrganizationDetails @lookup @internal
   bookings(
     after: String
     first: Int
@@ -153,6 +160,11 @@ type Booking_LocationDetails {
   name: String!
 }
 
+type BookingAvailabilityErrorDetails {
+  message: String!
+  unavailableResourceIds: [String!]!
+}
+
 type BookingCategoryDetails {
   category: BookingCategory!
   name: String!
@@ -175,6 +187,7 @@ type BookingDetails @key(fields: "id") {
   deletedByCustomer: CustomerDetails
   involvedOrganizations: [OrganizationDetails!]!
   involvedTeams: [TeamDetails!]!
+  failure: MarketplaceBookingFailureDetails @cost(weight: "10")
   arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   from: DateTime!
   until: DateTime!
@@ -201,7 +214,11 @@ type BookingFrequencyDetails {
 
 type BookingPayload {
   clientMutationId: String
-  booking: BookingDetails!
+  booking: BookingDetails
+  quotaError: BookingSpacesQuotaErrorDetails
+  accessError: SpacesAccessErrorDetails
+  availabilityError: BookingAvailabilityErrorDetails
+  failure: MarketplaceBookingFailureDetails
 }
 
 type BookingRecurrenceEndTypeDetails {
@@ -213,6 +230,34 @@ type BookingResourceDetails {
   customers: [CustomerDetails!]!
   resource: ResourceDetails!
   location: Booking_LocationDetails
+}
+
+type BookingSpacesQuotaErrorDetails {
+  errorCode: String!
+  reasonCode: SpacesQuotaReasonCodeDetails
+  currentUsage: Int!
+  quotaLimit: Int!
+  attemptedCurrentPeriodCount: Int!
+  excludedOutOfPeriodCount: Int!
+  totalAttemptedInstanceCount: Int!
+  remainingQuota: Int!
+  upgradePlans: [UpgradePlanDetails!]!
+}
+
+type BookingSpacesQuotaStatusDetails {
+  organizationId: String!
+  currentPeriodStartUtc: DateTime!
+  currentPeriodEndUtc: DateTime!
+  planCode: Int
+  quotaLimit: Int
+  currentUsage: Int!
+  attemptedCurrentPeriodCount: Int!
+  excludedOutOfPeriodCount: Int!
+  totalAttemptedInstanceCount: Int!
+  remainingQuota: Int
+  quotaExceeded: Boolean!
+  reasonCode: SpacesQuotaReasonCodeDetails
+  upgradePlans: [UpgradePlanDetails!]!
 }
 
 type BookingWindowDetails {
@@ -270,6 +315,7 @@ type MarketplaceBookingDetails {
   paidByOrganization: OrganizationDetails
   productVersion: ProductVersionDetails!
   refund: MarketplaceRefundDetails @cost(weight: "10")
+  failure: MarketplaceBookingFailureDetails @cost(weight: "10")
   quantity: Int!
   productPricing: ProductPricing!
   paymentMethod: PaymentMethodTypeDetails!
@@ -280,6 +326,10 @@ type MarketplaceBookingDetails {
   taxRatePercentage: Decimal
   taxRatePercentageToDisplay: String!
   totalAmount: Decimal
+  hostCommissionRatePercentage: Decimal
+  hostCommissionAmount: Decimal
+  hostPayoutAmount: Decimal
+  hostGrossProceedsAmount: Decimal
   totalAmountToDisplay: String!
   currency: CurrencyDetails
   currencyToDisplay: String!
@@ -292,6 +342,21 @@ type MarketplaceBookingDetails {
   paymentExpiry: DateTime!
   paymentStatus: PaymentStatusDetails!
   id: ID!
+}
+
+type MarketplaceBookingFailureChoiceDetails {
+  type: String!
+  name: String!
+}
+
+type MarketplaceBookingFailureDetails {
+  id: String!
+  category: MarketplaceBookingFailureChoiceDetails!
+  scope: MarketplaceBookingFailureChoiceDetails!
+  finalizedAt: DateTime!
+  requestedFrom: DateTime
+  requestedUntil: DateTime
+  customerAction: MarketplaceBookingFailureChoiceDetails!
 }
 
 type MarketplaceBookingPaymentStatusDetails {
@@ -312,6 +377,7 @@ type MarketplaceBookingSubscriptionDetails @key(fields: "id") {
   involvedOrganizations: [OrganizationDetails!]!
   involvedTeams: [TeamDetails!]!
   refund: MarketplaceRefundDetails @cost(weight: "10")
+  failure: MarketplaceBookingFailureDetails @cost(weight: "10")
   arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   startedAt: DateTime!
   cancelledAt: DateTime
@@ -319,6 +385,7 @@ type MarketplaceBookingSubscriptionDetails @key(fields: "id") {
   status: MarketplaceBookingSubscriptionStatusDetails!
   autoRenew: Boolean!
   cancelAtPeriodEnd: Boolean!
+  weeklySelectedDays: [DayOfWeek!]!
   marketplaceBooking: MarketplaceBookingDetails!
   recurringBookings: [RecurringBookingDetails!]!
   id: ID!
@@ -331,7 +398,8 @@ type MarketplaceBookingSubscriptionEdge {
 
 type MarketplaceBookingSubscriptionPayload {
   clientMutationId: String
-  marketplaceBookingSubscription: MarketplaceBookingSubscriptionDetails!
+  marketplaceBookingSubscription: MarketplaceBookingSubscriptionDetails
+  accessError: SpacesAccessErrorDetails
 }
 
 type MarketplaceBookingSubscriptionStatusDetails {
@@ -358,6 +426,11 @@ type MarketplaceRefundDetails {
   externalRefundNumber: String
   lastProcessedAt: DateTime
   lastError: String
+  paymentProvider: String
+  externalPaymentRefundId: String
+  paymentRefundStatus: String
+  paymentRefundLastProcessedAt: DateTime
+  paymentRefundLastError: String
   canProcessInXero: Boolean!
   events: [MarketplaceRefundEventDetails!]!
   requestedByCustomerId: String
@@ -434,6 +507,8 @@ type OrganizationBookingPermissions {
 }
 
 type OrganizationDetails @key(fields: "id") @shareable {
+  spacesPublicBookingAvailability: SpacesPublicBookingAvailabilityDetails!
+    @cost(weight: "10")
   customDomain: String
   id: ID!
 }
@@ -480,6 +555,8 @@ type ProductPricing @shareable {
   numberOfResourcesToBook: Int!
   cancellationPolicyType: ProductPricingCancellationPolicyType!
   cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
+  availableDays: [DayOfWeek!]
+  requiredDaysPerWeek: Int
 }
 
 type ProductPricingCancellationRefundRule @shareable {
@@ -498,6 +575,7 @@ type RecurringBookingDetails @key(fields: "id") {
   deletedByCustomer: CustomerDetails
   involvedOrganizations: [OrganizationDetails!]!
   involvedTeams: [TeamDetails!]!
+  failure: MarketplaceBookingFailureDetails @cost(weight: "10")
   from: DateTime!
   until: DateTime!
   category: BookingCategoryDetails!
@@ -524,7 +602,8 @@ type RecurringBookingEdge {
 
 type RecurringBookingPayload {
   clientMutationId: String
-  recurringBooking: RecurringBookingDetails!
+  recurringBooking: RecurringBookingDetails
+  accessError: SpacesAccessErrorDetails
 }
 
 type ResourceAvailabilityClassificationDetails {
@@ -570,6 +649,24 @@ type ResourceDetails @key(fields: "id") @shareable {
   id: ID!
 }
 
+type SpacesAccessErrorDetails {
+  errorCode: String!
+  status: SpacesSubscriptionStatus!
+  reasonCode: SpacesAccessReasonCode!
+  upgradeRequired: Boolean!
+  message: String!
+}
+
+type SpacesPublicBookingAvailabilityDetails {
+  available: Boolean!
+  message: String!
+}
+
+type SpacesQuotaReasonCodeDetails {
+  name: String!
+  type: SpacesQuotaReasonCode!
+}
+
 type TeamBookingPermissions {
   canAddBooking: Boolean!
   canUpdateBooking: Boolean!
@@ -578,6 +675,13 @@ type TeamBookingPermissions {
 
 type TeamDetails @key(fields: "id") {
   id: ID!
+}
+
+type UpgradePlanDetails {
+  planCode: Int!
+  name: String!
+  availability: String!
+  priceDescription: String
 }
 
 type Version @shareable {
@@ -623,6 +727,7 @@ input AddMarketplaceBookingSubscriptionInput {
   quantity: Int!
   productVersionId: String!
   pricingId: String!
+  weeklySelectedDays: [DayOfWeek!]
   checkoutReturnUrl: String
 }
 
@@ -635,6 +740,7 @@ input AddPrivateBookingInput {
   teamIds: [String!]
   from: DateTime!
   until: DateTime!
+  fullOpeningHoursDate: LocalDate
   notes: String
   category: BookingCategory
   resourceIds: [String!]
@@ -1016,6 +1122,7 @@ enum OrganizationTagType {
   RESOURCE_ROOM
   RESOURCE_PARKING
   RESOURCE_OTHERS
+  RESOURCE_ENTIRE_LOCATION
   LOCATION_SPACE_TYPE_CAR_PARK_SPACE
   LOCATION_SPACE_TYPE_EVENT_SPACE
   LOCATION_SPACE_TYPE_MEETING_SPACE
@@ -1281,6 +1388,43 @@ enum ScalarSerializationType {
   FLOAT
   OBJECT
   LIST
+}
+
+enum SpacesAccessReasonCode {
+  NOT_SET
+  ALLOWED_TRIAL
+  ALLOWED_PAID
+  ALLOWED_COMPLIMENTARY_BRIDGE
+  ALLOWED_PROTECTIVE_ACTION
+  ALLOWED_READ_OR_RECOVERY
+  TRIAL_EXPIRED
+  PAID_INACTIVE
+  MISSING_TRIAL_STATE
+  MISSING_OFFERING_STATE
+  ACTION_NOT_ALLOWED
+}
+
+enum SpacesQuotaReasonCode {
+  NOT_SET
+  WITHIN_QUOTA
+  FREE_TIER_LIMIT_EXCEEDED
+  PAID_TIER_LIMIT_EXCEEDED
+  CUSTOM_CAPACITY_EXCEEDED
+  MISSING_OFFERING_STATE
+  OUT_OF_PERIOD_EXCLUDED
+  TRIAL_EXPIRED
+}
+
+enum SpacesSubscriptionStatus {
+  NOT_SET
+  TRIAL_ACTIVE
+  TRIAL_EXPIRING
+  TRIAL_EXPIRED
+  COMPLIMENTARY_BRIDGE
+  PAID_ACTIVE
+  PAID_INACTIVE
+  LEGACY_ACTIVE
+  MISSING_STATE
 }
 
 "The `DateTime` scalar type represents a date and time with time zone offset information."

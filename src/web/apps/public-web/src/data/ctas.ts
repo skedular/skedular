@@ -26,6 +26,30 @@ export const ctas = [
     audience: "buyers and operators",
   },
   {
+    id: "try-teams",
+    label: "Try Teams",
+    purpose: "sign-up",
+    destinationType: "public-url",
+    destinationRef: "PUBLIC_SKEDULAR_TEAMS_APP_URL",
+    audience: "organization buyers",
+  },
+  {
+    id: "try-spaces",
+    label: "Try Spaces",
+    purpose: "sign-up",
+    destinationType: "public-url",
+    destinationRef: "PUBLIC_SKEDULAR_SPACES_APP_URL",
+    audience: "workspace operators",
+  },
+  {
+    id: "try-host",
+    label: "Try Host",
+    purpose: "sign-up",
+    destinationType: "public-url",
+    destinationRef: "PUBLIC_SKEDULAR_HOST_APP_URL",
+    audience: "independent hosts",
+  },
+  {
     id: "login",
     label: "Login",
     purpose: "login",
@@ -80,6 +104,14 @@ export const ctas = [
     destinationType: "internal-route",
     destinationRef: "/spaces",
     audience: "workspace operators",
+  },
+  {
+    id: "learn-host",
+    label: "Learn about Host",
+    purpose: "learn-more",
+    destinationType: "internal-route",
+    destinationRef: "/host",
+    audience: "independent hosts",
   },
 ] satisfies Cta[];
 

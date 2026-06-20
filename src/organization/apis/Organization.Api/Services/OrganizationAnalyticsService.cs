@@ -1,5 +1,4 @@
 using Api.Shared.Services;
-using Microsoft.EntityFrameworkCore;
 using Organization.Api.GraphQL.Analytics;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Repositories;
@@ -37,12 +36,8 @@ public class OrganizationAnalyticsService(
             throw new UnauthorizedAccessException();
         }
 
-        var dailyBookingCounts = await repositoryFactory.DbContext.DailyBookingCountRecording
-            .Where(item =>
-                !item.DeletedAt.HasValue && item.Organization.Id == organization.Id && item.Date >= from && item.Date <= until)
-            .OrderBy(item => item.Date)
-            .AsNoTrackingWithIdentityResolution()
-            .ToListAsync(cancellationToken);
+        var dailyBookingCounts = await repositoryFactory.DailyBookingCountRecordingRepository
+            .GetByOrganizationIdAndDateRangeAsync(organization.Id, from, until, cancellationToken);
 
         var dailyMemberCounts = await repositoryFactory.DailyMemberCountRecordingRepository
             .GetByOrganizationIdAndDateRangeAsync(organization.Id, from, until, cancellationToken);

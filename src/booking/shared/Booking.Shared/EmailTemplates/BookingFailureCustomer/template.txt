@@ -1,0 +1,12 @@
+SKEDULAR
+Booking update
+
+Hello {{RECIPIENT_NAME}},
+
+{{SUMMARY}}
+
+Next step
+You can review the booking in Skedular and {{CUSTOMER_ACTION}}.
+
+---
+Powered by Skedular

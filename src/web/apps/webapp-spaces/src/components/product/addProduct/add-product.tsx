@@ -4,6 +4,7 @@ import { listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import ProductEditorForm from '@/components/product/product-editor-form';
+import { toRequiredDaysPerWeekInput } from '@/components/product/product-editor-shared';
 
 import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence, ProductType } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
@@ -78,6 +79,8 @@ type PricingOptionForm = {
   maxAllowedResourcesLockTimePaidViaBankTransfer: string;
   billingMode: string;
   acceptedPaymentMethods: string[];
+  availableDays: string[];
+  requiredDaysPerWeek: string;
 };
 
 type CancellationRefundRuleForm = {
@@ -113,6 +116,8 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   maxAllowedResourcesLockTimePaidViaBankTransfer: (defaultMaxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
   billingMode: 'NOT_SET',
   acceptedPaymentMethods: [],
+  availableDays: [],
+  requiredDaysPerWeek: '',
 });
 
 const isSubscriptionCadence = (cadence?: string | null) =>
@@ -290,7 +295,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
 
           const seenCombinations = new Set<string>();
           for (const pricingOption of value as PricingOptionForm[]) {
-            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}`;
+            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}|${pricingOption.cadence === 'WEEKLY' ? pricingOption.requiredDaysPerWeek : ''}`;
             if (seenCombinations.has(combination)) {
               return false;
             }
@@ -444,6 +449,8 @@ const AddProduct = (props: Props) => {
             purchaseCadence: pricingOption.cadence as ProductPricingCadence,
             bookingCadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
+            availableDays: pricingOption.availableDays,
+            requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
             supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
             numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
             minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
@@ -507,6 +514,8 @@ const AddProduct = (props: Props) => {
               purchaseCadence: pricingOption.cadence as ProductPricingCadence,
               bookingCadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
+              availableDays: pricingOption.availableDays,
+              requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
               supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
               numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
               minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,

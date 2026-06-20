@@ -101,7 +101,8 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
             BookingFrequency.Daily => IsDailyRecurringOnDate(recurrenceStart, date, interval),
             BookingFrequency.Weekly => IsWeeklyRecurringOnDate(recurringBooking, recurrenceStart, date, interval),
             BookingFrequency.Monthly => IsMonthlyRecurringOnDate(recurringBooking, recurrenceStart, date, interval),
-            _ => throw new ArgumentOutOfRangeException()
+            _ => throw new ArgumentOutOfRangeException(null,
+                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
         };
     }
 
