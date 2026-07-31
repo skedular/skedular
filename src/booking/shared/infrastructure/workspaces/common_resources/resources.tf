@@ -35,6 +35,21 @@ resource "stripe_webhook_endpoint" "webhook_connect_account" {
   enabled_events = [
     "checkout.session.completed",
     "checkout.session.expired",
+    "checkout.session.async_payment_succeeded",
+    "checkout.session.async_payment_failed",
+    "payment_intent.succeeded",
+    "payment_intent.payment_failed",
+    "payment_intent.canceled",
+    "charge.succeeded",
+    "charge.failed",
+    "payout.paid",
+    "payout.reconciliation_completed",
+    "payout.failed",
+    "payout.canceled",
+    "payout.updated",
+    "refund.created",
+    "refund.updated",
+    "refund.failed",
   ]
 }
 
