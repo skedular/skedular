@@ -158,6 +158,7 @@ jobs:
                       "booking-shared": "src/booking/shared/",
                       "customer-shared": "src/customer/shared/",
                       "location-shared": "src/location/shared/",
+                      "marketplace-shared": "src/marketplace/shared/",
                       "msteams-shared": "src/msteams/shared/",
                       "organization-shared": "src/organization/shared/",
                       "slack-shared": "src/slack/shared/",
@@ -280,16 +281,7 @@ jobs:
                   }] if docs_selected and not docs_only else []
 
                   azure_entra_enabled = False
-                  disabled_infra_targets = {
-                      "booking-shared",
-                      "customer-shared",
-                      "location-shared",
-                      "msteams-shared",
-                      "organization-shared",
-                      "slack-shared",
-                      "team-shared",
-                      "web-shared",
-                  }
+                  disabled_infra_targets = set()
                   infra_targets = []
                   infra_validation_targets = []
 
@@ -341,7 +333,7 @@ jobs:
                       infra_targets = []
                       infra_validation_targets = []
 
-                  cd_target_names = set(web_apps.keys()) | {"docs-event-catalog", "shared"}
+                  cd_target_names = set(web_apps.keys()) | {"docs-event-catalog", "shared"} | set(domain_infra_paths.keys())
                   if manual_full_run:
                       staging_cd = [target for target in infra_targets if target["environment"] == "staging" and target["enabled"] == "true"]
                       production_cd = [target for target in infra_targets if target["environment"] == "production" and target["enabled"] == "true"]
