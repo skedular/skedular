@@ -1,6 +1,7 @@
 ---
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { resourceArticles } from "../../data/current-public-content";
+import { getPublicDestinationUrl } from "../../data/public-destination-urls";
 
 export function getStaticPaths() {
   return resourceArticles.map((article) => ({
@@ -35,26 +36,60 @@ const formatPublishedDate = (date: string) =>
     <div class="container">
       <p class="eyebrow">{article.topicTags.join(" / ")}</p>
       <h1>{article.title}</h1>
-      <time class="article-meta" datetime={article.publishedDate}>{formatPublishedDate(article.publishedDate)}</time>
+      {article.author && (
+        <p class="article-meta">By {article.author.name} · Published {formatPublishedDate(article.publishedDate)}{article.lastModified && article.lastModified !== article.publishedDate && ` · Updated ${formatPublishedDate(article.lastModified)}`}</p>
+      )}
+      {article.featureImage && <img class="article-feature-image" src={article.featureImage} alt={article.featureImageAlt ?? article.title} width="1200" height="630" loading="eager" />}
       <p class="article-summary">{article.summary}</p>
       {article.body.map((paragraph: string) => <p set:html={paragraph} />)}
       {
-        article.sections?.map((section: { heading: string; body: string[]; items?: string[] }) => (
+        article.sections?.map((section: { heading: string; body: string[]; items?: string[]; listType?: "ul" | "ol" }) => (
           <section class="article-section">
             <h2>{section.heading}</h2>
-            {section.body.map((paragraph: string) => (
+            {section.body.map((paragraph: string) => paragraph.startsWith("<table>") ? (
+              <div class="table-scroll" tabindex="0" aria-label="Refund lifecycle table" set:html={paragraph} />
+            ) : paragraph.startsWith("<strong>") ? (
+              <h3 set:html={paragraph} />
+            ) : (
               <p set:html={paragraph} />
             ))}
-            {section.items && (
+            {section.items && (section.listType === "ol" ? (
+              <ol>
+                {section.items.map((item: string) => (
+                  <li set:html={item} />
+                ))}
+              </ol>
+            ) : (
               <ul>
                 {section.items.map((item: string) => (
                   <li set:html={item} />
                 ))}
               </ul>
-            )}
+            ))}
           </section>
         ))
       }
+      {article.faq && (
+        <section class="article-section" aria-labelledby="article-faq-title">
+          <h2 id="article-faq-title">Frequently asked questions</h2>
+          <p>These are the questions customers and operators are most likely to ask when a booking or refund does not follow the usual path.</p>
+          {article.faq.map((item: { question: string; answer: string }) => (
+            <details class="article-faq-item">
+              <summary>{item.question}</summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </section>
+      )}
+      {article.cta && (
+        <section class="article-cta" aria-labelledby="article-cta-title">
+          <h2 id="article-cta-title">{article.cta.heading}</h2>
+          <p>{article.cta.body}</p>
+          <div class="article-cta-links">
+            {article.cta.links.map((link: { label: string; href: string; primary?: boolean }) => <a class:list={{ button: link.primary, "text-link": !link.primary }} href={link.href === "demo" ? getPublicDestinationUrl("PUBLIC_SKEDULAR_DEMO_URL") : link.href}>{link.label}</a>)}
+          </div>
+        </section>
+      )}
     </div>
   </article>
 </SiteLayout>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Booking failure and refund lifecycle</title>
+  <desc id="desc">A diagram showing a booking request moving through availability allocation to a successful, partial, or failed result, followed by payment processing, refund processing, and completion or reconciliation.</desc>
+  <rect width="1200" height="630" rx="32" fill="#102a43"/>
+  <text x="70" y="88" fill="#fff" font-family="Arial, sans-serif" font-size="38" font-weight="700">Booking and refund lifecycle</text>
+  <text x="70" y="126" fill="#b9d7ea" font-family="Arial, sans-serif" font-size="20">A durable outcome at every step</text>
+  <g font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle">
+    <rect x="70" y="220" width="190" height="92" rx="16" fill="#2f80ed"/><text x="165" y="258" fill="#fff">Booking</text><text x="165" y="286" fill="#fff">request</text>
+    <rect x="330" y="220" width="190" height="92" rx="16" fill="#00a896"/><text x="425" y="258" fill="#fff">Availability</text><text x="425" y="286" fill="#fff">allocation</text>
+    <rect x="590" y="170" width="190" height="72" rx="16" fill="#4caf50"/><text x="685" y="214" fill="#fff">Successful</text>
+    <rect x="590" y="260" width="190" height="72" rx="16" fill="#f2a900"/><text x="685" y="304" fill="#fff">Partial</text>
+    <rect x="590" y="350" width="190" height="72" rx="16" fill="#e76f51"/><text x="685" y="394" fill="#fff">Failed</text>
+    <rect x="850" y="220" width="280" height="92" rx="16" fill="#7357a6"/><text x="990" y="258" fill="#fff">Payment or</text><text x="990" y="286" fill="#fff">refund decision</text>
+  </g>
+  <g stroke="#b9d7ea" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M260 266h70"/><path d="M520 266h70"/><path d="M780 206h70"/><path d="M780 296h70"/><path d="M780 386h70"/>
+  </g>
+  <g fill="#b9d7ea"><path d="m320 256 16 10-16 10z"/><path d="m580 196 16 10-16 10z"/><path d="m580 286 16 10-16 10z"/><path d="m580 376 16 10-16 10z"/><path d="m840 196 16 10-16 10z"/><path d="m840 286 16 10-16 10z"/><path d="m840 376 16 10-16 10z"/></g>
+  <text x="990" y="390" fill="#b9d7ea" font-family="Arial, sans-serif" font-size="22" text-anchor="middle">Complete or reconcile</text>
+  <text x="70" y="550" fill="#b9d7ea" font-family="Arial, sans-serif" font-size="19">Skedular Spaces · Skedular Host · Booking reliability</text>
+</svg>

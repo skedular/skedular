@@ -17,7 +17,7 @@ terminologyRefs:
 relatedArticleIds:
   - spaces-bookings
   - spaces-products-pricing
-updatedAt: 2026-07-24
+updatedAt: 2026-08-01
 ---
 
 ## Understand Subscriptions in Spaces
@@ -61,6 +61,8 @@ Subscription Booking instances use the Product's eligible Resource pool and requ
 The first series is confirmed as a whole. If Spaces cannot allocate capacity for every required occurrence in that initial series, it does not present any occurrence as confirmed. The customer and authorized organization stakeholders receive the retained availability outcome and can review the Subscription before trying another arrangement.
 
 After a Subscription is active, a later occurrence can fail independently if capacity is no longer available. Spaces retains that occurrence outcome and communicates it without cancelling the Subscription or unrelated occurrences. An operator edit still makes that individual Booking an override, so the recurring workflow does not rewrite the Subscription’s weekly pattern.
+
+When payment has been captured and only part of a requested recurring series can be created, the target customer workflow shows the available and unavailable occurrences and gives the customer 24 hours to decide whether the partial series works. Acceptance keeps the created occurrences and refunds the unavailable portion. Rejection or no response cancels the created occurrences and refunds the full payment. This decision is recorded separately from the Subscription status and from the refund's provider status; see [Refunds](/docs/spaces/billing-and-payments/refunds) for the financial workflow.
 
 If payment for a recurring cycle expires or fails before confirmation, Spaces releases the affected unpaid-cycle capacity and retains the payment outcome. The Subscription configuration remains available for its normal lifecycle and operator review.
 

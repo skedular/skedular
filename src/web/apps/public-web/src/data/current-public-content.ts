@@ -8,8 +8,10 @@ import { boostingWorkplaceVisibilityKeepingHybridTeamsConnectedAndEngagedArticle
 import { deskSharingWithSkedularTheFutureOfFlexibleWorkspacesArticle } from "./blog-post-desk-sharing-with-skedular-the-future-of-flexible-workspaces";
 import { unityhubBecomesSkedularArticle } from "./blog-post-unityhub-becomes-skedular";
 import { unifiedHostExperienceArticle } from "./blog-post-unified-host-experience";
+import { reliableBookingsHonestRefundsArticle } from "./blog-post-reliable-bookings-honest-refunds";
 
 export const resourceArticles: ResourceArticle[] = [
+  reliableBookingsHonestRefundsArticle,
   unifiedHostExperienceArticle,
   skedularEvolutionArticle,
   howToDetermineTheRightAmountOfOfficeSpaceForYourTeamArticle,

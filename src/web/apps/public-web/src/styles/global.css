@@ -2617,6 +2617,74 @@ input {
   background: var(--white);
 }
 
+.article-feature-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 2rem 0;
+  border-radius: 1rem;
+}
+.article-author {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 3rem;
+  padding: 1.25rem;
+  border-left: 4px solid var(--color-primary, #2f80ed);
+  background: rgba(47, 128, 237, 0.07);
+}
+.article-author span {
+  color: var(--color-muted, #52606d);
+}
+.article-author p {
+  margin: 0.5rem 0 0;
+}
+.article-faq-item {
+  margin: 1rem 0;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(16, 42, 67, 0.15);
+}
+.article-faq-item summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+}
+.table-scroll:focus-visible {
+  outline: 3px solid var(--color-primary, #2f80ed);
+  outline-offset: 3px;
+}
+.article-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.article-section th,
+.article-section td {
+  padding: 0.75rem;
+  min-width: 10rem;
+  text-align: left;
+  vertical-align: top;
+}
+.article-cta {
+  margin-top: 3rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: #102a43;
+  color: #fff;
+}
+.article-cta-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1.25rem;
+}
+.article-cta .text-link {
+  color: #fff;
+}
+
 .article-page .container {
   max-width: 820px;
 }
@@ -2631,10 +2699,21 @@ input {
   margin-bottom: 14px;
 }
 
-.article-section ul {
+.article-section ul,
+.article-section ol {
   margin: 12px 0 0;
   padding-left: 22px;
   color: var(--muted);
+  list-style-position: outside;
+}
+.article-section ul {
+  list-style-type: disc;
+}
+.article-section ol {
+  list-style-type: decimal;
+}
+.article-section li {
+  display: list-item;
 }
 
 .article-section li + li {

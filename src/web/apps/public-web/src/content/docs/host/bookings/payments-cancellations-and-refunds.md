@@ -13,7 +13,7 @@ evidenceRefs:
 terminologyRefs:
   - docs-glossary:v1
 relatedArticleIds: []
-updatedAt: 2026-07-24
+updatedAt: 2026-08-01
 ---
 
 Host payment setup supports paid Bookings through Stripe Connect. A place can be online without a completed payment connection, but renters cannot complete a paid checkout until the connected account is ready to accept charges.
@@ -37,6 +37,12 @@ Host can show these payment statuses on a Booking:
 Other payment statuses may appear when a checkout expires or when payment is no longer required. Review the Booking details for the current status rather than treating a Booking's lifecycle and payment status as the same thing.
 
 If required payment expires or fails before confirmation, Host releases the affected place capacity and retains the payment outcome. The renter can start a new Booking request, which checks current availability again.
+
+## When a Host Booking cannot be completed
+
+The public Host booking form checks availability before submission, but the final availability decision belongs at the point where the Booking is committed. The target workflow records a classified failure when the place is no longer available or the Booking cannot be created, rather than leaving the renter with only a temporary error message.
+
+If payment has already been captured, a failed Booking enters the refund workflow. The renter should be able to see whether a Booking was created, what happened to the payment, and the current refund status. Cancellation, refund approval, provider processing, and refund completion are separate events. A refund is not complete until Stripe or the applicable manual process confirms the outcome.
 
 ## Payment actions requiring attention
 

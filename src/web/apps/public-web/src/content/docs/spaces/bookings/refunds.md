@@ -19,7 +19,7 @@ terminologyRefs:
 relatedArticleIds:
   - spaces-bank-payments
   - spaces-xero
-updatedAt: 2026-07-17
+updatedAt: 2026-08-01
 ---
 
 ## How refunds work
@@ -27,6 +27,16 @@ updatedAt: 2026-07-17
 In Skedular Spaces, cancellation and refund are separate decisions. Cancellation changes or ends a Booking or Subscription according to the applicable rules and selected cancellation timing. A refund reverses some or all of a confirmed payment when the applicable policy allows it.
 
 For a Booking, or for an immediate Subscription cancellation, Spaces reviews the Price's cancellation policy after the cancellation is confirmed, checks the payment, and then creates a refund record when the purchase is eligible. Operators do not issue a refund independently of this cancellation workflow. Cancellation and refund remain separate actions: cancellation changes the service or reservation, while refund changes the financial outcome.
+
+## Booking failures and partial recurring series
+
+Availability can change between the public booking form's availability check and the final booking write. Spaces is updating this workflow so availability is checked and claimed at the final point of commitment, failed attempts retain a recorded outcome, and the result remains visible in booking history rather than disappearing into a temporary error message.
+
+If payment has already been captured and the Booking cannot be created, the target workflow records the failure and starts a full refund. Customers and authorized organization stakeholders receive an outcome that explains whether the Booking was created, what happened to the payment, and what action is available next. Notification delivery is separate from the booking response and is designed to remain safe to retry.
+
+For a recurring series where only some requested dates remain available, the customer sees the successful and unavailable occurrences and the proposed unused amount. The confirmed decision window is 24 hours. If the customer accepts the partial series, the unavailable portion is refunded. If the customer rejects it or does not respond, the created occurrences are cancelled and the full payment is refunded. Treat the booking outcome and refund status as separate records while reviewing the case.
+
+See the [booking failure and refund lifecycle overview](/blog/reliable-bookings-honest-refunds) for the customer and operator flow, including the distinction between a cancelled Booking and a completed refund.
 
 ## Cancellation policies and eligibility
 
@@ -67,6 +77,16 @@ For a one-time Booking, cancellation releases the Booking according to the cance
 ## Refund statuses
 
 The refund record and timeline show whether a refund was requested, is under review, approved, processing with a provider, provider-pending, completed, rejected, cancelled, failed, or requires reconciliation. Stripe refunds generally update within minutes of the provider webhook; Xero credit-note processing can take up to one business day. These outcomes are separate from Booking cancellation, Subscription status, payment status, and invoice status.
+
+The important customer-facing distinction is:
+
+- **Approved** means the amount and refund path have been approved; it does not mean the money has returned.
+- **Processing** means the provider operation has been submitted and is awaiting confirmation.
+- **Provider pending** means the provider response is not final and must be checked before the refund is marked complete.
+- **Completed** means the refund outcome is confirmed.
+- **Reconciliation required** means local and provider records need an operator to resolve the difference.
+
+Refund operations use a stable idempotency reference and payment allocations so retries do not submit the same financial operation twice or exceed the captured amount. If the provider response is ambiguous, leave the refund in provider-pending or reconciliation handling rather than assuming success.
 
 ## What a refund changes
 

@@ -11,6 +11,10 @@ import { defaultSocialImageUrl, getArticleMetadataForPath, getCanonicalUrl, getR
 const { title, description, canonicalPath, robots = getRobotsForPath(canonicalPath) } = Astro.props;
 const canonicalUrl = getCanonicalUrl(canonicalPath);
 const article = getArticleMetadataForPath(canonicalPath);
+const articleMetadata = article as { publishedDate: string; lastModified?: string } | null;
+const socialImage = (article as { featureImage?: string } | null)?.featureImage
+  ? new URL((article as unknown as { featureImage: string }).featureImage, import.meta.env.PUBLIC_WEB_SITE_URL || "https://getskedular.com").toString()
+  : defaultSocialImageUrl;
 ---
 
 <meta charset="UTF-8" />
@@ -19,14 +23,14 @@ const article = getArticleMetadataForPath(canonicalPath);
 <meta name="robots" content={robots} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:type" content="website" />
+<meta property="og:type" content={article ? "article" : "website"} />
 <meta property="og:url" content={canonicalUrl} />
-<meta property="og:image" content={defaultSocialImageUrl} />
-<meta property="og:image:alt" content="Skedular logo" />
-{article && <meta property="article:published_time" content={article.publishedDate} />}
-{article && <meta property="article:modified_time" content={article.publishedDate} />}
+<meta property="og:image" content={socialImage} />
+<meta property="og:image:alt" content={article && (article as { featureImageAlt?: string }).featureImageAlt ? (article as unknown as { featureImageAlt: string }).featureImageAlt : "Skedular"} />
+{articleMetadata && <meta property="article:published_time" content={articleMetadata.publishedDate} />}
+{articleMetadata && <meta property="article:modified_time" content={articleMetadata.lastModified ?? articleMetadata.publishedDate} />}
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:image" content={defaultSocialImageUrl} />
+<meta name="twitter:image" content={socialImage} />
 <link rel="icon" href="/images/skedular-logo-primary.svg" type="image/svg+xml" />
 <link rel="canonical" href={canonicalUrl} />
 <title>{title}</title>

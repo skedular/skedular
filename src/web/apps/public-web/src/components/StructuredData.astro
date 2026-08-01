@@ -13,6 +13,7 @@ const { type = "Organization", name, description, path = "/", breadcrumbs = [], 
 import { defaultSocialImageUrl, getArticleMetadataForPath, getCanonicalUrl, siteUrl } from "../data/seo";
 
 const article = getArticleMetadataForPath(path);
+const articleMetadata = article as { publishedDate: string; lastModified?: string; featureImage?: string; author?: { name: string } } | null;
 const url = getCanonicalUrl(path);
 let graph: any = {};
 
@@ -34,12 +35,12 @@ if (type === "BreadcrumbList") {
     headline: name,
     description,
     url,
-    image: defaultSocialImageUrl,
-    datePublished: article?.publishedDate,
-    dateModified: article?.publishedDate,
+    image: articleMetadata?.featureImage ? new URL(articleMetadata.featureImage, siteUrl).toString() : defaultSocialImageUrl,
+    datePublished: articleMetadata?.publishedDate,
+    dateModified: articleMetadata?.lastModified ?? articleMetadata?.publishedDate,
     author: {
-      "@type": "Organization",
-      name: "Skedular",
+      "@type": articleMetadata?.author ? "Person" : "Organization",
+      name: articleMetadata?.author?.name ?? "Skedular",
       url: siteUrl,
     },
     publisher: {

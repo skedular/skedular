@@ -198,12 +198,23 @@ export interface ResourceArticle {
   migrationDecision: MigrationDecision;
   contentStatus: ContentStatus;
   claimReviewStatus: ReviewStatus;
+  lastModified?: string;
+  author?: { name: string; role: string; description: string };
+  featureImage?: string;
+  featureImageAlt?: string;
   body: string[];
   sections?: Array<{
     heading: string;
     body: string[];
     items?: string[];
+    listType?: "ul" | "ol";
   }>;
+  faq?: Array<{ question: string; answer: string }>;
+  cta?: {
+    heading: string;
+    body: string;
+    links: Array<{ label: string; href: string; primary?: boolean }>;
+  };
 }
 
 export interface ComparisonPage {
