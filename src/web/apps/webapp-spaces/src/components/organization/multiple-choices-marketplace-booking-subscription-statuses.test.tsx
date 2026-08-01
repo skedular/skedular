@@ -1,4 +1,6 @@
 import { render, screen } from '@testing-library/react';
+import { Form } from 'react-final-form';
+import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import MultipleChoicesMarketplaceBookingSubscriptionStatuses from './multiple-choices-marketplace-booking-subscription-statuses';
 
@@ -9,24 +11,27 @@ vi.mock('react-relay', () => ({
   useFragment: (...args: unknown[]) => useFragmentMock(...args),
 }));
 
-vi.mock('mui-rff', () => ({
-  Autocomplete: ({ options, multiple }: { options: { type: string; name: string }[]; multiple?: boolean }) => (
-    <div data-testid="autocomplete" data-multiple={multiple ? 'true' : 'false'}>
-      {options.map((option) => (
-        <span key={option.type} data-testid={`option-${option.type}`}>
-          {option.name}
-        </span>
-      ))}
-    </div>
+vi.mock('@/components/styled', () => ({
+  DefaultSelect: ({ children, value, onChange }: { children: ReactNode; value?: string; onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void }) => (
+    <select data-testid="select" value={value ?? ''} onChange={onChange}>
+      {children}
+    </select>
+  ),
+}));
+vi.mock('@mui/material/MenuItem', () => ({
+  default: ({ children, value }: { children: ReactNode; value?: string }) => (
+    <option data-testid={value ? `option-${value}` : undefined} value={value}>
+      {children}
+    </option>
   ),
 }));
 
 vi.mock('@skedular/ui', () => ({
   BodyIconTypography: ({ label }: { label: string }) => <span>{label}</span>,
-}));
-
-vi.mock('@mui/material/useAutocomplete', () => ({
-  createFilterOptions: () => (options: unknown[]) => options,
+  LeadIconTypography: ({ label }: { label: string }) => <span>{label}</span>,
+  SmallIconTypography: ({ label }: { label: string }) => <span>{label}</span>,
+  StackRow: ({ children }: { children: ReactNode }) => <span>{children}</span>,
+  PushToRight: () => null,
 }));
 
 const subscriptionStatusOptions = [
@@ -46,7 +51,7 @@ describe('MultipleChoicesMarketplaceBookingSubscriptionStatuses', () => {
   });
 
   it('renders all 5 subscription status options', () => {
-    render(<MultipleChoicesMarketplaceBookingSubscriptionStatuses rootDataRelay={{} as never} name="statuses" />);
+    render(<Form onSubmit={() => {}} render={() => <MultipleChoicesMarketplaceBookingSubscriptionStatuses rootDataRelay={{} as never} name="statuses" />} />);
 
     expect(screen.getByTestId('option-ACTIVE')).toBeInTheDocument();
     expect(screen.getByTestId('option-CANCELLED')).toBeInTheDocument();
@@ -55,14 +60,15 @@ describe('MultipleChoicesMarketplaceBookingSubscriptionStatuses', () => {
     expect(screen.getByTestId('option-PAUSED')).toBeInTheDocument();
   });
 
-  it('renders with multiple selection enabled', () => {
-    render(<MultipleChoicesMarketplaceBookingSubscriptionStatuses rootDataRelay={{} as never} name="statuses" />);
+  it('renders as a single select with an all option', () => {
+    render(<Form onSubmit={() => {}} render={() => <MultipleChoicesMarketplaceBookingSubscriptionStatuses rootDataRelay={{} as never} name="statuses" />} />);
 
-    expect(screen.getByTestId('autocomplete')).toHaveAttribute('data-multiple', 'true');
+    expect(screen.getByTestId('select')).not.toHaveAttribute('multiple');
+    expect(screen.getByText('All statuses')).toBeInTheDocument();
   });
 
   it('displays the correct display names for all status options', () => {
-    render(<MultipleChoicesMarketplaceBookingSubscriptionStatuses rootDataRelay={{} as never} name="statuses" />);
+    render(<Form onSubmit={() => {}} render={() => <MultipleChoicesMarketplaceBookingSubscriptionStatuses rootDataRelay={{} as never} name="statuses" />} />);
 
     expect(screen.getByText('Active')).toBeInTheDocument();
     expect(screen.getByText('Cancelled')).toBeInTheDocument();

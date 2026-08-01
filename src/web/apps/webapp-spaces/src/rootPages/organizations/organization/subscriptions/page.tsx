@@ -1,4 +1,3 @@
-import { RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
@@ -20,6 +19,7 @@ import SubscriptionCancellationSection from '@/components/marketplaceProductSubs
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { MultipleChoicesMarketplaceBookingPaymentStatuses, MultipleChoicesMarketplaceBookingSubscriptionStatuses } from '@/components/organization';
+import { getRelayErrorMessage, RelayError, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
@@ -629,12 +629,8 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
                 }}
               />
               <GridContainer spacing={1} sx={{ alignItems: 'center' }}>
-                <Box sx={{ width: 'min(100%, 300px)' }}>
-                  <MultipleChoicesMarketplaceBookingSubscriptionStatuses rootDataRelay={rootData} name="statuses" />
-                </Box>
-                <Box sx={{ width: 'min(100%, 300px)' }}>
-                  <MultipleChoicesMarketplaceBookingPaymentStatuses rootDataRelay={rootData} name="paymentStatuses" />
-                </Box>
+                <MultipleChoicesMarketplaceBookingSubscriptionStatuses rootDataRelay={rootData} name="statuses" label="Status" />
+                <MultipleChoicesMarketplaceBookingPaymentStatuses rootDataRelay={rootData} name="paymentStatuses" label="Payment status" />
               </GridContainer>
             </>
           )}

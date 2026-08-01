@@ -23,6 +23,9 @@ vi.mock('mui-rff', () => ({
 
 vi.mock('@skedular/ui', () => ({
   BodyIconTypography: ({ label }: { label: string }) => <span>{label}</span>,
+  LeadIconTypography: ({ label }: { label: string }) => <span>{label}</span>,
+  StackRow: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+  Divider: ({ children }: { children?: React.ReactNode }) => <span>{children}</span>,
 }));
 
 vi.mock('@mui/material/useAutocomplete', () => ({

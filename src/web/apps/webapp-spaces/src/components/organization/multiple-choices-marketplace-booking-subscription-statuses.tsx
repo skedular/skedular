@@ -1,13 +1,16 @@
 import type { multipleChoicesMarketplaceBookingSubscriptionStatuses_query$key } from '@/queries/__generated__/multipleChoicesMarketplaceBookingSubscriptionStatuses_query.graphql';
-import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { BodyIconTypography } from '@skedular/ui';
-import { Autocomplete } from 'mui-rff';
+import { DefaultSelect } from '@/components/styled';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@skedular/ui';
+import { Field } from 'react-final-form';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: multipleChoicesMarketplaceBookingSubscriptionStatuses_query$key;
   name: string;
+  label?: string;
   required?: boolean;
 };
 
@@ -16,7 +19,7 @@ type MarketplaceBookingSubscriptionStatusDetails = {
   name: string;
 };
 
-const MultipleChoicesMarketplaceBookingSubscriptionStatuses = ({ rootDataRelay, name, required }: Props) => {
+const MultipleChoicesMarketplaceBookingSubscriptionStatuses = ({ rootDataRelay, name, label, required }: Props) => {
   const rootData = useFragment<multipleChoicesMarketplaceBookingSubscriptionStatuses_query$key>(
     graphql`
       fragment multipleChoicesMarketplaceBookingSubscriptionStatuses_query on Query {
@@ -33,31 +36,39 @@ const MultipleChoicesMarketplaceBookingSubscriptionStatuses = ({ rootDataRelay, 
     () => rootData.marketplaceBookingSubscriptionStatuses.map((item) => item),
     [rootData.marketplaceBookingSubscriptionStatuses],
   );
-  const filter = createFilterOptions<MarketplaceBookingSubscriptionStatusDetails>();
-
   return (
-    <Autocomplete
-      name={name}
-      multiple={true}
-      required={required}
-      options={items}
-      getOptionValue={(option) => (option as MarketplaceBookingSubscriptionStatusDetails).type}
-      getOptionLabel={(option: string | MarketplaceBookingSubscriptionStatusDetails) => (option as MarketplaceBookingSubscriptionStatusDetails).name}
-      renderOption={(props, option) => {
-        const castedOption = option as MarketplaceBookingSubscriptionStatusDetails;
-
+    <Field name={name}>
+      {({ input }) => {
+        const selected = ((input.value as string[] | undefined) ?? [])[0] ?? '';
+        const selectedName = items.find((item) => item.type === selected)?.name;
         return (
-          <li {...props} key={castedOption.type}>
-            <BodyIconTypography label={castedOption.name} />
-          </li>
+          <DefaultSelect
+            {...input}
+            value={selected}
+            displayEmpty
+            size="small"
+            required={required}
+            renderValue={() => (
+              <StackRow sx={{ whiteSpace: 'nowrap', flexWrap: 'nowrap' }}>
+                <LeadIconTypography label={label ?? ''} />
+                <Divider orientation="vertical" flexItem />
+                <PushToRight />
+                <SmallIconTypography label={selectedName ?? 'All statuses'} sx={{ ml: 1 }} />
+              </StackRow>
+            )}
+            sx={{ width: '100%', minWidth: 0, '& .MuiSelect-select': { pr: '48px !important', minWidth: 0 } }}
+            onChange={(event) => input.onChange(event.target.value ? [event.target.value as string] : [])}
+          >
+            <MenuItem value="">All statuses</MenuItem>
+            {items.map((item) => (
+              <MenuItem key={item.type} value={item.type}>
+                <BodyIconTypography label={item.name} />
+              </MenuItem>
+            ))}
+          </DefaultSelect>
         );
       }}
-      disableCloseOnSelect
-      filterOptions={(options, params) => filter(options as MarketplaceBookingSubscriptionStatusDetails[], params)}
-      selectOnFocus
-      clearOnBlur
-      handleHomeEndKeys
-    />
+    </Field>
   );
 };
 
