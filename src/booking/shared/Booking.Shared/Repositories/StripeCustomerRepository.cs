@@ -11,6 +11,7 @@ public interface IStripeCustomerRepository : IRepository<StripeCustomer>
     Task<StripeCustomer?> GetByStripeCustomerIdAsync(string stripeCustomerId, CancellationToken cancellationToken);
     Task<StripeCustomer?> GetByOrganizationIdAsync(string stripeAccountId, string organizationId, CancellationToken cancellationToken);
     Task<StripeCustomer?> GetByCustomerIdAsync(string stripeAccountId, string customerId, CancellationToken cancellationToken);
+    Task<string?> GetOrganizationIdByStripeAccountIdAsync(string stripeAccountId, CancellationToken cancellationToken);
     StripeCustomer Add(StripeCustomer stripeCustomer);
 }
 
@@ -40,6 +41,12 @@ public class StripeCustomerRepository(BookingDbContext dbContext, TimeProvider t
                 query => !query.DeletedAt.HasValue && query.Customer != null && query.Customer.Id == customerId &&
                          query.StripeAccountId == stripeAccountId,
                 cancellationToken);
+
+    public async Task<string?> GetOrganizationIdByStripeAccountIdAsync(string stripeAccountId, CancellationToken cancellationToken) =>
+        await DbContext.StripeCustomer
+            .Where(query => !query.DeletedAt.HasValue && query.Organization != null && query.StripeAccountId == stripeAccountId)
+            .Select(query => query.Organization!.Id)
+            .FirstOrDefaultAsync(cancellationToken);
 
     public StripeCustomer Add(StripeCustomer stripeCustomer)
     {

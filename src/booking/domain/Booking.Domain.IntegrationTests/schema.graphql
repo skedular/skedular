@@ -12,7 +12,35 @@ type Query {
   marketplaceRefund(id: String!): MarketplaceRefundDetails @cost(weight: "10")
   marketplaceRefunds(organizationCustomDomain: String!, statuses: [String!]): [MarketplaceRefundDetails!]!
     @cost(weight: "10")
+  marketplaceRefundQueue(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    where: MarketplaceRefundWhereInput!
+  ): ConnectionOfMarketplaceRefundEdge! @cost(weight: "10")
+  marketplaceExternalRefundReconciliations(
+    organizationCustomDomain: String!
+    after: String
+    first: Int
+    before: String
+    last: Int
+    provider: String
+    status: String
+  ): ConnectionOfMarketplaceExternalRefundReconciliationEdge!
+    @cost(weight: "10")
+  marketplaceUnassignedExternalRefundReconciliations(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    provider: String
+    status: String
+  ): ConnectionOfMarketplaceExternalRefundReconciliationEdge!
+    @cost(weight: "10")
   marketplaceRefundStatuses: [MarketplaceRefundStatusDetails!]!
+  marketplaceRefundKinds: [MarketplaceRefundKindDetails!]!
+  marketplaceRefundEventTypes: [MarketplaceRefundEventTypeDetails!]!
   marketplaceBookingFailures: [MarketplaceBookingFailureDetails!]!
     @cost(weight: "10")
   bookingCategories: [BookingCategoryDetails!]!
@@ -92,21 +120,35 @@ type Query {
 }
 
 type Mutation {
-  markMarketplaceRefundPendingAccounting(
-    input: MarkMarketplaceRefundPendingAccountingInput!
-  ): MarketplaceRefundPayload! @cost(weight: "10")
-  completeMarketplaceRefund(input: CompleteMarketplaceRefundInput!): MarketplaceRefundPayload!
+  approveMarketplaceRefund(input: ApproveMarketplaceRefundInput!): MarketplaceRefundPayload!
     @cost(weight: "10")
-  markMarketplaceRefundManualRequired(
-    input: MarkMarketplaceRefundManualRequiredInput!
-  ): MarketplaceRefundPayload! @cost(weight: "10")
-  markMarketplaceRefundManualCompleted(
-    input: MarkMarketplaceRefundManualCompletedInput!
-  ): MarketplaceRefundPayload! @cost(weight: "10")
-  failMarketplaceRefund(input: FailMarketplaceRefundInput!): MarketplaceRefundPayload!
+  rejectMarketplaceRefund(input: RejectMarketplaceRefundInput!): MarketplaceRefundPayload!
     @cost(weight: "10")
-  processMarketplaceRefundInXero(input: ProcessMarketplaceRefundInXeroInput!): MarketplaceRefundPayload!
+  recordBankTransferRefundSent(input: RecordBankTransferRefundSentInput!): MarketplaceRefundPayload!
     @cost(weight: "10")
+  confirmBankTransferRefundReceived(
+    input: ConfirmBankTransferRefundReceivedInput!
+  ): MarketplaceRefundPayload! @cost(weight: "10")
+  retryMarketplaceRefund(input: RetryMarketplaceRefundInput!): MarketplaceRefundPayload!
+    @cost(weight: "10")
+  resolveRefundReconciliationRequired(
+    input: ResolveRefundReconciliationRequiredInput!
+  ): MarketplaceRefundPayload! @cost(weight: "10")
+  cancelMarketplaceRefund(input: CancelMarketplaceRefundInput!): MarketplaceRefundPayload!
+    @cost(weight: "10")
+  createPartialMarketplaceRefund(input: CreatePartialMarketplaceRefundInput!): MarketplaceRefundPayload!
+    @cost(weight: "10")
+  resolveMarketplaceExternalRefundReconciliation(
+    input: ResolveMarketplaceExternalRefundReconciliationInput!
+  ): MarketplaceExternalRefundReconciliationPayload! @cost(weight: "10")
+  resolveUnassignedMarketplaceExternalRefundReconciliation(
+    input: ResolveUnassignedMarketplaceExternalRefundReconciliationInput!
+  ): MarketplaceExternalRefundReconciliationPayload! @cost(weight: "10")
+  acceptPartialMarketplaceBooking(input: ResolvePartialMarketplaceBookingInput!): MarketplaceBookingFailureDetails!
+    @cost(weight: "10")
+  declinePartialMarketplaceBooking(
+    input: ResolvePartialMarketplaceBookingInput!
+  ): MarketplaceBookingFailureDetails! @cost(weight: "10")
   addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload!
     @cost(weight: "10")
   updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload!
@@ -283,6 +325,18 @@ type ConnectionOfMarketplaceBookingSubscriptionEdge {
   totalCount: Int!
 }
 
+type ConnectionOfMarketplaceExternalRefundReconciliationEdge {
+  pageInfo: PageInfo!
+  edges: [MarketplaceExternalRefundReconciliationEdge!]!
+  totalCount: Int!
+}
+
+type ConnectionOfMarketplaceRefundEdge {
+  pageInfo: PageInfo!
+  edges: [MarketplaceRefundEdge!]!
+  totalCount: Int!
+}
+
 type ConnectionOfRecurringBookingEdge {
   pageInfo: PageInfo!
   edges: [RecurringBookingEdge!]!
@@ -357,6 +411,10 @@ type MarketplaceBookingFailureDetails {
   requestedFrom: DateTime
   requestedUntil: DateTime
   customerAction: MarketplaceBookingFailureChoiceDetails!
+  resolutionDeadlineAt: DateTime
+  resolutionDecidedAt: DateTime
+  resolutionDecision: String
+  allocatedRefundAmount: Decimal
 }
 
 type MarketplaceBookingPaymentStatusDetails {
@@ -407,6 +465,30 @@ type MarketplaceBookingSubscriptionStatusDetails {
   name: String!
 }
 
+type MarketplaceExternalRefundReconciliationDetails {
+  id: String!
+  provider: String!
+  externalRefundId: String!
+  amount: Decimal
+  currency: String
+  status: String!
+  firstSeenAt: DateTime!
+  lastSeenAt: DateTime!
+  resolutionReason: String
+  resolutionActorCustomerId: String
+  resolutionCorrelationId: String
+}
+
+type MarketplaceExternalRefundReconciliationEdge {
+  node: MarketplaceExternalRefundReconciliationDetails!
+  cursor: String!
+}
+
+type MarketplaceExternalRefundReconciliationPayload {
+  clientMutationId: String
+  reconciliation: MarketplaceExternalRefundReconciliationDetails!
+}
+
 type MarketplaceRefundDetails {
   id: String!
   localEntityType: String!
@@ -436,6 +518,29 @@ type MarketplaceRefundDetails {
   requestedByCustomerId: String
   requestedByCustomerName: String
   xeroProcessingBlockedReason: String
+  refundKind: String!
+  idempotencyKey: String!
+  policySnapshotJson: String
+  calculationResultJson: String
+  timezoneId: String
+  retryCount: Int!
+  approvedAt: DateTime
+  approvedByCustomerId: String
+  rejectedAt: DateTime
+  rejectedByCustomerId: String
+  rejectionReason: String
+  cancelledAt: DateTime
+  cancellationReason: String
+  bankTransferReference: String
+  bankTransferSentAt: DateTime
+  reconciledAt: DateTime
+  reconciliationStatus: String
+  paymentAllocations: [MarketplaceRefundPaymentAllocationDetails!]!
+}
+
+type MarketplaceRefundEdge {
+  node: MarketplaceRefundDetails!
+  cursor: String!
 }
 
 type MarketplaceRefundEventDetails {
@@ -451,16 +556,32 @@ type MarketplaceRefundEventDetails {
   lastError: String
   actorCustomerId: String
   actorName: String
+  previousStatus: String
+  newStatus: String
+  correlationId: String
 }
 
 type MarketplaceRefundEventTypeDetails {
-  type: String!
+  type: MarketplaceRefundEventType!
+  name: String!
+}
+
+type MarketplaceRefundKindDetails {
+  type: MarketplaceRefundKind!
   name: String!
 }
 
 type MarketplaceRefundPayload {
   clientMutationId: String
   marketplaceRefund: MarketplaceRefundDetails!
+}
+
+type MarketplaceRefundPaymentAllocationDetails {
+  sourcePaymentProvider: String!
+  sourcePaymentReference: String!
+  sourcePaymentAmount: Decimal!
+  allocatedRefundAmount: Decimal!
+  currency: String!
 }
 
 type MarketplaceRefundPreviewDetails {
@@ -478,7 +599,7 @@ type MarketplaceRefundPreviewDetails {
 }
 
 type MarketplaceRefundStatusDetails {
-  type: String!
+  type: MarketplaceRefundStatus!
   name: String!
 }
 
@@ -769,6 +890,11 @@ input AddPrivateRecurringBookingInput {
   category: BookingCategory
 }
 
+input ApproveMarketplaceRefundInput {
+  id: String!
+  clientMutationId: String
+}
+
 input AvailableResourcesCountWhereInput {
   organizationId: String
   organizationCustomDomain: String
@@ -822,9 +948,14 @@ input BookingWhereInput {
   includeFutureBookingsOnly: Boolean
 }
 
-input CompleteMarketplaceRefundInput {
+input CancelMarketplaceRefundInput {
   id: String!
-  reason: String
+  reason: String!
+  clientMutationId: String
+}
+
+input ConfirmBankTransferRefundReceivedInput {
+  id: String!
   clientMutationId: String
 }
 
@@ -835,6 +966,14 @@ input ConfirmBookingPaymentInput {
 
 input ConfirmRecurringBookingPaymentInput {
   id: String!
+  clientMutationId: String
+}
+
+input CreatePartialMarketplaceRefundInput {
+  allocationId: String!
+  amount: Decimal!
+  reason: String!
+  idempotencyKey: String!
   clientMutationId: String
 }
 
@@ -857,12 +996,6 @@ input DeletePrivateBookingInput {
 input DeletePrivateRecurringBookingInput {
   clientMutationId: String
   id: String!
-}
-
-input FailMarketplaceRefundInput {
-  id: String!
-  reason: String
-  clientMutationId: String
 }
 
 input MakeBookingPaymentNotRequiredInput {
@@ -904,23 +1037,11 @@ input MarketplaceBookingSubscriptionWhereInput {
   includeMineOnly: Boolean
 }
 
-input MarkMarketplaceRefundManualCompletedInput {
-  clientMutationId: String
-  id: String!
-  reason: String
-}
-
-input MarkMarketplaceRefundManualRequiredInput {
-  clientMutationId: String
-  id: String!
-  reason: String
-}
-
-input MarkMarketplaceRefundPendingAccountingInput {
-  id: String!
-  refundAmount: Decimal
-  reason: String
-  clientMutationId: String
+input MarketplaceRefundWhereInput {
+  organizationCustomDomain: String
+  statuses: [String!]
+  requestedAtGte: DateTime
+  requestedAtLte: DateTime
 }
 
 input OrganizationAvailableResourcesWhereInput {
@@ -930,8 +1051,9 @@ input OrganizationAvailableResourcesWhereInput {
   until: DateTime!
 }
 
-input ProcessMarketplaceRefundInXeroInput {
+input RecordBankTransferRefundSentInput {
   id: String!
+  bankTransferReference: String!
   clientMutationId: String
 }
 
@@ -965,9 +1087,45 @@ input RejectBookingPaymentInput {
   id: String!
 }
 
+input RejectMarketplaceRefundInput {
+  id: String!
+  reason: String!
+  clientMutationId: String
+}
+
 input RejectRecurringBookingPaymentInput {
   id: String!
   clientMutationId: String
+}
+
+input ResolveMarketplaceExternalRefundReconciliationInput {
+  organizationId: String!
+  provider: String!
+  externalRefundId: String!
+  status: String!
+  reason: String!
+  clientMutationId: String
+}
+
+input ResolvePartialMarketplaceBookingInput {
+  id: String!
+  clientMutationId: String
+}
+
+input ResolveRefundReconciliationRequiredInput {
+  id: String!
+  completed: Boolean!
+  reason: String!
+  providerReference: String
+  clientMutationId: String
+}
+
+input ResolveUnassignedMarketplaceExternalRefundReconciliationInput {
+  clientMutationId: String
+  provider: String!
+  externalRefundId: String!
+  status: String!
+  reason: String!
 }
 
 input ResourceAvailabilityFilterInput {
@@ -983,6 +1141,11 @@ input ResourceAvailabilityFilterInput {
 input ResourceAvailabilityOrderByInput {
   direction: OrderDirection!
   field: ResourceAvailabilityOrderByField!
+}
+
+input RetryMarketplaceRefundInput {
+  id: String!
+  clientMutationId: String
 }
 
 input UpdateMarketplaceBookingInput {
@@ -1107,6 +1270,41 @@ enum MarketplaceBookingSubscriptionStatus {
   EXPIRED
   RENEWAL_FAILED
   PAUSED
+}
+
+enum MarketplaceRefundEventType {
+  REQUESTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  PROVIDER_PENDING
+  PROCESSING
+  SENT_TO_XERO
+  ACCOUNTING_PROJECTED
+  ACCOUNTING_PROJECTION_REQUIRED
+  COMPLETED
+  FAILED
+  CANCELLED
+  RECONCILIATION_REQUIRED
+}
+
+enum MarketplaceRefundKind {
+  CANCELLATION
+  MODIFICATION
+  PARTIAL
+}
+
+enum MarketplaceRefundStatus {
+  REQUESTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  PROCESSING
+  PROVIDER_PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+  RECONCILIATION_REQUIRED
 }
 
 enum OrderDirection {

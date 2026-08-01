@@ -318,7 +318,7 @@ flowchart TD
     L --> M
     M --> N{"Provider call failed?"}
     N -->|No| O["Mark refund projected to Xero"]
-    N -->|Yes| P["Mark refund manual-required / retriable"]
+    N -->|Yes| P["Mark refund ReconciliationRequired / retriable"]
 ```
 
 Key notes:
@@ -328,12 +328,13 @@ Key notes:
 - Xero credit-note projection is for accounting representation, not refund-policy ownership
 - current automated Xero projection is limited to one-time marketplace bookings with an existing standard Xero invoice
   link; subscription refunds still need explicit recurring/generated invoice correlation
-- admin review currently happens by previewing the policy result first and then moving the refund to
-  `PendingAccounting` with the approved amount, which may be reduced from the policy amount but not increased above it
-- refund timeline/audit views should be backed by persisted refund events such as `Requested`, `PendingAccounting`,
-  `SentToXero`, `Completed`, and `Failed`
-- manual operator handling should stay on the same path via `ManualRequired` and `ManualCompleted` states/events, rather
-  than introducing a separate refund tracker
+- admin review currently happens by previewing the policy result first and then moving the refund through
+  `UnderReview` and `Approved` with the approved amount, which may be reduced from the policy amount but not increased
+  above it
+- refund timeline/audit views should be backed by persisted refund events such as `Requested`, `Approved`, `SentToXero`,
+  `Completed`, `Failed`, and `ReconciliationRequired`
+- manual operator handling should stay on the same path via `ReconciliationRequired` and an audited transition to
+  `Completed` or `Failed`, rather than introducing a separate refund tracker
 
 ## 13. Admin Refund Review Path
 

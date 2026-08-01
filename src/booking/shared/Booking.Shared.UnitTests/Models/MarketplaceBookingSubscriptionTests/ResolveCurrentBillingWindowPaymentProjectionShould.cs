@@ -112,7 +112,7 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
             []);
         subscription.MarketplaceBooking.ProductVersion.Product = null!;
 
-        var result = subscription.ResolveCurrentBillingWindowPaymentProjection(DateTimeOffset.UtcNow);
+        var result = subscription.ResolveCurrentBillingWindowPaymentProjection(TimeProvider.System.GetUtcNow());
 
         result.ShouldBeNull();
     }

@@ -203,8 +203,10 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => repositoryFactory.CustomerRepository.GetByIdAsync(deletedByCustomer.Id, true, cancellationToken)).Returns(deletedByCustomer);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(existingSubscription)).Returns(existingSubscription);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdForUpdateAsync(existingSubscription.Id, cancellationToken))
+            .Returns(existingSubscription);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Remove(existingSubscription)).Returns(existingSubscription);
         A.CallTo(() => entityMapper.MapTo(existingSubscription)).Returns(deletedSubscription);
 
@@ -262,8 +264,10 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => repositoryFactory.CustomerRepository.GetByIdAsync(deletedByCustomer.Id, true, cancellationToken)).Returns(deletedByCustomer);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(existingSubscription)).Returns(existingSubscription);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdForUpdateAsync(existingSubscription.Id, cancellationToken))
+            .Returns(existingSubscription);
         A.CallTo(() => entityMapper.MapTo(existingSubscription)).Returns(updatedSubscription);
 
         var result = await sut.DeleteAsync(
@@ -323,7 +327,8 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(existingSubscription)).Returns(existingSubscription);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdForUpdateAsync(existingSubscription.Id, cancellationToken))
+            .Returns(existingSubscription);
         A.CallTo(() => entityMapper.MapTo(existingSubscription)).Returns(updatedSubscription);
 
         _ = await sut.DeleteAsync(
@@ -362,7 +367,8 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(existingSubscription)).Returns(existingSubscription);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdForUpdateAsync(existingSubscription.Id, cancellationToken))
+            .Returns(existingSubscription);
         A.CallTo(() => entityMapper.MapTo(existingSubscription)).Returns(updatedSubscription);
 
         var result = await sut.DeleteAsync(
@@ -404,7 +410,8 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(existingSubscription)).Returns(existingSubscription);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdForUpdateAsync(existingSubscription.Id, cancellationToken))
+            .Returns(existingSubscription);
         A.CallTo(() => entityMapper.MapTo(existingSubscription)).Returns(updatedSubscription);
 
         var result = await sut.DeleteAsync(
@@ -417,6 +424,46 @@ public class MarketplaceBookingSubscriptionServiceShould
         existingSubscription.CancelAtPeriodEnd.ShouldBeTrue();
         existingSubscription.AutoRenew.ShouldBeFalse();
         existingSubscription.DeletedByCustomer.ShouldBeNull();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task DeleteAsync_Preserves_Current_Cycle_Accounting_Billing_Without_Refunding_Current_Period(
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen] IMarketplaceRefundService marketplaceRefundService,
+        [Frozen] IEntityMapper entityMapper,
+        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen] IDbContextTransaction transaction,
+        MarketplaceBookingSubscriptionService sut,
+        CancellationToken cancellationToken)
+    {
+        var now = new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero);
+        var subscription = CreateSubscription(now.AddDays(-1), now.AddDays(3), ProductPricingCancellationPolicyType.NoCancellation, []);
+        subscription.AutoRenew = true;
+        var recurringBooking = new RecurringBooking
+        {
+            Id = "recurring-1", StartDate = subscription.StartedAt, MarketplaceBooking = subscription.MarketplaceBooking
+        };
+        subscription.RecurringBookings = [recurringBooking];
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdForUpdateAsync(subscription.Id, cancellationToken)).Returns(subscription);
+        A.CallTo(() => entityMapper.MapTo(subscription)).Returns(new Shared.Models.MarketplaceBookingSubscription { Id = subscription.Id });
+
+        await sut.DeleteAsync(subscription, new Customer(), MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd, cancellationToken);
+
+        A.CallTo(() => accountingInvoiceCancellationService.CancelRecurringBookingFutureBillingAsync(recurringBooking, cancellationToken))
+            .MustNotHaveHappened();
+        A.CallTo(() => marketplaceRefundService.CreateImmediateSubscriptionCancellationRefundAsync(A<MarketplaceBookingSubscription>._, A<Customer>._,
+                cancellationToken))
+            .MustNotHaveHappened();
     }
 
     private static MarketplaceBookingSubscription CreateSubscription(

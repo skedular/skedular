@@ -646,6 +646,10 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("OrganizationId")
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -828,6 +832,10 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<decimal?>("AllocatedRefundAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
                     b.Property<string>("BookingId")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
@@ -843,6 +851,10 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.PrimitiveCollection<string>("CreatedOccurrenceIds")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("CustomerAction")
                         .HasMaxLength(64)
@@ -887,10 +899,28 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("RequestedUntil")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("ResolutionActorCustomerId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("ResolutionDeadlineAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ResolutionDecidedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ResolutionDecision")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<string>("Scope")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
+
+                    b.PrimitiveCollection<string>("UnavailableOccurrenceIds")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
 
                     b.HasKey("Id");
 
@@ -908,6 +938,8 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("RecurringBookingId");
+
+                    b.HasIndex("ResolutionDecision", "ResolutionDeadlineAt");
 
                     b.ToTable("MarketplaceBookingFailure");
                 });
@@ -1127,6 +1159,98 @@ namespace Booking.Shared.Database.Migrations
                     b.ToTable("MarketplaceBookingSubscription");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceExternalRefundReconciliation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("ExternalRefundId")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTimeOffset>("FirstSeenAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("LastSeenAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("NextRetryAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("ResolutionActorCustomerId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ResolutionCorrelationId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("ResolutionReason")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasDefaultValue("Open");
+
+                    b.Property<string>("StripeAccountId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("OrganizationId", "Status");
+
+                    b.HasIndex("Provider", "ExternalRefundId")
+                        .IsUnique();
+
+                    b.HasIndex("Status", "NextRetryAt", "RetryCount");
+
+                    b.ToTable("MarketplaceExternalRefundReconciliation");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefund", b =>
                 {
                     b.Property<string>("Id")
@@ -1140,8 +1264,31 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<int?>("AppliedRuleMinutesBefore")
                         .HasColumnType("integer");
 
+                    b.Property<DateTimeOffset?>("ApprovedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ApprovedByCustomerId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("BankTransferReference")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTimeOffset?>("BankTransferSentAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<decimal?>("BaseAmount")
                         .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<string>("CalculationResultJson")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CancellationReason")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<DateTimeOffset?>("CancelledAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1168,11 +1315,23 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
                     b.Property<string>("LastError")
                         .HasMaxLength(10000)
                         .HasColumnType("character varying(10000)");
 
+                    b.Property<string>("LastNotificationStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<DateTimeOffset?>("LastProcessedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("LastReconciledAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("LocalEntityId")
@@ -1207,9 +1366,32 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
+                    b.Property<string>("PolicySnapshotJson")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PostPayoutRefund")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Reason")
                         .HasMaxLength(100000)
                         .HasColumnType("character varying(100000)");
+
+                    b.Property<DateTimeOffset?>("ReconciledAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ReconciliationLeaseExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ReconciliationLeaseOwner")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTimeOffset?>("ReconciliationLeaseRenewedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ReconciliationStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<DateTimeOffset>("ReferenceTime")
                         .HasColumnType("timestamp with time zone");
@@ -1217,8 +1399,25 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<decimal?>("RefundAmount")
                         .HasColumnType("DECIMAL(18,4)");
 
+                    b.Property<string>("RefundKind")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasDefaultValue("Cancellation");
+
                     b.Property<int>("RefundPercentage")
                         .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("RejectedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RejectedByCustomerId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
 
                     b.Property<DateTimeOffset>("RequestedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1226,18 +1425,59 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("RequestedByCustomerId")
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
+                    b.Property<string>("StripeAccountId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("StripeChargeId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("StripeChargeType")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("StripePaymentIntentId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("StripeRefundPath")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTimeOffset?>("StripeRefundPathSelectedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("StripeTransferId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("TimezoneId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("ApprovedByCustomerId");
+
                     b.HasIndex("CreatedAt");
+
+                    b.HasIndex("IdempotencyKey")
+                        .IsUnique();
 
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("RejectedByCustomerId");
 
                     b.HasIndex("RequestedByCustomerId");
 
@@ -1249,8 +1489,14 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("PaymentProvider", "ExternalPaymentRefundId")
                         .IsUnique();
 
-                    b.HasIndex("OrganizationId", "LocalEntityType", "LocalEntityId")
-                        .IsUnique();
+                    b.HasIndex("ReconciliationLeaseExpiresAt", "Status");
+
+                    b.HasIndex("LocalEntityType", "LocalEntityId", "RefundKind")
+                        .IsUnique()
+                        .HasDatabaseName("IX_MarketplaceRefund_ActiveCancellation")
+                        .HasFilter("\"RefundKind\" = 'Cancellation' AND \"Status\" NOT IN ('Completed', 'Failed', 'Rejected', 'Cancelled')");
+
+                    b.HasIndex("OrganizationId", "LocalEntityType", "LocalEntityId");
 
                     b.ToTable("MarketplaceRefund");
                 });
@@ -1267,6 +1513,10 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Property<string>("ActorCustomerId")
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1301,8 +1551,16 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("NewStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<DateTimeOffset>("OccurredAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PreviousStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("Reason")
                         .HasMaxLength(100000)
@@ -1322,6 +1580,132 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("MarketplaceRefundId", "OccurredAt", "CreatedAt");
 
                     b.ToTable("MarketplaceRefundEvent");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefundNotificationDelivery", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("MarketplaceRefundId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RecipientId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("SentAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasDefaultValue("Pending");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("MarketplaceRefundId", "EventType", "RecipientId")
+                        .IsUnique();
+
+                    b.ToTable("MarketplaceRefundNotificationDelivery");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefundPaymentAllocation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<decimal>("AllocatedRefundAmount")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<bool>("IsSourcePayment")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MarketplaceRefundId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("SourceCapturedAmount")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<string>("SourcePaymentProvider")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("SourcePaymentReference")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("SourcePaymentProvider", "SourcePaymentReference")
+                        .IsUnique()
+                        .HasFilter("\"IsSourcePayment\" = TRUE");
+
+                    b.HasIndex("MarketplaceRefundId", "SourcePaymentProvider", "SourcePaymentReference", "IsSourcePayment")
+                        .IsUnique();
+
+                    b.ToTable("MarketplaceRefundPaymentAllocation");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Organization", b =>
@@ -2109,6 +2493,14 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("ChargeId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("ChargeType")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<string>("CheckoutUrl")
                         .IsRequired()
                         .HasMaxLength(2000)
@@ -2119,6 +2511,10 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DestinationAccountId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<uint>("EntityFrameworkVersion")
                         .IsConcurrencyToken()
@@ -2133,6 +2529,29 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("PaymentIntentId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTimeOffset?>("PayoutDisbursedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PayoutFailureMessage")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("PayoutId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("PayoutStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("StripeAccountId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
                     b.Property<string>("StripeCheckoutSessionId")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -2141,6 +2560,10 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("StripeCustomerCustomerId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("TransferId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.HasKey("Id");
 
@@ -3089,17 +3512,29 @@ namespace Booking.Shared.Database.Migrations
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefund", b =>
                 {
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "ApprovedByCustomer")
+                        .WithMany()
+                        .HasForeignKey("ApprovedByCustomerId");
+
                     b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
                         .WithMany()
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "RejectedByCustomer")
+                        .WithMany()
+                        .HasForeignKey("RejectedByCustomerId");
+
                     b.HasOne("Booking.Shared.Database.Entities.Customer", "RequestedByCustomer")
                         .WithMany()
                         .HasForeignKey("RequestedByCustomerId");
 
+                    b.Navigation("ApprovedByCustomer");
+
                     b.Navigation("Organization");
+
+                    b.Navigation("RejectedByCustomer");
 
                     b.Navigation("RequestedByCustomer");
                 });
@@ -3117,6 +3552,28 @@ namespace Booking.Shared.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("ActorCustomer");
+
+                    b.Navigation("MarketplaceRefund");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefundNotificationDelivery", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.MarketplaceRefund", "MarketplaceRefund")
+                        .WithMany()
+                        .HasForeignKey("MarketplaceRefundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MarketplaceRefund");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefundPaymentAllocation", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.MarketplaceRefund", "MarketplaceRefund")
+                        .WithMany("PaymentAllocations")
+                        .HasForeignKey("MarketplaceRefundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("MarketplaceRefund");
                 });
@@ -3745,6 +4202,8 @@ namespace Booking.Shared.Database.Migrations
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefund", b =>
                 {
                     b.Navigation("Events");
+
+                    b.Navigation("PaymentAllocations");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Organization", b =>

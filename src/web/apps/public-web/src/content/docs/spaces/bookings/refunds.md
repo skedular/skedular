@@ -54,11 +54,11 @@ For a Stripe-paid Booking or Subscription, Spaces submits the approved refund th
 
 ## Bank-transfer refunds
 
-Bank transfers are external payments. Spaces does not automatically return money transferred directly between the Customer and the operator. The operator returns the money outside Skedular, then uses the **Needs manual follow-up** action to move the refund into manual handling and **Mark manual payout complete** to record that the external payout is finished.
+Bank transfers are external payments. Spaces does not automatically return money transferred directly between the Customer and the operator. The operator returns the money outside Skedular, then follows the audited workflow: **Approve refund**, **Record transfer sent** with the bank reference, and **Confirm transfer received**. The refund remains visible as **Under review**, **Approved**, or **Processing** until the transfer is confirmed. Allow up to five business days for manual settlement.
 
 ## Xero accounting
 
-When Xero processing is available, Spaces creates an authorized credit note in the connected Xero account against the original invoice. If the credit note cannot be created successfully, the refund remains unresolved until the accounting action is completed or the operator records another outcome with **Mark complete** or **Mark failed**. See [Xero accounting](/docs/spaces/billing-and-payments/xero-accounting) for the integration details.
+When Xero processing is available, Spaces creates an authorized credit note in the connected Xero account against the original invoice. If the credit note cannot be created successfully, the refund remains unresolved until the accounting action is completed or an operator resolves the reconciliation outcome with a reason and provider reference when applicable. See [Xero accounting](/docs/spaces/billing-and-payments/xero-accounting) for the integration details.
 
 ## Bookings and Subscriptions
 
@@ -66,7 +66,7 @@ For a one-time Booking, cancellation releases the Booking according to the cance
 
 ## Refund statuses
 
-The refund record and timeline show whether a refund was requested, is waiting for accounting or provider processing, completed, failed, or requires manual follow-up. These outcomes are separate from Booking cancellation, Subscription status, payment status, and invoice status.
+The refund record and timeline show whether a refund was requested, is under review, approved, processing with a provider, provider-pending, completed, rejected, cancelled, failed, or requires reconciliation. Stripe refunds generally update within minutes of the provider webhook; Xero credit-note processing can take up to one business day. These outcomes are separate from Booking cancellation, Subscription status, payment status, and invoice status.
 
 ## What a refund changes
 

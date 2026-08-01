@@ -127,7 +127,10 @@ public class EnsureForHostLocationAsyncShould
         var location = CreateLocation(locationId, OrganizationTypeConstants.Host);
         var hiddenResource = new ResourceEntity
         {
-            Id = $"host-location-resource-{location.Id}", Name = "Archived resource", Location = location, DeletedAt = DateTimeOffset.UtcNow
+            Id = $"host-location-resource-{location.Id}",
+            Name = "Archived resource",
+            Location = location,
+            DeletedAt = TimeProvider.System.GetUtcNow()
         };
         location.Resources.Add(hiddenResource);
         var sut = new AutoResourceService(repositoryFactory, logger);

@@ -114,8 +114,8 @@ The code paths are separate enough that it is easy to fix one and leave the othe
   Already-generated or already-emailed invoices are not retracted.
 - One-time marketplace booking cancellation must use the same accounting invoice cancellation boundary as recurring
   cancellation. Do not leave booking delete as a payment-workflow-only cleanup path.
-- On the Xero repeating path, marketplace subscription cancellation must also cancel the live repeating template in
-  Xero for the affected recurring booking instances instead of only freezing local export state.
+- On the Xero repeating path, marketplace subscription cancellation must also cancel the live repeating template in Xero
+  for the affected recurring booking instances instead of only freezing local export state.
 - Subscription cancellation is not complete if it only releases bookings/resources while recurring payment or recurring
   invoice flows are still active.
 - `CancelAtPeriodEnd` should not soft-delete the subscription immediately. It should keep the current cycle alive,
@@ -141,10 +141,9 @@ The code paths are separate enough that it is easy to fix one and leave the othe
 - Xero email-send is best-effort. Export should not fail just because Xero email delivery fails after the invoice
   already exists.
 - For Xero repeating invoice webhook reconciliation, keep the stored local recurring `AccountingInvoiceExportLink` keyed
-  by
-  the repeating template id. Generated recurring invoice webhooks arrive with a different concrete invoice id, so the
-  handler must resolve that concrete invoice from Xero, read `RepeatingInvoiceID`, and then correlate back to the
-  stored local link.
+  by the repeating template id. Generated recurring invoice webhooks arrive with a different concrete invoice id, so the
+  handler must resolve that concrete invoice from Xero, read `RepeatingInvoiceID`, and then correlate back to the stored
+  local link.
 - Xero may emit both the repeating-template invoice event and the concrete generated invoice event in the same or
   subsequent webhook batches. Do not assume event ordering or that the first event is the payment-bearing invoice.
 - Future work: recurring payment confirmation must eventually become installment-aware. For recurring cadences split by
@@ -182,12 +181,13 @@ The code paths are separate enough that it is easy to fix one and leave the othe
 - API/UI surfaces should consume the booking-owned Xero processing readiness signal for each refund instead of
   hardcoding assumptions such as “subscriptions can never process in Xero”.
 - Refund notifications should follow committed local refund state changes, not speculative provider attempts. Trigger
-  them after the refund save/commit boundary for `Requested`, `PendingAccounting`, `Completed`, and `Failed`.
+  them after the refund save/commit boundary for canonical states such as `Requested`, `ProviderPending`, `Completed`,
+  and `Failed`.
 - Immediate customer-facing cancellation should auto-attempt the happy-path refund projection when possible:
     - create the local refund record
     - auto-promote it into accounting processing
     - attempt Xero credit-note projection immediately when availability/correlation is deterministic
-    - fall back to `ManualRequired` only when automation is blocked or fails
+    - fall back to `ReconciliationRequired` only when automation is blocked, ambiguous, or fails
 - Do not require a separate operator approval click for the normal eligible-refund path unless the product explicitly
   wants manual approval. The default flow should be automatic, with admin follow-up reserved for exceptions.
 - Refund notification routing should dedupe identical customer/internal email addresses so one state change does not
@@ -195,8 +195,8 @@ The code paths are separate enough that it is easy to fix one and leave the othe
 - Internal refund notifications should target the same active owner/administrator audience that can modify payment
   methods, with `Organization.ContactEmail` included as an additional internal recipient when present.
 - Organization-managed refund notification emails are the source of truth for extra internal recipients. Per-
-  organization routing belongs on organization settings and should arrive in booking through the replicated
-  organization model.
+  organization routing belongs on organization settings and should arrive in booking through the replicated organization
+  model.
 - Refund notification copy should distinguish provider-confirmed completion from local/manual states, and failed
   notifications should explicitly call out manual follow-up when downstream accounting is blocked.
 - `CancelAtPeriodEnd` should usually stop future billing without automatically creating a refund for the active cycle.
@@ -213,16 +213,15 @@ The code paths are separate enough that it is easy to fix one and leave the othe
   fields.
 - Persist refund events for at least:
     - `Requested`
-    - `PendingAccounting`
+    - `ProviderPending`
     - `SentToXero`
     - `Completed`
     - `Failed`
-- Refund events should snapshot the amount, note/reason, actor, and provider reference/error state visible at that
-  step.
-- Manual refund handling should remain inside the same aggregate and event stream:
-    - `ManualRequired` means provider-side automation is blocked and operator follow-up is required
-    - `ManualCompleted` means the operator completed the refund outside provider automation but still inside the local
-      refund lifecycle
+- Refund events should snapshot the amount, note/reason, actor, and provider reference/error state visible at that step.
+- Manual refund handling should remain inside the same aggregate and event stream. Operator follow-up is represented by
+  `ReconciliationRequired` with a durable reason, provider reference, actor, and correlation ID; completed or rejected
+  outcomes use the canonical `Completed` or `Rejected` states. Removed legacy manual/accounting-pending states must not
+  be introduced by new code.
 - If finance/support need a cross-entity queue, prefer an organization-scoped refund operations view backed by a refund
   query rather than duplicating refund controls into unrelated booking lists.
 - Extra internal refund recipients from organization settings should still dedupe against customer and discovered

@@ -12,7 +12,6 @@ namespace Booking.Api.GraphQL.ResourceAvailability;
 [QueryType]
 public class RootQuery(IGraphQlMapper graphQlMapper)
 {
-    [UseResolverScope]
     public IEnumerable<ResourceAvailabilityClassificationDetails> ResourceAvailabilityStatuses() =>
     [
         new()

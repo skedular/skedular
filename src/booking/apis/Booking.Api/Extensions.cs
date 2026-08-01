@@ -19,6 +19,7 @@ public static class Extensions
         public IServiceCollection AddServices() =>
             services
                 .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
+                .AddScoped<IPlatformOperationsAuthorizationService, PlatformOperationsAuthorizationService>()
                 .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
                 .AddScoped<IPricingEntitlementEvaluator, PricingEntitlementEvaluator>()
                 .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()

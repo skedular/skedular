@@ -30,7 +30,6 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         return failures.Select(item => graphQlMapper.MapTo(item)).ToList();
     }
 
-    [UseResolverScope]
     public IEnumerable<BookingCategoryDetails> BookingCategories() =>
     [
         new() { Category = BookingCategory.WorkingFromHome, Name = BookingCategoryConstants.WorkingFromHome.ToBookingCategoryName() },
@@ -49,7 +48,6 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         new() { Category = BookingCategory.NonWorkingDay, Name = BookingCategoryConstants.NonWorkingDay.ToBookingCategoryName() }
     ];
 
-    [UseResolverScope]
     public IEnumerable<BookingCategoryDetails> MarketplaceBookingCategories() =>
     [
         new() { Category = BookingCategory.WorkingFromOffice, Name = BookingCategoryConstants.WorkingFromOffice.ToBookingCategoryName() },

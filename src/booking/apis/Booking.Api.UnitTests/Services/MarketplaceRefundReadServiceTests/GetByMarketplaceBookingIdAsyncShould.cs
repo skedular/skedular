@@ -37,7 +37,7 @@ public class GetByMarketplaceBookingIdAsyncShould
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundEventRepository).Returns(marketplaceRefundEventRepository);
-        A.CallTo(() => marketplaceRefundRepository.GetByLocalEntityAsync(
+        A.CallTo(() => marketplaceRefundRepository.GetLatestByLocalEntityAsync(
                 MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
                 "marketplace-booking-1",
                 cancellationToken))
@@ -51,7 +51,7 @@ public class GetByMarketplaceBookingIdAsyncShould
 
         var result = await sut.GetByMarketplaceBookingIdAsync("marketplace-booking-1", cancellationToken);
 
-        result.ShouldBe(mappedRefund);
+        result!.Id.ShouldBe(mappedRefund.Id);
         result!.CanProcessInXero.ShouldBeTrue();
     }
 
@@ -85,7 +85,7 @@ public class GetByMarketplaceBookingIdAsyncShould
         };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
-        A.CallTo(() => marketplaceRefundRepository.GetByLocalEntityAsync(
+        A.CallTo(() => marketplaceRefundRepository.GetLatestByLocalEntityAsync(
                 MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
                 "marketplace-booking-1",
                 cancellationToken))
@@ -96,7 +96,7 @@ public class GetByMarketplaceBookingIdAsyncShould
 
         var result = await sut.GetByMarketplaceBookingIdAsync("marketplace-booking-1", cancellationToken);
 
-        result.ShouldBe(mappedRefund);
+        result!.Id.ShouldBe(mappedRefund.Id);
         result!.Events.ShouldBeEmpty();
         result.RequestedByCustomerName.ShouldBeNull();
         result.LastError.ShouldBeNull();
@@ -118,7 +118,7 @@ public class GetByMarketplaceBookingIdAsyncShould
     {
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundEventRepository).Returns(marketplaceRefundEventRepository);
-        A.CallTo(() => marketplaceRefundRepository.GetByLocalEntityAsync(
+        A.CallTo(() => marketplaceRefundRepository.GetLatestByLocalEntityAsync(
                 MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
                 "marketplace-booking-1",
                 cancellationToken))

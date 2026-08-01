@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f481b2ab9addf871bbd0fdcfe118997d>>
+ * @generated SignedSource<<217b0e6db96dc049614766e1c081872e>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
+export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type myBookingCard_BookingDetails$data = {
@@ -65,6 +66,13 @@ export type myBookingCard_BookingDetails$data = {
       readonly name: string;
       readonly type: PaymentStatus;
     };
+    readonly refund: {
+      readonly currencyToDisplay: string;
+      readonly refundAmount: any | null | undefined;
+      readonly status: {
+        readonly type: MarketplaceRefundStatus;
+      };
+    } | null | undefined;
   } | null | undefined;
   readonly notes: string | null | undefined;
   readonly recurringBooking: {
@@ -115,7 +123,14 @@ v4 = [
   (v0/*:: as any*/),
   (v1/*:: as any*/),
   (v3/*:: as any*/)
-];
+],
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -334,13 +349,7 @@ return {
           "name": "paymentStatus",
           "plural": false,
           "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "type",
-              "storageKey": null
-            },
+            (v5/*:: as any*/),
             (v1/*:: as any*/)
           ],
           "storageKey": null
@@ -350,6 +359,43 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "invoiceUrl",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceRefundDetails",
+          "kind": "LinkedField",
+          "name": "refund",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "MarketplaceRefundStatusDetails",
+              "kind": "LinkedField",
+              "name": "status",
+              "plural": false,
+              "selections": [
+                (v5/*:: as any*/)
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "refundAmount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "currencyToDisplay",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -409,6 +455,6 @@ return {
 };
 })();
 
-(node as any).hash = "3b1d54823fea70db03f0f2eedf02954f";
+(node as any).hash = "581f2de9c64e9d951125d14f05da206a";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9521651feae694faf61549cb4ea7923d>>
+ * @generated SignedSource<<119db3da0fe908f7a9c06f4f73d5f1c8>>
  * @lightSyntaxTransform
  */
 
@@ -11,6 +11,8 @@ import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PAUSED" | "RENEWAL_FAILED" | "%future added value";
+export type MarketplaceRefundEventType = "ACCOUNTING_PROJECTED" | "ACCOUNTING_PROJECTION_REQUIRED" | "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "SENT_TO_XERO" | "UNDER_REVIEW" | "%future added value";
+export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type marketplaceProductSubscriptionDetails_subscription_Subscription$variables = {
@@ -121,7 +123,7 @@ export type marketplaceProductSubscriptionDetails_subscription_Subscription$data
         readonly currencyToDisplay: string;
         readonly eventType: {
           readonly name: string;
-          readonly type: string;
+          readonly type: MarketplaceRefundEventType;
         };
         readonly externalRefundNumber: string | null | undefined;
         readonly id: string;
@@ -140,7 +142,7 @@ export type marketplaceProductSubscriptionDetails_subscription_Subscription$data
       readonly requestedByCustomerName: string | null | undefined;
       readonly status: {
         readonly name: string;
-        readonly type: string;
+        readonly type: MarketplaceRefundStatus;
       };
     } | null | undefined;
     readonly startedAt: any;

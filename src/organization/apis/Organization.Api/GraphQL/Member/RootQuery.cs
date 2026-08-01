@@ -6,7 +6,6 @@ namespace Organization.Api.GraphQL.Member;
 [QueryType]
 public class RootQuery
 {
-    [UseResolverScope]
     public IEnumerable<OrganizationMemberRoleDetails> OrganizationMemberRoles() =>
     [
         new() { Type = OrganizationMemberRole.Owner, Name = OrganizationMemberRole.Owner.ToOrganizationMemberRoleName() },
@@ -14,7 +13,6 @@ public class RootQuery
         new() { Type = OrganizationMemberRole.Member, Name = OrganizationMemberRole.Member.ToOrganizationMemberRoleName() }
     ];
 
-    [UseResolverScope]
     public IEnumerable<OrganizationMemberStatusDetails> OrganizationMemberStatuses() =>
     [
         new() { Type = OrganizationMemberStatus.Active, Name = OrganizationMemberStatus.Active.ToOrganizationMemberStatusName() },

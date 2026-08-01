@@ -11,13 +11,17 @@ import { memo, useState } from 'react';
 
 type Props = {
   defaultDate?: Dayjs;
+  value?: Dayjs | null;
+  label?: string;
+  allowEmpty?: boolean;
   onDateChanged: (date: Dayjs) => void;
   disablePastDaysSelection?: boolean;
 };
 
-const DayPicker = ({ defaultDate, onDateChanged, disablePastDaysSelection }: Props) => {
-  const [date, setDate] = useState(defaultDate ?? startOfDay());
+const DayPicker = ({ defaultDate, value, label = 'Date', allowEmpty = false, onDateChanged, disablePastDaysSelection }: Props) => {
+  const [date, setDate] = useState<Dayjs | null>(value ?? defaultDate ?? (allowEmpty ? null : startOfDay()));
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const selectedDate = value !== undefined ? value : date;
 
   const handleChanged = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -38,7 +42,9 @@ const DayPicker = ({ defaultDate, onDateChanged, disablePastDaysSelection }: Pro
       }
     }
 
-    setDate(newDate);
+    if (value === undefined) {
+      setDate(newDate);
+    }
     handleClose();
 
     onDateChanged(newDate);
@@ -53,10 +59,10 @@ const DayPicker = ({ defaultDate, onDateChanged, disablePastDaysSelection }: Pro
         size="small"
         renderValue={() => (
           <StackRow>
-            <LeadIconTypography label="Date" startElement={<CalendarIcon />} />
+            <LeadIconTypography label={label} startElement={<CalendarIcon />} />
             <Divider orientation="vertical" flexItem />
             <PushToRight />
-            <SmallIconTypography label={toShortDateWithoutWeekDay(date)} />
+            <SmallIconTypography label={selectedDate ? toShortDateWithoutWeekDay(selectedDate) : 'Any date'} />
           </StackRow>
         )}
         value=""
@@ -71,7 +77,7 @@ const DayPicker = ({ defaultDate, onDateChanged, disablePastDaysSelection }: Pro
           horizontal: 'left',
         }}
       >
-        <StaticDatePicker slots={{ toolbar: EmptyCalendarToolbar }} slotProps={SimpleCalendarSlotProps} defaultValue={date} onChange={handleChange} />
+        <StaticDatePicker slots={{ toolbar: EmptyCalendarToolbar }} slotProps={SimpleCalendarSlotProps} value={selectedDate ?? startOfDay()} onChange={handleChange} />
       </Popover>
     </>
   );

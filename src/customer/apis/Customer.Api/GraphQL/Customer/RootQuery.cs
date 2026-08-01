@@ -11,7 +11,6 @@ namespace Customer.Api.GraphQL.Customer;
 [QueryType]
 public class RootQuery(IGraphQlMapper graphQlMapper)
 {
-    [UseResolverScope]
     public IEnumerable<PersonalInformationVisibilityDetails> PersonalInformationVisibilityTypes() =>
     [
         new() { Type = PersonalInformationVisibility.Visible, Name = PersonalInformationVisibility.Visible.ToPersonalInformationVisibilityName() },

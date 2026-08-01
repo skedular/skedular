@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.BookingInternal.V1;
 using Api.Shared.Services.Models;
-using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows;
@@ -11,6 +10,7 @@ using Stripe;
 using Stripe.Checkout;
 using Constants = Booking.Shared.GraphQL.Constants;
 using Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event;
+using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using Type = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Type;
 
 namespace Booking.Processors.Subscribers;
@@ -20,7 +20,7 @@ public class BookingInternalSubscriber(
     ITemporalService temporalService,
     IXeroWebhookService xeroWebhookService,
     IStripeHostRefundService stripeHostRefundService,
-    IMarketplaceRefundAutomationService marketplaceRefundAutomationService,
+    IStripePayoutReconciliationService payoutReconciliationService,
     IGraphQlTopicEventSender graphQlTopicEventSender) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -46,24 +46,160 @@ public class BookingInternalSubscriber(
         switch (stripeEvent.Type)
         {
             case EventTypes.CheckoutSessionCompleted:
+            case "checkout.session.async_payment_succeeded":
                 await HandleCheckoutSessionCompletedAsync(stripeEvent, cancellationToken);
                 break;
 
             case EventTypes.CheckoutSessionExpired:
+            case "checkout.session.async_payment_failed":
                 await HandleCheckoutSessionExpiredAsync(stripeEvent, cancellationToken);
+                break;
+            case "charge.succeeded" when stripeEvent.Data.Object is Charge charge:
+                await HandleChargeSucceededAsync(charge, cancellationToken);
+                break;
+            case "charge.failed" when stripeEvent.Data.Object is Charge charge:
+                await HandleChargeFailedAsync(charge, cancellationToken);
+                break;
+            case "payment_intent.succeeded" when stripeEvent.Data.Object is PaymentIntent paymentIntent:
+                await HandlePaymentIntentSucceededAsync(paymentIntent, cancellationToken);
+                break;
+            case "payment_intent.payment_failed" or "payment_intent.canceled"
+                when stripeEvent.Data.Object is PaymentIntent paymentIntent:
+                await HandlePaymentIntentFailedAsync(paymentIntent, cancellationToken);
+                break;
+            case "payout.paid" or "payout.reconciliation_completed" when stripeEvent.Data.Object is Payout payout:
+                await payoutReconciliationService.HandlePaidAsync(
+                    payout,
+                    stripeEvent.Account,
+                    cancellationToken,
+                    new DateTimeOffset(stripeEvent.Created, TimeSpan.Zero),
+                    stripeEvent.Id);
+                break;
+            case "payout.failed" or "payout.canceled" or "payout.updated" when stripeEvent.Data.Object is Payout payout:
+                await payoutReconciliationService.HandleStateChangedAsync(
+                    payout,
+                    stripeEvent.Type,
+                    cancellationToken,
+                    stripeEvent.Account,
+                    new DateTimeOffset(stripeEvent.Created, TimeSpan.Zero),
+                    stripeEvent.Id);
                 break;
             case "refund.created":
             case "refund.updated":
+            case "refund.failed":
                 if (stripeEvent.Data.Object is Refund refund)
                 {
-                    var localRefund = await stripeHostRefundService.ReconcileAsync(refund, cancellationToken);
-                    if (localRefund?.Status == MarketplaceRefundStatusConstants.Completed)
+                    var localRefund = await stripeHostRefundService.ReconcileAsync(
+                        refund,
+                        cancellationToken,
+                        stripeEvent.Account,
+                        stripeEvent.Id);
+                    if (localRefund is not null)
                     {
-                        await marketplaceRefundAutomationService.ProjectAccountingAfterStripeAsync(localRefund, null, cancellationToken);
+                        if (stripeEvent.Type == "refund.failed")
+                        {
+                            localRefund.RetryCount++;
+                            repositoryFactory.MarketplaceRefundRepository.Update(localRefund);
+                            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+                        }
                     }
                 }
 
                 break;
+        }
+    }
+
+    internal async Task HandleChargeSucceededAsync(Charge charge, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(charge.PaymentIntentId))
+        {
+            return;
+        }
+
+        var checkout = await repositoryFactory.StripeCheckoutSessionRepository.GetByPaymentIntentIdAsync(
+            charge.PaymentIntentId, cancellationToken);
+        if (checkout is null)
+        {
+            return;
+        }
+
+        checkout.ChargeId = charge.Id;
+        checkout.TransferId = charge.TransferId;
+        repositoryFactory.StripeCheckoutSessionRepository.Update(checkout);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task HandleChargeFailedAsync(Charge charge, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(charge.PaymentIntentId))
+        {
+            return;
+        }
+
+        var checkout = await repositoryFactory.StripeCheckoutSessionRepository.GetByPaymentIntentIdAsync(
+            charge.PaymentIntentId, cancellationToken);
+        if (checkout is null)
+        {
+            return;
+        }
+
+        checkout.MarketplaceBooking.PaymentStatus = PaymentStatusConstants.Rejected;
+        repositoryFactory.StripeCheckoutSessionRepository.Update(checkout);
+        repositoryFactory.MarketplaceBookingRepository.Update(checkout.MarketplaceBooking);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await SignalPaymentStatusAsync(checkout.MarketplaceBooking, cancellationToken);
+    }
+
+    private async Task HandlePaymentIntentSucceededAsync(PaymentIntent paymentIntent, CancellationToken cancellationToken)
+    {
+        var checkout = await repositoryFactory.StripeCheckoutSessionRepository.GetByPaymentIntentIdAsync(
+            paymentIntent.Id, cancellationToken);
+        if (checkout is null)
+        {
+            return;
+        }
+
+        checkout.PaymentIntentId = paymentIntent.Id;
+        checkout.MarketplaceBooking.PaymentStatus = PaymentStatusConstants.Confirmed;
+        repositoryFactory.StripeCheckoutSessionRepository.Update(checkout);
+        repositoryFactory.MarketplaceBookingRepository.Update(checkout.MarketplaceBooking);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await SignalPaymentStatusAsync(checkout.MarketplaceBooking, cancellationToken);
+    }
+
+    private async Task HandlePaymentIntentFailedAsync(PaymentIntent paymentIntent, CancellationToken cancellationToken)
+    {
+        var checkout = await repositoryFactory.StripeCheckoutSessionRepository.GetByPaymentIntentIdAsync(
+            paymentIntent.Id, cancellationToken);
+        if (checkout is null)
+        {
+            return;
+        }
+
+        checkout.MarketplaceBooking.PaymentStatus = PaymentStatusConstants.Rejected;
+        repositoryFactory.StripeCheckoutSessionRepository.Update(checkout);
+        repositoryFactory.MarketplaceBookingRepository.Update(checkout.MarketplaceBooking);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await SignalPaymentStatusAsync(checkout.MarketplaceBooking, cancellationToken);
+    }
+
+    private async Task SignalPaymentStatusAsync(
+        MarketplaceBooking marketplaceBooking,
+        CancellationToken cancellationToken)
+    {
+        if (marketplaceBooking.Booking is not null)
+        {
+            await temporalService.SignalPayBookingViaCardWorkflowAsync(
+                marketplaceBooking.Booking.Id,
+                new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
+                cancellationToken);
+        }
+        else if (marketplaceBooking.RecurringBooking?.MarketplaceBookingSubscription is not null)
+        {
+            await temporalService.SignalPayRecurringBookingViaCardWorkflowAsync(
+                marketplaceBooking.RecurringBooking.Id,
+                new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
+                cancellationToken);
         }
     }
 
@@ -81,6 +217,8 @@ public class BookingInternalSubscriber(
         }
 
         var marketplaceBooking = stripeCheckoutSession.MarketplaceBooking;
+        stripeCheckoutSession.PaymentIntentId = session.PaymentIntentId;
+        repositoryFactory.StripeCheckoutSessionRepository.Update(stripeCheckoutSession);
         marketplaceBooking.PaymentStatus = session.PaymentStatus switch
         {
             "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,

@@ -58,11 +58,17 @@ public class MarketplaceBookingSubscriptionIntegrations(
         AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        logger.LogInformation(
+            "Reconciling marketplace booking subscription {MarketplaceBookingSubscriptionId}",
+            args.MarketplaceBookingSubscriptionId);
         var subscription = await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdAsync(
             args.MarketplaceBookingSubscriptionId,
             cancellationToken);
         if (subscription is null || subscription.IsDeleted())
         {
+            logger.LogInformation(
+                "Marketplace booking subscription {MarketplaceBookingSubscriptionId} no longer exists or was deleted",
+                args.MarketplaceBookingSubscriptionId);
             return new AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsyncResponse(true, true);
         }
 
@@ -76,6 +82,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 cancellationToken);
             if (!accessDecision.Allowed)
             {
+                logger.LogInformation(
+                    "Marketplace booking subscription {MarketplaceBookingSubscriptionId} is waiting for spaces access for organization {OrganizationId}",
+                    subscription.Id,
+                    organization.Id);
                 // Keep the workflow alive so a paid upgrade resumes reconciliation without
                 // recreating the subscription or its existing configuration.
                 return new AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsyncResponse(false, false);
@@ -86,6 +96,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
         if (subscription.Status.ToMarketplaceBookingSubscriptionStatus() != MarketplaceBookingSubscriptionStatus.Active)
         {
+            logger.LogInformation(
+                "Marketplace booking subscription {MarketplaceBookingSubscriptionId} is not active; status is {Status}",
+                subscription.Id,
+                subscription.Status);
             if (subscription.Status.ToMarketplaceBookingSubscriptionStatus() == MarketplaceBookingSubscriptionStatus.Paused)
             {
                 // Keep the workflow alive for paused and other non-deleted states so it can
@@ -97,6 +111,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
         }
 
         var currentCycleRecurringBooking = await EnsureCurrentCycleRecurringBookingAsync(subscription, cancellationToken);
+        logger.LogInformation(
+            "Marketplace booking subscription {MarketplaceBookingSubscriptionId} is reconciling recurring booking {RecurringBookingId}",
+            subscription.Id,
+            currentCycleRecurringBooking.Id);
         if (subscription.RecurringBookings.All(item => item.Id != currentCycleRecurringBooking.Id))
         {
             subscription.RecurringBookings.Add(currentCycleRecurringBooking);
@@ -183,6 +201,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
         await accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, cancellationToken);
         MarkRecurringBookingPaymentAsTerminal(recurringBooking);
+        MarkSubscriptionPaymentAsTerminal(recurringBooking, args.FailureCategory);
 
         await marketplaceBookingFailureService.FinalizeAsync(
             new MarketplaceBookingFailureFinalization(
@@ -1011,6 +1030,26 @@ public class MarketplaceBookingSubscriptionIntegrations(
             ? PaymentStatusConstants.RecordNeverCreated
             : PaymentStatusConstants.Expired;
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+    }
+
+    private void MarkSubscriptionPaymentAsTerminal(RecurringBooking recurringBooking, string failureCategory)
+    {
+        var subscription = recurringBooking.MarketplaceBookingSubscription;
+        if (subscription is null || subscription.Status.ToMarketplaceBookingSubscriptionStatus() is
+                MarketplaceBookingSubscriptionStatus.Cancelled or
+                MarketplaceBookingSubscriptionStatus.Expired or
+                MarketplaceBookingSubscriptionStatus.RenewalFailed or
+                MarketplaceBookingSubscriptionStatus.Paused)
+        {
+            return;
+        }
+
+        subscription.Status = failureCategory == MarketplaceBookingFailureCategoryConstants.PaymentExpired
+            ? MarketplaceBookingSubscriptionStatus.Expired.ToMarketplaceBookingSubscriptionStatus()
+            : MarketplaceBookingSubscriptionStatus.RenewalFailed.ToMarketplaceBookingSubscriptionStatus();
+        subscription.AutoRenew = false;
+        subscription.NextRenewalAt = null;
+        repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(subscription);
     }
 
     private static int GetBookingPaymentExpiryInMinutes(ProductPricing pricing, PaymentMethod paymentMethod) =>

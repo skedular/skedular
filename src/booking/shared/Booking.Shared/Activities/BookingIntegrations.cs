@@ -7,6 +7,7 @@ using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
+using Booking.Shared.Workflows;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
@@ -42,6 +43,8 @@ public class BookingIntegrations(
     IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
     IMarketplaceBookingFailureService marketplaceBookingFailureService,
     IHostCommissionService hostCommissionService,
+    IMarketplaceRefundService marketplaceRefundService,
+    ITemporalOutboxService temporalOutboxService,
     TimeProvider timeProvider,
     ILogger<BookingIntegrations> logger)
 {
@@ -234,6 +237,10 @@ public class BookingIntegrations(
 
         var marketplaceBooking = booking.MarketplaceBooking;
         var failureCategory = args.FailureCategory ?? MarketplaceBookingFailureCategoryConstants.PaymentExpired;
+        // Capture the payment outcome before terminal cleanup rewrites the local status.
+        // Otherwise a confirmed payment is changed to Expired and the compensating refund
+        // path is skipped.
+        var wasAlreadyPaid = marketplaceBooking.PaymentStatus == PaymentStatusConstants.Confirmed;
         await marketplaceBookingFailureService.FinalizeAsync(
             new MarketplaceBookingFailureFinalization(
                 null,
@@ -252,6 +259,16 @@ public class BookingIntegrations(
                 booking.CreatedByCustomer?.Id,
                 []),
             cancellationToken);
+
+        MarketplaceRefund? refundToProcess = null;
+        if (wasAlreadyPaid)
+        {
+            // The refund service deliberately requires confirmed payment, so create the durable
+            // refund request before terminal cleanup changes the local payment status.
+            refundToProcess = await marketplaceRefundService.CreateBookingCancellationRefundAsync(
+                booking, null, cancellationToken, true);
+        }
+
         marketplaceBooking.PaymentStatus = marketplaceBooking.StripeCheckoutSession is null
             ? PaymentStatusConstants.RecordNeverCreated
             : PaymentStatusConstants.Expired;
@@ -263,6 +280,12 @@ public class BookingIntegrations(
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
 
         bookingOutboxPublisher.PublishBookings([entityMapper.MapTo(booking)], repositoryFactory.UnitOfWork);
+
+        if (refundToProcess is not null)
+        {
+            temporalOutboxService.StartWorkflowProcessMarketplaceRefund(
+                new ProcessMarketplaceRefundInput(refundToProcess.Id, null), repositoryFactory.UnitOfWork);
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

@@ -18,7 +18,10 @@ public class LocationSubscriber(
     IEventMapper eventMapper,
     IRepositoryFactory repositoryFactory,
     IDbTransactionBuilder transactionBuilder,
-    ITemporalService temporalService) : IEventSubscriber<Key, Event>
+    ITemporalService temporalService,
+    IMarketplaceRefundService marketplaceRefundService,
+    ITemporalOutboxService temporalOutboxService,
+    TimeProvider timeProvider) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -116,6 +119,28 @@ public class LocationSubscriber(
 
     private async Task HandleLocationDeletedEventAsync(Location existingLocation, CancellationToken cancellationToken)
     {
+        var futureBookings = await repositoryFactory.BookingRepository
+            .GetFutureConfirmedMarketplaceBookingsByLocationIdAsync(existingLocation.Id, timeProvider.GetUtcNow(), cancellationToken);
+        foreach (var booking in futureBookings)
+        {
+            var refund = await marketplaceRefundService.CreateBookingCancellationRefundAsync(
+                booking, null, cancellationToken, true);
+            if (refund is not null)
+            {
+                temporalOutboxService.StartWorkflowProcessMarketplaceRefund(
+                    new ProcessMarketplaceRefundInput(refund.Id, null),
+                    repositoryFactory.UnitOfWork);
+            }
+        }
+
+        if (futureBookings.Count != 0)
+        {
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            logger.LogInformation(
+                "Created provider-caused refunds for future bookings at deleted location. LocationId={LocationId}, BookingCount={BookingCount}",
+                existingLocation.Id, futureBookings.Count);
+        }
+
         _ = repositoryFactory.LocationRepository.Remove(existingLocation);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

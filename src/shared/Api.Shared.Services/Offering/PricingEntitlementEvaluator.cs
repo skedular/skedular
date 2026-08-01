@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-
 namespace Api.Shared.Services.Offering;
 
 public interface IPricingEntitlementEvaluator
@@ -11,10 +8,8 @@ public interface IPricingEntitlementEvaluator
     EntitlementDecision EvaluateLocationCreation(Models.Offering? offering, int currentLocationCount);
 }
 
-public class PricingEntitlementEvaluator(ILogger<PricingEntitlementEvaluator>? logger = null) : IPricingEntitlementEvaluator
+public class PricingEntitlementEvaluator : IPricingEntitlementEvaluator
 {
-    private readonly ILogger<PricingEntitlementEvaluator> _logger = logger ?? NullLogger<PricingEntitlementEvaluator>.Instance;
-
     public EntitlementDecision EvaluateActiveUser(Models.Offering? offering, string customerId)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
@@ -114,15 +109,7 @@ public class PricingEntitlementEvaluator(ILogger<PricingEntitlementEvaluator>? l
         return Denied(EntitlementReasonCode.FreeLocationLimitReached, $"Organization has reached the location capacity of {limit.Value}.");
     }
 
-    private EntitlementDecision Allowed(string message)
-    {
-        _logger.LogInformation("Pricing entitlement check allowed with reason {ReasonCode}", EntitlementReasonCode.Allowed);
-        return new EntitlementDecision(true, EntitlementReasonCode.Allowed, message);
-    }
+    private EntitlementDecision Allowed(string message) => new(true, EntitlementReasonCode.Allowed, message);
 
-    private EntitlementDecision Denied(EntitlementReasonCode reasonCode, string message)
-    {
-        _logger.LogWarning("Pricing entitlement check denied with reason {ReasonCode}: {Message}", reasonCode, message);
-        return new EntitlementDecision(false, reasonCode, message);
-    }
+    private EntitlementDecision Denied(EntitlementReasonCode reasonCode, string message) => new(false, reasonCode, message);
 }

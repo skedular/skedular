@@ -47,7 +47,8 @@ public class MarketplaceBookingSubscriptionService(
     IGraphQlTopicEventSender graphQlTopicEventSender,
     IGraphQlMapper graphQlMapper,
     IEntityMapper sharedEntityMapper,
-    Shared.Services.IMarketplaceBookingSubscriptionService sharedMarketplaceBookingSubscriptionService)
+    Shared.Services.IMarketplaceBookingSubscriptionService sharedMarketplaceBookingSubscriptionService,
+    ILogger<MarketplaceBookingSubscriptionService> logger)
     : IMarketplaceBookingSubscriptionService
 {
     public async Task<MarketplaceBookingSubscription> GetByIdAsync(string id, CancellationToken cancellationToken)
@@ -236,6 +237,11 @@ public class MarketplaceBookingSubscriptionService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
+        logger.LogInformation(
+            "Marketplace subscription cancellation received by Booking API. SubscriptionId={SubscriptionId}; cancellationMode={CancellationMode}",
+            id,
+            cancellationMode);
+
         var verifiableToken = context.GetVerifiableToken();
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
 
@@ -281,6 +287,10 @@ public class MarketplaceBookingSubscriptionService(
             customer,
             cancellationMode,
             cancellationToken);
+        logger.LogInformation(
+            "Marketplace subscription cancellation completed in Booking API. SubscriptionId={SubscriptionId}; status={SubscriptionStatus}",
+            subscription.Id,
+            subscription.Status);
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(
             Constants.MarketplaceBookingSubscriptionTopicName,
             subscription.Id,

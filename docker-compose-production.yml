@@ -244,6 +244,8 @@ services:
       IdentityProviders__WorkOS__ApiKey: ${STAGING_SKEDULAR_WORKOS_API_KEY}
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
+      Application__SpacesWebAppBaseDomain: https://spacesstaging.skedular.app
+      Application__HostWebAppBaseDomain: https://hoststaging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
@@ -373,6 +375,8 @@ services:
       Application__Environment: staging
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
+      Application__SpacesWebAppBaseDomain: https://spacesstaging.skedular.app
+      Application__HostWebAppBaseDomain: https://hoststaging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Xero__ClientId: ${STAGING_SKEDULAR_XERO_CLIENT_ID}
       Xero__ClientSecret: ${STAGING_SKEDULAR_XERO_CLIENT_SECRET}
@@ -489,6 +493,8 @@ services:
       Application__Environment: staging
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
+      Application__SpacesWebAppBaseDomain: https://spacesstaging.skedular.app
+      Application__HostWebAppBaseDomain: https://hoststaging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Xero__ClientId: ${STAGING_SKEDULAR_XERO_CLIENT_ID}
       Xero__ClientSecret: ${STAGING_SKEDULAR_XERO_CLIENT_SECRET}
@@ -686,6 +692,8 @@ services:
       IdentityProviders__WorkOS__ApiKey: ${PRODUCTION_SKEDULAR_WORKOS_API_KEY}
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
+      Application__SpacesWebAppBaseDomain: https://spaces.skedular.app
+      Application__HostWebAppBaseDomain: https://host.skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
       Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
@@ -815,6 +823,8 @@ services:
       Application__Environment: prod
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
+      Application__SpacesWebAppBaseDomain: https://spaces.skedular.app
+      Application__HostWebAppBaseDomain: https://host.skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
       Xero__ClientId: ${PRODUCTION_SKEDULAR_XERO_CLIENT_ID}
       Xero__ClientSecret: ${PRODUCTION_SKEDULAR_XERO_CLIENT_SECRET}
@@ -931,6 +941,8 @@ services:
       Application__Environment: prod
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
+      Application__SpacesWebAppBaseDomain: https://spaces.skedular.app
+      Application__HostWebAppBaseDomain: https://host.skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
       Xero__ClientId: ${PRODUCTION_SKEDULAR_XERO_CLIENT_ID}
       Xero__ClientSecret: ${PRODUCTION_SKEDULAR_XERO_CLIENT_SECRET}

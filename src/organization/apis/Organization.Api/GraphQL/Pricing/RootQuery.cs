@@ -56,7 +56,6 @@ public class RootQuery
         return subscription is null ? null : MapTo(subscription);
     }
 
-    [UseResolverScope]
     public IEnumerable<PricingCatalogProductOfferingDetails> PricingCatalogProductOfferings() =>
     [
         new()
@@ -71,7 +70,6 @@ public class RootQuery
         }
     ];
 
-    [UseResolverScope]
     public IEnumerable<PricingCatalogSubscriptionPlanDetails> PricingCatalogSubscriptionPlans() =>
     [
         new()
@@ -111,7 +109,6 @@ public class RootQuery
         }
     ];
 
-    [UseResolverScope]
     public IEnumerable<PricingCatalogPlanAvailabilityDetails> PricingCatalogPlanAvailabilities() =>
     [
         new()
@@ -142,7 +139,6 @@ public class RootQuery
         }
     ];
 
-    [UseResolverScope]
     public IEnumerable<OrganizationOfferingPlanStatusDetails> OrganizationOfferingPlanStatuses() =>
     [
         new() { Type = OrganizationOfferingPlanStatus.Pending, Name = OrganizationOfferingPlanStatus.Pending.ToOrganizationOfferingPlanStatusName() },
@@ -160,19 +156,16 @@ public class RootQuery
         new() { Type = OrganizationOfferingPlanStatus.Legacy, Name = OrganizationOfferingPlanStatus.Legacy.ToOrganizationOfferingPlanStatusName() }
     ];
 
-    [UseResolverScope]
     public IEnumerable<PricingEntitlementReasonCodeDetails> PricingEntitlementReasonCodes() =>
         Enum.GetValues<EntitlementReasonCode>()
             .Where(reasonCode => reasonCode != EntitlementReasonCode.NotSet)
             .Select(reasonCode => new PricingEntitlementReasonCodeDetails { Type = reasonCode, Name = reasonCode.ToEntitlementReasonCodeName() });
 
-    [UseResolverScope]
     public IEnumerable<SpacesSubscriptionStatusDetails> SpacesSubscriptionStatuses() =>
         Enum.GetValues<SpacesSubscriptionStatus>()
             .Where(status => status != SpacesSubscriptionStatus.NotSet)
             .Select(status => new SpacesSubscriptionStatusDetails { Type = status, Name = status.ToSpacesSubscriptionStatusName() });
 
-    [UseResolverScope]
     public IEnumerable<SpacesAccessReasonDetails> SpacesAccessReasons() =>
         Enum.GetValues<SpacesAccessReasonCode>()
             .Where(reason => reason != SpacesAccessReasonCode.NotSet)

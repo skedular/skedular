@@ -24,6 +24,7 @@ public class UpdateAsyncShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IUnitOfWork unitOfWork,
         PrivateBookingService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         var booking = new Shared.Models.Booking
@@ -55,7 +56,7 @@ public class UpdateAsyncShould
             .Returns(existingBooking);
         A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(booking);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, A<CancellationToken>._))
-            .Returns(Task.FromResult(A.Fake<IDbContextTransaction>()));
+            .Returns(Task.FromResult(dbContextTransaction));
 
         var result = await sut.UpdateAsync(booking, existingBooking, null, organizations, teams,
             null, false, cancellationToken);

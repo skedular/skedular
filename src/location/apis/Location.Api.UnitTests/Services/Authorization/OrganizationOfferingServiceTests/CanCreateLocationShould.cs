@@ -28,7 +28,7 @@ public class CanCreateLocationShould
         A.CallTo(() => pricingEntitlementEvaluator.EvaluateLocationCreation(organization.Offering, organization.Locations.Count))
             .Returns(new EntitlementDecision(true, EntitlementReasonCode.Allowed));
         A.CallTo(() => spacesAccessEvaluator.Evaluate(A<DateTimeOffset>._, organization.Offering, SpacesAccessAction.CreateOrModify))
-            .Returns(evaluator.Evaluate(DateTimeOffset.UtcNow, organization.Offering, SpacesAccessAction.CreateOrModify));
+            .Returns(evaluator.Evaluate(TimeProvider.System.GetUtcNow(), organization.Offering, SpacesAccessAction.CreateOrModify));
 
         var result = await sut.CanCreateLocationAsync("org-1", cancellationToken);
 
@@ -57,7 +57,7 @@ public class CanCreateLocationShould
         A.CallTo(() => pricingEntitlementEvaluator.EvaluateLocationCreation(organization.Offering, organization.Locations.Count))
             .Returns(new EntitlementDecision(false, EntitlementReasonCode.FreeLocationLimitReached));
         A.CallTo(() => spacesAccessEvaluator.Evaluate(A<DateTimeOffset>._, organization.Offering, SpacesAccessAction.CreateOrModify))
-            .Returns(evaluator.Evaluate(DateTimeOffset.UtcNow, organization.Offering, SpacesAccessAction.CreateOrModify));
+            .Returns(evaluator.Evaluate(TimeProvider.System.GetUtcNow(), organization.Offering, SpacesAccessAction.CreateOrModify));
 
         var result = await sut.CanCreateLocationAsync("org-1", cancellationToken);
 

@@ -4,6 +4,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
+using Microsoft.Extensions.Logging;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
 using Temporalio.Exceptions;
@@ -33,6 +34,8 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     void StartWorkflowPayBookingViaBankTransfer(PayBookingViaBankTransferInput args, IUnitOfWork unitOfWork);
 
     void StartWorkflowNotifyMarketplaceBookingFailure(NotifyMarketplaceBookingFailureInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowResolvePartialMarketplaceBooking(ResolvePartialMarketplaceBookingInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowProcessMarketplaceRefund(ProcessMarketplaceRefundInput args, IUnitOfWork unitOfWork);
 
     /// <summary>
     ///     Starts a workflow to book private recurring resources.
@@ -131,7 +134,8 @@ public class TemporalOutboxService(
     ITemporalHelperService temporalHelperService,
     TemporalConfiguration temporalConfiguration,
     ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
-    ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor) : ITemporalOutboxService
+    ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
+    ILogger<TemporalOutboxService> logger) : ITemporalOutboxService
 {
     private static readonly string s_payBookingViaCard = typeof(PayBookingViaCard).ToWorkflowType();
     private static readonly string s_payBookingViaBankTransfer = typeof(PayBookingViaBankTransfer).ToWorkflowType();
@@ -143,6 +147,8 @@ public class TemporalOutboxService(
     private static readonly string s_generateInitialArrearsBookingInvoice = typeof(GenerateInitialArrearsBookingInvoice).ToWorkflowType();
 
     private static readonly string s_notifyMarketplaceBookingFailure = typeof(NotifyMarketplaceBookingFailure).ToWorkflowType();
+    private static readonly string s_resolvePartialMarketplaceBooking = typeof(ResolvePartialMarketplaceBooking).ToWorkflowType();
+    private static readonly string s_processMarketplaceRefund = typeof(ProcessMarketplaceRefund).ToWorkflowType();
 
     private static readonly string s_payBookingViaCardSetPaymentStatusAsync =
         typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.SetPaymentStatusAsync))!.ToWorkflowSignalType();
@@ -221,6 +227,26 @@ public class TemporalOutboxService(
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
             },
             unitOfWork);
+
+    public void StartWorkflowResolvePartialMarketplaceBooking(ResolvePartialMarketplaceBookingInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<ResolvePartialMarketplaceBooking, ResolvePartialMarketplaceBookingInput>(args,
+            new WorkflowOptions
+            {
+                Id = workflowIdService.ResolvePartialMarketplaceBooking(args.FailureId),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            }, unitOfWork);
+
+    public void StartWorkflowProcessMarketplaceRefund(ProcessMarketplaceRefundInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<ProcessMarketplaceRefund, ProcessMarketplaceRefundInput>(args,
+            new WorkflowOptions
+            {
+                Id = workflowIdService.ProcessMarketplaceRefund(args.RefundId),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate
+            }, unitOfWork);
 
     public void StartBookPrivateRecurringResources(BookPrivateRecurringResourcesInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxWorkflowExecutor.Execute<BookPrivateRecurringResources, BookPrivateRecurringResourcesInput>(
@@ -340,6 +366,12 @@ public class TemporalOutboxService(
         WorkflowOptions workflowOptions,
         CancellationToken cancellationToken)
     {
+        logger.LogInformation(
+            "Dispatching Temporal outbox workflow {WorkflowType} with workflow ID {WorkflowId} to task queue {TaskQueue}",
+            workflowType,
+            workflowOptions.Id,
+            workflowOptions.TaskQueue);
+
         await temporalClient.Connection.ConnectAsync();
 
         if (workflowType == s_payBookingViaCard)
@@ -418,6 +450,36 @@ public class TemporalOutboxService(
             {
             }
         }
+        else if (workflowType == s_processMarketplaceRefund)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<ProcessMarketplaceRefundInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync((ProcessMarketplaceRefund workflow) => workflow.ExecuteAsync(input), workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
+        else if (workflowType == s_resolvePartialMarketplaceBooking)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<ResolvePartialMarketplaceBookingInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync(
+                    (ResolvePartialMarketplaceBooking workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
         else if (workflowType == s_bookMarketplaceBookingSubscriptionResources)
         {
             try
@@ -433,6 +495,10 @@ public class TemporalOutboxService(
             catch (WorkflowAlreadyStartedException)
             {
             }
+        }
+        else
+        {
+            throw new InvalidOperationException($"Unsupported Temporal outbox workflow type '{workflowType}'.");
         }
     }
 

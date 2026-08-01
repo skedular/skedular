@@ -17,6 +17,11 @@ public interface IRecurringBookingRepository : IRepository<RecurringBooking>
 {
     Task<RecurringBooking?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<RecurringBooking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<RecurringBooking>> GetByMarketplaceBookingSubscriptionIdAsync(
+        string marketplaceBookingSubscriptionId,
+        CancellationToken cancellationToken);
+
     RecurringBooking Add(RecurringBooking recurringBooking);
     RecurringBooking Update(RecurringBooking recurringBooking);
     RecurringBooking Remove(RecurringBooking recurringBooking);
@@ -178,6 +183,16 @@ public class RecurringBookingRepository(BookingDbContext dbContext, TimeProvider
         await DbContext.RecurringBooking
             .AddDependentObjects(false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<IReadOnlyList<RecurringBooking>> GetByMarketplaceBookingSubscriptionIdAsync(
+        string marketplaceBookingSubscriptionId,
+        CancellationToken cancellationToken) =>
+        await DbContext.RecurringBooking
+            .AddDependentObjects(true)
+            .Where(query => query.MarketplaceBookingSubscription != null &&
+                            query.MarketplaceBookingSubscription.Id == marketplaceBookingSubscriptionId)
+            .OrderByDescending(query => query.StartDate)
+            .ToListAsync(cancellationToken);
 
     public RecurringBooking Add(RecurringBooking recurringBooking)
     {

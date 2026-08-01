@@ -1,5 +1,6 @@
 using System.Net;
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
@@ -415,10 +416,11 @@ public class OrganizationStripeConnectAccountService(
         await transaction.CommitAsync(cancellationToken);
 
         return new Uri(Url.Combine(
-            applicationConfiguration.WebAppBaseDomain.ToString(),
-            "organizations",
-            organization.CustomDomain,
-            "setup-marketplace"));
+                GetWebAppBaseDomain(organization.Type).ToString(),
+                "organizations",
+                organization.CustomDomain,
+                "admin")
+            .SetQueryParam("section", "stripe-connect-accounts-setup"));
     }
 
     public Uri GetStripeAuthorizeExistingConnectAccountUrl(string organizationId) =>
@@ -431,6 +433,14 @@ public class OrganizationStripeConnectAccountService(
                 .SetQueryParam(
                     "redirect_uri",
                     Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), s_stripeConnectAccountOAuthCallbackBaseUrl.Value)));
+
+    private Uri GetWebAppBaseDomain(string organizationType) =>
+        organizationType switch
+        {
+            OrganizationTypeConstants.Marketplace => applicationConfiguration.SpacesWebAppBaseDomain,
+            OrganizationTypeConstants.Host => applicationConfiguration.HostWebAppBaseDomain,
+            _ => applicationConfiguration.WebAppBaseDomain
+        };
 
     private async Task<OrganizationStripeConnectAccount> UpdateInternalAsync(
         string nickname,

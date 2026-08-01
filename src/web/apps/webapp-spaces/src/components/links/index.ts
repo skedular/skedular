@@ -54,6 +54,9 @@ export const getOrganizationBookingAddLink = (
     redirectUrl: options?.redirectUrl,
   });
 export const getOrganizationSubscriptionsBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/subscriptions`;
+export const getOrganizationRefundsBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/refunds`;
+export const getOrganizationRefundBaseLink = (integratedPlatform: string | undefined, id: string, refundId: string) =>
+  `${getOrganizationRefundsBaseLink(integratedPlatform, id)}/${refundId}`;
 export const getOrganizationSubscriptionBaseLink = (integratedPlatform: string | undefined, id: string, subscriptionId: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/subscriptions/${subscriptionId}`;
 export const getOrganizationUsersBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/users`;

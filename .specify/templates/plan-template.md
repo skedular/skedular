@@ -37,9 +37,12 @@ Answer each gate. If a gate fails, resolve the issue before proceeding.
       If yes, confirm the correct generator script is identified and will be run.
 - [ ] **II. Domain Boundaries** — Does this feature cross domain ownership lines?
       If yes, confirm the cross-domain path uses a public service or event interface, not direct DB/internal access.
+      For persisted enum-like values, confirm source strings use explicit switch-based mappings to model enums;
+      direct `Enum.Parse`/`Enum.TryParse` mapping is not permitted.
 - [ ] **III. Testing** — What test tier is required?
-      Confirm unit tests are planned. If persistence/integration boundaries are crossed, confirm integration tests
-      are planned and will use repository-layer assertions (no raw `DbContext`).
+      Confirm unit tests are planned first. Add integration tests only for persistence, database-concurrency,
+      migration, schema-wiring, or external-infrastructure behavior that unit tests cannot prove; do not duplicate
+      service scenarios already covered by unit tests.
 - [ ] **IV. Frontend** — Does this feature include web changes?
       If yes, confirm Relay colocation, no hand-edited generated artifacts, typography wrappers used,
       and American spelling in user-facing copy.

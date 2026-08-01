@@ -14,7 +14,6 @@ namespace Team.Api.GraphQL.Invitation;
 [QueryType]
 public class RootQuery(IGraphQlMapper graphQlMapper)
 {
-    [UseResolverScope]
     public IEnumerable<TeamInvitationStatusDetails> TeamInvitationStatuses() =>
     [
         new() { Type = InvitationStatus.Pending, Name = InvitationStatus.Pending.ToInvitationStatusName() },

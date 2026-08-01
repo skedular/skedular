@@ -37,7 +37,7 @@ public class GetByMarketplaceBookingSubscriptionIdAsyncShould
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundEventRepository).Returns(marketplaceRefundEventRepository);
-        A.CallTo(() => marketplaceRefundRepository.GetByLocalEntityAsync(
+        A.CallTo(() => marketplaceRefundRepository.GetLatestByLocalEntityAsync(
                 MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
                 "subscription-1",
                 cancellationToken))
@@ -51,7 +51,7 @@ public class GetByMarketplaceBookingSubscriptionIdAsyncShould
 
         var result = await sut.GetByMarketplaceBookingSubscriptionIdAsync("subscription-1", cancellationToken);
 
-        result.ShouldBe(mappedRefund);
+        result!.Id.ShouldBe(mappedRefund.Id);
         result!.CanProcessInXero.ShouldBeFalse();
         result.XeroProcessingBlockedReason.ShouldBe("Concrete invoice instance has not been correlated yet.");
     }

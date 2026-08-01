@@ -9,6 +9,7 @@ using Booking.Shared.Services;
 using Enterprise.Shared.Accounting;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Microsoft.Extensions.Logging;
 using Xero.NetStandard.OAuth2.Api;
 using Xero.NetStandard.OAuth2.Model.Accounting;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
@@ -27,6 +28,163 @@ public class ProcessAsyncShould
 {
     [Theory]
     [AutoFakeItEasyData]
+    public async Task Not_Match_A_Credit_Note_Without_A_Settlement(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] AccountingApi accountingApi,
+        ILogger<XeroRefundService> logger,
+        CancellationToken cancellationToken)
+    {
+        organizationConfiguration.ApiKey = "api-key";
+        var creditNoteId = Guid.Parse("eb8e81fe-ebfb-47c6-9d0c-0fdc40d4eb0f");
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            OrganizationId = "org-1",
+            ExternalRefundId = creditNoteId.ToString(),
+            RefundAmount = 25m,
+            Status = MarketplaceRefundStatusConstants.Completed
+        };
+        var connection = CreateXeroConnection();
+        var sut = new TestableXeroRefundService(
+            organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
+            repositoryFactory, xeroSdkClientFactory, xeroTokenEncryptionService, TimeProvider.System, logger)
+        {
+            CreditNoteResponse = new CreditNotes { _CreditNotes = [new CreditNote { CreditNoteID = creditNoteId }] }, PaymentResponse = new Payments()
+        };
+
+        A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
+        A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
+        A.CallTo(() => callInvoker.AsyncUnaryCall(
+                A<Method<Admin_GetXeroConnectionInput, XeroConnection>>._,
+                A<string?>._,
+                A<CallOptions>._,
+                A<Admin_GetXeroConnectionInput>.That.Matches(input => input.OrganizationId == "org-1")))
+            .Returns(CreateResponse(connection));
+        A.CallTo(() => xeroTokenEncryptionService.Decrypt("encrypted-access")).Returns("access-token");
+        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(accountingApi);
+
+        var result = await sut.ReconcileAsync(refund, TimeProvider.System.GetUtcNow().AddDays(-1), cancellationToken);
+
+        result.ShouldBeFalse();
+        refund.ReconciliationStatus.ShouldBe("Unsettled");
+        A.CallTo(() => marketplaceRefundRepository.Update(refund)).MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Match_A_Credit_Note_When_The_Settlement_Payment_Exists(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] AccountingApi accountingApi,
+        ILogger<XeroRefundService> logger,
+        CancellationToken cancellationToken)
+    {
+        organizationConfiguration.ApiKey = "api-key";
+        var creditNoteId = Guid.Parse("eb8e81fe-ebfb-47c6-9d0c-0fdc40d4eb0f");
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            OrganizationId = "org-1",
+            ExternalRefundId = creditNoteId.ToString(),
+            RefundAmount = 25m,
+            Status = MarketplaceRefundStatusConstants.Completed
+        };
+        var connection = CreateXeroConnection();
+        var sut = new TestableXeroRefundService(
+            organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
+            repositoryFactory, xeroSdkClientFactory, xeroTokenEncryptionService, TimeProvider.System, logger)
+        {
+            CreditNoteResponse = new CreditNotes { _CreditNotes = [new CreditNote { CreditNoteID = creditNoteId }] },
+            PaymentResponse = new Payments { _Payments = [new Payment { CreditNote = new CreditNote { CreditNoteID = creditNoteId }, Amount = 25m }] }
+        };
+
+        A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
+        A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
+        A.CallTo(() => callInvoker.AsyncUnaryCall(
+                A<Method<Admin_GetXeroConnectionInput, XeroConnection>>._,
+                A<string?>._,
+                A<CallOptions>._,
+                A<Admin_GetXeroConnectionInput>.That.Matches(input => input.OrganizationId == "org-1")))
+            .Returns(CreateResponse(connection));
+        A.CallTo(() => xeroTokenEncryptionService.Decrypt("encrypted-access")).Returns("access-token");
+        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(accountingApi);
+
+        var result = await sut.ReconcileAsync(refund, TimeProvider.System.GetUtcNow().AddDays(-1), cancellationToken);
+
+        result.ShouldBeTrue();
+        refund.ReconciliationStatus.ShouldBe("Matched");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Find_An_Unchanged_Credit_Note_By_Id_When_It_Is_Outside_The_Modified_Since_Window(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen] CallInvoker callInvoker,
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] AccountingApi accountingApi,
+        ILogger<XeroRefundService> logger,
+        CancellationToken cancellationToken)
+    {
+        organizationConfiguration.ApiKey = "api-key";
+        var creditNoteId = Guid.Parse("eb8e81fe-ebfb-47c6-9d0c-0fdc40d4eb0f");
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            OrganizationId = "org-1",
+            ExternalRefundId = creditNoteId.ToString(),
+            RefundAmount = 25m,
+            Status = MarketplaceRefundStatusConstants.Completed
+        };
+        var connection = CreateXeroConnection();
+        var sut = new TestableXeroRefundService(
+            organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
+            repositoryFactory, xeroSdkClientFactory, xeroTokenEncryptionService, TimeProvider.System, logger)
+        {
+            CreditNoteResponse = new CreditNotes(),
+            CreditNoteByIdResponse = new CreditNotes { _CreditNotes = [new CreditNote { CreditNoteID = creditNoteId }] },
+            PaymentResponse = new Payments(),
+            HistoricalPaymentResponse = new Payments
+            {
+                _Payments = [new Payment { CreditNote = new CreditNote { CreditNoteID = creditNoteId }, Amount = 25m }]
+            }
+        };
+
+        A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
+        A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
+        A.CallTo(() => callInvoker.AsyncUnaryCall(
+                A<Method<Admin_GetXeroConnectionInput, XeroConnection>>._,
+                A<string?>._,
+                A<CallOptions>._,
+                A<Admin_GetXeroConnectionInput>.That.Matches(input => input.OrganizationId == "org-1")))
+            .Returns(CreateResponse(connection));
+        A.CallTo(() => xeroTokenEncryptionService.Decrypt("encrypted-access")).Returns("access-token");
+        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(accountingApi);
+
+        var result = await sut.ReconcileAsync(refund, TimeProvider.System.GetUtcNow().AddDays(-1), cancellationToken);
+
+        result.ShouldBeTrue();
+        refund.ReconciliationStatus.ShouldBe("Matched");
+        sut.CreditNoteByIdRequested.ShouldBeTrue();
+        sut.HistoricalPaymentLookupRequested.ShouldBeTrue();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public async Task Mark_Failed_When_Refund_Is_Not_For_A_One_Time_Marketplace_Booking(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
@@ -34,15 +192,16 @@ public class ProcessAsyncShould
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
         {
-            Id = "refund-1", Status = MarketplaceRefundStatusConstants.PendingAccounting, LocalEntityType = "UnsupportedEntity"
+            Id = "refund-1", Status = MarketplaceRefundStatusConstants.Processing, LocalEntityType = "UnsupportedEntity"
         };
         var sut = new TestableXeroRefundService(organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
-            xeroTokenEncryptionService, TimeProvider.System);
+            xeroTokenEncryptionService, TimeProvider.System, logger);
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
@@ -64,12 +223,13 @@ public class ProcessAsyncShould
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
         {
             Id = "refund-1",
-            Status = MarketplaceRefundStatusConstants.PendingAccounting,
+            Status = MarketplaceRefundStatusConstants.Processing,
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "marketplace-booking-1",
@@ -77,7 +237,7 @@ public class ProcessAsyncShould
         };
         var sut = new TestableXeroRefundService(organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
-            xeroTokenEncryptionService, TimeProvider.System);
+            xeroTokenEncryptionService, TimeProvider.System, logger);
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -107,13 +267,14 @@ public class ProcessAsyncShould
         [Frozen] AccountingApi accountingApi,
         [Frozen] CallInvoker callInvoker,
         [Frozen] OrganizationConfiguration organizationConfiguration,
+        ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
         var refund = new MarketplaceRefund
         {
             Id = "refund-1",
-            Status = MarketplaceRefundStatusConstants.PendingAccounting,
+            Status = MarketplaceRefundStatusConstants.Processing,
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "marketplace-booking-1",
@@ -145,7 +306,8 @@ public class ProcessAsyncShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
-            TimeProvider.System)
+            TimeProvider.System,
+            logger)
         {
             InvoiceResponse = new Invoices
             {
@@ -217,13 +379,14 @@ public class ProcessAsyncShould
         [Frozen] AccountingApi accountingApi,
         [Frozen] CallInvoker callInvoker,
         [Frozen] OrganizationConfiguration organizationConfiguration,
+        ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
         var refund = new MarketplaceRefund
         {
             Id = "refund-1",
-            Status = MarketplaceRefundStatusConstants.PendingAccounting,
+            Status = MarketplaceRefundStatusConstants.Processing,
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "marketplace-booking-1",
@@ -255,7 +418,8 @@ public class ProcessAsyncShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
-            TimeProvider.System)
+            TimeProvider.System,
+            logger)
         {
             InvoiceResponse = new Invoices
             {
@@ -317,12 +481,13 @@ public class ProcessAsyncShould
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
         {
             Id = "refund-1",
-            Status = MarketplaceRefundStatusConstants.PendingAccounting,
+            Status = MarketplaceRefundStatusConstants.Processing,
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
             LocalEntityId = "subscription-1",
@@ -345,7 +510,7 @@ public class ProcessAsyncShould
         };
         var sut = new TestableXeroRefundService(organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
-            xeroTokenEncryptionService, TimeProvider.System);
+            xeroTokenEncryptionService, TimeProvider.System, logger);
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
@@ -382,13 +547,14 @@ public class ProcessAsyncShould
         [Frozen] AccountingApi accountingApi,
         [Frozen] CallInvoker callInvoker,
         [Frozen] OrganizationConfiguration organizationConfiguration,
+        ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
         var refund = new MarketplaceRefund
         {
             Id = "refund-1",
-            Status = MarketplaceRefundStatusConstants.PendingAccounting,
+            Status = MarketplaceRefundStatusConstants.Processing,
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
             LocalEntityId = "subscription-1",
@@ -435,7 +601,8 @@ public class ProcessAsyncShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
-            TimeProvider.System)
+            TimeProvider.System,
+            logger)
         {
             InvoiceResponse = new Invoices
             {
@@ -504,13 +671,14 @@ public class ProcessAsyncShould
         [Frozen] AccountingApi accountingApi,
         [Frozen] CallInvoker callInvoker,
         [Frozen] OrganizationConfiguration organizationConfiguration,
+        ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
         var refund = new MarketplaceRefund
         {
             Id = "refund-1",
-            Status = MarketplaceRefundStatusConstants.PendingAccounting,
+            Status = MarketplaceRefundStatusConstants.Processing,
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "marketplace-booking-1",
@@ -543,7 +711,8 @@ public class ProcessAsyncShould
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
-            TimeProvider.System)
+            TimeProvider.System,
+            logger)
         {
             InvoiceResponse = new Invoices
             {
@@ -596,6 +765,15 @@ public class ProcessAsyncShould
             () => Status.DefaultSuccess,
             () => new Metadata(),
             () => { });
+
+    private static XeroConnection CreateXeroConnection() => new()
+    {
+        Id = "xero-1",
+        TenantId = "tenant-1",
+        IsActive = true,
+        AccessTokenEncrypted = "encrypted-access",
+        AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30))
+    };
 
     private static MarketplaceBookingSubscriptionEntity CreateSubscriptionForRefund(
         string recurringBookingInvoiceNumber,
@@ -690,17 +868,24 @@ public class ProcessAsyncShould
         IRepositoryFactory repositoryFactory,
         IXeroSdkClientFactory xeroSdkClientFactory,
         IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider)
+        TimeProvider timeProvider,
+        ILogger<XeroRefundService> logger)
         : XeroRefundService(
             organizationConfiguration,
             organizationBillingServiceClient,
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
-            timeProvider)
+            timeProvider,
+            logger)
     {
         public Invoices? InvoiceResponse { get; init; }
         public CreditNotes? CreditNoteResponse { get; init; }
+        public CreditNotes? CreditNoteByIdResponse { get; init; }
+        public Payments? PaymentResponse { get; init; }
+        public Payments? HistoricalPaymentResponse { get; init; }
+        public bool CreditNoteByIdRequested { get; private set; }
+        public bool HistoricalPaymentLookupRequested { get; private set; }
         public CreditNotes? CapturedCreditNotes { get; private set; }
         public Allocations? CapturedAllocations { get; private set; }
         public Payment? CapturedPayment { get; private set; }
@@ -723,6 +908,43 @@ public class ProcessAsyncShould
         {
             CapturedCreditNotes = creditNotes;
             return Task.FromResult(CreditNoteResponse ?? new CreditNotes());
+        }
+
+        protected override Task<CreditNotes> GetCreditNotesAsync(
+            AccountingApi accountingApi,
+            string accessToken,
+            string tenantId,
+            DateTime modifiedSince,
+            Guid creditNoteId,
+            CancellationToken cancellationToken) =>
+            Task.FromResult(CreditNoteResponse ?? new CreditNotes());
+
+        protected override Task<CreditNote?> GetCreditNoteByIdAsync(
+            AccountingApi accountingApi,
+            string accessToken,
+            string tenantId,
+            Guid creditNoteId,
+            CancellationToken cancellationToken)
+        {
+            CreditNoteByIdRequested = true;
+            return Task.FromResult(CreditNoteByIdResponse?._CreditNotes?.FirstOrDefault());
+        }
+
+        protected override Task<Payments> GetPaymentsAsync(
+            AccountingApi accountingApi,
+            string accessToken,
+            string tenantId,
+            DateTime? modifiedSince,
+            Guid creditNoteId,
+            CancellationToken cancellationToken)
+        {
+            if (modifiedSince is null)
+            {
+                HistoricalPaymentLookupRequested = true;
+                return Task.FromResult(HistoricalPaymentResponse ?? new Payments());
+            }
+
+            return Task.FromResult(PaymentResponse ?? new Payments());
         }
 
         protected override Task<Allocations> CreateCreditNoteAllocationAsync(

@@ -314,7 +314,7 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
                         <Chip
                           size="small"
                           icon={<PaymentStatusIcon />}
-                          label={subscription.marketplaceBooking.paymentStatus.name}
+                          label={subscription.status.type === 'CANCELLED' ? lifecycleDisplay.statusLabel : subscription.marketplaceBooking.paymentStatus.name}
                           color={isConfirmed ? 'success' : isPending ? 'warning' : 'default'}
                           variant={isConfirmed || isPending ? 'filled' : 'outlined'}
                         />

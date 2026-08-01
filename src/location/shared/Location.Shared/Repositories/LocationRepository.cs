@@ -167,6 +167,8 @@ public static class LocationExtensions
             if (searchCriteria.FilterThoseWithUnverifiedOrganization is not null && searchCriteria.FilterThoseWithUnverifiedOrganization.Value)
             {
                 originalQuery = originalQuery.Where(item =>
+                    (item.Organization.Type == OrganizationTypeConstants.Marketplace ||
+                     item.Organization.Type == OrganizationTypeConstants.Host) &&
                     item.Organization.IsOwnershipVerified.HasValue && item.Organization.IsOwnershipVerified.Value);
             }
 

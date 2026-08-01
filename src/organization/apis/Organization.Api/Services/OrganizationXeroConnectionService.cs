@@ -167,6 +167,7 @@ public class OrganizationXeroConnectionService(
 
             return BuildMarketplaceSetupUri(
                 organization.CustomDomain ?? throw new OrganizationNotFound(),
+                organization.Type,
                 iReadOnlyCollection,
                 "Choose the Xero tenant you want to use, then save the settings to finish the connection.");
         }
@@ -190,7 +191,9 @@ public class OrganizationXeroConnectionService(
         await transaction.CommitAsync(cancellationToken);
         await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
-        return BuildMarketplaceSetupUri(organization.CustomDomain ?? throw new OrganizationNotFound());
+        return BuildMarketplaceSetupUri(
+            organization.CustomDomain ?? throw new OrganizationNotFound(),
+            organization.Type);
     }
 
     public async Task<OrganizationXeroConnection?> RefreshTokensAsync(
@@ -511,11 +514,20 @@ public class OrganizationXeroConnectionService(
         return true;
     }
 
-    private Uri BuildMarketplaceSetupUri(string organizationCustomDomain, IReadOnlyList<XeroTenantOption>? tenantOptions = null,
+    private Uri BuildMarketplaceSetupUri(
+        string organizationCustomDomain,
+        string organizationType,
+        IReadOnlyList<XeroTenantOption>? tenantOptions = null,
         string? message = null)
     {
+        var webAppBaseDomain = organizationType switch
+        {
+            OrganizationTypeConstants.Marketplace => applicationConfiguration.SpacesWebAppBaseDomain,
+            OrganizationTypeConstants.Host => applicationConfiguration.HostWebAppBaseDomain,
+            _ => applicationConfiguration.WebAppBaseDomain
+        };
         var setupUrl = Url.Combine(
-                applicationConfiguration.WebAppBaseDomain.ToString(),
+                webAppBaseDomain.ToString(),
                 "organizations",
                 organizationCustomDomain,
                 "setup-marketplace")

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f85d9728a51079b5630a19ea874da74a>>
+ * @generated SignedSource<<05700f5cc87df8b8d5114dff9144570b>>
  * @lightSyntaxTransform
  */
 
@@ -24,7 +24,6 @@ export type rootShell_rootQuery$data = {
     readonly isOnboardingDone: boolean;
   };
   readonly organization: {
-    readonly isOwnershipVerified: boolean;
     readonly isSsoTokenValid: boolean;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
@@ -126,13 +125,6 @@ v10 = {
 v11 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "isOwnershipVerified",
-  "storageKey": null
-},
-v12 = {
-  "alias": null,
-  "args": null,
   "concreteType": "OrganizationTypeDetails",
   "kind": "LinkedField",
   "name": "type",
@@ -148,7 +140,7 @@ v12 = {
   ],
   "storageKey": null
 },
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -190,8 +182,7 @@ return {
           (v8/*:: as any*/),
           (v9/*:: as any*/),
           (v10/*:: as any*/),
-          (v11/*:: as any*/),
-          (v12/*:: as any*/)
+          (v11/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -299,9 +290,8 @@ return {
           (v9/*:: as any*/),
           (v10/*:: as any*/),
           (v11/*:: as any*/),
-          (v12/*:: as any*/),
           (v1/*:: as any*/),
-          (v13/*:: as any*/),
+          (v12/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -368,7 +358,7 @@ return {
             "name": "uniqueId",
             "storageKey": null
           },
-          (v13/*:: as any*/),
+          (v12/*:: as any*/),
           (v8/*:: as any*/),
           (v9/*:: as any*/)
         ],
@@ -384,16 +374,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0ca30c1172e7520e00ac71007a86919d",
+    "cacheID": "0a232291e6357b280d0d257199934ea5",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  me {\n    id\n    isOnboardingDone\n  }\n  customerReadinessSynced\n  pendingOrganizationInvitationsCount\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    logoUrl\n    name\n    isSsoTokenValid\n    isOwnershipVerified\n    type {\n      type\n    }\n    id\n  }\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n  ...observability_query\n}\n\nfragment appBar_query on Query {\n  me {\n    id\n    emails\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations(types: [PRIVATE]) {\n    uniqueId\n    customDomain\n    logoUrl\n    name\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenuContent_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    customDomain\n    canModify\n    canViewAnalytics\n    activeOffering {\n      free\n      earlyBird\n      id\n    }\n  }\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mobileLeftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
+    "text": "query rootShell_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  me {\n    id\n    isOnboardingDone\n  }\n  customerReadinessSynced\n  pendingOrganizationInvitationsCount\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    logoUrl\n    name\n    isSsoTokenValid\n    type {\n      type\n    }\n    id\n  }\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n  ...observability_query\n}\n\nfragment appBar_query on Query {\n  me {\n    id\n    emails\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations(types: [PRIVATE]) {\n    uniqueId\n    customDomain\n    logoUrl\n    name\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenuContent_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    customDomain\n    canModify\n    canViewAnalytics\n    activeOffering {\n      free\n      earlyBird\n      id\n    }\n  }\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mobileLeftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c0aa43dd1b1b322b02116032b9550e63";
+(node as any).hash = "6d1012b17f676d3f9f76bf0df88b0d02";
 
 export default node;

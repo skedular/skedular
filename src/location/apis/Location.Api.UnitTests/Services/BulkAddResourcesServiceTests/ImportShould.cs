@@ -147,12 +147,15 @@ public class ImportShould
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
             cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
-            cancellationToken, [], "Desk");
+            [], "Desk",
+            dbContextTransaction,
+            cancellationToken);
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 3, [], [], []) };
         var input = new BulkAddResources("location-1", rows);
@@ -179,12 +182,15 @@ public class ImportShould
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
             cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
-            cancellationToken, [], "Meeting Room");
+            [], "Meeting Room",
+            dbContextTransaction,
+            cancellationToken);
 
         var rows = new List<BulkAddResourceRow>
         {
@@ -214,13 +220,16 @@ public class ImportShould
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         // Existing: Desk-1, Desk-3 → next should be Desk-4, Desk-5, Desk-6
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
             cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
-            cancellationToken, ["Desk-1", "Desk-3"], "Desk");
+            ["Desk-1", "Desk-3"], "Desk",
+            dbContextTransaction,
+            cancellationToken);
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 3, [], [], []) };
         var input = new BulkAddResources("location-1", rows);
@@ -247,13 +256,16 @@ public class ImportShould
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         // Two rows with same base name — names must not collide within the batch
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
             cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
-            cancellationToken, [], "Desk");
+            [], "Desk",
+            dbContextTransaction,
+            cancellationToken);
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 2, [], [], []), new("type-tag-1", "Desk", 1, [], [], []) };
         var input = new BulkAddResources("location-1", rows);
@@ -282,6 +294,7 @@ public class ImportShould
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         // Existing: Desk-2. Two rows both with BaseName="Desk", Quantity=2.
@@ -289,7 +302,9 @@ public class ImportShould
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
             cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
-            cancellationToken, ["Desk-2"], "Desk");
+            ["Desk-2"], "Desk",
+            dbContextTransaction,
+            cancellationToken);
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 2, [], [], []), new("type-tag-1", "Desk", 2, [], [], []) };
         var input = new BulkAddResources("location-1", rows);
@@ -323,11 +338,11 @@ public class ImportShould
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         var existingLocation = new LocationEntity { Id = "location-1", OrganizationId = "org-1" };
         var validTypeTag = new OrganizationTagEntity { Id = "type-tag-1", Type = "RESOURCE_DESK", Name = "Desk" };
-        var fakeTransaction = A.Fake<IDbContextTransaction>();
         var locationModel = new Shared.Models.Location { Id = "location-1" };
         var resourceEntity = new ResourceEntity { Id = "res-1", Name = "Desk-1", Location = existingLocation };
         var resourceModel = new Resource { Id = "res-1", Name = "Desk-1", Location = locationModel };
@@ -336,7 +351,7 @@ public class ImportShould
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => repositoryFactory.OrganizationTagRepository).Returns(organizationTagRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(fakeTransaction);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(dbContextTransaction);
         A.CallTo(() => locationRepository.GetByIdAsync("location-1", cancellationToken)).Returns(existingLocation);
         A.CallTo(() => organizationTagRepository.GetActiveByIdsForOrganizationAsync(
             A<IReadOnlyList<string>>._, "org-1", null, cancellationToken)).Returns([validTypeTag]);
@@ -392,12 +407,15 @@ public class ImportShould
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
             cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
-            cancellationToken, [], "Desk");
+            [], "Desk",
+            dbContextTransaction,
+            cancellationToken);
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 1, [], [], []) };
         var input = new BulkAddResources("location-1", rows);
@@ -424,12 +442,15 @@ public class ImportShould
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
             cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
-            cancellationToken, [], "Desk");
+            [], "Desk",
+            dbContextTransaction,
+            cancellationToken);
 
         // All rows have quantity < 1 — nothing will be written
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 0, [], [], []) };
@@ -459,12 +480,15 @@ public class ImportShould
         [Frozen] IOrganizationOfferingService organizationOfferingService,
         [Frozen] IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         SetupSuccessfulTransaction(transactionBuilder, repositoryFactory, locationRepository, resourceRepository,
             organizationTagRepository, entityMapper, randomHelper,
             cachedCustomerService, organizationAuthorizationService, organizationOfferingService, unitOfWork,
-            cancellationToken, [], "Desk");
+            [], "Desk",
+            dbContextTransaction,
+            cancellationToken);
 
         var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 1, [], [], []) };
         var input = new BulkAddResources("location-1", rows);
@@ -500,13 +524,14 @@ public class ImportShould
         IOrganizationAuthorizationService organizationAuthorizationService,
         IOrganizationOfferingService organizationOfferingService,
         IUnitOfWork unitOfWork,
-        CancellationToken cancellationToken,
         IReadOnlyList<string> existingNames,
-        string typeTagName)
+        string typeTagName,
+        IDbContextTransaction dbContextTransaction,
+        CancellationToken cancellationToken)
     {
         var existingLocation = new LocationEntity { Id = "location-1", OrganizationId = "org-1" };
         var validTypeTag = new OrganizationTagEntity { Id = "type-tag-1", Type = "RESOURCE_DESK", Name = typeTagName };
-        var fakeTransaction = A.Fake<IDbContextTransaction>();
+        var fakeTransaction = dbContextTransaction;
         var locationModel = new Shared.Models.Location { Id = "location-1" };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);

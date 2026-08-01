@@ -84,5 +84,8 @@
         <GraphQL Update="Api/GraphQL/MarketplaceBookingSubscriptionStatuses.graphql">
             <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
+        <GraphQL Update="Api/GraphQL/MarketplaceRefundWorkflowContract.graphql">
+            <Generator>MSBuild:GenerateGraphQLCode</Generator>
+        </GraphQL>
     </ItemGroup>
 </Project>

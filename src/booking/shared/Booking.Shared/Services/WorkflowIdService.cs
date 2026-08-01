@@ -20,6 +20,8 @@ public interface IWorkflowIdService
     string MaintainOrganizationArrearsInvoiceAccountingState(string organizationArrearsInvoiceId);
     string MaintainAccountingInvoiceState(string localEntityType, string localEntityId);
     string NotifyMarketplaceBookingFailure(string failureId);
+    string ProcessMarketplaceRefund(string refundId);
+    string ResolvePartialMarketplaceBooking(string failureId);
 }
 
 public class WorkflowIdService(ITemporalHelperService temporalHelperService) : IWorkflowIdService
@@ -69,4 +71,10 @@ public class WorkflowIdService(ITemporalHelperService temporalHelperService) : I
 
     public string NotifyMarketplaceBookingFailure(string failureId) =>
         temporalHelperService.ToId($"notify-marketplace-booking-failure-{failureId}");
+
+    public string ProcessMarketplaceRefund(string refundId) =>
+        temporalHelperService.ToId($"process-marketplace-refund-{refundId}");
+
+    public string ResolvePartialMarketplaceBooking(string failureId) =>
+        temporalHelperService.ToId($"marketplace-booking-partial-resolution:{failureId}");
 }

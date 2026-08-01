@@ -19,7 +19,9 @@ public static class Extensions
                 .AddSingleton<IGraphQlTopicEventSender, GraphQlTopicEventSender>();
 
         public IServiceCollection AddJobs() =>
-            services;
+            services
+                .AddHostedService<SpacesBookingUsageRolloverWorkflowHostedService>()
+                .AddHostedService<MarketplaceRefundReconciliationHostedService>();
 
         public IServiceCollection AddInDomainClients(IConfiguration configuration)
         {

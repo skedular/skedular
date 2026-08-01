@@ -7,7 +7,6 @@ namespace Location.Api.GraphQL;
 [QueryType]
 public class RootQuery(IVersionService versionService)
 {
-    [UseResolverScope]
     public Version LocationVersion()
     {
         var version = versionService.GetVersion();

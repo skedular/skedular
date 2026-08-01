@@ -44,11 +44,11 @@ public class GetByIdAsyncShould
 
         var result = await sut.GetByIdAsync("refund-1", cancellationToken);
 
-        result.ShouldBe(mappedRefund);
+        result!.Id.ShouldBe(mappedRefund.Id);
         result!.CanProcessInXero.ShouldBeTrue();
         result.XeroProcessingBlockedReason.ShouldBeNull();
         result.Events.ShouldHaveSingleItem();
-        result.Events.Single().ShouldBe(mappedRefundEvent);
+        result.Events.Single().Id.ShouldBe(mappedRefundEvent.Id);
     }
 
     [Theory]

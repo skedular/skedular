@@ -12,12 +12,9 @@ namespace Enterprise.Shared.Database.SqlServer.Interceptors;
 ///     https://learn.microsoft.com/en-us/sql/t-sql/queries/hints-transact-sql-table
 ///     https://learn.microsoft.com/en-us/ef/core/logging-events-diagnostics/interceptors#example-command-interception-to-add-query-hints
 /// </summary>
-public class SelectForUpdateCommandInterceptor : DbCommandInterceptor
+public class SelectForUpdateCommandInterceptor(ILogger<SelectForUpdateCommandInterceptor>? logger = null) : DbCommandInterceptor
 {
-    private readonly ILogger<SelectForUpdateCommandInterceptor> _logger;
-
-    public SelectForUpdateCommandInterceptor(ILogger<SelectForUpdateCommandInterceptor>? logger = null) =>
-        _logger = logger ?? NullLogger<SelectForUpdateCommandInterceptor>.Instance;
+    private readonly ILogger<SelectForUpdateCommandInterceptor> _logger = logger ?? NullLogger<SelectForUpdateCommandInterceptor>.Instance;
 
     public override InterceptionResult<object> ScalarExecuting(DbCommand command, CommandEventData eventData, InterceptionResult<object> result)
     {

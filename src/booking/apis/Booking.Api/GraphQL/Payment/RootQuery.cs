@@ -6,14 +6,12 @@ namespace Booking.Api.GraphQL.Payment;
 [QueryType]
 public class RootQuery
 {
-    [UseResolverScope]
     public IEnumerable<PaymentMethodTypeDetails> PaymentMethodTypes() =>
     [
         new() { Type = PaymentMethod.Card, Name = PaymentMethodConstants.Card.ToPaymentMethodName() },
         new() { Type = PaymentMethod.BankTransfer, Name = PaymentMethodConstants.BankTransfer.ToPaymentMethodName() }
     ];
 
-    [UseResolverScope]
     public IEnumerable<PaymentStatusDetails> PaymentStatuses() =>
     [
         new() { Type = PaymentStatus.Pending, Name = PaymentStatusConstants.Pending.ToPaymentStatusName() },

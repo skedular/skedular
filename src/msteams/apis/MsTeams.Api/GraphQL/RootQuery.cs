@@ -7,7 +7,6 @@ namespace MsTeams.Api.GraphQL;
 [QueryType]
 public class RootQuery(IVersionService versionService)
 {
-    [UseResolverScope]
     public Version MsTeamsVersion()
     {
         var version = versionService.GetVersion();

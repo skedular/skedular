@@ -1,5 +1,6 @@
 using Booking.Shared.Models;
 using Booking.Shared.Workflows;
+using Enterprise.Shared.Random;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Temporalio.Api.Enums.V1;
@@ -125,7 +126,8 @@ public class TemporalService(
     TemporalConfiguration temporalConfiguration,
     ITemporalClient temporalClient,
     IWorkflowIdService workflowIdService,
-    ITemporalHelperService temporalHelperService) : ITemporalService
+    ITemporalHelperService temporalHelperService,
+    IRandomHelper randomHelper) : ITemporalService
 {
     /// <summary>
     ///     Starts a workflow to generate location resource slots.
@@ -159,7 +161,7 @@ public class TemporalService(
         await temporalClient.StartWorkflowAsync((GenerateResourcesSlots workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = workflowIdService.GenerateResourcesSlots(locationId),
+                Id = randomHelper.Generate(),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,

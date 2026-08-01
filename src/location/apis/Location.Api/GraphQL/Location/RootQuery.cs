@@ -16,14 +16,12 @@ namespace Location.Api.GraphQL.Location;
 [QueryType]
 public class RootQuery(IGraphQlMapper graphQlMapper)
 {
-    [UseResolverScope]
     public IEnumerable<LocationTypeDetails> LocationTypes() =>
     [
         new() { Type = LocationType.Private, Name = LocationTypeConstants.Private.ToLocationTypeName() },
         new() { Type = LocationType.Marketplace, Name = LocationTypeConstants.Marketplace.ToLocationTypeName() }
     ];
 
-    [UseResolverScope]
     public IEnumerable<LocationRestrictedInformationCategoryDetails> LocationRestrictedInformationCategories() =>
     [
         new()
@@ -143,7 +141,6 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         }
     ];
 
-    [UseResolverScope]
     public async Task<LocationDetails?> LocationAsync(string id, [Service] ILocationService locationService, CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await locationService.GetByIdAsync(id, false, cancellationToken));
 

@@ -87,7 +87,7 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
             FailureKey = $"failure-key-{failureId}",
             Category = MarketplaceBookingFailureCategoryConstants.AvailabilityConflict,
             Scope = MarketplaceBookingFailureScopeConstants.OneTimeBooking,
-            FinalizedAt = DateTimeOffset.UtcNow
+            FinalizedAt = TimeProvider.System.GetUtcNow()
         });
         repositoryFactory.MarketplaceBookingFailureDeliveryRepository.Add(CreateDelivery(failure.Id, recipientKey));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

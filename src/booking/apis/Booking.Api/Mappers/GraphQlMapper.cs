@@ -36,6 +36,9 @@ public interface IGraphQlMapper
     MarketplaceBookingFailureDetails MapTo(MarketplaceBookingFailureSummary src);
     MarketplaceRefundDetails MapTo(MarketplaceRefund src);
     MarketplaceRefundEventDetails MapTo(MarketplaceRefundEvent src);
+    MarketplaceRefundPreviewDetails MapTo(MarketplaceRefundPreviewModel src);
+    MarketplaceRefundDetails MapTo(MarketplaceRefundReadModel src);
+    MarketplaceRefundEventDetails MapTo(MarketplaceRefundEventModel src);
     OrganizationArrearsInvoiceDetails MapTo(OrganizationArrearsInvoice src);
     RecurringBookingDetails? MapTo(RecurringBooking? src);
     MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src);
@@ -58,6 +61,99 @@ public interface IGraphQlMapper
 
 public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 {
+    public MarketplaceRefundPreviewDetails MapTo(MarketplaceRefundPreviewModel src) => new()
+    {
+        LocalEntityType = src.LocalEntityType.ToMarketplaceRefundEntityTypeValue(),
+        LocalEntityId = src.LocalEntityId,
+        RequestedAt = src.RequestedAt,
+        ReferenceTime = src.ReferenceTime,
+        IsRefundable = src.IsRefundable,
+        RefundPercentage = src.RefundPercentage,
+        AppliedRuleMinutesBefore = src.AppliedRuleMinutesBefore,
+        BaseAmount = src.BaseAmount,
+        RefundAmount = src.RefundAmount,
+        Currency =
+            src.Currency is { } currency ? new CurrencyDetails { Type = currency, Name = currency.ToCurrencyName() } : null,
+        CurrencyToDisplay = src.Currency is { } displayCurrency ? displayCurrency.ToCurrencyName() : "N/A"
+    };
+
+    public MarketplaceRefundDetails MapTo(MarketplaceRefundReadModel src) => new()
+    {
+        Id = src.Id,
+        LocalEntityType = src.LocalEntityType.ToMarketplaceRefundEntityTypeValue(),
+        LocalEntityId = src.LocalEntityId,
+        Status = new MarketplaceRefundStatusDetails { Type = src.Status, Name = src.Status.ToMarketplaceRefundStatusName() },
+        RequestedAt = src.RequestedAt,
+        ReferenceTime = src.ReferenceTime,
+        RefundPercentage = src.RefundPercentage,
+        AppliedRuleMinutesBefore = src.AppliedRuleMinutesBefore,
+        BaseAmount = src.BaseAmount,
+        RefundAmount = src.RefundAmount,
+        Currency =
+            src.Currency is { } currency ? new CurrencyDetails { Type = currency, Name = currency.ToCurrencyName() } : null,
+        CurrencyToDisplay = src.Currency is { } displayCurrency ? displayCurrency.ToCurrencyName() : "N/A",
+        Reason = src.Reason,
+        AccountingProvider = src.AccountingProvider,
+        ExternalRefundId = src.ExternalRefundId,
+        ExternalRefundNumber = src.ExternalRefundNumber,
+        LastProcessedAt = src.LastProcessedAt,
+        LastError = src.LastError,
+        PaymentProvider = src.PaymentProvider,
+        ExternalPaymentRefundId = src.ExternalPaymentRefundId,
+        PaymentRefundStatus = src.PaymentRefundStatus,
+        PaymentRefundLastProcessedAt = src.PaymentRefundLastProcessedAt,
+        PaymentRefundLastError = src.PaymentRefundLastError,
+        CanProcessInXero = src.CanProcessInXero,
+        RequestedByCustomerId = src.RequestedByCustomerId,
+        RequestedByCustomerName = src.RequestedByCustomerName,
+        XeroProcessingBlockedReason = src.XeroProcessingBlockedReason,
+        RefundKind = src.RefundKind.ToString(),
+        IdempotencyKey = src.IdempotencyKey,
+        PolicySnapshotJson = src.PolicySnapshotJson,
+        CalculationResultJson = src.CalculationResultJson,
+        TimezoneId = src.TimezoneId,
+        RetryCount = src.RetryCount,
+        ApprovedAt = src.ApprovedAt,
+        ApprovedByCustomerId = src.ApprovedByCustomerId,
+        RejectedAt = src.RejectedAt,
+        RejectedByCustomerId = src.RejectedByCustomerId,
+        RejectionReason = src.RejectionReason,
+        CancelledAt = src.CancelledAt,
+        CancellationReason = src.CancellationReason,
+        BankTransferReference = src.BankTransferReference,
+        BankTransferSentAt = src.BankTransferSentAt,
+        ReconciledAt = src.ReconciledAt,
+        ReconciliationStatus = src.ReconciliationStatus?.ToString(),
+        Events = src.Events.Select(MapTo),
+        PaymentAllocations = src.PaymentAllocations.Select(item => new MarketplaceRefundPaymentAllocationDetails
+        {
+            SourcePaymentProvider = item.SourcePaymentProvider,
+            SourcePaymentReference = item.SourcePaymentReference,
+            SourcePaymentAmount = item.SourcePaymentAmount,
+            AllocatedRefundAmount = item.AllocatedRefundAmount,
+            Currency = item.Currency.ToCurrency()
+        }).ToList()
+    };
+
+    public MarketplaceRefundEventDetails MapTo(MarketplaceRefundEventModel src) => new()
+    {
+        Id = src.Id,
+        EventType = new MarketplaceRefundEventTypeDetails { Type = src.EventType, Name = src.EventType.ToMarketplaceRefundEventTypeName() },
+        OccurredAt = src.OccurredAt,
+        RefundAmount = src.RefundAmount,
+        CurrencyToDisplay = src.Currency is { } currency ? currency.ToCurrencyName() : "N/A",
+        Reason = src.Reason,
+        AccountingProvider = src.AccountingProvider,
+        ExternalRefundId = src.ExternalRefundId,
+        ExternalRefundNumber = src.ExternalRefundNumber,
+        LastError = src.LastError,
+        ActorCustomerId = src.ActorCustomerId,
+        ActorName = src.ActorName,
+        PreviousStatus = src.PreviousStatus?.ToString(),
+        NewStatus = src.NewStatus?.ToString(),
+        CorrelationId = src.CorrelationId
+    };
+
     public MarketplaceBookingFailureDetails MapTo(MarketplaceBookingFailureEntity src) =>
         new()
         {
@@ -68,10 +164,16 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             FinalizedAt = src.FinalizedAt,
             RequestedFrom = src.RequestedFrom,
             RequestedUntil = src.RequestedUntil,
-            CustomerAction = new MarketplaceBookingFailureChoiceDetails
-            {
-                Type = src.CustomerAction.ToSafeString(), Name = src.CustomerAction.ToSafeString().ToMarketplaceBookingFailureCustomerActionName()
-            }
+            CustomerAction =
+                new MarketplaceBookingFailureChoiceDetails
+                {
+                    Type = src.CustomerAction.ToSafeString(),
+                    Name = src.CustomerAction.ToSafeString().ToMarketplaceBookingFailureCustomerActionName()
+                },
+            ResolutionDeadlineAt = src.ResolutionDeadlineAt,
+            ResolutionDecidedAt = src.ResolutionDecidedAt,
+            ResolutionDecision = src.ResolutionDecision,
+            AllocatedRefundAmount = src.AllocatedRefundAmount
         };
 
     public MarketplaceBookingFailureDetails MapTo(MarketplaceBookingFailureSummary src) =>
@@ -134,7 +236,11 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             Id = src.Id,
             LocalEntityType = src.LocalEntityType,
             LocalEntityId = src.LocalEntityId,
-            Status = new MarketplaceRefundStatusDetails { Type = src.Status, Name = src.Status.ToMarketplaceRefundStatusName() },
+            Status =
+                new MarketplaceRefundStatusDetails
+                {
+                    Type = src.Status.ToMarketplaceRefundStatus(), Name = src.Status.ToMarketplaceRefundStatus().ToMarketplaceRefundStatusName()
+                },
             RequestedAt = src.RequestedAt,
             ReferenceTime = src.ReferenceTime,
             RefundPercentage = src.RefundPercentage,
@@ -154,7 +260,32 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             PaymentRefundStatus = src.PaymentRefundStatus,
             PaymentRefundLastProcessedAt = src.PaymentRefundLastProcessedAt,
             PaymentRefundLastError = src.PaymentRefundLastError,
-            RequestedByCustomerId = src.RequestedByCustomerId
+            RequestedByCustomerId = src.RequestedByCustomerId,
+            RefundKind = src.RefundKind,
+            IdempotencyKey = src.IdempotencyKey,
+            PolicySnapshotJson = src.PolicySnapshotJson,
+            CalculationResultJson = src.CalculationResultJson,
+            TimezoneId = src.TimezoneId,
+            RetryCount = src.RetryCount,
+            ApprovedAt = src.ApprovedAt,
+            ApprovedByCustomerId = src.ApprovedByCustomerId,
+            RejectedAt = src.RejectedAt,
+            RejectedByCustomerId = src.RejectedByCustomerId,
+            RejectionReason = src.RejectionReason,
+            CancelledAt = src.CancelledAt,
+            CancellationReason = src.CancellationReason,
+            BankTransferReference = src.BankTransferReference,
+            BankTransferSentAt = src.BankTransferSentAt,
+            ReconciledAt = src.ReconciledAt,
+            ReconciliationStatus = src.ReconciliationStatus,
+            PaymentAllocations = src.PaymentAllocations.Select(item => new MarketplaceRefundPaymentAllocationDetails
+            {
+                SourcePaymentProvider = item.SourcePaymentProvider,
+                SourcePaymentReference = item.SourcePaymentReference,
+                SourcePaymentAmount = item.SourceCapturedAmount,
+                AllocatedRefundAmount = item.AllocatedRefundAmount,
+                Currency = item.Currency
+            }).ToList()
         };
     }
 
@@ -165,7 +296,12 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         return new MarketplaceRefundEventDetails
         {
             Id = src.Id,
-            EventType = new MarketplaceRefundEventTypeDetails { Type = src.EventType, Name = src.EventType.ToMarketplaceRefundEventTypeName() },
+            EventType =
+                new MarketplaceRefundEventTypeDetails
+                {
+                    Type = src.EventType.ToMarketplaceRefundEventType(),
+                    Name = src.EventType.ToMarketplaceRefundEventType().ToMarketplaceRefundEventTypeName()
+                },
             OccurredAt = src.OccurredAt,
             RefundAmount = src.RefundAmount,
             CurrencyToDisplay = currency is null ? "N/A" : currency.Value.ToCurrencyName(),
@@ -174,7 +310,10 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             ExternalRefundId = src.ExternalRefundId,
             ExternalRefundNumber = src.ExternalRefundNumber,
             LastError = src.LastError,
-            ActorCustomerId = src.ActorCustomerId
+            ActorCustomerId = src.ActorCustomerId,
+            PreviousStatus = src.PreviousStatus,
+            NewStatus = src.NewStatus,
+            CorrelationId = src.CorrelationId
         };
     }
 

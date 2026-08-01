@@ -385,7 +385,13 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
 
         dest.Notes = src.Notes;
         dest.Category = src.Category.ToBookingCategory();
-        dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
+        // Resources can stay tracked across consecutive marketplace occurrences. A filtered
+        // include may therefore contain slots loaded for another occurrence; only associate
+        // slots in this booking's own time window.
+        dest.ResourceBookingSlots = resources
+            .SelectMany(item => item.ResourceBookingSlots)
+            .Where(slot => slot.Start >= src.From && slot.Start < src.Until)
+            .ToList();
         dest.InvolvedCustomers = involvedCustomers.ToList();
         dest.InvolvedOrganizations = involvedOrganizations.ToList();
         dest.InvolvedLocations = involvedLocations.ToList();
@@ -830,6 +836,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name.ToSafeString(),
+                Timezone = src.Timezone,
                 Type = src.Type.ToLocationType(),
                 OrganizationTags = MapTo(src.OrganizationTags).ToList()
             };

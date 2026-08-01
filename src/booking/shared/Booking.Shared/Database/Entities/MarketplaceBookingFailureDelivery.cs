@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Booking.Shared.Database.Entities;
 
-#pragma warning disable CS8618
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class MarketplaceBookingFailureDelivery : EntityBase
 {
     public string MarketplaceBookingFailureId { get; set; }
@@ -21,7 +22,7 @@ public class MarketplaceBookingFailureDelivery : EntityBase
     public string? LastError { get; set; }
     public virtual MarketplaceBookingFailure MarketplaceBookingFailure { get; set; }
 }
-#pragma warning restore CS8618
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 public class MarketplaceBookingFailureDeliveryConfiguration : IEntityTypeConfiguration<MarketplaceBookingFailureDelivery>
 {
@@ -36,7 +37,8 @@ public class MarketplaceBookingFailureDeliveryConfiguration : IEntityTypeConfigu
         builder.Property(item => item.Status).HasMaxLength(Constants.MaxAccountingStatusLength);
         builder.Property(item => item.LastError).HasMaxLength(Constants.MaxAccountingErrorLength);
 
-        builder.HasOne(item => item.MarketplaceBookingFailure).WithMany(item => item.Deliveries)
+        builder.HasOne(item => item.MarketplaceBookingFailure)
+            .WithMany(item => item.Deliveries)
             .HasForeignKey(item => item.MarketplaceBookingFailureId);
 
         builder.HasIndex(item => new { item.MarketplaceBookingFailureId, item.RecipientKey, item.Channel }).IsUnique();

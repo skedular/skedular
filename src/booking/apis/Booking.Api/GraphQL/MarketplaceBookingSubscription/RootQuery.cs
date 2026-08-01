@@ -21,7 +21,6 @@ namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 [QueryType]
 public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
 {
-    [UseResolverScope]
     public IEnumerable<MarketplaceBookingSubscriptionCancellationModeDetails> MarketplaceBookingSubscriptionCancellationModes() =>
     [
         new()
@@ -36,7 +35,6 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
         }
     ];
 
-    [UseResolverScope]
     public IEnumerable<MarketplaceBookingSubscriptionStatusDetails> MarketplaceBookingSubscriptionStatuses()
     {
         var statuses = new[]
@@ -54,7 +52,6 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
         return statuses;
     }
 
-    [UseResolverScope]
     public IEnumerable<MarketplaceBookingPaymentStatusDetails> MarketplaceBookingPaymentStatuses()
     {
         var statuses = new[]

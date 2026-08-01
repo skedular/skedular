@@ -2,6 +2,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Booking.Shared.Models;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Interceptors;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Time;
@@ -16,6 +17,7 @@ namespace Booking.Shared.Repositories;
 public interface IMarketplaceBookingSubscriptionRepository : IRepository<MarketplaceBookingSubscription>
 {
     Task<MarketplaceBookingSubscription?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<MarketplaceBookingSubscription?> GetByIdForUpdateAsync(string id, CancellationToken cancellationToken);
     Task<MarketplaceBookingSubscription?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     MarketplaceBookingSubscription Add(MarketplaceBookingSubscription recurringBooking);
     MarketplaceBookingSubscription Update(MarketplaceBookingSubscription recurringBooking);
@@ -54,6 +56,13 @@ public static class MarketplaceBookingSubscriptionExtensions
                 .ThenInclude(query => query.MarketplaceBooking)
                 .ThenInclude(query => query!.StripeCheckoutSession)
                 .ThenInclude(query => query!.StripeCustomer)
+                .Include(query =>
+                    query.RecurringBookings.Where(recurringBooking =>
+                        !recurringBooking.DeletedAt.HasValue &&
+                        recurringBooking.MarketplaceBooking != null &&
+                        (!recurringBooking.EndDate.HasValue || recurringBooking.EndDate.Value >= activeRecurringWindowStart)))
+                .ThenInclude(query => query.InvolvedCustomers)
+                .ThenInclude(query => query.Identities)
                 .Include(query =>
                     query.RecurringBookings.Where(recurringBooking =>
                         !recurringBooking.DeletedAt.HasValue &&
@@ -237,6 +246,24 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
         await DbContext.MarketplaceBookingSubscription
             .AddDependentObjects(true, TimeProvider)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<MarketplaceBookingSubscription?> GetByIdForUpdateAsync(string id, CancellationToken cancellationToken)
+    {
+        // PostgreSQL cannot apply FOR UPDATE to the nullable side of the outer joins that load
+        // the aggregate's dependent graph. Lock the root row first, then load its graph within
+        // the same transaction.
+        var lockedSubscription = await DbContext.MarketplaceBookingSubscription
+            .TagWith(EntityFrameworkInterceptorTags.ForUpdate)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+        if (lockedSubscription is null)
+        {
+            return null;
+        }
+
+        return await DbContext.MarketplaceBookingSubscription
+            .AddDependentObjects(true, TimeProvider)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+    }
 
     public async Task<MarketplaceBookingSubscription?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.MarketplaceBookingSubscription

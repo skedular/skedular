@@ -19,6 +19,7 @@ using OrganizationBillingCycleModel = Api.Shared.Services.Models.OrganizationBil
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+using Microsoft.Extensions.Logging;
 
 namespace Booking.Shared.UnitTests.Services.XeroInvoiceServiceTests;
 
@@ -47,6 +48,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
         [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
         [Frozen] TimeProvider timeProvider,
         [Frozen] CallInvoker callInvoker,
+        [Frozen] ILogger<XeroInvoiceService> logger,
         string recurringBookingId,
         string productVersionId,
         string pricingId,
@@ -73,7 +75,8 @@ public class HandleRecurringBookingInvoiceAsyncShould
             xeroRepeatingInvoiceScheduleService,
             xeroRecurringInvoiceTransitionService,
             invoicePaymentTermsService,
-            timeProvider);
+            timeProvider,
+            logger);
 
         var recurringBooking = new RecurringBooking
         {
@@ -199,6 +202,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
         [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
         [Frozen] TimeProvider timeProvider,
         [Frozen] CallInvoker callInvoker,
+        [Frozen] ILogger<XeroInvoiceService> logger,
         string recurringBookingId,
         string productVersionId,
         string pricingId,
@@ -224,7 +228,8 @@ public class HandleRecurringBookingInvoiceAsyncShould
             xeroRepeatingInvoiceScheduleService,
             xeroRecurringInvoiceTransitionService,
             invoicePaymentTermsService,
-            timeProvider);
+            timeProvider,
+            logger);
 
         var recurringBooking = new RecurringBooking
         {
@@ -328,6 +333,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
         [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
         [Frozen] TimeProvider timeProvider,
         [Frozen] CallInvoker callInvoker,
+        [Frozen] ILogger<XeroInvoiceService> logger,
         string recurringBookingId,
         string productVersionId,
         string pricingId,
@@ -354,7 +360,8 @@ public class HandleRecurringBookingInvoiceAsyncShould
             xeroRepeatingInvoiceScheduleService,
             xeroRecurringInvoiceTransitionService,
             invoicePaymentTermsService,
-            timeProvider);
+            timeProvider,
+            logger);
 
         var recurringBooking = new RecurringBooking
         {

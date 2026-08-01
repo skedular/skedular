@@ -75,6 +75,13 @@ const RootQuery = graphql`
       type
       name
     }
+    marketplaceBookingSubscriptionRefundPreview(subscriptionId: $subscriptionId) {
+      refundAmount
+      baseAmount
+      refundPercentage
+      currencyToDisplay
+      isRefundable
+    }
     marketplaceBookingSubscription(id: $subscriptionId) {
       id
       failure {
@@ -782,7 +789,13 @@ const MarketplaceProductSubscriptionDetails = ({
                                 <Chip
                                   size="small"
                                   icon={<PaymentStatusIcon />}
-                                  label={isCurrentCycle ? displayMarketplaceBooking.paymentStatus.name : (recurringBooking.marketplaceBooking?.paymentStatus.name ?? 'Preparing')}
+                                  label={
+                                    isCurrentCycle
+                                      ? subscription.status.type === 'CANCELLED'
+                                        ? (lifecycleDisplay?.statusLabel ?? subscription.status.name)
+                                        : displayMarketplaceBooking.paymentStatus.name
+                                      : (recurringBooking.marketplaceBooking?.paymentStatus.name ?? 'Preparing')
+                                  }
                                   color={isCurrentCycle && displayMarketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'success' : 'default'}
                                   variant={isCurrentCycle && displayMarketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'filled' : 'outlined'}
                                 />
@@ -953,6 +966,14 @@ const MarketplaceProductSubscriptionDetails = ({
               ? 'If the current period has already been billed, any refund will still be reviewed separately using the cancellation policy and payment status.'
               : 'If payment for the current period was never confirmed, this will stop future billing without creating a refund.'}
           </DialogContentText>
+          {pendingCancellationConfirmation?.type === 'IMMEDIATE' && rootData.marketplaceBookingSubscriptionRefundPreview.isRefundable ? (
+            <Alert severity="info" sx={{ mt: 1.5 }}>
+              Estimated refund: {rootData.marketplaceBookingSubscriptionRefundPreview.refundAmount ?? 0} {rootData.marketplaceBookingSubscriptionRefundPreview.currencyToDisplay}
+              {rootData.marketplaceBookingSubscriptionRefundPreview.refundPercentage != null
+                ? ` (${rootData.marketplaceBookingSubscriptionRefundPreview.refundPercentage}% of the eligible amount)`
+                : ''}
+            </Alert>
+          ) : null}
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmImmediateCancellationClick}
             onSecondaryClicked={handleCancelImmediateCancellationClick}

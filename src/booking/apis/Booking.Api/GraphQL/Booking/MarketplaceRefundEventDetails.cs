@@ -1,3 +1,4 @@
+using Booking.Shared.Models;
 using HotChocolate;
 
 namespace Booking.Api.GraphQL.Booking;
@@ -5,7 +6,7 @@ namespace Booking.Api.GraphQL.Booking;
 [GraphQLName("MarketplaceRefundEventTypeDetails")]
 public class MarketplaceRefundEventTypeDetails
 {
-    [GraphQLName("type")] public string Type { get; set; } = string.Empty;
+    [GraphQLName("type")] public MarketplaceRefundEventType Type { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 
@@ -24,4 +25,7 @@ public class MarketplaceRefundEventDetails
     [GraphQLName("lastError")] public string? LastError { get; set; }
     [GraphQLName("actorCustomerId")] public string? ActorCustomerId { get; set; }
     [GraphQLName("actorName")] public string? ActorName { get; set; }
+    public string? PreviousStatus { get; set; }
+    public string? NewStatus { get; set; }
+    public string? CorrelationId { get; set; }
 }

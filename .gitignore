@@ -867,3 +867,5 @@ test-artifacts/
 # Playwright specific
 playwright-report/
 playwright/.cache/
+
+graphify-out/

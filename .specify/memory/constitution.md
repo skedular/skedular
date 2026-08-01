@@ -1,6 +1,48 @@
 <!--
 SYNC IMPACT REPORT
 ==================
+Version change: 2.2.0 → 2.3.0
+
+Modified principles:
+  - II. Domain Ownership and Architecture Boundaries — added a mandatory service/API model boundary
+    requiring services to return domain models rather than GraphQL or other adapter types
+  - II. Domain Ownership and Architecture Boundaries — persisted enum-like values require explicit
+    switch-based source-to-model mappings; direct Enum.Parse/TryParse mapping is prohibited
+
+Added sections:
+  - Service/API Model Boundary
+
+Removed sections: none
+
+Templates reviewed and alignment status:
+  ✅ .specify/templates/plan-template.md — existing Constitution Check remains compatible; service/API
+    model boundary is enforced by the amended principle
+  ✅ .specify/templates/spec-template.md — no direct structural change required
+  ✅ .specify/templates/tasks-template.md — no direct structural change required
+
+Deferred TODOs: none
+-->
+<!--
+SYNC IMPACT REPORT
+==================
+Version change: 2.0.0 → 2.1.0
+
+Modified principles:
+  - III. Proportionate Testing and Logging Verification — made unit tests the default for
+    isolated behavior and limited integration tests to boundaries that unit tests cannot prove
+
+Added sections: none
+Removed sections: none
+
+Templates reviewed and alignment status:
+  ✅ .specify/templates/plan-template.md — updated testing review gate
+  ✅ .specify/templates/tasks-template.md — added unit-first integration-test guidance
+
+Deferred TODOs: none
+-->
+<!--
+SYNC IMPACT REPORT
+==================
 Version change: 1.2.0 → 2.0.0
 
 Modified principles:
@@ -84,6 +126,21 @@ that the appropriate generator was run and its outputs are committed.
 
 ### II. Domain Ownership and Architecture Boundaries
 
+#### Service/API Model Boundary
+
+Application and domain service interfaces MUST return shared domain models owned by the service/domain layer. They MUST
+NOT return GraphQL detail types, GraphQL inputs, GraphQL payloads, HotChocolate connection/edge types, or any other API
+adapter type. If a service needs to expose new data, first create or extend a model in the owning shared model namespace,
+then map that model to GraphQL, REST, gRPC, or another API representation at the API boundary. This keeps service
+contracts reusable when a second API layer is added and prevents API-specific dependencies from leaking inward.
+
+Every newly introduced enum-like model value MUST keep its enum, persisted constants, and conversion/name extensions
+co-located in the owning model file/group. GraphQL choice/detail types may wrap those models, but must not become the
+source of truth. Persisted strings MUST be mapped to model enums through explicit switch-based conversion extensions
+that list each supported source value. Direct `Enum.Parse`, `Enum.TryParse`, or equivalent reflection-based parsing
+MUST NOT be used for source-to-model mapping; unknown values MUST follow the owning mapping's explicit fallback or
+error policy.
+
 Each domain (booking, organization, location, marketplace, etc.) owns its own data, services,
 workflows, and Kafka event definitions. Cross-domain collaboration MUST go through public
 service or event interfaces, never through direct database or internal-class access. GraphQL
@@ -98,10 +155,20 @@ independent deployability, and prevent coupling that accumulates into architectu
 **Review gate**: New code that reads another domain's database, bypasses a service boundary, or
 duplicates shared infrastructure logic requires explicit justification before merging.
 
-### III. Proportionate Testing and Logging Verification
+### III. Unit-First, Proportionate Testing and Logging Verification
 
-Every backend change MUST include unit tests. Changes that cross persistence or integration
-boundaries (database, Kafka, Temporal, external HTTP) MUST also include integration tests.
+Every backend behavior change MUST be tested with unit tests when its behavior can be exercised
+without real infrastructure. Existing unit coverage MUST be reused and extended rather than
+duplicated in integration tests. Integration tests are required only for behavior that depends
+on a real persistence, database-concurrency, migration, schema-wiring, Kafka, Temporal, external
+HTTP, or other infrastructure boundary that a unit test cannot prove. An integration test MUST
+have a specific boundary-focused reason; a service scenario that can be isolated is not a valid
+reason by itself.
+
+Changes that cross persistence or integration boundaries MUST include the smallest possible
+integration test for that boundary, in addition to unit tests for business behavior. Tests MUST
+be removed or reduced when they duplicate existing coverage. Integration tests MUST NOT become
+end-to-end copies of unit-test scenarios.
 System/end-to-end tests are reserved for true cross-domain or real-infrastructure scenarios.
 Integration tests MUST NOT access `DbContext` or Entity Framework directly; all persistence
 assertions MUST go through repository or query-layer methods. Web UI changes MUST use Vitest
@@ -114,9 +181,9 @@ paths and key lifecycle transitions).
 behavior that is genuinely risky. Banning raw EF in integration tests keeps assertions
 decoupled from persistence implementation choices.
 
-**Review gate**: PRs that touch persistence, event, or workflow code without accompanying
-integration tests, or that assert state through `DbContext` directly, MUST be returned for
-revision.
+**Review gate**: Reviewers MUST reject duplicated integration scenarios when equivalent unit
+coverage exists. PRs that add infrastructure-dependent behavior without a focused boundary test,
+or that assert state through `DbContext` directly, MUST be returned for revision.
 
 ### IV. Frontend Consistency
 
@@ -243,4 +310,4 @@ explicit, documented exception is agreed and committed alongside the change.
 
 ---
 
-**Version**: 2.0.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-06-01
+**Version**: 2.1.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-07-28

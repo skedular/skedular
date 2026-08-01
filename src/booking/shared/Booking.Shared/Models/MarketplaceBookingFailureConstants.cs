@@ -29,6 +29,16 @@ public static class MarketplaceBookingFailureEventTypeConstants
     public const string DispatchQueued = "DispatchQueued";
     public const string DeliverySucceeded = "DeliverySucceeded";
     public const string DeliveryFailed = "DeliveryFailed";
+    public const string ResolutionAccepted = "ResolutionAccepted";
+    public const string ResolutionDeclined = "ResolutionDeclined";
+    public const string ResolutionExpired = "ResolutionExpired";
+}
+
+public static class MarketplaceBookingFailureResolutionDecisionConstants
+{
+    public const string Accepted = "Accepted";
+    public const string Declined = "Declined";
+    public const string Expired = "Expired";
 }
 
 public static class MarketplaceBookingFailureDeliveryAudienceConstants

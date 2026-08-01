@@ -30,11 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Skedular Host',
     description: 'List your space and manage bookings with Skedular Host',
-    icons: {
-      icon: '/favicon.ico',
-      shortcut: '/favicon.ico',
-      apple: '/images/skedular-icon-primary.svg',
-    },
+    icons: '/images/skedular-icon-primary.svg',
   };
 }
 

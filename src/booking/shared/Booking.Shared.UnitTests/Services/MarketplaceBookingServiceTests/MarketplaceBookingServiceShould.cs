@@ -464,7 +464,7 @@ public class MarketplaceBookingServiceShould
 
         result.ShouldBe(deletedBooking);
         existingBooking.DeletedByCustomer.ShouldBe(deletedByCustomer);
-        A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))
+        A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken, true))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();

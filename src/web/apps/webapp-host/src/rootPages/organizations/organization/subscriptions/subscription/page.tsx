@@ -422,7 +422,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                     <StackColumn spacing={0.75}>
                       <BodyIconTypography label={`Renewal: ${lifecycleDisplay?.renewalLabel ?? 'Not scheduled'}`} />
                       <BodyIconTypography
-                        label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
+                        label={`Current payment: ${subscription.status.type === 'CANCELLED' ? (lifecycleDisplay?.statusLabel ?? subscription.status.name) : subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
                         sx={{ opacity: 0.78 }}
                       />
                     </StackColumn>
@@ -543,7 +543,12 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                     <SummaryRow label="Next renewal" value={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : 'Not scheduled'} />
                     <SummaryRow label="Status" value={lifecycleDisplay?.statusLabel ?? subscription.status.name} />
                     <SummaryRow label="Renewal" value={lifecycleDisplay?.renewalLabel ?? 'Not scheduled'} />
-                    <SummaryRow label="Payment" value={subscription.marketplaceBooking.paymentStatus.name} />
+                    <SummaryRow
+                      label="Payment"
+                      value={
+                        subscription.status.type === 'CANCELLED' ? (lifecycleDisplay?.statusLabel ?? subscription.status.name) : subscription.marketplaceBooking.paymentStatus.name
+                      }
+                    />
                     <SummaryRow label="Payment method" value={subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} />
                     <SummaryRow label="Quantity" value={`${subscription.marketplaceBooking.quantity}`} />
                   </StackColumn>

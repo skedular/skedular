@@ -1,0 +1,3 @@
+query MarketplaceRefundWorkflowContract {
+    mutation: __schema { mutationType { fields { name } } }
+}

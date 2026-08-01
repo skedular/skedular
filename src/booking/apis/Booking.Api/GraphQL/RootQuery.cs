@@ -7,7 +7,6 @@ namespace Booking.Api.GraphQL;
 [QueryType]
 public class RootQuery(IVersionService versionService)
 {
-    [UseResolverScope]
     public Version BookingVersion()
     {
         var version = versionService.GetVersion();

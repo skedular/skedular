@@ -135,7 +135,11 @@ public class TemporalOutboxBackgroundService<TDbContext>(
             {
                 // Each claimed row is handled independently. One failed workflow-start
                 // should not prevent other rows in the batch from being attempted.
-                logger.LogTrace("Started executing workflow {WorkflowType}", outboxEvent.WorkflowType);
+                logger.LogInformation(
+                    "Claimed Temporal outbox workflow {WorkflowType} with outbox ID {OutboxId} and workflow ID {WorkflowId}",
+                    outboxEvent.WorkflowType,
+                    outboxEvent.Id,
+                    outboxEvent.WorkflowOptions.Id);
 
                 await using var scope = serviceProvider.CreateAsyncScope();
                 var temporalOutboxExecutor = scope.ServiceProvider.GetRequiredService<ITemporalOutboxExecutor>();
@@ -152,7 +156,10 @@ public class TemporalOutboxBackgroundService<TDbContext>(
                     "publish_temporal_outbox_message",
                     new Dictionary<string, string> { [nameof(outboxEvent.WorkflowType)] = outboxEvent.WorkflowType });
 
-                logger.LogTrace("Workflow {WorkflowType} execution started. Removing from outbox", outboxEvent.WorkflowType);
+                logger.LogInformation(
+                    "Temporal workflow {WorkflowType} with outbox ID {OutboxId} started successfully; removing its outbox record",
+                    outboxEvent.WorkflowType,
+                    outboxEvent.Id);
                 // Successful workflow start means the row has completed its handoff.
                 await CompleteOutboxEventAsync(outboxEvent.Id, outboxEvent.LeasedUntil, cancellationToken);
             }

@@ -17,6 +17,7 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Logging;
 using Xero.NetStandard.OAuth2.Api;
 using Xero.NetStandard.OAuth2.Model.Accounting;
 using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;
@@ -81,7 +82,8 @@ public class XeroInvoiceService(
     IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
     IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
     IInvoicePaymentTermsService invoicePaymentTermsService,
-    TimeProvider timeProvider) : IXeroInvoiceService
+    TimeProvider timeProvider,
+    ILogger<XeroInvoiceService> logger) : IXeroInvoiceService
 {
     public async Task<bool> TryHandleMarketplaceBookingInvoiceAsync(
         string organizationId,
@@ -91,8 +93,15 @@ public class XeroInvoiceService(
         CancellationToken cancellationToken)
     {
         var xeroConnection = await GetOrganizationXeroConnectionAsync(organizationId, cancellationToken);
+        logger.LogInformation(
+            "Xero marketplace invoice handling started for organization {OrganizationId}, marketplace booking {MarketplaceBookingId}, booking {BookingId}, connection ready={ConnectionReady}, billing mode={BillingMode}, send invoices={SendInvoices}",
+            organizationId, marketplaceBooking.Id, booking.Id, IsXeroConnectionReady(xeroConnection), xeroConnection?.BillingMode,
+            xeroConnection?.SendInvoicesViaXero);
         if (!IsXeroManagedForStandardInvoicing(xeroConnection))
         {
+            logger.LogInformation(
+                "Xero marketplace invoice export skipped for organization {OrganizationId}, marketplace booking {MarketplaceBookingId}: Xero is not configured for standard invoicing",
+                organizationId, marketplaceBooking.Id);
             return false;
         }
 
@@ -145,6 +154,9 @@ public class XeroInvoiceService(
 
         if (!IsXeroManagedForRecurringInvoicing(xeroConnection))
         {
+            logger.LogInformation(
+                "Xero recurring invoice export skipped for organization {OrganizationId}, recurring booking {RecurringBookingId}: Xero is not configured for recurring invoicing",
+                organizationId, recurringBooking.Id);
             return RecurringInvoiceHandlingDisposition.ContinueToSkedular;
         }
 
@@ -304,8 +316,15 @@ public class XeroInvoiceService(
     {
         var localEntityType = booking is null ? AccountingEntityTypeConstants.RecurringBooking : AccountingEntityTypeConstants.MarketplaceBooking;
         var localEntityId = booking is null ? recurringBooking!.Id : marketplaceBooking.Id;
+        logger.LogInformation(
+            "Starting Xero invoice export for organization {OrganizationId}, entity {LocalEntityType}/{LocalEntityId}, marketplace booking {MarketplaceBookingId}",
+            organizationId, localEntityType, localEntityId, marketplaceBooking.Id);
         var accountingInvoiceLink =
             await UpsertPendingAccountingInvoiceExportLinkAsync(organizationId, localEntityType, localEntityId, cancellationToken);
+        logger.LogInformation(
+            "Xero invoice export link ready for organization {OrganizationId}, entity {LocalEntityType}/{LocalEntityId}, link {AccountingInvoiceExportLinkId}, external invoice {ExternalInvoiceId}, export state {ExportConfigurationState}",
+            organizationId, localEntityType, localEntityId, accountingInvoiceLink.Id, accountingInvoiceLink.ExternalInvoiceId,
+            accountingInvoiceLink.ExportConfigurationState);
         var customer = GetInvoiceCustomer(booking, recurringBooking, marketplaceBooking) ?? throw new CustomerNotFound();
         var (accessToken, refreshedConnection) = await EnsureValidAccessTokenAsync(organizationId, xeroConnection, cancellationToken);
         var contact = await UpsertXeroContactAsync(organizationId, customer, refreshedConnection, accessToken, cancellationToken);
@@ -446,6 +465,12 @@ public class XeroInvoiceService(
                 }
             ]
         };
+
+        logger.LogInformation(
+            "Submitting Xero invoice for organization {OrganizationId}, tenant {TenantId}, entity {LocalEntityType}/{LocalEntityId}, invoice number {InvoiceNumber}, amount {Amount}, currency {Currency}, status {InvoiceStatus}",
+            organizationId, xeroConnection.TenantId, accountingInvoiceLink.LocalEntityType, accountingInvoiceLink.LocalEntityId,
+            marketplaceBooking.InvoiceNumber, invoiceRequest.LineItems?.Sum(item => item.LineAmount ?? 0m), invoiceRequest.CurrencyCode,
+            invoiceRequest.Status);
 
         var invoiceResponse = await accountingApi.CreateInvoicesAsync(
             accessToken,
@@ -780,6 +805,11 @@ public class XeroInvoiceService(
             accountingInvoiceLink.Id,
             cancellationToken);
         var exportedInvoice = invoiceResponse?._Invoices?.FirstOrDefault() ?? throw new XeroInvoiceExportFailedException();
+
+        logger.LogInformation(
+            "Xero invoice created for organization {OrganizationId}, tenant {TenantId}, entity {LocalEntityType}/{LocalEntityId}, external invoice {ExternalInvoiceId}, invoice number {ExternalInvoiceNumber}, status {ExternalStatus}",
+            organizationId, xeroConnection.TenantId, accountingInvoiceLink.LocalEntityType, accountingInvoiceLink.LocalEntityId,
+            exportedInvoice.InvoiceID, exportedInvoice.InvoiceNumber, exportedInvoice.Status);
 
         await ApplyXeroInvoiceSyncAsync(organizationId, accountingInvoiceLink, exportedInvoice, xeroConnection, cancellationToken);
 

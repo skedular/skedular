@@ -20,6 +20,11 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
     Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsWithValidMarketplaceAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<Database.Entities.Booking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<Database.Entities.Booking>> GetFutureConfirmedMarketplaceBookingsByLocationIdAsync(
+        string locationId,
+        DateTimeOffset from,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<Database.Entities.Booking>> GetByRecurringBookingIdAsync(
         string recurringBookingId,
         DateTimeOffset from,
@@ -317,6 +322,19 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         await DbContext.Booking
             .AddSingleBookingMinimumDependentObjects(false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<IReadOnlyList<Database.Entities.Booking>> GetFutureConfirmedMarketplaceBookingsByLocationIdAsync(
+        string locationId,
+        DateTimeOffset from,
+        CancellationToken cancellationToken) =>
+        await DbContext.Booking
+            .Where(query => !query.DeletedAt.HasValue &&
+                            query.From > from &&
+                            query.MarketplaceBooking != null &&
+                            query.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.Confirmed &&
+                            query.InvolvedLocations.Any(location => location.Id == locationId))
+            .AddSingleBookingMinimumDependentObjects(true)
+            .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<Database.Entities.Booking>> GetByRecurringBookingIdAsync(string recurringBookingId, DateTimeOffset from,
         DateTimeOffset? until, CancellationToken cancellationToken) =>

@@ -24,7 +24,7 @@ public class FinalizeAsyncShould
             null,
             MarketplaceBookingFailureCategoryConstants.PaymentExpired,
             MarketplaceBookingFailureScopeConstants.OneTimeBooking,
-            DateTimeOffset.UtcNow,
+            TimeProvider.System.GetUtcNow(),
             "booking-1",
             null,
             null,

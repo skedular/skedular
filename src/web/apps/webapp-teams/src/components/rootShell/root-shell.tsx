@@ -1,17 +1,17 @@
-import { InMsTeamsContext, RelayError, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { AppBar } from '@/components/appBar';
 import { InfoIcon, SignOutIcon } from '@/components/icons';
 import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
+import { InMsTeamsContext, RelayError, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 
-import { BodyIconTypography, CaptionIconTypography, PushToRight, SmallHeadingIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, PushToRight, SmallHeadingIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
@@ -42,7 +42,6 @@ const RootQuery = graphql`
       logoUrl
       name
       isSsoTokenValid
-      isOwnershipVerified
       type {
         type
       }
@@ -154,32 +153,6 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
                     >
                       Single sign-on
                     </Button>
-                  </StackColumn>
-                </StackRow>
-              </Box>
-            </Box>
-          )}
-          {rootData.me.isOnboardingDone && !rootData.organization?.isOwnershipVerified && rootData.organization?.type.type === 'PRIVATE' && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', px: { xs: 1, sm: 2, md: 3 }, pt: 1.5 }}>
-              <Box
-                sx={{
-                  width: '100%',
-                  maxWidth: 1200,
-                  mx: 'auto',
-                  borderRadius: 3,
-                  border: 1,
-                  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(217, 119, 6, 0.18)' : 'rgba(251, 191, 36, 0.28)'),
-                  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 251, 235, 0.92)' : 'rgba(120, 53, 15, 0.24)'),
-                  boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 20px rgba(120, 53, 15, 0.06)' : 'none'),
-                  px: 2,
-                  py: 1.5,
-                }}
-              >
-                <StackRow sx={{ alignItems: 'flex-start', gap: 1.5 }}>
-                  <InfoIcon color="warning" excludeTooltip sx={{ mt: 0.25 }} />
-                  <StackColumn sx={{ gap: 0.25 }}>
-                    <BodyIconTypography label="Ownership verification in progress" />
-                    <CaptionIconTypography label="We need to verify ownership for your organization. We will get back to you within 24 hours." />
                   </StackColumn>
                 </StackRow>
               </Box>

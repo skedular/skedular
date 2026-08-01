@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
@@ -7,7 +8,9 @@ using Booking.Shared.Repositories;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Grpc;
 using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Logging;
 using Xero.NetStandard.OAuth2.Api;
+using Xero.NetStandard.OAuth2.Client;
 using Xero.NetStandard.OAuth2.Model.Accounting;
 using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;
 using CurrencyCode = Xero.NetStandard.OAuth2.Model.Accounting.CurrencyCode;
@@ -21,8 +24,10 @@ namespace Booking.Shared.Services;
 
 public interface IXeroRefundService
 {
+    Task<bool> HasInvoiceTargetAsync(MarketplaceRefund refund, CancellationToken cancellationToken);
     Task<XeroRefundProcessingAvailability> GetProcessingAvailabilityAsync(MarketplaceRefund refund, CancellationToken cancellationToken);
     Task<MarketplaceRefund> ProcessAsync(MarketplaceRefund refund, CancellationToken cancellationToken);
+    Task<bool> ReconcileAsync(MarketplaceRefund refund, DateTimeOffset since, CancellationToken cancellationToken);
 }
 
 public class XeroRefundService(
@@ -31,13 +36,65 @@ public class XeroRefundService(
     IRepositoryFactory repositoryFactory,
     IXeroSdkClientFactory xeroSdkClientFactory,
     IXeroTokenEncryptionService xeroTokenEncryptionService,
-    TimeProvider timeProvider) : IXeroRefundService
+    TimeProvider timeProvider,
+    ILogger<XeroRefundService> logger) : IXeroRefundService
 {
+    public async Task<bool> HasInvoiceTargetAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
+    {
+        var resolution = await ResolveInvoiceTargetAsync(refund, cancellationToken);
+        logger.LogInformation(
+            "Resolved Xero invoice target for refund {RefundId}: found={HasInvoiceTarget}; reason={Reason}",
+            refund.Id,
+            resolution.InvoiceTarget is not null,
+            resolution.ErrorMessage);
+        return resolution.InvoiceTarget is not null;
+    }
+
+    public async Task<bool> ReconcileAsync(MarketplaceRefund refund, DateTimeOffset since, CancellationToken cancellationToken)
+    {
+        if (!Guid.TryParse(refund.ExternalRefundId, out var creditNoteId))
+        {
+            refund.ReconciliationStatus = "LookupFailed";
+            refund.LastReconciledAt = timeProvider.GetUtcNow();
+            repositoryFactory.MarketplaceRefundRepository.Update(refund);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            return false;
+        }
+
+        var connection = await GetOrganizationXeroConnectionAsync(refund.OrganizationId, cancellationToken);
+        if (!IsXeroConnectionReady(connection))
+        {
+            refund.ReconciliationStatus = "LookupFailed";
+            refund.LastReconciledAt = timeProvider.GetUtcNow();
+            repositoryFactory.MarketplaceRefundRepository.Update(refund);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            return false;
+        }
+
+        var (accessToken, refreshed) = await EnsureValidAccessTokenAsync(refund.OrganizationId, connection!, cancellationToken);
+        var api = xeroSdkClientFactory.CreateAccountingApi();
+        var notes = await GetCreditNotesAsync(api, accessToken, refreshed.TenantId, since.UtcDateTime, creditNoteId, cancellationToken);
+        var creditNote = notes._CreditNotes?.FirstOrDefault(note => note.CreditNoteID == creditNoteId);
+        if (creditNote is null)
+        {
+            creditNote = await GetCreditNoteByIdAsync(api, accessToken, refreshed.TenantId, creditNoteId, cancellationToken);
+        }
+
+        var matched = creditNote is not null && await IsCreditNoteSettledAsync(
+            api, accessToken, refreshed.TenantId, creditNote, refund.RefundAmount ?? 0m, since, cancellationToken);
+        refund.ReconciliationStatus = creditNote is null ? "NotFound" : matched ? "Matched" : "Unsettled";
+        refund.LastReconciledAt = timeProvider.GetUtcNow();
+        repositoryFactory.MarketplaceRefundRepository.Update(refund);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        return matched;
+    }
+
     public async Task<XeroRefundProcessingAvailability> GetProcessingAvailabilityAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
     {
-        if (refund.Status != MarketplaceRefundStatusConstants.PendingAccounting)
+        if (refund.Status is not (MarketplaceRefundStatusConstants.Processing or MarketplaceRefundStatusConstants.Completed))
         {
-            return new XeroRefundProcessingAvailability(false, "Refund must be pending accounting before Xero processing is available.");
+            return new XeroRefundProcessingAvailability(false,
+                "Refund must be processing or completed in Stripe before Xero processing is available.");
         }
 
         if (!refund.RefundAmount.HasValue || refund.RefundAmount <= 0)
@@ -53,16 +110,21 @@ public class XeroRefundService(
 
     public async Task<MarketplaceRefund> ProcessAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
     {
+        var stopwatch = Stopwatch.StartNew();
+        logger?.LogInformation(
+            "Starting Xero refund processing for refund {RefundId}, amount {RefundAmount}, currency {Currency}, retry count {RetryCount}", refund.Id,
+            refund.RefundAmount, refund.Currency, refund.RetryCount);
         try
         {
-            if (refund.Status != MarketplaceRefundStatusConstants.PendingAccounting)
+            if (refund.Status is not (MarketplaceRefundStatusConstants.Processing or MarketplaceRefundStatusConstants.Completed))
             {
-                throw new InvalidOperationException("Refund must be pending accounting before Xero processing.");
+                throw new InvalidOperationException("Refund must be processing or completed in Stripe before Xero processing.");
             }
 
             var resolution = await ResolveInvoiceTargetAsync(refund, cancellationToken);
             if (resolution.InvoiceTarget is null)
             {
+                logger?.LogWarning("Xero refund processing blocked for refund {RefundId}: {Reason}", refund.Id, resolution.ErrorMessage);
                 return MarkFailed(refund, resolution.ErrorMessage ?? "The original Xero invoice could not be resolved for this refund.");
             }
 
@@ -141,7 +203,7 @@ public class XeroRefundService(
                 accessToken,
                 refreshedConnection.TenantId,
                 creditNotes,
-                BuildIdempotencyKey(refund.Id),
+                BuildIdempotencyKey(GetIdempotencyKey(refund)),
                 cancellationToken);
             var creditNote = creditNoteResponse._CreditNotes?.FirstOrDefault();
             if (creditNote?.CreditNoteID is null)
@@ -149,8 +211,20 @@ public class XeroRefundService(
                 return MarkFailed(refund, "Xero credit note creation returned no credit note id.");
             }
 
+            // Persist the provider reference before allocation or cash-settlement work.
+            // If a later Xero call fails, reconciliation can now find the created credit note
+            // and retry/resolve it without creating a second credit note.
+            refund.AccountingProvider = AccountingProviderConstants.Xero;
+            refund.ExternalRefundId = creditNote.CreditNoteID.Value.ToString();
+            refund.ExternalRefundNumber = creditNote.CreditNoteNumber;
+            refund.LastProcessedAt = timeProvider.GetUtcNow();
+            refund.LastError = null;
+            refund = repositoryFactory.MarketplaceRefundRepository.Update(refund);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+            var refundAmount = refund.RefundAmount ?? 0m;
             var outstandingAmount = originalInvoice.AmountDue ?? 0m;
-            if (outstandingAmount >= refund.RefundAmount.Value)
+            if (outstandingAmount >= refundAmount)
             {
                 await CreateCreditNoteAllocationAsync(
                     accountingApi,
@@ -164,12 +238,12 @@ public class XeroRefundService(
                             new Allocation
                             {
                                 Invoice = new XeroInvoice { InvoiceID = invoiceId },
-                                Amount = refund.RefundAmount.Value,
+                                Amount = refundAmount,
                                 Date = refund.RequestedAt.UtcDateTime.Date
                             }
                         ]
                     },
-                    BuildAllocationIdempotencyKey(refund.Id),
+                    BuildAllocationIdempotencyKey(GetIdempotencyKey(refund)),
                     cancellationToken);
             }
             else if (outstandingAmount <= 0m)
@@ -191,11 +265,11 @@ public class XeroRefundService(
                         CreditNote = new CreditNote { CreditNoteID = creditNote.CreditNoteID },
                         Account = new Account { Code = bankAccountCode },
                         Code = bankAccountCode,
-                        Amount = refund.RefundAmount.Value,
+                        Amount = refundAmount,
                         Date = refund.RequestedAt.UtcDateTime.Date,
                         Reference = BuildRefundReference(invoiceTarget)
                     },
-                    BuildPaymentIdempotencyKey(refund.Id),
+                    BuildPaymentIdempotencyKey(GetIdempotencyKey(refund)),
                     cancellationToken);
             }
             else
@@ -205,20 +279,68 @@ public class XeroRefundService(
                     "The original Xero invoice has only a partial outstanding balance. Automatic refund settlement is not supported for partially paid invoices yet.");
             }
 
+            MarketplaceRefundStateMachine.EnsureAllowed(refund.Status, MarketplaceRefundStatusConstants.Completed);
             refund.Status = MarketplaceRefundStatusConstants.Completed;
-            refund.AccountingProvider = AccountingProviderConstants.Xero;
-            refund.ExternalRefundId = creditNote.CreditNoteID.Value.ToString();
-            refund.ExternalRefundNumber = creditNote.CreditNoteNumber;
             refund.LastProcessedAt = timeProvider.GetUtcNow();
             refund.LastError = null;
 
+            logger?.LogInformation(
+                "Completed Xero refund processing for refund {RefundId} with status {Status}, external refund {ExternalRefundId}, duration {DurationMs} ms, retry count {RetryCount}",
+                refund.Id, refund.Status, refund.ExternalRefundId, stopwatch.ElapsedMilliseconds, refund.RetryCount);
             return repositoryFactory.MarketplaceRefundRepository.Update(refund);
         }
         catch (Exception exception)
         {
-            return MarkFailed(refund, exception.Message);
+            logger?.LogError(exception, "Xero refund processing failed for refund {RefundId}", refund.Id);
+            return MarkFailed(refund, ToUserFacingError(exception));
         }
     }
+
+    private static string ToUserFacingError(Exception exception)
+    {
+        var message = exception.Message;
+        if (message.Contains("CreateCreditNoteAllocation", StringComparison.OrdinalIgnoreCase) &&
+            message.Contains("Only AUTHORISED invoices can have allocations applied to them", StringComparison.OrdinalIgnoreCase))
+        {
+            return
+                "Xero created the credit note, but could not apply it to the invoice because the invoice is not authorized. Manual accounting follow-up is required.";
+        }
+
+        if (message.StartsWith("Xero API", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Xero could not complete the accounting step for this refund. Manual accounting follow-up is required.";
+        }
+
+        return message;
+    }
+
+    protected virtual Task<CreditNotes> GetCreditNotesAsync(AccountingApi api, string accessToken, string tenantId, DateTime modifiedSince,
+        Guid creditNoteId, CancellationToken cancellationToken) =>
+        api.GetCreditNotesAsync(accessToken, tenantId, modifiedSince, $"CreditNoteID==Guid(\"{creditNoteId}\")", null, null, null, null,
+            cancellationToken);
+
+    protected virtual async Task<CreditNote?> GetCreditNoteByIdAsync(
+        AccountingApi api,
+        string accessToken,
+        string tenantId,
+        Guid creditNoteId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await api.GetCreditNoteAsync(accessToken, tenantId, creditNoteId, null, cancellationToken);
+            return response._CreditNotes?.FirstOrDefault(note => note.CreditNoteID == creditNoteId);
+        }
+        catch (ApiException exception) when (exception.ErrorCode == 404)
+        {
+            return null;
+        }
+    }
+
+    protected virtual Task<Payments> GetPaymentsAsync(AccountingApi api, string accessToken, string tenantId, DateTime? modifiedSince,
+        Guid creditNoteId, CancellationToken cancellationToken) =>
+        api.GetPaymentsAsync(accessToken, tenantId, modifiedSince, $"CreditNote.CreditNoteID==Guid(\"{creditNoteId}\")", null, null, null,
+            cancellationToken);
 
     protected virtual Task<Invoices> GetInvoiceAsync(
         AccountingApi accountingApi,
@@ -300,8 +422,23 @@ public class XeroRefundService(
         var recurringBooking = ResolveCurrentBillingWindowRecurringBooking(subscription, refund.RequestedAt);
         if (recurringBooking?.MarketplaceBooking is null)
         {
-            return new XeroRefundInvoiceTargetResolution(null,
-                "The current subscription billing window could not be matched to a billed recurring booking.");
+            // Subscription loading intentionally filters old recurring windows. A canceled
+            // subscription can still need a refund for the invoice that was just paid, so
+            // recover the persisted recurring bookings before declaring the refund unresolved.
+            var persistedRecurringBookings = await repositoryFactory.RecurringBookingRepository
+                .GetByMarketplaceBookingSubscriptionIdAsync(refund.LocalEntityId, cancellationToken);
+            recurringBooking = persistedRecurringBookings.FirstOrDefault(item =>
+                item.MarketplaceBooking is not null);
+            if (recurringBooking is null)
+            {
+                return new XeroRefundInvoiceTargetResolution(null,
+                    "The current subscription billing window could not be matched to a billed recurring booking.");
+            }
+
+            logger.LogInformation(
+                "Recovered persisted recurring booking {RecurringBookingId} for subscription refund {RefundId}",
+                recurringBooking.Id,
+                refund.Id);
         }
 
         var accountingInvoiceExportLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
@@ -311,7 +448,37 @@ public class XeroRefundService(
             cancellationToken);
         if (accountingInvoiceExportLink is null || string.IsNullOrWhiteSpace(accountingInvoiceExportLink.ExternalInvoiceId))
         {
-            return new XeroRefundInvoiceTargetResolution(null, "The subscription recurring booking is not linked to a Xero invoice export.");
+            var persistedRecurringBookings = await repositoryFactory.RecurringBookingRepository
+                .GetByMarketplaceBookingSubscriptionIdAsync(refund.LocalEntityId, cancellationToken);
+            foreach (var candidate in persistedRecurringBookings.Where(item =>
+                         item.MarketplaceBooking is not null &&
+                         item.Id != recurringBooking.Id &&
+                         IntersectsBillingWindow(subscription, item, refund.RequestedAt)))
+            {
+                var candidateLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
+                    AccountingProviderConstants.Xero,
+                    AccountingEntityTypeConstants.RecurringBooking,
+                    candidate.Id,
+                    cancellationToken);
+                if (candidateLink is null || string.IsNullOrWhiteSpace(candidateLink.ExternalInvoiceId))
+                {
+                    continue;
+                }
+
+                recurringBooking = candidate;
+                accountingInvoiceExportLink = candidateLink;
+                logger.LogInformation(
+                    "Recovered Xero invoice link {AccountingInvoiceExportLinkId} for subscription refund {RefundId} through recurring booking {RecurringBookingId}",
+                    candidateLink.Id,
+                    refund.Id,
+                    candidate.Id);
+                break;
+            }
+
+            if (accountingInvoiceExportLink is null || string.IsNullOrWhiteSpace(accountingInvoiceExportLink.ExternalInvoiceId))
+            {
+                return new XeroRefundInvoiceTargetResolution(null, "The subscription recurring booking is not linked to a Xero invoice export.");
+            }
         }
 
         if (accountingInvoiceExportLink.ExternalInvoiceMode == AccountingInvoiceExportModeConstants.RepeatingInvoice)
@@ -319,7 +486,7 @@ public class XeroRefundService(
             var accountingInvoiceInstances = await repositoryFactory.AccountingInvoiceInstanceRepository.GetByAccountingInvoiceExportLinkIdAsync(
                 accountingInvoiceExportLink.Id,
                 cancellationToken);
-            var matchingInvoiceInstance = ResolveMatchingInvoiceInstance(recurringBooking, accountingInvoiceInstances);
+            var matchingInvoiceInstance = ResolveMatchingInvoiceInstance(recurringBooking, accountingInvoiceInstances, refund.RequestedAt);
             if (matchingInvoiceInstance is null || string.IsNullOrWhiteSpace(matchingInvoiceInstance.ExternalInvoiceId))
             {
                 return new XeroRefundInvoiceTargetResolution(
@@ -335,20 +502,65 @@ public class XeroRefundService(
                 null);
         }
 
-        var latestInvoiceInstance = await repositoryFactory.AccountingInvoiceInstanceRepository.GetLatestByAccountingInvoiceExportLinkIdAsync(
-            accountingInvoiceExportLink.Id,
-            cancellationToken);
+        var nonRepeatingInvoiceInstances = await repositoryFactory.AccountingInvoiceInstanceRepository
+            .GetByAccountingInvoiceExportLinkIdAsync(accountingInvoiceExportLink.Id, cancellationToken);
+        var nonRepeatingInvoiceInstance = ResolveMatchingInvoiceInstance(recurringBooking, nonRepeatingInvoiceInstances, refund.RequestedAt);
 
         return new XeroRefundInvoiceTargetResolution(
             new XeroRefundInvoiceTarget(
                 recurringBooking.Id,
-                latestInvoiceInstance?.ExternalInvoiceId ?? accountingInvoiceExportLink.ExternalInvoiceId,
-                latestInvoiceInstance?.ExternalInvoiceNumber ?? accountingInvoiceExportLink.ExternalInvoiceNumber),
+                nonRepeatingInvoiceInstance?.ExternalInvoiceId ?? accountingInvoiceExportLink.ExternalInvoiceId,
+                nonRepeatingInvoiceInstance?.ExternalInvoiceNumber ?? accountingInvoiceExportLink.ExternalInvoiceNumber),
             null);
     }
 
+    private async Task<bool> IsCreditNoteSettledAsync(
+        AccountingApi accountingApi,
+        string accessToken,
+        string tenantId,
+        CreditNote creditNote,
+        decimal refundAmount,
+        DateTimeOffset since,
+        CancellationToken cancellationToken)
+    {
+        var allocatedAmount = creditNote.Allocations?.Sum(item => item.Amount ?? 0m) ?? 0m;
+        if (allocatedAmount >= refundAmount)
+        {
+            return true;
+        }
+
+        var payments = await GetPaymentsAsync(
+            accountingApi, accessToken, tenantId, since.UtcDateTime, creditNote.CreditNoteID!.Value, cancellationToken);
+        var paidAmount = GetPaidAmount(payments, creditNote.CreditNoteID.Value);
+        if (paidAmount < refundAmount)
+        {
+            // A payment created before the reconciliation window is omitted by
+            // the modified-since query. Repeat the filtered lookup without a
+            // timestamp so unchanged historical payments are still found.
+            var historicalPayments = await GetPaymentsAsync(
+                accountingApi, accessToken, tenantId, null, creditNote.CreditNoteID.Value, cancellationToken);
+            paidAmount = Math.Max(paidAmount, GetPaidAmount(historicalPayments, creditNote.CreditNoteID.Value));
+        }
+
+        return paidAmount >= refundAmount;
+    }
+
+    private static decimal GetPaidAmount(Payments payments, Guid creditNoteId) =>
+        payments._Payments?
+            .Where(payment => payment.CreditNote?.CreditNoteID == creditNoteId)
+            .Sum(payment => payment.Amount ?? 0m) ?? 0m;
+
     private MarketplaceRefund MarkFailed(MarketplaceRefund refund, string message)
     {
+        if (refund.Status == MarketplaceRefundStatusConstants.Completed)
+        {
+            refund.LastProcessedAt = timeProvider.GetUtcNow();
+            refund.LastError = message;
+            refund.ReconciliationStatus = "AccountingProjectionRequired";
+            return repositoryFactory.MarketplaceRefundRepository.Update(refund);
+        }
+
+        MarketplaceRefundStateMachine.EnsureAllowed(refund.Status, MarketplaceRefundStatusConstants.Failed);
         refund.Status = MarketplaceRefundStatusConstants.Failed;
         refund.LastProcessedAt = timeProvider.GetUtcNow();
         refund.LastError = message;
@@ -408,6 +620,9 @@ public class XeroRefundService(
 
     private static string BuildIdempotencyKey(string refundId) => $"refund-credit-note-{refundId}";
 
+    private static string GetIdempotencyKey(MarketplaceRefund refund) =>
+        string.IsNullOrWhiteSpace(refund.IdempotencyKey) ? refund.Id : refund.IdempotencyKey;
+
     private static string BuildAllocationIdempotencyKey(string refundId) => $"refund-credit-note-allocation-{refundId}";
 
     private static string BuildPaymentIdempotencyKey(string refundId) => $"refund-credit-note-payment-{refundId}";
@@ -464,7 +679,10 @@ public class XeroRefundService(
         DateTimeOffset now)
     {
         var recurringBookingsInWindow = subscription.RecurringBookings
-            .Where(item => !item.DeletedAt.HasValue && item.MarketplaceBooking is not null)
+            // A cancellation soft-deletes the recurring booking before the eligible
+            // refund is approved. The paid invoice remains the authoritative Xero
+            // target, so deleted recurring bookings must stay eligible here.
+            .Where(item => item.MarketplaceBooking is not null)
             .Where(item => IntersectsBillingWindow(subscription, item, now))
             .OrderBy(item => item.StartDate)
             .ToList();
@@ -534,7 +752,8 @@ public class XeroRefundService(
 
     private static AccountingInvoiceInstance? ResolveMatchingInvoiceInstance(
         RecurringBookingEntity recurringBooking,
-        IReadOnlyList<AccountingInvoiceInstance> accountingInvoiceInstances)
+        IReadOnlyList<AccountingInvoiceInstance> accountingInvoiceInstances,
+        DateTimeOffset requestedAt)
     {
         var marketplaceBooking = recurringBooking.MarketplaceBooking;
         if (marketplaceBooking is null || accountingInvoiceInstances.Count == 0)
@@ -542,8 +761,16 @@ public class XeroRefundService(
             return null;
         }
 
+        var hasCreatedAtValues = accountingInvoiceInstances.Any(item => item.CreatedAt != default);
+        var currentPeriodInstances = accountingInvoiceInstances
+            .Where(item => !string.Equals(item.ExternalStatus, AccountingStatusConstants.Cancelled, StringComparison.Ordinal));
+        if (hasCreatedAtValues)
+        {
+            currentPeriodInstances = currentPeriodInstances.Where(item => item.CreatedAt <= requestedAt);
+        }
+
         var matchingByNumber = !string.IsNullOrWhiteSpace(marketplaceBooking.InvoiceNumber)
-            ? accountingInvoiceInstances.FirstOrDefault(item =>
+            ? currentPeriodInstances.FirstOrDefault(item =>
                 string.Equals(item.ExternalInvoiceNumber, marketplaceBooking.InvoiceNumber, StringComparison.InvariantCultureIgnoreCase))
             : null;
         if (matchingByNumber is not null)
@@ -552,7 +779,7 @@ public class XeroRefundService(
         }
 
         var matchingByUrl = !string.IsNullOrWhiteSpace(marketplaceBooking.InvoiceUrl)
-            ? accountingInvoiceInstances.FirstOrDefault(item =>
+            ? currentPeriodInstances.FirstOrDefault(item =>
                 string.Equals(item.ExternalInvoiceUrl, marketplaceBooking.InvoiceUrl, StringComparison.InvariantCultureIgnoreCase))
             : null;
         if (matchingByUrl is not null)
@@ -560,13 +787,12 @@ public class XeroRefundService(
             return matchingByUrl;
         }
 
-        return accountingInvoiceInstances
+        return currentPeriodInstances
                    .Where(item =>
-                       !string.Equals(item.ExternalStatus, AccountingStatusConstants.Cancelled, StringComparison.Ordinal) &&
                        !string.Equals(item.ExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal))
                    .OrderByDescending(item => item.CreatedAt)
                    .FirstOrDefault() ??
-               accountingInvoiceInstances.OrderByDescending(item => item.CreatedAt).FirstOrDefault();
+               currentPeriodInstances.OrderByDescending(item => item.CreatedAt).FirstOrDefault();
     }
 
     private sealed record XeroRefundInvoiceTarget(

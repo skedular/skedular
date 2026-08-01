@@ -61,7 +61,7 @@ public static class CurrencyExtensions
             };
 
         public Currency ToCurrency() =>
-            src switch
+            src.ToLowerInvariant() switch
             {
                 CurrencyConstants.Nzd => Currency.Nzd,
                 CurrencyConstants.Usd => Currency.Usd,
@@ -73,9 +73,9 @@ public static class CurrencyExtensions
     extension(string? src)
     {
         public Currency? ToNullableCurrency() =>
-            src is null
+            string.IsNullOrWhiteSpace(src)
                 ? null
-                : src switch
+                : src.ToLowerInvariant() switch
                 {
                     CurrencyConstants.Nzd => Currency.Nzd,
                     CurrencyConstants.Usd => Currency.Usd,

@@ -142,6 +142,23 @@ public static class Constants
     public const int MaxXeroTenantIdLength = 100;
     public const int MaxXeroBillingModeLength = 50;
 
+    public const int MaxRefundCorrelationIdLength = 128;
+    public const int MaxRefundProviderLength = 64;
+    public const int MaxRefundExternalIdLength = 256;
+    public const int MaxRefundResolutionReasonLength = 2000;
+    public const int MaxRefundNotificationRecipientIdLength = 200;
+    public const int MaxRefundIdempotencyKeyLength = 256;
+    public const int MaxRefundTimezoneIdLength = 128;
+    public const int MaxRefundBankTransferReferenceLength = 256;
+    public const int MaxRefundStripeAccountIdLength = 128;
+    public const int MaxRefundStripeTransferIdLength = 128;
+    public const int MaxRefundStripeChargeIdLength = 128;
+    public const int MaxRefundStripePaymentIntentIdLength = 128;
+    public const int MaxRefundLeaseOwnerLength = 256;
+    public const int MaxRefundNotificationStatusLength = 64;
+    public const int MaxStripePayoutStatusLength = 64;
+    public const int MaxStripePayoutFailureMessageLength = 2000;
+
     public const int DefaultMaxAllowedResourcesLockTimePaidViaCard = 5; // Default to 5 minutes
     public const int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer = 30 * 24 * 60; // Default to 30 days
     public const int MaxCustomerTypeLength = 20;

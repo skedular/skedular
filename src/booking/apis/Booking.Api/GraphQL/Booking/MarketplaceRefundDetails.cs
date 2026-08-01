@@ -1,3 +1,4 @@
+using Booking.Shared.Models;
 using HotChocolate;
 
 namespace Booking.Api.GraphQL.Booking;
@@ -5,7 +6,7 @@ namespace Booking.Api.GraphQL.Booking;
 [GraphQLName("MarketplaceRefundStatusDetails")]
 public class MarketplaceRefundStatusDetails
 {
-    [GraphQLName("type")] public string Type { get; set; } = string.Empty;
+    [GraphQLName("type")] public MarketplaceRefundStatus Type { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }
 
@@ -46,6 +47,7 @@ public class MarketplaceRefundDetails
     [GraphQLName("paymentRefundLastError")]
     public string? PaymentRefundLastError { get; set; }
 
+
     [GraphQLName("canProcessInXero")] public bool CanProcessInXero { get; set; }
     [GraphQLName("events")] public IEnumerable<MarketplaceRefundEventDetails> Events { get; set; } = [];
     [GraphQLName("requestedByCustomerId")] public string? RequestedByCustomerId { get; set; }
@@ -55,4 +57,33 @@ public class MarketplaceRefundDetails
 
     [GraphQLName("xeroProcessingBlockedReason")]
     public string? XeroProcessingBlockedReason { get; set; }
+
+    public string RefundKind { get; set; } = string.Empty;
+    public string IdempotencyKey { get; set; } = string.Empty;
+    public string? PolicySnapshotJson { get; set; }
+    public string? CalculationResultJson { get; set; }
+    public string? TimezoneId { get; set; }
+    public int RetryCount { get; set; }
+    public DateTimeOffset? ApprovedAt { get; set; }
+    public string? ApprovedByCustomerId { get; set; }
+    public DateTimeOffset? RejectedAt { get; set; }
+    public string? RejectedByCustomerId { get; set; }
+    public string? RejectionReason { get; set; }
+    public DateTimeOffset? CancelledAt { get; set; }
+    public string? CancellationReason { get; set; }
+    public string? BankTransferReference { get; set; }
+    public DateTimeOffset? BankTransferSentAt { get; set; }
+    public DateTimeOffset? ReconciledAt { get; set; }
+    public string? ReconciliationStatus { get; set; }
+    public IReadOnlyList<MarketplaceRefundPaymentAllocationDetails> PaymentAllocations { get; set; } = [];
+}
+
+[GraphQLName("MarketplaceRefundPaymentAllocationDetails")]
+public class MarketplaceRefundPaymentAllocationDetails
+{
+    public string SourcePaymentProvider { get; set; } = string.Empty;
+    public string SourcePaymentReference { get; set; } = string.Empty;
+    public decimal SourcePaymentAmount { get; set; }
+    public decimal AllocatedRefundAmount { get; set; }
+    public string Currency { get; set; } = string.Empty;
 }

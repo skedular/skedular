@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eee313b62ccd901e2a09f95305ebfa0f>>
+ * @generated SignedSource<<6492e0506764a8fd7fa6e7fb32639baa>>
  * @lightSyntaxTransform
  */
 
@@ -11,6 +11,7 @@ import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type Currency = "NZD" | "USD" | "%future added value";
+export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type SpacesQuotaReasonCode = "CUSTOM_CAPACITY_EXCEEDED" | "FREE_TIER_LIMIT_EXCEEDED" | "MISSING_OFFERING_STATE" | "NOT_SET" | "OUT_OF_PERIOD_EXCLUDED" | "PAID_TIER_LIMIT_EXCEEDED" | "TRIAL_EXPIRED" | "WITHIN_QUOTA" | "%future added value";
 export type AddPrivateBookingInput = {
@@ -106,7 +107,7 @@ export type resourceCard_addPrivateBookingMutation$data = {
           readonly requestedByCustomerName: string | null | undefined;
           readonly status: {
             readonly name: string;
-            readonly type: string;
+            readonly type: MarketplaceRefundStatus;
           };
           readonly xeroProcessingBlockedReason: string | null | undefined;
         } | null | undefined;
@@ -209,7 +210,7 @@ export type resourceCard_addPrivateBookingMutation$rawResponse = {
           readonly requestedByCustomerName: string | null | undefined;
           readonly status: {
             readonly name: string;
-            readonly type: string;
+            readonly type: MarketplaceRefundStatus;
           };
           readonly xeroProcessingBlockedReason: string | null | undefined;
         } | null | undefined;

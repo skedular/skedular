@@ -276,6 +276,7 @@ public class EventMapper : IEventMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Name = locationAfterState.Name.ToSafeString(),
+            Timezone = locationAfterState.Timezone.ToSafeString(),
             Type = locationAfterState.Type switch
             {
                 LocationType.Private => Api.Shared.Services.Models.LocationType.Private,

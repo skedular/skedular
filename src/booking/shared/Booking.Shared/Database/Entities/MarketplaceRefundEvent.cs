@@ -10,6 +10,9 @@ namespace Booking.Shared.Database.Entities;
 public class MarketplaceRefundEvent : EntityBase
 {
     public string EventType { get; set; }
+    public string? PreviousStatus { get; set; }
+    public string? NewStatus { get; set; }
+    public string? CorrelationId { get; set; }
     public DateTimeOffset OccurredAt { get; set; }
     public decimal? RefundAmount { get; set; }
     public string? Reason { get; set; }
@@ -35,6 +38,9 @@ public class MarketplaceRefundEventConfiguration : IEntityTypeConfiguration<Mark
         builder.ConfigureEntityBase();
 
         builder.Property(item => item.EventType).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.PreviousStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.NewStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.CorrelationId).HasMaxLength(Constants.MaxRefundCorrelationIdLength);
         builder.Property(item => item.RefundAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Reason).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.AccountingProvider).HasMaxLength(Constants.MaxAccountingProviderLength);

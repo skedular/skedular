@@ -17,7 +17,6 @@ namespace Organization.Api.GraphQL.Organization;
 [QueryType]
 public class RootQuery(IGraphQlMapper graphQlMapper)
 {
-    [UseResolverScope]
     public IEnumerable<OrganizationTypeDetails> OrganizationTypes() =>
     [
         new() { Type = OrganizationType.Private, Name = OrganizationTypeConstants.Private.ToOrganizationTypeName() },
@@ -25,7 +24,6 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         new() { Type = OrganizationType.Host, Name = OrganizationTypeConstants.Host.ToOrganizationTypeName() }
     ];
 
-    [UseResolverScope]
     public IEnumerable<OrganizationBillingCycleDetails> OrganizationBillingCycles() =>
     [
         new() { Type = OrganizationBillingCycle.Weekly, Name = OrganizationBillingCycle.Weekly.ToOrganizationBillingCycleName() },
@@ -33,7 +31,6 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         new() { Type = OrganizationBillingCycle.Monthly, Name = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycleName() }
     ];
 
-    [UseResolverScope]
     public IEnumerable<OrganizationXeroBillingModeDetails> OrganizationXeroBillingModes() =>
     [
         new() { Type = OrganizationXeroBillingMode.Disabled, Name = OrganizationXeroBillingMode.Disabled.ToOrganizationXeroBillingModeName() },

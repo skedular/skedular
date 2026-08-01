@@ -3,6 +3,7 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Workflows;
 using Enterprise.Shared.Random;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
@@ -21,6 +22,7 @@ public class CreateBookingCancellationRefundAsyncShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
         [Frozen] IMarketplaceRefundEventService marketplaceRefundEventService,
+        [Frozen] ITemporalOutboxService temporalOutboxService,
         [Frozen] IRandomHelper randomHelper,
         [Frozen] TimeProvider timeProvider,
         MarketplaceRefundService sut,
@@ -36,11 +38,8 @@ public class CreateBookingCancellationRefundAsyncShould
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
-        A.CallTo(() => marketplaceRefundRepository.GetByLocalEntityAsync(
-                "org-1",
-                MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
-                "marketplace-booking-1",
-                cancellationToken))
+        A.CallTo(() => marketplaceRefundRepository.GetByIdempotencyKeyAsync(
+                "cancellation:MarketplaceBooking:marketplace-booking-1", cancellationToken))
             .Returns((MarketplaceRefund?)null);
         A.CallTo(() => marketplaceRefundRepository.Add(A<MarketplaceRefund>._))
             .ReturnsLazily((MarketplaceRefund marketplaceRefund) => marketplaceRefund);
@@ -61,7 +60,7 @@ public class CreateBookingCancellationRefundAsyncShould
         result.BaseAmount.ShouldBe(120m);
         result.RefundAmount.ShouldBe(60m);
         result.Currency.ShouldBe("NZD");
-        result.RequestedByCustomer.ShouldBe(requestedByCustomer);
+        result.RequestedByCustomerId.ShouldBe(requestedByCustomer.Id);
         A.CallTo(() => marketplaceRefundRepository.Add(A<MarketplaceRefund>.That.Matches(item =>
                 item.Id == "refund-1" &&
                 item.OrganizationId == "org-1" &&
@@ -74,6 +73,11 @@ public class CreateBookingCancellationRefundAsyncShould
                 MarketplaceRefundEventTypeConstants.Requested,
                 "customer-1",
                 requestedAt))
+            .MustHaveHappenedOnceExactly();
+        A.CallTo(() => temporalOutboxService.StartWorkflowProcessMarketplaceRefund(
+                A<ProcessMarketplaceRefundInput>.That.Matches(input =>
+                    input.RefundId == "refund-1" && input.ActorCustomerId == "customer-1"),
+                repositoryFactory.UnitOfWork))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -163,11 +167,8 @@ public class CreateBookingCancellationRefundAsyncShould
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
-        A.CallTo(() => marketplaceRefundRepository.GetByLocalEntityAsync(
-                "org-1",
-                MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
-                "marketplace-booking-1",
-                cancellationToken))
+        A.CallTo(() => marketplaceRefundRepository.GetByIdempotencyKeyAsync(
+                "cancellation:MarketplaceBooking:marketplace-booking-1", cancellationToken))
             .Returns((MarketplaceRefund?)null);
         A.CallTo(() => marketplaceRefundRepository.Add(A<MarketplaceRefund>._))
             .ReturnsLazily((MarketplaceRefund marketplaceRefund) => marketplaceRefund);
@@ -183,6 +184,143 @@ public class CreateBookingCancellationRefundAsyncShould
                 null,
                 requestedAt))
             .MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_Terminal_Refund_Without_Resetting_It(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceRefundService sut,
+        CancellationToken cancellationToken)
+    {
+        var requestedAt = new DateTimeOffset(2026, 4, 7, 9, 0, 0, TimeSpan.Zero);
+        var booking = CreateBooking(
+            "marketplace-booking-1",
+            requestedAt.AddHours(6),
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            []);
+        var completedRefund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            IdempotencyKey = "cancellation:MarketplaceBooking:marketplace-booking-1",
+            OrganizationId = "org-1",
+            LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
+            LocalEntityId = "marketplace-booking-1",
+            Status = MarketplaceRefundStatusConstants.Completed,
+            RefundAmount = 120m
+        };
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
+        A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
+        A.CallTo(() => marketplaceRefundRepository.GetByIdempotencyKeyAsync(
+                "cancellation:MarketplaceBooking:marketplace-booking-1", cancellationToken))
+            .Returns(completedRefund);
+
+        var result = await sut.CreateBookingCancellationRefundAsync(booking, null, cancellationToken);
+
+        result.ShouldBe(completedRefund);
+        completedRefund.Status.ShouldBe(MarketplaceRefundStatusConstants.Completed);
+        A.CallTo(() => marketplaceRefundRepository.Update(A<MarketplaceRefund>._)).MustNotHaveHappened();
+    }
+
+    [Theory]
+    [InlineAutoFakeItEasyData(new Type[] { }, MarketplaceRefundStatusConstants.Rejected)]
+    [InlineAutoFakeItEasyData(new Type[] { }, MarketplaceRefundStatusConstants.Cancelled)]
+    [InlineAutoFakeItEasyData(new Type[] { }, MarketplaceRefundStatusConstants.Completed)]
+    public async Task Return_Terminal_Refund_Without_Resetting_It_For_All_Terminal_Statuses(
+        string terminalStatus,
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceRefundService sut,
+        CancellationToken cancellationToken)
+    {
+        var requestedAt = new DateTimeOffset(2026, 4, 7, 9, 0, 0, TimeSpan.Zero);
+        var booking = CreateBooking("marketplace-booking-1", requestedAt.AddHours(6),
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff, []);
+        var terminalRefund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            IdempotencyKey = "cancellation:MarketplaceBooking:marketplace-booking-1",
+            OrganizationId = "org-1",
+            Status = terminalStatus,
+            LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
+            LocalEntityId = "marketplace-booking-1",
+            RefundAmount = 120m
+        };
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
+        A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
+        A.CallTo(() => marketplaceRefundRepository.GetByIdempotencyKeyAsync(
+                "cancellation:MarketplaceBooking:marketplace-booking-1", cancellationToken))
+            .Returns(terminalRefund);
+
+        var result = await sut.CreateBookingCancellationRefundAsync(booking, null, cancellationToken);
+
+        result.ShouldBe(terminalRefund);
+        terminalRefund.Status.ShouldBe(terminalStatus);
+        A.CallTo(() => marketplaceRefundRepository.Update(A<MarketplaceRefund>._)).MustNotHaveHappened();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Persist_Idempotency_Key_On_New_Refund(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceRefundService sut,
+        CancellationToken cancellationToken)
+    {
+        var requestedAt = new DateTimeOffset(2026, 4, 7, 9, 0, 0, TimeSpan.Zero);
+        var booking = CreateBooking("marketplace-booking-1", requestedAt.AddHours(6),
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff, []);
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
+        A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
+        A.CallTo(() => marketplaceRefundRepository.GetByIdempotencyKeyAsync(A<string>._, cancellationToken))
+            .Returns((MarketplaceRefund?)null);
+        A.CallTo(() => marketplaceRefundRepository.Add(A<MarketplaceRefund>._))
+            .ReturnsLazily((MarketplaceRefund r) => r);
+        A.CallTo(() => randomHelper.Generate()).Returns("refund-idempotency-1");
+
+        var result = await sut.CreateBookingCancellationRefundAsync(booking, null, cancellationToken);
+
+        result.ShouldNotBeNull();
+        result.IdempotencyKey.ShouldBe($"cancellation:{MarketplaceRefundEntityTypeConstants.MarketplaceBooking}:marketplace-booking-1");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Force_Full_Refund_Regardless_Of_Policy_When_Operator_Cancels(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen] IRandomHelper randomHelper,
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceRefundService sut,
+        CancellationToken cancellationToken)
+    {
+        // Policy would normally give 0% (outside window), but operator cancellation forces 100%
+        var requestedAt = new DateTimeOffset(2026, 4, 7, 9, 0, 0, TimeSpan.Zero);
+        var booking = CreateBooking("marketplace-booking-1", requestedAt.AddHours(-1),
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            [new ProductPricingCancellationRefundRule(120, 100)]);
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
+        A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
+        A.CallTo(() => marketplaceRefundRepository.GetByIdempotencyKeyAsync(A<string>._, cancellationToken))
+            .Returns((MarketplaceRefund?)null);
+        A.CallTo(() => marketplaceRefundRepository.Add(A<MarketplaceRefund>._))
+            .ReturnsLazily((MarketplaceRefund r) => r);
+        A.CallTo(() => randomHelper.Generate()).Returns("refund-1");
+
+        var result = await sut.CreateBookingCancellationRefundAsync(booking, null, cancellationToken, true);
+
+        result.ShouldNotBeNull();
+        result.RefundPercentage.ShouldBe(100);
+        result.RefundAmount.ShouldBe(120m);
     }
 
     private static Database.Entities.Booking CreateBooking(

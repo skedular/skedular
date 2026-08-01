@@ -11,19 +11,14 @@ namespace Organization.Api.GraphQL.Tag;
 [QueryType]
 public class RootQuery(IGraphQlMapper graphQlMapper)
 {
-    [UseResolverScope]
     public OrganizationTagType DeskResourceType() => OrganizationTagType.ResourceDesk;
 
-    [UseResolverScope]
     public OrganizationTagType RoomResourceType() => OrganizationTagType.ResourceRoom;
 
-    [UseResolverScope]
     public OrganizationTagType ParkingResourceType() => OrganizationTagType.ResourceParking;
 
-    [UseResolverScope]
     public OrganizationTagType OtherResourceType() => OrganizationTagType.ResourceOthers;
 
-    [UseResolverScope]
     public OrganizationTagType EntireLocationResourceType() => OrganizationTagType.ResourceEntireLocation;
 
     [UseResolverScope]

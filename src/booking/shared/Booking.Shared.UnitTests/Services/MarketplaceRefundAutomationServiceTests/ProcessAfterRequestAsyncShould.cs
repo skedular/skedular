@@ -11,10 +11,10 @@ public class ProcessAfterRequestAsyncShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Reverse_The_Stripe_Application_Fee_For_Host_Card_Refunds(
+    public async Task Complete_The_Stripe_Refund_Without_Creating_A_Xero_Refund(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventService marketplaceRefundEventService,
+        [Frozen] IMarketplaceRefundTransitionService transitionService,
         [Frozen] IStripeHostRefundService stripeHostRefundService,
         [Frozen] IXeroRefundService xeroRefundService,
         [Frozen] IUnitOfWork unitOfWork,
@@ -29,26 +29,26 @@ public class ProcessAfterRequestAsyncShould
             PaymentProvider = "STRIPE",
             PaymentRefundStatus = MarketplaceRefundStatusConstants.Completed
         };
-        var projectedRefund =
-            new MarketplaceRefund { Id = refund.Id, Status = MarketplaceRefundStatusConstants.Completed, AccountingProvider = "XERO" };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => marketplaceRefundRepository.Update(A<MarketplaceRefund>._)).ReturnsLazily(call => call.GetArgument<MarketplaceRefund>(0)!);
+        A.CallTo(() => transitionService.TransitionAsync(A<MarketplaceRefund>._, A<string>._, A<string?>._, A<string?>._, A<string?>._,
+                cancellationToken))
+            .ReturnsLazily(call =>
+            {
+                var value = call.GetArgument<MarketplaceRefund>(0)!;
+                value.Status = call.GetArgument<string>(1)!;
+                value.LastError = call.GetArgument<string?>(2);
+                return Task.FromResult(value);
+            });
         A.CallTo(() => stripeHostRefundService.IsHostRefundAsync(refund, cancellationToken)).Returns(true);
         A.CallTo(() => stripeHostRefundService.CanProcessAsync(refund, cancellationToken)).Returns(true);
         A.CallTo(() => stripeHostRefundService.ProcessAsync(refund, cancellationToken)).Returns(completedRefund);
-        A.CallTo(() => xeroRefundService.GetProcessingAvailabilityAsync(completedRefund, cancellationToken))
-            .Returns(new XeroRefundProcessingAvailability(true, null));
-        A.CallTo(() => xeroRefundService.ProcessAsync(completedRefund, cancellationToken)).Returns(projectedRefund);
-
         var result = await sut.ProcessAfterRequestAsync(refund, "customer-1", cancellationToken);
 
-        result.ShouldBe(projectedRefund);
-        A.CallTo(() => xeroRefundService.ProcessAsync(completedRefund, cancellationToken)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => marketplaceRefundEventService.Add(completedRefund, MarketplaceRefundEventTypeConstants.Completed, "customer-1",
-                A<DateTimeOffset?>._))
-            .MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedTwiceExactly();
+        result.ShouldBe(completedRefund);
+        A.CallTo(() => xeroRefundService.GetProcessingAvailabilityAsync(A<MarketplaceRefund>._, cancellationToken)).MustNotHaveHappened();
+        A.CallTo(() => xeroRefundService.ProcessAsync(A<MarketplaceRefund>._, cancellationToken)).MustNotHaveHappened();
     }
 
     [Theory]
@@ -56,6 +56,7 @@ public class ProcessAfterRequestAsyncShould
     public async Task Require_Manual_Handling_When_A_Host_Card_Refund_Has_No_Stripe_Correlation(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen] IMarketplaceRefundTransitionService transitionService,
         [Frozen] IStripeHostRefundService stripeHostRefundService,
         [Frozen] IXeroRefundService xeroRefundService,
         [Frozen] IUnitOfWork unitOfWork,
@@ -65,13 +66,21 @@ public class ProcessAfterRequestAsyncShould
         var refund = new MarketplaceRefund { Id = "refund-1", Status = MarketplaceRefundStatusConstants.Requested };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
+        A.CallTo(() => transitionService.TransitionAsync(A<MarketplaceRefund>._, A<string>._, A<string?>._, A<string?>._, A<string?>._,
+                cancellationToken))
+            .ReturnsLazily(call =>
+            {
+                var value = call.GetArgument<MarketplaceRefund>(0)!;
+                value.Status = call.GetArgument<string>(1)!;
+                value.LastError = call.GetArgument<string?>(2);
+                return Task.FromResult(value);
+            });
         A.CallTo(() => stripeHostRefundService.IsHostRefundAsync(refund, cancellationToken)).Returns(true);
         A.CallTo(() => stripeHostRefundService.CanProcessAsync(refund, cancellationToken)).Returns(false);
 
         var result = await sut.ProcessAfterRequestAsync(refund, null, cancellationToken);
 
-        result.Status.ShouldBe(MarketplaceRefundStatusConstants.ManualRequired);
+        result.Status.ShouldBe(MarketplaceRefundStatusConstants.Failed);
         A.CallTo(() => xeroRefundService.GetProcessingAvailabilityAsync(A<MarketplaceRefund>._, cancellationToken)).MustNotHaveHappened();
     }
 
@@ -80,7 +89,8 @@ public class ProcessAfterRequestAsyncShould
     public async Task Process_In_Xero_When_Availability_Is_Confirmed(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventService marketplaceRefundEventService,
+        [Frozen] IMarketplaceRefundTransitionService transitionService,
+        [Frozen] IStripeHostRefundService stripeHostRefundService,
         [Frozen] IXeroRefundService xeroRefundService,
         [Frozen] IUnitOfWork unitOfWork,
         MarketplaceRefundAutomationService sut,
@@ -96,7 +106,16 @@ public class ProcessAfterRequestAsyncShould
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
+        A.CallTo(() => transitionService.TransitionAsync(A<MarketplaceRefund>._, A<string>._, A<string?>._, A<string?>._, A<string?>._,
+                cancellationToken))
+            .ReturnsLazily(call =>
+            {
+                var value = call.GetArgument<MarketplaceRefund>(0)!;
+                value.Status = call.GetArgument<string>(1)!;
+                value.LastError = call.GetArgument<string?>(2);
+                return Task.FromResult(value);
+            });
+        A.CallTo(() => stripeHostRefundService.IsHostRefundAsync(refund, cancellationToken)).Returns(false);
         A.CallTo(() => xeroRefundService.GetProcessingAvailabilityAsync(refund, cancellationToken))
             .Returns(new XeroRefundProcessingAvailability(true, null));
         A.CallTo(() => xeroRefundService.ProcessAsync(refund, cancellationToken)).Returns(completedRefund);
@@ -104,16 +123,9 @@ public class ProcessAfterRequestAsyncShould
         var result = await sut.ProcessAfterRequestAsync(refund, "customer-1", cancellationToken);
 
         result.ShouldBe(completedRefund);
-        refund.Status.ShouldBe(MarketplaceRefundStatusConstants.PendingAccounting);
-        A.CallTo(() => marketplaceRefundEventService.Add(refund, MarketplaceRefundEventTypeConstants.PendingAccounting, "customer-1",
-                A<DateTimeOffset?>._))
-            .MustHaveHappenedOnceExactly();
-        A.CallTo(() => marketplaceRefundEventService.Add(refund, MarketplaceRefundEventTypeConstants.SentToXero, "customer-1", A<DateTimeOffset?>._))
-            .MustHaveHappenedOnceExactly();
-        A.CallTo(() => marketplaceRefundEventService.Add(completedRefund, MarketplaceRefundEventTypeConstants.Completed, "customer-1",
-                A<DateTimeOffset?>._))
-            .MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+        refund.Status.ShouldBe(MarketplaceRefundStatusConstants.Processing);
+        A.CallTo(() => transitionService.TransitionAsync(completedRefund, MarketplaceRefundStatusConstants.Completed, A<string?>._,
+            "customer-1", A<string?>._, cancellationToken)).MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -121,7 +133,7 @@ public class ProcessAfterRequestAsyncShould
     public async Task Fall_Back_To_Manual_Required_When_Xero_Is_Not_Available(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventService marketplaceRefundEventService,
+        [Frozen] IMarketplaceRefundTransitionService transitionService,
         [Frozen] IXeroRefundService xeroRefundService,
         [Frozen] IUnitOfWork unitOfWork,
         MarketplaceRefundAutomationService sut,
@@ -131,19 +143,25 @@ public class ProcessAfterRequestAsyncShould
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
+        A.CallTo(() => transitionService.TransitionAsync(A<MarketplaceRefund>._, A<string>._, A<string?>._, A<string?>._, A<string?>._,
+                cancellationToken))
+            .ReturnsLazily(call =>
+            {
+                var value = call.GetArgument<MarketplaceRefund>(0)!;
+                value.Status = call.GetArgument<string>(1)!;
+                value.LastError = call.GetArgument<string?>(2);
+                return Task.FromResult(value);
+            });
         A.CallTo(() => xeroRefundService.GetProcessingAvailabilityAsync(refund, cancellationToken))
             .Returns(new XeroRefundProcessingAvailability(false, "Invoice correlation is missing."));
 
         var result = await sut.ProcessAfterRequestAsync(refund, "customer-1", cancellationToken);
 
         result.ShouldBe(refund);
-        refund.Status.ShouldBe(MarketplaceRefundStatusConstants.ManualRequired);
+        refund.Status.ShouldBe(MarketplaceRefundStatusConstants.Failed);
         refund.LastError.ShouldBe("Invoice correlation is missing.");
-        A.CallTo(() => marketplaceRefundEventService.Add(refund, MarketplaceRefundEventTypeConstants.ManualRequired, "customer-1",
-                A<DateTimeOffset?>._))
-            .MustHaveHappenedOnceExactly();
+        A.CallTo(() => transitionService.TransitionAsync(refund, MarketplaceRefundStatusConstants.Failed,
+            "Invoice correlation is missing.", "customer-1", A<string?>._, cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => xeroRefundService.ProcessAsync(A<MarketplaceRefund>._, cancellationToken)).MustNotHaveHappened();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
     }
 }

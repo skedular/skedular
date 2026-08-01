@@ -122,8 +122,6 @@ public class MarketplaceBookingService(
     IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
     MarketplaceRefundPolicyService marketplaceRefundPolicyService,
     IMarketplaceRefundService marketplaceRefundService,
-    IMarketplaceRefundAutomationService marketplaceRefundAutomationService,
-    IMarketplaceRefundNotificationService marketplaceRefundNotificationService,
     ISpacesBookingQuotaService spacesBookingQuotaService,
     IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
     IMarketplaceBookingFailureService marketplaceBookingFailureService,
@@ -669,6 +667,9 @@ public class MarketplaceBookingService(
         // return URL stay tied to that original booking/payment flow rather than to later
         // edits to notes, people, or resources.
         ArgumentNullException.ThrowIfNull(bookingEntity.MarketplaceBooking);
+        // Booking modifications currently preserve the original payment/refund aggregate. A future
+        // price-reduction flow must create a separate modification refund for (original total - new
+        // total), rather than mutating the cancellation refund or rewriting historical payment state.
         bookingEntity.MarketplaceBooking.CheckoutReturnUrl = existingCheckoutReturnUrl;
         bookingEntity.MarketplaceBooking.StripeCheckoutSession = existingStripeCheckoutSession;
 
@@ -749,8 +750,10 @@ public class MarketplaceBookingService(
         }
 
         var refund = createRefund
-            ? await marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken)
+            ? await marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken,
+                ignoreCancellationPolicy)
             : null;
+
         await accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -758,9 +761,7 @@ public class MarketplaceBookingService(
         await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
         if (refund is not null)
         {
-            refund = await marketplaceRefundAutomationService.ProcessAfterRequestAsync(refund, deletedByCustomer?.Id, cancellationToken);
             await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, deletedBooking.Id, cancellationToken);
-            await marketplaceRefundNotificationService.NotifyStatusChangedAsync(refund, cancellationToken);
         }
 
         return deletedBooking;

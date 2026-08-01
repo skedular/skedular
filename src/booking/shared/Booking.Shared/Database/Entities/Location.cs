@@ -11,6 +11,7 @@ namespace Booking.Shared.Database.Entities;
 public class Location : ReplicatedEntityBaseWithDeleted
 {
     public string? Name { get; set; }
+    public string? Timezone { get; set; }
     public string Type { get; set; }
     public OpeningHours? OpeningHours { get; set; }
 
@@ -29,6 +30,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationNameLength);
+        builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxLocationTypeLength).HasDefaultValue(LocationTypeConstants.Private);
         builder.Property(item => item.OpeningHours).HasColumnType("jsonb");
 

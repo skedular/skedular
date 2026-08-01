@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8f4881b0cfd4cbb9f64f5fa45e7c5736>>
+ * @generated SignedSource<<72922de75e73368963b5d636f5ae6d71>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,8 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
+export type MarketplaceRefundEventType = "ACCOUNTING_PROJECTED" | "ACCOUNTING_PROJECTION_REQUIRED" | "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "SENT_TO_XERO" | "UNDER_REVIEW" | "%future added value";
+export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type marketplaceProductBookingDetails_booking_Subscription$variables = {
   bookingId: string;
@@ -60,12 +62,14 @@ export type marketplaceProductBookingDetails_booking_Subscription$data = {
           readonly currencyToDisplay: string;
           readonly eventType: {
             readonly name: string;
-            readonly type: string;
+            readonly type: MarketplaceRefundEventType;
           };
           readonly externalRefundNumber: string | null | undefined;
           readonly id: string;
           readonly lastError: string | null | undefined;
+          readonly newStatus: string | null | undefined;
           readonly occurredAt: any;
+          readonly previousStatus: string | null | undefined;
           readonly reason: string | null | undefined;
           readonly refundAmount: any | null | undefined;
         }>;
@@ -79,7 +83,7 @@ export type marketplaceProductBookingDetails_booking_Subscription$data = {
         readonly requestedByCustomerName: string | null | undefined;
         readonly status: {
           readonly name: string;
-          readonly type: string;
+          readonly type: MarketplaceRefundStatus;
         };
       } | null | undefined;
     } | null | undefined;
@@ -335,6 +339,20 @@ v12 = {
               "kind": "ScalarField",
               "name": "actorName",
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "previousStatus",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "newStatus",
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -465,16 +483,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5e6f567b997b91868002dddf72add1fc",
+    "cacheID": "3b2c977ba30ab1cacb11471c989a7774",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBookingDetails_booking_Subscription",
     "operationKind": "subscription",
-    "text": "subscription marketplaceProductBookingDetails_booking_Subscription(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    deletedByCustomer {\n      id\n    }\n    marketplaceBooking {\n      id\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        finalizedAt\n        customerAction {\n          type\n          name\n        }\n      }\n      refund {\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        events {\n          id\n          eventType {\n            type\n            name\n          }\n          occurredAt\n          refundAmount\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          actorName\n        }\n      }\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n    id\n  }\n}\n"
+    "text": "subscription marketplaceProductBookingDetails_booking_Subscription(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    deletedByCustomer {\n      id\n    }\n    marketplaceBooking {\n      id\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        finalizedAt\n        customerAction {\n          type\n          name\n        }\n      }\n      refund {\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        events {\n          id\n          eventType {\n            type\n            name\n          }\n          occurredAt\n          refundAmount\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          actorName\n          previousStatus\n          newStatus\n        }\n      }\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7c2aa8ef388deb8df2335015e2e94be2";
+(node as any).hash = "f41880b8e06b540cb0dc59f64d0e65ff";
 
 export default node;

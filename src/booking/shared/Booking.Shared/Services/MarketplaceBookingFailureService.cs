@@ -14,6 +14,9 @@ public interface IMarketplaceBookingFailureService
     Task<MarketplaceBookingFailureSummary> FinalizeAsync(
         MarketplaceBookingFailureFinalization finalization,
         CancellationToken cancellationToken);
+
+    Task<MarketplaceBookingFailureSummary> ResolvePartialAsync(string failureId, string decision, string? actorCustomerId,
+        CancellationToken cancellationToken);
 }
 
 public class MarketplaceBookingFailureService(
@@ -21,6 +24,7 @@ public class MarketplaceBookingFailureService(
     IRandomHelper randomHelper,
     ITemporalOutboxService temporalOutboxService,
     IMarketplaceBookingFailureNotificationService notificationService,
+    IMarketplacePartialBookingResolutionService partialBookingResolutionService,
     ILogger<MarketplaceBookingFailureService> logger) : IMarketplaceBookingFailureService
 {
     public async Task<MarketplaceBookingFailureSummary> FinalizeAsync(
@@ -57,7 +61,11 @@ public class MarketplaceBookingFailureService(
             RequestedResourceIds = finalization.RequestedResourceIds.Distinct().ToList(),
             CustomerAction = finalization.CustomerAction,
             CorrelationId = finalization.CorrelationId,
-            Reason = finalization.Reason
+            Reason = finalization.Reason,
+            ResolutionDeadlineAt = finalization.Scope is MarketplaceBookingFailureScopeConstants.InitialSeries
+                or MarketplaceBookingFailureScopeConstants.RecurringCycle
+                ? finalization.FinalizedAt.AddHours(24)
+                : null
         });
 
         repositoryFactory.MarketplaceBookingFailureEventRepository.Add(new MarketplaceBookingFailureEvent
@@ -102,6 +110,11 @@ public class MarketplaceBookingFailureService(
         temporalOutboxService.StartWorkflowNotifyMarketplaceBookingFailure(
             new NotifyMarketplaceBookingFailureInput(failure.Id),
             repositoryFactory.UnitOfWork);
+        if (failure.ResolutionDeadlineAt is not null)
+        {
+            temporalOutboxService.StartWorkflowResolvePartialMarketplaceBooking(
+                new ResolvePartialMarketplaceBookingInput(failure.Id, failure.ResolutionDeadlineAt.Value), repositoryFactory.UnitOfWork);
+        }
 
         try
         {
@@ -140,6 +153,10 @@ public class MarketplaceBookingFailureService(
 
         return ToModel(failure);
     }
+
+    public async Task<MarketplaceBookingFailureSummary> ResolvePartialAsync(string failureId, string decision, string? actorCustomerId,
+        CancellationToken cancellationToken) =>
+        await partialBookingResolutionService.ResolveAsync(failureId, decision, actorCustomerId, cancellationToken);
 
     private static MarketplaceBookingFailureSummary ToModel(MarketplaceBookingFailure failure) =>
         new(failure.Id, failure.Category, failure.Scope, failure.FinalizedAt, failure.RequestedFrom, failure.RequestedUntil,

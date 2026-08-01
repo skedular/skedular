@@ -1,3 +1,4 @@
+using Booking.Shared.Configurations;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
@@ -18,6 +19,7 @@ public class MarketplaceBookingFailureNotificationIntegrations(
     IRepositoryFactory repositoryFactory,
     IMarketplaceBookingFailureNotificationService notificationService,
     IEmailService emailService,
+    EmailConfiguration emailConfiguration,
     IDbTransactionBuilder transactionBuilder,
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
@@ -72,7 +74,8 @@ public class MarketplaceBookingFailureNotificationIntegrations(
             {
                 var message = await notificationService.RenderAsync(failure,
                     delivery.Audience != MarketplaceBookingFailureDeliveryAudienceConstants.Customer, "there", cancellationToken);
-                await emailService.SendRawEmailAsync(message.Subject, message.Text, message.Html, "Skedular", [delivery.RecipientEmail], [], [], [],
+                await emailService.SendRawEmailAsync(message.Subject, message.Text, message.Html, emailConfiguration.BookingInvoiceEmailSender,
+                    [delivery.RecipientEmail], [], [], [],
                     cancellationToken);
                 delivery.Status = MarketplaceBookingFailureDeliveryStatusConstants.Sent;
                 delivery.SentAt = delivery.LastAttemptAt;

@@ -13,7 +13,7 @@ public class ExceptionContextGenerator : ISpecimenBuilder
     {
         if (request is not Type type || type != typeof(ExceptionContext))
         {
-            return new NoSpecimen();
+            return NoSpecimen.Instance;
         }
 
         return new ExceptionContext(

@@ -23,6 +23,7 @@ public class UpdatePatchAsyncShould
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ILogger<FloorPlanService> logger,
         FloorPlanService sut,
+        ILocationRepository locationRepository,
         CancellationToken cancellationToken)
     {
         var locationModel = new Shared.Models.Location { Id = "location-1", Organization = new Organization { Id = "org-1" } };
@@ -31,13 +32,12 @@ public class UpdatePatchAsyncShould
             Id = "location-1", OrganizationId = "org-1", Organization = new Shared.Database.Entities.Organization { Id = "org-1" }
         };
         var floorPlanEntity = new FloorPlan { Id = "fp-1", Location = locationEntity };
-        var floorPlanModel = new Shared.Models.FloorPlan { Id = "fp-1", Name = "Floor 1", Location = locationModel };
         var request = new FloorPlanPatchRequest(
             new Shared.Models.FloorPlan { Id = "fp-1", Name = "Updated Floor", Location = locationModel },
             new HashSet<FloorPlanPatchField> { FloorPlanPatchField.Name });
 
         A.CallTo(() => repositoryFactory.FloorPlanRepository).Returns(floorPlanRepository);
-        A.CallTo(() => repositoryFactory.LocationRepository).Returns(A.Fake<ILocationRepository>());
+        A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => floorPlanRepository.GetByIdAsync("fp-1", cancellationToken)).Returns(floorPlanEntity);
         A.CallTo(() => cachedLocationService.GetByIdAsync("location-1", cancellationToken))
             .ReturnsLazily(_ => new ValueTask<Shared.Database.Entities.Location?>(locationEntity));

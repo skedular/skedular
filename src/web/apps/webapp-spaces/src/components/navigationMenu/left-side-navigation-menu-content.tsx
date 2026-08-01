@@ -6,6 +6,7 @@ import {
   LocationIcon,
   MembersIcon,
   ProductIcon,
+  RefundIcon,
   SettingsIcon,
   SubscriptionsIcon,
   UpgradeIcon,
@@ -18,6 +19,7 @@ import {
   getOrganizationBaseLink,
   getOrganizationLocationsBaseLink,
   getOrganizationProductsBaseLink,
+  getOrganizationRefundsBaseLink,
   getOrganizationSubscriptionsBaseLink,
   getOrganizationUsersBaseLink,
 } from '@/components/links';
@@ -147,6 +149,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationProductsBaseLink = getOrganizationProductsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationSubscriptionsBaseLink = getOrganizationSubscriptionsBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationRefundsBaseLink = getOrganizationRefundsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, rootData.organization.customDomain!);
 
   return (
@@ -312,6 +315,32 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                       startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}
                       spacing={3}
                       invertDefaultColor={pathName.startsWith(organizationSubscriptionsBaseLink) && paletteMode === 'dark'}
+                    />
+                  )}
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          )}
+
+          {rootData.organization.canModify && rootData.organization.type.type === 'MARKETPLACE' && (
+            <ListItem disablePadding>
+              <Link component={NextLink} href={organizationRefundsBaseLink}>
+                <ListItemButton
+                  selected={pathName.startsWith(organizationRefundsBaseLink)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationRefundsBaseLink)) }}
+                >
+                  {collapsed && (
+                    <BodyIconTypography
+                      startElement={!hideIcons && <RefundIcon color="inherit" />}
+                      invertDefaultColor={pathName.startsWith(organizationRefundsBaseLink) && paletteMode === 'dark'}
+                    />
+                  )}
+                  {!collapsed && (
+                    <BodyIconTypography
+                      label="Refunds"
+                      startElement={!hideIcons && <RefundIcon color="inherit" />}
+                      spacing={3}
+                      invertDefaultColor={pathName.startsWith(organizationRefundsBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                 </ListItemButton>

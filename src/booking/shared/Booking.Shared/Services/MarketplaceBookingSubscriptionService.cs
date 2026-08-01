@@ -8,6 +8,7 @@ using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Random;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Constants = Booking.Shared.GraphQL.Constants;
 using Customer = Booking.Shared.Database.Entities.Customer;
@@ -41,14 +42,11 @@ public class MarketplaceBookingSubscriptionService(
     IProductVersionHelperService productVersionHelperService,
     IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
     ITemporalOutboxService temporalOutboxService,
-    IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
     MarketplaceRefundPolicyService marketplaceRefundPolicyService,
     IMarketplaceRefundService marketplaceRefundService,
-    IMarketplaceRefundAutomationService marketplaceRefundAutomationService,
-    IMarketplaceRefundNotificationService marketplaceRefundNotificationService,
     ISpacesBookingQuotaService spacesBookingQuotaService,
     IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
     IMarketplaceBookingWeeklyDaySelectionService marketplaceBookingWeeklyDaySelectionService,
@@ -221,72 +219,138 @@ public class MarketplaceBookingSubscriptionService(
         Database.Entities.MarketplaceBookingSubscription existingSubscription,
         Customer? deletedByCustomer,
         MarketplaceBookingSubscriptionCancellationMode cancellationMode,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken) =>
+        await DeleteAsync(existingSubscription, deletedByCustomer, cancellationMode, cancellationToken, 0);
+
+    private async Task<MarketplaceBookingSubscription> DeleteAsync(
+        Database.Entities.MarketplaceBookingSubscription existingSubscription,
+        Customer? deletedByCustomer,
+        MarketplaceBookingSubscriptionCancellationMode cancellationMode,
+        CancellationToken cancellationToken,
+        int concurrencyRetryCount)
     {
-        if (deletedByCustomer is not null)
+        try
         {
-            EnsureSubscriptionCanStillBeCancelled(existingSubscription, cancellationMode);
-        }
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd)
-        {
-            existingSubscription.LastModifiedByCustomer = deletedByCustomer;
-            existingSubscription.CancelledAt = timeProvider.GetUtcNow();
-            existingSubscription.CancelAtPeriodEnd = true;
-            existingSubscription.AutoRenew = false;
-            existingSubscription.NextRenewalAt ??= ResolveNextRenewalAt(
-                existingSubscription.StartedAt,
-                existingSubscription.MarketplaceBooking.ProductPricing.PurchaseCadence);
-            existingSubscription = repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(existingSubscription);
-        }
-        else
-        {
-            existingSubscription.LastModifiedByCustomer = deletedByCustomer;
-            existingSubscription.CancelledAt = timeProvider.GetUtcNow();
-            existingSubscription.Status = MarketplaceBookingSubscriptionStatus.Cancelled.ToMarketplaceBookingSubscriptionStatus();
-            existingSubscription.AutoRenew = false;
-            existingSubscription.CancelAtPeriodEnd = false;
-            existingSubscription = repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(existingSubscription);
-
-            var refund = await marketplaceRefundService.CreateImmediateSubscriptionCancellationRefundAsync(
-                existingSubscription,
-                deletedByCustomer,
-                cancellationToken);
-            temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
+            logger.LogInformation(
+                "Marketplace subscription cancellation started. SubscriptionId={SubscriptionId}; cancellationMode={CancellationMode}; requestedByCustomerId={CustomerId}",
                 existingSubscription.Id,
-                repositoryFactory.UnitOfWork);
+                cancellationMode,
+                deletedByCustomer?.Id);
+            var subscriptionId = existingSubscription.Id;
+
+            // Validate the request object only on the first attempt. A failed attempt mutates this
+            // tracked instance before SaveChanges rolls back, so retry must rely solely on the fresh
+            // database reload below rather than treating those uncommitted mutations as terminal.
+            if (concurrencyRetryCount == 0)
+            {
+                if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.Immediate &&
+                    existingSubscription.Status == MarketplaceBookingSubscriptionStatus.Cancelled.ToMarketplaceBookingSubscriptionStatus() &&
+                    existingSubscription.CancelledAt.HasValue)
+                {
+                    return entityMapper.MapTo(existingSubscription);
+                }
+
+                if (deletedByCustomer is not null)
+                {
+                    EnsureSubscriptionCanStillBeCancelled(existingSubscription, cancellationMode);
+                }
+            }
+
+            await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+            // The GraphQL/API layer may have loaded this aggregate before a payment webhook or
+            // subscription workflow updated it. Reload it inside the cancellation transaction so
+            // the delete/refund decision uses the current xmin concurrency token.
+            repositoryFactory.ResetChangeTracker();
+            existingSubscription = await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdForUpdateAsync(
+                                       subscriptionId,
+                                       cancellationToken) ??
+                                   throw new InvalidOperationException($"Marketplace booking subscription was not found: {subscriptionId}");
+            var trackedDeletedByCustomer = deletedByCustomer is null
+                ? null
+                : await repositoryFactory.CustomerRepository.GetByIdAsync(
+                    deletedByCustomer.Id,
+                    true,
+                    cancellationToken);
+
+            // Cleanup signals are replayed by Temporal. Once an immediate cancellation has
+            // committed, return the existing aggregate without creating another refund boundary
+            // or sending another provider-cancellation signal.
+            if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.Immediate &&
+                existingSubscription.Status == MarketplaceBookingSubscriptionStatus.Cancelled.ToMarketplaceBookingSubscriptionStatus() &&
+                existingSubscription.CancelledAt.HasValue)
+            {
+                return entityMapper.MapTo(existingSubscription);
+            }
+
+            if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd)
+            {
+                existingSubscription.LastModifiedByCustomer = trackedDeletedByCustomer;
+                existingSubscription.CancelledAt = timeProvider.GetUtcNow();
+                existingSubscription.CancelAtPeriodEnd = true;
+                existingSubscription.AutoRenew = false;
+                existingSubscription.NextRenewalAt ??= ResolveNextRenewalAt(
+                    existingSubscription.StartedAt,
+                    existingSubscription.MarketplaceBooking.ProductPricing.PurchaseCadence);
+                existingSubscription.ModifiedAt = timeProvider.GetUtcNow();
+            }
+            else
+            {
+                existingSubscription.LastModifiedByCustomer = trackedDeletedByCustomer;
+                existingSubscription.CancelledAt = timeProvider.GetUtcNow();
+                existingSubscription.Status = MarketplaceBookingSubscriptionStatus.Cancelled.ToMarketplaceBookingSubscriptionStatus();
+                existingSubscription.AutoRenew = false;
+                existingSubscription.CancelAtPeriodEnd = false;
+                existingSubscription.ModifiedAt = timeProvider.GetUtcNow();
+
+                var refund = await marketplaceRefundService.CreateImmediateSubscriptionCancellationRefundAsync(
+                    existingSubscription,
+                    deletedByCustomer,
+                    cancellationToken);
+
+                logger.LogInformation(
+                    "Marketplace subscription cancellation refund result. SubscriptionId={SubscriptionId}; refundId={RefundId}; refundStatus={RefundStatus}",
+                    existingSubscription.Id,
+                    refund?.Id,
+                    refund?.Status);
+
+                temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
+                    existingSubscription.Id,
+                    repositoryFactory.UnitOfWork);
+
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+
+                if (refund is not null)
+                {
+                    await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.MarketplaceBookingSubscriptionTopicName,
+                        existingSubscription.Id,
+                        cancellationToken);
+                }
+
+                return entityMapper.MapTo(existingSubscription);
+            }
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 
-            if (refund is not null)
-            {
-                refund = await marketplaceRefundAutomationService.ProcessAfterRequestAsync(refund, deletedByCustomer?.Id, cancellationToken);
-                await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.MarketplaceBookingSubscriptionTopicName,
-                    existingSubscription.Id,
-                    cancellationToken);
-                await marketplaceRefundNotificationService.NotifyStatusChangedAsync(refund, cancellationToken);
-            }
-
             return entityMapper.MapTo(existingSubscription);
         }
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd)
+        catch (DbUpdateConcurrencyException exception) when (concurrencyRetryCount < 2)
         {
-            // End-of-period cancellation should stop future Xero billing immediately by removing
-            // the repeating template, while leaving the already-issued current invoice untouched.
-            foreach (var recurringBooking in existingSubscription.RecurringBookings.Where(item => !item.IsDeleted()))
-            {
-                await accountingInvoiceCancellationService.CancelRecurringBookingFutureBillingAsync(recurringBooking, cancellationToken);
-            }
+            logger.LogWarning(
+                exception,
+                "Marketplace booking subscription cancellation conflicted with a concurrent update. Retrying. SubscriptionId: {SubscriptionId}, RetryCount: {RetryCount}",
+                existingSubscription.Id,
+                concurrencyRetryCount + 1);
+            repositoryFactory.ResetChangeTracker();
+            return await DeleteAsync(
+                existingSubscription,
+                deletedByCustomer,
+                cancellationMode,
+                cancellationToken,
+                concurrencyRetryCount + 1);
         }
-
-        return entityMapper.MapTo(existingSubscription);
     }
 
     private static List<Organization> MergeOrganizationsWithProductOwner(

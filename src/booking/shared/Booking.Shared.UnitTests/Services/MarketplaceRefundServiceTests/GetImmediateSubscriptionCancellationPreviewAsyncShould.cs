@@ -36,8 +36,8 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
         result.LocalEntityId.ShouldBe(subscription.Id);
         result.ReferenceTime.ShouldBe(subscription.NextRenewalAt!.Value);
         result.IsRefundable.ShouldBeTrue();
-        result.RefundPercentage.ShouldBe(75);
-        result.RefundAmount.ShouldBe(60m);
+        result.RefundPercentage.ShouldBe(83);
+        result.RefundAmount.ShouldBe(66.67m);
     }
 
     [Theory]
@@ -74,6 +74,152 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
         result.RefundPercentage.ShouldBe(0);
         result.BaseAmount.ShouldBeNull();
         result.RefundAmount.ShouldBeNull();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Calculate_67_Percent_Refund_When_10_Of_30_Days_Consumed(
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceRefundService sut,
+        CancellationToken cancellationToken)
+    {
+        var startedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
+        var requestedAt = new DateTimeOffset(2026, 4, 11, 0, 0, 0, TimeSpan.Zero); // 10 days consumed
+        var nextRenewalAt = new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero); // 30-day cycle
+        var subscription = CreateSubscription(
+            startedAt,
+            nextRenewalAt,
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            []);
+        subscription.RecurringBookings =
+        [
+            new RecurringBookingEntity
+            {
+                Id = "recurring-1",
+                StartDate = startedAt,
+                MarketplaceBooking = new MarketplaceBookingEntity
+                {
+                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(), ProductPricing = subscription.MarketplaceBooking.ProductPricing
+                }
+            }
+        ];
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
+
+        var result = await sut.GetImmediateSubscriptionCancellationPreviewAsync(subscription, cancellationToken);
+
+        result.IsRefundable.ShouldBeTrue();
+        result.RefundPercentage.ShouldBe(67); // 20/30 days remaining = 66.67% → 67%
+        result.RefundAmount.ShouldBe(53.33m); // 80 * (20 / 30), rounded to currency precision
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Calculate_0_Percent_Refund_When_Full_Cycle_Consumed(
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceRefundService sut,
+        CancellationToken cancellationToken)
+    {
+        var startedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
+        var requestedAt = new DateTimeOffset(2026, 4, 30, 23, 59, 59, TimeSpan.Zero); // Almost full cycle consumed
+        var nextRenewalAt = new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero); // 30-day cycle
+        var subscription = CreateSubscription(
+            startedAt,
+            nextRenewalAt,
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            []);
+        subscription.RecurringBookings =
+        [
+            new RecurringBookingEntity
+            {
+                Id = "recurring-1",
+                StartDate = startedAt,
+                MarketplaceBooking = new MarketplaceBookingEntity
+                {
+                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(), ProductPricing = subscription.MarketplaceBooking.ProductPricing
+                }
+            }
+        ];
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
+
+        var result = await sut.GetImmediateSubscriptionCancellationPreviewAsync(subscription, cancellationToken);
+
+        result.IsRefundable.ShouldBeFalse();
+        result.RefundPercentage.ShouldBe(0);
+        result.RefundAmount.ShouldBeNull();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Calculate_100_Percent_Refund_When_0_Days_Consumed(
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceRefundService sut,
+        CancellationToken cancellationToken)
+    {
+        var startedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
+        var requestedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero); // Just started
+        var nextRenewalAt = new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero); // 30-day cycle
+        var subscription = CreateSubscription(
+            startedAt,
+            nextRenewalAt,
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            []);
+        subscription.RecurringBookings =
+        [
+            new RecurringBookingEntity
+            {
+                Id = "recurring-1",
+                StartDate = startedAt,
+                MarketplaceBooking = new MarketplaceBookingEntity
+                {
+                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(), ProductPricing = subscription.MarketplaceBooking.ProductPricing
+                }
+            }
+        ];
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
+
+        var result = await sut.GetImmediateSubscriptionCancellationPreviewAsync(subscription, cancellationToken);
+
+        result.IsRefundable.ShouldBeTrue();
+        result.RefundPercentage.ShouldBe(100); // Full cycle remaining
+        result.RefundAmount.ShouldBe(80m);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Never_Exceed_100_Percent_When_Cancellation_Is_Requested_Before_The_Billing_Window(
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceRefundService sut,
+        CancellationToken cancellationToken)
+    {
+        var startedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
+        var requestedAt = new DateTimeOffset(2026, 3, 31, 23, 59, 59, TimeSpan.Zero);
+        var subscription = CreateSubscription(
+            startedAt,
+            startedAt.AddMonths(1),
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            []);
+        subscription.RecurringBookings =
+        [
+            new RecurringBookingEntity
+            {
+                Id = "recurring-1",
+                StartDate = startedAt,
+                MarketplaceBooking = new MarketplaceBookingEntity
+                {
+                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(), ProductPricing = subscription.MarketplaceBooking.ProductPricing
+                }
+            }
+        ];
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
+
+        var result = await sut.GetImmediateSubscriptionCancellationPreviewAsync(subscription, cancellationToken);
+
+        result.RefundPercentage.ShouldBe(100);
+        result.RefundAmount.ShouldBe(80m);
     }
 
     private static MarketplaceBookingSubscriptionEntity CreateSubscription(

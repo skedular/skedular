@@ -4,6 +4,7 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
+using Microsoft.Extensions.Logging;
 using Temporalio.Activities;
 using Constants = Booking.Shared.GraphQL.Constants;
 
@@ -27,7 +28,8 @@ public class InvoiceIntegrations(
     IOrganizationInvoiceCounterService organizationInvoiceCounterService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
     ISkedularInvoiceService skedularInvoiceService,
-    IXeroInvoiceService xeroInvoiceService)
+    IXeroInvoiceService xeroInvoiceService,
+    ILogger<InvoiceIntegrations> logger)
 {
     [Activity]
     public async Task GenerateAndSendInvoiceAsync(GenerateAndSendInvoiceInput args)
@@ -69,6 +71,7 @@ public class InvoiceIntegrations(
     public async Task GenerateAndSendRecurringInvoiceAsync(GenerateAndSendRecurringInvoiceInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        logger.LogInformation("Generating recurring invoice for recurring booking {RecurringBookingId}", args.RecurringBookingId);
         var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(args.RecurringBookingId, cancellationToken);
         if (recurringBooking is null || recurringBooking.IsDeleted())
         {
@@ -90,6 +93,11 @@ public class InvoiceIntegrations(
             marketplaceBooking,
             productVersion,
             cancellationToken);
+
+        logger.LogInformation(
+            "Recurring invoice handling completed for recurring booking {RecurringBookingId} with disposition {Disposition}",
+            args.RecurringBookingId,
+            disposition);
 
         if (disposition == RecurringInvoiceHandlingDisposition.StopAndPublish)
         {

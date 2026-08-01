@@ -37,7 +37,7 @@ public class CreateFailureKeyShould
             null,
             MarketplaceBookingFailureCategoryConstants.AvailabilityConflict,
             scope,
-            DateTimeOffset.UtcNow,
+            TimeProvider.System.GetUtcNow(),
             bookingId,
             recurringBookingId,
             null,

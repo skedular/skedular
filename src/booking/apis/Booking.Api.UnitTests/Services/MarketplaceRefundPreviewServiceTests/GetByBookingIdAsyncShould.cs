@@ -48,11 +48,11 @@ public class GetByBookingIdAsyncShould
 
         var result = await sut.GetByBookingIdAsync("booking-1", cancellationToken);
 
-        result.LocalEntityType.ShouldBe(MarketplaceRefundEntityTypeConstants.MarketplaceBooking);
+        result.LocalEntityType.ShouldBe(MarketplaceRefundEntityType.MarketplaceBooking);
         result.LocalEntityId.ShouldBe("marketplace-booking-1");
         result.IsRefundable.ShouldBeTrue();
         result.RefundAmount.ShouldBe(60m);
-        result.CurrencyToDisplay.ShouldBe("NZD - $");
+        result.Currency.ShouldBe(Currency.Nzd);
     }
 
     [Theory]

@@ -1,9 +1,7 @@
 import { RelayError, toRootError, useKnownParams } from '@skedular/shared';
 import { Loading } from '@/components/loading';
 import { OrganizationAdmin } from '@/components/organization/organizationAdmin';
-
 import { RootShell } from '@/components/rootShell';
-
 import type { pageOrganizationAdmin_rootQuery } from '@/queries/__generated__/pageOrganizationAdmin_rootQuery.graphql';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';

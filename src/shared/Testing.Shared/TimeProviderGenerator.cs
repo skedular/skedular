@@ -7,14 +7,9 @@ public class TimeProviderGenerator : ISpecimenBuilder
 {
     public object Create(object request, ISpecimenContext context)
     {
-        if (request is not Type type)
+        if (request is not Type type || type != typeof(TimeProvider))
         {
-            return new NoSpecimen();
-        }
-
-        if (type != typeof(TimeProvider))
-        {
-            return new NoSpecimen();
+            return NoSpecimen.Instance;
         }
 
         return A.Fake<TimeProvider>();

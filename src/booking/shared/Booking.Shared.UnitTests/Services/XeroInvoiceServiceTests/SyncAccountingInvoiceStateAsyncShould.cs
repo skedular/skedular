@@ -16,6 +16,7 @@ using Enterprise.Shared.Random;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using Xero.NetStandard.OAuth2.Api;
 using Xero.NetStandard.OAuth2.Model.Accounting;
 using AccountingInvoiceExportModeConstants = Booking.Shared.Models.AccountingInvoiceExportModeConstants;
@@ -52,6 +53,7 @@ public class SyncAccountingInvoiceStateAsyncShould
         [Frozen] IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
         [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
         [Frozen] AccountingApi accountingApi,
+        [Frozen] ILogger<XeroInvoiceService> logger,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
@@ -82,7 +84,8 @@ public class SyncAccountingInvoiceStateAsyncShould
             xeroRepeatingInvoiceScheduleService,
             xeroRecurringInvoiceTransitionService,
             invoicePaymentTermsService,
-            TimeProvider.System) { InvoiceResponse = new Invoices { _Invoices = [invoice] } };
+            TimeProvider.System,
+            logger) { InvoiceResponse = new Invoices { _Invoices = [invoice] } };
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
             Id = "link-1",
@@ -189,6 +192,7 @@ public class SyncAccountingInvoiceStateAsyncShould
         [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
         [Frozen] IDbContextTransaction transaction,
         [Frozen] AccountingApi accountingApi,
+        [Frozen] ILogger<XeroInvoiceService> logger,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
@@ -230,7 +234,8 @@ public class SyncAccountingInvoiceStateAsyncShould
             xeroRepeatingInvoiceScheduleService,
             xeroRecurringInvoiceTransitionService,
             invoicePaymentTermsService,
-            TimeProvider.System) { InvoiceResponse = new Invoices { _Invoices = [invoice] } };
+            TimeProvider.System,
+            logger) { InvoiceResponse = new Invoices { _Invoices = [invoice] } };
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
             Id = "link-1",
@@ -343,7 +348,8 @@ public class SyncAccountingInvoiceStateAsyncShould
         IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
         IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
         IInvoicePaymentTermsService invoicePaymentTermsService,
-        TimeProvider timeProvider)
+        TimeProvider timeProvider,
+        ILogger<XeroInvoiceService> logger)
         : XeroInvoiceService(
             organizationConfiguration,
             organizationServiceClient,
@@ -362,7 +368,8 @@ public class SyncAccountingInvoiceStateAsyncShould
             xeroRepeatingInvoiceScheduleService,
             xeroRecurringInvoiceTransitionService,
             invoicePaymentTermsService,
-            timeProvider)
+            timeProvider,
+            logger)
     {
         public Invoices? InvoiceResponse { get; init; }
 

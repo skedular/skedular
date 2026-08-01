@@ -289,7 +289,14 @@ public class StripeIntegrations(
             throw new StripeCustomerNotFound();
         var stripeCheckoutSession = new StripeCheckoutSession
         {
-            Id = randomHelper.Generate(), StripeCheckoutSessionId = session.Id, CheckoutUrl = session.Url, StripeCustomer = stripeCustomer
+            Id = randomHelper.Generate(),
+            StripeCheckoutSessionId = session.Id,
+            CheckoutUrl = session.Url,
+            PaymentIntentId = session.PaymentIntentId,
+            ChargeType = hostPaymentIntentData is null ? "Direct" : "Destination",
+            StripeAccountId = hostPaymentIntentData is null ? args.StripeConnectAccountId : null,
+            DestinationAccountId = hostPaymentIntentData?.TransferData?.Destination,
+            StripeCustomer = stripeCustomer
         };
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);
@@ -421,7 +428,14 @@ public class StripeIntegrations(
             throw new StripeCustomerNotFound();
         var stripeCheckoutSession = new StripeCheckoutSession
         {
-            Id = randomHelper.Generate(), StripeCheckoutSessionId = session.Id, CheckoutUrl = session.Url, StripeCustomer = stripeCustomer
+            Id = randomHelper.Generate(),
+            StripeCheckoutSessionId = session.Id,
+            CheckoutUrl = session.Url,
+            PaymentIntentId = session.PaymentIntentId,
+            ChargeType = hostPaymentIntentData is null ? "Direct" : "Destination",
+            StripeAccountId = hostPaymentIntentData is null ? args.StripeConnectAccountId : null,
+            DestinationAccountId = hostPaymentIntentData?.TransferData?.Destination,
+            StripeCustomer = stripeCustomer
         };
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);

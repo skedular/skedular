@@ -41,8 +41,8 @@ public class OrganizationSubscriberShould
             {
                 Code = OfferingCode.EarlyBirdV1,
                 PurchasedTeamCapacity = 100,
-                Start = DateTimeOffset.UtcNow,
-                End = DateTimeOffset.UtcNow.AddMonths(1)
+                Start = TimeProvider.System.GetUtcNow(),
+                End = TimeProvider.System.GetUtcNow().AddMonths(1)
             }
         };
         var existing = new Organization

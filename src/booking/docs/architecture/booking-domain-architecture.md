@@ -59,7 +59,8 @@ It also references the external systems that the booking domain coordinates with
     - A durable audit record for a refund lifecycle step such as requested, approved, sent to Xero, completed, or
       failed.
     - Snapshots the amount, reason, actor, and provider/error metadata shown in timeline and notification surfaces.
-    - Also covers manual follow-up and manual completion steps so those actions remain inside the same refund model.
+    - Also covers operator follow-up and explicit confirmation steps so those actions remain inside the same refund
+      model.
 
 - `Accounting credit note / adjustment link`
     - The durable link between a local refund and the downstream accounting artifact used to represent that refund in
@@ -228,16 +229,15 @@ flowchart TD
 - Payment confirmation is a separate prerequisite from refund policy. A policy-eligible cancellation must not create or
   advance a refund unless the relevant marketplace payment for that booking or billing window has actually been
   confirmed.
-- Admin actions may approve, reduce, or reject a refund, but that override must be stored locally with actor and
-  reason.
+- Admin actions may approve, reduce, or reject a refund, but that override must be stored locally with actor and reason.
 - Xero is the downstream accounting representation of the refund decision.
 - A refund is not the same thing as a booking delete, subscription end, invoice cancellation, or payment-status change.
 - Refund state should therefore not be collapsed into:
     - `MarketplaceBooking.PaymentStatus`
     - `AccountingInvoiceExportLink`
     - invoice-instance sync state
-- Refund history should also not be reconstructed only from the latest aggregate timestamps/fields. Timeline/audit
-  views should read from persisted refund events.
+- Refund history should also not be reconstructed only from the latest aggregate timestamps/fields. Timeline/audit views
+  should read from persisted refund events.
 - Manual payouts or finance-team handling should be represented as first-class refund statuses/events, not free-form
   notes attached to `Failed`.
 
@@ -610,8 +610,8 @@ sequenceDiagram
         Shared->>Xero: create credit note or equivalent accounting adjustment
         Xero-->>Shared: external credit note state
         Shared->>Refund: persist provider link + status
-    else refund needs manual follow-up
-        Shared->>Refund: mark manual required / pending
+    else refund needs operator follow-up
+        Shared->>Refund: mark reconciliation required / provider pending
     end
 ```
 

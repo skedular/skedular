@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1be875d680b8feb52abd7082ed568fc4>>
+ * @generated SignedSource<<eccb055f7feeab59afa6f1b9b5dca970>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,8 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
+export type MarketplaceRefundEventType = "ACCOUNTING_PROJECTED" | "ACCOUNTING_PROJECTION_REQUIRED" | "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "SENT_TO_XERO" | "UNDER_REVIEW" | "%future added value";
+export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
@@ -50,6 +52,7 @@ export type marketplaceProductBookingDetails_rootQuery$data = {
         readonly checkoutUrl: string;
       } | null | undefined;
       readonly failure: {
+        readonly allocatedRefundAmount: any | null | undefined;
         readonly category: {
           readonly name: string;
           readonly type: string;
@@ -60,6 +63,8 @@ export type marketplaceProductBookingDetails_rootQuery$data = {
         };
         readonly finalizedAt: any;
         readonly id: string;
+        readonly resolutionDeadlineAt: any | null | undefined;
+        readonly resolutionDecision: string | null | undefined;
       } | null | undefined;
       readonly id: string;
       readonly invoiceNumber: string | null | undefined;
@@ -103,12 +108,14 @@ export type marketplaceProductBookingDetails_rootQuery$data = {
           readonly currencyToDisplay: string;
           readonly eventType: {
             readonly name: string;
-            readonly type: string;
+            readonly type: MarketplaceRefundEventType;
           };
           readonly externalRefundNumber: string | null | undefined;
           readonly id: string;
           readonly lastError: string | null | undefined;
+          readonly newStatus: string | null | undefined;
           readonly occurredAt: any;
+          readonly previousStatus: string | null | undefined;
           readonly reason: string | null | undefined;
           readonly refundAmount: any | null | undefined;
         }>;
@@ -122,7 +129,7 @@ export type marketplaceProductBookingDetails_rootQuery$data = {
         readonly requestedByCustomerName: string | null | undefined;
         readonly status: {
           readonly name: string;
-          readonly type: string;
+          readonly type: MarketplaceRefundStatus;
         };
       } | null | undefined;
     } | null | undefined;
@@ -318,6 +325,27 @@ v12 = {
       "plural": false,
       "selections": (v11/*:: as any*/),
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "resolutionDeadlineAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "resolutionDecision",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "allocatedRefundAmount",
+      "storageKey": null
     }
   ],
   "storageKey": null
@@ -454,6 +482,20 @@ v18 = {
           "args": null,
           "kind": "ScalarField",
           "name": "actorName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "previousStatus",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "newStatus",
           "storageKey": null
         }
       ],
@@ -764,16 +806,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "de98330cb2865848bdf95536b3429d4a",
+    "cacheID": "abb0146f16e663d79e90548669dae5c4",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBookingDetails_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductBookingDetails_rootQuery(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    deletedByCustomer {\n      id\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n      }\n    }\n    marketplaceBooking {\n      id\n      quantity\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        finalizedAt\n        customerAction {\n          type\n          name\n        }\n      }\n      refund {\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        events {\n          id\n          eventType {\n            type\n            name\n          }\n          occurredAt\n          refundAmount\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          actorName\n        }\n      }\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        type {\n          type\n          name\n        }\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        id\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
+    "text": "query marketplaceProductBookingDetails_rootQuery(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    deletedByCustomer {\n      id\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n      }\n    }\n    marketplaceBooking {\n      id\n      quantity\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        finalizedAt\n        customerAction {\n          type\n          name\n        }\n        resolutionDeadlineAt\n        resolutionDecision\n        allocatedRefundAmount\n      }\n      refund {\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        events {\n          id\n          eventType {\n            type\n            name\n          }\n          occurredAt\n          refundAmount\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          actorName\n          previousStatus\n          newStatus\n        }\n      }\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        type {\n          type\n          name\n        }\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        id\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "024f96ef77332c858dfd10da704c6e3e";
+(node as any).hash = "45bcf0122d0cab2f9d7f932ad725cce1";
 
 export default node;

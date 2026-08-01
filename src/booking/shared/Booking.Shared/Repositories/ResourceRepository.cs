@@ -592,7 +592,11 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .ToListAsync(cancellationToken);
         foreach (var slot in slots)
         {
-            slot.Bookings.Add(booking);
+            if (slot.Bookings.All(existing => existing.Id != booking.Id))
+            {
+                slot.Bookings.Add(booking);
+            }
+
             foreach (var customer in booking.InvolvedCustomers)
             {
                 if (slot.Customers.All(existing => existing.Id != customer.Id))

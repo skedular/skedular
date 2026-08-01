@@ -5,6 +5,7 @@ import { CalendarIcon, EllipseMenuIcon, NotesIcon, PaymentStatusIcon, PdfIcon, T
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import { RefundStatusBadge } from '@/components/refund/RefundStatusBadge';
 import Resources from '@/components/resource/resources';
 import { Zones } from '@/components/zone';
 import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/myBookingCard_BookingDetails.graphql';
@@ -133,6 +134,13 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
             name
           }
           invoiceUrl
+          refund {
+            status {
+              type
+            }
+            refundAmount
+            currencyToDisplay
+          }
         }
         recurringBooking {
           id
@@ -529,6 +537,14 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
                       : 'outlined'
                   }
                 />
+              ) : null}
+              {bookingDetails.marketplaceBooking?.refund ? (
+                <StackRow sx={{ gap: 0.5, alignItems: 'center' }}>
+                  <RefundStatusBadge status={bookingDetails.marketplaceBooking.refund.status.type} />
+                  {bookingDetails.marketplaceBooking.refund.refundAmount ? (
+                    <SmallIconTypography label={`${bookingDetails.marketplaceBooking.refund.refundAmount} ${bookingDetails.marketplaceBooking.refund.currencyToDisplay}`} />
+                  ) : null}
+                </StackRow>
               ) : null}
               {bookingDetails.marketplaceBooking?.invoiceUrl ? (
                 <Link component={NextLink} href={bookingDetails.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer" underline="none">

@@ -28,4 +28,8 @@ public class MarketplaceBookingFailureDetails
     [GraphQLName("requestedFrom")] public DateTimeOffset? RequestedFrom { get; set; }
     [GraphQLName("requestedUntil")] public DateTimeOffset? RequestedUntil { get; set; }
     [GraphQLName("customerAction")] public MarketplaceBookingFailureChoiceDetails CustomerAction { get; set; } = new();
+    [GraphQLName("resolutionDeadlineAt")] public DateTimeOffset? ResolutionDeadlineAt { get; set; }
+    [GraphQLName("resolutionDecidedAt")] public DateTimeOffset? ResolutionDecidedAt { get; set; }
+    [GraphQLName("resolutionDecision")] public string? ResolutionDecision { get; set; }
+    [GraphQLName("allocatedRefundAmount")] public decimal? AllocatedRefundAmount { get; set; }
 }

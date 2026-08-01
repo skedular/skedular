@@ -11,6 +11,8 @@ public class ApplicationConfiguration
     public string DomainSource { get; set; } = string.Empty;
     public string AppSource { get; set; } = string.Empty;
     public Uri WebAppBaseDomain { get; set; } = Constants.EmptyUri;
+    public Uri SpacesWebAppBaseDomain { get; set; } = Constants.EmptyUri;
+    public Uri HostWebAppBaseDomain { get; set; } = Constants.EmptyUri;
     public Uri ApiBaseDomain { get; set; } = Constants.EmptyUri;
     public QuerySplittingBehavior? QuerySplittingBehavior { get; set; }
     public string GetSource() => $"{Environment}::{DomainSource}::{AppSource}";

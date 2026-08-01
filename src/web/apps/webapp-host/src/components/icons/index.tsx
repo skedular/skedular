@@ -78,6 +78,7 @@ export { default as ContactPhoneIcon } from '@mui/icons-material/PhoneEnabled';
 export { default as PdfIcon } from '@mui/icons-material/PictureAsPdf';
 export { default as OpeningHoursIcon } from '@mui/icons-material/QueryBuilder';
 export { default as BillingIcon } from '@mui/icons-material/Receipt';
+export { default as RefundIcon } from '@mui/icons-material/CurrencyExchange';
 export { default as RemoveIcon } from '@mui/icons-material/Remove';
 export { default as CustomOpeningHoursIcon } from '@mui/icons-material/Schedule';
 export { default as SearchRoundedIcon } from '@mui/icons-material/SearchRounded';

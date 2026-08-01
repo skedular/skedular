@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e462bb58bedd6d2e32efbf079fd9e06>>
+ * @generated SignedSource<<25ffa7b3e2607e28b7027ee145d81b5d>>
  * @lightSyntaxTransform
  */
 
@@ -11,6 +11,8 @@ import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type MarketplaceBookingSubscriptionCancellationMode = "AT_PERIOD_END" | "IMMEDIATE" | "%future added value";
 export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PAUSED" | "RENEWAL_FAILED" | "%future added value";
+export type MarketplaceRefundEventType = "ACCOUNTING_PROJECTED" | "ACCOUNTING_PROJECTION_REQUIRED" | "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "SENT_TO_XERO" | "UNDER_REVIEW" | "%future added value";
+export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type pageOrganizationSubscriptionDetail_rootQuery$variables = {
@@ -76,7 +78,7 @@ export type pageOrganizationSubscriptionDetail_rootQuery$data = {
         readonly currencyToDisplay: string;
         readonly eventType: {
           readonly name: string;
-          readonly type: string;
+          readonly type: MarketplaceRefundEventType;
         };
         readonly externalRefundNumber: string | null | undefined;
         readonly id: string;
@@ -96,7 +98,7 @@ export type pageOrganizationSubscriptionDetail_rootQuery$data = {
       readonly requestedByCustomerName: string | null | undefined;
       readonly status: {
         readonly name: string;
-        readonly type: string;
+        readonly type: MarketplaceRefundStatus;
       };
       readonly xeroProcessingBlockedReason: string | null | undefined;
     } | null | undefined;

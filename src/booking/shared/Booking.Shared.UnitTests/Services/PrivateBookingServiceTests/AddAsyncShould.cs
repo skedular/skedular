@@ -25,6 +25,7 @@ public class AddAsyncShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IUnitOfWork unitOfWork,
         PrivateBookingService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         var booking = new Shared.Models.Booking
@@ -62,7 +63,7 @@ public class AddAsyncShould
                 new DateTimeOffset(2026, 6, 1, 0, 0, 0, TimeSpan.Zero),
                 new DateTimeOffset(2026, 7, 1, 0, 0, 0, TimeSpan.Zero))));
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, A<CancellationToken>._))
-            .Returns(Task.FromResult(A.Fake<IDbContextTransaction>()));
+            .Returns(Task.FromResult(dbContextTransaction));
         A.CallTo(() => entityMapper.MapTo(A<Database.Entities.Booking>._))
             .Returns(booking);
 
@@ -80,6 +81,7 @@ public class AddAsyncShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IUnitOfWork unitOfWork,
         PrivateBookingService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         var booking = new Shared.Models.Booking
@@ -117,7 +119,7 @@ public class AddAsyncShould
                 new DateTimeOffset(2026, 6, 1, 0, 0, 0, TimeSpan.Zero),
                 new DateTimeOffset(2026, 7, 1, 0, 0, 0, TimeSpan.Zero))));
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, A<CancellationToken>._))
-            .Returns(Task.FromResult(A.Fake<IDbContextTransaction>()));
+            .Returns(Task.FromResult(dbContextTransaction));
         A.CallTo(() => entityMapper.MapTo(A<Database.Entities.Booking>._))
             .Returns(booking);
 
@@ -136,6 +138,7 @@ public class AddAsyncShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IUnitOfWork unitOfWork,
         PrivateBookingService sut,
+        IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
         var booking = new Shared.Models.Booking
@@ -164,7 +167,7 @@ public class AddAsyncShould
         A.CallTo(() => repositoryFactory.BookingRepository.Add(A<Database.Entities.Booking>._))
             .Returns(new Database.Entities.Booking { Id = "booking-1" });
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, A<CancellationToken>._))
-            .Returns(Task.FromResult(A.Fake<IDbContextTransaction>()));
+            .Returns(Task.FromResult(dbContextTransaction));
         A.CallTo(() => entityMapper.MapTo(A<Database.Entities.Booking>._))
             .Returns(booking);
 

@@ -2,6 +2,7 @@ using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.RecurringBooking;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
+using Booking.Shared.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
@@ -74,8 +75,15 @@ public static partial class MarketplaceBookingSubscriptionDetailsType
     public static Task<MarketplaceRefundDetails?> GetRefund(
         [Parent] MarketplaceBookingSubscriptionDetails item,
         [Service] IMarketplaceRefundReadService marketplaceRefundReadService,
+        [Service] IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
-        marketplaceRefundReadService.GetByMarketplaceBookingSubscriptionIdAsync(item.Id, cancellationToken);
+        MapRefundAsync(marketplaceRefundReadService.GetByMarketplaceBookingSubscriptionIdAsync(item.Id, cancellationToken), graphQlMapper);
+
+    private static async Task<MarketplaceRefundDetails?> MapRefundAsync(Task<MarketplaceRefundReadModel?> task, IGraphQlMapper mapper)
+    {
+        var model = await task;
+        return model is null ? null : mapper.MapTo(model);
+    }
 
     public static async Task<MarketplaceBookingFailureDetails?> GetFailure(
         [Parent] MarketplaceBookingSubscriptionDetails item,

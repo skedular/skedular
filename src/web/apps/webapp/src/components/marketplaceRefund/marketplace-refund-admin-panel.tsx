@@ -1,10 +1,9 @@
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import type { marketplaceRefundAdminPanel_completeMarketplaceRefundMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_completeMarketplaceRefundMutation.graphql';
-import type { marketplaceRefundAdminPanel_failMarketplaceRefundMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_failMarketplaceRefundMutation.graphql';
-import type { marketplaceRefundAdminPanel_markMarketplaceRefundManualCompletedMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_markMarketplaceRefundManualCompletedMutation.graphql';
-import type { marketplaceRefundAdminPanel_markMarketplaceRefundManualRequiredMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_markMarketplaceRefundManualRequiredMutation.graphql';
-import type { marketplaceRefundAdminPanel_markMarketplaceRefundPendingAccountingMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_markMarketplaceRefundPendingAccountingMutation.graphql';
-import type { marketplaceRefundAdminPanel_processMarketplaceRefundInXeroMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_processMarketplaceRefundInXeroMutation.graphql';
+import type { marketplaceRefundAdminPanel_approveMarketplaceRefundMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_approveMarketplaceRefundMutation.graphql';
+import type { marketplaceRefundAdminPanel_cancelMarketplaceRefundMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_cancelMarketplaceRefundMutation.graphql';
+import type { marketplaceRefundAdminPanel_rejectMarketplaceRefundMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_rejectMarketplaceRefundMutation.graphql';
+import type { marketplaceRefundAdminPanel_resolveRefundReconciliationRequiredMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_resolveRefundReconciliationRequiredMutation.graphql';
+import type { marketplaceRefundAdminPanel_retryMarketplaceRefundMutation } from '@/queries/__generated__/marketplaceRefundAdminPanel_retryMarketplaceRefundMutation.graphql';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -15,40 +14,27 @@ import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
 import { DefaultDialogTitle, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
 import { useContext, useState } from 'react';
 import { graphql, useMutation } from 'react-relay';
+import type { PayloadError } from 'relay-runtime';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import MarketplaceRefundTimeline from './marketplace-refund-timeline';
-import { formatRefundAmount, hasDisplayCurrency } from './refund-display';
+import { formatRefundAmount } from './refund-display';
 
 type Props = {
   entityLabel: string;
   refund: {
     id: string;
-    currency?: {
-      type: string;
-      name: string;
-    } | null;
-    status: {
-      type: string;
-      name: string;
-    };
-    requestedAt?: string | null | undefined;
-    lastProcessedAt?: string | null | undefined;
+    currency?: { type: string; name: string } | null;
+    status: { type: string; name: string };
     refundAmount?: number | null | undefined;
-    refundPercentage?: number | null | undefined;
     currencyToDisplay: string;
     reason?: string | null | undefined;
     lastError?: string | null | undefined;
     externalRefundNumber?: string | null | undefined;
-    canProcessInXero?: boolean | null | undefined;
-    xeroProcessingBlockedReason?: string | null | undefined;
     requestedByCustomerName?: string | null | undefined;
     events?: ReadonlyArray<{
       id: string;
-      eventType: {
-        type: string;
-        name: string;
-      };
+      eventType: { type: string; name: string };
       occurredAt?: string | null | undefined;
       refundAmount?: number | null | undefined;
       currencyToDisplay: string;
@@ -60,119 +46,90 @@ type Props = {
   };
 };
 
+type DialogMode = 'REJECT' | 'CANCEL' | 'RESOLVE_COMPLETE' | 'RESOLVE_FAILED' | null;
+
 const toRefundStatusType = (value?: string | null | undefined) => value?.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase() ?? '';
+
+const toRefundErrorMessage = (value?: string | null | undefined) =>
+  value?.includes('Only AUTHORISED invoices can have allocations applied to them')
+    ? 'Xero created the credit note, but could not apply it to the invoice because the invoice is not authorized. Manual accounting follow-up is required.'
+    : value;
 
 const MarketplaceRefundAdminPanel = ({ refund }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const [refundApprovalDialogOpen, setRefundApprovalDialogOpen] = useState(false);
-  const [refundApprovalAmount, setRefundApprovalAmount] = useState('');
-  const [refundApprovalReason, setRefundApprovalReason] = useState('');
-  const [refundResolutionDialogMode, setRefundResolutionDialogMode] = useState<'COMPLETE' | 'FAIL' | null>(null);
-  const [manualResolutionDialogMode, setManualResolutionDialogMode] = useState<'REQUIRE' | 'COMPLETE' | null>(null);
-  const [refundResolutionReason, setRefundResolutionReason] = useState('');
-  const [commitMarkMarketplaceRefundPendingAccounting] = useMutation<marketplaceRefundAdminPanel_markMarketplaceRefundPendingAccountingMutation>(graphql`
-    mutation marketplaceRefundAdminPanel_markMarketplaceRefundPendingAccountingMutation($input: MarkMarketplaceRefundPendingAccountingInput!) @raw_response_type {
-      markMarketplaceRefundPendingAccounting(input: $input) {
+  const [dialogMode, setDialogMode] = useState<DialogMode>(null);
+  const [reason, setReason] = useState('');
+
+  const [approve] = useMutation<marketplaceRefundAdminPanel_approveMarketplaceRefundMutation>(graphql`
+    mutation marketplaceRefundAdminPanel_approveMarketplaceRefundMutation($input: ApproveMarketplaceRefundInput!) {
+      approveMarketplaceRefund(input: $input) {
         marketplaceRefund {
           id
           status {
             type
             name
           }
-          refundAmount
-          currencyToDisplay
-          reason
           lastError
           externalRefundNumber
         }
       }
     }
   `);
-  const [commitCompleteMarketplaceRefund] = useMutation<marketplaceRefundAdminPanel_completeMarketplaceRefundMutation>(graphql`
-    mutation marketplaceRefundAdminPanel_completeMarketplaceRefundMutation($input: CompleteMarketplaceRefundInput!) @raw_response_type {
-      completeMarketplaceRefund(input: $input) {
+  const [reject] = useMutation<marketplaceRefundAdminPanel_rejectMarketplaceRefundMutation>(graphql`
+    mutation marketplaceRefundAdminPanel_rejectMarketplaceRefundMutation($input: RejectMarketplaceRefundInput!) {
+      rejectMarketplaceRefund(input: $input) {
         marketplaceRefund {
           id
           status {
             type
             name
           }
-          refundAmount
-          currencyToDisplay
-          reason
           lastError
           externalRefundNumber
         }
       }
     }
   `);
-  const [commitFailMarketplaceRefund] = useMutation<marketplaceRefundAdminPanel_failMarketplaceRefundMutation>(graphql`
-    mutation marketplaceRefundAdminPanel_failMarketplaceRefundMutation($input: FailMarketplaceRefundInput!) @raw_response_type {
-      failMarketplaceRefund(input: $input) {
+  const [cancel] = useMutation<marketplaceRefundAdminPanel_cancelMarketplaceRefundMutation>(graphql`
+    mutation marketplaceRefundAdminPanel_cancelMarketplaceRefundMutation($input: CancelMarketplaceRefundInput!) {
+      cancelMarketplaceRefund(input: $input) {
         marketplaceRefund {
           id
           status {
             type
             name
           }
-          refundAmount
-          currencyToDisplay
-          reason
           lastError
           externalRefundNumber
         }
       }
     }
   `);
-  const [commitProcessMarketplaceRefundInXero] = useMutation<marketplaceRefundAdminPanel_processMarketplaceRefundInXeroMutation>(graphql`
-    mutation marketplaceRefundAdminPanel_processMarketplaceRefundInXeroMutation($input: ProcessMarketplaceRefundInXeroInput!) @raw_response_type {
-      processMarketplaceRefundInXero(input: $input) {
+  const [retry] = useMutation<marketplaceRefundAdminPanel_retryMarketplaceRefundMutation>(graphql`
+    mutation marketplaceRefundAdminPanel_retryMarketplaceRefundMutation($input: RetryMarketplaceRefundInput!) {
+      retryMarketplaceRefund(input: $input) {
         marketplaceRefund {
           id
           status {
             type
             name
           }
-          refundAmount
-          currencyToDisplay
-          reason
           lastError
           externalRefundNumber
         }
       }
     }
   `);
-  const [commitMarkMarketplaceRefundManualRequired] = useMutation<marketplaceRefundAdminPanel_markMarketplaceRefundManualRequiredMutation>(graphql`
-    mutation marketplaceRefundAdminPanel_markMarketplaceRefundManualRequiredMutation($input: MarkMarketplaceRefundManualRequiredInput!) @raw_response_type {
-      markMarketplaceRefundManualRequired(input: $input) {
+  const [resolve] = useMutation<marketplaceRefundAdminPanel_resolveRefundReconciliationRequiredMutation>(graphql`
+    mutation marketplaceRefundAdminPanel_resolveRefundReconciliationRequiredMutation($input: ResolveRefundReconciliationRequiredInput!) {
+      resolveRefundReconciliationRequired(input: $input) {
         marketplaceRefund {
           id
           status {
             type
             name
           }
-          refundAmount
-          currencyToDisplay
-          reason
-          lastError
-          externalRefundNumber
-        }
-      }
-    }
-  `);
-  const [commitMarkMarketplaceRefundManualCompleted] = useMutation<marketplaceRefundAdminPanel_markMarketplaceRefundManualCompletedMutation>(graphql`
-    mutation marketplaceRefundAdminPanel_markMarketplaceRefundManualCompletedMutation($input: MarkMarketplaceRefundManualCompletedInput!) @raw_response_type {
-      markMarketplaceRefundManualCompleted(input: $input) {
-        marketplaceRefund {
-          id
-          status {
-            type
-            name
-          }
-          refundAmount
-          currencyToDisplay
-          reason
           lastError
           externalRefundNumber
         }
@@ -180,212 +137,73 @@ const MarketplaceRefundAdminPanel = ({ refund }: Props) => {
     }
   `);
 
-  const refundStatusType = toRefundStatusType(refund.status.type);
-  const refundSeverity =
-    refundStatusType === 'COMPLETED' || refundStatusType === 'MANUAL_COMPLETED'
-      ? 'success'
-      : refundStatusType === 'FAILED' || refundStatusType === 'MANUAL_REQUIRED'
-        ? 'warning'
-        : 'info';
-  const refundAmountLabel = formatRefundAmount(refund.refundAmount, refund.currency?.type, refund.currencyToDisplay);
-  const canProcessInXero = refund.canProcessInXero ?? true;
-  const xeroBlockedMessage = refund.xeroProcessingBlockedReason;
-  const parsedRefundApprovalAmount = refundApprovalAmount.trim() === '' ? undefined : Number(refundApprovalAmount);
-  const isRefundApprovalAmountInvalid =
-    parsedRefundApprovalAmount !== undefined &&
-    (!Number.isFinite(parsedRefundApprovalAmount) || parsedRefundApprovalAmount <= 0 || (refund.refundAmount != null && parsedRefundApprovalAmount > Number(refund.refundAmount)));
+  const status = toRefundStatusType(refund.status.type);
+  const severity = refund.lastError ? 'warning' : status === 'COMPLETED' ? 'success' : status === 'FAILED' || status === 'REJECTED' ? 'warning' : 'info';
+  const amountLabel = formatRefundAmount(refund.refundAmount, refund.currency?.type, refund.currencyToDisplay);
 
-  const runRefundAction = (runMutation: () => void) => {
-    runMutation();
+  type RelayCompleted = (response: unknown, errors?: PayloadError[] | null) => void;
+  type RelayError = (error: Error) => void;
+  const run = (action: (onCompleted: RelayCompleted, onError: RelayError) => void, successMessage: string) => {
+    action(
+      (_, errors) => {
+        if (errors?.length) {
+          themedToast(<NotificationContent content={`We couldn't update this refund. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+          return;
+        }
+        setDialogMode(null);
+        themedToast(<NotificationContent content={successMessage} />);
+      },
+      (error) => themedToast(<NotificationContent content={`We couldn't update this refund. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions),
+    );
   };
 
-  const handleQueueRefundClick = () => {
-    setRefundApprovalAmount(refund.refundAmount != null ? String(refund.refundAmount) : '');
-    setRefundApprovalReason(refund.reason ?? '');
-    setRefundApprovalDialogOpen(true);
-  };
-
-  const handleCloseRefundApprovalDialog = () => {
-    setRefundApprovalDialogOpen(false);
-  };
-
-  const handleOpenRefundResolutionDialog = (mode: 'COMPLETE' | 'FAIL') => {
-    setRefundResolutionReason(refund.reason ?? '');
-    setRefundResolutionDialogMode(mode);
-  };
-
-  const handleCloseRefundResolutionDialog = () => {
-    setRefundResolutionDialogMode(null);
-  };
-
-  const handleOpenManualResolutionDialog = (mode: 'REQUIRE' | 'COMPLETE') => {
-    setRefundResolutionReason(refund.reason ?? '');
-    setManualResolutionDialogMode(mode);
-  };
-
-  const handleCloseManualResolutionDialog = () => {
-    setManualResolutionDialogMode(null);
-  };
-
-  const handleConfirmQueueRefundClick = () => {
-    if (isRefundApprovalAmountInvalid) {
+  const executeDialogAction = () => {
+    const trimmedReason = reason.trim();
+    if (!trimmedReason && dialogMode !== 'RESOLVE_COMPLETE') {
       return;
     }
 
-    runRefundAction(() => {
-      commitMarkMarketplaceRefundPendingAccounting({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            id: refund.id,
-            refundAmount: parsedRefundApprovalAmount,
-            reason: refundApprovalReason.trim() || undefined,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors?.length) {
-            themedToast(<NotificationContent content={`We couldn't queue this refund. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
-            return;
-          }
-
-          setRefundApprovalDialogOpen(false);
-        },
-        onError: (error) => {
-          themedToast(<NotificationContent content={`We couldn't queue this refund. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
-        },
-      });
-    });
+    if (dialogMode === 'REJECT') {
+      run((onCompleted, onError) => reject({ variables: { input: { clientMutationId: uuid(), id: refund.id, reason: trimmedReason } }, onCompleted, onError }), 'Refund rejected.');
+    } else if (dialogMode === 'CANCEL') {
+      run((onCompleted, onError) => cancel({ variables: { input: { clientMutationId: uuid(), id: refund.id, reason: trimmedReason } }, onCompleted, onError }), 'Refund canceled.');
+    } else if (dialogMode === 'RESOLVE_COMPLETE' || dialogMode === 'RESOLVE_FAILED') {
+      run(
+        (onCompleted, onError) =>
+          resolve({
+            variables: {
+              input: {
+                clientMutationId: uuid(),
+                id: refund.id,
+                completed: dialogMode === 'RESOLVE_COMPLETE',
+                reason: trimmedReason || 'Resolved by an operator.',
+                providerReference: refund.externalRefundNumber ?? undefined,
+              },
+            },
+            onCompleted,
+            onError,
+          }),
+        dialogMode === 'RESOLVE_COMPLETE' ? 'Refund marked completed.' : 'Refund marked failed.',
+      );
+    }
   };
 
-  const handleProcessRefundInXeroClick = () => {
-    runRefundAction(() => {
-      commitProcessMarketplaceRefundInXero({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            id: refund.id,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors?.length) {
-            themedToast(<NotificationContent content={`We couldn't send this refund to Xero. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
-            return;
-          }
-        },
-        onError: (error) => {
-          themedToast(<NotificationContent content={`We couldn't send this refund to Xero. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
-        },
-      });
-    });
-  };
-
-  const handleCompleteRefundClick = () => {
-    runRefundAction(() => {
-      commitCompleteMarketplaceRefund({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            id: refund.id,
-            reason: refundResolutionReason.trim() || undefined,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors?.length) {
-            themedToast(<NotificationContent content={`We couldn't complete this refund. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
-            return;
-          }
-
-          setRefundResolutionDialogMode(null);
-        },
-        onError: (error) => {
-          themedToast(<NotificationContent content={`We couldn't complete this refund. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
-        },
-      });
-    });
-  };
-
-  const handleFailRefundClick = () => {
-    runRefundAction(() => {
-      commitFailMarketplaceRefund({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            id: refund.id,
-            reason: refundResolutionReason.trim() || undefined,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors?.length) {
-            themedToast(<NotificationContent content={`We couldn't update this refund. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
-            return;
-          }
-
-          setRefundResolutionDialogMode(null);
-        },
-        onError: (error) => {
-          themedToast(<NotificationContent content={`We couldn't update this refund. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
-        },
-      });
-    });
-  };
-
-  const handleMarkManualRequiredClick = () => {
-    runRefundAction(() => {
-      commitMarkMarketplaceRefundManualRequired({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            id: refund.id,
-            reason: refundResolutionReason.trim() || undefined,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors?.length) {
-            themedToast(<NotificationContent content={`We couldn't move this refund to manual follow-up. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
-            return;
-          }
-
-          setManualResolutionDialogMode(null);
-        },
-        onError: (error) => {
-          themedToast(<NotificationContent content={`We couldn't move this refund to manual follow-up. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
-        },
-      });
-    });
-  };
-
-  const handleMarkManualCompletedClick = () => {
-    runRefundAction(() => {
-      commitMarkMarketplaceRefundManualCompleted({
-        variables: {
-          input: {
-            clientMutationId: uuid(),
-            id: refund.id,
-            reason: refundResolutionReason.trim() || undefined,
-          },
-        },
-        onCompleted: (_, errors) => {
-          if (errors?.length) {
-            themedToast(<NotificationContent content={`We couldn't complete this refund manually. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
-            return;
-          }
-
-          setManualResolutionDialogMode(null);
-        },
-        onError: (error) => {
-          themedToast(<NotificationContent content={`We couldn't complete this refund manually. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
-        },
-      });
-    });
-  };
+  const dialogTitle =
+    dialogMode === 'REJECT'
+      ? 'Reject refund'
+      : dialogMode === 'CANCEL'
+        ? 'Cancel refund'
+        : dialogMode === 'RESOLVE_COMPLETE'
+          ? 'Resolve refund as completed'
+          : 'Resolve refund as failed';
 
   return (
     <>
-      <Alert severity={refundSeverity} sx={{ mb: 1, borderRadius: 2 }}>
+      <Alert severity={severity} sx={{ mb: 1, borderRadius: 2 }}>
         Refund status: {refund.status.name}
-        {refundAmountLabel ? `, amount ${refundAmountLabel}.` : '.'}
+        {amountLabel ? `, amount ${amountLabel}.` : '.'}
         {refund.externalRefundNumber ? ` Reference ${refund.externalRefundNumber}.` : ''}
-        {refund.lastError ? ` ${refund.lastError}` : ''}
+        {toRefundErrorMessage(refund.lastError) ? ` ${toRefundErrorMessage(refund.lastError)}` : ''}
       </Alert>
       {refund.requestedByCustomerName ? (
         <Alert severity="info" sx={{ mb: 1, borderRadius: 2 }}>
@@ -393,130 +211,107 @@ const MarketplaceRefundAdminPanel = ({ refund }: Props) => {
         </Alert>
       ) : null}
       <StackRow sx={{ mb: 1, rowGap: 1 }}>
-        {refundStatusType === 'REQUESTED' || refundStatusType === 'FAILED' || refundStatusType === 'MANUAL_REQUIRED' ? (
-          <Button size="small" variant="outlined" onClick={handleQueueRefundClick}>
-            {refundStatusType === 'FAILED' || refundStatusType === 'MANUAL_REQUIRED' ? 'Retry refund' : 'Queue refund'}
-          </Button>
-        ) : null}
-        {refundStatusType === 'PENDING_ACCOUNTING' ? (
+        {status === 'UNDER_REVIEW' ? (
           <>
-            {canProcessInXero ? (
-              <Button size="small" variant="outlined" onClick={handleProcessRefundInXeroClick}>
-                Send to Xero
-              </Button>
-            ) : null}
-            <Button size="small" variant="outlined" onClick={() => handleOpenManualResolutionDialog('REQUIRE')}>
-              Needs manual follow-up
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() =>
+                run((onCompleted, onError) => approve({ variables: { input: { clientMutationId: uuid(), id: refund.id } }, onCompleted, onError }), 'Refund approved.')
+              }
+            >
+              Approve
             </Button>
-            <Button size="small" color="success" variant="text" onClick={() => handleOpenRefundResolutionDialog('COMPLETE')}>
-              Mark complete
-            </Button>
-            <Button size="small" color="warning" variant="text" onClick={() => handleOpenRefundResolutionDialog('FAIL')}>
-              Mark failed
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => {
+                setReason(refund.reason ?? '');
+                setDialogMode('REJECT');
+              }}
+            >
+              Reject
             </Button>
           </>
         ) : null}
-        {refundStatusType === 'MANUAL_REQUIRED' ? (
-          <Button size="small" color="success" variant="text" onClick={() => handleOpenManualResolutionDialog('COMPLETE')}>
-            Mark manual payout complete
+        {status === 'FAILED' ? (
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() =>
+              run((onCompleted, onError) => retry({ variables: { input: { clientMutationId: uuid(), id: refund.id } }, onCompleted, onError }), 'Refund retry queued.')
+            }
+          >
+            Retry refund
+          </Button>
+        ) : null}
+        {status === 'RECONCILIATION_REQUIRED' ? (
+          <>
+            <Button
+              size="small"
+              color="success"
+              variant="text"
+              onClick={() => {
+                setReason('');
+                setDialogMode('RESOLVE_COMPLETE');
+              }}
+            >
+              Resolve as completed
+            </Button>
+            <Button
+              size="small"
+              color="warning"
+              variant="text"
+              onClick={() => {
+                setReason('');
+                setDialogMode('RESOLVE_FAILED');
+              }}
+            >
+              Resolve as failed
+            </Button>
+          </>
+        ) : null}
+        {status === 'REQUESTED' || status === 'UNDER_REVIEW' || status === 'APPROVED' ? (
+          <Button
+            size="small"
+            color="warning"
+            variant="text"
+            onClick={() => {
+              setReason(refund.reason ?? '');
+              setDialogMode('CANCEL');
+            }}
+          >
+            Cancel refund
           </Button>
         ) : null}
       </StackRow>
-      {refundStatusType === 'PENDING_ACCOUNTING' && !canProcessInXero && xeroBlockedMessage ? (
-        <Alert severity="info" sx={{ mb: 1, borderRadius: 2 }}>
-          {xeroBlockedMessage}
-        </Alert>
-      ) : null}
       <MarketplaceRefundTimeline refund={refund} />
-      <Dialog open={refundApprovalDialogOpen} onClose={handleCloseRefundApprovalDialog}>
-        <DefaultDialogTitle title="Approve Refund" />
+      <Dialog open={dialogMode !== null} onClose={() => setDialogMode(null)}>
+        <DefaultDialogTitle title={dialogTitle} />
         <DialogContent sx={{ mt: 2, minWidth: { xs: 0, sm: 420 } }}>
           <DialogContentText>
-            Queue this refund for accounting with an approved amount and optional note. The approved amount cannot exceed the current refund amount on the record.
-          </DialogContentText>
-          <TextField
-            fullWidth
-            margin="normal"
-            label={`Approved amount${hasDisplayCurrency(refund.currency?.type, refund.currencyToDisplay) ? ` (${refund.currency?.type ?? refund.currencyToDisplay})` : ''}`}
-            value={refundApprovalAmount}
-            onChange={(event) => setRefundApprovalAmount(event.target.value)}
-            error={isRefundApprovalAmountInvalid}
-            helperText={
-              isRefundApprovalAmountInvalid
-                ? `Enter an amount greater than zero${refund.refundAmount != null ? ` and no more than ${refund.refundAmount}` : ''}.`
-                : refund.refundAmount != null
-                  ? `Policy amount currently recorded: ${formatRefundAmount(refund.refundAmount, refund.currency?.type, refund.currencyToDisplay)}`
-                  : 'Leave unchanged to keep the current amount.'
-            }
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            multiline
-            minRows={3}
-            label="Admin note"
-            value={refundApprovalReason}
-            onChange={(event) => setRefundApprovalReason(event.target.value)}
-            helperText="Optional note recorded with the refund status."
-          />
-          <TwoButtonsDialogActions
-            onPrimaryClicked={handleConfirmQueueRefundClick}
-            onSecondaryClicked={handleCloseRefundApprovalDialog}
-            primaryLabel="Queue refund"
-            secondaryLabel="Cancel"
-            primaryDisabled={isRefundApprovalAmountInvalid}
-          />
-        </DialogContent>
-      </Dialog>
-      <Dialog open={refundResolutionDialogMode !== null} onClose={handleCloseRefundResolutionDialog}>
-        <DefaultDialogTitle title={refundResolutionDialogMode === 'COMPLETE' ? 'Complete Refund' : 'Fail Refund'} />
-        <DialogContent sx={{ mt: 2, minWidth: { xs: 0, sm: 420 } }}>
-          <DialogContentText>
-            {refundResolutionDialogMode === 'COMPLETE'
-              ? 'Record an optional note for how this refund was completed.'
-              : 'Record an optional note explaining why this refund failed or what needs follow-up.'}
+            {dialogMode === 'REJECT'
+              ? 'Provide a reason for rejecting this refund.'
+              : dialogMode === 'CANCEL'
+                ? 'Provide a reason for canceling this refund.'
+                : 'Record the operator resolution reason.'}
           </DialogContentText>
           <TextField
             fullWidth
             margin="normal"
             multiline
             minRows={3}
-            label="Admin note"
-            value={refundResolutionReason}
-            onChange={(event) => setRefundResolutionReason(event.target.value)}
-            helperText="Optional note recorded with the refund status."
+            label="Reason"
+            value={reason}
+            onChange={(event) => setReason(event.target.value)}
+            required={dialogMode !== 'RESOLVE_COMPLETE'}
           />
           <TwoButtonsDialogActions
-            onPrimaryClicked={refundResolutionDialogMode === 'COMPLETE' ? handleCompleteRefundClick : handleFailRefundClick}
-            onSecondaryClicked={handleCloseRefundResolutionDialog}
-            primaryLabel={refundResolutionDialogMode === 'COMPLETE' ? 'Mark complete' : 'Mark failed'}
-            secondaryLabel="Cancel"
-          />
-        </DialogContent>
-      </Dialog>
-      <Dialog open={manualResolutionDialogMode !== null} onClose={handleCloseManualResolutionDialog}>
-        <DefaultDialogTitle title={manualResolutionDialogMode === 'COMPLETE' ? 'Complete Refund Manually' : 'Move Refund To Manual Follow-Up'} />
-        <DialogContent sx={{ mt: 2, minWidth: { xs: 0, sm: 420 } }}>
-          <DialogContentText>
-            {manualResolutionDialogMode === 'COMPLETE'
-              ? 'Record an optional note for the manual completion of this refund.'
-              : 'Record an optional note explaining the manual follow-up required for this refund.'}
-          </DialogContentText>
-          <TextField
-            fullWidth
-            margin="normal"
-            multiline
-            minRows={3}
-            label="Admin note"
-            value={refundResolutionReason}
-            onChange={(event) => setRefundResolutionReason(event.target.value)}
-            helperText="Optional note recorded with the refund status."
-          />
-          <TwoButtonsDialogActions
-            onPrimaryClicked={manualResolutionDialogMode === 'COMPLETE' ? handleMarkManualCompletedClick : handleMarkManualRequiredClick}
-            onSecondaryClicked={handleCloseManualResolutionDialog}
-            primaryLabel={manualResolutionDialogMode === 'COMPLETE' ? 'Mark manual completion' : 'Move to manual follow-up'}
-            secondaryLabel="Cancel"
+            onPrimaryClicked={executeDialogAction}
+            onSecondaryClicked={() => setDialogMode(null)}
+            primaryLabel={dialogMode === 'REJECT' ? 'Reject' : dialogMode === 'CANCEL' ? 'Cancel refund' : 'Resolve'}
+            secondaryLabel="Close"
+            primaryDisabled={!reason.trim() && dialogMode !== 'RESOLVE_COMPLETE'}
           />
         </DialogContent>
       </Dialog>

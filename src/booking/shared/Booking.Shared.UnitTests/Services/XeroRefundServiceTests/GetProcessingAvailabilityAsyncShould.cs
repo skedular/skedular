@@ -7,6 +7,7 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Accounting;
 using Grpc.Core;
+using Microsoft.Extensions.Logging;
 using Xero.NetStandard.OAuth2.Api;
 using Xero.NetStandard.OAuth2.Model.Accounting;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
@@ -33,12 +34,13 @@ public class GetProcessingAvailabilityAsyncShould
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
         {
             Id = "refund-1",
-            Status = MarketplaceRefundStatusConstants.PendingAccounting,
+            Status = MarketplaceRefundStatusConstants.Processing,
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
             LocalEntityId = "subscription-1",
@@ -59,7 +61,7 @@ public class GetProcessingAvailabilityAsyncShould
         };
         var sut = new TestableXeroRefundService(organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
-            xeroTokenEncryptionService, TimeProvider.System);
+            xeroTokenEncryptionService, TimeProvider.System, logger);
 
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
@@ -92,12 +94,13 @@ public class GetProcessingAvailabilityAsyncShould
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
         {
             Id = "refund-1",
-            Status = MarketplaceRefundStatusConstants.PendingAccounting,
+            Status = MarketplaceRefundStatusConstants.Processing,
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
             LocalEntityId = "subscription-1",
@@ -129,7 +132,7 @@ public class GetProcessingAvailabilityAsyncShould
         };
         var sut = new TestableXeroRefundService(organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
-            xeroTokenEncryptionService, TimeProvider.System);
+            xeroTokenEncryptionService, TimeProvider.System, logger);
 
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
@@ -215,14 +218,16 @@ public class GetProcessingAvailabilityAsyncShould
         IRepositoryFactory repositoryFactory,
         IXeroSdkClientFactory xeroSdkClientFactory,
         IXeroTokenEncryptionService xeroTokenEncryptionService,
-        TimeProvider timeProvider)
+        TimeProvider timeProvider,
+        ILogger<XeroRefundService> logger)
         : XeroRefundService(
             organizationConfiguration,
             organizationBillingServiceClient,
             repositoryFactory,
             xeroSdkClientFactory,
             xeroTokenEncryptionService,
-            timeProvider)
+            timeProvider,
+            logger)
     {
         protected override Task<Invoices> GetInvoiceAsync(
             AccountingApi accountingApi,

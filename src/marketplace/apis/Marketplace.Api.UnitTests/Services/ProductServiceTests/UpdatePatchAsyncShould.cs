@@ -36,7 +36,7 @@ public class UpdatePatchAsyncShould
         var existingProduct = new ProductEntity { Id = "product-1", Organization = orgEntity };
         var productVersion = new ProductVersion
         {
-            Product = new Product { Id = "product-1" }, CreatedAt = DateTimeOffset.UtcNow, PricingOptions = []
+            Product = new Product { Id = "product-1" }, CreatedAt = TimeProvider.System.GetUtcNow(), PricingOptions = []
         };
         var productModel = new Product { Id = "product-1", Organization = new Organization { Id = "org-1" }, ProductVersions = [productVersion] };
         var request = new ProductPatchRequest(
@@ -123,9 +123,7 @@ public class UpdatePatchAsyncShould
         var existingProduct = new ProductEntity { Id = "product-1", Organization = orgEntity };
         var currentVersion = new ProductVersion
         {
-            Product = new Product { Id = "product-1" },
-            CreatedAt = DateTimeOffset.UtcNow,
-            PricingOptions = []
+            Product = new Product { Id = "product-1" }, CreatedAt = TimeProvider.System.GetUtcNow(), PricingOptions = []
         };
         var productModel = new Product { Id = "product-1", Organization = new Organization { Id = "org-1" }, ProductVersions = [currentVersion] };
         var productVersionEntity = new ProductVersionEntity { Id = "version-2", Product = existingProduct };

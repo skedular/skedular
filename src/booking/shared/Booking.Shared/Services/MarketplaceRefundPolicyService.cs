@@ -6,6 +6,28 @@ namespace Booking.Shared.Services;
 public class MarketplaceRefundPolicyService
 {
     public MarketplaceRefundQuote GetQuote(
+        CancellationPolicySnapshot snapshot,
+        DateTimeOffset referenceTime,
+        DateTimeOffset requestedAt)
+    {
+        if (snapshot.PolicyType == nameof(ProductPricingCancellationPolicyType.NoCancellation))
+        {
+            return new MarketplaceRefundQuote(false, false, 0, null);
+        }
+
+        var applicableRule = snapshot.Rules
+            .OrderByDescending(item => item.MinutesBefore)
+            .FirstOrDefault(item => requestedAt <= referenceTime.AddMinutes(-item.MinutesBefore));
+        if (applicableRule is null)
+        {
+            return new MarketplaceRefundQuote(false, false, 0, null);
+        }
+
+        var percentage = Math.Clamp(applicableRule.RefundPercentage, 0, 100);
+        return new MarketplaceRefundQuote(true, percentage > 0, percentage, applicableRule.MinutesBefore);
+    }
+
+    public MarketplaceRefundQuote GetQuote(
         ProductPricing pricing,
         DateTimeOffset referenceTime,
         DateTimeOffset requestedAt)

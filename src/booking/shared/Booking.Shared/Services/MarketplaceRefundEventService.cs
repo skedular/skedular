@@ -10,7 +10,9 @@ public interface IMarketplaceRefundEventService
         MarketplaceRefund refund,
         string eventType,
         string? actorCustomerId,
-        DateTimeOffset? occurredAt = null);
+        DateTimeOffset? occurredAt = null,
+        string? previousStatus = null,
+        string? correlationId = null);
 }
 
 public class MarketplaceRefundEventService(
@@ -21,13 +23,18 @@ public class MarketplaceRefundEventService(
         MarketplaceRefund refund,
         string eventType,
         string? actorCustomerId,
-        DateTimeOffset? occurredAt = null) =>
+        DateTimeOffset? occurredAt = null,
+        string? previousStatus = null,
+        string? correlationId = null) =>
         repositoryFactory.MarketplaceRefundEventRepository.Add(
             new MarketplaceRefundEvent
             {
                 Id = randomHelper.Generate(),
                 MarketplaceRefundId = refund.Id,
                 EventType = eventType,
+                PreviousStatus = previousStatus,
+                NewStatus = refund.Status,
+                CorrelationId = correlationId,
                 OccurredAt = occurredAt ?? refund.LastProcessedAt ?? refund.RequestedAt,
                 RefundAmount = refund.RefundAmount,
                 Reason = refund.Reason,

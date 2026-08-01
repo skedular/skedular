@@ -1,6 +1,7 @@
 import { PaletteModeContext, dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate, useIntegratedPlatform } from '@skedular/shared';
 import { CustomerAvatar } from '@/components/avatars';
 import RecurringBookingDeleteConfirmationDialog from '@/components/booking/recurring-booking-delete-confirmation-dialog';
+import OperatorCancelBookingButton from '@/components/booking/operator-cancel-booking-button';
 import { CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, PaymentStatusIcon, PdfIcon } from '@/components/icons';
@@ -907,7 +908,9 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
               <Button variant="contained" size="small" onClick={handleViewBookingDetailsClick} sx={{ textTransform: 'none' }}>
                 {visibleViewDetailsLabel}
               </Button>
-              {visibleRemoveBookingLabel ? (
+              {visibleRemoveBookingLabel && bookingDetails.channel.channel === 'MARKETPLACE' && !recurringBooking ? (
+                <OperatorCancelBookingButton bookingId={bookingDetails.id} label={visibleRemoveBookingLabel} onConfirm={removeBooking} />
+              ) : visibleRemoveBookingLabel ? (
                 <Button variant="outlined" color="error" size="small" onClick={handleRemoveBookingClick} sx={{ textTransform: 'none' }}>
                   {visibleRemoveBookingLabel}
                 </Button>

@@ -22,9 +22,9 @@
         <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5"/>
 
         <!-- Test Fixtures (AutoFixture) -->
-        <PackageReference Include="AutoFixture" Version="5.0.0-preview0012"/>
-        <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="5.0.0-preview0012"/>
-        <PackageReference Include="AutoFixture.Xunit3" Version="5.0.0-preview0012"/>
+        <PackageReference Include="AutoFixture" Version="5.0.0-rc.1"/>
+        <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="5.0.0-rc.1"/>
+        <PackageReference Include="AutoFixture.Xunit3" Version="5.0.0-rc.1"/>
 
         <!-- Mocking -->
         <PackageReference Include="FakeItEasy" Version="9.0.1" NoWarn="NU1608"/>

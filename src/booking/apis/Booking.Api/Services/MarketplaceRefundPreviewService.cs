@@ -1,6 +1,5 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Booking.Api.GraphQL.Booking;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
@@ -12,8 +11,8 @@ namespace Booking.Api.Services;
 
 public interface IMarketplaceRefundPreviewService
 {
-    Task<MarketplaceRefundPreviewDetails> GetByBookingIdAsync(string bookingId, CancellationToken cancellationToken);
-    Task<MarketplaceRefundPreviewDetails> GetByMarketplaceBookingSubscriptionIdAsync(string subscriptionId, CancellationToken cancellationToken);
+    Task<MarketplaceRefundPreviewModel> GetByBookingIdAsync(string bookingId, CancellationToken cancellationToken);
+    Task<MarketplaceRefundPreviewModel> GetByMarketplaceBookingSubscriptionIdAsync(string subscriptionId, CancellationToken cancellationToken);
 }
 
 public class MarketplaceRefundPreviewService(
@@ -22,16 +21,17 @@ public class MarketplaceRefundPreviewService(
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService) : IMarketplaceRefundPreviewService
 {
-    public async Task<MarketplaceRefundPreviewDetails> GetByBookingIdAsync(string bookingId, CancellationToken cancellationToken)
+    public async Task<MarketplaceRefundPreviewModel> GetByBookingIdAsync(string bookingId, CancellationToken cancellationToken)
     {
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken) ?? throw new BookingNotFound();
         ArgumentNullException.ThrowIfNull(booking.MarketplaceBooking);
 
         await EnsureAuthorizedAsync(ResolveOrganizationId(booking.MarketplaceBooking), cancellationToken);
-        return MapTo(await marketplaceRefundService.GetBookingCancellationPreviewAsync(booking, cancellationToken));
+        var result = MapTo(await marketplaceRefundService.GetBookingCancellationPreviewAsync(booking, cancellationToken));
+        return result;
     }
 
-    public async Task<MarketplaceRefundPreviewDetails> GetByMarketplaceBookingSubscriptionIdAsync(
+    public async Task<MarketplaceRefundPreviewModel> GetByMarketplaceBookingSubscriptionIdAsync(
         string subscriptionId,
         CancellationToken cancellationToken)
     {
@@ -40,7 +40,8 @@ public class MarketplaceRefundPreviewService(
         ArgumentNullException.ThrowIfNull(subscription.MarketplaceBooking);
 
         await EnsureAuthorizedAsync(ResolveOrganizationId(subscription.MarketplaceBooking), cancellationToken);
-        return MapTo(await marketplaceRefundService.GetImmediateSubscriptionCancellationPreviewAsync(subscription, cancellationToken));
+        var result = MapTo(await marketplaceRefundService.GetImmediateSubscriptionCancellationPreviewAsync(subscription, cancellationToken));
+        return result;
     }
 
     private async Task EnsureAuthorizedAsync(string organizationId, CancellationToken cancellationToken)
@@ -60,23 +61,17 @@ public class MarketplaceRefundPreviewService(
         return marketplaceBooking.ProductVersion.Product.Organization.Id;
     }
 
-    private static MarketplaceRefundPreviewDetails MapTo(MarketplaceRefundPreview preview)
+    private static MarketplaceRefundPreviewModel MapTo(MarketplaceRefundPreview preview) => new()
     {
-        var currency = preview.Currency.ToNullableCurrency();
-
-        return new MarketplaceRefundPreviewDetails
-        {
-            LocalEntityType = preview.LocalEntityType,
-            LocalEntityId = preview.LocalEntityId,
-            RequestedAt = preview.RequestedAt,
-            ReferenceTime = preview.ReferenceTime,
-            IsRefundable = preview.IsRefundable,
-            RefundPercentage = preview.RefundPercentage,
-            AppliedRuleMinutesBefore = preview.AppliedRuleMinutesBefore,
-            BaseAmount = preview.BaseAmount,
-            RefundAmount = preview.RefundAmount,
-            Currency = currency is null ? null : new CurrencyDetails { Type = currency.Value, Name = currency.Value.ToCurrencyName() },
-            CurrencyToDisplay = currency is null ? "N/A" : currency.Value.ToCurrencyName()
-        };
-    }
+        LocalEntityType = preview.LocalEntityType.ToMarketplaceRefundEntityType(),
+        LocalEntityId = preview.LocalEntityId,
+        RequestedAt = preview.RequestedAt,
+        ReferenceTime = preview.ReferenceTime,
+        IsRefundable = preview.IsRefundable,
+        RefundPercentage = preview.RefundPercentage,
+        AppliedRuleMinutesBefore = preview.AppliedRuleMinutesBefore,
+        BaseAmount = preview.BaseAmount,
+        RefundAmount = preview.RefundAmount,
+        Currency = preview.Currency.ToNullableCurrency()
+    };
 }

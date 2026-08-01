@@ -33,6 +33,7 @@ public class ReleaseBookingResourcesAsyncShould
         [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
         [Frozen] ICachedBookingService cachedBookingService,
         [Frozen] IMarketplaceBookingFailureService marketplaceBookingFailureService,
+        [Frozen] IMarketplaceRefundService marketplaceRefundService,
         BookingIntegrations sut,
         string bookingId)
     {
@@ -54,6 +55,9 @@ public class ReleaseBookingResourcesAsyncShould
         A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(A<MarketplaceBookingFailureFinalization>._,
                 environment.CancellationTokenSource.Token))
             .Returns(new MarketplaceBookingFailure());
+        A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(
+                booking, null, environment.CancellationTokenSource.Token, true))
+            .Returns(new MarketplaceRefund { Id = "refund-1", Status = "Requested" });
 
         await environment.RunAsync(() =>
             sut.ReleaseBookingResourcesAsync(new ReleaseBookingResourcesInput(
@@ -75,6 +79,9 @@ public class ReleaseBookingResourcesAsyncShould
                     item.Scope == MarketplaceBookingFailureScopeConstants.OneTimeBooking &&
                     item.BookingId == bookingId),
                 environment.CancellationTokenSource.Token))
+            .MustHaveHappenedOnceExactly();
+        A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(
+                booking, null, environment.CancellationTokenSource.Token, true))
             .MustHaveHappenedOnceExactly();
     }
 }

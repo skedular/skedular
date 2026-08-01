@@ -70,7 +70,6 @@ public class RootQuery(IVersionService versionService)
         new() { Type = ProductType.Event, Name = ProductType.Event.ToProductTypeName() }
     ];
 
-    [UseResolverScope]
     public Version MarketplaceVersion()
     {
         var version = versionService.GetVersion();
@@ -78,7 +77,6 @@ public class RootQuery(IVersionService versionService)
         return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
     }
 
-    [UseResolverScope]
     public IEnumerable<CurrencyDetails> Currencies() =>
     [
         new() { Type = Currency.Nzd, Name = Currency.Nzd.ToCurrencyName() },

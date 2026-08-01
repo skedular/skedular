@@ -3,8 +3,11 @@ using Api.Shared.Services.Offering;
 using Booking.Api.Mappers;
 using Booking.Api.Models;
 using Booking.Api.Services;
+using Booking.Shared.Models;
+using Booking.Shared.Services.Cache;
 using HotChocolate;
 using HotChocolate.Types;
+using MarketplaceBookingFailureService = Booking.Shared.Services.IMarketplaceBookingFailureService;
 using MarketplaceBookingAvailabilityConflict = Booking.Shared.Services.MarketplaceBookingAvailabilityConflict;
 
 namespace Booking.Api.GraphQL.Booking;
@@ -12,6 +15,32 @@ namespace Booking.Api.GraphQL.Booking;
 [MutationType]
 public class RootMutation(IGraphQlMapper graphQlMapper)
 {
+    [UseResolverScope]
+    public async Task<MarketplaceBookingFailureDetails> AcceptPartialMarketplaceBookingAsync(
+        ResolvePartialMarketplaceBookingInput input,
+        [Service] MarketplaceBookingFailureService failureService,
+        [Service] ICachedCustomerService cachedCustomerService,
+        CancellationToken cancellationToken)
+    {
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var result = await failureService.ResolvePartialAsync(input.Id, MarketplaceBookingFailureResolutionDecisionConstants.Accepted, customerId,
+            cancellationToken);
+        return graphQlMapper.MapTo(result);
+    }
+
+    [UseResolverScope]
+    public async Task<MarketplaceBookingFailureDetails> DeclinePartialMarketplaceBookingAsync(
+        ResolvePartialMarketplaceBookingInput input,
+        [Service] MarketplaceBookingFailureService failureService,
+        [Service] ICachedCustomerService cachedCustomerService,
+        CancellationToken cancellationToken)
+    {
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var result = await failureService.ResolvePartialAsync(input.Id, MarketplaceBookingFailureResolutionDecisionConstants.Declined, customerId,
+            cancellationToken);
+        return graphQlMapper.MapTo(result);
+    }
+
     [UseResolverScope]
     public async Task<BookingPayload> AddPrivateBookingAsync(
         AddPrivateBookingInput input,

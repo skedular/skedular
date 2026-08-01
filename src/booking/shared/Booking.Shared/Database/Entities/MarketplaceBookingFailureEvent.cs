@@ -5,19 +5,21 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Booking.Shared.Database.Entities;
 
-#pragma warning disable CS8618
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class MarketplaceBookingFailureEvent : EntityBase
 {
-    public string MarketplaceBookingFailureId { get; set; }
     public string EventType { get; set; }
     public DateTimeOffset OccurredAt { get; set; }
     public string? Reason { get; set; }
     public string? LastError { get; set; }
     public string? ActorCustomerId { get; set; }
 
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string MarketplaceBookingFailureId { get; set; }
     public virtual MarketplaceBookingFailure MarketplaceBookingFailure { get; set; }
 }
-#pragma warning restore CS8618
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 public class MarketplaceBookingFailureEventConfiguration : IEntityTypeConfiguration<MarketplaceBookingFailureEvent>
 {

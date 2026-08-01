@@ -41,6 +41,7 @@ import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from './marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from './marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from './marketplace-refund-status-card';
+import { RefundHistoryTimeline } from '@/components/refund/RefundHistoryTimeline';
 import { canRequestMarketplaceBookingCancellation } from './marketplace-self-service-eligibility';
 
 const RootQuery = graphql`
@@ -83,6 +84,9 @@ const RootQuery = graphql`
             type
             name
           }
+          resolutionDeadlineAt
+          resolutionDecision
+          allocatedRefundAmount
         }
         refund {
           currency {
@@ -115,6 +119,8 @@ const RootQuery = graphql`
             lastError
             externalRefundNumber
             actorName
+            previousStatus
+            newStatus
           }
         }
         invoiceUrl
@@ -211,6 +217,8 @@ const BookingSubscription = graphql`
             lastError
             externalRefundNumber
             actorName
+            previousStatus
+            newStatus
           }
         }
         invoiceUrl
@@ -247,6 +255,22 @@ const DeleteMarketplaceBookingMutation = graphql`
     }
   }
 `;
+const AcceptPartialMutation = graphql`
+  mutation marketplaceProductBookingDetails_acceptPartialMutation($input: ResolvePartialMarketplaceBookingInput!) {
+    acceptPartialMarketplaceBooking(input: $input) {
+      id
+      resolutionDecision
+    }
+  }
+`;
+const DeclinePartialMutation = graphql`
+  mutation marketplaceProductBookingDetails_declinePartialMutation($input: ResolvePartialMarketplaceBookingInput!) {
+    declinePartialMarketplaceBooking(input: $input) {
+      id
+      resolutionDecision
+    }
+  }
+`;
 
 const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: PreloadedQuery<marketplaceProductBookingDetails_rootQuery, Record<string, unknown>> }) => {
   const rootData = usePreloadedQuery<marketplaceProductBookingDetails_rootQuery>(RootQuery, queryReference);
@@ -257,6 +281,8 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
   const [hasCancelledLocally, setHasCancelledLocally] = useState(false);
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState(false);
   const [commitDeleteMarketplaceBooking, isDeleteMarketplaceBookingInFlight] = useMutation(DeleteMarketplaceBookingMutation);
+  const [commitAcceptPartial] = useMutation(AcceptPartialMutation);
+  const [commitDeclinePartial] = useMutation(DeclinePartialMutation);
   const isCancelled = hasCancelledLocally || !!booking?.deletedByCustomer?.id;
   const hasConfirmedPayment = marketplaceBooking?.paymentStatus.type === 'CONFIRMED';
   const canRequestCancellation = useMemo(() => {
@@ -400,18 +426,47 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                         Start a new booking
                       </Button>
                     ) : null}
+                    {marketplaceBooking.failure.resolutionDeadlineAt && !marketplaceBooking.failure.resolutionDecision ? (
+                      <StackRow sx={{ mt: 1 }}>
+                        <Button variant="contained" onClick={() => commitAcceptPartial({ variables: { input: { id: marketplaceBooking.failure!.id } } })}>
+                          Keep available bookings
+                        </Button>
+                        <Button variant="outlined" onClick={() => commitDeclinePartial({ variables: { input: { id: marketplaceBooking.failure!.id } } })}>
+                          Cancel all and refund
+                        </Button>
+                      </StackRow>
+                    ) : null}
                   </Alert>
                 ) : null}
 
                 {marketplaceBooking.refund ? (
-                  <MarketplaceRefundStatusCard
-                    entityLabel="booking"
-                    hasInvoice={Boolean(marketplaceBooking.invoiceUrl) || (booking.arrearsInvoices?.length ?? 0) > 0}
-                    isCancelled={isCancelled}
-                    isPaymentRequired={marketplaceBooking.isPaymentRequired}
-                    paymentStatusType={marketplaceBooking.paymentStatus.type}
-                    refund={marketplaceBooking.refund}
-                  />
+                  <>
+                    <MarketplaceRefundStatusCard
+                      entityLabel="booking"
+                      hasInvoice={Boolean(marketplaceBooking.invoiceUrl) || (booking.arrearsInvoices?.length ?? 0) > 0}
+                      isCancelled={isCancelled}
+                      isPaymentRequired={marketplaceBooking.isPaymentRequired}
+                      paymentStatusType={marketplaceBooking.paymentStatus.type}
+                      refund={marketplaceBooking.refund}
+                    />
+                    {marketplaceBooking.refund.events.length > 0 ? (
+                      <Card sx={{ mt: 3, borderRadius: 3, border: 1, borderColor: (theme) => theme.palette.divider, boxShadow: 'none' }}>
+                        <CardContent sx={{ p: 2.5 }}>
+                          <SubtitleIconTypography label="Refund history" />
+                          <RefundHistoryTimeline
+                            events={marketplaceBooking.refund.events.map((event) => ({
+                              id: event.id,
+                              eventType: event.eventType.name,
+                              occurredAt: event.occurredAt,
+                              actorName: event.actorName,
+                              previousStatus: event.previousStatus,
+                              newStatus: event.newStatus,
+                            }))}
+                          />
+                        </CardContent>
+                      </Card>
+                    ) : null}
+                  </>
                 ) : null}
 
                 {canRequestCancellation ? (

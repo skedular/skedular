@@ -357,7 +357,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
             ? `${new Date(currentCycle.startDate).toLocaleDateString()} - ${currentCycle.endDate ? new Date(currentCycle.endDate).toLocaleDateString() : 'Open ended'}`
             : 'No billing period yet',
           renewalLabel: lifecycleDisplay.renewalLabel,
-          paymentStatusLabel: subscription.marketplaceBooking.paymentStatus.name,
+          paymentStatusLabel: subscription.status.type === 'CANCELLED' ? lifecycleDisplay.statusLabel : subscription.marketplaceBooking.paymentStatus.name,
           paymentMethodLabel: subscription.marketplaceBooking.paymentMethod.name ?? 'Not set',
           quantityLabel: `${subscription.marketplaceBooking.quantity}`,
           statusLabel: lifecycleDisplay.statusLabel,
@@ -732,7 +732,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
                             <StackColumn spacing={0.75}>
                               <BodyIconTypography label={`Renewal: ${lifecycleDisplay.renewalLabel}`} />
                               <SmallIconTypography
-                                label={`Current payment: ${subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
+                                label={`Current payment: ${subscription.status.type === 'CANCELLED' ? lifecycleDisplay.statusLabel : subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
                                 sx={{ opacity: 0.78 }}
                               />
                               <SmallIconTypography label="Open details and manage this subscription" sx={{ opacity: 0.72 }} />

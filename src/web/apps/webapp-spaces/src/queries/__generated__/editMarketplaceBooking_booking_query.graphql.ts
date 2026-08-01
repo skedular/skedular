@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a1edec5d27683e72af7e5cbc93c92a4>>
+ * @generated SignedSource<<562a768a652043b3db6fbf1554d511f1>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type Currency = "NZD" | "USD" | "%future added value";
+export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editMarketplaceBooking_booking_query$data = {
@@ -88,7 +89,7 @@ export type editMarketplaceBooking_booking_query$data = {
         readonly requestedByCustomerName: string | null | undefined;
         readonly status: {
           readonly name: string;
-          readonly type: string;
+          readonly type: MarketplaceRefundStatus;
         };
         readonly xeroProcessingBlockedReason: string | null | undefined;
       } | null | undefined;

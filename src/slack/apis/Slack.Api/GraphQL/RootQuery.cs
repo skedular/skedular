@@ -7,7 +7,6 @@ namespace Slack.Api.GraphQL;
 [QueryType]
 public class RootQuery(IVersionService versionService)
 {
-    [UseResolverScope]
     public Version SlackVersion()
     {
         var version = versionService.GetVersion();

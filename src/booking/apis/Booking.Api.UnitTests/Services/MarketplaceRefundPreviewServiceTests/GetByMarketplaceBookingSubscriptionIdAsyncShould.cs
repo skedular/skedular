@@ -49,7 +49,7 @@ public class GetByMarketplaceBookingSubscriptionIdAsyncShould
 
         var result = await sut.GetByMarketplaceBookingSubscriptionIdAsync("subscription-1", cancellationToken);
 
-        result.LocalEntityType.ShouldBe(MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription);
+        result.LocalEntityType.ShouldBe(MarketplaceRefundEntityType.MarketplaceBookingSubscription);
         result.LocalEntityId.ShouldBe("subscription-1");
         result.RefundAmount.ShouldBe(60m);
     }

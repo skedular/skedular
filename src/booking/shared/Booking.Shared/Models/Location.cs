@@ -6,6 +6,7 @@ namespace Booking.Shared.Models;
 public class Location : ReplicatedModelBaseWithDeleted
 {
     public string Name { get; set; } = string.Empty;
+    public string? Timezone { get; set; }
     public LocationType Type { get; set; }
     public OpeningHours? OpeningHours { get; set; }
     public IReadOnlyList<Resource> Resources { get; set; } = [];

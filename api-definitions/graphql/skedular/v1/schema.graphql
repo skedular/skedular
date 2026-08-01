@@ -224,6 +224,18 @@ type Query
     @fusion__field(schema: BOOKING_API)
   marketplaceBookingSubscriptionStatuses: [MarketplaceBookingSubscriptionStatusDetails!]!
     @fusion__field(schema: BOOKING_API)
+  marketplaceExternalRefundReconciliations(
+    after: String @fusion__inputField(schema: BOOKING_API)
+    before: String @fusion__inputField(schema: BOOKING_API)
+    first: Int @fusion__inputField(schema: BOOKING_API)
+    last: Int @fusion__inputField(schema: BOOKING_API)
+    organizationCustomDomain: String! @fusion__inputField(schema: BOOKING_API)
+    provider: String @fusion__inputField(schema: BOOKING_API)
+    status: String @fusion__inputField(schema: BOOKING_API)
+  ): ConnectionOfMarketplaceExternalRefundReconciliationEdge!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   marketplaceLocations(
     after: String @fusion__inputField(schema: LOCATION_API)
     before: String @fusion__inputField(schema: LOCATION_API)
@@ -239,6 +251,20 @@ type Query
     @cost(weight: "10")
     @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
+  marketplaceRefundEventTypes: [MarketplaceRefundEventTypeDetails!]!
+    @fusion__field(schema: BOOKING_API)
+  marketplaceRefundKinds: [MarketplaceRefundKindDetails!]!
+    @fusion__field(schema: BOOKING_API)
+  marketplaceRefundQueue(
+    after: String @fusion__inputField(schema: BOOKING_API)
+    before: String @fusion__inputField(schema: BOOKING_API)
+    first: Int @fusion__inputField(schema: BOOKING_API)
+    last: Int @fusion__inputField(schema: BOOKING_API)
+    where: MarketplaceRefundWhereInput! @fusion__inputField(schema: BOOKING_API)
+  ): ConnectionOfMarketplaceRefundEdge!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   marketplaceRefunds(
     organizationCustomDomain: String! @fusion__inputField(schema: BOOKING_API)
     statuses: [String!] @fusion__inputField(schema: BOOKING_API)
@@ -247,6 +273,17 @@ type Query
     @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
   marketplaceRefundStatuses: [MarketplaceRefundStatusDetails!]!
+    @fusion__field(schema: BOOKING_API)
+  marketplaceUnassignedExternalRefundReconciliations(
+    after: String @fusion__inputField(schema: BOOKING_API)
+    before: String @fusion__inputField(schema: BOOKING_API)
+    first: Int @fusion__inputField(schema: BOOKING_API)
+    last: Int @fusion__inputField(schema: BOOKING_API)
+    provider: String @fusion__inputField(schema: BOOKING_API)
+    status: String @fusion__inputField(schema: BOOKING_API)
+  ): ConnectionOfMarketplaceExternalRefundReconciliationEdge!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
   marketplaceVersion: Version! @fusion__field(schema: MARKETPLACE_API)
   me: CustomerDetails!
@@ -557,6 +594,12 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: TEAM_API, weight: "10")
     @fusion__field(schema: TEAM_API)
+  acceptPartialMarketplaceBooking(
+    input: ResolvePartialMarketplaceBookingInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceBookingFailureDetails!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   activateProducts(
     input: ActivateProductsInput! @fusion__inputField(schema: MARKETPLACE_API)
   ): ProductsPayload!
@@ -715,6 +758,12 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
+  approveMarketplaceRefund(
+    input: ApproveMarketplaceRefundInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceRefundPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   bulkAddResources(
     input: BulkAddResourcesInput! @fusion__inputField(schema: LOCATION_API)
   ): BulkAddResourcesPayload!
@@ -733,6 +782,12 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: TEAM_API, weight: "10")
     @fusion__field(schema: TEAM_API)
+  cancelMarketplaceRefund(
+    input: CancelMarketplaceRefundInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceRefundPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   cancelOrganizationOffering(
     input: CancelOrganizationOfferingInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): CancelOrganizationOfferingPayload!
@@ -775,12 +830,6 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: CUSTOMER_API, weight: "10")
     @fusion__field(schema: CUSTOMER_API)
-  completeMarketplaceRefund(
-    input: CompleteMarketplaceRefundInput! @fusion__inputField(schema: BOOKING_API)
-  ): MarketplaceRefundPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: BOOKING_API, weight: "10")
-    @fusion__field(schema: BOOKING_API)
   completeOnboarding(
     input: CompleteOrganizationOnboardingInput! @fusion__inputField(schema: CUSTOMER_API)
   ): CustomerPayload!
@@ -793,6 +842,12 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
+  confirmBankTransferRefundReceived(
+    input: ConfirmBankTransferRefundReceivedInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceRefundPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   confirmBookingPayment(
     input: ConfirmBookingPaymentInput! @fusion__inputField(schema: BOOKING_API)
   ): BookingPayload!
@@ -802,6 +857,12 @@ type Mutation
   confirmRecurringBookingPayment(
     input: ConfirmRecurringBookingPaymentInput! @fusion__inputField(schema: BOOKING_API)
   ): RecurringBookingPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
+  createPartialMarketplaceRefund(
+    input: CreatePartialMarketplaceRefundInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceRefundPayload!
     @cost(weight: "10")
     @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
@@ -817,6 +878,12 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: LOCATION_API, weight: "10")
     @fusion__field(schema: LOCATION_API)
+  declinePartialMarketplaceBooking(
+    input: ResolvePartialMarketplaceBookingInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceBookingFailureDetails!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   deleteCustomTag(
     input: DeleteCustomTagInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): OrganizationTagPayload!
@@ -953,12 +1020,6 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: ORGANIZATION_API, weight: "10")
     @fusion__field(schema: ORGANIZATION_API)
-  failMarketplaceRefund(
-    input: FailMarketplaceRefundInput! @fusion__inputField(schema: BOOKING_API)
-  ): MarketplaceRefundPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: BOOKING_API, weight: "10")
-    @fusion__field(schema: BOOKING_API)
   inviteCustomersToJoinOrganization(
     input: InviteCustomersToJoinOrganizationInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): InvitationsToJoinOrganizationPayload!
@@ -983,26 +1044,8 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
-  markMarketplaceRefundManualCompleted(
-    input: MarkMarketplaceRefundManualCompletedInput! @fusion__inputField(schema: BOOKING_API)
-  ): MarketplaceRefundPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: BOOKING_API, weight: "10")
-    @fusion__field(schema: BOOKING_API)
-  markMarketplaceRefundManualRequired(
-    input: MarkMarketplaceRefundManualRequiredInput! @fusion__inputField(schema: BOOKING_API)
-  ): MarketplaceRefundPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: BOOKING_API, weight: "10")
-    @fusion__field(schema: BOOKING_API)
-  markMarketplaceRefundPendingAccounting(
-    input: MarkMarketplaceRefundPendingAccountingInput! @fusion__inputField(schema: BOOKING_API)
-  ): MarketplaceRefundPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: BOOKING_API, weight: "10")
-    @fusion__field(schema: BOOKING_API)
-  processMarketplaceRefundInXero(
-    input: ProcessMarketplaceRefundInXeroInput! @fusion__inputField(schema: BOOKING_API)
+  recordBankTransferRefundSent(
+    input: RecordBankTransferRefundSentInput! @fusion__inputField(schema: BOOKING_API)
   ): MarketplaceRefundPayload!
     @cost(weight: "10")
     @fusion__cost(schema: BOOKING_API, weight: "10")
@@ -1025,6 +1068,12 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: TEAM_API, weight: "10")
     @fusion__field(schema: TEAM_API)
+  rejectMarketplaceRefund(
+    input: RejectMarketplaceRefundInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceRefundPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   rejectRecurringBookingPayment(
     input: RejectRecurringBookingPaymentInput! @fusion__inputField(schema: BOOKING_API)
   ): RecurringBookingPayload!
@@ -1097,6 +1146,30 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: TEAM_API, weight: "10")
     @fusion__field(schema: TEAM_API)
+  resolveMarketplaceExternalRefundReconciliation(
+    input: ResolveMarketplaceExternalRefundReconciliationInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceExternalRefundReconciliationPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
+  resolveRefundReconciliationRequired(
+    input: ResolveRefundReconciliationRequiredInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceRefundPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
+  resolveUnassignedMarketplaceExternalRefundReconciliation(
+    input: ResolveUnassignedMarketplaceExternalRefundReconciliationInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceExternalRefundReconciliationPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
+  retryMarketplaceRefund(
+    input: RetryMarketplaceRefundInput! @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceRefundPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   setCustomerDefaultOrganization(
     input: SetCustomerDefaultOrganizationInput! @fusion__inputField(schema: CUSTOMER_API)
   ): CustomerPayload!
@@ -1589,6 +1662,20 @@ type ConnectionOfMarketplaceBookingSubscriptionEdge
   @fusion__type(schema: BOOKING_API) {
   edges: [MarketplaceBookingSubscriptionEdge!]!
     @fusion__field(schema: BOOKING_API)
+  pageInfo: PageInfo! @fusion__field(schema: BOOKING_API)
+  totalCount: Int! @fusion__field(schema: BOOKING_API)
+}
+
+type ConnectionOfMarketplaceExternalRefundReconciliationEdge
+  @fusion__type(schema: BOOKING_API) {
+  edges: [MarketplaceExternalRefundReconciliationEdge!]!
+    @fusion__field(schema: BOOKING_API)
+  pageInfo: PageInfo! @fusion__field(schema: BOOKING_API)
+  totalCount: Int! @fusion__field(schema: BOOKING_API)
+}
+
+type ConnectionOfMarketplaceRefundEdge @fusion__type(schema: BOOKING_API) {
+  edges: [MarketplaceRefundEdge!]! @fusion__field(schema: BOOKING_API)
   pageInfo: PageInfo! @fusion__field(schema: BOOKING_API)
   totalCount: Int! @fusion__field(schema: BOOKING_API)
 }
@@ -2130,6 +2217,7 @@ type MarketplaceBookingFailureChoiceDetails @fusion__type(schema: BOOKING_API) {
 }
 
 type MarketplaceBookingFailureDetails @fusion__type(schema: BOOKING_API) {
+  allocatedRefundAmount: Decimal @fusion__field(schema: BOOKING_API)
   category: MarketplaceBookingFailureChoiceDetails!
     @fusion__field(schema: BOOKING_API)
   customerAction: MarketplaceBookingFailureChoiceDetails!
@@ -2138,6 +2226,9 @@ type MarketplaceBookingFailureDetails @fusion__type(schema: BOOKING_API) {
   id: String! @fusion__field(schema: BOOKING_API)
   requestedFrom: DateTime @fusion__field(schema: BOOKING_API)
   requestedUntil: DateTime @fusion__field(schema: BOOKING_API)
+  resolutionDeadlineAt: DateTime @fusion__field(schema: BOOKING_API)
+  resolutionDecidedAt: DateTime @fusion__field(schema: BOOKING_API)
+  resolutionDecision: String @fusion__field(schema: BOOKING_API)
   scope: MarketplaceBookingFailureChoiceDetails!
     @fusion__field(schema: BOOKING_API)
 }
@@ -2218,10 +2309,46 @@ type MarketplaceBookingSubscriptionStatusDetails
     @fusion__field(schema: BOOKING_API)
 }
 
+type MarketplaceExternalRefundReconciliationDetails
+  @fusion__type(schema: BOOKING_API) {
+  amount: Decimal @fusion__field(schema: BOOKING_API)
+  currency: String @fusion__field(schema: BOOKING_API)
+  externalRefundId: String! @fusion__field(schema: BOOKING_API)
+  firstSeenAt: DateTime! @fusion__field(schema: BOOKING_API)
+  id: String! @fusion__field(schema: BOOKING_API)
+  lastSeenAt: DateTime! @fusion__field(schema: BOOKING_API)
+  provider: String! @fusion__field(schema: BOOKING_API)
+  resolutionActorCustomerId: String @fusion__field(schema: BOOKING_API)
+  resolutionCorrelationId: String @fusion__field(schema: BOOKING_API)
+  resolutionReason: String @fusion__field(schema: BOOKING_API)
+  status: String! @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceExternalRefundReconciliationEdge
+  @fusion__type(schema: BOOKING_API) {
+  cursor: String! @fusion__field(schema: BOOKING_API)
+  node: MarketplaceExternalRefundReconciliationDetails!
+    @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceExternalRefundReconciliationPayload
+  @fusion__type(schema: BOOKING_API) {
+  clientMutationId: String @fusion__field(schema: BOOKING_API)
+  reconciliation: MarketplaceExternalRefundReconciliationDetails!
+    @fusion__field(schema: BOOKING_API)
+}
+
 type MarketplaceRefundDetails @fusion__type(schema: BOOKING_API) {
   accountingProvider: String @fusion__field(schema: BOOKING_API)
   appliedRuleMinutesBefore: Int @fusion__field(schema: BOOKING_API)
+  approvedAt: DateTime @fusion__field(schema: BOOKING_API)
+  approvedByCustomerId: String @fusion__field(schema: BOOKING_API)
+  bankTransferReference: String @fusion__field(schema: BOOKING_API)
+  bankTransferSentAt: DateTime @fusion__field(schema: BOOKING_API)
   baseAmount: Decimal @fusion__field(schema: BOOKING_API)
+  calculationResultJson: String @fusion__field(schema: BOOKING_API)
+  cancellationReason: String @fusion__field(schema: BOOKING_API)
+  cancelledAt: DateTime @fusion__field(schema: BOOKING_API)
   canProcessInXero: Boolean! @fusion__field(schema: BOOKING_API)
   currency: CurrencyDetails @fusion__field(schema: BOOKING_API)
   currencyToDisplay: String! @fusion__field(schema: BOOKING_API)
@@ -2230,29 +2357,47 @@ type MarketplaceRefundDetails @fusion__type(schema: BOOKING_API) {
   externalRefundId: String @fusion__field(schema: BOOKING_API)
   externalRefundNumber: String @fusion__field(schema: BOOKING_API)
   id: String! @fusion__field(schema: BOOKING_API)
+  idempotencyKey: String! @fusion__field(schema: BOOKING_API)
   lastError: String @fusion__field(schema: BOOKING_API)
   lastProcessedAt: DateTime @fusion__field(schema: BOOKING_API)
   localEntityId: String! @fusion__field(schema: BOOKING_API)
   localEntityType: String! @fusion__field(schema: BOOKING_API)
+  paymentAllocations: [MarketplaceRefundPaymentAllocationDetails!]!
+    @fusion__field(schema: BOOKING_API)
   paymentProvider: String @fusion__field(schema: BOOKING_API)
   paymentRefundLastError: String @fusion__field(schema: BOOKING_API)
   paymentRefundLastProcessedAt: DateTime @fusion__field(schema: BOOKING_API)
   paymentRefundStatus: String @fusion__field(schema: BOOKING_API)
+  policySnapshotJson: String @fusion__field(schema: BOOKING_API)
   reason: String @fusion__field(schema: BOOKING_API)
+  reconciledAt: DateTime @fusion__field(schema: BOOKING_API)
+  reconciliationStatus: String @fusion__field(schema: BOOKING_API)
   referenceTime: DateTime! @fusion__field(schema: BOOKING_API)
   refundAmount: Decimal @fusion__field(schema: BOOKING_API)
+  refundKind: String! @fusion__field(schema: BOOKING_API)
   refundPercentage: Int! @fusion__field(schema: BOOKING_API)
+  rejectedAt: DateTime @fusion__field(schema: BOOKING_API)
+  rejectedByCustomerId: String @fusion__field(schema: BOOKING_API)
+  rejectionReason: String @fusion__field(schema: BOOKING_API)
   requestedAt: DateTime! @fusion__field(schema: BOOKING_API)
   requestedByCustomerId: String @fusion__field(schema: BOOKING_API)
   requestedByCustomerName: String @fusion__field(schema: BOOKING_API)
+  retryCount: Int! @fusion__field(schema: BOOKING_API)
   status: MarketplaceRefundStatusDetails! @fusion__field(schema: BOOKING_API)
+  timezoneId: String @fusion__field(schema: BOOKING_API)
   xeroProcessingBlockedReason: String @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceRefundEdge @fusion__type(schema: BOOKING_API) {
+  cursor: String! @fusion__field(schema: BOOKING_API)
+  node: MarketplaceRefundDetails! @fusion__field(schema: BOOKING_API)
 }
 
 type MarketplaceRefundEventDetails @fusion__type(schema: BOOKING_API) {
   accountingProvider: String @fusion__field(schema: BOOKING_API)
   actorCustomerId: String @fusion__field(schema: BOOKING_API)
   actorName: String @fusion__field(schema: BOOKING_API)
+  correlationId: String @fusion__field(schema: BOOKING_API)
   currencyToDisplay: String! @fusion__field(schema: BOOKING_API)
   eventType: MarketplaceRefundEventTypeDetails!
     @fusion__field(schema: BOOKING_API)
@@ -2260,20 +2405,36 @@ type MarketplaceRefundEventDetails @fusion__type(schema: BOOKING_API) {
   externalRefundNumber: String @fusion__field(schema: BOOKING_API)
   id: String! @fusion__field(schema: BOOKING_API)
   lastError: String @fusion__field(schema: BOOKING_API)
+  newStatus: String @fusion__field(schema: BOOKING_API)
   occurredAt: DateTime! @fusion__field(schema: BOOKING_API)
+  previousStatus: String @fusion__field(schema: BOOKING_API)
   reason: String @fusion__field(schema: BOOKING_API)
   refundAmount: Decimal @fusion__field(schema: BOOKING_API)
 }
 
 type MarketplaceRefundEventTypeDetails @fusion__type(schema: BOOKING_API) {
   name: String! @fusion__field(schema: BOOKING_API)
-  type: String! @fusion__field(schema: BOOKING_API)
+  type: MarketplaceRefundEventType! @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceRefundKindDetails @fusion__type(schema: BOOKING_API) {
+  name: String! @fusion__field(schema: BOOKING_API)
+  type: MarketplaceRefundKind! @fusion__field(schema: BOOKING_API)
 }
 
 type MarketplaceRefundPayload @fusion__type(schema: BOOKING_API) {
   clientMutationId: String @fusion__field(schema: BOOKING_API)
   marketplaceRefund: MarketplaceRefundDetails!
     @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceRefundPaymentAllocationDetails
+  @fusion__type(schema: BOOKING_API) {
+  allocatedRefundAmount: Decimal! @fusion__field(schema: BOOKING_API)
+  currency: String! @fusion__field(schema: BOOKING_API)
+  sourcePaymentAmount: Decimal! @fusion__field(schema: BOOKING_API)
+  sourcePaymentProvider: String! @fusion__field(schema: BOOKING_API)
+  sourcePaymentReference: String! @fusion__field(schema: BOOKING_API)
 }
 
 type MarketplaceRefundPreviewDetails @fusion__type(schema: BOOKING_API) {
@@ -2292,7 +2453,7 @@ type MarketplaceRefundPreviewDetails @fusion__type(schema: BOOKING_API) {
 
 type MarketplaceRefundStatusDetails @fusion__type(schema: BOOKING_API) {
   name: String! @fusion__field(schema: BOOKING_API)
-  type: String! @fusion__field(schema: BOOKING_API)
+  type: MarketplaceRefundStatus! @fusion__field(schema: BOOKING_API)
 }
 
 type MyOrganizationDetails @fusion__type(schema: ORGANIZATION_API) {
@@ -4086,6 +4247,11 @@ input AddZoneInput @fusion__type(schema: ORGANIZATION_API) {
   organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
 }
 
+input ApproveMarketplaceRefundInput @fusion__type(schema: BOOKING_API) {
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  id: String! @fusion__inputField(schema: BOOKING_API)
+}
+
 input AreaRangeInput @fusion__type(schema: LOCATION_API) {
   fromInSqm: String! @fusion__inputField(schema: LOCATION_API)
   toInSqm: String! @fusion__inputField(schema: LOCATION_API)
@@ -4170,6 +4336,12 @@ input CancelInvitationToJoinTeamInput @fusion__type(schema: TEAM_API) {
   id: String! @fusion__inputField(schema: TEAM_API)
 }
 
+input CancelMarketplaceRefundInput @fusion__type(schema: BOOKING_API) {
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  id: String! @fusion__inputField(schema: BOOKING_API)
+  reason: String! @fusion__inputField(schema: BOOKING_API)
+}
+
 input CancelOrganizationOfferingInput @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
   organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
@@ -4232,12 +4404,6 @@ input ClearCustomerDefaultOrganizationInput @fusion__type(schema: CUSTOMER_API) 
   clientMutationId: String @fusion__inputField(schema: CUSTOMER_API)
 }
 
-input CompleteMarketplaceRefundInput @fusion__type(schema: BOOKING_API) {
-  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
-  id: String! @fusion__inputField(schema: BOOKING_API)
-  reason: String @fusion__inputField(schema: BOOKING_API)
-}
-
 input CompleteOrganizationMemberOnboardingInput
   @fusion__type(schema: ORGANIZATION_API) {
   clientMutationId: String @fusion__inputField(schema: ORGANIZATION_API)
@@ -4247,6 +4413,11 @@ input CompleteOrganizationMemberOnboardingInput
 
 input CompleteOrganizationOnboardingInput @fusion__type(schema: CUSTOMER_API) {
   clientMutationId: String @fusion__inputField(schema: CUSTOMER_API)
+}
+
+input ConfirmBankTransferRefundReceivedInput @fusion__type(schema: BOOKING_API) {
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  id: String! @fusion__inputField(schema: BOOKING_API)
 }
 
 input ConfirmBookingPaymentInput @fusion__type(schema: BOOKING_API) {
@@ -4263,6 +4434,14 @@ input ContactDetailsInput @fusion__type(schema: LOCATION_API) {
   contactEmails: [String!] @fusion__inputField(schema: LOCATION_API)
   contactPeople: [String!] @fusion__inputField(schema: LOCATION_API)
   contactPhones: [String!] @fusion__inputField(schema: LOCATION_API)
+}
+
+input CreatePartialMarketplaceRefundInput @fusion__type(schema: BOOKING_API) {
+  allocationId: String! @fusion__inputField(schema: BOOKING_API)
+  amount: Decimal! @fusion__inputField(schema: BOOKING_API)
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  idempotencyKey: String! @fusion__inputField(schema: BOOKING_API)
+  reason: String! @fusion__inputField(schema: BOOKING_API)
 }
 
 input CustomerOrderInput @fusion__type(schema: CUSTOMER_API) {
@@ -4421,12 +4600,6 @@ input DisconnectOrganizationXeroConnectionInput
   organizationId: String @fusion__inputField(schema: ORGANIZATION_API)
 }
 
-input FailMarketplaceRefundInput @fusion__type(schema: BOOKING_API) {
-  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
-  id: String! @fusion__inputField(schema: BOOKING_API)
-  reason: String @fusion__inputField(schema: BOOKING_API)
-}
-
 input FloorPlanOrderInput @fusion__type(schema: LOCATION_API) {
   direction: OrderDirection! @fusion__inputField(schema: LOCATION_API)
   field: FloorPlanOrderField! @fusion__inputField(schema: LOCATION_API)
@@ -4570,26 +4743,11 @@ input MarketplaceLocationWhereInput @fusion__type(schema: LOCATION_API) {
   zoneIds: [String!] @fusion__inputField(schema: LOCATION_API)
 }
 
-input MarkMarketplaceRefundManualCompletedInput
-  @fusion__type(schema: BOOKING_API) {
-  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
-  id: String! @fusion__inputField(schema: BOOKING_API)
-  reason: String @fusion__inputField(schema: BOOKING_API)
-}
-
-input MarkMarketplaceRefundManualRequiredInput
-  @fusion__type(schema: BOOKING_API) {
-  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
-  id: String! @fusion__inputField(schema: BOOKING_API)
-  reason: String @fusion__inputField(schema: BOOKING_API)
-}
-
-input MarkMarketplaceRefundPendingAccountingInput
-  @fusion__type(schema: BOOKING_API) {
-  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
-  id: String! @fusion__inputField(schema: BOOKING_API)
-  reason: String @fusion__inputField(schema: BOOKING_API)
-  refundAmount: Decimal @fusion__inputField(schema: BOOKING_API)
+input MarketplaceRefundWhereInput @fusion__type(schema: BOOKING_API) {
+  organizationCustomDomain: String @fusion__inputField(schema: BOOKING_API)
+  requestedAtGte: DateTime @fusion__inputField(schema: BOOKING_API)
+  requestedAtLte: DateTime @fusion__inputField(schema: BOOKING_API)
+  statuses: [String!] @fusion__inputField(schema: BOOKING_API)
 }
 
 input MyInvitationsToJoinOrganizationsWhereInput
@@ -4701,11 +4859,6 @@ input PolygonInput @fusion__type(schema: LOCATION_API) {
   southWest: PointCoordinatesInput! @fusion__inputField(schema: LOCATION_API)
 }
 
-input ProcessMarketplaceRefundInXeroInput @fusion__type(schema: BOOKING_API) {
-  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
-  id: String! @fusion__inputField(schema: BOOKING_API)
-}
-
 input ProductOrderInput @fusion__type(schema: MARKETPLACE_API) {
   direction: OrderDirection! @fusion__inputField(schema: MARKETPLACE_API)
   field: ProductOrderField! @fusion__inputField(schema: MARKETPLACE_API)
@@ -4751,6 +4904,12 @@ input ProductWhereInput @fusion__type(schema: MARKETPLACE_API) {
   productIds: [String!] @fusion__inputField(schema: MARKETPLACE_API)
 }
 
+input RecordBankTransferRefundSentInput @fusion__type(schema: BOOKING_API) {
+  bankTransferReference: String! @fusion__inputField(schema: BOOKING_API)
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  id: String! @fusion__inputField(schema: BOOKING_API)
+}
+
 input RecurringBookingOrderInput @fusion__type(schema: BOOKING_API) {
   direction: OrderDirection! @fusion__inputField(schema: BOOKING_API)
   field: RecurringBookingOrderField! @fusion__inputField(schema: BOOKING_API)
@@ -4790,6 +4949,12 @@ input RejectInvitationToJoinOrganizationInput
 input RejectInvitationToJoinTeamInput @fusion__type(schema: TEAM_API) {
   clientMutationId: String @fusion__inputField(schema: TEAM_API)
   id: String! @fusion__inputField(schema: TEAM_API)
+}
+
+input RejectMarketplaceRefundInput @fusion__type(schema: BOOKING_API) {
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  id: String! @fusion__inputField(schema: BOOKING_API)
+  reason: String! @fusion__inputField(schema: BOOKING_API)
 }
 
 input RejectRecurringBookingPaymentInput @fusion__type(schema: BOOKING_API) {
@@ -4856,6 +5021,39 @@ input RemoveTeamMembersInput @fusion__type(schema: TEAM_API) {
   ids: [String!]! @fusion__inputField(schema: TEAM_API)
 }
 
+input ResolveMarketplaceExternalRefundReconciliationInput
+  @fusion__type(schema: BOOKING_API) {
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  externalRefundId: String! @fusion__inputField(schema: BOOKING_API)
+  organizationId: String! @fusion__inputField(schema: BOOKING_API)
+  provider: String! @fusion__inputField(schema: BOOKING_API)
+  reason: String! @fusion__inputField(schema: BOOKING_API)
+  status: String! @fusion__inputField(schema: BOOKING_API)
+}
+
+input ResolvePartialMarketplaceBookingInput @fusion__type(schema: BOOKING_API) {
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  id: String! @fusion__inputField(schema: BOOKING_API)
+}
+
+input ResolveRefundReconciliationRequiredInput
+  @fusion__type(schema: BOOKING_API) {
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  completed: Boolean! @fusion__inputField(schema: BOOKING_API)
+  id: String! @fusion__inputField(schema: BOOKING_API)
+  providerReference: String @fusion__inputField(schema: BOOKING_API)
+  reason: String! @fusion__inputField(schema: BOOKING_API)
+}
+
+input ResolveUnassignedMarketplaceExternalRefundReconciliationInput
+  @fusion__type(schema: BOOKING_API) {
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  externalRefundId: String! @fusion__inputField(schema: BOOKING_API)
+  provider: String! @fusion__inputField(schema: BOOKING_API)
+  reason: String! @fusion__inputField(schema: BOOKING_API)
+  status: String! @fusion__inputField(schema: BOOKING_API)
+}
+
 input ResourceAvailabilityFilterInput @fusion__type(schema: BOOKING_API) {
   date: LocalDate! @fusion__inputField(schema: BOOKING_API)
   floorId: String @fusion__inputField(schema: BOOKING_API)
@@ -4888,6 +5086,11 @@ input ResourceWhereInput @fusion__type(schema: LOCATION_API) {
   nameContains: String @fusion__inputField(schema: LOCATION_API)
   productTagIds: [String!] @fusion__inputField(schema: LOCATION_API)
   zoneIds: [String!] @fusion__inputField(schema: LOCATION_API)
+}
+
+input RetryMarketplaceRefundInput @fusion__type(schema: BOOKING_API) {
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  id: String! @fusion__inputField(schema: BOOKING_API)
 }
 
 input SetCustomerDefaultOrganizationInput @fusion__type(schema: CUSTOMER_API) {
@@ -5643,6 +5846,41 @@ enum MarketplaceBookingSubscriptionStatus @fusion__type(schema: BOOKING_API) {
   EXPIRED @fusion__enumValue(schema: BOOKING_API)
   RENEWAL_FAILED @fusion__enumValue(schema: BOOKING_API)
   PAUSED @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum MarketplaceRefundEventType @fusion__type(schema: BOOKING_API) {
+  REQUESTED @fusion__enumValue(schema: BOOKING_API)
+  UNDER_REVIEW @fusion__enumValue(schema: BOOKING_API)
+  APPROVED @fusion__enumValue(schema: BOOKING_API)
+  REJECTED @fusion__enumValue(schema: BOOKING_API)
+  PROVIDER_PENDING @fusion__enumValue(schema: BOOKING_API)
+  PROCESSING @fusion__enumValue(schema: BOOKING_API)
+  SENT_TO_XERO @fusion__enumValue(schema: BOOKING_API)
+  ACCOUNTING_PROJECTED @fusion__enumValue(schema: BOOKING_API)
+  ACCOUNTING_PROJECTION_REQUIRED @fusion__enumValue(schema: BOOKING_API)
+  COMPLETED @fusion__enumValue(schema: BOOKING_API)
+  FAILED @fusion__enumValue(schema: BOOKING_API)
+  CANCELLED @fusion__enumValue(schema: BOOKING_API)
+  RECONCILIATION_REQUIRED @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum MarketplaceRefundKind @fusion__type(schema: BOOKING_API) {
+  CANCELLATION @fusion__enumValue(schema: BOOKING_API)
+  MODIFICATION @fusion__enumValue(schema: BOOKING_API)
+  PARTIAL @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum MarketplaceRefundStatus @fusion__type(schema: BOOKING_API) {
+  REQUESTED @fusion__enumValue(schema: BOOKING_API)
+  UNDER_REVIEW @fusion__enumValue(schema: BOOKING_API)
+  APPROVED @fusion__enumValue(schema: BOOKING_API)
+  REJECTED @fusion__enumValue(schema: BOOKING_API)
+  PROCESSING @fusion__enumValue(schema: BOOKING_API)
+  PROVIDER_PENDING @fusion__enumValue(schema: BOOKING_API)
+  COMPLETED @fusion__enumValue(schema: BOOKING_API)
+  FAILED @fusion__enumValue(schema: BOOKING_API)
+  CANCELLED @fusion__enumValue(schema: BOOKING_API)
+  RECONCILIATION_REQUIRED @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum OrderDirection

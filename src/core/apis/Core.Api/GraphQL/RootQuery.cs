@@ -7,7 +7,6 @@ namespace Core.Api.GraphQL;
 [QueryType]
 public class RootQuery(IVersionService versionService)
 {
-    [UseResolverScope]
     public Version CoreVersion()
     {
         var version = versionService.GetVersion();

@@ -631,6 +631,7 @@ const SubscriptionCard = ({
     isCancelled: subscription.status.type === 'CANCELLED',
     fallbackActiveLabel: subscription.status.name,
   });
+  const paymentStatusLabel = subscription.status.type === 'CANCELLED' ? lifecycleDisplay.statusLabel : subscription.marketplaceBooking.paymentStatus.name;
 
   return (
     <Link component={NextLink} href={subscriptionLink} underline="none" color="inherit" sx={cardLinkSx('success')}>
@@ -643,7 +644,7 @@ const SubscriptionCard = ({
           <Chip
             size="small"
             icon={<PaymentStatusIcon />}
-            label={subscription.marketplaceBooking.paymentStatus.name}
+            label={paymentStatusLabel}
             color={isConfirmed ? 'success' : isPending ? 'warning' : 'default'}
             variant={isConfirmed || isPending ? 'filled' : 'outlined'}
           />

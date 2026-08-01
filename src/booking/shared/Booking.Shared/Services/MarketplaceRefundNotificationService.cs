@@ -6,6 +6,7 @@ using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared;
 using Enterprise.Shared.Email;
+using Microsoft.EntityFrameworkCore;
 using Organization = Booking.Shared.Database.Entities.Organization;
 
 namespace Booking.Shared.Services;
@@ -18,11 +19,17 @@ public interface IMarketplaceRefundNotificationService
 public class MarketplaceRefundNotificationService(
     EmailConfiguration emailConfiguration,
     IRepositoryFactory repositoryFactory,
-    IEmailService emailService) : IMarketplaceRefundNotificationService
+    IEmailService emailService,
+    TimeProvider timeProvider) : IMarketplaceRefundNotificationService
 {
     public async Task NotifyStatusChangedAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
     {
         if (!ShouldNotify(refund.Status))
+        {
+            return;
+        }
+
+        if (string.Equals(refund.LastNotificationStatus, refund.Status, StringComparison.Ordinal))
         {
             return;
         }
@@ -52,6 +59,52 @@ public class MarketplaceRefundNotificationService(
             organization.RefundNotificationEmails.ToSafeCollection());
 
         var notificationDetails = BuildNotificationDetails(refund, organization);
+        var eventType = refund.Status;
+
+        if (!string.IsNullOrWhiteSpace(customerEmail))
+        {
+            var customerDelivery = await repositoryFactory.MarketplaceRefundRepository
+                .GetNotificationDeliveryAsync(refund.Id, eventType, customerEmail, cancellationToken);
+            if (customerDelivery is not null && customerDelivery.Status == "Sent")
+            {
+                customerEmail = null;
+            }
+            else if (customerDelivery is not null && customerDelivery.Status == "Sending" &&
+                     customerDelivery.ModifiedAt > timeProvider.GetUtcNow().AddMinutes(-10))
+            {
+                customerEmail = null;
+            }
+            else if (customerDelivery is null)
+            {
+                repositoryFactory.MarketplaceRefundRepository.AddNotificationDelivery(new MarketplaceRefundNotificationDelivery
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    MarketplaceRefundId = refund.Id,
+                    EventType = eventType,
+                    RecipientId = customerEmail,
+                    Status = "Sending",
+                    AttemptCount = 1
+                });
+            }
+            else
+            {
+                customerDelivery.Status = "Sending";
+                customerDelivery.AttemptCount++;
+            }
+
+            if (!string.IsNullOrWhiteSpace(customerEmail))
+            {
+                try
+                {
+                    await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+                }
+                catch (DbUpdateException)
+                {
+                    // Another worker claimed this exact delivery key first.
+                    customerEmail = null;
+                }
+            }
+        }
 
         if (!string.IsNullOrWhiteSpace(customerEmail))
         {
@@ -71,10 +124,75 @@ public class MarketplaceRefundNotificationService(
                 [],
                 [],
                 cancellationToken);
+            var sentCustomerDelivery = await repositoryFactory.MarketplaceRefundRepository
+                .GetNotificationDeliveryAsync(refund.Id, eventType, customerEmail, cancellationToken);
+            if (sentCustomerDelivery is null)
+            {
+                repositoryFactory.MarketplaceRefundRepository.AddNotificationDelivery(new MarketplaceRefundNotificationDelivery
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    MarketplaceRefundId = refund.Id,
+                    EventType = eventType,
+                    RecipientId = customerEmail,
+                    Status = "Sent",
+                    AttemptCount = 1,
+                    SentAt = timeProvider.GetUtcNow()
+                });
+            }
+            else
+            {
+                sentCustomerDelivery.Status = "Sent";
+                sentCustomerDelivery.SentAt = timeProvider.GetUtcNow();
+                sentCustomerDelivery.AttemptCount++;
+            }
         }
 
-        if (internalEmails.Count != 0)
+        var pendingInternalEmails = new List<string>();
+        foreach (var internalEmail in internalEmails)
         {
+            var internalDelivery = await repositoryFactory.MarketplaceRefundRepository
+                .GetNotificationDeliveryAsync(refund.Id, eventType, internalEmail, cancellationToken);
+            if (internalDelivery is not null && internalDelivery.Status == "Sent")
+            {
+                continue;
+            }
+
+            pendingInternalEmails.Add(internalEmail);
+            if (internalDelivery is null)
+            {
+                repositoryFactory.MarketplaceRefundRepository.AddNotificationDelivery(new MarketplaceRefundNotificationDelivery
+                {
+                    Id = Guid.NewGuid().ToString("N"),
+                    MarketplaceRefundId = refund.Id,
+                    EventType = eventType,
+                    RecipientId = internalEmail,
+                    Status = "Sending",
+                    AttemptCount = 1
+                });
+            }
+            else
+            {
+                internalDelivery.Status = "Sending";
+                internalDelivery.AttemptCount++;
+            }
+        }
+
+        if (pendingInternalEmails.Count != 0)
+        {
+            try
+            {
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateException)
+            {
+                pendingInternalEmails.Clear();
+            }
+
+            if (pendingInternalEmails.Count == 0)
+            {
+                return;
+            }
+
             var (text, html) = await LoadTemplatesAsync(
                 "Booking.Shared.EmailTemplates.RefundStatusInternal.template",
                 cancellationToken);
@@ -85,21 +203,53 @@ public class MarketplaceRefundNotificationService(
                 text,
                 html,
                 $"{organization.Name ?? "Skedular"} {emailConfiguration.BookingInvoiceEmailSender}",
-                internalEmails,
+                pendingInternalEmails,
                 [],
                 [],
                 [],
                 cancellationToken);
+            foreach (var internalEmail in pendingInternalEmails)
+            {
+                var internalDelivery = await repositoryFactory.MarketplaceRefundRepository
+                    .GetNotificationDeliveryAsync(refund.Id, eventType, internalEmail, cancellationToken);
+                if (internalDelivery is null)
+                {
+                    repositoryFactory.MarketplaceRefundRepository.AddNotificationDelivery(new MarketplaceRefundNotificationDelivery
+                    {
+                        Id = Guid.NewGuid().ToString("N"),
+                        MarketplaceRefundId = refund.Id,
+                        EventType = eventType,
+                        RecipientId = internalEmail,
+                        Status = "Sent",
+                        AttemptCount = 1,
+                        SentAt = timeProvider.GetUtcNow()
+                    });
+                }
+                else
+                {
+                    internalDelivery.Status = "Sent";
+                    internalDelivery.SentAt = timeProvider.GetUtcNow();
+                    internalDelivery.AttemptCount++;
+                }
+            }
         }
+
+        refund.LastNotificationStatus = refund.Status;
+        repositoryFactory.MarketplaceRefundRepository.Update(refund);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private static bool ShouldNotify(string status) =>
         status is MarketplaceRefundStatusConstants.Requested
-            or MarketplaceRefundStatusConstants.PendingAccounting
-            or MarketplaceRefundStatusConstants.ManualRequired
-            or MarketplaceRefundStatusConstants.ManualCompleted
+            or MarketplaceRefundStatusConstants.UnderReview
+            or MarketplaceRefundStatusConstants.Approved
+            or MarketplaceRefundStatusConstants.Rejected
+            or MarketplaceRefundStatusConstants.ProviderPending
+            or MarketplaceRefundStatusConstants.Processing
             or MarketplaceRefundStatusConstants.Completed
-            or MarketplaceRefundStatusConstants.Failed;
+            or MarketplaceRefundStatusConstants.Failed
+            or MarketplaceRefundStatusConstants.Cancelled
+            or MarketplaceRefundStatusConstants.ReconciliationRequired;
 
     private static RefundNotificationDetails BuildNotificationDetails(MarketplaceRefund refund, Organization organization)
     {
@@ -124,39 +274,13 @@ public class MarketplaceRefundNotificationService(
                 note,
                 error,
                 refund.Status),
-            MarketplaceRefundStatusConstants.PendingAccounting => new RefundNotificationDetails(
-                $"Refund approved and queued with {organization.Name ?? "Skedular"}",
-                $"Refund queued for accounting for {entityLabel}",
-                $"Your {entityLabel} refund has been approved locally and is queued for accounting processing.",
-                $"A {entityLabel} refund has been approved locally and queued for accounting processing.",
-                entityLabel,
-                amountLabel,
-                reference,
-                note,
-                error,
-                refund.Status),
-            MarketplaceRefundStatusConstants.ManualRequired => new RefundNotificationDetails(
-                $"Refund needs manual follow-up with {organization.Name ?? "Skedular"}",
-                $"Refund needs manual follow-up for {entityLabel}",
-                BuildManualRequiredCustomerSummary(refund, entityLabel),
-                BuildManualRequiredInternalSummary(refund, entityLabel),
-                entityLabel,
-                amountLabel,
-                reference,
-                note,
-                error,
-                refund.Status),
-            MarketplaceRefundStatusConstants.ManualCompleted => new RefundNotificationDetails(
-                $"Refund completed manually with {organization.Name ?? "Skedular"}",
-                $"Refund completed manually for {entityLabel}",
-                $"Your {entityLabel} refund has been completed manually by the team.",
-                $"A {entityLabel} refund has been marked as completed manually.",
-                entityLabel,
-                amountLabel,
-                reference,
-                note,
-                error,
-                refund.Status),
+            MarketplaceRefundStatusConstants.UnderReview or MarketplaceRefundStatusConstants.Approved
+                or MarketplaceRefundStatusConstants.ProviderPending or MarketplaceRefundStatusConstants.Processing
+                => BuildInProgressDetails(refund, organization, entityLabel, amountLabel, reference, note, error),
+            MarketplaceRefundStatusConstants.Rejected or MarketplaceRefundStatusConstants.Cancelled
+                => BuildClosedDetails(refund, organization, entityLabel, amountLabel, reference, note, error),
+            MarketplaceRefundStatusConstants.ReconciliationRequired
+                => BuildReconciliationDetails(refund, organization, entityLabel, amountLabel, reference, note, error),
             MarketplaceRefundStatusConstants.Completed => new RefundNotificationDetails(
                 $"Refund completed with {organization.Name ?? "Skedular"}",
                 $"Refund completed for {entityLabel}",
@@ -182,6 +306,27 @@ public class MarketplaceRefundNotificationService(
         };
     }
 
+    private static RefundNotificationDetails BuildInProgressDetails(MarketplaceRefund refund, Organization organization, string entityLabel,
+        string amount, string reference, string note, string error) =>
+        new($"Refund update with {organization.Name ?? "Skedular"}", $"Refund update for {entityLabel}",
+            $"Your {entityLabel} refund is still being processed.", $"A {entityLabel} refund is still being processed.", entityLabel, amount,
+            reference, note, error, refund.Status);
+
+    private static RefundNotificationDetails BuildClosedDetails(MarketplaceRefund refund, Organization organization, string entityLabel,
+        string amount, string reference, string note, string error) =>
+        new($"Refund update with {organization.Name ?? "Skedular"}", $"Refund closed for {entityLabel}",
+            $"Your {entityLabel} refund was {ToClosedStatusLabel(refund.Status)}.",
+            $"A {entityLabel} refund was {ToClosedStatusLabel(refund.Status)}.", entityLabel, amount, reference, note, error, refund.Status);
+
+    private static string ToClosedStatusLabel(string status) =>
+        status == MarketplaceRefundStatusConstants.Cancelled ? "canceled" : status.ToLowerInvariant();
+
+    private static RefundNotificationDetails BuildReconciliationDetails(MarketplaceRefund refund, Organization organization, string entityLabel,
+        string amount, string reference, string note, string error) =>
+        new($"Refund needs reconciliation with {organization.Name ?? "Skedular"}", $"Refund needs reconciliation for {entityLabel}",
+            $"Your {entityLabel} refund needs additional payment-provider reconciliation.",
+            $"A {entityLabel} refund needs payment-provider reconciliation.", entityLabel, amount, reference, note, error, refund.Status);
+
     private static string BuildCompletedCustomerSummary(MarketplaceRefund refund, string entityLabel) =>
         string.IsNullOrWhiteSpace(refund.AccountingProvider)
             ? $"Your {entityLabel} refund has been completed and recorded locally."
@@ -201,16 +346,6 @@ public class MarketplaceRefundNotificationService(
         string.IsNullOrWhiteSpace(refund.LastError)
             ? $"A {entityLabel} refund failed and needs manual follow-up."
             : $"A {entityLabel} refund failed and needs manual follow-up. Current issue: {refund.LastError}";
-
-    private static string BuildManualRequiredCustomerSummary(MarketplaceRefund refund, string entityLabel) =>
-        string.IsNullOrWhiteSpace(refund.LastError)
-            ? $"Your {entityLabel} refund requires manual follow-up from the team before it can complete."
-            : $"Your {entityLabel} refund requires manual follow-up from the team before it can complete. Current issue: {refund.LastError}";
-
-    private static string BuildManualRequiredInternalSummary(MarketplaceRefund refund, string entityLabel) =>
-        string.IsNullOrWhiteSpace(refund.LastError)
-            ? $"A {entityLabel} refund has been moved to manual follow-up."
-            : $"A {entityLabel} refund has been moved to manual follow-up. Current issue: {refund.LastError}";
 
     private static async Task<(string Text, string Html)> LoadTemplatesAsync(string baseResourceName, CancellationToken cancellationToken)
     {

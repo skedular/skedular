@@ -57,9 +57,13 @@ public static class Extensions
                 .AddSingleton<IRetrievable<Price, PriceGetOptions>, PriceService>()
                 .AddSingleton<ICreatable<Session, SessionCreateOptions>, SessionService>()
                 .AddSingleton<IListable<Session, SessionListOptions>, SessionService>()
+                .AddSingleton<IListable<BalanceTransaction, BalanceTransactionListOptions>, BalanceTransactionService>()
+                .AddSingleton<BalanceTransactionService>()
                 .AddSingleton<IRetrievable<Session, SessionGetOptions>, SessionService>()
                 .AddSingleton<IUpdatable<Session, SessionUpdateOptions>, SessionService>()
                 .AddSingleton<ICreatable<Refund, RefundCreateOptions>, RefundService>()
+                .AddSingleton<IRetrievable<Refund, RefundGetOptions>, RefundService>()
+                .AddSingleton<IRetrievable<Payout, PayoutGetOptions>, PayoutService>()
                 .AddSingleton<ICreatable<OAuthToken, OAuthTokenCreateOptions>, OAuthTokenService>()
                 .AddSingleton<PaymentMethodService>();
         }

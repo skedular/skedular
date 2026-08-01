@@ -11,6 +11,10 @@ description: "Task list template for feature implementation"
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
+**Testing discipline**: Add unit-test tasks for isolated behavior first. Add integration-test tasks only when a
+specific persistence, concurrency, migration, schema-wiring, or external-infrastructure boundary cannot be proven
+with unit tests. Do not add integration tests that repeat existing unit scenarios.
+
 ## Format: `[ID] [P?] [Story] Description`
 
 - **[P]**: Can run in parallel (different files, no dependencies)

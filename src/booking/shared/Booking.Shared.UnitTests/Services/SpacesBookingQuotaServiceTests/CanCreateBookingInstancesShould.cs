@@ -17,7 +17,7 @@ public class CanCreateBookingInstancesShould
         DateTimeOffset? periodStart = null,
         DateTimeOffset? periodEnd = null)
     {
-        var now = DateTimeOffset.UtcNow;
+        var now = TimeProvider.System.GetUtcNow();
         var code = planCode switch
         {
             1 => OfferingCode.SpacesFreeTierV1,
@@ -67,7 +67,7 @@ public class CanCreateBookingInstancesShould
                 A<DateTimeOffset>._, A<DateTimeOffset>._))
             .Returns(new SpacesBookingInstanceCount(1, 0));
 
-        var result = await sut.CanCreateBookingInstanceAsync(organizationId, DateTimeOffset.UtcNow, cancellationToken);
+        var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.CanCreate.ShouldBeTrue();
         result.QuotaLimit.ShouldBe(100);
@@ -96,7 +96,7 @@ public class CanCreateBookingInstancesShould
                 A<DateTimeOffset>._, A<DateTimeOffset>._))
             .Returns(new SpacesBookingInstanceCount(1, 0));
 
-        var result = await sut.CanCreateBookingInstanceAsync(organizationId, DateTimeOffset.UtcNow, cancellationToken);
+        var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.CanCreate.ShouldBeFalse();
         result.ReasonCode.ShouldBe(SpacesQuotaReasonCode.FreeTierLimitExceeded);
@@ -125,7 +125,7 @@ public class CanCreateBookingInstancesShould
                 A<DateTimeOffset>._, A<DateTimeOffset>._))
             .Returns(new SpacesBookingInstanceCount(1, 0));
 
-        var result = await sut.CanCreateBookingInstanceAsync(organizationId, DateTimeOffset.UtcNow, cancellationToken);
+        var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.CanCreate.ShouldBeTrue();
         result.QuotaLimit.ShouldBe(500);
@@ -151,7 +151,7 @@ public class CanCreateBookingInstancesShould
                 A<DateTimeOffset>._, A<DateTimeOffset>._))
             .Returns(new SpacesBookingInstanceCount(1, 0));
 
-        var result = await sut.CanCreateBookingInstanceAsync(organizationId, DateTimeOffset.UtcNow, cancellationToken);
+        var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.CanCreate.ShouldBeTrue();
         result.PlanCode.ShouldBe(4);
@@ -179,7 +179,7 @@ public class CanCreateBookingInstancesShould
                 A<DateTimeOffset>._, A<DateTimeOffset>._))
             .Returns(new SpacesBookingInstanceCount(1, 0));
 
-        var result = await sut.CanCreateBookingInstanceAsync(organizationId, DateTimeOffset.UtcNow, cancellationToken);
+        var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.CanCreate.ShouldBeFalse();
         result.ReasonCode.ShouldBe(SpacesQuotaReasonCode.PaidTierLimitExceeded);
@@ -196,7 +196,7 @@ public class CanCreateBookingInstancesShould
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
             .Returns(Task.FromResult<Organization?>(null));
 
-        var result = await sut.CanCreateBookingInstanceAsync(organizationId, DateTimeOffset.UtcNow, cancellationToken);
+        var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.CanCreate.ShouldBeFalse();
         result.ReasonCode.ShouldBe(SpacesQuotaReasonCode.MissingOfferingState);
@@ -254,7 +254,7 @@ public class CanCreateBookingInstancesShould
                 A<DateTimeOffset>._))
             .Returns(new SpacesBookingInstanceCount(1, 0));
 
-        var result = await sut.CanCreateBookingInstanceAsync(organizationId, DateTimeOffset.UtcNow, cancellationToken);
+        var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.CanCreate.ShouldBeFalse();
         result.ReasonCode.ShouldBe(SpacesQuotaReasonCode.FreeTierLimitExceeded);
@@ -276,7 +276,7 @@ public class CanCreateBookingInstancesShould
                 organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
             .Returns(Task.FromResult(0));
 
-        var result = await sut.CanCreateBookingInstanceAsync(organizationId, DateTimeOffset.UtcNow, cancellationToken);
+        var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.CanCreate.ShouldBeFalse();
         result.ReasonCode.ShouldBe(SpacesQuotaReasonCode.MissingOfferingState);
@@ -298,7 +298,7 @@ public class CanCreateBookingInstancesShould
                 organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
             .Returns(Task.FromResult(0));
 
-        var result = await sut.CanCreateBookingInstanceAsync(organizationId, DateTimeOffset.UtcNow, cancellationToken);
+        var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.CanCreate.ShouldBeFalse();
         result.ReasonCode.ShouldBe(SpacesQuotaReasonCode.MissingOfferingState);
@@ -312,7 +312,7 @@ public class CanCreateBookingInstancesShould
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var now = DateTimeOffset.UtcNow;
+        var now = TimeProvider.System.GetUtcNow();
         var organization = CreateOrganization(1);
         organization.Offering!.SpacesTrialStartedAt = now.AddDays(-14);
         organization.Offering.SpacesTrialEndsAt = now;
