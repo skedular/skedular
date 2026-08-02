@@ -60,6 +60,8 @@ const RootQuery = graphql`
         isPolicyOverride
         unavailableReason
       }
+      cancellationPolicyOverridden
+      cancellationOverrideReason
       involvedCustomers {
         id
         name
@@ -185,6 +187,8 @@ const BookingSubscription = graphql`
         isPolicyOverride
         unavailableReason
       }
+      cancellationPolicyOverridden
+      cancellationOverrideReason
       marketplaceBooking {
         id
         failure {
@@ -444,6 +448,13 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                   </Alert>
                 ) : null}
 
+                {booking.cancellationPolicyOverridden ? (
+                  <Alert severity="info" sx={{ mt: 3, borderRadius: 3 }}>
+                    Cancellation policy overridden
+                    {booking.cancellationOverrideReason ? `: ${booking.cancellationOverrideReason}` : ''}
+                  </Alert>
+                ) : null}
+
                 {marketplaceBooking.failure ? (
                   <Alert severity="warning" sx={{ mt: 3, borderRadius: 3 }}>
                     <SubtitleIconTypography label={marketplaceBooking.failure.category.name} />
@@ -531,6 +542,7 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                   {!isStoredFullDayRange(booking.from, booking.until) ? <DetailsRow label="Booking time" value={toStoredBookingTimeRange(booking.from, booking.until)} /> : null}
                   {marketplaceBooking.productVersion?.type.type !== 'EVENT' ? <DetailsRow label="Quantity" value={`${marketplaceBooking.quantity}`} /> : null}
                   <DetailsRow label="Booked for" value={booking.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
+                  {booking.cancellationPolicyOverridden ? <DetailsRow label="Cancellation reason" value={booking.cancellationOverrideReason ?? 'Policy overridden'} /> : null}
                   <DetailsRow
                     label="Location"
                     value={
