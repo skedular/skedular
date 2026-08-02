@@ -1480,6 +1480,10 @@ type BookingDetails
     @fusion__field(schema: BOOKING_API)
   bookingResources: [BookingResourceDetails!]!
     @fusion__field(schema: BOOKING_API)
+  cancellationAvailability: MarketplaceCancellationAvailabilityDetails!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   cancellationOverrideReason: String @fusion__field(schema: BOOKING_API)
   cancellationPolicyOverridden: Boolean! @fusion__field(schema: BOOKING_API)
   category: BookingCategoryDetails! @fusion__field(schema: BOOKING_API)
@@ -2270,6 +2274,10 @@ type MarketplaceBookingSubscriptionDetails
     @fusion__field(schema: BOOKING_API)
   autoRenew: Boolean! @fusion__field(schema: BOOKING_API)
   cancelAtPeriodEnd: Boolean! @fusion__field(schema: BOOKING_API)
+  cancellationAvailability: MarketplaceSubscriptionCancellationAvailabilityDetails!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   cancellationOverrideReason: String @fusion__field(schema: BOOKING_API)
   cancellationPolicyOverridden: Boolean! @fusion__field(schema: BOOKING_API)
   cancelledAt: DateTime @fusion__field(schema: BOOKING_API)
@@ -2320,6 +2328,14 @@ type MarketplaceBookingSubscriptionStatusDetails
   name: String! @fusion__field(schema: BOOKING_API)
   type: MarketplaceBookingSubscriptionStatus!
     @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceCancellationAvailabilityDetails
+  @fusion__type(schema: BOOKING_API) {
+  canCancel: Boolean! @fusion__field(schema: BOOKING_API)
+  isPolicyOverride: Boolean! @fusion__field(schema: BOOKING_API)
+  requiresReason: Boolean! @fusion__field(schema: BOOKING_API)
+  unavailableReason: String @fusion__field(schema: BOOKING_API)
 }
 
 type MarketplaceExternalRefundReconciliationDetails
@@ -2467,6 +2483,14 @@ type MarketplaceRefundPreviewDetails @fusion__type(schema: BOOKING_API) {
 type MarketplaceRefundStatusDetails @fusion__type(schema: BOOKING_API) {
   name: String! @fusion__field(schema: BOOKING_API)
   type: MarketplaceRefundStatus! @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceSubscriptionCancellationAvailabilityDetails
+  @fusion__type(schema: BOOKING_API) {
+  atPeriodEnd: MarketplaceCancellationAvailabilityDetails!
+    @fusion__field(schema: BOOKING_API)
+  immediate: MarketplaceCancellationAvailabilityDetails!
+    @fusion__field(schema: BOOKING_API)
 }
 
 type MyOrganizationDetails @fusion__type(schema: ORGANIZATION_API) {

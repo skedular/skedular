@@ -2,8 +2,8 @@
 
 ## Purpose
 
-Owns provider-specific token validation implementations and identity-provider configuration for
-external auth systems such as WorkOS, Cognito, Google, and Azure Entra.
+Owns provider-specific token validation implementations and identity-provider configuration for external auth systems
+such as WorkOS, Cognito, Google, and Azure Entra.
 
 ## Registration
 
@@ -26,12 +26,12 @@ Provider services are registered only when their matching config sections are pr
 ## Relationship To Security
 
 - Each provider implements `Enterprise.Shared.Security.Token.ITokenService`.
-- `Security/` consumes these services via `IEnumerable<ITokenService>` but does not own the provider
-  implementations anymore.
+- `Security/` consumes these services via `IEnumerable<ITokenService>` but does not own the provider implementations
+  anymore.
 
 ## Rules
 
 - Keep provider implementation code here, not under `Security/`.
 - Provider registration conditions belong in root `Enterprise.Shared/Extensions.cs`.
-- If a provider needs extra configuration guards, add them in `AddIdentityTokenProviders()` and keep
-  the guard aligned with the provider's actual runtime requirements.
+- If a provider needs extra configuration guards, add them in `AddIdentityTokenProviders()` and keep the guard aligned
+  with the provider's actual runtime requirements.

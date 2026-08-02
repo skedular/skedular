@@ -2,8 +2,8 @@
 
 ## Purpose
 
-Provides EF Core base types, the repository/unit-of-work abstractions, and database-specific
-registration helpers for PostgreSQL and SQL Server. Outbox entity configuration is in
+Provides EF Core base types, the repository/unit-of-work abstractions, and database-specific registration helpers for
+PostgreSQL and SQL Server. Outbox entity configuration is in
 `Outbox/Kafka/` and `Outbox/Temporal/` — see `Outbox/AGENTS.md`.
 
 ## Sub-modules
@@ -34,8 +34,8 @@ All variants accept an optional `healthCheckName` to register a PostgreSQL readi
 
 **Config section key:** `ConnectionStrings:{connectionName}` (standard ASP.NET Core connection string).
 
-**Prerequisites:** `AddCoreServices<TProgram>()` (registers `ApplicationConfiguration` for query
-splitting behaviour) and a registered `NpgsqlDataSource`.
+**Prerequisites:** `AddCoreServices<TProgram>()` (registers `ApplicationConfiguration` for query splitting behaviour)
+and a registered `NpgsqlDataSource`.
 
 ## Registration — SQL Server
 
@@ -77,8 +77,8 @@ public class MyDbContext : DbContextBase<MyDbContext>, IUnitOfWork, IKafkaOutbox
 ## Interceptors
 
 `SelectForUpdateCommandInterceptor` rewrites `SELECT` statements inside a transaction to use
-`FOR UPDATE SKIP LOCKED`. This is used by the outbox background services to claim rows safely.
-Do not remove this interceptor from outbox-enabled contexts.
+`FOR UPDATE SKIP LOCKED`. This is used by the outbox background services to claim rows safely. Do not remove this
+interceptor from outbox-enabled contexts.
 
 ## DbContext Configuration
 
@@ -105,6 +105,6 @@ Registers a readiness health check that verifies database connectivity. The heal
 - Keep workflow logging at the service, job, processor, or activity boundary rather than introducing broad
   repository-level logging.
 - Do not call `SaveChanges()` inside a loop — batch changes and call once per unit-of-work boundary.
-- `QuerySplittingBehavior` defaults to `SplitQuery` (set in `ApplicationConfiguration`); override
-  per-query with `.AsSingleQuery()` only when a split produces incorrect results.
+- `QuerySplittingBehavior` defaults to `SplitQuery` (set in `ApplicationConfiguration`); override per-query with
+  `.AsSingleQuery()` only when a split produces incorrect results.
 - Migration assemblies must be co-located in the same assembly as the `DbContext`.

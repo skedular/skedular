@@ -3,8 +3,8 @@
 ## Purpose
 
 Provides CDN (public file serving) and private file storage behind two interfaces:
-`ICdnService` and `IFileService`. Implementations switch between a local filesystem backend
-(development/file-server mode) and Cloudflare R2 (production) based on configuration.
+`ICdnService` and `IFileService`. Implementations switch between a local filesystem backend (development/file-server
+mode) and Cloudflare R2 (production) based on configuration.
 
 ## Registration
 
@@ -53,17 +53,17 @@ When running locally, the service automatically creates the required directories
 `FileServerPublicFilePath` and `FileServerFilePath` default to `~/wwwroot/cdn` and `~/wwwroot/private`
 when left empty.
 
-`PublicCdnFileEndpoint` and `FileEndpoint` are populated by `AddFileStorage(...)` from the host-specific
-route prefixes and are used to build returned file URLs.
+`PublicCdnFileEndpoint` and `FileEndpoint` are populated by `AddFileStorage(...)` from the host-specific route prefixes
+and are used to build returned file URLs.
 
 `MaxFileSize` is applied as the `MultipartBodyLengthLimit` for file upload endpoints.
 
 ## Rules
 
-- Always call `AddFileStorage` with the host-specific endpoint strings rather than reading them
-  inside the module — the module does not know its own public URL.
+- Always call `AddFileStorage` with the host-specific endpoint strings rather than reading them inside the module — the
+  module does not know its own public URL.
 - Do not reference `Cloudflare` configuration directly in domain code — inject `ICdnService` or
   `IFileService` instead.
-- Cloudflare R2 access is implemented through the AWS S3 SDK (`AWSSDK.S3`) against the R2
-  S3-compatible endpoint; keep that dependency aligned with both `CloudflareCdnService` and
+- Cloudflare R2 access is implemented through the AWS S3 SDK (`AWSSDK.S3`) against the R2 S3-compatible endpoint; keep
+  that dependency aligned with both `CloudflareCdnService` and
   `CloudflareFileService`.

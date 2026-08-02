@@ -4,9 +4,9 @@ This file applies to `shared/Api.Shared`.
 
 ## Purpose
 
-`Api.Shared` is the shared event contracts library targeting **netstandard2.0** to enable cross-platform compatibility (
-.NET Framework, .NET Core, .NET 5+). It defines the core Kafka event abstraction and metadata infrastructure used by all
-event-driven components across the system.
+`Api.Shared` is the shared event contracts library targeting **netstandard2.0** to enable cross-platform compatibility
+(.NET Framework, .NET Core, .NET 5+). It defines the core Kafka event abstraction and metadata infrastructure used by
+all event-driven components across the system.
 
 ## Portability Rule
 

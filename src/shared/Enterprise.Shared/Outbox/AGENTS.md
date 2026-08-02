@@ -4,13 +4,12 @@
 
 Implements the transactional outbox pattern for two brokers:
 
-- **Kafka** (`Outbox/Kafka/`) — atomically writes a Kafka message to a database row, then a background
-  service drains those rows and publishes them to Kafka.
-- **Temporal** (`Outbox/Temporal/`) — atomically writes a workflow-start or workflow-signal intent to a
-  database row, then a background service drains those rows and calls the Temporal server.
+- **Kafka** (`Outbox/Kafka/`) — atomically writes a Kafka message to a database row, then a background service drains
+  those rows and publishes them to Kafka.
+- **Temporal** (`Outbox/Temporal/`) — atomically writes a workflow-start or workflow-signal intent to a database row,
+  then a background service drains those rows and calls the Temporal server.
 
-This guarantees at-least-once delivery even if the process crashes between the database commit and the
-broker call.
+This guarantees at-least-once delivery even if the process crashes between the database commit and the broker call.
 
 ## Sub-modules
 
@@ -20,8 +19,8 @@ broker call.
 | Temporal outbox | `Enterprise.Shared.Outbox.Temporal` | `services.AddTemporalOutboxBackgroundService<TDbContext>()` + `services.AddTemporalOutboxService()` |
 
 `AddKafkaOutboxService()` is called automatically by `AddKafka(...)`.
-`AddTemporalOutboxService()` is called automatically by `AddTemporalWorker(...)`.
-Only call these manually when the parent module is not registered.
+`AddTemporalOutboxService()` is called automatically by `AddTemporalWorker(...)`. Only call these manually when the
+parent module is not registered.
 
 ## Database Entities
 
@@ -54,8 +53,8 @@ Each background service uses a claim-then-release strategy:
 3. Successfully processed rows are deleted; failed rows increment `RetryCount` and log `ProcessingErrors`.
 4. Rows that reach `CriticalRetryThreshold` (5) are logged at `Critical` level.
 
-Do not modify the polling logic or the retry/lease strategy without understanding this ordering — changing
-it can cause double-delivery or silent message loss.
+Do not modify the polling logic or the retry/lease strategy without understanding this ordering — changing it can cause
+double-delivery or silent message loss.
 
 ## Telemetry
 

@@ -45,7 +45,9 @@ Answer each gate. If a gate fails, resolve the issue before proceeding.
       service scenarios already covered by unit tests.
 - [ ] **IV. Frontend** — Does this feature include web changes?
       If yes, confirm Relay colocation, no hand-edited generated artifacts, typography wrappers used,
-      and American spelling in user-facing copy.
+      American spelling in user-facing copy, and review/update of corresponding public-web documentation
+      for any customer-facing or operator-facing behavior changes. Record why existing documentation remains
+      accurate when no documentation update is needed.
 - [ ] **V. Pattern Consistency** — Does this feature introduce a new pattern or deviate from an existing one?
       If yes, a brief justification MUST be documented here before tasks are accepted.
 - [ ] **VI. Logging** — Does this feature add or change behavior?

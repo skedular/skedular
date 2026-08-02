@@ -36,6 +36,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
 
 import logger from '@/libs/logging';
 import { logCustomerSelfServiceActionRejected, logCustomerSelfServiceActionStarted } from '@/libs/logging/aggregate-marketplace-telemetry';
@@ -91,6 +92,20 @@ const RootQuery = graphql`
       id
       cancellationPolicyOverridden
       cancellationOverrideReason
+      cancellationAvailability {
+        immediate {
+          canCancel
+          requiresReason
+          isPolicyOverride
+          unavailableReason
+        }
+        atPeriodEnd {
+          canCancel
+          requiresReason
+          isPolicyOverride
+          unavailableReason
+        }
+      }
       failure {
         category {
           type
@@ -501,20 +516,27 @@ const MarketplaceProductSubscriptionDetails = ({
   const hasConfirmedCurrentCyclePayment = displayMarketplaceBooking?.paymentStatus.type === 'CONFIRMED';
   const cancellationModes = rootData.marketplaceBookingSubscriptionCancellationModes;
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
+  const [cancellationOverrideReason, setCancellationOverrideReason] = useState('');
+  const canCancelImmediately = subscription?.cancellationAvailability.immediate.canCancel === true;
+  const canCancelAtPeriodEnd = subscription?.cancellationAvailability.atPeriodEnd.canCancel === true;
+  const subscriptionAutoRenew = subscription?.autoRenew === true;
   const immediateCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
+    if (!canCancelImmediately) {
+      return null;
+    }
     const mode = cancellationModes.find((item) => item.type === 'IMMEDIATE');
 
     return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
-  }, [cancellationModes]);
+  }, [cancellationModes, canCancelImmediately]);
   const atPeriodEndCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
-    if (!subscription?.autoRenew) {
+    if (!subscriptionAutoRenew || !canCancelAtPeriodEnd) {
       return null;
     }
 
     const mode = cancellationModes.find((item) => item.type === 'AT_PERIOD_END');
 
     return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
-  }, [cancellationModes, subscription?.autoRenew]);
+  }, [cancellationModes, subscriptionAutoRenew, canCancelAtPeriodEnd]);
   const handleDeleteMarketplaceBookingSubscriptionClick = (cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode) => {
     if (!subscription) {
       return;
@@ -533,6 +555,8 @@ const MarketplaceProductSubscriptionDetails = ({
           clientMutationId: uuid(),
           id: subscription.id,
           cancellationMode: cancellationModeType,
+          cancellationOverrideReason:
+            cancellationModeType === 'IMMEDIATE' && subscription.cancellationAvailability.immediate.requiresReason ? cancellationOverrideReason.trim() : null,
         },
       },
       onCompleted: (data, errors) => {
@@ -716,6 +740,14 @@ const MarketplaceProductSubscriptionDetails = ({
                     />
                     <Divider />
                   </StackColumn>
+                ) : null}
+
+                {subscription.status.type === 'ACTIVE' && !immediateCancellationMode && !atPeriodEndCancellationMode ? (
+                  <Alert severity="info" sx={{ mt: 2, borderRadius: 3 }}>
+                    {subscription.cancellationAvailability.immediate.unavailableReason ??
+                      subscription.cancellationAvailability.atPeriodEnd.unavailableReason ??
+                      'This subscription cannot be cancelled at the moment.'}
+                  </Alert>
                 ) : null}
 
                 {canRequestMarketplaceSubscriptionCancellation({
@@ -1005,7 +1037,27 @@ const MarketplaceProductSubscriptionDetails = ({
                 : ''}
             </Alert>
           ) : null}
+          {pendingCancellationConfirmation?.type === 'IMMEDIATE' && subscription?.cancellationAvailability.immediate.requiresReason ? (
+            <TextField
+              autoFocus
+              fullWidth
+              required
+              label="Cancellation reason"
+              value={cancellationOverrideReason}
+              onChange={(event) => setCancellationOverrideReason(event.target.value)}
+              helperText="This reason is recorded because you are overriding the published cancellation policy."
+              multiline
+              minRows={3}
+              sx={{ mt: 2 }}
+            />
+          ) : null}
           <TwoButtonsDialogActions
+            primaryDisabled={
+              isDeleteMarketplaceBookingSubscriptionInFlight ||
+              (pendingCancellationConfirmation?.type === 'IMMEDIATE' &&
+                subscription?.cancellationAvailability.immediate.requiresReason === true &&
+                !cancellationOverrideReason.trim())
+            }
             onPrimaryClicked={handleConfirmImmediateCancellationClick}
             onSecondaryClicked={handleCancelImmediateCancellationClick}
             primaryLabel="Cancel now"

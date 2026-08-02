@@ -28,8 +28,8 @@ This file covers `organization/apis/`.
   export, not a new org-owned invoice engine.
 - `organization/apis/` should not encode recurring cadence rules beyond exposing the billing mode itself. The booking
   layer owns the billing-cycle versus purchase-cadence split for repeating invoices.
-- `organization/apis/` also should not encode booking invoice-cadence rules into invoice payment terms. Invoice due
-  days are org-level payment terms, not billing-cycle or recurring-cadence rules.
+- `organization/apis/` also should not encode booking invoice-cadence rules into invoice payment terms. Invoice due days
+  are org-level payment terms, not billing-cycle or recurring-cadence rules.
 - `organization/apis/` also should not assume that changing billing mode or billing cycle performs an immediate live
   migration of existing recurring Xero exports. Booking owns the freeze-versus-migrate transition policy.
 - If the org-facing billing-mode list changes, run `scripts/generate-graphql.sh` instead of hand-editing

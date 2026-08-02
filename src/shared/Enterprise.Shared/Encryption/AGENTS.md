@@ -2,8 +2,8 @@
 
 ## Purpose
 
-Owns reusable low-level encryption primitives shared across modules, without taking ownership of the
-higher-level use cases that depend on them.
+Owns reusable low-level encryption primitives shared across modules, without taking ownership of the higher-level use
+cases that depend on them.
 
 ## What Lives Here
 
@@ -19,7 +19,6 @@ higher-level use cases that depend on them.
 
 ## Rules
 
-- Keep this module generic and reusable; do not add cookie-specific, SSO-specific, or Xero-specific
-  policy here.
-- If a service only wraps `IStringEncryptionAlgorithm` for a specific product concern, keep that
-  wrapper in the owning module rather than moving it into `Encryption/`.
+- Keep this module generic and reusable; do not add cookie-specific, SSO-specific, or Xero-specific policy here.
+- If a service only wraps `IStringEncryptionAlgorithm` for a specific product concern, keep that wrapper in the owning
+  module rather than moving it into `Encryption/`.

@@ -81,12 +81,12 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   },
   [MoreActionsMenuOptionType.DeleteBooking]: {
     id: MoreActionsMenuOptionType.DeleteBooking,
-    label: 'Remove Booking',
+    label: 'Cancel Booking',
     icon: <DeleteIcon color="warning" />,
   },
   [MoreActionsMenuOptionType.DeleteRecurringBooking]: {
     id: MoreActionsMenuOptionType.DeleteRecurringBooking,
-    label: 'Remove recurring series',
+    label: 'Cancel recurring series',
     icon: <DeleteIcon color="warning" />,
   },
   [MoreActionsMenuOptionType.ConfirmBookingPayment]: {

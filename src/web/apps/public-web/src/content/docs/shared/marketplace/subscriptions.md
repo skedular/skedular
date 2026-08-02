@@ -17,7 +17,7 @@ relatedArticleIds:
   - shared-customers
   - shared-bookings
   - shared-payments
-updatedAt: 2026-07-24
+updatedAt: 2026-08-02
 ---
 
 <div class="documentation-concept-support"><strong>Managed in</strong><span>✅ Skedular Spaces</span></div>
@@ -79,6 +79,8 @@ The Subscription keeps the Product Version and Price used for its current access
 ## Cancellation and expiry
 
 Immediate cancellation ends the Subscription now, stops future Booking generation, and asynchronously cancels Subscription-generated Bookings from the current day onward. Past Bookings remain as historical records. Cancel at period end keeps the current cycle active, disables renewal, and changes the Subscription to Cancelled at the cycle boundary. A Subscription that reaches its renewal date without auto-renewal becomes Expired.
+
+The customer-facing experience shows cancellation actions only when the current actor can use them. If cancellation is unavailable, the Subscription details show the reason rather than offering an action that cannot succeed. An authorized owner or administrator may be able to override a cancellation restriction; an override requires a short reason that is retained in the organization's audit history.
 
 Cancellation stops future access and Booking generation. Immediate cancellation cancels generated current and future Bookings asynchronously, while past Bookings remain. It does not automatically retract invoices that have already been created or sent. Refund decisions are separate from cancellation and follow the Product Price cancellation policy through Booking and Commerce.
 

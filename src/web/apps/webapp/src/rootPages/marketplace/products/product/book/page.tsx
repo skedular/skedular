@@ -1,10 +1,12 @@
 import { MarketplaceProductBooking, MarketplaceProductBookingSignIn } from '@/components/marketplaceProductBooking';
+import { Loading } from '@/components/loading';
 import { OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell } from '@/components/rootShell';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { memo } from 'react';
 
 const RootPage = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  if (loading) return <Loading />;
 
   if (user) {
     return (

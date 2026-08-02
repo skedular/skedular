@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bac93f069caaddee3384493cfbbc52c4>>
+ * @generated SignedSource<<0302c3be1bbf7f73586d20c12003244f>>
  * @lightSyntaxTransform
  */
 
@@ -115,6 +115,13 @@ return {
         "plural": false,
         "selections": [
           (v1/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "cancellationOverrideReason",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -503,16 +510,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "27438cc9c312e2c902efcd4fb6439a63",
+    "cacheID": "33502a913d3a40cd979a28febbeb08b0",
     "id": null,
     "metadata": {},
     "name": "editMarketplaceBooking_booking_refetchableFragment",
     "operationKind": "query",
-    "text": "query editMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...editMarketplaceBooking_booking_query\n}\n\nfragment editMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    hasRecurringInstanceOverrides\n    category {\n      category\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      id\n      name\n    }\n    involvedLocations {\n      name\n    }\n    involvedTeams {\n      id\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n        color\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n      }\n    }\n    marketplaceBooking {\n      id\n      isPaymentRequired\n      paymentStatus {\n        type\n        name\n      }\n      invoiceUrl\n      refund {\n        id\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        canProcessInXero\n        xeroProcessingBlockedReason\n      }\n    }\n    recurringBooking {\n      id\n      startDate\n      endDate\n      frequency {\n        name\n      }\n      marketplaceBooking {\n        id\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
+    "text": "query editMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...editMarketplaceBooking_booking_query\n}\n\nfragment editMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    cancellationOverrideReason\n    from\n    until\n    notes\n    hasRecurringInstanceOverrides\n    category {\n      category\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      id\n      name\n    }\n    involvedLocations {\n      name\n    }\n    involvedTeams {\n      id\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n        color\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n      }\n    }\n    marketplaceBooking {\n      id\n      isPaymentRequired\n      paymentStatus {\n        type\n        name\n      }\n      invoiceUrl\n      refund {\n        id\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        canProcessInXero\n        xeroProcessingBlockedReason\n      }\n    }\n    recurringBooking {\n      id\n      startDate\n      endDate\n      frequency {\n        name\n      }\n      marketplaceBooking {\n        id\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0ff3f8f5aa0c84acdcd3bb04878dbbed";
+(node as any).hash = "9bb5a77a22b380ca156575ec21840661";
 
 export default node;

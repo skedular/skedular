@@ -2,8 +2,8 @@
 
 ## Purpose
 
-Registers Stripe SDK service interfaces as singletons so they can be injected without
-importing the Stripe SDK directly in domain code.
+Registers Stripe SDK service interfaces as singletons so they can be injected without importing the Stripe SDK directly
+in domain code.
 
 ## Registration
 
@@ -15,8 +15,8 @@ services.AddStripe(configuration);
 
 ## What Gets Registered
 
-`AddStripe` sets `Stripe.StripeConfiguration.ApiKey` globally and registers the following Stripe
-service interfaces as singletons (implementation: the matching Stripe SDK service class):
+`AddStripe` sets `Stripe.StripeConfiguration.ApiKey` globally and registers the following Stripe service interfaces as
+singletons (implementation: the matching Stripe SDK service class):
 
 | Stripe resource      | Interfaces registered                                                 |
 |----------------------|-----------------------------------------------------------------------|
@@ -52,9 +52,9 @@ service interfaces as singletons (implementation: the matching Stripe SDK servic
 
 ## Rules
 
-- Do not access `Stripe.StripeConfiguration.ApiKey` directly in domain code — the key is set once
-  at startup by `AddStripe`.
-- Inject the narrowest Stripe interface your service needs (e.g. `ICreatable<Customer,...>`) rather
-  than the concrete `CustomerService`, so tests can mock the Stripe boundary cleanly.
-- Webhook signature verification must use the appropriate webhook key per endpoint (platform account
-  vs. connect account); do not mix them.
+- Do not access `Stripe.StripeConfiguration.ApiKey` directly in domain code — the key is set once at startup by
+  `AddStripe`.
+- Inject the narrowest Stripe interface your service needs (e.g. `ICreatable<Customer,...>`) rather than the concrete
+  `CustomerService`, so tests can mock the Stripe boundary cleanly.
+- Webhook signature verification must use the appropriate webhook key per endpoint (platform account vs. connect
+  account); do not mix them.

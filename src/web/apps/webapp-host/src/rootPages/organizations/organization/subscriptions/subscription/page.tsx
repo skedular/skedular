@@ -28,6 +28,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 
@@ -175,6 +176,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   const rootData = usePreloadedQuery<pageOrganizationSubscriptionDetail_rootQuery>(RootQuery, queryReference);
   const { integratedPlatform } = useIntegratedPlatform();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
+  const [cancellationOverrideReason, setCancellationOverrideReason] = useState('');
   const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
     useMutation<pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation>(graphql`
       mutation pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
@@ -261,6 +263,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           clientMutationId: uuid(),
           id: subscriptionId,
           cancellationMode: cancellationModeType,
+          cancellationOverrideReason: cancellationOverrideReason.trim() || null,
         },
       },
       onCompleted: (_, errors) => {
@@ -578,7 +581,19 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           <DialogContentText>
             {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing will stop immediately. Previous invoices will stay on record.`}
           </DialogContentText>
+          <TextField
+            label="Cancellation reason"
+            value={cancellationOverrideReason}
+            onChange={(event) => setCancellationOverrideReason(event.target.value)}
+            required
+            multiline
+            minRows={2}
+            fullWidth
+            helperText="Required when the cancellation policy would block this cancellation."
+            sx={{ mt: 2 }}
+          />
           <TwoButtonsDialogActions
+            primaryDisabled={isDeleteMarketplaceBookingSubscriptionInFlight || !cancellationOverrideReason.trim()}
             onPrimaryClicked={() => {
               if (!pendingCancellationConfirmation) {
                 return;

@@ -2,9 +2,8 @@
 
 ## Purpose
 
-Registers the Temporal .NET SDK worker and client with environment-qualified task queues,
-mTLS support, configurable capacity and rate limits, and the outbox writers needed for
-transactional workflow execution.
+Registers the Temporal .NET SDK worker and client with environment-qualified task queues, mTLS support, configurable
+capacity and rate limits, and the outbox writers needed for transactional workflow execution.
 
 ## Registration
 
@@ -29,9 +28,8 @@ services.AddTemporalClient(configuration, connectionName: "temporal");
 
 **Config section key:** `Temporal` — see `Temporal/Configurations/TemporalConfiguration.cs`.
 
-**Prerequisites:** `AddCoreServices<TProgram>()` (registers `ApplicationConfiguration` for environment
-prefix). `AddTemporalOutboxBackgroundService<TDbContext>()` must be called separately if the host needs
-the outbox drain loop.
+**Prerequisites:** `AddCoreServices<TProgram>()` (registers `ApplicationConfiguration` for environment prefix).
+`AddTemporalOutboxBackgroundService<TDbContext>()` must be called separately if the host needs the outbox drain loop.
 
 ## Task Queue Naming
 
@@ -94,13 +92,12 @@ These helpers live in `Temporal/Extensions.cs` and are used internally by the ou
 
 ## ITemporalHelperService
 
-`ITemporalHelperService` provides a `ToId(...)` method for constructing deterministic workflow IDs
-from structured inputs. Use this service instead of building IDs inline in calling code.
+`ITemporalHelperService` provides a `ToId(...)` method for constructing deterministic workflow IDs from structured
+inputs. Use this service instead of building IDs inline in calling code.
 
 ## Rules
 
-- Always use the environment-prefixed task queue — never hardcode a raw queue name in a workflow
-  registration call.
+- Always use the environment-prefixed task queue — never hardcode a raw queue name in a workflow registration call.
 - Workflow IDs must be constructed through a domain `WorkflowIdService`, not inline at the call site.
 - Do not register workflows or activities directly on `ITemporalClient`; use the worker builder's
   `.AddWorkflow<T>()` / `.AddActivity<T>()` methods.

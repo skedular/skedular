@@ -101,4 +101,30 @@ public static partial class MarketplaceBookingSubscriptionDetailsType
         var failure = await failureReadService.GetBySubscriptionIdAsync(item.Id, cancellationToken);
         return failure is null ? null : graphQlMapper.MapTo(failure);
     }
+
+
+    public static async Task<MarketplaceSubscriptionCancellationAvailabilityDetails> GetCancellationAvailabilityAsync(
+        [Parent] MarketplaceBookingSubscriptionDetails item,
+        [Service] IMarketplaceCancellationAvailabilityService cancellationAvailabilityService,
+        CancellationToken cancellationToken)
+    {
+        var availability = await cancellationAvailabilityService.GetSubscriptionAsync(item.Id, cancellationToken);
+        return new MarketplaceSubscriptionCancellationAvailabilityDetails
+        {
+            Immediate = new MarketplaceCancellationAvailabilityDetails
+            {
+                CanCancel = availability.Immediate.CanCancel,
+                RequiresReason = availability.Immediate.RequiresReason,
+                IsPolicyOverride = availability.Immediate.IsPolicyOverride,
+                UnavailableReason = availability.Immediate.UnavailableReason
+            },
+            AtPeriodEnd = new MarketplaceCancellationAvailabilityDetails
+            {
+                CanCancel = availability.AtPeriodEnd.CanCancel,
+                RequiresReason = availability.AtPeriodEnd.RequiresReason,
+                IsPolicyOverride = availability.AtPeriodEnd.IsPolicyOverride,
+                UnavailableReason = availability.AtPeriodEnd.UnavailableReason
+            }
+        };
+    }
 }

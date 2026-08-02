@@ -1,6 +1,5 @@
 using AutoFixture;
 using Organization.Shared.Services.Pricing;
-using Testing.Shared;
 
 namespace Organization.Api.UnitTests.Fixtures;
 

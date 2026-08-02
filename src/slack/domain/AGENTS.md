@@ -16,8 +16,8 @@ This file covers `slack/domain/`.
 ## Aspire App Host Rule
 
 - Keep Slack dependency readiness in `Slack.Domain.AppHost/AppHost.cs`.
-- All resources referenced by Slack should have matching `WaitFor(...)` or `WaitForCompletion(...)` there rather than
-  in test startup.
+- All resources referenced by Slack should have matching `WaitFor(...)` or `WaitForCompletion(...)` there rather than in
+  test startup.
 
 ## Agent Rule
 

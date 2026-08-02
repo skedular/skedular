@@ -31,10 +31,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, ReactNode, useEffect, useMemo, useState } from 'react';
+import { memo, ReactNode, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useSubscription } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -43,7 +44,6 @@ import MarketplaceProductBookingDetailsHero from './marketplace-product-booking-
 import MarketplaceProductBookingPaymentPanel from './marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from './marketplace-refund-status-card';
 import { RefundHistoryTimeline } from '@/components/refund/RefundHistoryTimeline';
-import { canRequestMarketplaceBookingCancellation } from './marketplace-self-service-eligibility';
 
 const RootQuery = graphql`
   query marketplaceProductBookingDetails_rootQuery($bookingId: String!) {
@@ -53,6 +53,12 @@ const RootQuery = graphql`
       until
       deletedByCustomer {
         id
+      }
+      cancellationAvailability {
+        canCancel
+        requiresReason
+        isPolicyOverride
+        unavailableReason
       }
       involvedCustomers {
         id
@@ -173,6 +179,12 @@ const BookingSubscription = graphql`
       deletedByCustomer {
         id
       }
+      cancellationAvailability {
+        canCancel
+        requiresReason
+        isPolicyOverride
+        unavailableReason
+      }
       marketplaceBooking {
         id
         failure {
@@ -285,19 +297,15 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
   const marketplaceBooking = booking?.marketplaceBooking;
   const [hasCancelledLocally, setHasCancelledLocally] = useState(false);
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState(false);
+  const [cancellationOverrideReason, setCancellationOverrideReason] = useState('');
   const [commitDeleteMarketplaceBooking, isDeleteMarketplaceBookingInFlight] =
     useMutation<marketplaceProductBookingDetails_deleteMarketplaceBookingMutation>(DeleteMarketplaceBookingMutation);
   const [commitAcceptPartial] = useMutation(AcceptPartialMutation);
   const [commitDeclinePartial] = useMutation(DeclinePartialMutation);
   const isCancelled = hasCancelledLocally || !!booking?.deletedByCustomer?.id;
   const hasConfirmedPayment = marketplaceBooking?.paymentStatus.type === 'CONFIRMED';
-  const canRequestCancellation = useMemo(() => {
-    if (!booking || !marketplaceBooking || isCancelled) {
-      return false;
-    }
-
-    return canRequestMarketplaceBookingCancellation({ bookingStartsAt: booking.from, isCancelled, now: new Date() });
-  }, [booking, isCancelled, marketplaceBooking]);
+  const cancellationAvailability = booking?.cancellationAvailability;
+  const canRequestCancellation = !isCancelled && cancellationAvailability?.canCancel === true;
   const productTitle = marketplaceBooking?.productVersion?.listingMetadata.title ?? 'this booking';
   const handleRequestCancellationClick = () => {
     logCustomerSelfServiceActionStarted({ logger, actionType: 'cancel_booking', purchaseId: booking?.id ?? 'unknown', purchaseType: 'booking' });
@@ -311,6 +319,10 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
       return;
     }
 
+    if (cancellationAvailability?.requiresReason && !cancellationOverrideReason.trim()) {
+      return;
+    }
+
     let bookingDetailsInfo = productTitle;
     if (booking.involvedLocations.length > 0) {
       bookingDetailsInfo += ` at ${booking.involvedLocations[0]!.name}`;
@@ -321,6 +333,7 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
         input: {
           clientMutationId: uuid(),
           id: booking.id,
+          cancellationOverrideReason: cancellationAvailability?.requiresReason ? cancellationOverrideReason.trim() : null,
         },
       },
       onCompleted: (data, errors) => {
@@ -490,9 +503,11 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                       <SubtitleIconTypography label="Cancel booking" sx={{ mt: 1 }} />
                       <BodyIconTypography
                         label={
-                          hasConfirmedPayment
-                            ? 'If this booking is still within its cancellation window, you can cancel it here. If payment has already been recorded, any eligible refund is reviewed separately after the cancellation is accepted.'
-                            : 'If this booking is still within its cancellation window, you can cancel it here. If payment was never confirmed, cancellation stops the booking without creating a refund.'
+                          cancellationAvailability?.isPolicyOverride
+                            ? 'You have permission to override this product’s cancellation policy. Please provide a reason before cancelling.'
+                            : hasConfirmedPayment
+                              ? 'You can cancel this booking here. If payment has already been recorded, any eligible refund is reviewed separately after cancellation.'
+                              : 'You can cancel this booking here. If payment was never confirmed, cancellation stops the booking without creating a refund.'
                         }
                         sx={{ mt: 1, opacity: 0.82 }}
                       />
@@ -503,6 +518,12 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                       </StackRow>
                     </CardContent>
                   </Card>
+                ) : null}
+
+                {!isCancelled && cancellationAvailability && !cancellationAvailability.canCancel ? (
+                  <Alert severity="info" sx={{ mt: 3, borderRadius: 3 }}>
+                    {cancellationAvailability.unavailableReason}
+                  </Alert>
                 ) : null}
 
                 <StackColumn spacing={2} sx={{ mt: 3 }}>
@@ -579,8 +600,22 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
               ? 'If payment has already been recorded, any refund still depends on the cancellation policy and may be processed after the cancellation is confirmed.'
               : 'If payment was never confirmed, this cancellation will not create a refund.'}
           </DialogContentText>
+          {cancellationAvailability?.requiresReason ? (
+            <TextField
+              autoFocus
+              fullWidth
+              required
+              label="Cancellation reason"
+              value={cancellationOverrideReason}
+              onChange={(event) => setCancellationOverrideReason(event.target.value)}
+              helperText="This reason is recorded because you are overriding the published cancellation policy."
+              multiline
+              minRows={3}
+              sx={{ mt: 2 }}
+            />
+          ) : null}
           <TwoButtonsDialogActions
-            primaryDisabled={isDeleteMarketplaceBookingInFlight}
+            primaryDisabled={isDeleteMarketplaceBookingInFlight || (cancellationAvailability?.requiresReason === true && !cancellationOverrideReason.trim())}
             onPrimaryClicked={handleConfirmCancellationClick}
             onSecondaryClicked={handleCancelCancellationClick}
             primaryLabel="Cancel booking"

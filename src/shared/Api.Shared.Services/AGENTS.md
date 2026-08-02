@@ -6,15 +6,14 @@ This file covers `shared/Api.Shared.Services`.
 
 - Models and enum/string conversions here are cross-domain contracts.
 - If a new enum value is added here, update all string constants, both conversion directions, and any display-name
-  helper
-  in the same change.
+  helper in the same change.
 - When the model is consumed by multiple domains, add unit tests here so the shared contract is locked down before the
   domain-specific behavior changes.
 
 ## Copy Localisation Rule
 
-- When this layer owns exception messages, display names, or other text that is surfaced to users or operators, write
-  it in British spelling and grammar rather than American English.
+- When this layer owns exception messages, display names, or other text that is surfaced to users or operators, write it
+  in British spelling and grammar rather than American English.
 - Keep that localisation limited to surfaced copy. Do not rename shared model types, enum members, namespaces, method
   names, or other technical contracts solely to make them British English.
 

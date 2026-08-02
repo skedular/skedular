@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<40b679405e06f184e26acd35a931af33>>
+ * @generated SignedSource<<2277a15118f2446bab2e8cc3cdf9338c>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type DeleteMarketplaceBookingInput = {
+  cancellationOverrideReason?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   id: string;
 };

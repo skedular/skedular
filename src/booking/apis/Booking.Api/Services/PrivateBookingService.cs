@@ -34,7 +34,7 @@ public class PrivateBookingService(
         AddAsync(booking, null, cancellationToken);
 
     public async Task<Shared.Models.Booking> AddAsync(
-        Shared.Models.Booking booking, 
+        Shared.Models.Booking booking,
         DateOnly? fullOpeningHoursDate,
         CancellationToken cancellationToken)
     {

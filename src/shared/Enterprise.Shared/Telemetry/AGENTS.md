@@ -2,8 +2,8 @@
 
 ## Purpose
 
-Configures OpenTelemetry traces and metrics with a standard set of instrumentations, exporters, and
-a reusable context propagation API for passing trace context across async and messaging boundaries.
+Configures OpenTelemetry traces and metrics with a standard set of instrumentations, exporters, and a reusable context
+propagation API for passing trace context across async and messaging boundaries.
 
 ## Registration
 
@@ -75,8 +75,7 @@ Use `MetricTaggingExtensions.ToTagList(ITaggable)` to convert tag objects to `Ta
 
 ## Rules
 
-- Do not create `ActivitySource` instances directly in domain code — use `IActivityAccessor` to
-  retrieve or start activities so the source name stays consistent.
+- Do not create `ActivitySource` instances directly in domain code — use `IActivityAccessor` to retrieve or start
+  activities so the source name stays consistent.
 - Health check routes are filtered from traces automatically; do not add custom filters for them.
-- The custom meter name must match `OpenTelemetryConfiguration.MeterProviderName` in config; do not
-  hardcode a string.
+- The custom meter name must match `OpenTelemetryConfiguration.MeterProviderName` in config; do not hardcode a string.

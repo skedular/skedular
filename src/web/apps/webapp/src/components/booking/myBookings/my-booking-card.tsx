@@ -85,6 +85,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
     graphql`
       fragment myBookingCard_BookingDetails on BookingDetails {
         id
+        cancellationAvailability {
+          canCancel
+          requiresReason
+          unavailableReason
+        }
         cancellationPolicyOverridden
         cancellationOverrideReason
         from
@@ -229,6 +234,8 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
   const shortDateFormatFrom = toShortDate(bookingDetails.from);
   const recurringBooking = bookingDetails.recurringBooking;
   const isMarketplaceRecurringBooking = !!recurringBooking?.marketplaceBooking;
+  const marketplaceCancellationAvailability = bookingDetails.marketplaceBooking ? bookingDetails.cancellationAvailability : null;
+  const canCancelMarketplaceBooking = marketplaceCancellationAvailability?.canCancel === true;
   const canDeleteRecurringOccurrence = !!recurringBooking && !isMarketplaceRecurringBooking && bookingDetails.channel.channel === 'PRIVATE';
   const canEditRecurringSeries = canDeleteRecurringOccurrence;
   const recurringSeriesLabel = recurringBooking ? `${recurringBooking.frequency.name} recurring booking` : null;
@@ -269,11 +276,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
       ...moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteBooking],
       label: recurringOccurrenceActionLabel,
     });
-  } else if (!recurringBooking) {
+  } else if (!recurringBooking && (!bookingDetails.marketplaceBooking || canCancelMarketplaceBooking)) {
     moreActionsOption.push(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteBooking]);
   }
 
-  if (recurringBooking && recurringSeriesActionLabel) {
+  if (recurringBooking && recurringSeriesActionLabel && !isMarketplaceRecurringBooking) {
     moreActionsOption.push({
       ...moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteRecurringBooking],
       label: recurringSeriesActionLabel,
@@ -603,6 +610,10 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
                     label={`Cancellation policy overridden${bookingDetails.cancellationOverrideReason ? `: ${bookingDetails.cancellationOverrideReason}` : ''}`}
                   />
                 ) : null}
+                {marketplaceCancellationAvailability && !marketplaceCancellationAvailability.canCancel ? (
+                  <CaptionIconTypography label={marketplaceCancellationAvailability.unavailableReason ?? 'Cancellation is not available for this booking.'} />
+                ) : null}
+                {isMarketplaceRecurringBooking ? <CaptionIconTypography label="Open the subscription details to review available cancellation options." /> : null}
                 <SubtitleIconTypography label="Booking details" />
                 <Resources resources={bookingDetails.bookingResources.map((item) => ({ id: item.resource.id, name: item.resource.name, color: item.resource.color }))} hideNAText />
                 <CustomTags customTags={customTags.map((customTag) => ({ id: customTag.id, name: customTag.name, color: customTag.color }))} hideNAText />

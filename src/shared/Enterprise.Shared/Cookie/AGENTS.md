@@ -2,8 +2,8 @@
 
 ## Purpose
 
-Owns cookie-specific encryption concerns in `Enterprise.Shared`: cookie configuration binding and
-the `ICookieEncryptionService` wrapper used by SSO and other cookie flows.
+Owns cookie-specific encryption concerns in `Enterprise.Shared`: cookie configuration binding and the
+`ICookieEncryptionService` wrapper used by SSO and other cookie flows.
 
 ## Registration
 
@@ -28,5 +28,5 @@ builder.AddCookieServices();
 
 - Keep cookie-specific encryption wiring here rather than under `Security/`.
 - Do not reuse `ICookieEncryptionService` for Xero token encryption.
-- If cookie encryption needs different configuration or lifecycle behaviour, change this module and the
-  root `AddCookieServices()` composition point rather than hiding that logic in unrelated modules.
+- If cookie encryption needs different configuration or lifecycle behaviour, change this module and the root
+  `AddCookieServices()` composition point rather than hiding that logic in unrelated modules.

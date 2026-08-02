@@ -230,6 +230,8 @@ type BookingDetails @key(fields: "id") {
   involvedOrganizations: [OrganizationDetails!]!
   involvedTeams: [TeamDetails!]!
   failure: MarketplaceBookingFailureDetails @cost(weight: "10")
+  cancellationAvailability: MarketplaceCancellationAvailabilityDetails!
+    @cost(weight: "10")
   arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   from: DateTime!
   until: DateTime!
@@ -444,6 +446,8 @@ type MarketplaceBookingSubscriptionDetails @key(fields: "id") {
   involvedTeams: [TeamDetails!]!
   refund: MarketplaceRefundDetails @cost(weight: "10")
   failure: MarketplaceBookingFailureDetails @cost(weight: "10")
+  cancellationAvailability: MarketplaceSubscriptionCancellationAvailabilityDetails!
+    @cost(weight: "10")
   arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   startedAt: DateTime!
   cancelledAt: DateTime
@@ -474,6 +478,13 @@ type MarketplaceBookingSubscriptionPayload {
 type MarketplaceBookingSubscriptionStatusDetails {
   type: MarketplaceBookingSubscriptionStatus!
   name: String!
+}
+
+type MarketplaceCancellationAvailabilityDetails {
+  canCancel: Boolean!
+  requiresReason: Boolean!
+  isPolicyOverride: Boolean!
+  unavailableReason: String
 }
 
 type MarketplaceExternalRefundReconciliationDetails {
@@ -612,6 +623,11 @@ type MarketplaceRefundPreviewDetails {
 type MarketplaceRefundStatusDetails {
   type: MarketplaceRefundStatus!
   name: String!
+}
+
+type MarketplaceSubscriptionCancellationAvailabilityDetails {
+  immediate: MarketplaceCancellationAvailabilityDetails!
+  atPeriodEnd: MarketplaceCancellationAvailabilityDetails!
 }
 
 type OrganizationArrearsInvoiceDetails {

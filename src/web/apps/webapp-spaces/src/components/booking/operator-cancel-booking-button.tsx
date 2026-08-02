@@ -31,8 +31,13 @@ const OperatorCancelBookingButton = ({ bookingId, label, onConfirm }: Props) => 
 
   const close = () => setOpen(false);
   const confirm = () => {
+    const trimmedReason = reason.trim();
+    if (!trimmedReason) {
+      return;
+    }
+
     close();
-    onConfirm(reason.trim());
+    onConfirm(trimmedReason);
   };
 
   return (
@@ -69,7 +74,13 @@ const OperatorCancelBookingButton = ({ bookingId, label, onConfirm }: Props) => 
               <BodyIconTypography label={`Non-refundable amount: ${preview.currencyToDisplay} ${preview.baseAmount - (preview.refundAmount ?? 0)}`} />
             ) : null}
           </StackColumn>
-          <TwoButtonsDialogActions primaryLabel="Cancel booking" secondaryLabel="Keep booking" onPrimaryClicked={confirm} onSecondaryClicked={close} />
+          <TwoButtonsDialogActions
+            primaryLabel="Cancel booking"
+            primaryDisabled={!reason.trim()}
+            secondaryLabel="Keep booking"
+            onPrimaryClicked={confirm}
+            onSecondaryClicked={close}
+          />
         </DialogContent>
       </Dialog>
     </>

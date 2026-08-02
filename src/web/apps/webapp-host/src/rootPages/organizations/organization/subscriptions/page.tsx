@@ -41,6 +41,7 @@ import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
@@ -251,6 +252,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
   const router = useRouter();
   const { integratedPlatform } = useIntegratedPlatform();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
+  const [cancellationOverrideReason, setCancellationOverrideReason] = useState('');
   const [viewMode, setViewMode] = useState<SubscriptionViewMode>('list');
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<string | null>(null);
@@ -396,6 +398,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
           clientMutationId: uuid(),
           id: subscriptionId,
           cancellationMode: cancellationModeType,
+          cancellationOverrideReason: cancellationOverrideReason.trim() || null,
         },
       },
       onCompleted: (_, errors) => {
@@ -924,7 +927,19 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
           <DialogContentText>
             {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing will stop immediately. Previous invoices will stay on record.`}
           </DialogContentText>
+          <TextField
+            label="Cancellation reason"
+            value={cancellationOverrideReason}
+            onChange={(event) => setCancellationOverrideReason(event.target.value)}
+            required
+            multiline
+            minRows={2}
+            fullWidth
+            helperText="Required when the cancellation policy would block this cancellation."
+            sx={{ mt: 2 }}
+          />
           <TwoButtonsDialogActions
+            primaryDisabled={isDeleteMarketplaceBookingSubscriptionInFlight || !cancellationOverrideReason.trim()}
             onPrimaryClicked={handleConfirmImmediateCancellationClick}
             onSecondaryClicked={handleCancelImmediateCancellationClick}
             primaryLabel="Cancel now"

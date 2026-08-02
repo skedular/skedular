@@ -22,7 +22,7 @@ relatedArticleIds:
   - shared-teams
   - shared-products
   - shared-subscriptions
-updatedAt: 2026-07-15
+updatedAt: 2026-08-02
 ---
 
 ## Overview
@@ -75,6 +75,8 @@ Before a booking is confirmed, Skedular checks the selected resources and their 
 
 Cancellation ends the booking's future resource entitlement according to the applicable product and organization rules. It is separate from any refund or accounting decision. Use the relevant product documentation for cancellation windows and refund behavior.
 
+The customer-facing experience shows **Cancel** only when the booking can be cancelled by the current actor. When cancellation is unavailable, the booking details show the reason instead of presenting an action that cannot succeed. An owner or administrator with the required permission may be able to override a product cancellation restriction; an override requires a short cancellation reason for the organization's audit history.
+
 ## Product Differences
 
 <div class="documentation-concept-grid"><div><strong>📅 Skedular Teams</strong><small>Resource-first booking for private workplace scheduling, including team bookings.</small></div><div><strong>🛒 Skedular Spaces</strong><small>Product-first marketplace bookings where products allocate suitable resources.</small></div><div><strong>🏠 Skedular Host</strong><small>Place-first bookings with the underlying resource managed behind the scenes.</small></div></div>
@@ -119,6 +121,10 @@ No. A single booking stays within one calendar day. Multi-day reservations use a
 ### What happens when I cancel a booking?
 
 The booking's future resource entitlement ends according to the applicable product and organization rules. Refunds, when relevant, are handled separately.
+
+### Why can I not cancel a booking?
+
+Cancellation may be unavailable because the product's cancellation window has passed, the booking is in a state that cannot be cancelled, or the current actor does not have permission. Skedular shows the applicable reason in the booking details. An authorized owner or administrator may be able to override the restriction and must provide a reason when doing so.
 
 ### What is the difference between a booking and a subscription?
 

@@ -45,6 +45,7 @@ public static class Extensions
                 .AddScoped<IPrivateBookingService, PrivateBookingService>()
                 .AddScoped<IPrivateRecurringBookingService, PrivateRecurringBookingService>()
                 .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>()
+                .AddScoped<IMarketplaceCancellationAvailabilityService, MarketplaceCancellationAvailabilityService>()
                 .AddScoped<ICancellationDecisionService, CancellationDecisionService>()
                 .AddScoped<IMarketplaceBookingFailureReadService, MarketplaceBookingFailureReadService>()
                 .AddScoped<IMarketplaceBookingSubscriptionService, MarketplaceBookingSubscriptionService>()

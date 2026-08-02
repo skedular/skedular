@@ -89,4 +89,20 @@ public static partial class BookingDetailsType
         var failure = await failureReadService.GetByBookingIdAsync(item.Id, cancellationToken);
         return failure is null ? null : graphQlMapper.MapTo(failure);
     }
+
+
+    public static async Task<MarketplaceCancellationAvailabilityDetails> GetCancellationAvailabilityAsync(
+        [Parent] BookingDetails item,
+        [Service] IMarketplaceCancellationAvailabilityService cancellationAvailabilityService,
+        CancellationToken cancellationToken)
+    {
+        var availability = await cancellationAvailabilityService.GetBookingAsync(item.Id, cancellationToken);
+        return new MarketplaceCancellationAvailabilityDetails
+        {
+            CanCancel = availability.CanCancel,
+            RequiresReason = availability.RequiresReason,
+            IsPolicyOverride = availability.IsPolicyOverride,
+            UnavailableReason = availability.UnavailableReason
+        };
+    }
 }

@@ -4,13 +4,13 @@ This file applies to everything under `shared/Enterprise.Shared`.
 
 ## Library Purpose
 
-`Enterprise.Shared` is a composable, technology-agnostic infrastructure library. It is designed to be
-consumed by any .NET application — not only by this repository. Each module is independently adoptable:
+`Enterprise.Shared` is a composable, technology-agnostic infrastructure library. It is designed to be consumed by any
+.NET application — not only by this repository. Each module is independently adoptable:
 consumers register only the modules they need. No module is forced on any host.
 
 The root `Extensions.cs` provides a repository-level convenience bundle (`AddDefaultServices`,
-`UseWebApplicationDefaults`) that wires everything together for hosts in this repo. External consumers
-**should not call those bundle methods**; they should compose the individual module registrations instead.
+`UseWebApplicationDefaults`) that wires everything together for hosts in this repo. External consumers **should not call
+those bundle methods**; they should compose the individual module registrations instead.
 
 ## Modularity Design — Registration Entry Points
 
@@ -89,19 +89,19 @@ Each subfolder has its own `AGENTS.md` with module-specific rules:
 ## Cross-Cutting Helpers
 
 - Helpers that are not owned by a single domain or runtime host belong here.
-- If a toggle or utility is used by more than one host or integration-test project, add it here rather
-  than duplicating it per-host.
-- `DomainAppHostEnvironmentVariables` and `Constants` live at the root because they are shared by hosts
-  and test projects alike.
+- If a toggle or utility is used by more than one host or integration-test project, add it here rather than duplicating
+  it per-host.
+- `DomainAppHostEnvironmentVariables` and `Constants` live at the root because they are shared by hosts and test
+  projects alike.
 
 ## Adding a New Module
 
 1. Create a subfolder with a clearly scoped `Extensions.cs` containing `Add*` / `Use*` extension methods.
-2. Add an `AGENTS.md` in the new folder documenting: purpose, registration entry point, config section
-   key, prerequisites (other `Add*` that must run first), and NuGet dependencies.
+2. Add an `AGENTS.md` in the new folder documenting: purpose, registration entry point, config section key,
+   prerequisites (other `Add*` that must run first), and NuGet dependencies.
 3. Add the new method to the table above.
-4. Do **not** add the new module to `AddDefaultServices` or `UseWebApplicationDefaults`. Consumers opt in
-   explicitly; nothing is wired by default.
+4. Do **not** add the new module to `AddDefaultServices` or `UseWebApplicationDefaults`. Consumers opt in explicitly;
+   nothing is wired by default.
 
 ## Unit Test File Shape
 

@@ -4,10 +4,10 @@
 
 Provides two independent capabilities:
 
-1. **MCP server** (`Mcp/`) — registers a Model Context Protocol server that exposes tools from one or
-   more assemblies over HTTP.
-2. **Agent session helpers** — extension methods for serializing and deserializing Microsoft Agent
-   Framework `AgentSession` objects to/from JSON strings, enabling session persistence across requests.
+1. **MCP server** (`Mcp/`) — registers a Model Context Protocol server that exposes tools from one or more assemblies
+   over HTTP.
+2. **Agent session helpers** — extension methods for serializing and deserializing Microsoft Agent Framework
+   `AgentSession` objects to/from JSON strings, enabling session persistence across requests.
 
 ## Registration — MCP Server
 
@@ -31,8 +31,8 @@ app.UseMcpServer();
 }
 ```
 
-`UseMcpServer()` is a no-op when `McpConfig` is not registered, so it is safe to call from
-hosts that conditionally enable MCP.
+`UseMcpServer()` is a no-op when `McpConfig` is not registered, so it is safe to call from hosts that conditionally
+enable MCP.
 
 ## Agent Session Helpers
 
@@ -60,7 +60,7 @@ These helpers live as extension methods on `AIAgent` and `string?` respectively.
 
 - MCP tool classes must be in an assembly reachable through one of the `types` passed to
   `AddMcpServer` — scanning is per-assembly, not global.
-- The filename `Extentions.cs` is a known typo in the source; do not rename it as other files in
-  this repo may reference it. Fix the typo only if all references are updated together.
-- Do not add AI model configuration constants here; keep model names and endpoint URLs in the
-  calling host's configuration.
+- The filename `Extentions.cs` is a known typo in the source; do not rename it as other files in this repo may reference
+  it. Fix the typo only if all references are updated together.
+- Do not add AI model configuration constants here; keep model names and endpoint URLs in the calling host's
+  configuration.

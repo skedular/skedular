@@ -402,9 +402,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     rootData.organizationBookingPermissions.canModifyPaymentMethod &&
     bookingDetails.marketplaceBooking &&
     bookingDetails.marketplaceBooking.isPaymentRequired &&
-    bookingDetails.marketplaceBooking.paymentStatus.type !== 'REJECTED' &&
-    bookingDetails.marketplaceBooking.paymentStatus.type !== 'EXPIRED' &&
-    bookingDetails.marketplaceBooking.paymentStatus.type !== 'RECORD_NEVER_CREATED'
+    bookingDetails.marketplaceBooking.paymentStatus.type === 'PENDING'
   ) {
     moreActionsOption.push(
       moreActionsMenuAllOptions[MoreActionsMenuOptionType.ConfirmBookingPayment],
@@ -505,8 +503,12 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         },
       });
     } else {
+      const cancellationOverrideReason = window.prompt('Cancellation reason')?.trim();
+      if (!cancellationOverrideReason) {
+        return;
+      }
       commitDeleteMarketplaceBooking({
-        variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id } },
+        variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id, cancellationOverrideReason } },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
             themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
@@ -543,12 +545,18 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         return;
       }
 
+      const cancellationOverrideReason = window.prompt('Cancellation reason')?.trim();
+      if (!cancellationOverrideReason) {
+        return;
+      }
+
       commitDeleteMarketplaceBookingSubscription({
         variables: {
           input: {
             clientMutationId: uuid(),
             id: subscriptionId,
             cancellationMode: 'IMMEDIATE',
+            cancellationOverrideReason,
           },
         },
         onCompleted: (_, errors) => {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3a39958ec61e6cde8d2f6db05e275196>>
+ * @generated SignedSource<<3d1eb08eaa23b1e60797a2d724e14e5b>>
  * @lightSyntaxTransform
  */
 
@@ -12,6 +12,7 @@ export type MarketplaceBookingSubscriptionCancellationMode = "AT_PERIOD_END" | "
 export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PAUSED" | "RENEWAL_FAILED" | "%future added value";
 export type DeleteMarketplaceBookingSubscriptionInput = {
   cancellationMode: MarketplaceBookingSubscriptionCancellationMode;
+  cancellationOverrideReason?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   id: string;
 };

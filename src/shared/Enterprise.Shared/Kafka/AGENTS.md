@@ -2,9 +2,8 @@
 
 ## Purpose
 
-Provides the full Kafka producer/consumer stack built on Confluent.Kafka and Confluent Schema Registry
-with Protobuf serialization, OpenTelemetry trace propagation, retry/dead-letter topic routing, and the
-transactional outbox publisher.
+Provides the full Kafka producer/consumer stack built on Confluent.Kafka and Confluent Schema Registry with Protobuf
+serialization, OpenTelemetry trace propagation, retry/dead-letter topic routing, and the transactional outbox publisher.
 
 ## Registration
 
@@ -35,8 +34,8 @@ services.AddKafkaEventConsumers<MySubscriber, KeyType, EventType>(kafkaConfig, [
 services.AddKafkaReliableEventConsumers<MySubscriber, KeyType, EventType>(kafkaConfig);
 ```
 
-Every event type must carry `[KafkaTopic(...)]` (see `Events/KafkaTopicAttribute.cs`).
-Every subscriber implements `IEventSubscriber<TKey, TEvent>`.
+Every event type must carry `[KafkaTopic(...)]` (see `Events/KafkaTopicAttribute.cs`). Every subscriber implements
+`IEventSubscriber<TKey, TEvent>`.
 
 ## Producing Events
 

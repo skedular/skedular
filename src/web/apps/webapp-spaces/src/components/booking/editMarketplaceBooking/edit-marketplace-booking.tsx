@@ -39,8 +39,7 @@ type Props = {
   onReloadRequired?: () => void;
 };
 
-const canShowMarketplacePaymentActions = (paymentStatusType: string | undefined, isPaymentRequired: boolean | undefined) =>
-  !!isPaymentRequired && paymentStatusType !== 'REJECTED' && paymentStatusType !== 'EXPIRED' && paymentStatusType !== 'RECORD_NEVER_CREATED';
+const canShowMarketplacePaymentActions = (paymentStatusType: string | undefined, isPaymentRequired: boolean | undefined) => !!isPaymentRequired && paymentStatusType === 'PENDING';
 
 const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired }: Props) => {
   const rootData = useFragment<editMarketplaceBooking_query$key>(
@@ -73,6 +72,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
       fragment editMarketplaceBooking_booking_query on Query @refetchable(queryName: "editMarketplaceBooking_booking_refetchableFragment") {
         booking(id: $bookingId) {
           id
+          cancellationOverrideReason
           from
           until
           notes
@@ -289,11 +289,16 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
     }
 
     const bookingDetailsInfo = getBookingDetailsInfo();
+    const cancellationOverrideReason = window.prompt('Cancellation reason')?.trim();
+    if (!cancellationOverrideReason) {
+      return;
+    }
     commitDeleteMarketplaceBooking({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: booking.id,
+          cancellationOverrideReason,
         },
       },
       onCompleted: (data, errors) => {
@@ -341,12 +346,22 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
       return;
     }
 
+    const booking = rootDataBooking.booking;
+    if (!booking) {
+      return;
+    }
+    const cancellationOverrideReason = window.prompt('Cancellation reason')?.trim();
+    if (!cancellationOverrideReason) {
+      return;
+    }
+
     commitDeleteMarketplaceBookingSubscription({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: subscription.id,
           cancellationMode: 'IMMEDIATE',
+          cancellationOverrideReason,
         },
       },
       onCompleted: (data, errors) => {
@@ -589,13 +604,14 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
 
                 <StackColumn spacing={1}>
                   <SubtitleIconTypography label="Cancellation" />
-                  {recurringBooking?.marketplaceBooking && !isResourceAssignmentPending ? (
+                  {booking.cancellationOverrideReason ? <BodyIconTypography label={`Cancellation reason: ${booking.cancellationOverrideReason}`} sx={{ opacity: 0.78 }} /> : null}
+                  {booking.cancellationOverrideReason ? null : recurringBooking?.marketplaceBooking && !isResourceAssignmentPending ? (
                     <Button color="error" variant="outlined" onClick={handleRemoveRecurringSeriesClick} sx={{ alignSelf: 'flex-start' }}>
                       Cancel Series
                     </Button>
                   ) : (
                     <Button color="error" variant="outlined" onClick={handleRemoveBookingClick} sx={{ alignSelf: 'flex-start' }}>
-                      Remove Booking
+                      Cancel Booking
                     </Button>
                   )}
                 </StackColumn>

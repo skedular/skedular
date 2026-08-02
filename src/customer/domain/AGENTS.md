@@ -15,8 +15,8 @@ This file covers `customer/domain/`.
 ## Aspire App Host Rule
 
 - Keep customer dependency readiness in `Customer.Domain.AppHost/AppHost.cs`.
-- All resources referenced by customer should have matching `WaitFor(...)` or `WaitForCompletion(...)` there rather
-  than in test startup.
+- All resources referenced by customer should have matching `WaitFor(...)` or `WaitForCompletion(...)` there rather than
+  in test startup.
 
 ## Test Style
 

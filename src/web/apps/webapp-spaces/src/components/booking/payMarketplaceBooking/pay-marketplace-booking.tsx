@@ -560,9 +560,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
               {rootData.organizationBookingPermissions.canModifyPaymentMethod &&
                 booking.marketplaceBooking &&
                 booking.marketplaceBooking.isPaymentRequired &&
-                booking.marketplaceBooking.paymentStatus.type !== 'REJECTED' &&
-                booking.marketplaceBooking.paymentStatus.type !== 'EXPIRED' &&
-                booking.marketplaceBooking.paymentStatus.type !== 'RECORD_NEVER_CREATED' && (
+                booking.marketplaceBooking.paymentStatus.type === 'PENDING' && (
                   <StackRow>
                     <Button variant="contained" onClick={handleConfirmPaymentClick}>
                       Confirm Payment

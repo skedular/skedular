@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e3acea45847e39e30dc9e8f099e7826a>>
+ * @generated SignedSource<<6111e2b234bc8958f374cb2a90a0e2cf>>
  * @lightSyntaxTransform
  */
 
@@ -30,6 +30,11 @@ export type myBookingCard_BookingDetails$data = {
       }>;
     };
   }>;
+  readonly cancellationAvailability: {
+    readonly canCancel: boolean;
+    readonly requiresReason: boolean;
+    readonly unavailableReason: string | null | undefined;
+  };
   readonly cancellationOverrideReason: string | null | undefined;
   readonly cancellationPolicyOverridden: boolean;
   readonly channel: {
@@ -140,6 +145,38 @@ return {
   "name": "myBookingCard_BookingDetails",
   "selections": [
     (v0/*:: as any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "MarketplaceCancellationAvailabilityDetails",
+      "kind": "LinkedField",
+      "name": "cancellationAvailability",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canCancel",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "requiresReason",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "unavailableReason",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -471,6 +508,6 @@ return {
 };
 })();
 
-(node as any).hash = "589ed51a485076c623a028b49f02e0c4";
+(node as any).hash = "b18e06395987e676c0e9aec771ee1c3a";
 
 export default node;

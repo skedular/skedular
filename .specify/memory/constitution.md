@@ -1,6 +1,25 @@
 <!--
 SYNC IMPACT REPORT
 ==================
+Version change: 2.3.0 → 2.4.0
+
+Modified principles:
+  - IV. Frontend Consistency — added a mandatory public-documentation review/update for
+    customer-facing or operator-facing behavior changes
+
+Added sections: none
+Removed sections: none
+
+Templates reviewed and alignment status:
+  ✅ .specify/templates/plan-template.md — added a documentation review gate for web behavior changes
+  ✅ .specify/templates/spec-template.md — no direct structural change required
+  ✅ .specify/templates/tasks-template.md — existing documentation task remains compatible
+
+Deferred TODOs: none
+-->
+<!--
+SYNC IMPACT REPORT
+==================
 Version change: 2.2.0 → 2.3.0
 
 Modified principles:
@@ -214,7 +233,11 @@ product-specific Relay queries. Auth entry points (sign-in, callback, account se
 notifications) remain in `webapp` and are shared entry points for all products.
 
 All user-facing and operator-facing copy MUST use American spelling and grammar; technical
-identifiers (API fields, routes, schema names) are exempt.
+identifiers (API fields, routes, schema names) are exempt. Any change to customer-facing or
+operator-facing behavior MUST include a review of the corresponding public-web documentation.
+Documentation MUST be updated in the same change when the behavior, eligibility rules, visible
+states, cancellation/refund semantics, or user/operator actions are changed. If no update is
+needed, the plan or review notes MUST record why the existing documentation remains accurate.
 
 **Rationale**: Centralizing the design system and shared runtime modules into packages means a
 single change propagates to all products simultaneously, eliminating duplication and drift.
@@ -226,7 +249,10 @@ product-specific work.
 feature or page components (outside `web/packages/ui/src/typography/`), import
 typography wrappers from any path other than `@skedular/ui`, duplicate shared providers or
 utilities inside a product app instead of using `@skedular/shared`, or introduce
-non-American-English copy in user-facing strings MUST be corrected before merging.
+non-American-English copy in user-facing strings MUST be corrected before merging. PRs that
+change customer-facing or operator-facing behavior MUST also include the corresponding
+public-web documentation update or an explicit rationale for why no documentation change is
+required.
 
 ### V. Change Safety and Pattern Consistency
 

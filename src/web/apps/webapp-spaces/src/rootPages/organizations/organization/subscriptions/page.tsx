@@ -571,7 +571,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
         ),
       },
     ],
-    [handleOpenMoreActionsClick, handleOpenSubscriptionClick],
+    [handleOpenMoreActionsClick, handleOpenSubscriptionClick, integratedPlatform, organizationCustomDomain, router],
   );
 
   const handleConfirmRecurringBookingPaymentClick = (recurringBookingId: string, cycleLabel: string) => {

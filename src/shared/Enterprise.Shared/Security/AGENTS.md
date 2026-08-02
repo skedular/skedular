@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Provides the security pipeline surface: request token validation middleware, SAML SSO, shared token
-contracts, and a gRPC authenticator. Provider implementations and cookie encryption now live in
-their own sibling modules and are composed into this pipeline by the root `Enterprise.Shared`
+Provides the security pipeline surface: request token validation middleware, SAML SSO, shared token contracts, and a
+gRPC authenticator. Provider implementations and cookie encryption now live in their own sibling modules and are
+composed into this pipeline by the root `Enterprise.Shared`
 extensions.
 
 ## Sub-modules
@@ -33,8 +33,8 @@ Supported providers and their config keys:
 | Google         | `IdentityProviders:Google`  | `IGoogleTokenService`                                   |
 | Azure Entra ID | `Azure:Entra`               | `IAzureEntraTokenService`, `IGraphServiceClientFactory` |
 
-All providers implement `ITokenService`. Root `AddIdentityTokenProviders()` aggregates the
-registered ones into `IEnumerable<ITokenService>` for multi-provider validation pipelines.
+All providers implement `ITokenService`. Root `AddIdentityTokenProviders()` aggregates the registered ones into
+`IEnumerable<ITokenService>` for multi-provider validation pipelines.
 
 ### Core security middleware
 
@@ -53,8 +53,8 @@ instances and enriches the request context with the resolved identity.
 builder.AddCookieServices();
 ```
 
-`ICookieEncryptionService` no longer lives under `Security/`. It is owned by the `Cookie/` module and
-uses `IStringEncryptionAlgorithm` from `Encryption/`.
+`ICookieEncryptionService` no longer lives under `Security/`. It is owned by the `Cookie/` module and uses
+`IStringEncryptionAlgorithm` from `Encryption/`.
 
 ### SAML SSO
 
@@ -68,16 +68,16 @@ app.UseSso();   // adds SsoContextEnricherMiddleware
 
 ## Encryption Boundary
 
-- `IStringEncryptionAlgorithm` lives under `Encryption/` and is the low-level cipher shared by cookie
-  encryption and Xero token encryption.
-- `ICookieEncryptionService` lives under `Cookie/` and remains the cookie-specific wrapper. Do not
-  share it with Xero token encryption.
+- `IStringEncryptionAlgorithm` lives under `Encryption/` and is the low-level cipher shared by cookie encryption and
+  Xero token encryption.
+- `ICookieEncryptionService` lives under `Cookie/` and remains the cookie-specific wrapper. Do not share it with Xero
+  token encryption.
 - `IXeroTokenEncryptionService` lives in `Accounting/` with its own key configuration.
 
 ## gRPC Authentication
 
-`IGrpcAuthenticator` (registered by `AddSecurity()`) verifies API key or bearer token metadata on
-incoming gRPC calls. Use `GrpcExtensions.CreateMetadata(...)` to attach credentials on the client side.
+`IGrpcAuthenticator` (registered by `AddSecurity()`) verifies API key or bearer token metadata on incoming gRPC calls.
+Use `GrpcExtensions.CreateMetadata(...)` to attach credentials on the client side.
 
 ## Configuration Reference
 
@@ -102,6 +102,6 @@ incoming gRPC calls. Use `GrpcExtensions.CreateMetadata(...)` to attach credenti
 - Do not reuse `ICookieEncryptionService` for Xero token encryption — they must stay separate.
 - `ITokenService` implementations must be registered before the app starts serving requests; root
   `AddIdentityTokenProviders()` builds the aggregated `IEnumerable<ITokenService>` at startup.
-- Do not add cookie-encryption registration logic back into `Security/Extensions.cs`; keep that split in
-  the root `Enterprise.Shared/Extensions.cs` composition layer.
+- Do not add cookie-encryption registration logic back into `Security/Extensions.cs`; keep that split in the root
+  `Enterprise.Shared/Extensions.cs` composition layer.
 - Do not bypass `SecurityContextEnricherMiddleware` by reading tokens manually in controllers.

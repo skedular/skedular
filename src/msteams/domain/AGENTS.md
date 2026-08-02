@@ -16,8 +16,8 @@ This file covers `msteams/domain/`.
 ## Aspire App Host Rule
 
 - Keep MsTeams dependency readiness in `MsTeams.Domain.AppHost/AppHost.cs`.
-- All resources referenced by MsTeams should have matching `WaitFor(...)` or `WaitForCompletion(...)` there rather
-  than in test startup.
+- All resources referenced by MsTeams should have matching `WaitFor(...)` or `WaitForCompletion(...)` there rather than
+  in test startup.
 
 ## Agent Rule
 

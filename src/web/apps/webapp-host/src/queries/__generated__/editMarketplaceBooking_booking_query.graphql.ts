@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<562a768a652043b3db6fbf1554d511f1>>
+ * @generated SignedSource<<c0b7bd8b0a6ca1fd852664128ae48ccf>>
  * @lightSyntaxTransform
  */
 
@@ -38,6 +38,7 @@ export type editMarketplaceBooking_booking_query$data = {
         }>;
       };
     }>;
+    readonly cancellationOverrideReason: string | null | undefined;
     readonly category: {
       readonly category: BookingCategory;
     };
@@ -200,6 +201,13 @@ return {
       "plural": false,
       "selections": [
         (v0/*:: as any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "cancellationOverrideReason",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -591,6 +599,6 @@ return {
 };
 })();
 
-(node as any).hash = "0ff3f8f5aa0c84acdcd3bb04878dbbed";
+(node as any).hash = "9bb5a77a22b380ca156575ec21840661";
 
 export default node;

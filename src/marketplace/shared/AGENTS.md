@@ -4,8 +4,8 @@ This file covers `marketplace/shared/`.
 
 ## Scope
 
-- `marketplace/shared/` owns the core marketplace domain model: products, product versions, pricing options,
-  listings, and marketplace-facing purchase/checkout state.
+- `marketplace/shared/` owns the core marketplace domain model: products, product versions, pricing options, listings,
+  and marketplace-facing purchase/checkout state.
 - It is the library consumed by `Marketplace.Api`, `Marketplace.Jobs`, and `Marketplace.Processors`.
 
 ## Product and Pricing Model

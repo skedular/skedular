@@ -17,6 +17,6 @@ This file applies to `location/shared/Location.Shared.UnitTests`.
 ## Agent Rule
 
 - Keep unit tests fast and free of real infrastructure (no DB, no Kafka, no Temporal).
-- If the test requires real infrastructure, it belongs in `location/domain/Location.Domain.IntegrationTests` or
-  the system tests instead.
+- If the test requires real infrastructure, it belongs in `location/domain/Location.Domain.IntegrationTests` or the
+  system tests instead.
 - Follow the unit test file shape defined in the root `AGENTS.md`.
