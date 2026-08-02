@@ -18,6 +18,13 @@ public class MarketplaceBookingSubscriptionDetails : Node
     [GraphQLName("status")] public MarketplaceBookingSubscriptionStatusDetails Status { get; set; } = new();
     [GraphQLName("autoRenew")] public bool AutoRenew { get; set; }
     [GraphQLName("cancelAtPeriodEnd")] public bool CancelAtPeriodEnd { get; set; }
+
+    [GraphQLName("cancellationPolicyOverridden")]
+    public bool CancellationPolicyOverridden { get; set; }
+
+    [GraphQLName("cancellationOverrideReason")]
+    public string? CancellationOverrideReason { get; set; }
+
     [GraphQLName("weeklySelectedDays")] public IEnumerable<DayOfWeek> WeeklySelectedDays { get; set; } = [];
     [GraphQLName("marketplaceBooking")] public MarketplaceBookingDetails MarketplaceBooking { get; set; } = new();
     [GraphQLName("recurringBookings")] public IEnumerable<RecurringBookingDetails> RecurringBookings { get; set; } = [];

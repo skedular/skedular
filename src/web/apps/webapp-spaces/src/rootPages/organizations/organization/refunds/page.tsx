@@ -28,7 +28,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/system/Box';
 import type { SxProps, Theme } from '@mui/system';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { getOrganizationRefundBaseLink } from '@/components/links';
+import { getOrganizationRefundBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import Grid from '@mui/material/Grid';
 import Link from 'next/link';
@@ -228,6 +228,7 @@ const RefundManagement = ({
     type: refund.localEntityType === 'MarketplaceBookingSubscription' ? 'Subscription' : 'Booking',
     customer: refund.requestedByCustomerName ?? 'Customer unavailable',
     amount: `${refund.refundAmount ?? 'Amount unavailable'} ${refund.currencyToDisplay}`,
+    reason: refund.reason ?? '',
     status: refund.status.name,
     requestedAt: refund.requestedAt,
   }));
@@ -235,6 +236,7 @@ const RefundManagement = ({
     { field: 'type', headerName: 'Type', minWidth: 130, flex: 0.8 },
     { field: 'customer', headerName: 'Customer', minWidth: 200, flex: 1.4 },
     { field: 'amount', headerName: 'Amount', minWidth: 150, flex: 0.9 },
+    { field: 'reason', headerName: 'Cancellation reason', minWidth: 220, flex: 1.4 },
     {
       field: 'status',
       headerName: 'Status',
@@ -322,11 +324,21 @@ const RefundManagement = ({
                         <Divider />
                         <StackColumn spacing={0.5}>
                           <SmallIconTypography label={`${refund.refundAmount ?? 'Amount unavailable'} ${refund.currencyToDisplay}`} />
+                          {refund.reason ? <SmallIconTypography label={`Cancellation reason: ${refund.reason}`} /> : null}
                           <SmallIconTypography label={`Requested ${new Date(refund.requestedAt).toLocaleString()}`} sx={{ opacity: 0.72 }} />
                         </StackColumn>
                         <Button component={Link} href={openRefund(refund.id)} sx={{ alignSelf: 'flex-start', mt: 'auto' }}>
                           Review refund
                         </Button>
+                        {refund.localEntityType === 'MarketplaceBookingSubscription' ? (
+                          <Button
+                            component={Link}
+                            href={getOrganizationSubscriptionBaseLink(integratedPlatform, data.organization?.customDomain ?? '', refund.localEntityId)}
+                            sx={{ alignSelf: 'flex-start' }}
+                          >
+                            View subscription
+                          </Button>
+                        ) : null}
                       </StackColumn>
                     </CardContent>
                   </Card>

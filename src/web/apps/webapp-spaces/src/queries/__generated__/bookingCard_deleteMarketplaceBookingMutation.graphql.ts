@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<40b679405e06f184e26acd35a931af33>>
+ * @generated SignedSource<<734e950a698191d1b2882ba257af9b5b>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,9 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type CancellationErrorCode = "INSUFFICIENT_MANAGEMENT_PERMISSION" | "INVALID_TERMINAL_STATE" | "OVERRIDE_REASON_REQUIRED" | "POLICY_RESTRICTION" | "%future added value";
 export type DeleteMarketplaceBookingInput = {
+  cancellationOverrideReason?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   id: string;
 };
@@ -20,6 +22,10 @@ export type bookingCard_deleteMarketplaceBookingMutation$data = {
   readonly deleteMarketplaceBooking: {
     readonly booking: {
       readonly id: string;
+    } | null | undefined;
+    readonly cancellationError: {
+      readonly code: CancellationErrorCode;
+      readonly message: string;
     } | null | undefined;
   };
 };
@@ -51,6 +57,31 @@ v1 = [
 v2 = {
   "alias": null,
   "args": null,
+  "concreteType": "CancellationErrorDetails",
+  "kind": "LinkedField",
+  "name": "cancellationError",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "code",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "message",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
@@ -70,6 +101,7 @@ return {
         "name": "deleteMarketplaceBooking",
         "plural": false,
         "selections": [
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -78,7 +110,7 @@ return {
             "name": "booking",
             "plural": false,
             "selections": [
-              (v2/*:: as any*/)
+              (v3/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -103,6 +135,7 @@ return {
         "name": "deleteMarketplaceBooking",
         "plural": false,
         "selections": [
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -111,7 +144,7 @@ return {
             "name": "booking",
             "plural": false,
             "selections": [
-              (v2/*:: as any*/),
+              (v3/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -137,16 +170,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "64c5a60e281e7f361fa19ff29dc89d97",
+    "cacheID": "e471d5b9690c6f813931fa2195322b9c",
     "id": null,
     "metadata": {},
     "name": "bookingCard_deleteMarketplaceBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_deleteMarketplaceBookingMutation(\n  $input: DeleteMarketplaceBookingInput!\n) {\n  deleteMarketplaceBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
+    "text": "mutation bookingCard_deleteMarketplaceBookingMutation(\n  $input: DeleteMarketplaceBookingInput!\n) {\n  deleteMarketplaceBooking(input: $input) {\n    cancellationError {\n      code\n      message\n    }\n    booking {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "50661ec7999e23dbf0ba86bb9a622ed3";
+(node as any).hash = "29b301011ce3fea33f1b331814349ca5";
 
 export default node;

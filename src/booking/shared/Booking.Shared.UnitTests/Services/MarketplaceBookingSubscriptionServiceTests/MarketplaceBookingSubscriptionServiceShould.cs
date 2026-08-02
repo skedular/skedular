@@ -150,7 +150,8 @@ public class MarketplaceBookingSubscriptionServiceShould
 
         // Act & Assert
         await Should.ThrowAsync<MarketplaceBookingSubscriptionCancellationNotAllowed>(() =>
-            sut.DeleteAsync(existingSubscription, deletedByCustomer, MarketplaceBookingSubscriptionCancellationMode.Immediate, cancellationToken));
+            sut.DeleteAsync(existingSubscription, deletedByCustomer, MarketplaceBookingSubscriptionCancellationMode.Immediate, false, null,
+                cancellationToken));
     }
 
     [Theory]
@@ -172,12 +173,13 @@ public class MarketplaceBookingSubscriptionServiceShould
 
         // Act & Assert
         await Should.ThrowAsync<MarketplaceBookingSubscriptionCancellationNotAllowed>(() =>
-            sut.DeleteAsync(existingSubscription, deletedByCustomer, MarketplaceBookingSubscriptionCancellationMode.Immediate, cancellationToken));
+            sut.DeleteAsync(existingSubscription, deletedByCustomer, MarketplaceBookingSubscriptionCancellationMode.Immediate, false, null,
+                cancellationToken));
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task DeleteAsync_Allows_User_Delete_When_Inside_Cancellation_Window(
+    public async Task DeleteAsync_Allows_Operator_Delete_When_Cancellation_Policy_Blocks_Cancellation(
         [Frozen] TimeProvider timeProvider,
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
@@ -196,8 +198,8 @@ public class MarketplaceBookingSubscriptionServiceShould
         var existingSubscription = CreateSubscription(
             now.AddDays(-1),
             now.AddDays(3),
-            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
-            [new ProductPricingCancellationRefundRule(120, 100)]);
+            ProductPricingCancellationPolicyType.NoCancellation,
+            []);
         var deletedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
@@ -215,6 +217,8 @@ public class MarketplaceBookingSubscriptionServiceShould
             existingSubscription,
             deletedByCustomer,
             MarketplaceBookingSubscriptionCancellationMode.Immediate,
+            true,
+            "Customer requested an exception.",
             cancellationToken);
 
         // Assert
@@ -274,6 +278,8 @@ public class MarketplaceBookingSubscriptionServiceShould
             existingSubscription,
             deletedByCustomer,
             MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd,
+            false,
+            null,
             cancellationToken);
 
         result.ShouldBe(updatedSubscription);
@@ -335,6 +341,8 @@ public class MarketplaceBookingSubscriptionServiceShould
             existingSubscription,
             deletedByCustomer,
             MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd,
+            false,
+            null,
             cancellationToken);
 
         existingSubscription.NextRenewalAt.ShouldBe(existingSubscription.StartedAt.AddMonths(1));
@@ -375,6 +383,8 @@ public class MarketplaceBookingSubscriptionServiceShould
             existingSubscription,
             deletedByCustomer,
             MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd,
+            false,
+            null,
             cancellationToken);
 
         result.ShouldBe(updatedSubscription);
@@ -418,6 +428,8 @@ public class MarketplaceBookingSubscriptionServiceShould
             existingSubscription,
             deletedByCustomer,
             MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd,
+            false,
+            null,
             cancellationToken);
 
         result.ShouldBe(updatedSubscription);
@@ -457,7 +469,8 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdForUpdateAsync(subscription.Id, cancellationToken)).Returns(subscription);
         A.CallTo(() => entityMapper.MapTo(subscription)).Returns(new Shared.Models.MarketplaceBookingSubscription { Id = subscription.Id });
 
-        await sut.DeleteAsync(subscription, new Customer(), MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd, cancellationToken);
+        await sut.DeleteAsync(subscription, new Customer(), MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd, false, null,
+            cancellationToken);
 
         A.CallTo(() => accountingInvoiceCancellationService.CancelRecurringBookingFutureBillingAsync(recurringBooking, cancellationToken))
             .MustNotHaveHappened();

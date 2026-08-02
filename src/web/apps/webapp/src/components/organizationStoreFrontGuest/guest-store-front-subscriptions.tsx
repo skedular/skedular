@@ -128,6 +128,10 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
     useMutation<guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation>(graphql`
       mutation guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
         deleteMarketplaceBookingSubscription(input: $input) {
+          cancellationError {
+            code
+            message
+          }
           marketplaceBookingSubscription {
             id
             cancelAtPeriodEnd
@@ -171,7 +175,12 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
           cancellationMode: cancellationModeType,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (data, errors) => {
+        const cancellationError = data?.deleteMarketplaceBookingSubscription?.cancellationError;
+        if (cancellationError) {
+          toast(<NotificationContent content={`Failed to update ${productTitle}. ${cancellationError.message}`} />, errorNotificationOptions);
+          return;
+        }
         if (errors && errors.length > 0) {
           toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 

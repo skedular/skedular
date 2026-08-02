@@ -2,6 +2,7 @@ import { BodyIconTypography, DefaultDialogTitle, StackColumn, TwoButtonsDialogAc
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import { useState } from 'react';
 import { graphql, useLazyLoadQuery } from 'react-relay';
 import type { operatorCancelBookingButton_query } from '@/queries/__generated__/operatorCancelBookingButton_query.graphql';
@@ -9,7 +10,7 @@ import type { operatorCancelBookingButton_query } from '@/queries/__generated__/
 type Props = {
   bookingId: string;
   label: string;
-  onConfirm: () => void;
+  onConfirm: (reason: string) => void;
 };
 
 const query = graphql`
@@ -24,18 +25,28 @@ const query = graphql`
 
 const OperatorCancelBookingButton = ({ bookingId, label, onConfirm }: Props) => {
   const [open, setOpen] = useState(false);
+  const [reason, setReason] = useState('');
   const data = useLazyLoadQuery<operatorCancelBookingButton_query>(query, { bookingId }, { fetchPolicy: 'store-and-network' });
   const preview = data.marketplaceBookingRefundPreview;
 
   const close = () => setOpen(false);
   const confirm = () => {
     close();
-    onConfirm();
+    onConfirm(reason.trim());
   };
 
   return (
     <>
-      <Button variant="outlined" color="error" size="small" onClick={() => setOpen(true)} sx={{ textTransform: 'none' }}>
+      <Button
+        variant="outlined"
+        color="error"
+        size="small"
+        onClick={() => {
+          setReason('');
+          setOpen(true);
+        }}
+        sx={{ textTransform: 'none' }}
+      >
         {label}
       </Button>
       <Dialog open={open} onClose={close} fullWidth maxWidth="sm">
@@ -43,6 +54,16 @@ const OperatorCancelBookingButton = ({ bookingId, label, onConfirm }: Props) => 
         <DialogContent>
           <StackColumn spacing={1.5}>
             <BodyIconTypography label="Review the refund before confirming this operator cancellation." />
+            <TextField
+              label="Cancellation reason"
+              value={reason}
+              onChange={(event) => setReason(event.target.value)}
+              required
+              multiline
+              minRows={2}
+              helperText="Required when the cancellation policy would block this cancellation."
+              fullWidth
+            />
             <BodyIconTypography label={`Refund amount: ${preview.currencyToDisplay} ${preview.refundAmount ?? 0}`} />
             {preview.baseAmount && preview.refundAmount !== null && preview.baseAmount > preview.refundAmount ? (
               <BodyIconTypography label={`Non-refundable amount: ${preview.currencyToDisplay} ${preview.baseAmount - (preview.refundAmount ?? 0)}`} />

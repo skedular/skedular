@@ -33,6 +33,11 @@ import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 
+const toCustomerCancellationErrorMessage = (message: string) =>
+  message.toLowerCase().includes('cancellation') && message.toLowerCase().includes('not allowed')
+    ? 'This booking can no longer be cancelled because it is outside the allowed cancellation window.'
+    : message;
+
 type Props = {
   bookingDetailsRelay: myBookingCard_BookingDetails$key;
   organizationCustomDomain: string;
@@ -80,6 +85,8 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
     graphql`
       fragment myBookingCard_BookingDetails on BookingDetails {
         id
+        cancellationPolicyOverridden
+        cancellationOverrideReason
         from
         until
         notes
@@ -171,6 +178,10 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
   const [commitDeleteMarketplaceBooking] = useMutation<myBookingCard_deleteMarketplaceBookingMutation>(graphql`
     mutation myBookingCard_deleteMarketplaceBookingMutation($connectionIds: [ID!]!, $input: DeleteMarketplaceBookingInput!) {
       deleteMarketplaceBooking(input: $input) {
+        cancellationError {
+          code
+          message
+        }
         booking {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -191,6 +202,10 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
   const [commitDeleteMarketplaceBookingSubscription] = useMutation<myBookingCard_deleteMarketplaceBookingSubscriptionMutation>(graphql`
     mutation myBookingCard_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
       deleteMarketplaceBookingSubscription(input: $input) {
+        cancellationError {
+          code
+          message
+        }
         marketplaceBookingSubscription {
           id
           cancelAtPeriodEnd
@@ -337,13 +352,19 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+            themedToast(
+              <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${toCustomerCancellationErrorMessage(getRelayErrorMessage(errors))}`} />,
+              errorNotificationOptions,
+            );
 
             return;
           }
         },
         onError: (error) => {
-          themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
+          themedToast(
+            <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${toCustomerCancellationErrorMessage(getRelayErrorMessage(error))}`} />,
+            errorNotificationOptions,
+          );
         },
       });
     } else {
@@ -355,15 +376,29 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
             id: bookingDetails.id,
           },
         },
-        onCompleted: (_, errors) => {
+        onCompleted: (data, errors) => {
+          const cancellationError = data?.deleteMarketplaceBooking?.cancellationError;
+          if (cancellationError) {
+            themedToast(
+              <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${toCustomerCancellationErrorMessage(cancellationError.message)}`} />,
+              errorNotificationOptions,
+            );
+            return;
+          }
           if (errors && errors.length > 0) {
-            themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+            themedToast(
+              <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${toCustomerCancellationErrorMessage(getRelayErrorMessage(errors))}`} />,
+              errorNotificationOptions,
+            );
 
             return;
           }
         },
         onError: (error) => {
-          themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
+          themedToast(
+            <NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${toCustomerCancellationErrorMessage(getRelayErrorMessage(error))}`} />,
+            errorNotificationOptions,
+          );
         },
       });
     }
@@ -399,7 +434,15 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
             cancellationMode: 'IMMEDIATE',
           },
         },
-        onCompleted: (_, errors) => {
+        onCompleted: (data, errors) => {
+          const cancellationError = data?.deleteMarketplaceBookingSubscription?.cancellationError;
+          if (cancellationError) {
+            themedToast(
+              <NotificationContent content={`We couldn't cancel this recurring series. ${toCustomerCancellationErrorMessage(cancellationError.message)}`} />,
+              errorNotificationOptions,
+            );
+            return;
+          }
           if (errors && errors.length > 0) {
             themedToast(<NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
@@ -555,6 +598,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
             <Box sx={sectionSx}>
               <StackColumn spacing={1}>
+                {bookingDetails.cancellationPolicyOverridden ? (
+                  <CaptionIconTypography
+                    label={`Cancellation policy overridden${bookingDetails.cancellationOverrideReason ? `: ${bookingDetails.cancellationOverrideReason}` : ''}`}
+                  />
+                ) : null}
                 <SubtitleIconTypography label="Booking details" />
                 <Resources resources={bookingDetails.bookingResources.map((item) => ({ id: item.resource.id, name: item.resource.name, color: item.resource.color }))} hideNAText />
                 <CustomTags customTags={customTags.map((customTag) => ({ id: customTag.id, name: customTag.name, color: customTag.color }))} hideNAText />

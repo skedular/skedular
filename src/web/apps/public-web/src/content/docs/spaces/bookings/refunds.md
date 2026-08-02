@@ -48,6 +48,12 @@ The cancellation policy is configured with the Product Price. Spaces supports th
 
 Refund preview and creation require a confirmed payment and a confirmed, policy-eligible cancellation. A refund cannot exceed the amount paid, less any amount already refunded.
 
+## Operator cancellation overrides
+
+An organization owner or administrator can cancel a Booking or Subscription when the customer-facing cancellation policy would otherwise block the cancellation. The operator must provide a short reason when the policy is overridden. This permission changes only whether cancellation is allowed; it does not change the refund calculation, payment checks, resource cleanup, invoice handling, or provider approval workflow.
+
+Customers remain subject to the published cancellation policy and cannot grant themselves operator permissions by sending an override reason. After an override, Stripe refunds continue through the automatic Stripe flow, while bank-transfer refunds still require the operator's approval and transfer confirmation, and Xero refunds still follow the accounting approval/processing flow.
+
 ## How the refund amount is determined
 
 Spaces starts with the cancellation policy and the cancellation time, then considers the confirmed amount paid and any previous refund activity. The operator can enter a lower **Approved amount** than the policy amount, but it cannot exceed the current refundable amount.

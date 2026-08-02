@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fa17a3f2594999b41f63f4f775ac88d0>>
+ * @generated SignedSource<<a259f8e7316dd16ca314ca2e0b81ba68>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,9 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type CancellationErrorCode = "INSUFFICIENT_MANAGEMENT_PERMISSION" | "INVALID_TERMINAL_STATE" | "OVERRIDE_REASON_REQUIRED" | "POLICY_RESTRICTION" | "%future added value";
 export type DeleteMarketplaceBookingInput = {
+  cancellationOverrideReason?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   id: string;
 };
@@ -19,6 +21,10 @@ export type payMarketplaceBooking_deleteMarketplaceBookingMutation$data = {
   readonly deleteMarketplaceBooking: {
     readonly booking: {
       readonly id: string;
+    } | null | undefined;
+    readonly cancellationError: {
+      readonly code: CancellationErrorCode;
+      readonly message: string;
     } | null | undefined;
   };
 };
@@ -50,6 +56,31 @@ v1 = [
     "name": "deleteMarketplaceBooking",
     "plural": false,
     "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "CancellationErrorDetails",
+        "kind": "LinkedField",
+        "name": "cancellationError",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "code",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "message",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -90,16 +121,16 @@ return {
     "selections": (v1/*:: as any*/)
   },
   "params": {
-    "cacheID": "71f7137c0e98c9de87c235e6f7151b5b",
+    "cacheID": "1286cdb96e44b1144a00277094dfed8b",
     "id": null,
     "metadata": {},
     "name": "payMarketplaceBooking_deleteMarketplaceBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation payMarketplaceBooking_deleteMarketplaceBookingMutation(\n  $input: DeleteMarketplaceBookingInput!\n) {\n  deleteMarketplaceBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
+    "text": "mutation payMarketplaceBooking_deleteMarketplaceBookingMutation(\n  $input: DeleteMarketplaceBookingInput!\n) {\n  deleteMarketplaceBooking(input: $input) {\n    cancellationError {\n      code\n      message\n    }\n    booking {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5946e5620f307438f389539fd0ac1658";
+(node as any).hash = "5d3bd1141da1d9ac9a25d17cd9770c6b";
 
 export default node;

@@ -1,7 +1,7 @@
 'use client';
 
 import { RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
-import { getOrganizationSubscriptionsBaseLink } from '@/components/links';
+import { getOrganizationRefundBaseLink, getOrganizationSubscriptionsBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import {
   SupportedMarketplaceBookingSubscriptionCancellationMode,
@@ -26,6 +26,7 @@ import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
 import type { SxProps, Theme } from '@mui/system';
@@ -63,6 +64,8 @@ const RootQuery = graphql`
     }
     marketplaceBookingSubscription(id: $subscriptionId) {
       id
+      cancellationPolicyOverridden
+      cancellationOverrideReason
       startedAt
       nextRenewalAt
       autoRenew
@@ -175,10 +178,15 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   const rootData = usePreloadedQuery<pageOrganizationSubscriptionDetail_rootQuery>(RootQuery, queryReference);
   const { integratedPlatform } = useIntegratedPlatform();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
+  const [cancellationOverrideReason, setCancellationOverrideReason] = useState('');
   const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
     useMutation<pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation>(graphql`
       mutation pageOrganizationSubscriptionDetail_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
         deleteMarketplaceBookingSubscription(input: $input) {
+          cancellationError {
+            code
+            message
+          }
           marketplaceBookingSubscription {
             id
             cancelAtPeriodEnd
@@ -254,6 +262,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     subscriptionId: string,
     productTitle: string,
     cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode,
+    overrideReason?: string,
   ) => {
     commitDeleteMarketplaceBookingSubscription({
       variables: {
@@ -261,9 +270,15 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           clientMutationId: uuid(),
           id: subscriptionId,
           cancellationMode: cancellationModeType,
+          cancellationOverrideReason: overrideReason,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (data, errors) => {
+        const cancellationError = data.deleteMarketplaceBookingSubscription.cancellationError;
+        if (cancellationError) {
+          toast(<NotificationContent content={`We couldn't update ${productTitle}. ${cancellationError.message}`} />, errorNotificationOptions);
+          return;
+        }
         if (errors && errors.length > 0) {
           toast(<NotificationContent content={`We couldn't update ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
           return;
@@ -287,6 +302,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       productTitle,
       mode: cancellationMode,
     });
+    setCancellationOverrideReason('');
   };
 
   const handleConfirmRecurringBookingPaymentClick = (recurringBookingId: string, cycleLabel: string) => {
@@ -452,6 +468,13 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                       <StackColumn spacing={2} sx={{ mt: 2 }}>
                         <Divider />
                         <MarketplaceRefundAdminPanel entityLabel={`${productTitle} for ${customerLabel}`} refund={subscription.refund} />
+                        <Button
+                          component={Link}
+                          href={getOrganizationRefundBaseLink(integratedPlatform, organizationCustomDomain, subscription.refund.id)}
+                          sx={{ alignSelf: 'flex-start' }}
+                        >
+                          View refund details
+                        </Button>
                       </StackColumn>
                     ) : null}
                   </CardContent>
@@ -551,6 +574,9 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                     />
                     <SummaryRow label="Payment method" value={subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} />
                     <SummaryRow label="Quantity" value={`${subscription.marketplaceBooking.quantity}`} />
+                    {subscription.cancellationPolicyOverridden ? (
+                      <SummaryRow label="Cancellation reason" value={subscription.cancellationOverrideReason ?? 'Policy overridden'} />
+                    ) : null}
                   </StackColumn>
 
                   <Divider sx={{ my: 2 }} />
@@ -578,6 +604,17 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           <DialogContentText>
             {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing will stop immediately. Previous invoices will stay on record.`}
           </DialogContentText>
+          <TextField
+            label="Cancellation reason"
+            value={cancellationOverrideReason}
+            onChange={(event) => setCancellationOverrideReason(event.target.value)}
+            required
+            multiline
+            minRows={2}
+            fullWidth
+            helperText="Required when the cancellation policy would block this cancellation."
+            sx={{ mt: 2 }}
+          />
           <TwoButtonsDialogActions
             onPrimaryClicked={() => {
               if (!pendingCancellationConfirmation) {
@@ -588,6 +625,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                 pendingCancellationConfirmation.subscriptionId,
                 pendingCancellationConfirmation.productTitle,
                 pendingCancellationConfirmation.mode.type,
+                cancellationOverrideReason.trim(),
               );
               setPendingCancellationConfirmation(null);
             }}

@@ -3,7 +3,18 @@ using Api.Shared.Services.Offering;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Services;
 using Enterprise.Shared.GraphQL;
+using IMarketplaceBookingService = Booking.Api.Services.IMarketplaceBookingService;
+using IMarketplaceBookingSubscriptionService = Booking.Api.Services.IMarketplaceBookingSubscriptionService;
+using IPrivateBookingService = Booking.Api.Services.IPrivateBookingService;
+using IPrivateRecurringBookingService = Booking.Api.Services.IPrivateRecurringBookingService;
+using IResourceService = Booking.Api.Services.IResourceService;
+using MarketplaceBookingService = Booking.Api.Services.MarketplaceBookingService;
+using MarketplaceBookingSubscriptionService = Booking.Api.Services.MarketplaceBookingSubscriptionService;
+using PrivateBookingService = Booking.Api.Services.PrivateBookingService;
+using PrivateRecurringBookingService = Booking.Api.Services.PrivateRecurringBookingService;
+using ResourceService = Booking.Api.Services.ResourceService;
 
 namespace Booking.Api;
 
@@ -34,6 +45,7 @@ public static class Extensions
                 .AddScoped<IPrivateBookingService, PrivateBookingService>()
                 .AddScoped<IPrivateRecurringBookingService, PrivateRecurringBookingService>()
                 .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>()
+                .AddScoped<ICancellationDecisionService, CancellationDecisionService>()
                 .AddScoped<IMarketplaceBookingFailureReadService, MarketplaceBookingFailureReadService>()
                 .AddScoped<IMarketplaceBookingSubscriptionService, MarketplaceBookingSubscriptionService>()
                 .AddScoped<IResourceService, ResourceService>()

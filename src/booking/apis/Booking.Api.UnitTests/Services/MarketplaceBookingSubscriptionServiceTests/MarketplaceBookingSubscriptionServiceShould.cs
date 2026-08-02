@@ -182,10 +182,13 @@ public class MarketplaceBookingSubscriptionServiceShould
                 existingSubscription,
                 customer,
                 MarketplaceBookingSubscriptionCancellationMode.Immediate,
+                false,
+                null,
                 cancellationToken))
             .Returns(deletedSubscription);
 
-        var result = await sut.DeleteAsync(existingSubscription.Id, MarketplaceBookingSubscriptionCancellationMode.Immediate, cancellationToken);
+        var result = await sut.DeleteAsync(existingSubscription.Id, MarketplaceBookingSubscriptionCancellationMode.Immediate, null,
+            cancellationToken);
 
         result.ShouldBe(deletedSubscription);
     }
@@ -216,10 +219,13 @@ public class MarketplaceBookingSubscriptionServiceShould
                 existingSubscription,
                 customer,
                 MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd,
+                false,
+                null,
                 cancellationToken))
             .Returns(deletedSubscription);
 
-        var result = await sut.DeleteAsync(existingSubscription.Id, MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd, cancellationToken);
+        var result = await sut.DeleteAsync(existingSubscription.Id, MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd, null,
+            cancellationToken);
 
         result.ShouldBe(deletedSubscription);
     }

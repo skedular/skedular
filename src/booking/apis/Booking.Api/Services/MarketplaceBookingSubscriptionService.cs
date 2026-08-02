@@ -5,6 +5,7 @@ using Booking.Api.Services.Authorization;
 using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.GraphQL;
@@ -33,6 +34,7 @@ public interface IMarketplaceBookingSubscriptionService
     Task<MarketplaceBookingSubscription> DeleteAsync(
         string id,
         MarketplaceBookingSubscriptionCancellationMode cancellationMode,
+        string? cancellationOverrideReason,
         CancellationToken cancellationToken);
 }
 
@@ -40,6 +42,7 @@ public class MarketplaceBookingSubscriptionService(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     IOrganizationAuthorizationService organizationAuthorizationService,
+    ICancellationDecisionService cancellationDecisionService,
     ITeamAuthorizationService teamAuthorizationService,
     IContext context,
     ICachedCustomerService cachedCustomerService,
@@ -233,6 +236,7 @@ public class MarketplaceBookingSubscriptionService(
     public async Task<MarketplaceBookingSubscription> DeleteAsync(
         string id,
         MarketplaceBookingSubscriptionCancellationMode cancellationMode,
+        string? cancellationOverrideReason,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
@@ -282,10 +286,21 @@ public class MarketplaceBookingSubscriptionService(
             }
         }
 
+        var productOwnerOrganizationId = existingSubscription.ProductVersion?.Product?.Organization?.Id;
+        var cancellationDecision = string.IsNullOrWhiteSpace(productOwnerOrganizationId)
+            ? new CancellationDecision(new CancellationActor(CancellationActorCategory.Customer, customer.Id), false, null)
+            : cancellationDecisionService.ResolveCustomerDecision(
+                customer.Id,
+                productOwnerOrganizationId,
+                await organizationAuthorizationService.CanOverrideCancellationPolicyAsync(productOwnerOrganizationId, customer.Id, cancellationToken),
+                cancellationOverrideReason);
+
         var subscription = await sharedMarketplaceBookingSubscriptionService.DeleteAsync(
             existingSubscription,
             customer,
             cancellationMode,
+            cancellationDecision.CanOverridePolicy,
+            cancellationDecision.OverrideReason,
             cancellationToken);
         logger.LogInformation(
             "Marketplace subscription cancellation completed in Booking API. SubscriptionId={SubscriptionId}; status={SubscriptionStatus}",

@@ -26,13 +26,14 @@ public interface IMarketplaceBookingService
     Task<string?> GetBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken);
     Task<MarketplaceBookingAddResult> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> UpdateAsync(MarketplaceBookingPatchRequest request, CancellationToken cancellationToken);
-    Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken);
+    Task<Shared.Models.Booking> DeleteAsync(string id, string? cancellationOverrideReason, CancellationToken cancellationToken);
 }
 
 public class MarketplaceBookingService(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     IOrganizationAuthorizationService organizationAuthorizationService,
+    ICancellationDecisionService cancellationDecisionService,
     ITeamAuthorizationService teamAuthorizationService,
     IContext context,
     Shared.Services.IMarketplaceBookingService sharedMarketplaceBookingService,
@@ -202,7 +203,7 @@ public class MarketplaceBookingService(
         }
     }
 
-    public async Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Booking> DeleteAsync(string id, string? cancellationOverrideReason, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -239,10 +240,21 @@ public class MarketplaceBookingService(
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(productVersionId, cancellationToken) ??
                              throw new ProductVersionNotFound();
         var productOwnerOrganizationId = productVersion.Product.Organization.Id;
-        var ignoreCancellationPolicy =
-            await organizationAuthorizationService.CanDeleteBookingAsync(productOwnerOrganizationId, customer.Id, cancellationToken);
+        var canManageProduct =
+            await organizationAuthorizationService.CanOverrideCancellationPolicyAsync(productOwnerOrganizationId, customer.Id, cancellationToken);
+        var cancellationDecision = cancellationDecisionService.ResolveCustomerDecision(
+            customer.Id,
+            productOwnerOrganizationId,
+            canManageProduct,
+            cancellationOverrideReason);
 
-        return await sharedMarketplaceBookingService.DeleteAsync(existingBooking, customer, ignoreCancellationPolicy, true, cancellationToken);
+        return await sharedMarketplaceBookingService.DeleteAsync(
+            existingBooking,
+            customer,
+            cancellationDecision.CanOverridePolicy,
+            cancellationDecision.OverrideReason,
+            true,
+            cancellationToken);
     }
 
     private async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)

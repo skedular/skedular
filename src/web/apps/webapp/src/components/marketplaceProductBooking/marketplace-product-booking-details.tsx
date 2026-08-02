@@ -19,6 +19,7 @@ import useKnownParams from '@/hooks/use-known-params';
 import logger from '@/libs/logging';
 import { logCustomerSelfServiceActionRejected, logCustomerSelfServiceActionStarted } from '@/libs/logging/aggregate-marketplace-telemetry';
 import type { marketplaceProductBookingDetails_rootQuery } from '@/queries/__generated__/marketplaceProductBookingDetails_rootQuery.graphql';
+import type { marketplaceProductBookingDetails_deleteMarketplaceBookingMutation } from '@/queries/__generated__/marketplaceProductBookingDetails_deleteMarketplaceBookingMutation.graphql';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -246,6 +247,10 @@ const BookingSubscription = graphql`
 const DeleteMarketplaceBookingMutation = graphql`
   mutation marketplaceProductBookingDetails_deleteMarketplaceBookingMutation($input: DeleteMarketplaceBookingInput!) {
     deleteMarketplaceBooking(input: $input) {
+      cancellationError {
+        code
+        message
+      }
       booking {
         id
         deletedByCustomer {
@@ -280,7 +285,8 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
   const marketplaceBooking = booking?.marketplaceBooking;
   const [hasCancelledLocally, setHasCancelledLocally] = useState(false);
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState(false);
-  const [commitDeleteMarketplaceBooking, isDeleteMarketplaceBookingInFlight] = useMutation(DeleteMarketplaceBookingMutation);
+  const [commitDeleteMarketplaceBooking, isDeleteMarketplaceBookingInFlight] =
+    useMutation<marketplaceProductBookingDetails_deleteMarketplaceBookingMutation>(DeleteMarketplaceBookingMutation);
   const [commitAcceptPartial] = useMutation(AcceptPartialMutation);
   const [commitDeclinePartial] = useMutation(DeclinePartialMutation);
   const isCancelled = hasCancelledLocally || !!booking?.deletedByCustomer?.id;
@@ -317,7 +323,15 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
           id: booking.id,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (data, errors) => {
+        const cancellationError = data?.deleteMarketplaceBooking?.cancellationError;
+        if (cancellationError) {
+          toast(
+            <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(cancellationError.message)}`} />,
+            errorNotificationOptions,
+          );
+          return;
+        }
         if (errors && errors.length > 0) {
           logCustomerSelfServiceActionRejected({ logger, actionType: 'cancel_booking', purchaseType: 'booking', reasonCode: getRelayErrorMessage(errors) });
           toast(

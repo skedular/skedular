@@ -105,6 +105,8 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     graphql`
       fragment bookingCard_BookingDetails on BookingDetails {
         id
+        cancellationPolicyOverridden
+        cancellationOverrideReason
         from
         until
         notes
@@ -212,6 +214,10 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
   const [commitDeleteMarketplaceBooking] = useMutation<bookingCard_deleteMarketplaceBookingMutation>(graphql`
     mutation bookingCard_deleteMarketplaceBookingMutation($connectionIds: [ID!]!, $input: DeleteMarketplaceBookingInput!) {
       deleteMarketplaceBooking(input: $input) {
+        cancellationError {
+          code
+          message
+        }
         booking {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -232,6 +238,10 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
   const [commitDeleteMarketplaceBookingSubscription] = useMutation<bookingCard_deleteMarketplaceBookingSubscriptionMutation>(graphql`
     mutation bookingCard_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
       deleteMarketplaceBookingSubscription(input: $input) {
+        cancellationError {
+          code
+          message
+        }
         marketplaceBookingSubscription {
           id
           cancelAtPeriodEnd
@@ -498,7 +508,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     }
   };
 
-  const removeBooking = () => {
+  const removeBooking = (cancellationOverrideReason?: string) => {
     let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
     if (bookingDetails.involvedLocations.length > 0) {
       bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
@@ -522,8 +532,13 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       });
     } else {
       commitDeleteMarketplaceBooking({
-        variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id } },
-        onCompleted: (_, errors) => {
+        variables: { connectionIds, input: { clientMutationId: uuid(), id: bookingDetails.id, cancellationOverrideReason } },
+        onCompleted: (data, errors) => {
+          const cancellationError = data.deleteMarketplaceBooking.cancellationError;
+          if (cancellationError) {
+            themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${cancellationError.message}`} />, errorNotificationOptions);
+            return;
+          }
           if (errors && errors.length > 0) {
             themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
@@ -567,7 +582,12 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
             cancellationMode: 'IMMEDIATE',
           },
         },
-        onCompleted: (_, errors) => {
+        onCompleted: (data, errors) => {
+          const cancellationError = data.deleteMarketplaceBookingSubscription.cancellationError;
+          if (cancellationError) {
+            themedToast(<NotificationContent content={`We couldn't cancel this recurring series. ${cancellationError.message}`} />, errorNotificationOptions);
+            return;
+          }
           if (errors && errors.length > 0) {
             themedToast(<NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
@@ -927,6 +947,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
 
             <Box sx={sectionSx}>
               <StackColumn spacing={1}>
+                {bookingDetails.cancellationPolicyOverridden ? (
+                  <CaptionIconTypography
+                    label={`Cancellation policy overridden${bookingDetails.cancellationOverrideReason ? `: ${bookingDetails.cancellationOverrideReason}` : ''}`}
+                  />
+                ) : null}
                 <SubtitleIconTypography label="Booking details" />
                 <Resources resources={bookingDetails.bookingResources.map((item) => ({ id: item.resource.id, name: item.resource.name, color: item.resource.color }))} hideNAText />
                 <CustomTags customTags={customTags.map((customTag) => ({ id: customTag.id, name: customTag.name, color: customTag.color }))} hideNAText />

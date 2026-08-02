@@ -1480,6 +1480,8 @@ type BookingDetails
     @fusion__field(schema: BOOKING_API)
   bookingResources: [BookingResourceDetails!]!
     @fusion__field(schema: BOOKING_API)
+  cancellationOverrideReason: String @fusion__field(schema: BOOKING_API)
+  cancellationPolicyOverridden: Boolean! @fusion__field(schema: BOOKING_API)
   category: BookingCategoryDetails! @fusion__field(schema: BOOKING_API)
   channel: BookingChannelDetails! @fusion__field(schema: BOOKING_API)
   createdByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
@@ -1520,6 +1522,8 @@ type BookingPayload @fusion__type(schema: BOOKING_API) {
   availabilityError: BookingAvailabilityErrorDetails
     @fusion__field(schema: BOOKING_API)
   booking: BookingDetails @fusion__field(schema: BOOKING_API)
+  cancellationError: CancellationErrorDetails
+    @fusion__field(schema: BOOKING_API)
   clientMutationId: String @fusion__field(schema: BOOKING_API)
   failure: MarketplaceBookingFailureDetails @fusion__field(schema: BOOKING_API)
   quotaError: BookingSpacesQuotaErrorDetails @fusion__field(schema: BOOKING_API)
@@ -1584,6 +1588,11 @@ type BulkAddResourceRowResult @fusion__type(schema: LOCATION_API) {
 type BulkAddResourcesPayload @fusion__type(schema: LOCATION_API) {
   clientMutationId: String @fusion__field(schema: LOCATION_API)
   results: [BulkAddResourceRowResult!]! @fusion__field(schema: LOCATION_API)
+}
+
+type CancellationErrorDetails @fusion__type(schema: BOOKING_API) {
+  code: CancellationErrorCode! @fusion__field(schema: BOOKING_API)
+  message: String! @fusion__field(schema: BOOKING_API)
 }
 
 type CancelOrganizationOfferingPayload @fusion__type(schema: ORGANIZATION_API) {
@@ -2261,6 +2270,8 @@ type MarketplaceBookingSubscriptionDetails
     @fusion__field(schema: BOOKING_API)
   autoRenew: Boolean! @fusion__field(schema: BOOKING_API)
   cancelAtPeriodEnd: Boolean! @fusion__field(schema: BOOKING_API)
+  cancellationOverrideReason: String @fusion__field(schema: BOOKING_API)
+  cancellationPolicyOverridden: Boolean! @fusion__field(schema: BOOKING_API)
   cancelledAt: DateTime @fusion__field(schema: BOOKING_API)
   createdByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
   deletedByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
@@ -2297,6 +2308,8 @@ type MarketplaceBookingSubscriptionEdge @fusion__type(schema: BOOKING_API) {
 
 type MarketplaceBookingSubscriptionPayload @fusion__type(schema: BOOKING_API) {
   accessError: SpacesAccessErrorDetails @fusion__field(schema: BOOKING_API)
+  cancellationError: CancellationErrorDetails
+    @fusion__field(schema: BOOKING_API)
   clientMutationId: String @fusion__field(schema: BOOKING_API)
   marketplaceBookingSubscription: MarketplaceBookingSubscriptionDetails
     @fusion__field(schema: BOOKING_API)
@@ -4503,6 +4516,7 @@ input DeleteLocationRestrictedInformationInput
 }
 
 input DeleteMarketplaceBookingInput @fusion__type(schema: BOOKING_API) {
+  cancellationOverrideReason: String @fusion__inputField(schema: BOOKING_API)
   clientMutationId: String @fusion__inputField(schema: BOOKING_API)
   id: String! @fusion__inputField(schema: BOOKING_API)
 }
@@ -4510,6 +4524,7 @@ input DeleteMarketplaceBookingInput @fusion__type(schema: BOOKING_API) {
 input DeleteMarketplaceBookingSubscriptionInput
   @fusion__type(schema: BOOKING_API) {
   cancellationMode: MarketplaceBookingSubscriptionCancellationMode! @fusion__inputField(schema: BOOKING_API)
+  cancellationOverrideReason: String @fusion__inputField(schema: BOOKING_API)
   clientMutationId: String @fusion__inputField(schema: BOOKING_API)
   id: String! @fusion__inputField(schema: BOOKING_API)
 }
@@ -5583,6 +5598,13 @@ enum BookingOrderField @fusion__type(schema: BOOKING_API) {
   NOTES @fusion__enumValue(schema: BOOKING_API)
   CATEGORY @fusion__enumValue(schema: BOOKING_API)
   CHANNEL @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum CancellationErrorCode @fusion__type(schema: BOOKING_API) {
+  POLICY_RESTRICTION @fusion__enumValue(schema: BOOKING_API)
+  OVERRIDE_REASON_REQUIRED @fusion__enumValue(schema: BOOKING_API)
+  INSUFFICIENT_MANAGEMENT_PERMISSION @fusion__enumValue(schema: BOOKING_API)
+  INVALID_TERMINAL_STATE @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum CatalogVersion @fusion__type(schema: ORGANIZATION_API) {

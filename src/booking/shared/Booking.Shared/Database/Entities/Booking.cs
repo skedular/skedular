@@ -17,6 +17,8 @@ public class Booking : EntityBaseWithDeleted
     public string Channel { get; set; }
     public ICollection<BookingSchedule> Schedules { get; set; }
     public bool? HasRecurringInstanceOverrides { get; set; }
+    public bool CancellationPolicyOverridden { get; set; }
+    public string? CancellationOverrideReason { get; set; }
 
     public virtual MarketplaceBooking? MarketplaceBooking { get; set; }
     public virtual ICollection<OrganizationArrearsInvoiceLine> OrganizationArrearsInvoiceLines { get; set; } = [];
@@ -44,6 +46,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.Property(item => item.Category).HasMaxLength(Constants.MaxBookingCategoryLength);
         builder.Property(item => item.Channel).HasMaxLength(Constants.MaxBookingChannelLength);
         builder.Property(item => item.Schedules).HasColumnType("jsonb");
+        builder.Property(item => item.CancellationOverrideReason).HasMaxLength(Constants.MaxDescriptionLength);
 
         builder.HasMany(item => item.ResourceBookingSlots).WithMany(item => item.Bookings);
         builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedBookings);

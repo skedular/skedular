@@ -173,6 +173,10 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
   const [commitDeleteMarketplaceBooking] = useMutation<editMarketplaceBooking_deleteMarketplaceBookingMutation>(graphql`
     mutation editMarketplaceBooking_deleteMarketplaceBookingMutation($input: DeleteMarketplaceBookingInput!) {
       deleteMarketplaceBooking(input: $input) {
+        cancellationError {
+          code
+          message
+        }
         booking {
           id
         }
@@ -183,6 +187,10 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
   const [commitDeleteMarketplaceBookingSubscription] = useMutation<editMarketplaceBooking_deleteMarketplaceBookingSubscriptionMutation>(graphql`
     mutation editMarketplaceBooking_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
       deleteMarketplaceBookingSubscription(input: $input) {
+        cancellationError {
+          code
+          message
+        }
         marketplaceBookingSubscription {
           id
           cancelAtPeriodEnd
@@ -288,7 +296,12 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
           id: booking.id,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (data, errors) => {
+        const cancellationError = data?.deleteMarketplaceBooking?.cancellationError;
+        if (cancellationError) {
+          themedToast(<NotificationContent content={cancellationError.message} />, errorNotificationOptions);
+          return;
+        }
         if (errors && errors.length > 0) {
           themedToast(<NotificationContent content={`We couldn't remove booking ${bookingDetailsInfo}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
@@ -336,7 +349,12 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
           cancellationMode: 'IMMEDIATE',
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (data, errors) => {
+        const cancellationError = data?.deleteMarketplaceBookingSubscription?.cancellationError;
+        if (cancellationError) {
+          themedToast(<NotificationContent content={cancellationError.message} />, errorNotificationOptions);
+          return;
+        }
         if (errors && errors.length > 0) {
           themedToast(<NotificationContent content={`We couldn't cancel this recurring series. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 

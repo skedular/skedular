@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0c9c03a7f7216813f5daf76c51d1fde5>>
+ * @generated SignedSource<<753153cf9acde71dcaf030c091867475>>
  * @lightSyntaxTransform
  */
 
@@ -38,6 +38,7 @@ export type pageOrganizationRefundDetail_rootQuery$data = {
     readonly externalRefundNumber: string | null | undefined;
     readonly id: string;
     readonly lastError: string | null | undefined;
+    readonly localEntityId: string;
     readonly localEntityType: string;
     readonly reason: string | null | undefined;
     readonly refundAmount: any | null | undefined;
@@ -145,6 +146,13 @@ v8 = [
       {
         "alias": null,
         "args": null,
+        "kind": "ScalarField",
+        "name": "localEntityId",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
         "concreteType": "CurrencyDetails",
         "kind": "LinkedField",
         "name": "currency",
@@ -237,16 +245,16 @@ return {
     "selections": (v8/*:: as any*/)
   },
   "params": {
-    "cacheID": "e0c70230c9100a5e0739f2b4882e33ce",
+    "cacheID": "e7a95536c9a8ddd8b13a485cb74ff33d",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationRefundDetail_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationRefundDetail_rootQuery(\n  $refundId: String!\n) {\n  marketplaceRefund(id: $refundId) {\n    id\n    localEntityType\n    currency {\n      type\n      name\n    }\n    status {\n      type\n      name\n    }\n    requestedByCustomerName\n    refundAmount\n    currencyToDisplay\n    reason\n    lastError\n    externalRefundNumber\n    events {\n      id\n      eventType {\n        type\n        name\n      }\n      occurredAt\n      refundAmount\n      currencyToDisplay\n      reason\n      lastError\n      externalRefundNumber\n      actorName\n    }\n  }\n}\n"
+    "text": "query pageOrganizationRefundDetail_rootQuery(\n  $refundId: String!\n) {\n  marketplaceRefund(id: $refundId) {\n    id\n    localEntityType\n    localEntityId\n    currency {\n      type\n      name\n    }\n    status {\n      type\n      name\n    }\n    requestedByCustomerName\n    refundAmount\n    currencyToDisplay\n    reason\n    lastError\n    externalRefundNumber\n    events {\n      id\n      eventType {\n        type\n        name\n      }\n      occurredAt\n      refundAmount\n      currencyToDisplay\n      reason\n      lastError\n      externalRefundNumber\n      actorName\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e3cdc6ea274602dd6c3c9d50bbb25621";
+(node as any).hash = "7118adb1c3a5e2e53a20f31c3df657ee";
 
 export default node;

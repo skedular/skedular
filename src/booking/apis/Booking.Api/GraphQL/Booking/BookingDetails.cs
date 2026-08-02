@@ -32,6 +32,12 @@ public class BookingDetails : Node
     [GraphQLName("recurringBooking")] public RecurringBookingDetails? RecurringBooking { get; set; }
     [GraphQLName("marketplaceBooking")] public MarketplaceBookingDetails? MarketplaceBooking { get; set; }
 
+    [GraphQLName("cancellationPolicyOverridden")]
+    public bool CancellationPolicyOverridden { get; set; }
+
+    [GraphQLName("cancellationOverrideReason")]
+    public string? CancellationOverrideReason { get; set; }
+
     [GraphQLName("hasRecurringInstanceOverrides")]
     public bool? HasRecurringInstanceOverrides { get; set; }
 

@@ -15,6 +15,8 @@ public class MarketplaceBookingSubscription : EntityBaseWithDeleted
     public string Status { get; set; }
     public bool AutoRenew { get; set; }
     public bool CancelAtPeriodEnd { get; set; }
+    public bool CancellationPolicyOverridden { get; set; }
+    public string? CancellationOverrideReason { get; set; }
     public ICollection<string> WeeklySelectedDays { get; set; } = [];
 
     public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
@@ -41,6 +43,7 @@ public class MarketplaceBookingSubscriptionConfiguration : IEntityTypeConfigurat
         builder.Property(item => item.AutoRenew);
         builder.Property(item => item.CancelAtPeriodEnd);
         builder.Property(item => item.WeeklySelectedDays).HasColumnType("jsonb");
+        builder.Property(item => item.CancellationOverrideReason).HasMaxLength(Constants.MaxDescriptionLength);
 
         builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedMarketplaceBookingSubscription);
         builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedMarketplaceBookingSubscription);

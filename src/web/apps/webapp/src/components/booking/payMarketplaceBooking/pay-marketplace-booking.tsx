@@ -168,6 +168,10 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
   const [commitDeleteMarketplaceBooking] = useMutation<payMarketplaceBooking_deleteMarketplaceBookingMutation>(graphql`
     mutation payMarketplaceBooking_deleteMarketplaceBookingMutation($input: DeleteMarketplaceBookingInput!) {
       deleteMarketplaceBooking(input: $input) {
+        cancellationError {
+          code
+          message
+        }
         booking {
           id
         }
@@ -288,7 +292,12 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
           id: bookingDetails.id,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (data, errors) => {
+        const cancellationError = data?.deleteMarketplaceBooking?.cancellationError;
+        if (cancellationError) {
+          themedToast(<NotificationContent content={cancellationError.message} />, errorNotificationOptions);
+          return;
+        }
         if (errors && errors.length > 0) {
           themedToast(<NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 

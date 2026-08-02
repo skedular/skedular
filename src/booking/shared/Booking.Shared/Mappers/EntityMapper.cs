@@ -176,7 +176,9 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             RecurringBooking = src.RecurringBooking is null ? null : MapToRecurringBookingWithoutSubscription(src.RecurringBooking),
             MarketplaceBooking = MapTo(ResolveBookingMarketplaceBooking(src)),
-            HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides
+            HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides,
+            CancellationPolicyOverridden = src.CancellationPolicyOverridden,
+            CancellationOverrideReason = src.CancellationOverrideReason
         };
 
     public OrganizationArrearsInvoice MapTo(Database.Entities.OrganizationArrearsInvoice src) =>
@@ -244,6 +246,8 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Status = src.Status.ToMarketplaceBookingSubscriptionStatus(),
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+            CancellationPolicyOverridden = src.CancellationPolicyOverridden,
+            CancellationOverrideReason = src.CancellationOverrideReason,
             WeeklySelectedDays = src.WeeklySelectedDays.Select(item => item.ToDayOfWeek()).ToList(),
             MarketplaceBooking = marketplaceBooking,
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
@@ -718,6 +722,8 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
         dest.Status = src.Status.ToMarketplaceBookingSubscriptionStatus();
         dest.AutoRenew = src.AutoRenew;
         dest.CancelAtPeriodEnd = src.CancelAtPeriodEnd;
+        dest.CancellationPolicyOverridden = src.CancellationPolicyOverridden;
+        dest.CancellationOverrideReason = src.CancellationOverrideReason;
         dest.WeeklySelectedDays = src.WeeklySelectedDays.Select(item => item.ToDayOfWeek()).ToList();
         dest.InvolvedCustomers = involvedCustomers.ToList();
         dest.InvolvedOrganizations = involvedOrganizations.ToList();

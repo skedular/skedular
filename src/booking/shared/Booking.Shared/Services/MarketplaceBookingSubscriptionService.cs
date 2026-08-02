@@ -32,6 +32,8 @@ public interface IMarketplaceBookingSubscriptionService
         Database.Entities.MarketplaceBookingSubscription existingSubscription,
         Customer? deletedByCustomer,
         MarketplaceBookingSubscriptionCancellationMode cancellationMode,
+        bool ignoreCancellationPolicy,
+        string? cancellationOverrideReason,
         CancellationToken cancellationToken);
 }
 
@@ -219,16 +221,23 @@ public class MarketplaceBookingSubscriptionService(
         Database.Entities.MarketplaceBookingSubscription existingSubscription,
         Customer? deletedByCustomer,
         MarketplaceBookingSubscriptionCancellationMode cancellationMode,
+        bool ignoreCancellationPolicy,
+        string? cancellationOverrideReason,
         CancellationToken cancellationToken) =>
-        await DeleteAsync(existingSubscription, deletedByCustomer, cancellationMode, cancellationToken, 0);
+        await DeleteAsync(existingSubscription, deletedByCustomer, cancellationMode, ignoreCancellationPolicy, cancellationOverrideReason,
+            cancellationToken, 0);
 
     private async Task<MarketplaceBookingSubscription> DeleteAsync(
         Database.Entities.MarketplaceBookingSubscription existingSubscription,
         Customer? deletedByCustomer,
         MarketplaceBookingSubscriptionCancellationMode cancellationMode,
+        bool ignoreCancellationPolicy,
+        string? cancellationOverrideReason,
         CancellationToken cancellationToken,
-        int concurrencyRetryCount)
+        int concurrencyRetryCount,
+        bool cancellationPolicyOverriddenFromInitialAttempt = false)
     {
+        var cancellationPolicyOverriddenForRetry = cancellationPolicyOverriddenFromInitialAttempt;
         try
         {
             logger.LogInformation(
@@ -241,6 +250,8 @@ public class MarketplaceBookingSubscriptionService(
             // Validate the request object only on the first attempt. A failed attempt mutates this
             // tracked instance before SaveChanges rolls back, so retry must rely solely on the fresh
             // database reload below rather than treating those uncommitted mutations as terminal.
+            var cancellationPolicyOverridden = cancellationPolicyOverriddenFromInitialAttempt;
+            var requestedCancellationOverrideReason = cancellationOverrideReason;
             if (concurrencyRetryCount == 0)
             {
                 if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.Immediate &&
@@ -252,7 +263,23 @@ public class MarketplaceBookingSubscriptionService(
 
                 if (deletedByCustomer is not null)
                 {
-                    EnsureSubscriptionCanStillBeCancelled(existingSubscription, cancellationMode);
+                    try
+                    {
+                        EnsureSubscriptionCanStillBeCancelled(existingSubscription, cancellationMode);
+                    }
+                    catch (MarketplaceBookingSubscriptionCancellationNotAllowed) when (
+                        ignoreCancellationPolicy && !string.IsNullOrWhiteSpace(cancellationOverrideReason))
+                    {
+                        cancellationPolicyOverridden = true;
+                        cancellationPolicyOverriddenForRetry = true;
+                        logger.LogInformation(
+                            "Marketplace subscription cancellation policy overridden by authorized operator. SubscriptionId={SubscriptionId}",
+                            existingSubscription.Id);
+                    }
+                    catch (MarketplaceBookingSubscriptionCancellationNotAllowed) when (ignoreCancellationPolicy)
+                    {
+                        throw new MarketplaceBookingSubscriptionCancellationOverrideReasonRequired();
+                    }
                 }
             }
 
@@ -266,6 +293,9 @@ public class MarketplaceBookingSubscriptionService(
                                        subscriptionId,
                                        cancellationToken) ??
                                    throw new InvalidOperationException($"Marketplace booking subscription was not found: {subscriptionId}");
+            cancellationPolicyOverridden |= existingSubscription.CancellationPolicyOverridden;
+            cancellationPolicyOverriddenForRetry |= cancellationPolicyOverridden;
+            requestedCancellationOverrideReason ??= existingSubscription.CancellationOverrideReason;
             var trackedDeletedByCustomer = deletedByCustomer is null
                 ? null
                 : await repositoryFactory.CustomerRepository.GetByIdAsync(
@@ -285,6 +315,8 @@ public class MarketplaceBookingSubscriptionService(
 
             if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd)
             {
+                existingSubscription.CancellationPolicyOverridden = cancellationPolicyOverridden;
+                existingSubscription.CancellationOverrideReason = cancellationPolicyOverridden ? requestedCancellationOverrideReason : null;
                 existingSubscription.LastModifiedByCustomer = trackedDeletedByCustomer;
                 existingSubscription.CancelledAt = timeProvider.GetUtcNow();
                 existingSubscription.CancelAtPeriodEnd = true;
@@ -296,6 +328,8 @@ public class MarketplaceBookingSubscriptionService(
             }
             else
             {
+                existingSubscription.CancellationPolicyOverridden = cancellationPolicyOverridden;
+                existingSubscription.CancellationOverrideReason = cancellationPolicyOverridden ? requestedCancellationOverrideReason : null;
                 existingSubscription.LastModifiedByCustomer = trackedDeletedByCustomer;
                 existingSubscription.CancelledAt = timeProvider.GetUtcNow();
                 existingSubscription.Status = MarketplaceBookingSubscriptionStatus.Cancelled.ToMarketplaceBookingSubscriptionStatus();
@@ -348,8 +382,11 @@ public class MarketplaceBookingSubscriptionService(
                 existingSubscription,
                 deletedByCustomer,
                 cancellationMode,
+                ignoreCancellationPolicy,
+                cancellationOverrideReason,
                 cancellationToken,
-                concurrencyRetryCount + 1);
+                concurrencyRetryCount + 1,
+                cancellationPolicyOverriddenForRetry);
         }
     }
 

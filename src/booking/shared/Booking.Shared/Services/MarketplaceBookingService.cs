@@ -90,6 +90,7 @@ public interface IMarketplaceBookingService
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         bool ignoreCancellationPolicy,
+        string? cancellationOverrideReason,
         bool createRefund,
         CancellationToken cancellationToken);
 
@@ -704,6 +705,7 @@ public class MarketplaceBookingService(
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         bool ignoreCancellationPolicy,
+        string? cancellationOverrideReason,
         bool createRefund,
         CancellationToken cancellationToken)
     {
@@ -712,10 +714,31 @@ public class MarketplaceBookingService(
             throw new BookingIsNotMarketplace();
         }
 
-        if (deletedByCustomer is not null && !ignoreCancellationPolicy)
+        var cancellationPolicyOverridden = false;
+        if (deletedByCustomer is not null)
         {
-            EnsureBookingCanStillBeCancelled(existingBooking);
+            try
+            {
+                EnsureBookingCanStillBeCancelled(existingBooking);
+            }
+            catch (MarketplaceBookingCancellationNotAllowed) when
+                (ignoreCancellationPolicy && !string.IsNullOrWhiteSpace(cancellationOverrideReason))
+            {
+                cancellationPolicyOverridden = true;
+                logger.LogInformation(
+                    "Marketplace booking cancellation policy overridden by authorized operator. BookingId={BookingId}",
+                    existingBooking.Id);
+            }
+            catch (MarketplaceBookingCancellationNotAllowed) when (ignoreCancellationPolicy)
+            {
+                throw new MarketplaceBookingCancellationOverrideReasonRequired();
+            }
         }
+
+        existingBooking.CancellationPolicyOverridden = cancellationPolicyOverridden || existingBooking.CancellationPolicyOverridden;
+        existingBooking.CancellationOverrideReason = existingBooking.CancellationPolicyOverridden
+            ? cancellationOverrideReason ?? existingBooking.CancellationOverrideReason
+            : null;
 
         var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 

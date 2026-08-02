@@ -12,4 +12,7 @@ public class DeleteMarketplaceBookingSubscriptionInput
     [GraphQLName("cancellationMode")]
     public MarketplaceBookingSubscriptionCancellationMode CancellationMode { get; set; } =
         MarketplaceBookingSubscriptionCancellationMode.Immediate;
+
+    [GraphQLName("cancellationOverrideReason")]
+    public string? CancellationOverrideReason { get; set; }
 }

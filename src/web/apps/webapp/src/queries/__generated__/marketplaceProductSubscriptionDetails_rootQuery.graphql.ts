@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f21e58811d601485da8c414d2d2ddd0d>>
+ * @generated SignedSource<<9f1cd4d456a23cac440c5b96a46453ff>>
  * @lightSyntaxTransform
  */
 
@@ -29,6 +29,8 @@ export type marketplaceProductSubscriptionDetails_rootQuery$data = {
     }>;
     readonly autoRenew: boolean;
     readonly cancelAtPeriodEnd: boolean;
+    readonly cancellationOverrideReason: string | null | undefined;
+    readonly cancellationPolicyOverridden: boolean;
     readonly failure: {
       readonly category: {
         readonly name: string;
@@ -532,6 +534,20 @@ v13 = [
     "plural": false,
     "selections": [
       (v6/*:: as any*/),
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "cancellationPolicyOverridden",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "cancellationOverrideReason",
+        "storageKey": null
+      },
       (v7/*:: as any*/),
       {
         "alias": null,
@@ -795,16 +811,16 @@ return {
     "selections": (v13/*:: as any*/)
   },
   "params": {
-    "cacheID": "6ad2fb04250b88827e97306034723918",
+    "cacheID": "9b2de3c81bf1f236d64a3531b4001e33",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscriptionDetails_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductSubscriptionDetails_rootQuery(\n  $subscriptionId: String!\n) {\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  marketplaceBookingSubscriptionRefundPreview(subscriptionId: $subscriptionId) {\n    refundAmount\n    baseAmount\n    refundPercentage\n    currencyToDisplay\n    isRefundable\n  }\n  marketplaceBookingSubscription(id: $subscriptionId) {\n    id\n    failure {\n      category {\n        type\n        name\n      }\n      customerAction {\n        type\n        name\n      }\n    }\n    startedAt\n    nextRenewalAt\n    autoRenew\n    cancelAtPeriodEnd\n    weeklySelectedDays\n    marketplaceBooking {\n      id\n      quantity\n      invoiceUrl\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        id\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        organization {\n          customerFacingTermsAndConditionsUrl\n        }\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    refund {\n      currency {\n        type\n        name\n      }\n      status {\n        type\n        name\n      }\n      requestedAt\n      lastProcessedAt\n      refundAmount\n      refundPercentage\n      currencyToDisplay\n      reason\n      lastError\n      externalRefundNumber\n      requestedByCustomerName\n      events {\n        id\n        eventType {\n          type\n          name\n        }\n        occurredAt\n        refundAmount\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        actorName\n      }\n    }\n    status {\n      type\n      name\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    recurringBookings {\n      id\n      startDate\n      endDate\n      failure {\n        category {\n          type\n          name\n        }\n        customerAction {\n          type\n          name\n        }\n      }\n      marketplaceBooking {\n        id\n        quantity\n        invoiceUrl\n        isPaymentRequired\n        paymentExpiry\n        productVersion {\n          id\n          listingMetadata {\n            title\n            subTitle\n            about\n            includedFeatures\n          }\n          featureImages {\n            original {\n              url\n            }\n          }\n          organization {\n            customerFacingTermsAndConditionsUrl\n          }\n        }\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          type\n          name\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
+    "text": "query marketplaceProductSubscriptionDetails_rootQuery(\n  $subscriptionId: String!\n) {\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  marketplaceBookingSubscriptionRefundPreview(subscriptionId: $subscriptionId) {\n    refundAmount\n    baseAmount\n    refundPercentage\n    currencyToDisplay\n    isRefundable\n  }\n  marketplaceBookingSubscription(id: $subscriptionId) {\n    id\n    cancellationPolicyOverridden\n    cancellationOverrideReason\n    failure {\n      category {\n        type\n        name\n      }\n      customerAction {\n        type\n        name\n      }\n    }\n    startedAt\n    nextRenewalAt\n    autoRenew\n    cancelAtPeriodEnd\n    weeklySelectedDays\n    marketplaceBooking {\n      id\n      quantity\n      invoiceUrl\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        id\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        organization {\n          customerFacingTermsAndConditionsUrl\n        }\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    refund {\n      currency {\n        type\n        name\n      }\n      status {\n        type\n        name\n      }\n      requestedAt\n      lastProcessedAt\n      refundAmount\n      refundPercentage\n      currencyToDisplay\n      reason\n      lastError\n      externalRefundNumber\n      requestedByCustomerName\n      events {\n        id\n        eventType {\n          type\n          name\n        }\n        occurredAt\n        refundAmount\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        actorName\n      }\n    }\n    status {\n      type\n      name\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    recurringBookings {\n      id\n      startDate\n      endDate\n      failure {\n        category {\n          type\n          name\n        }\n        customerAction {\n          type\n          name\n        }\n      }\n      marketplaceBooking {\n        id\n        quantity\n        invoiceUrl\n        isPaymentRequired\n        paymentExpiry\n        productVersion {\n          id\n          listingMetadata {\n            title\n            subTitle\n            about\n            includedFeatures\n          }\n          featureImages {\n            original {\n              url\n            }\n          }\n          organization {\n            customerFacingTermsAndConditionsUrl\n          }\n        }\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          type\n          name\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d99a58562fc84cf3a1212bab913f1979";
+(node as any).hash = "c2982a9c493daeb88ebb9782b2bc67e6";
 
 export default node;

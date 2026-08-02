@@ -15,6 +15,8 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
     public MarketplaceBookingSubscriptionStatus Status { get; set; }
     public bool AutoRenew { get; set; }
     public bool CancelAtPeriodEnd { get; set; }
+    public bool CancellationPolicyOverridden { get; set; }
+    public string? CancellationOverrideReason { get; set; }
     public IReadOnlyList<DayOfWeek> WeeklySelectedDays { get; set; } = [];
     public MarketplaceBooking MarketplaceBooking { get; set; } = new();
     public IReadOnlyList<Customer> InvolvedCustomers { get; set; } = [];

@@ -48,6 +48,11 @@ import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 
+const toCustomerSubscriptionCancellationErrorMessage = (message: string) =>
+  message.toLowerCase().includes('cancellation') && message.toLowerCase().includes('not allowed')
+    ? 'This subscription cannot be cancelled under the current cancellation policy.'
+    : message;
+
 type Props = {
   queryReference: PreloadedQuery<customerBookingsHub_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
@@ -91,6 +96,8 @@ const RootQuery = graphql`
       edges {
         node {
           id
+          cancellationPolicyOverridden
+          cancellationOverrideReason
           from
           until
           channel {
@@ -139,6 +146,8 @@ const RootQuery = graphql`
       edges {
         node {
           id
+          cancellationPolicyOverridden
+          cancellationOverrideReason
           from
           until
           channel {
@@ -187,6 +196,8 @@ const RootQuery = graphql`
       edges {
         node {
           id
+          cancellationPolicyOverridden
+          cancellationOverrideReason
           startedAt
           nextRenewalAt
           autoRenew
@@ -240,6 +251,10 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
     useMutation<customerBookingsHub_deleteMarketplaceBookingSubscriptionMutation>(graphql`
       mutation customerBookingsHub_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
         deleteMarketplaceBookingSubscription(input: $input) {
+          cancellationError {
+            code
+            message
+          }
           marketplaceBookingSubscription {
             id
             cancelAtPeriodEnd
@@ -289,9 +304,20 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
           cancellationMode: cancellationModeType,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (data, errors) => {
+        const cancellationError = data?.deleteMarketplaceBookingSubscription?.cancellationError;
+        if (cancellationError) {
+          toast(
+            <NotificationContent content={`Failed to update ${productTitle}. ${toCustomerSubscriptionCancellationErrorMessage(cancellationError.message)}`} />,
+            errorNotificationOptions,
+          );
+          return;
+        }
         if (errors && errors.length > 0) {
-          toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+          toast(
+            <NotificationContent content={`Failed to update ${productTitle}. ${toCustomerSubscriptionCancellationErrorMessage(getRelayErrorMessage(errors))}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
@@ -299,7 +325,10 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
         onReloadRequired();
       },
       onError: (error) => {
-        toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
+        toast(
+          <NotificationContent content={`Failed to update ${productTitle}. ${toCustomerSubscriptionCancellationErrorMessage(getRelayErrorMessage(error))}`} />,
+          errorNotificationOptions,
+        );
       },
     });
   };
@@ -528,6 +557,7 @@ const BookingCard = ({ booking, integratedPlatform }: { booking: BookingNode; in
               <BodyIconTypography label={`Quantity ${booking.marketplaceBooking.quantity}`} sx={{ minWidth: 0, overflowWrap: 'anywhere', opacity: 0.88 }} />
             </StackRow>
           ) : null}
+          {booking.cancellationPolicyOverridden ? <DetailsRow label="Cancellation reason" value={booking.cancellationOverrideReason ?? 'Policy overridden'} /> : null}
         </StackColumn>
 
         <StackRow sx={{ mt: 2, gap: 1, flexWrap: 'wrap' }}>
@@ -659,6 +689,7 @@ const SubscriptionCard = ({
           <DetailsRow label="Next renewal" value={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : lifecycleDisplay.nextRenewalFallbackLabel} />
           <DetailsRow label="Cancellation" value={lifecycleDisplay.renewalLabel} />
           <DetailsRow label="Payment method" value={subscription.marketplaceBooking.paymentMethod.name} />
+          {subscription.cancellationPolicyOverridden ? <DetailsRow label="Cancellation reason" value={subscription.cancellationOverrideReason ?? 'Policy overridden'} /> : null}
         </StackColumn>
 
         {subscription.status.type === 'ACTIVE' ? (

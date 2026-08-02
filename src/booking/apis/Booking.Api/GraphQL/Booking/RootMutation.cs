@@ -153,8 +153,39 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] IMarketplaceBookingService marketplaceBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await marketplaceBookingService.DeleteAsync(input.Id, cancellationToken);
-        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
+        try
+        {
+            var booking = await marketplaceBookingService.DeleteAsync(input.Id, input.CancellationOverrideReason, cancellationToken);
+            return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = graphQlMapper.MapTo(booking) };
+        }
+        catch (MarketplaceBookingCancellationNotAllowed exception)
+        {
+            return new BookingPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                CancellationError = new CancellationErrorDetails { Code = CancellationErrorCode.PolicyRestriction, Message = exception.Message }
+            };
+        }
+        catch (MarketplaceBookingCancellationOverrideReasonRequired exception)
+        {
+            return new BookingPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                CancellationError =
+                    new CancellationErrorDetails { Code = CancellationErrorCode.OverrideReasonRequired, Message = exception.Message }
+            };
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            return new BookingPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                CancellationError = new CancellationErrorDetails
+                {
+                    Code = CancellationErrorCode.InsufficientManagementPermission, Message = exception.Message
+                }
+            };
+        }
     }
 
     private static BookingPayload ToQuotaErrorPayload(string? clientMutationId, SpacesBookingQuotaExceeded exception) =>

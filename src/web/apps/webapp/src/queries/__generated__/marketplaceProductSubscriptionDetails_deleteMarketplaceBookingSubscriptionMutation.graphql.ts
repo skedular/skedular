@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6780d63d7e9996b43f5cfa29819de852>>
+ * @generated SignedSource<<d62b1243fc975c598d1f8c1d933d1dc3>>
  * @lightSyntaxTransform
  */
 
@@ -8,10 +8,12 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type CancellationErrorCode = "INSUFFICIENT_MANAGEMENT_PERMISSION" | "INVALID_TERMINAL_STATE" | "OVERRIDE_REASON_REQUIRED" | "POLICY_RESTRICTION" | "%future added value";
 export type MarketplaceBookingSubscriptionCancellationMode = "AT_PERIOD_END" | "IMMEDIATE" | "%future added value";
 export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PAUSED" | "RENEWAL_FAILED" | "%future added value";
 export type DeleteMarketplaceBookingSubscriptionInput = {
   cancellationMode: MarketplaceBookingSubscriptionCancellationMode;
+  cancellationOverrideReason?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   id: string;
 };
@@ -20,6 +22,10 @@ export type marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscr
 };
 export type marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation$data = {
   readonly deleteMarketplaceBookingSubscription: {
+    readonly cancellationError: {
+      readonly code: CancellationErrorCode;
+      readonly message: string;
+    } | null | undefined;
     readonly marketplaceBookingSubscription: {
       readonly cancelAtPeriodEnd: boolean;
       readonly id: string;
@@ -59,6 +65,31 @@ v1 = [
     "name": "deleteMarketplaceBookingSubscription",
     "plural": false,
     "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "CancellationErrorDetails",
+        "kind": "LinkedField",
+        "name": "cancellationError",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "code",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "message",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": null,
@@ -138,16 +169,16 @@ return {
     "selections": (v1/*:: as any*/)
   },
   "params": {
-    "cacheID": "c37950accef4aea3ab98fe679e50547e",
+    "cacheID": "4edb4a1257e6e7b806f473812601275e",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation",
     "operationKind": "mutation",
-    "text": "mutation marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation(\n  $input: DeleteMarketplaceBookingSubscriptionInput!\n) {\n  deleteMarketplaceBookingSubscription(input: $input) {\n    marketplaceBookingSubscription {\n      id\n      cancelAtPeriodEnd\n      nextRenewalAt\n      status {\n        type\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation(\n  $input: DeleteMarketplaceBookingSubscriptionInput!\n) {\n  deleteMarketplaceBookingSubscription(input: $input) {\n    cancellationError {\n      code\n      message\n    }\n    marketplaceBookingSubscription {\n      id\n      cancelAtPeriodEnd\n      nextRenewalAt\n      status {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "df7ae9b2b3622291a8d8c6576f485263";
+(node as any).hash = "c8401b951db0e2265e640e21c132ca6d";
 
 export default node;

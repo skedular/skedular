@@ -1,4 +1,4 @@
-import { getOrganizationSubscriptionBaseLink } from '@/components/links';
+import { getOrganizationRefundBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import {
@@ -41,6 +41,7 @@ import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
@@ -116,6 +117,8 @@ const RootQuery = graphql`
       edges {
         node {
           id
+          cancellationPolicyOverridden
+          cancellationOverrideReason
           startedAt
           nextRenewalAt
           autoRenew
@@ -229,6 +232,7 @@ type SubscriptionListRow = {
   statusLabel: string;
   statusColor: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
   hasPendingPayment: boolean;
+  refundId: string | null;
 };
 
 type Props = {
@@ -251,6 +255,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
   const router = useRouter();
   const { integratedPlatform } = useIntegratedPlatform();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
+  const [cancellationOverrideReason, setCancellationOverrideReason] = useState('');
   const [viewMode, setViewMode] = useState<SubscriptionViewMode>('list');
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<string | null>(null);
@@ -258,6 +263,10 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
     useMutation<pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation>(graphql`
       mutation pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
         deleteMarketplaceBookingSubscription(input: $input) {
+          cancellationError {
+            code
+            message
+          }
           marketplaceBookingSubscription {
             id
             cancelAtPeriodEnd
@@ -363,6 +372,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
           statusLabel: lifecycleDisplay.statusLabel,
           statusColor: lifecycleDisplay.statusColor,
           hasPendingPayment: sortedRecurringBookings.some((item) => item.marketplaceBooking?.paymentStatus.type === 'PENDING'),
+          refundId: subscription.refund?.id ?? null,
         };
       }),
     [filteredSubscriptions],
@@ -389,6 +399,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
     subscriptionId: string,
     productTitle: string,
     cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode,
+    overrideReason?: string,
   ) => {
     commitDeleteMarketplaceBookingSubscription({
       variables: {
@@ -396,9 +407,15 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
           clientMutationId: uuid(),
           id: subscriptionId,
           cancellationMode: cancellationModeType,
+          cancellationOverrideReason: overrideReason,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (data, errors) => {
+        const cancellationError = data.deleteMarketplaceBookingSubscription.cancellationError;
+        if (cancellationError) {
+          toast(<NotificationContent content={`We couldn't update ${productTitle}. ${cancellationError.message}`} />, errorNotificationOptions);
+          return;
+        }
         if (errors && errors.length > 0) {
           toast(<NotificationContent content={`We couldn't update ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
@@ -422,6 +439,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
       productTitle,
       mode: cancellationMode,
     });
+    setCancellationOverrideReason('');
   };
   const handleCancelImmediateCancellationClick = () => {
     setPendingCancellationConfirmation(null);
@@ -435,6 +453,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
       pendingCancellationConfirmation.subscriptionId,
       pendingCancellationConfirmation.productTitle,
       pendingCancellationConfirmation.mode.type,
+      cancellationOverrideReason.trim(),
     );
     setPendingCancellationConfirmation(null);
   };
@@ -498,6 +517,25 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
         field: 'quantityLabel',
         headerName: 'Qty',
         minWidth: 90,
+      },
+      {
+        field: 'refundId',
+        headerName: 'Refund',
+        minWidth: 130,
+        sortable: false,
+        renderCell: (params) =>
+          params.row.refundId ? (
+            <Button
+              size="small"
+              variant="text"
+              onClick={(event) => {
+                event.stopPropagation();
+                router.push(getOrganizationRefundBaseLink(integratedPlatform, organizationCustomDomain, params.row.refundId!));
+              }}
+            >
+              View refund
+            </Button>
+          ) : null,
       },
       {
         field: 'actions',
@@ -731,6 +769,9 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
                                 label={`Current payment: ${subscription.status.type === 'CANCELLED' ? lifecycleDisplay.statusLabel : subscription.marketplaceBooking.paymentStatus.name} • Payment method: ${subscription.marketplaceBooking.paymentMethod.name ?? 'Not set'} • Quantity: ${subscription.marketplaceBooking.quantity}`}
                                 sx={{ opacity: 0.78 }}
                               />
+                              {subscription.cancellationPolicyOverridden ? (
+                                <SmallIconTypography label={`Cancellation reason: ${subscription.cancellationOverrideReason ?? 'Policy overridden'}`} sx={{ opacity: 0.78 }} />
+                              ) : null}
                               <SmallIconTypography label="Open details and manage this subscription" sx={{ opacity: 0.72 }} />
                             </StackColumn>
                           </Box>
@@ -756,7 +797,19 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
                             </StackColumn>
                           ) : null}
 
-                          {subscription.refund ? <MarketplaceRefundAdminPanel entityLabel={`${productTitle} for ${customerLabel}`} refund={subscription.refund} /> : null}
+                          {subscription.refund ? (
+                            <StackColumn spacing={1}>
+                              <MarketplaceRefundAdminPanel entityLabel={`${productTitle} for ${customerLabel}`} refund={subscription.refund} />
+                              <Button
+                                size="small"
+                                variant="text"
+                                onClick={() => router.push(getOrganizationRefundBaseLink(integratedPlatform, organizationCustomDomain, subscription.refund!.id))}
+                                sx={{ alignSelf: 'flex-start' }}
+                              >
+                                View refund details
+                              </Button>
+                            </StackColumn>
+                          ) : null}
 
                           <Divider />
 
@@ -920,6 +973,17 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
           <DialogContentText>
             {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing will stop immediately. Previous invoices will stay on record.`}
           </DialogContentText>
+          <TextField
+            label="Cancellation reason"
+            value={cancellationOverrideReason}
+            onChange={(event) => setCancellationOverrideReason(event.target.value)}
+            required
+            multiline
+            minRows={2}
+            fullWidth
+            helperText="Required when the cancellation policy would block this cancellation."
+            sx={{ mt: 2 }}
+          />
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmImmediateCancellationClick}
             onSecondaryClicked={handleCancelImmediateCancellationClick}

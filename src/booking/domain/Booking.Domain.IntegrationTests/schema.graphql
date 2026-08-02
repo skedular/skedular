@@ -240,6 +240,8 @@ type BookingDetails @key(fields: "id") {
   involvedLocations: [Booking_LocationDetails!]!
   recurringBooking: RecurringBookingDetails
   marketplaceBooking: MarketplaceBookingDetails
+  cancellationPolicyOverridden: Boolean!
+  cancellationOverrideReason: String
   hasRecurringInstanceOverrides: Boolean
   id: ID!
 }
@@ -261,6 +263,7 @@ type BookingPayload {
   accessError: SpacesAccessErrorDetails
   availabilityError: BookingAvailabilityErrorDetails
   failure: MarketplaceBookingFailureDetails
+  cancellationError: CancellationErrorDetails
 }
 
 type BookingRecurrenceEndTypeDetails {
@@ -311,6 +314,11 @@ type BookingWindowDetails {
   bookedByName: String
   bookedByUserId: String
   notes: String
+}
+
+type CancellationErrorDetails {
+  code: CancellationErrorCode!
+  message: String!
 }
 
 type ConnectionOfBookingEdge {
@@ -443,6 +451,8 @@ type MarketplaceBookingSubscriptionDetails @key(fields: "id") {
   status: MarketplaceBookingSubscriptionStatusDetails!
   autoRenew: Boolean!
   cancelAtPeriodEnd: Boolean!
+  cancellationPolicyOverridden: Boolean!
+  cancellationOverrideReason: String
   weeklySelectedDays: [DayOfWeek!]!
   marketplaceBooking: MarketplaceBookingDetails!
   recurringBookings: [RecurringBookingDetails!]!
@@ -458,6 +468,7 @@ type MarketplaceBookingSubscriptionPayload {
   clientMutationId: String
   marketplaceBookingSubscription: MarketplaceBookingSubscriptionDetails
   accessError: SpacesAccessErrorDetails
+  cancellationError: CancellationErrorDetails
 }
 
 type MarketplaceBookingSubscriptionStatusDetails {
@@ -980,12 +991,14 @@ input CreatePartialMarketplaceRefundInput {
 input DeleteMarketplaceBookingInput {
   clientMutationId: String
   id: String!
+  cancellationOverrideReason: String
 }
 
 input DeleteMarketplaceBookingSubscriptionInput {
   clientMutationId: String
   id: String!
   cancellationMode: MarketplaceBookingSubscriptionCancellationMode!
+  cancellationOverrideReason: String
 }
 
 input DeletePrivateBookingInput {
@@ -1229,6 +1242,13 @@ enum BookingOrderField {
   NOTES
   CATEGORY
   CHANNEL
+}
+
+enum CancellationErrorCode {
+  POLICY_RESTRICTION
+  OVERRIDE_REASON_REQUIRED
+  INSUFFICIENT_MANAGEMENT_PERMISSION
+  INVALID_TERMINAL_STATE
 }
 
 enum Currency {

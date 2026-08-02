@@ -293,7 +293,7 @@ public class MarketplaceBookingServiceShould
 
         // Act & Assert
         await Should.ThrowAsync<BookingIsNotMarketplace>(() =>
-            sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken));
+            sut.DeleteAsync(existingBooking, deletedByCustomer, false, null, true, cancellationToken));
     }
 
     [Theory]
@@ -315,7 +315,7 @@ public class MarketplaceBookingServiceShould
 
         // Act & Assert
         await Should.ThrowAsync<MarketplaceBookingCancellationNotAllowed>(() =>
-            sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken));
+            sut.DeleteAsync(existingBooking, deletedByCustomer, false, null, true, cancellationToken));
     }
 
     [Theory]
@@ -337,7 +337,7 @@ public class MarketplaceBookingServiceShould
 
         // Act & Assert
         await Should.ThrowAsync<MarketplaceBookingCancellationNotAllowed>(() =>
-            sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken));
+            sut.DeleteAsync(existingBooking, deletedByCustomer, false, null, true, cancellationToken));
     }
 
     [Theory]
@@ -374,7 +374,7 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))
             .Returns(Task.FromResult<MarketplaceRefund?>(null));
 
-        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken);
+        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, null, true, cancellationToken);
 
         result.ShouldBe(deletedBooking);
         A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))
@@ -416,7 +416,7 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(deletedBooking);
 
         // Act
-        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken);
+        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, null, true, cancellationToken);
 
         // Assert
         result.ShouldBe(deletedBooking);
@@ -448,8 +448,8 @@ public class MarketplaceBookingServiceShould
         var existingBooking = CreateMarketplaceBooking(
             now.AddMinutes(30),
             false,
-            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
-            [new ProductPricingCancellationRefundRule(45, 100)]);
+            ProductPricingCancellationPolicyType.NoCancellation,
+            []);
         var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
@@ -460,10 +460,12 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
         A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(deletedBooking);
 
-        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, true, true, cancellationToken);
+        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, true, "Operator approved cancellation.", true, cancellationToken);
 
         result.ShouldBe(deletedBooking);
         existingBooking.DeletedByCustomer.ShouldBe(deletedByCustomer);
+        existingBooking.CancellationPolicyOverridden.ShouldBeTrue();
+        existingBooking.CancellationOverrideReason.ShouldBe("Operator approved cancellation.");
         A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken, true))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
@@ -504,7 +506,7 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
         A.CallTo(() => entityMapper.MapTo(existingBooking)).Returns(deletedBooking);
 
-        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, false, cancellationToken);
+        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, null, false, cancellationToken);
 
         result.ShouldBe(deletedBooking);
         A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))

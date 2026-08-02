@@ -362,6 +362,13 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("CancellationOverrideReason")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<bool>("CancellationPolicyOverridden")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Category")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1084,6 +1091,13 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("CancelAtPeriodEnd")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("CancellationOverrideReason")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<bool>("CancellationPolicyOverridden")
                         .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("CancelledAt")

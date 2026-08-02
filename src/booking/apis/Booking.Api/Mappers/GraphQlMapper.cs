@@ -211,6 +211,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             DeletedByCustomerId = src.DeletedByCustomer?.Id,
             RecurringBooking = MapTo(src.RecurringBooking),
             MarketplaceBooking = MapTo(src.MarketplaceBooking),
+            CancellationPolicyOverridden = src.CancellationPolicyOverridden,
+            CancellationOverrideReason = src.CancellationOverrideReason,
             HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides
         };
 
@@ -360,6 +362,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 },
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+            CancellationPolicyOverridden = src.CancellationPolicyOverridden,
+            CancellationOverrideReason = src.CancellationOverrideReason,
             WeeklySelectedDays = src.WeeklySelectedDays?.ToList() ?? [],
             MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
             InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),

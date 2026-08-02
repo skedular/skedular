@@ -25,6 +25,8 @@ public class Booking : ModelBaseWithDeleted
     public Customer? DeletedByCustomer { get; set; }
     public RecurringBooking? RecurringBooking { get; set; }
     public bool? HasRecurringInstanceOverrides { get; set; }
+    public bool CancellationPolicyOverridden { get; set; }
+    public string? CancellationOverrideReason { get; set; }
 
     public IReadOnlyList<ResourceBookingSlot> ResourceBookingSlots
     {

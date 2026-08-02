@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Booking.Api.GraphQL.Booking;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
+using Booking.Shared.Models;
 using HotChocolate;
 using HotChocolate.Types;
 
@@ -47,10 +48,54 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken)
     {
-        var subscription = await marketplaceBookingSubscriptionService.DeleteAsync(input.Id, input.CancellationMode, cancellationToken);
-        return new MarketplaceBookingSubscriptionPayload
+        try
         {
-            ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = graphQlMapper.MapTo(subscription)
-        };
+            var subscription = await marketplaceBookingSubscriptionService.DeleteAsync(
+                input.Id,
+                input.CancellationMode,
+                input.CancellationOverrideReason,
+                cancellationToken);
+            return new MarketplaceBookingSubscriptionPayload
+            {
+                ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = graphQlMapper.MapTo(subscription)
+            };
+        }
+        catch (MarketplaceBookingSubscriptionCancellationNotAllowed exception)
+        {
+            return new MarketplaceBookingSubscriptionPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                CancellationError = new CancellationErrorDetails { Code = CancellationErrorCode.PolicyRestriction, Message = exception.Message }
+            };
+        }
+        catch (MarketplaceBookingSubscriptionCancellationOverrideReasonRequired exception)
+        {
+            return new MarketplaceBookingSubscriptionPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                CancellationError =
+                    new CancellationErrorDetails { Code = CancellationErrorCode.OverrideReasonRequired, Message = exception.Message }
+            };
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            return new MarketplaceBookingSubscriptionPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                CancellationError = new CancellationErrorDetails
+                {
+                    Code = CancellationErrorCode.InsufficientManagementPermission, Message = exception.Message
+                }
+            };
+        }
+        catch (MarketplaceBookingSubscriptionCannotBeUpdated exception)
+        {
+            return new MarketplaceBookingSubscriptionPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                CancellationError =
+                    new CancellationErrorDetails { Code = CancellationErrorCode.InvalidTerminalState, Message = exception.Message }
+            };
+        }
     }
 }

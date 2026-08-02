@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<661ebd52766c9964368e0aca0517b966>>
+ * @generated SignedSource<<a2e79864481a9bb0fa4e1812b59ba388>>
  * @lightSyntaxTransform
  */
 
@@ -32,6 +32,8 @@ export type bookingCard_BookingDetails$data = {
       }>;
     };
   }>;
+  readonly cancellationOverrideReason: string | null | undefined;
+  readonly cancellationPolicyOverridden: boolean;
   readonly category: {
     readonly category: BookingCategory;
     readonly name: string;
@@ -170,6 +172,20 @@ return {
   "name": "bookingCard_BookingDetails",
   "selections": [
     (v0/*:: as any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "cancellationPolicyOverridden",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "cancellationOverrideReason",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -585,6 +601,6 @@ return {
 };
 })();
 
-(node as any).hash = "15c900e8a206cec058db5618f75a5d7a";
+(node as any).hash = "5251ea32684a1260df1c520dab80b06a";
 
 export default node;

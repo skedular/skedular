@@ -12,4 +12,5 @@ public class MarketplaceBookingSubscriptionPayload
     public MarketplaceBookingSubscriptionDetails? MarketplaceBookingSubscription { get; set; }
 
     [GraphQLName("accessError")] public SpacesAccessErrorDetails? AccessError { get; set; }
+    [GraphQLName("cancellationError")] public CancellationErrorDetails? CancellationError { get; set; }
 }

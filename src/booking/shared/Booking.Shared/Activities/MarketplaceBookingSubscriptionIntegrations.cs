@@ -171,7 +171,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
             foreach (var existingBooking in existingBookings)
             {
-                await marketplaceBookingService.DeleteAsync(existingBooking, subscription.DeletedByCustomer, false, false, cancellationToken);
+                await marketplaceBookingService.DeleteAsync(existingBooking, subscription.DeletedByCustomer, false, null, false, cancellationToken);
             }
 
             recurringBooking.DeletedByCustomer = subscription.DeletedByCustomer;
@@ -231,7 +231,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
         foreach (var existingBooking in existingBookings)
         {
-            await marketplaceBookingService.DeleteAsync(existingBooking, null, false, false, cancellationToken);
+            await marketplaceBookingService.DeleteAsync(existingBooking, null, false, null, false, cancellationToken);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -303,7 +303,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
         // attempt any re-timing or resource repair.
         foreach (var existingBooking in reconciliationPlan.BookingsToRemove)
         {
-            await marketplaceBookingService.DeleteAsync(existingBooking, null, false, false, cancellationToken);
+            await marketplaceBookingService.DeleteAsync(existingBooking, null, false, null, false, cancellationToken);
         }
 
         var bookingsToRemoveIds = reconciliationPlan.BookingsToRemove.Select(item => item.Id).ToHashSet();

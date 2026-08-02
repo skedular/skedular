@@ -58,6 +58,11 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useLazyLoadQuery, useMutation, usePreloadedQuery, useQueryLoader, useSubscription } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
+
+const toCustomerSubscriptionCancellationErrorMessage = (message: string) =>
+  message.toLowerCase().includes('cancellation') && message.toLowerCase().includes('not allowed')
+    ? 'This subscription cannot be cancelled under the current cancellation policy.'
+    : message;
 import MarketplaceProductBookingDetailsHero from '../marketplaceProductBooking/marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from '../marketplaceProductBooking/marketplace-refund-status-card';
@@ -84,6 +89,8 @@ const RootQuery = graphql`
     }
     marketplaceBookingSubscription(id: $subscriptionId) {
       id
+      cancellationPolicyOverridden
+      cancellationOverrideReason
       failure {
         category {
           type
@@ -430,6 +437,10 @@ const MarketplaceProductSubscriptionDetails = ({
     useMutation<marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation>(graphql`
       mutation marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
         deleteMarketplaceBookingSubscription(input: $input) {
+          cancellationError {
+            code
+            message
+          }
           marketplaceBookingSubscription {
             id
             cancelAtPeriodEnd
@@ -524,7 +535,15 @@ const MarketplaceProductSubscriptionDetails = ({
           cancellationMode: cancellationModeType,
         },
       },
-      onCompleted: (_, errors) => {
+      onCompleted: (data, errors) => {
+        const cancellationError = data?.deleteMarketplaceBookingSubscription?.cancellationError;
+        if (cancellationError) {
+          toast(
+            <NotificationContent content={`Failed to cancel subscription. ${toCustomerSubscriptionCancellationErrorMessage(cancellationError.message)}`} />,
+            errorNotificationOptions,
+          );
+          return;
+        }
         if (errors && errors.length > 0) {
           logCustomerSelfServiceActionRejected({
             logger,
@@ -532,7 +551,10 @@ const MarketplaceProductSubscriptionDetails = ({
             purchaseType: 'subscription',
             reasonCode: getRelayErrorMessage(errors),
           });
-          toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+          toast(
+            <NotificationContent content={`Failed to update ${productTitle}. ${toCustomerSubscriptionCancellationErrorMessage(getRelayErrorMessage(errors))}`} />,
+            errorNotificationOptions,
+          );
 
           return;
         }
@@ -546,7 +568,10 @@ const MarketplaceProductSubscriptionDetails = ({
           purchaseType: 'subscription',
           reasonCode: getRelayErrorMessage(error),
         });
-        toast(<NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
+        toast(
+          <NotificationContent content={`Failed to update ${productTitle}. ${toCustomerSubscriptionCancellationErrorMessage(getRelayErrorMessage(error))}`} />,
+          errorNotificationOptions,
+        );
       },
     });
   };
@@ -632,6 +657,9 @@ const MarketplaceProductSubscriptionDetails = ({
                   />
                   <DetailsRow label="Booked for" value={subscription.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
                   <DetailsRow label="Renewal" value={lifecycleDisplay?.renewalLabel ?? (subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period')} />
+                  {subscription.cancellationPolicyOverridden ? (
+                    <DetailsRow label="Cancellation reason" value={subscription.cancellationOverrideReason ?? 'Policy overridden'} />
+                  ) : null}
                   {weeklySelectedDaysSummary ? <DetailsRow label="Weekly selected days (UTC)" value={weeklySelectedDaysSummary} /> : null}
                 </StackColumn>
               </CardContent>
@@ -720,6 +748,9 @@ const MarketplaceProductSubscriptionDetails = ({
                   <DetailsRow label="Quantity" value={`${displayMarketplaceBooking.quantity}`} />
                   <DetailsRow label="Booked for" value={subscription.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
                   <DetailsRow label="Renewal" value={lifecycleDisplay?.renewalLabel ?? (subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period')} />
+                  {subscription.cancellationPolicyOverridden ? (
+                    <DetailsRow label="Cancellation reason" value={subscription.cancellationOverrideReason ?? 'Policy overridden'} />
+                  ) : null}
                   {weeklySelectedDaysSummary ? <DetailsRow label="Weekly selected days (UTC)" value={weeklySelectedDaysSummary} /> : null}
                   {productVersion ? (
                     <DetailsRow

@@ -1,5 +1,5 @@
 import { RelayError, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
-import { getOrganizationRefundsBaseLink } from '@/components/links';
+import { getOrganizationRefundsBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { RootShell } from '@/components/rootShell';
@@ -7,7 +7,7 @@ import type { pageOrganizationRefundDetail_rootQuery } from '@/queries/__generat
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { PageHeaderPanel, StackColumn } from '@skedular/ui';
+import { PageHeaderPanel, SmallIconTypography, StackColumn } from '@skedular/ui';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { memo, useEffect } from 'react';
@@ -19,6 +19,7 @@ const RootQuery = graphql`
     marketplaceRefund(id: $refundId) {
       id
       localEntityType
+      localEntityId
       currency {
         type
         name
@@ -72,8 +73,18 @@ const Content = ({
           Back to refunds
         </Button>
         <PageHeaderPanel title="Refund details" description="Review the full timeline and take the next permitted action." />
+        {data.marketplaceRefund.localEntityType === 'MarketplaceBookingSubscription' ? (
+          <Button
+            component={Link}
+            href={getOrganizationSubscriptionBaseLink(integratedPlatform, organizationCustomDomain, data.marketplaceRefund.localEntityId)}
+            sx={{ alignSelf: 'flex-start' }}
+          >
+            View subscription
+          </Button>
+        ) : null}
         <Card variant="outlined" sx={{ borderRadius: 3 }}>
           <CardContent>
+            {data.marketplaceRefund.reason ? <SmallIconTypography label={`Cancellation reason: ${data.marketplaceRefund.reason}`} sx={{ mb: 2 }} /> : null}
             <MarketplaceRefundAdminPanel
               entityLabel={data.marketplaceRefund.localEntityType === 'MarketplaceBookingSubscription' ? 'subscription' : 'booking'}
               refund={data.marketplaceRefund}

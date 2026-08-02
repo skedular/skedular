@@ -189,8 +189,14 @@ public class ProductPricingCancellationPolicyInvalid() : Exception("The cancella
 
 public class MarketplaceBookingCancellationNotAllowed() : Exception("This booking has passed its cancellation deadline.");
 
+public class MarketplaceBookingCancellationOverrideReasonRequired()
+    : Exception("A cancellation override reason is required when the cancellation policy blocks the cancellation.");
+
 public class MarketplaceBookingSubscriptionCancellationNotAllowed()
     : Exception("This subscription has passed its cancellation deadline.");
+
+public class MarketplaceBookingSubscriptionCancellationOverrideReasonRequired()
+    : Exception("A cancellation override reason is required when the cancellation policy blocks the cancellation.");
 
 public class MarketplaceEventResourceSelectionRequiresEventProduct()
     : Exception("You can only choose event resources for event products.");

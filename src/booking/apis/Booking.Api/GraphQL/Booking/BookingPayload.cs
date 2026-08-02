@@ -1,3 +1,4 @@
+using Booking.Shared.Models;
 using HotChocolate;
 
 namespace Booking.Api.GraphQL.Booking;
@@ -11,6 +12,14 @@ public class BookingPayload
     [GraphQLName("accessError")] public SpacesAccessErrorDetails? AccessError { get; set; }
     [GraphQLName("availabilityError")] public BookingAvailabilityErrorDetails? AvailabilityError { get; set; }
     [GraphQLName("failure")] public MarketplaceBookingFailureDetails? Failure { get; set; }
+    [GraphQLName("cancellationError")] public CancellationErrorDetails? CancellationError { get; set; }
+}
+
+[GraphQLName("CancellationErrorDetails")]
+public class CancellationErrorDetails
+{
+    [GraphQLName("code")] public CancellationErrorCode Code { get; set; }
+    [GraphQLName("message")] public string Message { get; set; } = string.Empty;
 }
 
 [GraphQLName("BookingAvailabilityErrorDetails")]
