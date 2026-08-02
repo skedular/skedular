@@ -2,23 +2,11 @@ Hi {{RECIPIENT_NAME}},
 
 {{SUMMARY}}
 
-Refund type:
-{{ENTITY_LABEL}}
+Refund amount: {{AMOUNT}}
 
-Status:
-{{STATUS}}
-
-Amount:
-{{AMOUNT}}
-
-Reference:
-{{REFERENCE}}
-
-Note:
 {{NOTE}}
 
-Error:
-{{ERROR}}
+If you have questions about this booking or refund, please contact the organization directly. We’ll keep you updated if anything else is needed.
 
 —
 Powered by Skedular

@@ -1,6 +1,6 @@
 Hi,
 
-New Organization has joined Skedular.
+A new organization has joined Skedular.
 
 Organization ID:
 {{ORGANIZATION_ID}}

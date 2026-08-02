@@ -2,23 +2,17 @@ Hi {{RECIPIENT_NAME}},
 
 {{SUMMARY}}
 
-Refund type:
-{{ENTITY_LABEL}}
+Booking or subscription: {{ENTITY_LABEL}}
 
-Status:
-{{STATUS}}
+Current status: {{STATUS}}
 
-Amount:
-{{AMOUNT}}
+Refund amount: {{AMOUNT}}
 
-Reference:
-{{REFERENCE}}
+Customer-provided reason: {{NOTE}}
 
-Note:
-{{NOTE}}
+Provider reference: {{REFERENCE}}
 
-Error:
-{{ERROR}}
+Latest issue: {{ERROR}}
 
 {{INTERNAL_CONTEXT}}
 

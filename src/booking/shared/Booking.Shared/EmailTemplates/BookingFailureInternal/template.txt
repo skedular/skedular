@@ -5,8 +5,8 @@ Hello {{RECIPIENT_NAME}},
 
 {{SUMMARY}}
 
-Action required
-Review the affected booking in Skedular to help the customer if needed.
+Recommended action
+Review the affected booking in Skedular and contact the customer if they need help completing the booking.
 
 ---
 Powered by Skedular

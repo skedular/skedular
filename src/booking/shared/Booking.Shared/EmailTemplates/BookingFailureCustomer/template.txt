@@ -5,8 +5,8 @@ Hello {{RECIPIENT_NAME}},
 
 {{SUMMARY}}
 
-Next step
-You can review the booking in Skedular and {{CUSTOMER_ACTION}}.
+What you can do
+Please review the booking in Skedular and {{CUSTOMER_ACTION}}. If you did not make this change, no further action is needed.
 
 ---
 Powered by Skedular

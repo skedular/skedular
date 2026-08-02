@@ -1,6 +1,6 @@
 Hi,
 
-New customer has joined Skedular.
+A new customer has joined Skedular.
 
 Customer ID:
 {{CUSTOMER_ID}}

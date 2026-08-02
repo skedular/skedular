@@ -1,6 +1,6 @@
 Hi,
 
-New Location has joined Skedular.
+A new location has joined Skedular.
 
 Location ID:
 {{LOCATION_ID}}
