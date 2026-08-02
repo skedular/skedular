@@ -206,6 +206,20 @@ export const getSpacesAppLink = () => {
   }
 };
 
+export const getHostAppLink = () => {
+  const hostAppUrl = process.env.NEXT_PUBLIC_SKEDULAR_HOST_APP_URL;
+
+  if (!hostAppUrl?.trim()) {
+    return '/';
+  }
+
+  try {
+    return new URL('/', hostAppUrl).href;
+  } catch {
+    return '/';
+  }
+};
+
 export const getOrganizationLocationAddPrivateLink = (integratedPlatform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
   let params = '';
 

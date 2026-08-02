@@ -3,7 +3,7 @@ import AppSwitcher from '@skedular/ui/app-shell/app-switcher';
 import { CustomerAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { BookingIcon, FeedbackIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon, SystemModeIcon } from '@/components/icons';
-import { getCustomerMarketplaceBookingsLink, getNotificationsLink, getSettingsLink, getSignOutReturnToLink, getSpacesAppLink } from '@/components/links';
+import { getCustomerMarketplaceBookingsLink, getHostAppLink, getNotificationsLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import type { noOrganizationAppBar_query$key } from '@/queries/__generated__/noOrganizationAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -113,7 +113,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
 
   const settingsLink = getSettingsLink(integratedPlatform);
   const bookingsLink = getCustomerMarketplaceBookingsLink(integratedPlatform);
-  const spacesAppLink = getSpacesAppLink();
+  const hostAppLink = getHostAppLink();
   const notificationsLink = getNotificationsLink(integratedPlatform);
   const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
   const selectedThemeIcon =
@@ -150,7 +150,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
 
           <Button
             component={NextLink}
-            href={spacesAppLink}
+            href={hostAppLink}
             variant="text"
             sx={{
               display: { xs: 'none', md: 'inline-flex' },
@@ -297,7 +297,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, showLogo }: Props) => {
             </MenuItem>
 
             <MenuItem>
-              <Link component={NextLink} href={spacesAppLink}>
+              <Link component={NextLink} href={hostAppLink}>
                 <SmallIconTypography startElement={<OrganizationIcon />} label="Become a host" />
               </Link>
             </MenuItem>
