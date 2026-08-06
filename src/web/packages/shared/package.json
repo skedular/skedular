@@ -14,7 +14,7 @@
     "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix"
   },
   "dependencies": {
-    "@mui/icons-material": "^9.3.0",
+    "@mui/icons-material": "^9.3.1",
     "@next/third-parties": "^16.3.0",
     "@skedular/ui": "workspace:*",
     "cookies-next": "^6.1.1",
@@ -29,7 +29,7 @@
     "uuid": "^14.0.1"
   },
   "peerDependencies": {
-    "@mui/material": "^9.3.0",
+    "@mui/material": "^9.3.1",
     "@mui/system": "^9.3.0",
     "@mui/x-data-grid": "^9.10.1",
     "@mui/x-date-pickers": "^9.10.1",
