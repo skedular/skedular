@@ -318,7 +318,7 @@ public class TeamMemberService(
                 Role = item.Id == customerId ? TeamMemberRoleConstants.Owner : TeamMemberRoleConstants.Member,
                 Customer = item,
                 Team = existingTeam,
-                Status = TeamMemberStatusConstants.Active
+                Status = TeamMemberStatusConstants.Active,
             }));
         }
         else
@@ -337,7 +337,7 @@ public class TeamMemberService(
                 Customer = item.Customer,
                 Team = existingTeam,
                 OrganizationMember = item,
-                Status = TeamMemberStatusConstants.Active
+                Status = TeamMemberStatusConstants.Active,
             }));
         }
 
@@ -499,7 +499,7 @@ public class TeamMemberService(
             Customer = organizationMemberToAdd.Customer,
             Team = existingTeam,
             OrganizationMember = organizationMemberToAdd,
-            Status = TeamMemberStatusConstants.Active
+            Status = TeamMemberStatusConstants.Active,
         };
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);

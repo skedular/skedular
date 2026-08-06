@@ -10,7 +10,12 @@ public class SetShould
     [Fact]
     public void Add_Header_If_Not_Present()
     {
-        var headers = new Headers { new Header("one", []), new Header("two", []), new Header("three", []) };
+        var headers = new Headers
+        {
+            new Header("one", []),
+            new Header("two", []),
+            new Header("three", []),
+        };
 
         headers.Set("my header", "my value");
 
@@ -23,7 +28,12 @@ public class SetShould
     [Fact]
     public void Replace_Header_If_Present()
     {
-        var headers = new Headers { new Header("one", []), new Header("my header", []), new Header("three", []) };
+        var headers = new Headers
+        {
+            new Header("one", []),
+            new Header("my header", []),
+            new Header("three", []),
+        };
 
         headers.Set("my header", "my value");
 

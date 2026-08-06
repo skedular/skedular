@@ -21,7 +21,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         CustomersByPreferredLocationWhereInput where,
         IEnumerable<CustomerOrderInput>? orderBy,
-        [Service] ICustomerService customerService,
+        [Service]
+        ICustomerService customerService,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(where.LocationId);
@@ -39,10 +40,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 }

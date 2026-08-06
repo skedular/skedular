@@ -213,10 +213,13 @@ public class BulkAddResourcesService(
                     Inactive = false,
                     RequireBookingApproval = false,
                     Capacity = 1,
-                    Location = entityMapper.MapTo(existingLocation)
+                    Location = entityMapper.MapTo(existingLocation),
                 };
 
-                var allTagEntities = new List<OrganizationTagEntity> { typeTagIndex[row.OrganizationResourceTypeTagId] };
+                var allTagEntities = new List<OrganizationTagEntity>
+                {
+                    typeTagIndex[row.OrganizationResourceTypeTagId],
+                };
                 allTagEntities.AddRange(resolvedNonTypeTags);
 
                 rowEntities.Add(entityMapper.MapTo(resourceModel, existingLocation, allTagEntities));

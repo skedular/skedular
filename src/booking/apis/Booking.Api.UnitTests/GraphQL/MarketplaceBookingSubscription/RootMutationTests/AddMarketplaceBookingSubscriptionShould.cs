@@ -10,13 +10,21 @@ public class AddMarketplaceBookingSubscriptionShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Forward_The_Mapped_Weekly_Selected_Days_To_The_Subscription_Service(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         RootMutation sut,
         CancellationToken cancellationToken)
     {
-        var input = new AddMarketplaceBookingSubscriptionInput { WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Thursday] };
-        var subscription = new Shared.Models.MarketplaceBookingSubscription { WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Thursday] };
+        var input = new AddMarketplaceBookingSubscriptionInput
+        {
+            WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Thursday],
+        };
+        var subscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Thursday],
+        };
         var details = new MarketplaceBookingSubscriptionDetails();
         var expectedDays = new[] { DayOfWeek.Tuesday, DayOfWeek.Thursday };
         A.CallTo(() => graphQlMapper.MapTo(input)).Returns(subscription);

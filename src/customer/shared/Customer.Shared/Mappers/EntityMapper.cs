@@ -79,8 +79,8 @@ public class EntityMapper : IEntityMapper
                     {
                         Id = context.GetVerifiableToken().ToSafeString(),
                         Email = context.GetEmail(),
-                        EmailVerified = context.GetEmailVerified()
-                    }
+                        EmailVerified = context.GetEmailVerified(),
+                    },
                 },
             IsOnboardingDone = false,
             DefaultOrganization = null,
@@ -89,11 +89,16 @@ public class EntityMapper : IEntityMapper
             PreferredResources = [],
             FavouriteLocations = [],
             PersonalInformationVisibility = PersonalInformationVisibility.Visible,
-            Type = CustomerType.Registered
+            Type = CustomerType.Registered,
         };
 
     public Identity MapToIdentity(IContext context) =>
-        new() { Id = context.GetVerifiableToken().ToSafeString(), Email = context.GetEmail(), EmailVerified = context.GetEmailVerified() };
+        new()
+        {
+            Id = context.GetVerifiableToken().ToSafeString(),
+            Email = context.GetEmail(),
+            EmailVerified = context.GetEmailVerified(),
+        };
 
     public Models.Customer MapTo(Database.Entities.Customer src) =>
         new()
@@ -129,7 +134,7 @@ public class EntityMapper : IEntityMapper
             StripeCustomer = MapTo(src.StripeCustomer),
             StripePaymentMethods = MapTo(src.StripePaymentMethods).ToList(),
             PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility(),
-            Type = src.Type.ToCustomerType()
+            Type = src.Type.ToCustomerType(),
         };
 
     public CustomerFeedback MapTo(Database.Entities.CustomerFeedback src) =>
@@ -145,9 +150,9 @@ public class EntityMapper : IEntityMapper
                 FeedbackChannelTypeConstants.Slack => FeedbackChannelType.Slack,
                 FeedbackChannelTypeConstants.MsTeams => FeedbackChannelType.MsTeams,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Channel), src.Channel,
-                    $"Unexpected value for {nameof(src.Channel)}: {src.Channel}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Channel)}: {src.Channel}. Update enum mapping or caller input."),
             },
-            Customer = MapTo(src.Customer)
+            Customer = MapTo(src.Customer),
         };
 
     public Database.Entities.CustomerFeedback MapTo(CustomerFeedback src, Database.Entities.Customer customer) =>
@@ -161,9 +166,9 @@ public class EntityMapper : IEntityMapper
                 FeedbackChannelType.Slack => FeedbackChannelTypeConstants.Slack,
                 FeedbackChannelType.MsTeams => FeedbackChannelTypeConstants.MsTeams,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Channel), src.Channel,
-                    $"Unexpected value for {nameof(src.Channel)}: {src.Channel}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Channel)}: {src.Channel}. Update enum mapping or caller input."),
             },
-            Customer = customer
+            Customer = customer,
         };
 
     public Database.Entities.Customer MapToEntity(
@@ -201,7 +206,7 @@ public class EntityMapper : IEntityMapper
             PreferredOrganizationTags = preferredOrganizationTags.ToList(),
             FavouriteLocations = favouriteLocations.ToList(),
             PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility(),
-            Type = src.Type.ToCustomerType()
+            Type = src.Type.ToCustomerType(),
         };
 
     public IEnumerable<Identity> MapToEntity(IEnumerable<Models.Identity> src) => src.Select(MapToEntity);
@@ -262,7 +267,7 @@ public class EntityMapper : IEntityMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode
+                CountryCode = src.CountryCode,
             };
 
     public Edge<Models.Customer> MapTo(Edge<Database.Entities.Customer> src) => new(MapTo(src.Node), src.Cursor);
@@ -276,7 +281,11 @@ public class EntityMapper : IEntityMapper
             Email = src.Identities.ToSingleEmail(),
             Phone = src.PhoneNumber.ToSafeString(),
             PreferredLocales = string.IsNullOrWhiteSpace(src.Locale) ? [] : [src.Locale],
-            Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
+            Metadata = new Dictionary<string, string>
+            {
+                { "type", "customer" },
+                { "customerId", src.Id },
+            },
         };
 
     public Database.Entities.StripePaymentMethod MapTo(PaymentMethod paymentMethod, string setupIntentId, Database.Entities.Customer customer) =>
@@ -293,10 +302,15 @@ public class EntityMapper : IEntityMapper
             CardFunding = paymentMethod.Card?.Funding,
             CardIssuer = paymentMethod.Card?.Issuer,
             CardLastFourDigit = paymentMethod.Card?.Last4,
-            Customer = customer
+            Customer = customer,
         };
 
-    private static Identity MapToEntity(Models.Identity src) => new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
+    private static Identity MapToEntity(Models.Identity src) => new()
+    {
+        Id = src.Id,
+        Email = src.Email,
+        EmailVerified = src.EmailVerified,
+    };
 
     private static IEnumerable<Location> MapToLocations(IEnumerable<Database.Entities.Location?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
@@ -313,7 +327,7 @@ public class EntityMapper : IEntityMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 Email = src.Email,
-                EmailVerified = src.EmailVerified
+                EmailVerified = src.EmailVerified,
             };
 
     private static Organization? MapTo(Database.Entities.Organization? src) =>
@@ -328,7 +342,7 @@ public class EntityMapper : IEntityMapper
                 EventRaisedAt = src.EventRaisedAt,
                 CustomDomain = src.CustomDomain,
                 Type = src.Type.ToOrganizationType(),
-                IsOwnershipVerified = src.IsOwnershipVerified
+                IsOwnershipVerified = src.IsOwnershipVerified,
             };
 
     private static Location? MapTo(Database.Entities.Location? src) =>
@@ -343,7 +357,7 @@ public class EntityMapper : IEntityMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Organization = MapTo(src.Organization),
                 Type = src.Type.ToNullableLocationType(),
-                Resources = MapToResources(src.Resources).ToList()
+                Resources = MapToResources(src.Resources).ToList(),
             };
 
     private static IEnumerable<OrganizationTag> MapToOrganizationTags(IEnumerable<Database.Entities.OrganizationTag?>? src) =>
@@ -362,7 +376,10 @@ public class EntityMapper : IEntityMapper
                 Name = src.Name,
                 Type = src.Type.ToNullableOrganizationTagType(),
                 Color = src.Color,
-                Organization = new Organization { Id = src.Organization.Id }
+                Organization = new Organization
+                {
+                    Id = src.Organization.Id,
+                },
             };
 
     private static IEnumerable<Models.Resource> MapToResources(IEnumerable<Resource?>? src) =>
@@ -378,7 +395,12 @@ public class EntityMapper : IEntityMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Location = src.Location is null ? null : new Location { Id = src.Location.Id }
+                Location = src.Location is null
+                    ? null
+                    : new Location
+                    {
+                        Id = src.Location.Id,
+                    },
             };
 
     private static StripeCustomer? MapTo(Database.Entities.StripeCustomer? src) =>
@@ -390,7 +412,7 @@ public class EntityMapper : IEntityMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                StripeCustomerId = src.StripeCustomerId
+                StripeCustomerId = src.StripeCustomerId,
             };
 
     private static StripePaymentMethod MapToModel(Database.Entities.StripePaymentMethod src) =>
@@ -410,6 +432,6 @@ public class EntityMapper : IEntityMapper
             CardFingerprint = src.CardFingerprint,
             CardFunding = src.CardFunding,
             CardIssuer = src.CardIssuer,
-            CardLastFourDigit = src.CardLastFourDigit
+            CardLastFourDigit = src.CardLastFourDigit,
         };
 }

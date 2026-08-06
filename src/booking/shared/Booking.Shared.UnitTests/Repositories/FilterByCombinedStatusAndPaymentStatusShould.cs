@@ -15,23 +15,35 @@ public class FilterByCombinedStatusAndPaymentStatusShould
             new()
             {
                 Status = MarketplaceBookingSubscriptionStatusConstants.Active,
-                MarketplaceBooking = new MarketplaceBooking { PaymentStatus = PaymentStatusConstants.Pending }
+                MarketplaceBooking = new MarketplaceBooking
+                {
+                    PaymentStatus = PaymentStatusConstants.Pending,
+                },
             },
             new()
             {
                 Status = MarketplaceBookingSubscriptionStatusConstants.Active,
-                MarketplaceBooking = new MarketplaceBooking { PaymentStatus = PaymentStatusConstants.Confirmed }
+                MarketplaceBooking = new MarketplaceBooking
+                {
+                    PaymentStatus = PaymentStatusConstants.Confirmed,
+                },
             },
             new()
             {
                 Status = MarketplaceBookingSubscriptionStatusConstants.Cancelled,
-                MarketplaceBooking = new MarketplaceBooking { PaymentStatus = PaymentStatusConstants.Pending }
+                MarketplaceBooking = new MarketplaceBooking
+                {
+                    PaymentStatus = PaymentStatusConstants.Pending,
+                },
             },
             new()
             {
                 Status = MarketplaceBookingSubscriptionStatusConstants.Cancelled,
-                MarketplaceBooking = new MarketplaceBooking { PaymentStatus = PaymentStatusConstants.Confirmed }
-            }
+                MarketplaceBooking = new MarketplaceBooking
+                {
+                    PaymentStatus = PaymentStatusConstants.Confirmed,
+                },
+            },
         }.AsQueryable();
 
     private static MarketplaceBookingSubscriptionSearchCriteria CriteriaWith(

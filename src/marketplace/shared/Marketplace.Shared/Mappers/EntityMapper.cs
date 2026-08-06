@@ -36,7 +36,7 @@ public class EntityMapper : IEntityMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Type = src.Type.ToNullableCustomerType()
+                Type = src.Type.ToNullableCustomerType(),
             };
 
     public Product MapTo(Database.Entities.Product src)
@@ -48,7 +48,7 @@ public class EntityMapper : IEntityMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Inactive = src.Inactive,
-            Organization = MapTo(src.Organization)
+            Organization = MapTo(src.Organization),
         };
 
         product.ProductVersions = MapTo(src.ProductVersions, src).ToList();
@@ -68,7 +68,12 @@ public class EntityMapper : IEntityMapper
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = MapTo(src.OrganizationTags).ToList(),
             PricingOptions = src.PricingOptions.ToList(),
-            Product = new Product { Id = product.Id, Inactive = product.Inactive, Organization = MapTo(product.Organization) }
+            Product = new Product
+            {
+                Id = product.Id,
+                Inactive = product.Inactive,
+                Organization = MapTo(product.Organization),
+            },
         };
 
     public Database.Entities.Product MapTo(Product src, Organization organization) =>
@@ -89,7 +94,7 @@ public class EntityMapper : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             Inactive = src.Inactive,
             Organization = organization,
-            ProductVersions = MapTo(src.ProductVersions, src).ToList()
+            ProductVersions = MapTo(src.ProductVersions, src).ToList(),
         };
 
     public Models.Organization MapTo(Organization src) =>
@@ -105,7 +110,7 @@ public class EntityMapper : IEntityMapper
             Website = src.Website,
             LogoUrl = src.LogoUrl,
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
-            Tags = MapTo(src.Tags).ToList()
+            Tags = MapTo(src.Tags).ToList(),
         };
 
     public Database.Entities.ProductVersion MapTo(
@@ -125,7 +130,7 @@ public class EntityMapper : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Type = src.Type.ToNullableOrganizationTagType(),
-            Color = src.Color
+            Color = src.Color,
         };
 
     private IEnumerable<ProductVersion> MapTo(IEnumerable<Database.Entities.ProductVersion> src, Database.Entities.Product product) =>

@@ -35,6 +35,10 @@ public class DailyResourceAvailabilitySnapshotConfiguration : IEntityTypeConfigu
 
         builder.HasIndex(item => item.Date);
         builder.HasIndex(item => item.Classification);
-        builder.HasIndex(item => new { item.LocationId, item.Date });
+        builder.HasIndex(item => new
+        {
+            item.LocationId,
+            item.Date,
+        });
     }
 }

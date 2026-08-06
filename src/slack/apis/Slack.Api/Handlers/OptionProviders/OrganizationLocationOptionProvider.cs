@@ -28,8 +28,12 @@ public class OrganizationLocationOptionProvider(IRepositoryFactory repositoryFac
         {
             Options = connection.Edges
                 .Select(item => item.Node)
-                .Select(item => new Option { Text = item.Name.ToOptionText(), Value = item.Id })
-                .ToList()
+                .Select(item => new Option
+                {
+                    Text = item.Name.ToOptionText(),
+                    Value = item.Id,
+                })
+                .ToList(),
         };
     }
 }

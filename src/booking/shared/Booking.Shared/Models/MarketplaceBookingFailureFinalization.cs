@@ -41,7 +41,7 @@ public static class MarketplaceBookingFailureKey
                 ToStableWindow(finalization.RequestedFrom)),
             MarketplaceBookingFailureScopeConstants.RecurringCycle => string.Concat(
                 finalization.MarketplaceBookingSubscriptionId ?? finalization.RecurringBookingId, ":", ToStableWindow(finalization.RequestedFrom)),
-            _ => null
+            _ => null,
         };
         ArgumentException.ThrowIfNullOrWhiteSpace(owner);
         return string.Concat("marketplace-booking-failure:", finalization.Scope, ":", owner, ":", finalization.Category);

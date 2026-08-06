@@ -62,7 +62,10 @@ public class LocationBookingDerivedState(
 
             dailyBookingRecordings.Add(new DailyBookingCountRecording
             {
-                Id = randomHelper.Generate(), Date = groupedBooking.Key, Count = dayBookings.Count, Location = location
+                Id = randomHelper.Generate(),
+                Date = groupedBooking.Key,
+                Count = dayBookings.Count,
+                Location = location,
             });
 
             dailyDeskBookingRecordings.Add(new DailyDeskBookingCountRecording
@@ -73,7 +76,7 @@ public class LocationBookingDerivedState(
                     booking.ResourceIds.Any(resourceId =>
                         resources.TryGetValue(resourceId, out var resource) &&
                         resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceDesk))),
-                Location = location
+                Location = location,
             });
 
             dailyRoomBookingRecordings.Add(new DailyRoomBookingCountRecording
@@ -84,7 +87,7 @@ public class LocationBookingDerivedState(
                     booking.ResourceIds.Any(resourceId =>
                         resources.TryGetValue(resourceId, out var resource) &&
                         resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceRoom))),
-                Location = location
+                Location = location,
             });
         }
 
@@ -115,8 +118,21 @@ public class LocationBookingDerivedState(
                     First = 1000,
                     Before = string.Empty,
                     Last = ((int?)null).ToNullInt(),
-                    Where = new BookingWhereInput { LocationIds = { locationId } },
-                    OrderBy = { new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From } }
+                    Where = new BookingWhereInput
+                    {
+                        LocationIds =
+                        {
+                            locationId,
+                        },
+                    },
+                    OrderBy =
+                    {
+                        new BookingOrderInput
+                        {
+                            Direction = OrderDirection.Ascending,
+                            Field = BookingOrderField.From,
+                        },
+                    },
                 },
                 bookingConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);

@@ -12,7 +12,8 @@ public class OrganizationInvoiceCounterServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_OrganizationNotFound_When_Organization_Does_Not_Exist(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         OrganizationInvoiceCounterService sut,
         IOrganizationRepository organizationRepository,
         CancellationToken cancellationToken)
@@ -28,15 +29,24 @@ public class OrganizationInvoiceCounterServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_New_Counter_And_Return_First_Invoice_Number_When_No_Counter_Exists(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         OrganizationInvoiceCounterService sut,
         IOrganizationRepository organizationRepository,
         IOrganizationInvoiceCounterRepository organizationInvoiceCounterRepository,
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)
     {
-        var organization = new Organization { Id = "org-1", Name = "Test Org" };
-        var newCounter = new OrganizationInvoiceCounter { InvoiceNumber = 1, Organization = organization };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Name = "Test Org",
+        };
+        var newCounter = new OrganizationInvoiceCounter
+        {
+            InvoiceNumber = 1,
+            Organization = organization,
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationInvoiceCounterRepository).Returns(organizationInvoiceCounterRepository);
@@ -60,15 +70,24 @@ public class OrganizationInvoiceCounterServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Increment_Existing_Counter_And_Return_Next_Invoice_Number(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         OrganizationInvoiceCounterService sut,
         IOrganizationRepository organizationRepository,
         IOrganizationInvoiceCounterRepository organizationInvoiceCounterRepository,
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)
     {
-        var organization = new Organization { Id = "org-1", Name = "Test Org" };
-        var existingCounter = new OrganizationInvoiceCounter { InvoiceNumber = 5, Organization = organization };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Name = "Test Org",
+        };
+        var existingCounter = new OrganizationInvoiceCounter
+        {
+            InvoiceNumber = 5,
+            Organization = organization,
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationInvoiceCounterRepository).Returns(organizationInvoiceCounterRepository);

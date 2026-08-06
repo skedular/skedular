@@ -11,9 +11,12 @@ public class MarkProcessingExhaustedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Persist_Failed_State_And_Notify_When_Automatic_Attempts_Are_Exhausted(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IMarketplaceRefundTransitionService transitionService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IMarketplaceRefundTransitionService transitionService,
         MarketplaceRefundExhaustionService sut,
         CancellationToken cancellationToken)
     {
@@ -23,7 +26,7 @@ public class MarkProcessingExhaustedAsyncShould
             Status = MarketplaceRefundStatusConstants.Processing,
             RetryCount = 1,
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
-            LocalEntityId = "booking-1"
+            LocalEntityId = "booking-1",
         };
         const string Error = "provider unavailable";
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);

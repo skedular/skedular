@@ -18,7 +18,10 @@ public class TeamCoreController(IVersionService versionService, ILogger<TeamCore
 
         return Task.FromResult<ActionResult<Version>>(new Version
         {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
         });
     }
 }

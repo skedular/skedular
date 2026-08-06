@@ -76,7 +76,11 @@ public class BookingSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        foreach (var changedFact in changedFacts.DistinctBy(item => new { item.CustomerId, item.LocationId }))
+        foreach (var changedFact in changedFacts.DistinctBy(item => new
+                 {
+                     item.CustomerId,
+                     item.LocationId,
+                 }))
         {
             await cachedLocationBookingAccessService.RemoveByCustomerAndLocationAsync(
                 changedFact.CustomerId,
@@ -112,7 +116,7 @@ public class BookingSubscriber(
                 LocationId = locationId,
                 OrganizationId = organizationId,
                 ActiveBookingCount = 0,
-                EventRaisedAt = eventRaisedAt
+                EventRaisedAt = eventRaisedAt,
             };
     }
 }

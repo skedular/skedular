@@ -37,7 +37,11 @@ public class CachedCustomerService(
                 async ct => await repositoryFactory.CustomerRepository.AnyByVerifiableTokenUntrackedAsync(verifiableToken, ct)
                     ? true
                     : throw new CustomerNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(30), LocalCacheExpiration = TimeSpan.FromDays(7) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromDays(30),
+                    LocalCacheExpiration = TimeSpan.FromDays(7),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (CustomerNotFound)
@@ -56,7 +60,11 @@ public class CachedCustomerService(
             CreateKeyByVerifiableTokenId(verifiableToken),
             async ct => (await repositoryFactory.CustomerRepository.GetMinimalByVerifiableTokenUntrackedAsync(verifiableToken, ct) ??
                          throw new CustomerNotFound()).Id,
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromMinutes(30),
+                LocalCacheExpiration = TimeSpan.FromSeconds(30),
+            },
             cancellationToken: cancellationToken);
     }
 
@@ -75,7 +83,11 @@ public class CachedCustomerService(
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.CustomerRepository.GetByIdUntrackedAsync(id, ct) ?? throw new CustomerNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (CustomerNotFound)
@@ -112,7 +124,11 @@ public class CachedCustomerService(
                 CreateKeyByVerifiableToken(verifiableToken),
                 async ct => await repositoryFactory.CustomerRepository.GetByVerifiableTokenUntrackedAsync(verifiableToken, ct) ??
                             throw new CustomerNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (CustomerNotFound)

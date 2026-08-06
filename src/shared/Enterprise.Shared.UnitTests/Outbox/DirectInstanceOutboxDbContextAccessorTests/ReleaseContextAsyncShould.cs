@@ -18,7 +18,10 @@ public class ReleaseContextAsyncShould
         await using var _ = context;
         var sut = new GetContextAccessor<DatabaseTestContext>(context, logger);
 
-        await context.Parents.AddAsync(new ParentEntity { Id = Guid.CreateVersion7().ToString() }, cancellationToken);
+        await context.Parents.AddAsync(new ParentEntity
+        {
+            Id = Guid.CreateVersion7().ToString(),
+        }, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
         context.Parents.First().Name = "updated";
 

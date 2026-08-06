@@ -10,27 +10,50 @@ namespace Booking.Api.GraphQL.Booking;
 [GraphQLName("BookingDetails")]
 public class BookingDetails : Node
 {
-    [GraphQLName("from")] public DateTimeOffset From { get; set; }
-    [GraphQLName("until")] public DateTimeOffset Until { get; set; }
-    [GraphQLName("notes")] public string? Notes { get; set; }
-    [GraphQLName("category")] public BookingCategoryDetails Category { get; set; } = new();
-    [GraphQLName("channel")] public BookingChannelDetails Channel { get; set; } = new();
-    [GraphQLName("bookingResources")] public IEnumerable<BookingResourceDetails> BookingResources { get; set; } = [];
-    [GraphQLName("involvedCustomerIds")] public IEnumerable<string> InvolvedCustomerIds { get; set; } = [];
+    [GraphQLName("from")]
+    public DateTimeOffset From { get; set; }
+
+    [GraphQLName("until")]
+    public DateTimeOffset Until { get; set; }
+
+    [GraphQLName("notes")]
+    public string? Notes { get; set; }
+
+    [GraphQLName("category")]
+    public BookingCategoryDetails Category { get; set; } = new();
+
+    [GraphQLName("channel")]
+    public BookingChannelDetails Channel { get; set; } = new();
+
+    [GraphQLName("bookingResources")]
+    public IEnumerable<BookingResourceDetails> BookingResources { get; set; } = [];
+
+    [GraphQLName("involvedCustomerIds")]
+    public IEnumerable<string> InvolvedCustomerIds { get; set; } = [];
 
     [GraphQLName("involvedOrganizationIds")]
     public IEnumerable<(string Id, string CustomDomain)> InvolvedOrganizationIds { get; set; } = [];
 
-    [GraphQLName("involvedLocations")] public IEnumerable<LocationDetails> InvolvedLocations { get; set; } = [];
-    [GraphQLName("involvedTeamIds")] public IEnumerable<string> InvolvedTeamIds { get; set; } = [];
-    [GraphQLName("createdByCustomerId")] public string? CreatedByCustomerId { get; set; }
+    [GraphQLName("involvedLocations")]
+    public IEnumerable<LocationDetails> InvolvedLocations { get; set; } = [];
+
+    [GraphQLName("involvedTeamIds")]
+    public IEnumerable<string> InvolvedTeamIds { get; set; } = [];
+
+    [GraphQLName("createdByCustomerId")]
+    public string? CreatedByCustomerId { get; set; }
 
     [GraphQLName("lastModifiedByCustomerId")]
     public string? LastModifiedByCustomerId { get; set; }
 
-    [GraphQLName("deletedByCustomerId")] public string? DeletedByCustomerId { get; set; }
-    [GraphQLName("recurringBooking")] public RecurringBookingDetails? RecurringBooking { get; set; }
-    [GraphQLName("marketplaceBooking")] public MarketplaceBookingDetails? MarketplaceBooking { get; set; }
+    [GraphQLName("deletedByCustomerId")]
+    public string? DeletedByCustomerId { get; set; }
+
+    [GraphQLName("recurringBooking")]
+    public RecurringBookingDetails? RecurringBooking { get; set; }
+
+    [GraphQLName("marketplaceBooking")]
+    public MarketplaceBookingDetails? MarketplaceBooking { get; set; }
 
     [GraphQLName("cancellationPolicyOverridden")]
     public bool CancellationPolicyOverridden { get; set; }
@@ -42,9 +65,12 @@ public class BookingDetails : Node
     public bool? HasRecurringInstanceOverrides { get; set; }
 
     public async Task<IEnumerable<OrganizationArrearsInvoiceDetails>> GetArrearsInvoicesAsync(
-        [Service] IBookingService bookingService,
-        [Service] IGraphQlMapper graphQlMapper,
-        [Parent] BookingDetails booking,
+        [Service]
+        IBookingService bookingService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
+        [Parent]
+        BookingDetails booking,
         CancellationToken cancellationToken) =>
         (await bookingService.GetArrearsInvoicesAsync(booking.Id, cancellationToken)).Select(graphQlMapper.MapTo);
 }
@@ -81,9 +107,12 @@ public static partial class BookingDetailsType
         item.InvolvedTeamIds.Select(id => new TeamDetails(id));
 
     public static async Task<MarketplaceBookingFailureDetails?> GetFailureAsync(
-        [Service] IGraphQlMapper graphQlMapper,
-        [Service] IMarketplaceBookingFailureReadService failureReadService,
-        [Parent] BookingDetails item,
+        [Service]
+        IGraphQlMapper graphQlMapper,
+        [Service]
+        IMarketplaceBookingFailureReadService failureReadService,
+        [Parent]
+        BookingDetails item,
         CancellationToken cancellationToken)
     {
         var failure = await failureReadService.GetByBookingIdAsync(item.Id, cancellationToken);
@@ -92,8 +121,10 @@ public static partial class BookingDetailsType
 
 
     public static async Task<MarketplaceCancellationAvailabilityDetails> GetCancellationAvailabilityAsync(
-        [Parent] BookingDetails item,
-        [Service] IMarketplaceCancellationAvailabilityService cancellationAvailabilityService,
+        [Parent]
+        BookingDetails item,
+        [Service]
+        IMarketplaceCancellationAvailabilityService cancellationAvailabilityService,
         CancellationToken cancellationToken)
     {
         var availability = await cancellationAvailabilityService.GetBookingAsync(item.Id, cancellationToken);
@@ -102,7 +133,7 @@ public static partial class BookingDetailsType
             CanCancel = availability.CanCancel,
             RequiresReason = availability.RequiresReason,
             IsPolicyOverride = availability.IsPolicyOverride,
-            UnavailableReason = availability.UnavailableReason
+            UnavailableReason = availability.UnavailableReason,
         };
     }
 }

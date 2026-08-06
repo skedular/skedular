@@ -10,8 +10,10 @@ public class AddCustomerPaymentMethodShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Call_HandleStripePaymentMethodEventAsync(
-        [Frozen] IPaymentService paymentService,
-        [NoAutoProperties] CustomerStripeController sut,
+        [Frozen]
+        IPaymentService paymentService,
+        [NoAutoProperties]
+        CustomerStripeController sut,
         string setupIntent,
         string setupIntentClientSecret,
         string redirectStatus,
@@ -30,8 +32,10 @@ public class AddCustomerPaymentMethodShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Redirect(
-        [Frozen] IPaymentService paymentService,
-        [NoAutoProperties] CustomerStripeController sut,
+        [Frozen]
+        IPaymentService paymentService,
+        [NoAutoProperties]
+        CustomerStripeController sut,
         string setupIntent,
         string setupIntentClientSecret,
         string redirectStatus,
@@ -53,8 +57,10 @@ public class AddCustomerPaymentMethodShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_Exception_When_Payment_Service_Throws(
-        [Frozen] IPaymentService paymentService,
-        [NoAutoProperties] CustomerStripeController sut,
+        [Frozen]
+        IPaymentService paymentService,
+        [NoAutoProperties]
+        CustomerStripeController sut,
         string setupIntent,
         string setupIntentClientSecret,
         string redirectStatus,

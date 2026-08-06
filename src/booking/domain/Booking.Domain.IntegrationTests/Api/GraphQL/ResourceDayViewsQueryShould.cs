@@ -17,7 +17,10 @@ public class ResourceDayViewsQueryShould(
 
         var filter = new ResourceAvailabilityFilterInput
         {
-            Date = DateOnly.FromDateTime(DateTime.UtcNow), OrganizationCustomDomain = "test-org", LocationIds = [], Statuses = []
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            OrganizationCustomDomain = "test-org",
+            LocationIds = [],
+            Statuses = [],
         };
 
         var result = await resourceDayViewsQuery.ExecuteAsync(filter, [], cancellationToken);
@@ -37,7 +40,10 @@ public class ResourceDayViewsQueryShould(
 
         var filter = new ResourceAvailabilityFilterInput
         {
-            Date = DateOnly.FromDateTime(DateTime.UtcNow), OrganizationCustomDomain = "test-org", LocationIds = [], Statuses = []
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            OrganizationCustomDomain = "test-org",
+            LocationIds = [],
+            Statuses = [],
         };
 
         var result = await resourceDayViewsQuery.ExecuteAsync(filter, [], cancellationToken);

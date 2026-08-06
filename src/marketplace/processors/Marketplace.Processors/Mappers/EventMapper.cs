@@ -70,11 +70,16 @@ public class EventMapper : IEventMapper
                 CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
                 CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             Identities = customer.Identities
-                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified })
-                .ToList()
+                .Select(item => new Shared.Models.Identity
+                {
+                    Id = item.Id,
+                    Email = item.Email,
+                    EmailVerified = item.EmailVerified,
+                })
+                .ToList(),
         };
     }
 
@@ -132,7 +137,7 @@ public class EventMapper : IEventMapper
                 SpacesTrialStartedAt = organizationAfterState.Offering.SpacesTrialStartedAt?.ToDateTimeOffset(),
                 SpacesTrialEndsAt = organizationAfterState.Offering.SpacesTrialEndsAt?.ToDateTimeOffset(),
                 SpacesProductEnabled = organizationAfterState.Offering.SpacesProductEnabled,
-                SpacesNextBillingAt = organizationAfterState.Offering.SpacesNextBillingAt?.ToDateTimeOffset()
+                SpacesNextBillingAt = organizationAfterState.Offering.SpacesNextBillingAt?.ToDateTimeOffset(),
             },
             Type = organizationAfterState.Type switch
             {
@@ -140,9 +145,9 @@ public class EventMapper : IEventMapper
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
                 OrganizationType.Host => Api.Shared.Services.Models.OrganizationType.Host,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
-            IsOwnershipVerified = organizationAfterState.IsOwnershipVerified
+            IsOwnershipVerified = organizationAfterState.IsOwnershipVerified,
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
@@ -154,17 +159,20 @@ public class EventMapper : IEventMapper
                 OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             Status = item.Status switch
             {
                 OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
-            Customer = new Customer { Id = item.CustomerId },
-            Organization = organization
+            Customer = new Customer
+            {
+                Id = item.CustomerId,
+            },
+            Organization = organization,
         }).ToList();
 
         organization.Tags = organizationAfterState.Tags.Select(item => new OrganizationTag
@@ -175,7 +183,7 @@ public class EventMapper : IEventMapper
             Name = item.Name,
             Type = item.Type.ToNullableOrganizationTagType(),
             Color = item.Color,
-            Organization = organization
+            Organization = organization,
         }).ToList();
 
         organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
@@ -188,7 +196,7 @@ public class EventMapper : IEventMapper
                 LoginUrl = organizationAfterState.SsoSettings.LoginUrl,
                 AppFederationMetadataUrl = organizationAfterState.SsoSettings.AppFederationMetadataUrl,
                 IsActive = organizationAfterState.SsoSettings.IsActive,
-                Organization = organization
+                Organization = organization,
             };
 
         return organization;

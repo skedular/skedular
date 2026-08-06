@@ -10,8 +10,10 @@ public class RemoveByIdOrCustomDomainShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Debug_When_Cache_Entry_Is_Evicted(
-        [Frozen] HybridCache hybridCache,
-        [Frozen] ILogger<CachedOrganizationService> logger,
+        [Frozen]
+        HybridCache hybridCache,
+        [Frozen]
+        ILogger<CachedOrganizationService> logger,
         CachedOrganizationService sut,
         CancellationToken cancellationToken)
     {

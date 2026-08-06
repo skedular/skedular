@@ -56,7 +56,7 @@ public class TemporalOutboxService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
             },
             unitOfWork);
 
@@ -69,7 +69,7 @@ public class TemporalOutboxService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
             },
             unitOfWork);
 
@@ -82,7 +82,7 @@ public class TemporalOutboxService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
             },
             unitOfWork);
 
@@ -95,7 +95,7 @@ public class TemporalOutboxService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
             },
             unitOfWork);
 
@@ -108,7 +108,7 @@ public class TemporalOutboxService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
             },
             unitOfWork);
 
@@ -120,7 +120,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.NewOrganizationJoined(args.OrganizationId, args.OrganizationCustomDomain),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 

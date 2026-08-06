@@ -55,7 +55,7 @@ public class LocationsProductsRelationships(
                         .Select(item => organizationTags.First(tag => tag.Id == item))
                         .Where(item => !string.IsNullOrWhiteSpace(item.Type))
                         .Where(item => OrganizationTagTypeConstants.ResourceTypes.Contains(item.Type!.ToOrganizationTagType()))
-                        .ToList()
+                        .ToList(),
                 });
 
                 locationIds.Add(location.Id);

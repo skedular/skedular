@@ -37,21 +37,28 @@ public class SendUsFeedbackButtonHandler(
             cancellationToken);
 
         var workspace = entityMapper.MapTo(workspaceEntity);
-        var greetings = new SectionBlock { Text = $"Hi <@{workspaceMemberEntity.Id}>, what feedback would you like to share with us?".ToMarkdown() };
+        var greetings = new SectionBlock
+        {
+            Text = $"Hi <@{workspaceMemberEntity.Id}>, what feedback would you like to share with us?".ToMarkdown(),
+        };
 
         var feedback = new InputBlock
         {
             BlockId = FeedbackKey,
             Label = "Feedback".ToPlainText(),
-            Element = new PlainTextInput { ActionId = FeedbackKey, Multiline = true },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = FeedbackKey,
+                Multiline = true,
+            },
+            Optional = false,
         };
 
         var notes = new SectionBlock
         {
             Text =
                 "We value your feedback, whether it's big or small. Sometimes, it's the smallest details that distinguish a great product from a mediocre one. If you notice something missing or something that bothers you, please let us know, and we'll address it promptly!"
-                    .ToMarkdown()
+                    .ToMarkdown(),
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -64,7 +71,7 @@ public class SendUsFeedbackButtonHandler(
                 Close = "Cancel",
                 Submit = "Send",
                 Blocks = [greetings, feedback, notes],
-                PrivateMetadata = action.Value
+                PrivateMetadata = action.Value,
             },
             cancellationToken);
     }

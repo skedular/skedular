@@ -12,23 +12,25 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<OrganizationPayload> UpdateOrganizationSsoSettingsAsync(
         UpdateOrganizationSsoSettingsInput input,
-        [Service] IOrganizationSsoService organizationSsoService,
+        [Service]
+        IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = graphQlMapper.MapTo(await organizationSsoService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken))!
+            Organization = graphQlMapper.MapTo(await organizationSsoService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken))!,
         };
 
     [UseResolverScope]
     public async Task<OrganizationPayload> RemoveOrganizationSsoSettingsAsync(
         RemoveOrganizationSsoSettingsInput input,
-        [Service] IOrganizationSsoService organizationSsoService,
+        [Service]
+        IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
             Organization = graphQlMapper.MapTo(
-                await organizationSsoService.RemoveAsync(input.OrganizationId, input.OrganizationCustomDomain, cancellationToken))!
+                await organizationSsoService.RemoveAsync(input.OrganizationId, input.OrganizationCustomDomain, cancellationToken))!,
         };
 }

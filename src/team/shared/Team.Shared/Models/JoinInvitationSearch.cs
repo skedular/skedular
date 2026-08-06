@@ -10,5 +10,5 @@ public record JoinTeamInvitationOrder(OrderDirection Direction, JoinTeamInvitati
 public enum JoinTeamInvitationOrderField
 {
     CreatedAt,
-    Status
+    Status,
 }

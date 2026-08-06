@@ -113,7 +113,10 @@ public class StripeHostRefundService(
                             Amount = ToMinorUnits(refund.RefundAmount ?? 0m, refund.Currency),
                             RefundApplicationFee = refundApplicationFee,
                             ReverseTransfer = reverseTransfer,
-                            Metadata = new Dictionary<string, string> { ["marketplace_refund_id"] = refund.Id }
+                            Metadata = new Dictionary<string, string>
+                            {
+                                ["marketplace_refund_id"] = refund.Id,
+                            },
                         },
                         GetStripeRefundIdempotencyKey(refund, reverseTransfer, refundApplicationFee, isInitialProviderRequest),
                         cancellationToken,
@@ -196,7 +199,7 @@ public class StripeHostRefundService(
                         Amount = stripeRefund.Amount / 100m,
                         Currency = stripeRefund.Currency,
                         Status = MarketplaceExternalRefundReconciliationStatusConstants.Open,
-                        ResolutionReason = "No matching local refund was found."
+                        ResolutionReason = "No matching local refund was found.",
                     });
             }
             else
@@ -400,7 +403,7 @@ public class StripeHostRefundService(
             "BHD" or "JOD" or "KWD" or "OMR" or "TND" => 1000m,
             "BIF" or "CLP" or "DJF" or "GNF" or "JPY" or "KMF" or "KRW" or "MGA" or "PYG" or "RWF" or "UGX" or "VND" or "VUV" or "XAF" or "XOF"
                 or "XPF" => 1m,
-            _ => 100m
+            _ => 100m,
         };
         return decimal.ToInt64(decimal.Round(amount * multiplier, 0, MidpointRounding.AwayFromZero));
     }
@@ -412,7 +415,7 @@ public class StripeHostRefundService(
             "pending" or "requires_action" => MarketplaceRefundStatusConstants.ProviderPending,
             "failed" => MarketplaceRefundStatusConstants.Failed,
             "canceled" => MarketplaceRefundStatusConstants.Cancelled,
-            _ => MarketplaceRefundStatusConstants.ProviderPending
+            _ => MarketplaceRefundStatusConstants.ProviderPending,
         };
 
     private sealed record StripeRefundContext(
@@ -451,22 +454,38 @@ public class StripeHostRefundClient(
         string? stripeAccountId = null) =>
         refundService.CreateAsync(
             options,
-            new RequestOptions { IdempotencyKey = idempotencyKey, StripeAccount = stripeAccountId },
+            new RequestOptions
+            {
+                IdempotencyKey = idempotencyKey,
+                StripeAccount = stripeAccountId,
+            },
             cancellationToken);
 
     public Task<Refund> GetRefundAsync(string refundId, CancellationToken cancellationToken, string? stripeAccountId = null) =>
-        refundRetriever.GetAsync(refundId, new RefundGetOptions(), new RequestOptions { StripeAccount = stripeAccountId }, cancellationToken);
+        refundRetriever.GetAsync(refundId, new RefundGetOptions(), new RequestOptions
+        {
+            StripeAccount = stripeAccountId,
+        }, cancellationToken);
 
     public Task<Payout> GetPayoutAsync(string payoutId, string stripeAccountId, CancellationToken cancellationToken) =>
-        payoutRetriever.GetAsync(payoutId, new PayoutGetOptions(), new RequestOptions { StripeAccount = stripeAccountId }, cancellationToken);
+        payoutRetriever.GetAsync(payoutId, new PayoutGetOptions(), new RequestOptions
+        {
+            StripeAccount = stripeAccountId,
+        }, cancellationToken);
 
     public async Task<IReadOnlyList<BalanceTransaction>> GetPayoutBalanceTransactionsAsync(
         string payoutId, string stripeAccountId, CancellationToken cancellationToken)
     {
         var transactions = new List<BalanceTransaction>();
         await foreach (var transaction in balanceTransactionService.ListAutoPagingAsync(
-                           new BalanceTransactionListOptions { Payout = payoutId },
-                           new RequestOptions { StripeAccount = stripeAccountId },
+                           new BalanceTransactionListOptions
+                           {
+                               Payout = payoutId,
+                           },
+                           new RequestOptions
+                           {
+                               StripeAccount = stripeAccountId,
+                           },
                            cancellationToken))
         {
             transactions.Add(transaction);

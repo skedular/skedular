@@ -81,6 +81,23 @@ type Query {
   allMarketplaceBookingSubscriptions(
     where: MarketplaceBookingSubscriptionWhereInput!
   ): [MarketplaceBookingSubscriptionDetails!]! @cost(weight: "10")
+  marketplacePurchases(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    organizationCustomDomain: String
+    sourceTypes: [MarketplacePurchaseSourceType!]
+    lifecycleStates: [MarketplacePurchaseLifecycleState!]
+    paymentStatuses: [PaymentStatus!]
+    customerId: String
+    productVersionId: String
+    activityFrom: DateTime
+    activityUntil: DateTime
+    bookingFrom: DateTime
+    bookingUntil: DateTime
+    orderBy: [MarketplacePurchaseHistoryOrderInput!]
+  ): ConnectionOfMarketplacePurchaseHistoryEdge! @cost(weight: "10")
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
   paymentStatuses: [PaymentStatusDetails!]!
   organizationBookingPermissions(
@@ -329,6 +346,12 @@ type ConnectionOfBookingEdge {
   totalCount: Int!
 }
 
+type ConnectionOfMarketplaceBookingInstanceEdge {
+  pageInfo: PageInfo!
+  edges: [MarketplaceBookingInstanceEdge!]!
+  totalCount: Int!
+}
+
 type ConnectionOfMarketplaceBookingSubscriptionEdge {
   pageInfo: PageInfo!
   edges: [MarketplaceBookingSubscriptionEdge!]!
@@ -338,6 +361,12 @@ type ConnectionOfMarketplaceBookingSubscriptionEdge {
 type ConnectionOfMarketplaceExternalRefundReconciliationEdge {
   pageInfo: PageInfo!
   edges: [MarketplaceExternalRefundReconciliationEdge!]!
+  totalCount: Int!
+}
+
+type ConnectionOfMarketplacePurchaseHistoryEdge {
+  pageInfo: PageInfo!
+  edges: [MarketplacePurchaseHistoryEdge!]!
   totalCount: Int!
 }
 
@@ -427,6 +456,11 @@ type MarketplaceBookingFailureDetails {
   allocatedRefundAmount: Decimal
 }
 
+type MarketplaceBookingInstanceEdge {
+  node: RecurringBookingDetails!
+  cursor: String!
+}
+
 type MarketplaceBookingPaymentStatusDetails {
   type: PaymentStatus!
   name: String!
@@ -448,6 +482,14 @@ type MarketplaceBookingSubscriptionDetails @key(fields: "id") {
   failure: MarketplaceBookingFailureDetails @cost(weight: "10")
   cancellationAvailability: MarketplaceSubscriptionCancellationAvailabilityDetails!
     @cost(weight: "10")
+  bookingInstances(
+    after: String
+    first: Int
+    before: String
+    last: Int
+    from: DateTime
+    until: DateTime
+  ): ConnectionOfMarketplaceBookingInstanceEdge! @cost(weight: "10")
   arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   startedAt: DateTime!
   cancelledAt: DateTime
@@ -509,6 +551,38 @@ type MarketplaceExternalRefundReconciliationEdge {
 type MarketplaceExternalRefundReconciliationPayload {
   clientMutationId: String
   reconciliation: MarketplaceExternalRefundReconciliationDetails!
+}
+
+type MarketplacePurchaseHistoryDetails {
+  refund: MarketplaceRefundDetails @cost(weight: "10")
+  id: String!
+  sourceId: String!
+  sourceType: MarketplacePurchaseSourceType!
+  sourceTypeName: String!
+  lifecycleState: MarketplacePurchaseLifecycleState!
+  lifecycleStateName: String!
+  renewalState: MarketplacePurchaseRenewalState!
+  renewalStateName: String!
+  purchasedAt: DateTime!
+  activityAt: DateTime!
+  bookingFrom: DateTime
+  bookingUntil: DateTime
+  paymentStatus: PaymentStatus!
+  productVersionId: String
+  productTitle: String
+  totalAmount: Decimal
+  currency: Currency
+  customerId: String
+  deletedByCustomerId: String
+  cancellationReason: String
+  refundId: String
+  bookingId: String
+  isDeleted: Boolean!
+}
+
+type MarketplacePurchaseHistoryEdge {
+  node: MarketplacePurchaseHistoryDetails!
+  cursor: String!
 }
 
 type MarketplaceRefundDetails {
@@ -740,6 +814,7 @@ type RecurringBookingDetails @key(fields: "id") {
   skippedDates: [DateTime!]!
   requestedResources: [ResourceDetails!]!
   marketplaceBooking: MarketplaceBookingDetails
+  marketplaceBookingSubscriptionId: String
   id: ID!
 }
 
@@ -1066,6 +1141,11 @@ input MarketplaceBookingSubscriptionWhereInput {
   includeMineOnly: Boolean
 }
 
+input MarketplacePurchaseHistoryOrderInput {
+  field: MarketplacePurchaseHistoryOrderField!
+  direction: OrderDirection!
+}
+
 input MarketplaceRefundWhereInput {
   organizationCustomDomain: String
   statuses: [String!]
@@ -1306,6 +1386,33 @@ enum MarketplaceBookingSubscriptionStatus {
   EXPIRED
   RENEWAL_FAILED
   PAUSED
+}
+
+enum MarketplacePurchaseHistoryOrderField {
+  ACTIVITY_AT
+  PURCHASED_AT
+  BOOKING_FROM
+  BOOKING_UNTIL
+}
+
+enum MarketplacePurchaseLifecycleState {
+  ACTIVE
+  CANCELLED
+  DELETED
+  EXPIRED
+  PAYMENT_FAILED
+  PENDING
+}
+
+enum MarketplacePurchaseRenewalState {
+  NOT_APPLICABLE
+  RENEWS
+  DOES_NOT_RENEW
+}
+
+enum MarketplacePurchaseSourceType {
+  BOOKING
+  SUBSCRIPTION
 }
 
 enum MarketplaceRefundEventType {

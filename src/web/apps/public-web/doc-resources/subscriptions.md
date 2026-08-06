@@ -262,6 +262,8 @@ When the subscription renews the following month, the latest version of the offe
 
 # Related Concepts
 
+Operators should use the Marketplace purchases history to review both recurring Subscriptions and one-time marketplace Bookings. The history is retained according to the existing purchase-record policy and is ordered by latest activity; cancellation, deletion, payment, and refund state remain separate concerns.
+
 - Products
 - Offers
 - Bookings

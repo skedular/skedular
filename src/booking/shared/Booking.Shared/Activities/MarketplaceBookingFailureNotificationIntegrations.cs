@@ -125,6 +125,6 @@ public class MarketplaceBookingFailureNotificationIntegrations(
             : MarketplaceBookingFailureEventTypeConstants.DeliveryFailed,
         OccurredAt = delivery.LastAttemptAt ?? timeProvider.GetUtcNow(),
         Reason = $"{delivery.Audience}:{delivery.Channel}",
-        LastError = error
+        LastError = error,
     });
 }

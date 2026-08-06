@@ -9,7 +9,10 @@ public class ExtractShould
     [AutoFakeItEasyData]
     public void Extract_Values(StringDictionaryPropagatorFunctions functions)
     {
-        var destination = new Dictionary<string, string> { { "my key", "my value" } };
+        var destination = new Dictionary<string, string>
+        {
+            { "my key", "my value" },
+        };
         var extract = functions.Extract(destination, "my key");
         extract.Single().ShouldBe("my value");
     }
@@ -18,7 +21,10 @@ public class ExtractShould
     [AutoFakeItEasyData]
     public void Return_Empty_If_Not_Present(StringDictionaryPropagatorFunctions functions)
     {
-        var destination = new Dictionary<string, string> { { "my key", "my value" } };
+        var destination = new Dictionary<string, string>
+        {
+            { "my key", "my value" },
+        };
         var extract = functions.Extract(destination, "my other key");
         extract.ShouldBeEmpty();
     }
@@ -27,7 +33,11 @@ public class ExtractShould
     [AutoFakeItEasyData]
     public void Extract_Field(StringDictionaryPropagatorFunctions functions)
     {
-        var destination = new Dictionary<string, string> { { "my key", "one" }, { "my second key", "two" } };
+        var destination = new Dictionary<string, string>
+        {
+            { "my key", "one" },
+            { "my second key", "two" },
+        };
         var extract = functions.Extract(destination, "my key").ToArray();
         extract[0].ShouldBe("one");
     }

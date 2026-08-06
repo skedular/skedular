@@ -7,11 +7,14 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
+using ICancellationDecisionService = Booking.Shared.Services.ICancellationDecisionService;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using IMarketplaceBookingSubscriptionService = Booking.Shared.Services.IMarketplaceBookingSubscriptionService;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
+using Product = Booking.Shared.Database.Entities.Product;
+using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 
 namespace Booking.Api.UnitTests.Services.MarketplaceBookingSubscriptionServiceTests;
 
@@ -21,19 +24,38 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetByIdAsync_Returns_Subscription_For_Involved_Customer(
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
-        [Frozen] IEntityMapper sharedEntityMapper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
+        [Frozen]
+        IEntityMapper sharedEntityMapper,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
         var subscription = new MarketplaceBookingSubscription
         {
             Id = "subscription-1",
-            InvolvedCustomers = [new Customer { Id = "customer-1" }],
-            InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                    Type = OrganizationTypeConstants.Marketplace,
+                },
+            ],
         };
-        var mappedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = subscription.Id };
+        var mappedSubscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            Id = subscription.Id,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedMarketplaceBookingSubscriptionService.GetByIdAsync(subscription.Id, cancellationToken)).Returns(subscription);
@@ -47,24 +69,46 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetByIdAsync_Allows_Marketplace_Admin_To_View_Other_Customers_Subscription(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
-        [Frozen] IEntityMapper sharedEntityMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
+        [Frozen]
+        IEntityMapper sharedEntityMapper,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
         var subscription = new MarketplaceBookingSubscription
         {
             Id = "subscription-1",
-            InvolvedCustomers = [new Customer { Id = "customer-2" }],
-            InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-2",
+                },
+            ],
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                    Type = OrganizationTypeConstants.Marketplace,
+                },
+            ],
         };
         var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1",
             OrganizationMemberRoleConstants.Administrator);
-        var mappedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = subscription.Id };
+        var mappedSubscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            Id = subscription.Id,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedMarketplaceBookingSubscriptionService.GetByIdAsync(subscription.Id, cancellationToken)).Returns(subscription);
@@ -88,16 +132,25 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetPaginatedMarketplaceBookingSubscriptionsAsync_Allows_Requesting_Own_Marketplace_Subscriptions_By_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
         var searchCriteria = CreateSearchCriteria(["customer-1"], "org-1");
-        var organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Marketplace,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -131,10 +184,14 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetPaginatedMarketplaceBookingSubscriptionsAsync_Throws_When_Marketplace_Member_Requests_Other_Customers_Subscriptions(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -159,25 +216,59 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Forwards_Immediate_Cancellation_Mode_To_Shared_Service(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IContext context,
-        [Frozen] IMarketplaceBookingSubscriptionService sharedMarketplaceBookingSubscriptionService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        ICancellationDecisionService cancellationDecisionService,
+        [Frozen]
+        IMarketplaceBookingSubscriptionService sharedMarketplaceBookingSubscriptionService,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
-        var customer = new Customer { Id = "customer-1" };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var organization = new Organization
+        {
+            Id = "organization-1",
+        };
+        var product = new Product
+        {
+            Id = "product-1",
+            OrganizationId = organization.Id,
+            Organization = organization,
+        };
+        var productVersion = new ProductVersion
+        {
+            Id = "product-version-1",
+            ProductId = product.Id,
+            Product = product,
+        };
         var existingSubscription = new MarketplaceBookingSubscription
         {
-            Id = "subscription-1", InvolvedCustomers = [customer], InvolvedOrganizations = [], InvolvedTeams = []
+            Id = "subscription-1",
+            InvolvedCustomers = [customer],
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
+            ProductVersion = productVersion,
         };
-        var deletedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var deletedSubscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            Id = existingSubscription.Id,
+        };
 
         A.CallTo(() => context.GetVerifiableToken()).Returns("token-1");
         A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(A<string>._, true, cancellationToken)).Returns(customer);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdAsync(existingSubscription.Id, cancellationToken))
             .Returns(existingSubscription);
+        A.CallTo(() => cancellationDecisionService.ResolveCustomerDecision(customer.Id, organization.Id, false, null))
+            .Returns(new CancellationDecision(new CancellationActor(CancellationActorCategory.Customer, customer.Id), false, null));
         A.CallTo(() => sharedMarketplaceBookingSubscriptionService.DeleteAsync(
                 existingSubscription,
                 customer,
@@ -196,25 +287,59 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Forwards_At_Period_End_Cancellation_Mode_To_Shared_Service(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IContext context,
-        [Frozen] IMarketplaceBookingSubscriptionService sharedMarketplaceBookingSubscriptionService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        ICancellationDecisionService cancellationDecisionService,
+        [Frozen]
+        IMarketplaceBookingSubscriptionService sharedMarketplaceBookingSubscriptionService,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
-        var customer = new Customer { Id = "customer-1" };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var organization = new Organization
+        {
+            Id = "organization-1",
+        };
+        var product = new Product
+        {
+            Id = "product-1",
+            OrganizationId = organization.Id,
+            Organization = organization,
+        };
+        var productVersion = new ProductVersion
+        {
+            Id = "product-version-1",
+            ProductId = product.Id,
+            Product = product,
+        };
         var existingSubscription = new MarketplaceBookingSubscription
         {
-            Id = "subscription-1", InvolvedCustomers = [customer], InvolvedOrganizations = [], InvolvedTeams = []
+            Id = "subscription-1",
+            InvolvedCustomers = [customer],
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
+            ProductVersion = productVersion,
         };
-        var deletedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var deletedSubscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            Id = existingSubscription.Id,
+        };
 
         A.CallTo(() => context.GetVerifiableToken()).Returns("token-1");
         A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(A<string>._, true, cancellationToken)).Returns(customer);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdAsync(existingSubscription.Id, cancellationToken))
             .Returns(existingSubscription);
+        A.CallTo(() => cancellationDecisionService.ResolveCustomerDecision(customer.Id, organization.Id, false, null))
+            .Returns(new CancellationDecision(new CancellationActor(CancellationActorCategory.Customer, customer.Id), false, null));
         A.CallTo(() => sharedMarketplaceBookingSubscriptionService.DeleteAsync(
                 existingSubscription,
                 customer,
@@ -267,11 +392,14 @@ public class MarketplaceBookingSubscriptionServiceShould
                 {
                     Id = "membership-1",
                     CustomerId = customerId,
-                    Customer = new Customer { Id = customerId },
+                    Customer = new Customer
+                    {
+                        Id = customerId,
+                    },
                     OrganizationId = id,
                     Status = OrganizationMemberStatusConstants.Active,
-                    Role = role
-                }
-            ]
+                    Role = role,
+                },
+            ],
         };
 }

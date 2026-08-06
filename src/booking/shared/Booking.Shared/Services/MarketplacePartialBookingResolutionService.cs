@@ -108,7 +108,7 @@ public sealed class MarketplacePartialBookingResolutionService(
                 ? MarketplaceBookingFailureEventTypeConstants.ResolutionAccepted
                 : decision == MarketplaceBookingFailureResolutionDecisionConstants.Declined
                     ? MarketplaceBookingFailureEventTypeConstants.ResolutionDeclined
-                    : MarketplaceBookingFailureEventTypeConstants.ResolutionExpired
+                    : MarketplaceBookingFailureEventTypeConstants.ResolutionExpired,
         });
         repositoryFactory.MarketplaceBookingFailureRepository.Update(failure);
         try

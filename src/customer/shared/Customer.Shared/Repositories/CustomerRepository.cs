@@ -195,7 +195,7 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                 KeysetPaginationField<Database.Entities.Customer>.Create(
                     nameof(Database.Entities.Customer.Name),
                     query => query.Name,
-                    OrderDirection.Ascending)
+                    OrderDirection.Ascending),
             ];
         }
 
@@ -238,7 +238,7 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                     query => query.PhoneNumber,
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(nameof(orderField.Field), orderField.Field,
-                    $"Unexpected value for {nameof(orderField.Field)}: {orderField.Field}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(orderField.Field)}: {orderField.Field}. Update enum mapping or caller input."),
             })
             .ToList();
     }

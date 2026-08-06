@@ -32,7 +32,7 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, 
                             "givenName",
                             "surname",
                             "photo",
-                            "photos"
+                            "photos",
                         ];
                         _ = requestConfiguration.QueryParameters.Select.Skip(skipCount);
                     },

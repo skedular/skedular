@@ -121,7 +121,7 @@ public class MarketplaceRefundReconciliationLeaseShould(IRepositoryFactory repos
         IdempotencyKey = $"reconciliation:{id}",
         RequestedAt = TimeProvider.System.GetUtcNow(),
         ReferenceTime = TimeProvider.System.GetUtcNow(),
-        RefundKind = MarketplaceRefundKindConstants.Cancellation
+        RefundKind = MarketplaceRefundKindConstants.Cancellation,
     };
 
     private static MarketplaceRefundPaymentAllocation CreateSourceAllocation(
@@ -133,7 +133,7 @@ public class MarketplaceRefundReconciliationLeaseShould(IRepositoryFactory repos
         SourcePaymentReference = $"payment-{id}",
         SourceCapturedAmount = amount,
         Currency = "NZD",
-        IsSourcePayment = true
+        IsSourcePayment = true,
     };
 
     private static async Task<bool> TryReserveAsync(

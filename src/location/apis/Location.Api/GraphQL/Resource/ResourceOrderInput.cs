@@ -7,6 +7,9 @@ namespace Location.Api.GraphQL.Resource;
 [GraphQLName("ResourceOrderInput")]
 public class ResourceOrderInput
 {
-    [GraphQLName("direction")] public OrderDirection Direction { get; set; }
-    [GraphQLName("field")] public ResourceOrderField Field { get; set; }
+    [GraphQLName("direction")]
+    public OrderDirection Direction { get; set; }
+
+    [GraphQLName("field")]
+    public ResourceOrderField Field { get; set; }
 }

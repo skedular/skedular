@@ -31,7 +31,7 @@ public class CloudflareFileService(
                 ServiceURL = uri.ToString(),
                 ForcePathStyle = true,
                 RequestChecksumCalculation = RequestChecksumCalculation.WHEN_REQUIRED,
-                ResponseChecksumValidation = ResponseChecksumValidation.WHEN_REQUIRED
+                ResponseChecksumValidation = ResponseChecksumValidation.WHEN_REQUIRED,
             });
 
         fileName = string.IsNullOrWhiteSpace(extension) ? fileName : $"{fileName}{extension}";
@@ -43,7 +43,7 @@ public class CloudflareFileService(
             InputStream = stream,
             ContentType = contentType,
             AutoCloseStream = false,
-            DisablePayloadSigning = true
+            DisablePayloadSigning = true,
         };
 
         _ = await client.PutObjectAsync(request, cancellationToken);
@@ -69,13 +69,21 @@ public class CloudflareFileService(
                     ServiceURL = uri.ToString(),
                     ForcePathStyle = true,
                     RequestChecksumCalculation = RequestChecksumCalculation.WHEN_REQUIRED,
-                    ResponseChecksumValidation = ResponseChecksumValidation.WHEN_REQUIRED
+                    ResponseChecksumValidation = ResponseChecksumValidation.WHEN_REQUIRED,
                 });
 
             _ = await client.GetObjectMetadataAsync(
-                new GetObjectMetadataRequest { BucketName = cloudflareConfiguration.FileR2BucketName, Key = fileName }, cancellationToken);
+                new GetObjectMetadataRequest
+                {
+                    BucketName = cloudflareConfiguration.FileR2BucketName,
+                    Key = fileName,
+                }, cancellationToken);
 
-            var request = new GetObjectRequest { BucketName = cloudflareConfiguration.FileR2BucketName, Key = fileName };
+            var request = new GetObjectRequest
+            {
+                BucketName = cloudflareConfiguration.FileR2BucketName,
+                Key = fileName,
+            };
 
             using var response = await client.GetObjectAsync(request, cancellationToken);
             using var memoryStream = new MemoryStream();

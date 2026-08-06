@@ -44,6 +44,10 @@ public class OrganizationMemberConfiguration : IEntityTypeConfiguration<Organiza
         builder.HasIndex(item => item.Role);
         builder.HasIndex(item => item.Status);
         builder.HasIndex(item => item.IsOrganizationOnboardingDone);
-        builder.HasIndex(item => new { item.CustomerId, item.OrganizationId }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.CustomerId,
+            item.OrganizationId,
+        }).IsUnique();
     }
 }

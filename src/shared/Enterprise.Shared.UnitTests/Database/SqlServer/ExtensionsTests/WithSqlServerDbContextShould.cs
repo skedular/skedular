@@ -19,7 +19,7 @@ public class WithSqlServerDbContextShould
     [
         typeof(ServiceCollectionFixtureCustomizer),
         typeof(FakeHostEnvironmentFixtureCustomizer),
-        typeof(SqlServerConfigurationFixtureCustomizer)
+        typeof(SqlServerConfigurationFixtureCustomizer),
     ])]
     public void Register_db_context_and_supporting_services(ServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
@@ -46,7 +46,7 @@ public class WithSqlServerDbContextShould
     [
         typeof(ServiceCollectionFixtureCustomizer),
         typeof(FakeHostEnvironmentFixtureCustomizer),
-        typeof(SqlServerConfigurationFixtureCustomizer)
+        typeof(SqlServerConfigurationFixtureCustomizer),
     ])]
     public void Register_pooled_db_context_factory(ServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {

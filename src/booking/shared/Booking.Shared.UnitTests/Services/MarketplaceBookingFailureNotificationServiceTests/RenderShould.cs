@@ -17,7 +17,11 @@ public class RenderShould
         MarketplaceBookingFailureNotificationService sut,
         CancellationToken cancellationToken)
     {
-        var failure = new MarketplaceBookingFailure { Category = category, CustomerAction = MarketplaceBookingFailureCustomerActionConstants.Rebook };
+        var failure = new MarketplaceBookingFailure
+        {
+            Category = category,
+            CustomerAction = MarketplaceBookingFailureCustomerActionConstants.Rebook,
+        };
         var message = await sut.RenderAsync(failure, false, "Jamie", cancellationToken);
 
         message.Subject.ShouldBe("Your booking could not be completed");

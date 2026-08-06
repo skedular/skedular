@@ -20,12 +20,20 @@ public class BasicCustomerWithIdentityFixtureCustomizer : IFixtureCustomizer
                 })
                 .With(item => item.PersonalInformationVisibility, () =>
                 {
-                    var values = new List<string> { PersonalInformationVisibilityConstants.Visible, PersonalInformationVisibilityConstants.Redacted };
+                    var values = new List<string>
+                    {
+                        PersonalInformationVisibilityConstants.Visible,
+                        PersonalInformationVisibilityConstants.Redacted,
+                    };
                     return values[Random.Shared.Next(0, values.Count - 1)];
                 })
                 .With(item => item.Type, () =>
                 {
-                    var values = new List<string> { CustomerTypeConstants.Guest, CustomerTypeConstants.Registered };
+                    var values = new List<string>
+                    {
+                        CustomerTypeConstants.Guest,
+                        CustomerTypeConstants.Registered,
+                    };
                     return values[Random.Shared.Next(0, values.Count - 1)];
                 })
                 .With(item => item.CustomerFeedbacks, [])

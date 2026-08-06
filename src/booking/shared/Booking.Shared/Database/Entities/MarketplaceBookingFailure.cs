@@ -63,6 +63,10 @@ public class MarketplaceBookingFailureConfiguration : IEntityTypeConfiguration<M
         builder.HasIndex(item => item.MarketplaceBookingSubscriptionId);
         builder.HasIndex(item => item.FinalizedAt);
         // Expiry workers only need unresolved offers whose deadline has passed.
-        builder.HasIndex(item => new { item.ResolutionDecision, item.ResolutionDeadlineAt });
+        builder.HasIndex(item => new
+        {
+            item.ResolutionDecision,
+            item.ResolutionDeadlineAt,
+        });
     }
 }

@@ -77,9 +77,9 @@ public class EventMapper : IEventMapper
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
                 OrganizationType.Host => Api.Shared.Services.Models.OrganizationType.Host,
                 _ => throw new ArgumentOutOfRangeException(nameof(organizationAfterState.Type), organizationAfterState.Type,
-                    $"Unexpected value for {nameof(organizationAfterState.Type)}: {organizationAfterState.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(organizationAfterState.Type)}: {organizationAfterState.Type}. Update enum mapping or caller input."),
             },
-            IsOwnershipVerified = organizationAfterState.IsOwnershipVerified
+            IsOwnershipVerified = organizationAfterState.IsOwnershipVerified,
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
@@ -92,17 +92,20 @@ public class EventMapper : IEventMapper
                 OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
-                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
             },
             Status = item.Status switch
             {
                 OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
-                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
             },
-            Customer = new Shared.Models.Customer { Id = item.CustomerId },
-            Organization = organization
+            Customer = new Shared.Models.Customer
+            {
+                Id = item.CustomerId,
+            },
+            Organization = organization,
         }).ToList();
 
         organization.Tags = organizationAfterState.Tags.Select(item => new OrganizationTag
@@ -112,7 +115,7 @@ public class EventMapper : IEventMapper
             Name = item.Name.ToSafeString(),
             Type = item.Type.ToNullableOrganizationTagType(),
             Color = item.Color.ToSafeString(),
-            Organization = organization
+            Organization = organization,
         }).ToList();
 
         organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
@@ -125,7 +128,7 @@ public class EventMapper : IEventMapper
                 LoginUrl = organizationAfterState.SsoSettings.LoginUrl,
                 AppFederationMetadataUrl = organizationAfterState.SsoSettings.AppFederationMetadataUrl,
                 IsActive = organizationAfterState.SsoSettings.IsActive,
-                Organization = organization
+                Organization = organization,
             };
 
         return organization;
@@ -142,18 +145,27 @@ public class EventMapper : IEventMapper
             Id = locationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Organization = new Organization { Id = locationAfterState.OrganizationId },
+            Organization = new Organization
+            {
+                Id = locationAfterState.OrganizationId,
+            },
             Type = locationAfterState.Type switch
             {
                 LocationType.Private => Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(nameof(locationAfterState.Type), locationAfterState.Type,
-                    $"Unexpected value for {nameof(locationAfterState.Type)}: {locationAfterState.Type}. Update enum mapping or caller input.")
-            }
+                    $"Unexpected value for {nameof(locationAfterState.Type)}: {locationAfterState.Type}. Update enum mapping or caller input."),
+            },
         };
 
         location.Resources = locationAfterState.Resources.Select(item =>
-            new Shared.Models.Resource { Id = item.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt, Location = location }).ToList();
+            new Shared.Models.Resource
+            {
+                Id = item.Id,
+                DeletedAt = deletedAt,
+                EventRaisedAt = eventRaisedAt,
+                Location = location,
+            }).ToList();
 
         return location;
     }
@@ -192,7 +204,7 @@ public class EventMapper : IEventMapper
                 PreferredOrganizationTags = MapOrganizationTags(src.PreferredOrganizationTags).ToList(),
                 FavouriteLocations = MapLocations(src.FavouriteLocations).ToList(),
                 PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility(),
-                Type = src.Type.ToCustomerType()
+                Type = src.Type.ToCustomerType(),
             };
 
     public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
@@ -300,7 +312,7 @@ public class EventMapper : IEventMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 Email = src.Email,
-                EmailVerified = src.EmailVerified
+                EmailVerified = src.EmailVerified,
             };
 
     private static Organization? MapOrganization(Shared.Database.Entities.Organization? src) =>
@@ -315,7 +327,7 @@ public class EventMapper : IEventMapper
                 EventRaisedAt = src.EventRaisedAt,
                 CustomDomain = src.CustomDomain,
                 Type = src.Type.ToOrganizationType(),
-                IsOwnershipVerified = src.IsOwnershipVerified
+                IsOwnershipVerified = src.IsOwnershipVerified,
             };
 
     private static Location? MapLocation(Shared.Database.Entities.Location? src, bool includeResources) =>
@@ -330,7 +342,7 @@ public class EventMapper : IEventMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Organization = MapOrganization(src.Organization),
                 Type = src.Type.ToNullableLocationType(),
-                Resources = includeResources ? MapResources(src.Resources).ToList() : []
+                Resources = includeResources ? MapResources(src.Resources).ToList() : [],
             };
 
     private static IEnumerable<Shared.Models.Resource> MapResources(IEnumerable<Resource?>? src) =>
@@ -346,7 +358,7 @@ public class EventMapper : IEventMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Location = MapLocation(src.Location, false)!
+                Location = MapLocation(src.Location, false)!,
             };
 
     private static IEnumerable<OrganizationTag> MapOrganizationTags(IEnumerable<Shared.Database.Entities.OrganizationTag?>? src) =>
@@ -364,7 +376,7 @@ public class EventMapper : IEventMapper
                 EventRaisedAt = src.EventRaisedAt,
                 Name = src.Name,
                 Type = src.Type.ToNullableOrganizationTagType(),
-                Color = src.Color
+                Color = src.Color,
             };
 
     private static CustomerBillingDetails? MapBillingDetails(Shared.Database.Entities.CustomerBillingDetails? src) =>
@@ -389,6 +401,6 @@ public class EventMapper : IEventMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode
+                CountryCode = src.CountryCode,
             };
 }

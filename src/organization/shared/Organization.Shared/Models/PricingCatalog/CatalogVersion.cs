@@ -4,7 +4,7 @@ public enum CatalogVersion
 {
     TeamsV1 = 0,
     SpacesV1 = 1,
-    HostV1 = 2
+    HostV1 = 2,
 }
 
 public static class CatalogVersionConstants
@@ -25,7 +25,7 @@ public static class CatalogVersionCodeExtensions
                 CatalogVersion.SpacesV1 => "Spaces V1",
                 CatalogVersion.HostV1 => "Host V1",
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 
@@ -40,7 +40,7 @@ public static class CatalogVersionCodeExtensions
                     CatalogVersionConstants.SpacesV1 => CatalogVersion.SpacesV1,
                     CatalogVersionConstants.HostV1 => CatalogVersion.HostV1,
                     _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
                 };
     }
 }

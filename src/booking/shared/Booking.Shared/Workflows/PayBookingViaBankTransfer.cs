@@ -30,7 +30,11 @@ public class PayBookingViaBankTransfer
                 {
                     StartToCloseTimeout = TimeSpan.FromSeconds(30),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
 
             await Workflow.ExecuteActivityAsync(
@@ -40,7 +44,11 @@ public class PayBookingViaBankTransfer
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(2),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
 
             if (!await Workflow.WaitConditionAsync(() => _state.PaymentStatus is not null || _state.BookingDeleted, GetDelayDuration(args)))
@@ -48,7 +56,11 @@ public class PayBookingViaBankTransfer
                 await Workflow.ExecuteActivityAsync(
                     (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
                         new ReleaseBookingResourcesInput(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentExpired)),
-                    new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                    });
 
                 return;
             }
@@ -60,7 +72,11 @@ public class PayBookingViaBankTransfer
                 await Workflow.ExecuteActivityAsync(
                     (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
                         new ReleaseBookingResourcesInput(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
-                    new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                    });
             }
         }
         catch (Exception)
@@ -68,7 +84,11 @@ public class PayBookingViaBankTransfer
             await Workflow.ExecuteActivityAsync(
                 (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
                     new ReleaseBookingResourcesInput(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
-                new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                });
         }
     }
 
@@ -77,7 +97,10 @@ public class PayBookingViaBankTransfer
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { PaymentStatus = args.PaymentStatus };
+        _state = _state with
+        {
+            PaymentStatus = args.PaymentStatus,
+        };
 
         return Task.CompletedTask;
     }
@@ -87,7 +110,10 @@ public class PayBookingViaBankTransfer
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { BookingDeleted = true };
+        _state = _state with
+        {
+            BookingDeleted = true,
+        };
 
         return Task.CompletedTask;
     }

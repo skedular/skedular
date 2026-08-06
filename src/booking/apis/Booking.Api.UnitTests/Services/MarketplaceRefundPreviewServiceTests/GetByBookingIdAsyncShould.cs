@@ -18,11 +18,16 @@ public class GetByBookingIdAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Mapped_Preview_When_Customer_Can_Modify_Payment_Method(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         MarketplaceRefundPreviewService sut,
         CancellationToken cancellationToken)
     {
@@ -58,10 +63,14 @@ public class GetByBookingIdAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_When_Customer_Cannot_Modify_Payment_Method(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         MarketplaceRefundPreviewService sut,
         CancellationToken cancellationToken)
     {
@@ -85,8 +94,14 @@ public class GetByBookingIdAsyncShould
                 Id = "marketplace-booking-1",
                 ProductVersion = new ProductVersionEntity
                 {
-                    Product = new ProductEntity { Organization = new OrganizationEntity { Id = "org-1" } }
-                }
-            }
+                    Product = new ProductEntity
+                    {
+                        Organization = new OrganizationEntity
+                        {
+                            Id = "org-1",
+                        },
+                    },
+                },
+            },
         };
 }

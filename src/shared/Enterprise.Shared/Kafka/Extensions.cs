@@ -42,7 +42,10 @@ public static class Extensions
             services.AddSingleton(kafkaConfiguration);
             if (kafkaConfiguration.SchemaRegistry is not null)
             {
-                var schemaRegistryConfig = new SchemaRegistryConfig { Url = kafkaConfiguration.SchemaRegistry.Url };
+                var schemaRegistryConfig = new SchemaRegistryConfig
+                {
+                    Url = kafkaConfiguration.SchemaRegistry.Url,
+                };
 
                 if (!string.IsNullOrWhiteSpace(kafkaConfiguration.SchemaRegistry.ApiKey) &&
                     !string.IsNullOrWhiteSpace(kafkaConfiguration.SchemaRegistry.SecretKey))
@@ -71,7 +74,10 @@ public static class Extensions
                 .AddSingleton<IKafkaActivityTracer, KafkaActivityTracer>()
                 .AddSingleton<IKafkaActivityStarter, KafkaActivityStarter>()
                 .AddSingleton<IPropagatorFunctionProvider<Headers>, HeaderPropagatorFunctions>()
-                .AddSingleton(new KafkaTelemetryConfiguration { Enabled = useTelemetry });
+                .AddSingleton(new KafkaTelemetryConfiguration
+                {
+                    Enabled = useTelemetry,
+                });
 
             services.TryAddSingleton<IKafkaLogger, KafkaLogger>();
             services.TryAddSingleton<IHostApplicationLifetimeWrapper, HostApplicationLifetimeWrapper>();

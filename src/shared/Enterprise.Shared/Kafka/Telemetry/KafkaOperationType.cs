@@ -3,5 +3,5 @@
 public enum KafkaOperationType
 {
     Provide,
-    Consume
+    Consume,
 }

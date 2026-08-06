@@ -9,7 +9,8 @@ public class GetContextAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_new_context_on_get_context_async(
-        [Frozen] IDbContextFactory<DbContext> factory,
+        [Frozen]
+        IDbContextFactory<DbContext> factory,
         FactoryBasedOutboxDbContextAccessor<DbContext> sut,
         CancellationToken cancellationToken)
     {
@@ -29,7 +30,8 @@ public class GetContextAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Pass_cancellation_token_to_factory(
-        [Frozen] IDbContextFactory<DbContext> factory,
+        [Frozen]
+        IDbContextFactory<DbContext> factory,
         FactoryBasedOutboxDbContextAccessor<DbContext> sut,
         CancellationToken cancellationToken)
     {

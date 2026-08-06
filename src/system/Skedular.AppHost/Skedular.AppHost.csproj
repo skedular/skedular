@@ -13,7 +13,7 @@
         <PackageReference Include="Aspire.Hosting.AppHost" Version="13.4.6"/>
         <PackageReference Include="Aspire.Hosting.Redis" Version="13.4.6"/>
         <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.4.6"/>
-        <PackageReference Include="HotChocolate.Fusion.Aspire" Version="16.5.1"/>
+        <PackageReference Include="HotChocolate.Fusion.Aspire" Version="16.6.0"/>
 
         <!-- Analyzers -->
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.7.23">

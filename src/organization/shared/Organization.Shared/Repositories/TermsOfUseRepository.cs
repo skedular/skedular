@@ -37,7 +37,7 @@ public class TermsOfUseRepository(OrganizationDbContext dbContext, TimeProvider 
         {
             1 => activeTermsOfUse[0],
             0 => throw new ActiveTermsOfUseNotFoundException(),
-            _ => throw new MultipleActiveTermsOfUseFoundException()
+            _ => throw new MultipleActiveTermsOfUseFoundException(),
         };
     }
 
@@ -63,7 +63,7 @@ public class TermsOfUseRepository(OrganizationDbContext dbContext, TimeProvider 
         {
             1 => activeTermsOfUse[0],
             0 => throw new ActiveTermsOfUseNotFoundException(),
-            _ => throw new MultipleActiveTermsOfUseFoundException()
+            _ => throw new MultipleActiveTermsOfUseFoundException(),
         };
     }
 }

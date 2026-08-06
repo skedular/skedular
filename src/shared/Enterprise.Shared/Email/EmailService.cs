@@ -52,10 +52,12 @@ public class EmailService(ILogger<EmailService> logger) : IEmailService
             Source = sender,
             Destination = new Destination
             {
-                ToAddresses = toAddresses.ToList(), CcAddresses = ccAddresses.ToList(), BccAddresses = bccAddresses.ToList()
+                ToAddresses = toAddresses.ToList(),
+                CcAddresses = ccAddresses.ToList(),
+                BccAddresses = bccAddresses.ToList(),
             },
             Template = templateId,
-            TemplateData = templateData
+            TemplateData = templateData,
         };
 
         await client.SendTemplatedEmailAsync(request, cancellationToken);
@@ -89,7 +91,11 @@ public class EmailService(ILogger<EmailService> logger) : IEmailService
         message.Bcc.AddRange(bccAddresses.Select(MailboxAddress.Parse));
         message.Subject = subject;
 
-        var bodyBuilder = new BodyBuilder { TextBody = bodyText, HtmlBody = bodyHtml };
+        var bodyBuilder = new BodyBuilder
+        {
+            TextBody = bodyText,
+            HtmlBody = bodyHtml,
+        };
 
         foreach (var emailAttachment in emailAttachments)
         {
@@ -109,7 +115,10 @@ public class EmailService(ILogger<EmailService> logger) : IEmailService
         memoryStream.Seek(0, SeekOrigin.Begin);
 
         var rawMessage = new RawMessage(memoryStream);
-        var request = new SendRawEmailRequest { RawMessage = rawMessage };
+        var request = new SendRawEmailRequest
+        {
+            RawMessage = rawMessage,
+        };
 
         using var client = new AmazonSimpleEmailServiceClient();
         await client.SendRawEmailAsync(request, cancellationToken);

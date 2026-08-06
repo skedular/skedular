@@ -36,11 +36,11 @@ public class EventMapper : IEventMapper
                 LocationType.Private => Api.Shared.Clients.Events.Skedular.Location.V1.LocationType.Private,
                 LocationType.Marketplace => Api.Shared.Clients.Events.Skedular.Location.V1.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             OrganizationId = src.Organization.Id,
             OpeningHours = MapTo(src.OpeningHours),
-            PhysicalAddress = MapTo(src.PhysicalAddress)
+            PhysicalAddress = MapTo(src.PhysicalAddress),
         };
 
         location.Resources.AddRange(src.Resources.Select(item =>
@@ -54,7 +54,7 @@ public class EventMapper : IEventMapper
                 Color = item.Color.ToSafeString(),
                 Capacity = item.Capacity,
                 IsAvailableHoursOverridden = item.IsAvailableHoursOverridden,
-                AvailableHours = item.AvailableHours is null ? null : MapTo(item.AvailableHours)
+                AvailableHours = item.AvailableHours is null ? null : MapTo(item.AvailableHours),
             };
 
             resource.TagIds.AddRange(item.Tags.Select(tag => tag.Id));
@@ -83,16 +83,20 @@ public class EventMapper : IEventMapper
                     Thursday = MapToDefault(),
                     Friday = MapToDefault(),
                     Saturday = MapToDefault(),
-                    Sunday = MapToDefault()
-                }
+                    Sunday = MapToDefault(),
+                },
             };
         }
 
-        var openingHours = new Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHours { WeekOpeningHours = MapTo(src.WeekOpeningHours) };
+        var openingHours = new Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHours
+        {
+            WeekOpeningHours = MapTo(src.WeekOpeningHours),
+        };
         openingHours.ClosedDates.AddRange(src.ClosedDates.Select(item => item.ToTimestamp()));
         openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.ToList().Select(item => new VariedDateOpeningHours
         {
-            Date = item.Key.ToTimestamp(), OpeningHoursDetails = MapTo(item.Value)
+            Date = item.Key.ToTimestamp(),
+            OpeningHoursDetails = MapTo(item.Value),
         }));
 
         return openingHours;
@@ -107,7 +111,7 @@ public class EventMapper : IEventMapper
             Thursday = MapTo(src.Thursday),
             Friday = MapTo(src.Friday),
             Saturday = MapTo(src.Saturday),
-            Sunday = MapTo(src.Sunday)
+            Sunday = MapTo(src.Sunday),
         };
 
     private static Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHoursDetails MapTo(OpeningHoursDetails src) =>
@@ -116,11 +120,17 @@ public class EventMapper : IEventMapper
             Closed = src.Closed,
             OpenAllDay = src.OpenAllDay,
             From = src.From is null ? string.Empty : $"{src.From.Value.Hour}:{src.From.Value.Minute}",
-            Until = src.Until is null ? string.Empty : $"{src.Until.Value.Hour}:{src.Until.Value.Minute}"
+            Until = src.Until is null ? string.Empty : $"{src.Until.Value.Hour}:{src.Until.Value.Minute}",
         };
 
     private static Api.Shared.Clients.Events.Skedular.Location.V1.OpeningHoursDetails MapToDefault() =>
-        new() { Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty };
+        new()
+        {
+            Closed = false,
+            OpenAllDay = true,
+            From = string.Empty,
+            Until = string.Empty,
+        };
 
     private static PhysicalAddress? MapTo(LocationPhysicalAddress? src) =>
         src is null
@@ -140,23 +150,42 @@ public class EventMapper : IEventMapper
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
                 PlaceId = src.PlaceId.ToSafeString(),
-                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
+                Coordinates = src.Coordinates is null
+                    ? null
+                    : new Coordinates
+                    {
+                        Longitude = src.Coordinates.X,
+                        Latitude = src.Coordinates.Y,
+                    },
             };
 
     private static IEnumerable<CdnImageFile> MapTo(IEnumerable<Api.Shared.Services.Models.CdnImageFile> src) =>
         src.Select(MapTo);
 
     private static CdnImageFile MapTo(Api.Shared.Services.Models.CdnImageFile src) =>
-        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+        new()
+        {
+            Original = MapTo(src.Original),
+            Thumbnail = MapTo(src.Thumbnail),
+        };
 
     private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
-        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
+        src is null
+            ? null
+            : new CdnFile
+            {
+                Url = src.Url.ToSafeString(),
+                Height = src.Height.ToNullInt(),
+                Width = src.Width.ToNullInt(),
+            };
 
     private static Api.Shared.Clients.Events.Skedular.Location.V1.ListingMetadata MapTo(ListingMetadata src)
     {
         var listingMetadata = new Api.Shared.Clients.Events.Skedular.Location.V1.ListingMetadata
         {
-            About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
+            About = src.About.ToSafeString(),
+            Title = src.Title.ToSafeString(),
+            SubTitle = src.SubTitle.ToSafeString(),
         };
 
         listingMetadata.IncludedFeatures.AddRange(src.IncludedFeatures.ToSafeCollection().Select(item => item.ToSafeString()));
@@ -172,6 +201,6 @@ public class EventMapper : IEventMapper
             Category = src.Category.ToLocationRestrictedInformationCategory(),
             Content = src.Content.ToSafeString(),
             Active = src.Active,
-            SortOrder = src.SortOrder
+            SortOrder = src.SortOrder,
         };
 }

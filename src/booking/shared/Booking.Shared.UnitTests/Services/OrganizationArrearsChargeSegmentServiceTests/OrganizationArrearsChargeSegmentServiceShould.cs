@@ -66,7 +66,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
         result.Select(item => item.EarnedAt).ToList().ShouldBe([
             new DateTimeOffset(2026, 2, 1, 0, 0, 0, TimeSpan.Zero).AddTicks(-1),
             new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero).AddTicks(-1),
-            new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero).AddTicks(-1)
+            new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero).AddTicks(-1),
         ]);
     }
 
@@ -155,7 +155,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
                 new DateTimeOffset(2026, 1, 19, 0, 0, 0, TimeSpan.Zero)),
             new BillingPeriod(
                 new DateTimeOffset(2026, 1, 19, 0, 0, 0, TimeSpan.Zero),
-                new DateTimeOffset(2026, 1, 21, 0, 0, 0, TimeSpan.Zero))
+                new DateTimeOffset(2026, 1, 21, 0, 0, 0, TimeSpan.Zero)),
         ]);
         result.Select(item => item.Amount).ToList().ShouldBe([50m, 70m, 20m]);
     }
@@ -178,7 +178,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
         [
             new DateTimeOffset(2026, 1, 12, 0, 0, 0, TimeSpan.Zero).AddTicks(-1),
             new DateTimeOffset(2026, 1, 19, 0, 0, 0, TimeSpan.Zero).AddTicks(-1),
-            new DateTimeOffset(2026, 1, 21, 0, 0, 0, TimeSpan.Zero).AddTicks(-1)
+            new DateTimeOffset(2026, 1, 21, 0, 0, 0, TimeSpan.Zero).AddTicks(-1),
         ]);
     }
 
@@ -206,7 +206,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
                 new DateTimeOffset(2026, 4, 13, 0, 0, 0, TimeSpan.Zero)),
             new BillingPeriod(
                 new DateTimeOffset(2026, 4, 13, 0, 0, 0, TimeSpan.Zero),
-                new DateTimeOffset(2026, 4, 23, 0, 0, 0, TimeSpan.Zero))
+                new DateTimeOffset(2026, 4, 23, 0, 0, 0, TimeSpan.Zero)),
         ]);
         result.Select(item => item.Amount).ToList().ShouldBe([48.28m, 135.17m, 96.55m]);
     }
@@ -236,7 +236,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
                 new DateTimeOffset(2026, 5, 29, 0, 0, 0, TimeSpan.Zero)),
             new BillingPeriod(
                 new DateTimeOffset(2026, 5, 29, 0, 0, 0, TimeSpan.Zero),
-                new DateTimeOffset(2026, 6, 29, 0, 0, 0, TimeSpan.Zero))
+                new DateTimeOffset(2026, 6, 29, 0, 0, 0, TimeSpan.Zero)),
         ]);
         result.First().Amount.ShouldBe(483.33m);
         result.Select(item => item.Amount).ToList().ShouldBe([483.33m, 483.33m, 483.34m]);
@@ -256,25 +256,53 @@ public class OrganizationArrearsChargeSegmentServiceShould
             Id = "booking-1",
             From = from,
             Until = until,
-            InvolvedOrganizations = [new Organization { Id = "org-1" }],
-            InvolvedCustomers = [new Customer { Id = "customer-1" }],
-            CreatedByCustomer = new Customer { Id = "customer-1" },
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                },
+            ],
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+            CreatedByCustomer = new Customer
+            {
+                Id = "customer-1",
+            },
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = quantity,
                 Currency = Currency.Nzd,
                 BillingMode = billingMode,
                 ProductVersion =
-                    new ProductVersion { Currency = Currency.Nzd, Product = new Product { Organization = new Organization { Id = "org-1" } } },
+                    new ProductVersion
+                    {
+                        Currency = Currency.Nzd,
+                        Product = new Product
+                        {
+                            Organization = new Organization
+                            {
+                                Id = "org-1",
+                            },
+                        },
+                    },
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = purchaseCadence,
                     BookingCadence = bookingCadence,
                     Price = price,
                     BillingMode = billingMode,
-                    ListingMetadata = ListingMetadata.Empty with { Title = "Area Pass" }
-                }
-            }
+                    ListingMetadata = ListingMetadata.Empty with
+                    {
+                        Title = "Area Pass",
+                    },
+                },
+            },
         };
 
     private static RecurringBooking CreateRecurringBooking(
@@ -289,24 +317,52 @@ public class OrganizationArrearsChargeSegmentServiceShould
             Id = "recurring-booking-1",
             StartDate = startDate,
             EndDate = endDate,
-            InvolvedOrganizations = [new Organization { Id = "org-1" }],
-            InvolvedCustomers = [new Customer { Id = "customer-1" }],
-            CreatedByCustomer = new Customer { Id = "customer-1" },
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                },
+            ],
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+            CreatedByCustomer = new Customer
+            {
+                Id = "customer-1",
+            },
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = quantity,
                 Currency = Currency.Nzd,
                 BillingMode = billingMode,
                 ProductVersion =
-                    new ProductVersion { Currency = Currency.Nzd, Product = new Product { Organization = new Organization { Id = "org-1" } } },
+                    new ProductVersion
+                    {
+                        Currency = Currency.Nzd,
+                        Product = new Product
+                        {
+                            Organization = new Organization
+                            {
+                                Id = "org-1",
+                            },
+                        },
+                    },
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = purchaseCadence,
                     BookingCadence = ProductPricingCadence.Daily,
                     Price = price,
                     BillingMode = billingMode,
-                    ListingMetadata = ListingMetadata.Empty with { Title = "Area Pass" }
-                }
-            }
+                    ListingMetadata = ListingMetadata.Empty with
+                    {
+                        Title = "Area Pass",
+                    },
+                },
+            },
         };
 }

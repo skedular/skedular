@@ -63,7 +63,7 @@ public class OrganizationXeroConnectionService(
     [
         OrganizationXeroBillingMode.Disabled,
         OrganizationXeroBillingMode.Enabled,
-        OrganizationXeroBillingMode.RepeatingInvoices
+        OrganizationXeroBillingMode.RepeatingInvoices,
     ];
 
     private static readonly Lazy<string> s_xeroOAuthCallbackBaseUrl = new(() =>
@@ -135,7 +135,7 @@ public class OrganizationXeroConnectionService(
             Organization = organization,
             BillingMode = XeroBillingModeConstants.Disabled,
             SendInvoicesViaXero = true,
-            AutoReconcilePayments = true
+            AutoReconcilePayments = true,
         };
         organizationXeroConnection.Scopes = xeroConfiguration.Scopes;
         organizationXeroConnection.AccessTokenEncrypted = xeroTokenEncryptionService.Encrypt(tokenResponse.AccessToken);
@@ -242,7 +242,12 @@ public class OrganizationXeroConnectionService(
         {
             Id = organizationXeroConnection.Id,
             Organization =
-                new Shared.Models.Organization { Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name },
+                new Shared.Models.Organization
+                {
+                    Id = organization.Id,
+                    CustomDomain = organization.CustomDomain,
+                    Name = organization.Name,
+                },
             TenantId = organizationXeroConnection.TenantId,
             TenantName = organizationXeroConnection.TenantName,
             BillingMode = organizationXeroConnection.BillingMode.ToOrganizationXeroBillingMode(),
@@ -261,7 +266,7 @@ public class OrganizationXeroConnectionService(
             AccessTokenExpiresAt = organizationXeroConnection.AccessTokenExpiresAt,
             RefreshTokenExpiresAt = organizationXeroConnection.RefreshTokenExpiresAt,
             LastSuccessfulSyncAt = organizationXeroConnection.LastSuccessfulSyncAt,
-            LastError = organizationXeroConnection.LastError
+            LastError = organizationXeroConnection.LastError,
         };
     }
 
@@ -294,7 +299,7 @@ public class OrganizationXeroConnectionService(
                 Organization = organization,
                 BillingMode = XeroBillingModeConstants.Disabled,
                 SendInvoicesViaXero = true,
-                AutoReconcilePayments = true
+                AutoReconcilePayments = true,
             };
         }
 
@@ -474,7 +479,7 @@ public class OrganizationXeroConnectionService(
                 OrganizationXeroConnectionPatchField.DefaultReferencePrefix =>
                     ApplyValue(request.DefaultReferencePrefix, xeroConnection.DefaultReferencePrefix,
                         value => xeroConnection.DefaultReferencePrefix = value) || changed,
-                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation Xero connection patch field is not supported.")
+                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation Xero connection patch field is not supported."),
             };
         }
 
@@ -500,7 +505,7 @@ public class OrganizationXeroConnectionService(
             OrganizationXeroConnectionPatchField.IsActive => request.IsActive,
             OrganizationXeroConnectionPatchField.SendInvoicesViaXero => request.SendInvoicesViaXero,
             OrganizationXeroConnectionPatchField.AutoReconcilePayments => request.AutoReconcilePayments,
-            _ => null
+            _ => null,
         };
 
     private static bool ApplyValue<T>(T value, T currentValue, Action<T> apply)
@@ -524,7 +529,7 @@ public class OrganizationXeroConnectionService(
         {
             OrganizationTypeConstants.Marketplace => applicationConfiguration.SpacesWebAppBaseDomain,
             OrganizationTypeConstants.Host => applicationConfiguration.HostWebAppBaseDomain,
-            _ => applicationConfiguration.WebAppBaseDomain
+            _ => applicationConfiguration.WebAppBaseDomain,
         };
         var setupUrl = Url.Combine(
                 webAppBaseDomain.ToString(),
@@ -622,7 +627,7 @@ public class OrganizationXeroConnectionService(
         {
             1 => new TenantConnectionSelection(organizationConnections[0], []),
             > 1 => new TenantConnectionSelection(null, tenantOptions),
-            _ => throw new NoXeroOrganizationTenantConnectionsException()
+            _ => throw new NoXeroOrganizationTenantConnectionsException(),
         };
     }
 

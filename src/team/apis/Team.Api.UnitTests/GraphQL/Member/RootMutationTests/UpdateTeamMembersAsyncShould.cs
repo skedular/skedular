@@ -14,9 +14,12 @@ public class UpdateTeamMembersAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_information_for_update_team_members_mutation(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] ITeamMemberService teamMemberService,
-        [Frozen] ILogger<RootMutation> logger,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        ITeamMemberService teamMemberService,
+        [Frozen]
+        ILogger<RootMutation> logger,
         RootMutation sut,
         UpdateTeamMembersInput input,
         Shared.Models.Team team,

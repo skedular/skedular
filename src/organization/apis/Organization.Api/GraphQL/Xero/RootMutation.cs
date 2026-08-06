@@ -12,19 +12,21 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<OrganizationPayload> UpdateOrganizationXeroConnectionAsync(
         UpdateOrganizationXeroConnectionInput input,
-        [Service] IOrganizationXeroConnectionService organizationXeroConnectionService,
+        [Service]
+        IOrganizationXeroConnectionService organizationXeroConnectionService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
             Organization =
-                graphQlMapper.MapTo(await organizationXeroConnectionService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken))!
+                graphQlMapper.MapTo(await organizationXeroConnectionService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken))!,
         };
 
     [UseResolverScope]
     public async Task<OrganizationPayload> DisconnectOrganizationXeroConnectionAsync(
         DisconnectOrganizationXeroConnectionInput input,
-        [Service] IOrganizationXeroConnectionService organizationXeroConnectionService,
+        [Service]
+        IOrganizationXeroConnectionService organizationXeroConnectionService,
         CancellationToken cancellationToken) =>
         new()
         {
@@ -32,6 +34,6 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             Organization = graphQlMapper.MapTo(await organizationXeroConnectionService.RemoveAsync(
                 input.OrganizationId,
                 input.OrganizationCustomDomain,
-                cancellationToken))!
+                cancellationToken))!,
         };
 }

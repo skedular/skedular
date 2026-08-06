@@ -61,6 +61,6 @@ public class CustomerReadinessEventSubscriber(
         Domain.Core => CustomerReadinessState.Domains.Core,
         Domain.Slack => CustomerReadinessState.Domains.Slack,
         Domain.MsTeams => CustomerReadinessState.Domains.MsTeams,
-        _ => null
+        _ => null,
     };
 }

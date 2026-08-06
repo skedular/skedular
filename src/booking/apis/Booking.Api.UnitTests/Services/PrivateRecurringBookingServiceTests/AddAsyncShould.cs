@@ -25,21 +25,43 @@ public class AddAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Generate_An_Id_And_Call_The_Shared_Service_For_A_New_Recurring_Booking(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IContext context,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] IPrivateRecurringBookingService sharedPrivateRecurringBookingService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        IPrivateRecurringBookingService sharedPrivateRecurringBookingService,
         PrivateRecurringBookingService sut,
         string verifiableToken,
         string generatedRecurringBookingId,
         CancellationToken cancellationToken)
     {
-        var recurringBooking = new RecurringBooking { InvolvedCustomers = [new Customer { Id = "customer-1" }] };
-        var customer = new CustomerEntity { Id = "customer-1" };
-        var expected = new RecurringBooking { Id = generatedRecurringBookingId };
+        var recurringBooking = new RecurringBooking
+        {
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+        };
+        var customer = new CustomerEntity
+        {
+            Id = "customer-1",
+        };
+        var expected = new RecurringBooking
+        {
+            Id = generatedRecurringBookingId,
+        };
         IReadOnlyList<string> emptyIds = [];
         IReadOnlyList<Organization> emptyOrganizations = [];
         IReadOnlyList<Team> emptyTeams = [];

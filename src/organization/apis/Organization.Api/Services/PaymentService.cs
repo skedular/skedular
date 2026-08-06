@@ -76,7 +76,11 @@ public class PaymentService(
         organization.OrganizationStripeCustomer ??= await stripeCustomerService.AddAsync(organization.Id, cancellationToken);
 
         var setupIntent = await setupIntentCreateService.CreateAsync(
-            new SetupIntentCreateOptions { Customer = organization.OrganizationStripeCustomer.StripeCustomerId, PaymentMethodTypes = ["card"] },
+            new SetupIntentCreateOptions
+            {
+                Customer = organization.OrganizationStripeCustomer.StripeCustomerId,
+                PaymentMethodTypes = ["card"],
+            },
             new RequestOptions(),
             cancellationToken);
 
@@ -150,7 +154,7 @@ public class PaymentService(
                     Organization = organization,
                     Start = now,
                     End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
-                    AutoRenew = true
+                    AutoRenew = true,
                 };
                 newOrganizationOffering.ApplyOfferingTemplate(OfferingCode.FreeTierV1);
 
@@ -186,7 +190,10 @@ public class PaymentService(
             await paymentMethodService.DetachAsync(
                 organizationStripePaymentMethod.PaymentMethodId,
                 new PaymentMethodDetachOptions(),
-                new RequestOptions { IdempotencyKey = $"DetachPaymentMethod-{organizationStripePaymentMethod.Id}" },
+                new RequestOptions
+                {
+                    IdempotencyKey = $"DetachPaymentMethod-{organizationStripePaymentMethod.Id}",
+                },
                 cancellationToken);
         }
 

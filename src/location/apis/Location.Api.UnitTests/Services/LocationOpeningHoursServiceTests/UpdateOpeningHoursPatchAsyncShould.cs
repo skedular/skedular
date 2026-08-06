@@ -17,24 +17,39 @@ public class UpdateOpeningHoursPatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Authorization_Rejection_And_Rethrow(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] ILogger<LocationOpeningHoursService> logger,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        ILogger<LocationOpeningHoursService> logger,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         LocationOpeningHoursService sut,
         CancellationToken cancellationToken)
     {
         var locationEntity = new Shared.Database.Entities.Location
         {
-            Id = "location-1", OrganizationId = "org-1", Organization = new Organization { Id = "org-1" }
+            Id = "location-1",
+            OrganizationId = "org-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
         };
         var request = new LocationOpeningHoursPatchRequest(
             "location-1",
             WeekOpeningHours.Default,
-            new HashSet<LocationOpeningHoursPatchField> { LocationOpeningHoursPatchField.WeekOpeningHours });
+            new HashSet<LocationOpeningHoursPatchField>
+            {
+                LocationOpeningHoursPatchField.WeekOpeningHours,
+            });
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -54,17 +69,24 @@ public class UpdateOpeningHoursPatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Error_And_Rethrow_On_General_Failure(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ILogger<LocationOpeningHoursService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ILogger<LocationOpeningHoursService> logger,
         LocationOpeningHoursService sut,
         CancellationToken cancellationToken)
     {
         var request = new LocationOpeningHoursPatchRequest(
             "location-1",
             WeekOpeningHours.Default,
-            new HashSet<LocationOpeningHoursPatchField> { LocationOpeningHoursPatchField.WeekOpeningHours });
+            new HashSet<LocationOpeningHoursPatchField>
+            {
+                LocationOpeningHoursPatchField.WeekOpeningHours,
+            });
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken))
@@ -81,17 +103,24 @@ public class UpdateOpeningHoursPatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Autosave_Started(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ILogger<LocationOpeningHoursService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ILogger<LocationOpeningHoursService> logger,
         LocationOpeningHoursService sut,
         CancellationToken cancellationToken)
     {
         var request = new LocationOpeningHoursPatchRequest(
             "location-1",
             WeekOpeningHours.Default,
-            new HashSet<LocationOpeningHoursPatchField> { LocationOpeningHoursPatchField.WeekOpeningHours });
+            new HashSet<LocationOpeningHoursPatchField>
+            {
+                LocationOpeningHoursPatchField.WeekOpeningHours,
+            });
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).ThrowsAsync(new InvalidOperationException("forced early failure"));

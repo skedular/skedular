@@ -17,26 +17,54 @@ public class DeleteShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Information_When_Delete_Completes(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ITeamOutboxPublisher teamOutboxPublisher,
-        [Frozen] ICachedTeamService cachedTeamService,
-        [Frozen] ITeamRepository teamRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<TeamService> logger,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ITeamOutboxPublisher teamOutboxPublisher,
+        [Frozen]
+        ICachedTeamService cachedTeamService,
+        [Frozen]
+        ITeamRepository teamRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<TeamService> logger,
         TeamService sut,
         CancellationToken cancellationToken)
     {
         var teamEntity = new Shared.Database.Entities.Team
         {
-            Id = "team-1", OrganizationId = "org-1", Organization = new Organization { Id = "org-1" }
+            Id = "team-1",
+            OrganizationId = "org-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
         };
-        var deletedTeamEntity = new Shared.Database.Entities.Team { Id = "team-1", OrganizationId = "org-1", Organization = teamEntity.Organization };
-        var deletedTeamModel = new Shared.Models.Team { Id = "team-1", Organization = new Shared.Models.Organization { Id = "org-1" } };
+        var deletedTeamEntity = new Shared.Database.Entities.Team
+        {
+            Id = "team-1",
+            OrganizationId = "org-1",
+            Organization = teamEntity.Organization,
+        };
+        var deletedTeamModel = new Shared.Models.Team
+        {
+            Id = "team-1",
+            Organization = new Shared.Models.Organization
+            {
+                Id = "org-1",
+            },
+        };
 
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);

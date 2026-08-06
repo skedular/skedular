@@ -27,7 +27,10 @@ public class MarketplaceOutboxPublisher(
         foreach (var product in products)
         {
             publisher.Publish(
-                new Key { ProductId = product.Id },
+                new Key
+                {
+                    ProductId = product.Id,
+                },
                 new Event
                 {
                     Metadata = Event.NewMetadata(
@@ -35,7 +38,10 @@ public class MarketplaceOutboxPublisher(
                         applicationConfiguration.AppSource,
                         product.IsDeleted() ? Type.ProductDeleted : Type.ProductUpserted,
                         context.GetCorrelationId()),
-                    Data = new Data { Product = eventMapper.MapTo(product) }
+                    Data = new Data
+                    {
+                        Product = eventMapper.MapTo(product),
+                    },
                 },
                 unitOfWork);
         }

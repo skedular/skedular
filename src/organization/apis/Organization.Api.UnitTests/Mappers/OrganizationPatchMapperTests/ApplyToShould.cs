@@ -12,11 +12,18 @@ public class ApplyToShould
     [AutoFakeItEasyData]
     public void Update_Only_Selected_Name(OrganizationPatchMapper sut)
     {
-        var organization = new Shared.Database.Entities.Organization { Name = "Old name", Type = OrganizationTypeConstants.Private };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Name = "Old name",
+            Type = OrganizationTypeConstants.Private,
+        };
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.Name,
+            },
             "New name");
 
         var changed = sut.ApplyTo(request, organization, []);
@@ -29,11 +36,18 @@ public class ApplyToShould
     [AutoFakeItEasyData]
     public void Return_False_When_Selected_Values_Are_Unchanged(OrganizationPatchMapper sut)
     {
-        var organization = new Shared.Database.Entities.Organization { Name = "Existing name", Type = OrganizationTypeConstants.Private };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Name = "Existing name",
+            Type = OrganizationTypeConstants.Private,
+        };
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.Name,
+            },
             organization.Name);
 
         var changed = sut.ApplyTo(request, organization, []);
@@ -45,8 +59,16 @@ public class ApplyToShould
     [AutoFakeItEasyData]
     public void Update_All_Selected_Organization_Setup_Fields(OrganizationPatchMapper sut)
     {
-        var originalIndustrySubCategory = new IndustrySubCategory { Id = "industry-old", Name = "Old" };
-        var nextIndustrySubCategory = new IndustrySubCategory { Id = "industry-new", Name = "New" };
+        var originalIndustrySubCategory = new IndustrySubCategory
+        {
+            Id = "industry-old",
+            Name = "Old",
+        };
+        var nextIndustrySubCategory = new IndustrySubCategory
+        {
+            Id = "industry-new",
+            Name = "New",
+        };
         var organization = new Shared.Database.Entities.Organization
         {
             CustomDomain = "old-domain",
@@ -66,14 +88,20 @@ public class ApplyToShould
             FeatureImages = [new CdnImageFile(new CdnFile("https://old.example.com/image.png", 1, 2), null)],
             PhysicalAddress = new OrganizationPhysicalAddress
             {
-                AddressLine1 = "Old address line", City = "Old city", Zipcode = "1111", Country = "Old country"
-            }
+                AddressLine1 = "Old address line",
+                City = "Old city",
+                Zipcode = "1111",
+                Country = "Old country",
+            },
         };
         var nextFeatureImage = new CdnImageFile(new CdnFile("https://new.example.com/image.png", 3, 4), null);
         var nextMarketplaceListingMetadata = new ListingMetadata("Marketplace", "Marketplace title", "Marketplace sub title", ["Feature"]);
         var nextPhysicalAddress = new Shared.Models.OrganizationPhysicalAddress
         {
-            AddressLine1 = "New address line", City = "New city", Zipcode = "2222", Country = "New country"
+            AddressLine1 = "New address line",
+            City = "New city",
+            Zipcode = "2222",
+            Country = "New country",
         };
         var request = new OrganizationPatchRequest(
             "org-1",
@@ -126,17 +154,26 @@ public class ApplyToShould
             Type = OrganizationTypeConstants.Private,
             PhysicalAddress = new OrganizationPhysicalAddress
             {
-                AddressLine1 = "Old address line", City = "Old city", Zipcode = "1111", Country = "Old country"
-            }
+                AddressLine1 = "Old address line",
+                City = "Old city",
+                Zipcode = "1111",
+                Country = "Old country",
+            },
         };
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.PhysicalAddress },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.PhysicalAddress,
+            },
             organization.Name,
             PhysicalAddress: new Shared.Models.OrganizationPhysicalAddress
             {
-                AddressLine1 = "New address line", City = "New city", Zipcode = "2222", Country = "New country"
+                AddressLine1 = "New address line",
+                City = "New city",
+                Zipcode = "2222",
+                Country = "New country",
             });
 
         var changed = sut.ApplyTo(request, organization, []);

@@ -34,7 +34,13 @@ public class LocationGrpcService(
     {
         var version = versionService.GetVersion();
 
-        return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
+        return Task.FromResult(new Version
+        {
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
+        });
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Location.Core.V1.Location> Admin_Add(
@@ -90,7 +96,7 @@ public class LocationGrpcService(
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private => LocationType.Private,
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace => LocationType.Marketplace,
                     _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
                 }).ToList(),
                 null,
                 request.Where.NotContactedYet,
@@ -107,7 +113,7 @@ public class LocationGrpcService(
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationOrderField.Name => LocationOrderField.Name,
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationOrderField.Timezone => LocationOrderField.Timezone,
                     _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
                 };
 
                 return new LocationOrder(direction, field);
@@ -122,9 +128,9 @@ public class LocationGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
@@ -160,7 +166,7 @@ public class LocationGrpcService(
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private => LocationType.Private,
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace => LocationType.Marketplace,
                     _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
                 }).ToList(),
                 null,
                 request.Where.NotContactedYet,
@@ -176,7 +182,7 @@ public class LocationGrpcService(
                 {
                     global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationOrderField.Name => LocationOrderField.Name,
                     _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
                 };
 
                 return new LocationOrder(direction, field);
@@ -191,9 +197,9 @@ public class LocationGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
@@ -210,7 +216,7 @@ public class LocationGrpcService(
             CanView = permissions.CanView,
             CanModify = permissions.CanModify,
             CanDelete = permissions.CanDelete,
-            CanViewAnalytics = permissions.CanViewAnalytics
+            CanViewAnalytics = permissions.CanViewAnalytics,
         };
     }
 
@@ -263,6 +269,6 @@ public class LocationGrpcService(
             global::Api.Shared.Grpc.Skedular.Location.Core.V1.LocationPatchField.UniqueClaimCode =>
                 LocationPatchField.UniqueClaimCode,
             _ => throw new ArgumentOutOfRangeException(nameof(fields), field,
-                $"Unexpected value for {nameof(fields)}: {field}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(fields)}: {field}. Update enum mapping or caller input."),
         }).ToHashSet();
 }

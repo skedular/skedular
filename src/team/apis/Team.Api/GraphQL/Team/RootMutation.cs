@@ -12,44 +12,64 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
     [UseResolverScope]
     public async Task<TeamPayload> AddTeamAsync(
         AddTeamInput input,
-        [Service] ITeamService teamService,
+        [Service]
+        ITeamService teamService,
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting {OperationName}", nameof(AddTeamAsync));
         var team = await teamService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
         logger.LogInformation("Completed {OperationName}", nameof(AddTeamAsync));
-        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
+        return new TeamPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Team = graphQlMapper.MapTo(team)!,
+        };
     }
 
     [UseResolverScope]
     public async Task<TeamPayload> UpdateTeamAsync(
         UpdateTeamInput input,
-        [Service] ITeamService teamService,
+        [Service]
+        ITeamService teamService,
         CancellationToken cancellationToken)
     {
         var team = await teamService.UpdateAsync(new TeamPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate), cancellationToken);
-        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
+        return new TeamPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Team = graphQlMapper.MapTo(team)!,
+        };
     }
 
     [UseResolverScope]
     public async Task<TeamPayload> DeleteTeamAsync(
         DeleteTeamInput input,
-        [Service] ITeamService teamService,
+        [Service]
+        ITeamService teamService,
         CancellationToken cancellationToken)
     {
         var team = await teamService.DeleteAsync(input.Id, cancellationToken);
-        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
+        return new TeamPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Team = graphQlMapper.MapTo(team)!,
+        };
     }
 
     [UseResolverScope]
     public async Task<TeamPayload> UpdateTeamAndTeamMembersAsync(
         UpdateTeamAndTeamMembersInput input,
-        [Service] ITeamService teamService,
+        [Service]
+        ITeamService teamService,
         CancellationToken cancellationToken)
     {
         var team = await teamService.UpdateAsync(
             new TeamAndMembersPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
             cancellationToken);
-        return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
+        return new TeamPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Team = graphQlMapper.MapTo(team)!,
+        };
     }
 }

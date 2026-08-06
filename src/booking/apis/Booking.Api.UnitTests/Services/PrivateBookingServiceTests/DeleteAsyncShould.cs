@@ -14,23 +14,40 @@ public class DeleteAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Preserve_Recurring_Series_When_Deleting_A_Single_Recurring_Instance(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IContext context,
-        [Frozen] SharedPrivateBookingService sharedPrivateBookingService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        SharedPrivateBookingService sharedPrivateBookingService,
         PrivateBookingService sut,
         string bookingId,
         string verifiableToken,
         CancellationToken cancellationToken)
     {
-        var customer = new CustomerEntity { Id = "customer-1" };
-        var recurringBooking = new RecurringBooking { Id = "recurring-1" };
+        var customer = new CustomerEntity
+        {
+            Id = "customer-1",
+        };
+        var recurringBooking = new RecurringBooking
+        {
+            Id = "recurring-1",
+        };
         var booking = new Shared.Database.Entities.Booking
         {
-            Id = bookingId, RecurringBooking = recurringBooking, InvolvedOrganizations = [], InvolvedTeams = []
+            Id = bookingId,
+            RecurringBooking = recurringBooking,
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
         };
-        var deletedBooking = new Shared.Models.Booking { Id = bookingId };
+        var deletedBooking = new Shared.Models.Booking
+        {
+            Id = bookingId,
+        };
 
         A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -48,20 +65,42 @@ public class DeleteAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_When_An_Involved_Organization_Cannot_Delete_The_Booking(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IContext context,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         PrivateBookingService sut,
         string bookingId,
         string verifiableToken,
         CancellationToken cancellationToken)
     {
-        var customer = new CustomerEntity { Id = "customer-1" };
-        var booking = new Shared.Database.Entities.Booking { Id = bookingId, InvolvedOrganizations = [new Organization { Id = "org-1" }] };
-        var organization = new Organization { Id = "org-1" };
+        var customer = new CustomerEntity
+        {
+            Id = "customer-1",
+        };
+        var booking = new Shared.Database.Entities.Booking
+        {
+            Id = bookingId,
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                },
+            ],
+        };
+        var organization = new Organization
+        {
+            Id = "org-1",
+        };
 
         A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);

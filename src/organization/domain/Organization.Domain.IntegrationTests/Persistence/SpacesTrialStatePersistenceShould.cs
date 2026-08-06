@@ -47,7 +47,7 @@ public class SpacesTrialStatePersistenceShould
             Type = organizationType,
             BillingCycle = OrganizationBillingCycleConstants.Monthly,
             InvoiceDueInDays = 7,
-            SpacesTrialStartedAt = trialStartedAt
+            SpacesTrialStartedAt = trialStartedAt,
         });
         repositoryFactory.OrganizationOfferingRepository.Add(new OrganizationOffering
         {
@@ -57,7 +57,7 @@ public class SpacesTrialStatePersistenceShould
             Start = now,
             End = now.AddMonths(1),
             Currency = CurrencyConstants.Usd,
-            SpacesBillingStartsAt = billingStartsAt
+            SpacesBillingStartsAt = billingStartsAt,
         });
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 

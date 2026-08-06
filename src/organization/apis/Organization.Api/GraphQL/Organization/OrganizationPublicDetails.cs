@@ -15,26 +15,47 @@ namespace Organization.Api.GraphQL.Organization;
 [GraphQLName("OrganizationPublicDetails")]
 public class OrganizationPublicDetails
 {
-    [GraphQLName("uniqueId")] public string Id { get; set; } = string.Empty;
-    [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("website")] public string? Website { get; set; }
+    [GraphQLName("uniqueId")]
+    public string Id { get; set; } = string.Empty;
+
+    [GraphQLName("customDomain")]
+    public string? CustomDomain { get; set; }
+
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [GraphQLName("website")]
+    public string? Website { get; set; }
 
     [GraphQLName("customerFacingTermsAndConditionsUrl")]
     public string? CustomerFacingTermsAndConditionsUrl { get; set; }
 
-    [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
+    [GraphQLName("logoUrl")]
+    public string? LogoUrl { get; set; }
 
     [GraphQLName("industrySubCategories")]
     public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> IndustrySubCategories { get; set; } = [];
 
-    [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
-    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
-    [GraphQLName("physicalAddress")] public OrganizationPhysicalAddressDetails? PhysicalAddress { get; set; }
-    [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
-    [GraphQLName("locationSpaceTypes")] public IEnumerable<OrganizationTagDetails> LocationSpaceTypes { get; set; } = [];
-    [GraphQLName("amenities")] public IEnumerable<OrganizationTagDetails> Amenities { get; set; } = [];
-    [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
+    [GraphQLName("contactEmail")]
+    public string? ContactEmail { get; set; }
+
+    [GraphQLName("contactPhone")]
+    public string? ContactPhone { get; set; }
+
+    [GraphQLName("physicalAddress")]
+    public OrganizationPhysicalAddressDetails? PhysicalAddress { get; set; }
+
+    [GraphQLName("resourceTypes")]
+    public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
+
+    [GraphQLName("locationSpaceTypes")]
+    public IEnumerable<OrganizationTagDetails> LocationSpaceTypes { get; set; } = [];
+
+    [GraphQLName("amenities")]
+    public IEnumerable<OrganizationTagDetails> Amenities { get; set; } = [];
+
+    [GraphQLName("featureImages")]
+    public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
 
     [GraphQLName("marketplaceListingMetadata")]
     public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty;
@@ -47,9 +68,12 @@ public class OrganizationPublicDetails
         int? last,
         CustomTagOrganizationTagWhereInput? where,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
-        [Parent] OrganizationPublicDetails organization,
-        [Service] ITagService tagService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Parent]
+        OrganizationPublicDetails organization,
+        [Service]
+        ITagService tagService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
             after,
@@ -74,9 +98,12 @@ public class OrganizationPublicDetails
         int? last,
         ZoneOrganizationTagWhereInput? where,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
-        [Parent] OrganizationPublicDetails organization,
-        [Service] ITagService tagService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Parent]
+        OrganizationPublicDetails organization,
+        [Service]
+        ITagService tagService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
             after,
@@ -118,10 +145,10 @@ public class OrganizationPublicDetails
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 }

@@ -18,7 +18,10 @@ public class ResourceAvailabilitySubscriptionShould(
 
         var filter = new ResourceAvailabilityFilterInput
         {
-            Date = DateOnly.FromDateTime(DateTime.UtcNow), OrganizationCustomDomain = "test-org", LocationIds = [], Statuses = []
+            Date = DateOnly.FromDateTime(DateTime.UtcNow),
+            OrganizationCustomDomain = "test-org",
+            LocationIds = [],
+            Statuses = [],
         };
 
         var queryResult = await resourceDayViewsQuery.ExecuteAsync(filter, [], cancellationToken);

@@ -9,7 +9,7 @@ public enum OrganizationBankAccountPatchField
     BankName,
     AccountHolderName,
     AccountNumber,
-    Country
+    Country,
 }
 
 public record OrganizationBankAccountPatchRequest(

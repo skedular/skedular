@@ -3,7 +3,7 @@ namespace Booking.Shared.Models;
 public enum MarketplaceRefundEventType
 {
     Requested, UnderReview, Approved, Rejected, ProviderPending, Processing, SentToXero, AccountingProjected, AccountingProjectionRequired, Completed,
-    Failed, Cancelled, ReconciliationRequired
+    Failed, Cancelled, ReconciliationRequired,
 }
 
 public static class MarketplaceRefundEventTypeConstants
@@ -41,7 +41,7 @@ public static class MarketplaceRefundEventTypeConstantsExtensions
             MarketplaceRefundEventTypeConstants.Failed => MarketplaceRefundEventType.Failed,
             MarketplaceRefundEventTypeConstants.Cancelled => MarketplaceRefundEventType.Cancelled,
             MarketplaceRefundEventTypeConstants.ReconciliationRequired => MarketplaceRefundEventType.ReconciliationRequired,
-            _ => MarketplaceRefundEventType.Requested
+            _ => MarketplaceRefundEventType.Requested,
         };
 
     public static string ToMarketplaceRefundEventTypeName(this MarketplaceRefundEventType eventType) =>
@@ -60,7 +60,7 @@ public static class MarketplaceRefundEventTypeConstantsExtensions
             MarketplaceRefundEventType.Failed => "Failed",
             MarketplaceRefundEventType.Cancelled => "Refund cancelled",
             MarketplaceRefundEventType.ReconciliationRequired => "Reconciliation required",
-            _ => throw new ArgumentOutOfRangeException(nameof(eventType), eventType, "Unknown refund event type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(eventType), eventType, "Unknown refund event type."),
         };
 
     public static string ToMarketplaceRefundEventTypeName(this string eventType) =>

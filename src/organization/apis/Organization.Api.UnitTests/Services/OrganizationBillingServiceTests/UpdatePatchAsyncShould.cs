@@ -19,32 +19,60 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_Billing_Details_When_Organization_Has_None(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationBillingDetailsRepository organizationBillingDetailsRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationBillingDetailsRepository organizationBillingDetailsRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationBillingService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Shared.Database.Entities.Organization { Id = "org-1", CustomDomain = "acme", Name = "Acme" };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Acme",
+        };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var updatedOrganization = new Shared.Models.Organization
         {
-            Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name
+            Id = organization.Id,
+            CustomDomain = organization.CustomDomain,
+            Name = organization.Name,
         };
         var request = new OrganizationBillingDetailsPatchRequest(
             organization.Id,
             organization.CustomDomain,
-            new HashSet<OrganizationBillingDetailsPatchField> { OrganizationBillingDetailsPatchField.Email },
+            new HashSet<OrganizationBillingDetailsPatchField>
+            {
+                OrganizationBillingDetailsPatchField.Email,
+            },
             "Acme",
             "billing@acme.test",
             null,
@@ -101,17 +129,28 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_Only_Selected_Billing_Details_Field(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationBillingDetailsRepository organizationBillingDetailsRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationBillingDetailsRepository organizationBillingDetailsRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationBillingService sut,
         CancellationToken cancellationToken)
     {
@@ -122,22 +161,36 @@ public class UpdatePatchAsyncShould
             Email = "old@acme.test",
             AddressLine1 = "1 Example Road",
             Zipcode = "1010",
-            Country = "New Zealand"
+            Country = "New Zealand",
         };
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1", CustomDomain = "acme", Name = "Acme", BillingDetails = billingDetails
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Acme",
+            BillingDetails = billingDetails,
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var updatedOrganization = new Shared.Models.Organization
         {
-            Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name
+            Id = organization.Id,
+            CustomDomain = organization.CustomDomain,
+            Name = organization.Name,
         };
         var request = new OrganizationBillingDetailsPatchRequest(
             organization.Id,
             organization.CustomDomain,
-            new HashSet<OrganizationBillingDetailsPatchField> { OrganizationBillingDetailsPatchField.CompanyName },
+            new HashSet<OrganizationBillingDetailsPatchField>
+            {
+                OrganizationBillingDetailsPatchField.CompanyName,
+            },
             "New company",
             "ignored@acme.test",
             null,

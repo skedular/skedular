@@ -33,7 +33,14 @@ public class RecordDeskAvailabilitySnapshotShould(
                 A<CallOptions>._,
                 A<Admin_GetPaginatedBookingsInput>._))
             .Returns(new AsyncUnaryCall<BookingConnection>(
-                Task.FromResult(new BookingConnection { PageInfo = new PageInfo { HasNextPage = false, EndCursor = string.Empty } }),
+                Task.FromResult(new BookingConnection
+                {
+                    PageInfo = new PageInfo
+                    {
+                        HasNextPage = false,
+                        EndCursor = string.Empty,
+                    },
+                }),
                 Task.FromResult(new Metadata()),
                 () => Status.DefaultSuccess,
                 () => new Metadata(),
@@ -46,7 +53,11 @@ public class RecordDeskAvailabilitySnapshotShould(
         var deskTagId = await Nanoid.GenerateAsync();
         var now = timeProvider.GetUtcNow();
 
-        var org = new Organization { Id = organizationId, CreatedAt = now };
+        var org = new Organization
+        {
+            Id = organizationId,
+            CreatedAt = now,
+        };
         await repositoryFactory.DbContext.Organization.AddAsync(org, cancellationToken);
 
         var location = new LocationEntity
@@ -55,18 +66,27 @@ public class RecordDeskAvailabilitySnapshotShould(
             Name = "Integration Test Location",
             OrganizationId = organizationId,
             Type = LocationTypeConstants.Private,
-            CreatedAt = now
+            CreatedAt = now,
         };
         await repositoryFactory.DbContext.Location.AddAsync(location, cancellationToken);
 
-        var deskTag = new OrganizationTag { Id = deskTagId, Type = OrganizationTagTypeConstants.ResourceDesk, Organization = org, CreatedAt = now };
+        var deskTag = new OrganizationTag
+        {
+            Id = deskTagId,
+            Type = OrganizationTagTypeConstants.ResourceDesk,
+            Organization = org,
+            CreatedAt = now,
+        };
         await repositoryFactory.DbContext.OrganizationTag.AddAsync(deskTag, cancellationToken);
 
         for (var i = 0; i < deskCount; i++)
         {
             var resource = new LocationResource
             {
-                Id = await Nanoid.GenerateAsync(), Name = $"Desk {i + 1:D2}", Location = location, CreatedAt = now
+                Id = await Nanoid.GenerateAsync(),
+                Name = $"Desk {i + 1:D2}",
+                Location = location,
+                CreatedAt = now,
             };
             resource.OrganizationTags.Add(deskTag);
             await repositoryFactory.DbContext.Resource.AddAsync(resource, cancellationToken);
@@ -79,14 +99,20 @@ public class RecordDeskAvailabilitySnapshotShould(
     [Theory]
     [AutoFakeItEasyData]
     public async Task Persist_One_Snapshot_Per_Desk(
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        ILogger<LocationDailyAnalytics> logger,
         CancellationToken cancellationToken)
     {
         SetupEmptyBookingCallInvoker(callInvoker);
         var locationId = await SeedLocationWithDesksAsync(DeskCount, cancellationToken);
 
-        var bookingConfiguration = new BookingConfiguration { GrpcUrl = new Uri("http://localhost:5999"), ApiKey = "test-key" };
+        var bookingConfiguration = new BookingConfiguration
+        {
+            GrpcUrl = new Uri("http://localhost:5999"),
+            ApiKey = "test-key",
+        };
         var sut = new LocationDailyAnalytics(
             repositoryFactory,
             randomHelper,
@@ -111,14 +137,20 @@ public class RecordDeskAvailabilitySnapshotShould(
     [Theory]
     [AutoFakeItEasyData]
     public async Task Replace_Existing_Snapshots_On_Second_Invocation(
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] ILogger<LocationDailyAnalytics> logger,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        ILogger<LocationDailyAnalytics> logger,
         CancellationToken cancellationToken)
     {
         SetupEmptyBookingCallInvoker(callInvoker);
         var locationId = await SeedLocationWithDesksAsync(DeskCount, cancellationToken);
 
-        var bookingConfiguration = new BookingConfiguration { GrpcUrl = new Uri("http://localhost:5999"), ApiKey = "test-key" };
+        var bookingConfiguration = new BookingConfiguration
+        {
+            GrpcUrl = new Uri("http://localhost:5999"),
+            ApiKey = "test-key",
+        };
         var sut = new LocationDailyAnalytics(
             repositoryFactory,
             randomHelper,

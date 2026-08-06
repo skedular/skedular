@@ -393,7 +393,7 @@ public class ResourcesPage(
             GetTitle(),
             asyncBlocks[0],
             GetResourcesSearchCriteriaAndPaginationBlocks(resourceConnection, commonPageContext.PageContext),
-            asyncBlocks[1]
+            asyncBlocks[1],
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -403,7 +403,7 @@ public class ResourcesPage(
             {
                 CallbackId = ResourcesCallback,
                 Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
             cancellationToken);
@@ -421,7 +421,10 @@ public class ResourcesPage(
 
     private static IReadOnlyList<Block> GetTitle() =>
     [
-        new SectionBlock { Text = "*Resources*".ToMarkdown() }
+        new SectionBlock
+        {
+            Text = "*Resources*".ToMarkdown(),
+        },
     ];
 
     private async Task<IReadOnlyList<Block>> GetToolbarAsync(
@@ -438,8 +441,8 @@ public class ResourcesPage(
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addDeskButton).Concat(feedbackButton).ToList()
-            }
+                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addDeskButton).Concat(feedbackButton).ToList(),
+            },
         ];
     }
 
@@ -447,10 +450,19 @@ public class ResourcesPage(
     {
         if (!resourceConnection.Edges.Any())
         {
-            return [new SectionBlock { Text = "No resource found".ToMarkdown() }];
+            return
+            [
+                new SectionBlock
+                {
+                    Text = "No resource found".ToMarkdown(),
+                },
+            ];
         }
 
-        var totalDesksCount = new SectionBlock { Text = $"Total resources: {resourceConnection.TotalCount}".ToMarkdown() };
+        var totalDesksCount = new SectionBlock
+        {
+            Text = $"Total resources: {resourceConnection.TotalCount}".ToMarkdown(),
+        };
         if (resourceConnection.TotalCount <= ResourcesPageSize)
         {
             return [totalDesksCount];
@@ -469,7 +481,9 @@ public class ResourcesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageResources, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageResources,
+                Text = Icons.FirstPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.ResourcesPage.Pagination.First = null;
@@ -479,7 +493,9 @@ public class ResourcesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageResources, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageResources,
+                Text = Icons.PreviousPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
@@ -492,7 +508,9 @@ public class ResourcesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageResources, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageResources,
+                Text = Icons.NextPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.ResourcesPage.Pagination.First = null;
@@ -502,11 +520,16 @@ public class ResourcesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageResources, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageResources,
+                Text = Icons.LastPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
-        var paginationActionBlock = new ActionsBlock { Elements = paginationButtons };
+        var paginationActionBlock = new ActionsBlock
+        {
+            Elements = paginationButtons,
+        };
 
         return [totalDesksCount, paginationActionBlock];
     }
@@ -526,18 +549,26 @@ public class ResourcesPage(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationResourceTypeKey,
-                InitialOption = new Option { Text = resource.ResourceType.Name.ToOptionText(), Value = resource.ResourceType.Id },
-                MinQueryLength = 0
+                InitialOption = new Option
+                {
+                    Text = resource.ResourceType.Name.ToOptionText(),
+                    Value = resource.ResourceType.Id,
+                },
+                MinQueryLength = 0,
             },
-            Optional = false
+            Optional = false,
         };
 
         var name = new InputBlock
         {
             BlockId = ResourceActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = ResourceActionTypes.Name, InitialValue = resource.Name.ToSafeString() },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = ResourceActionTypes.Name,
+                InitialValue = resource.Name.ToSafeString(),
+            },
+            Optional = false,
         };
 
         var deactivated = new InputBlock
@@ -548,9 +579,16 @@ public class ResourcesPage(
                 new CheckboxGroup
                 {
                     ActionId = ResourceActionTypes.Inactive,
-                    Options = new List<Option> { new() { Text = "Inactive".ToPlainText(), Value = ResourceActionTypes.Inactive } }
+                    Options = new List<Option>
+                    {
+                        new()
+                        {
+                            Text = "Inactive".ToPlainText(),
+                            Value = ResourceActionTypes.Inactive,
+                        },
+                    },
                 },
-            Optional = true
+            Optional = true,
         };
 
         var requireBookingApproval = new InputBlock
@@ -563,18 +601,26 @@ public class ResourcesPage(
                     ActionId = ResourceActionTypes.RequireBookingApproval,
                     Options = new List<Option>
                     {
-                        new() { Text = "Require Booking Approval".ToPlainText(), Value = ResourceActionTypes.RequireBookingApproval }
-                    }
+                        new()
+                        {
+                            Text = "Require Booking Approval".ToPlainText(),
+                            Value = ResourceActionTypes.RequireBookingApproval,
+                        },
+                    },
                 },
-            Optional = true
+            Optional = true,
         };
 
         var capacity = new InputBlock
         {
             BlockId = ResourceActionTypes.Capacity,
             Label = "Capacity".ToPlainText(),
-            Element = new PlainTextInput { ActionId = ResourceActionTypes.Capacity, InitialValue = resource.Capacity.ToString() },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = ResourceActionTypes.Capacity,
+                InitialValue = resource.Capacity.ToString(),
+            },
+            Optional = false,
         };
 
         var blocks = new List<Block>
@@ -583,7 +629,7 @@ public class ResourcesPage(
             name,
             deactivated,
             requireBookingApproval,
-            capacity
+            capacity,
         };
 
         var customTagConnection =
@@ -601,7 +647,7 @@ public class ResourcesPage(
                     {
                         Text = item.Name.ToOptionText(),
                         Value = item.Id,
-                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
+                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
                     }).ToList(),
                     InitialOptions = customTagConnection.Edges.Select(item => item.Node)
                         .Where(item => resource.CustomTags
@@ -611,10 +657,10 @@ public class ResourcesPage(
                             {
                                 Text = item.Name.ToOptionText(),
                                 Value = item.Id,
-                                Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
-                            }).ToList()
+                                Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
+                            }).ToList(),
                 },
-                Optional = true
+                Optional = true,
             });
         }
 
@@ -632,7 +678,7 @@ public class ResourcesPage(
                     {
                         Text = item.Name.ToOptionText(),
                         Value = item.Id,
-                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
+                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
                     }).ToList(),
                     InitialOptions = zoneConnection.Edges.Select(item => item.Node)
                         .Where(item => resource.Zones.Select(organizationZone => organizationZone.Id).Contains(item.Id))
@@ -641,10 +687,10 @@ public class ResourcesPage(
                             {
                                 Text = item.Name.ToOptionText(),
                                 Value = item.Id,
-                                Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
-                            }).ToList()
+                                Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
+                            }).ToList(),
                 },
-                Optional = true
+                Optional = true,
             });
         }
 
@@ -658,7 +704,7 @@ public class ResourcesPage(
                 Close = "Cancel",
                 Submit = "Save",
                 Blocks = blocks,
-                PrivateMetadata = context.Serialize()
+                PrivateMetadata = context.Serialize(),
             },
             cancellationToken);
     }
@@ -671,7 +717,10 @@ public class ResourcesPage(
         CancellationToken cancellationToken)
     {
         var resource = await locationResourceService.GetAsync(workspaceMember.Id, context.ResourceId, cancellationToken);
-        var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the resource {resource.Name.ToSafeString()}?" };
+        var confirmationMessage = new SectionBlock
+        {
+            Text = $"Are you sure you want to remove the resource {resource.Name.ToSafeString()}?",
+        };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(
@@ -683,7 +732,7 @@ public class ResourcesPage(
                 Close = "No",
                 Submit = "Yes",
                 Blocks = [confirmationMessage],
-                PrivateMetadata = context.Serialize()
+                PrivateMetadata = context.Serialize(),
             },
             cancellationToken);
     }

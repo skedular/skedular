@@ -42,38 +42,57 @@ public class EventMapper : IEventMapper
             Locale = src.Locale.ToSafeString(),
             PhoneNumber = src.PhoneNumber.ToSafeString(),
             BillingDetails = MapTo(src.BillingDetails),
-            Settings = new Settings { IsOnboardingDone = src.IsOnboardingDone },
+            Settings = new Settings
+            {
+                IsOnboardingDone = src.IsOnboardingDone,
+            },
             PreferredOrganizationId = src.DefaultOrganization is null ? string.Empty : src.DefaultOrganization.Id,
             PersonalInformationVisibility = src.PersonalInformationVisibility switch
             {
                 PersonalInformationVisibility.Visible => Api.Shared.Clients.Events.Skedular.Customer.V1.PersonalInformationVisibility.Visible,
                 PersonalInformationVisibility.Redacted => Api.Shared.Clients.Events.Skedular.Customer.V1.PersonalInformationVisibility.Redacted,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.PersonalInformationVisibility), src.PersonalInformationVisibility,
-                    $"Unexpected value for {nameof(src.PersonalInformationVisibility)}: {src.PersonalInformationVisibility}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.PersonalInformationVisibility)}: {src.PersonalInformationVisibility}. Update enum mapping or caller input."),
             },
             Type = src.Type switch
             {
                 CustomerType.Guest => Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType.Guest,
                 CustomerType.Registered => Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
-                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
-            }
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input."),
+            },
         };
 
         customer.Identities.AddRange(MapTo(src.Identities));
         customer.PreferredLocations.AddRange(
             src.PreferredLocations.Select(item =>
-                new Location { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
+                new Location
+                {
+                    Id = item.Id,
+                    OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id,
+                })
         );
         customer.PreferredResources.AddRange(
             src.PreferredResources.Select(item =>
-                new Resource { Id = item.Id, LocationId = item.Location is null ? string.Empty : item.Location.Id }));
+                new Resource
+                {
+                    Id = item.Id,
+                    LocationId = item.Location is null ? string.Empty : item.Location.Id,
+                }));
         customer.PreferredOrganizationTags.AddRange(
-            src.PreferredOrganizationTags.Select(item => new OrganizationTag { Id = item.Id, OrganizationId = item.Organization.Id })
+            src.PreferredOrganizationTags.Select(item => new OrganizationTag
+            {
+                Id = item.Id,
+                OrganizationId = item.Organization.Id,
+            })
         );
         customer.FavouriteLocations.AddRange(
             src.FavouriteLocations.Select(item =>
-                new Location { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
+                new Location
+                {
+                    Id = item.Id,
+                    OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id,
+                })
         );
 
         return customer;
@@ -82,7 +101,12 @@ public class EventMapper : IEventMapper
     private static IEnumerable<Identity> MapTo(IEnumerable<Models.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Models.Identity src) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = src.EmailVerified ?? false,
+        };
 
     private static CustomerBillingDetails? MapTo(Models.CustomerBillingDetails? src) =>
         src is null
@@ -104,6 +128,12 @@ public class EventMapper : IEventMapper
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
                 PlaceId = src.PlaceId.ToSafeString(),
-                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
+                Coordinates = src.Coordinates is null
+                    ? null
+                    : new Coordinates
+                    {
+                        Longitude = src.Coordinates.X,
+                        Latitude = src.Coordinates.Y,
+                    },
             };
 }

@@ -44,7 +44,7 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
             OrganizationBillingCycle.Weekly => ProductPricingCadence.Weekly,
             OrganizationBillingCycle.Fortnightly => ProductPricingCadence.Fortnightly,
             OrganizationBillingCycle.Monthly => ProductPricingCadence.Monthly,
-            _ => throw new ArgumentOutOfRangeException(nameof(organizationBillingCycle))
+            _ => throw new ArgumentOutOfRangeException(nameof(organizationBillingCycle)),
         };
 
     private static decimal CalculateInstallmentAmount(
@@ -98,7 +98,7 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
             ProductPricingCadence.FiveMonths => recurringBooking.StartDate.AddMonths(5),
             ProductPricingCadence.SixMonths => recurringBooking.StartDate.AddMonths(6),
             ProductPricingCadence.Yearly => recurringBooking.StartDate.AddYears(1),
-            _ => recurringBooking.StartDate.AddDays(1)
+            _ => recurringBooking.StartDate.AddDays(1),
         };
 
     private static bool ShouldSplitByBillingCycle(ProductPricingCadence cadence, OrganizationBillingCycle billingCycle) =>
@@ -125,7 +125,7 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
                 ProductPricingCadence.FiveMonths or
                 ProductPricingCadence.SixMonths or
                 ProductPricingCadence.Yearly,
-            _ => throw new ArgumentOutOfRangeException(nameof(billingCycle))
+            _ => throw new ArgumentOutOfRangeException(nameof(billingCycle)),
         };
 
     private static List<(DateTimeOffset StartInclusive, DateTimeOffset EndExclusive)> SplitIntoBillingCyclePeriodsFromStart(
@@ -143,7 +143,7 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
                 OrganizationBillingCycle.Weekly => cursor.AddDays(7),
                 OrganizationBillingCycle.Fortnightly => cursor.AddDays(14),
                 OrganizationBillingCycle.Monthly => cursor.AddMonths(1),
-                _ => throw new ArgumentOutOfRangeException(nameof(billingCycle))
+                _ => throw new ArgumentOutOfRangeException(nameof(billingCycle)),
             };
 
             var periodEnd = nextBoundary < until ? nextBoundary : until;

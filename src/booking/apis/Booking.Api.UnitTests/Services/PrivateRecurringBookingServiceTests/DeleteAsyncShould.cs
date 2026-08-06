@@ -13,20 +13,42 @@ public class DeleteAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_When_An_Involved_Team_Cannot_Delete_The_Recurring_Booking(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] ITeamRepository teamRepository,
-        [Frozen] IContext context,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        ITeamRepository teamRepository,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
         PrivateRecurringBookingService sut,
         string recurringBookingId,
         string verifiableToken,
         CancellationToken cancellationToken)
     {
-        var customer = new CustomerEntity { Id = "customer-1" };
-        var recurringBooking = new RecurringBooking { Id = recurringBookingId, InvolvedTeams = [new Team { Id = "team-1" }] };
-        var team = new Team { Id = "team-1" };
+        var customer = new CustomerEntity
+        {
+            Id = "customer-1",
+        };
+        var recurringBooking = new RecurringBooking
+        {
+            Id = recurringBookingId,
+            InvolvedTeams =
+            [
+                new Team
+                {
+                    Id = "team-1",
+                },
+            ],
+        };
+        var team = new Team
+        {
+            Id = "team-1",
+        };
 
         A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);

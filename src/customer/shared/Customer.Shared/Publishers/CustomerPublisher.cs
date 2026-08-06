@@ -23,7 +23,10 @@ public class CustomerPublisher(
 {
     public async Task PublishCustomersAsync(IReadOnlyList<Models.Customer> customers, CancellationToken cancellationToken) =>
         await Task.WhenAll(customers.Select(customer => publisher.PublishAsync(
-            new Key { CustomerId = customer.Id },
+            new Key
+            {
+                CustomerId = customer.Id,
+            },
             new Event
             {
                 Metadata = Event.NewMetadata(
@@ -31,7 +34,10 @@ public class CustomerPublisher(
                     applicationConfiguration.AppSource,
                     customer.IsDeleted() ? Type.CustomerDeleted : Type.CustomerUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Customer = eventMapper.MapTo(customer) }
+                Data = new Data
+                {
+                    Customer = eventMapper.MapTo(customer),
+                },
             },
             cancellationToken)));
 }

@@ -177,7 +177,10 @@ public class XeroRefundService(
                     {
                         Type = CreditNote.TypeEnum.ACCRECCREDIT,
                         Status = CreditNote.StatusEnum.AUTHORISED,
-                        Contact = new Contact { ContactID = originalInvoice.Contact.ContactID },
+                        Contact = new Contact
+                        {
+                            ContactID = originalInvoice.Contact.ContactID,
+                        },
                         Date = refund.RequestedAt.UtcDateTime.Date,
                         Reference = BuildRefundReference(invoiceTarget),
                         CurrencyCode = ResolveCurrencyCode(refund, originalInvoice),
@@ -191,11 +194,11 @@ public class XeroRefundService(
                                 UnitAmount = refund.RefundAmount.Value,
                                 LineAmount = refund.RefundAmount.Value,
                                 AccountCode = accountCode,
-                                TaxType = taxType
-                            }
-                        ]
-                    }
-                ]
+                                TaxType = taxType,
+                            },
+                        ],
+                    },
+                ],
             };
 
             var creditNoteResponse = await CreateCreditNotesAsync(
@@ -237,11 +240,14 @@ public class XeroRefundService(
                         [
                             new Allocation
                             {
-                                Invoice = new XeroInvoice { InvoiceID = invoiceId },
+                                Invoice = new XeroInvoice
+                                {
+                                    InvoiceID = invoiceId,
+                                },
                                 Amount = refundAmount,
-                                Date = refund.RequestedAt.UtcDateTime.Date
-                            }
-                        ]
+                                Date = refund.RequestedAt.UtcDateTime.Date,
+                            },
+                        ],
                     },
                     BuildAllocationIdempotencyKey(GetIdempotencyKey(refund)),
                     cancellationToken);
@@ -262,12 +268,18 @@ public class XeroRefundService(
                     refreshedConnection.TenantId,
                     new Payment
                     {
-                        CreditNote = new CreditNote { CreditNoteID = creditNote.CreditNoteID },
-                        Account = new Account { Code = bankAccountCode },
+                        CreditNote = new CreditNote
+                        {
+                            CreditNoteID = creditNote.CreditNoteID,
+                        },
+                        Account = new Account
+                        {
+                            Code = bankAccountCode,
+                        },
                         Code = bankAccountCode,
                         Amount = refundAmount,
                         Date = refund.RequestedAt.UtcDateTime.Date,
-                        Reference = BuildRefundReference(invoiceTarget)
+                        Reference = BuildRefundReference(invoiceTarget),
                     },
                     BuildPaymentIdempotencyKey(GetIdempotencyKey(refund)),
                     cancellationToken);
@@ -386,7 +398,7 @@ public class XeroRefundService(
                 cancellationToken),
             _ => new XeroRefundInvoiceTargetResolution(
                 null,
-                "Xero refund processing currently supports only marketplace bookings and subscription billing windows.")
+                "Xero refund processing currently supports only marketplace bookings and subscription billing windows."),
         };
 
     private async Task<XeroRefundInvoiceTargetResolution> ResolveOneTimeBookingInvoiceTargetAsync(MarketplaceRefund refund,
@@ -570,7 +582,10 @@ public class XeroRefundService(
     private async Task<XeroConnection?> GetOrganizationXeroConnectionAsync(string organizationId, CancellationToken cancellationToken)
     {
         var response = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
-            new Admin_GetXeroConnectionInput { OrganizationId = organizationId },
+            new Admin_GetXeroConnectionInput
+            {
+                OrganizationId = organizationId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -597,7 +612,10 @@ public class XeroRefundService(
         }
 
         var refreshedToken = (XeroOAuth2Token)await xeroSdkClientFactory.CreateClient().RefreshAccessTokenAsync(
-            new XeroOAuth2Token { RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted) });
+            new XeroOAuth2Token
+            {
+                RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted),
+            });
 
         var now = timeProvider.GetUtcNow();
         var refreshedConnection = await organizationBillingServiceClient.Admin_RefreshXeroConnectionTokensAsync(
@@ -610,7 +628,7 @@ public class XeroRefundService(
                         ? xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted)
                         : refreshedToken.RefreshToken),
                 AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(now.AddMinutes(30)),
-                RefreshTokenExpiresAt = Timestamp.FromDateTimeOffset(now.AddDays(60))
+                RefreshTokenExpiresAt = Timestamp.FromDateTimeOffset(now.AddDays(60)),
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -728,7 +746,7 @@ public class XeroRefundService(
             OrganizationBillingCycleConstants.Weekly => startInclusive.AddDays(7),
             OrganizationBillingCycleConstants.Fortnightly => startInclusive.AddDays(14),
             OrganizationBillingCycleConstants.Monthly => startInclusive.AddMonths(1),
-            _ => throw new ArgumentOutOfRangeException(nameof(organizationBillingCycle))
+            _ => throw new ArgumentOutOfRangeException(nameof(organizationBillingCycle)),
         };
 
     private static DateTimeOffset ResolveRecurringBookingCycleEndExclusive(RecurringBookingEntity recurringBooking)
@@ -746,7 +764,7 @@ public class XeroRefundService(
             ProductPricingCadence.FiveMonths => recurringBooking.StartDate.AddMonths(5),
             ProductPricingCadence.SixMonths => recurringBooking.StartDate.AddMonths(6),
             ProductPricingCadence.Yearly => recurringBooking.StartDate.AddYears(1),
-            _ => recurringBooking.StartDate.AddDays(1)
+            _ => recurringBooking.StartDate.AddDays(1),
         };
     }
 

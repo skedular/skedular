@@ -14,7 +14,10 @@ public abstract class InMemoryDbContextFixtureCustomizer<TDbContext> : IFixtureC
     {
         var databaseName = Guid.CreateVersion7().ToString();
         var genericOptions = new DbContextOptionsBuilder<TDbContext>().UseInMemoryDatabase(databaseName).Options;
-        var customOptions = new CustomDbContextOptions<TDbContext> { IsPooled = IsPooled };
+        var customOptions = new CustomDbContextOptions<TDbContext>
+        {
+            IsPooled = IsPooled,
+        };
         if (TryCreateContext([genericOptions, customOptions], out var created) || TryCreateContext([genericOptions], out created))
         {
             return created;

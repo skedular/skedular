@@ -42,7 +42,12 @@ public class ResourceComponents(ICustomerService customerService, ILocationPermi
 
         return
         [
-            new Button { ActionId = ResourceActionTypes.AddResource, Text = "Add Resource".ToPlainTextWithIcon(Icons.New), Value = context }
+            new Button
+            {
+                ActionId = ResourceActionTypes.AddResource,
+                Text = "Add Resource".ToPlainTextWithIcon(Icons.New),
+                Value = context,
+            },
         ];
     }
 
@@ -71,11 +76,26 @@ public class ResourceComponents(ICustomerService customerService, ILocationPermi
 
         var blocks = new List<Block>
         {
-            new SectionBlock { Text = $"*Type*: {resource.ResourceType.Name.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*Name*: {resource.Name.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*Inactive*: {resource.Inactive}".ToMarkdown() },
-            new SectionBlock { Text = $"*Capacity*: {resource.Capacity}".ToMarkdown() },
-            new SectionBlock { Text = $"*RequireBookingApproval*: {resource.RequireBookingApproval}".ToMarkdown() }
+            new SectionBlock
+            {
+                Text = $"*Type*: {resource.ResourceType.Name.ToSafeString()}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*Name*: {resource.Name.ToSafeString()}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*Inactive*: {resource.Inactive}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*Capacity*: {resource.Capacity}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*RequireBookingApproval*: {resource.RequireBookingApproval}".ToMarkdown(),
+            },
         };
 
         if (resource.CustomTags.Count != 0)
@@ -84,7 +104,7 @@ public class ResourceComponents(ICustomerService customerService, ILocationPermi
             {
                 Text = string
                     .Join(", ", resource.CustomTags.OrderBy(item => item.Name).Select(item => item.Name))
-                    .ToMarkdownWithIcon(Icons.CustomTags)
+                    .ToMarkdownWithIcon(Icons.CustomTags),
             });
         }
 
@@ -94,7 +114,7 @@ public class ResourceComponents(ICustomerService customerService, ILocationPermi
             {
                 Text = string
                     .Join(", ", resource.Zones.OrderBy(item => item.Name).Select(item => item.Name))
-                    .ToMarkdownWithIcon(Icons.Zones)
+                    .ToMarkdownWithIcon(Icons.Zones),
             });
         }
 
@@ -106,7 +126,7 @@ public class ResourceComponents(ICustomerService customerService, ILocationPermi
             {
                 ActionId = ResourceActionTypes.RemovePreferredResource,
                 Text = "Remove preferred resource".ToPlainTextWithIcon(Icons.ClearDefault),
-                Value = new RemovePreferredResourceContext(pageContext, resource.Id).Serialize()
+                Value = new RemovePreferredResourceContext(pageContext, resource.Id).Serialize(),
             });
         }
         else
@@ -115,20 +135,23 @@ public class ResourceComponents(ICustomerService customerService, ILocationPermi
             {
                 ActionId = ResourceActionTypes.SetPreferredResource,
                 Text = "Set preferred resource".ToPlainTextWithIcon(Icons.SetAsDefault),
-                Value = new SetPreferredResourceContext(pageContext, resource.Id).Serialize()
+                Value = new SetPreferredResourceContext(pageContext, resource.Id).Serialize(),
             });
         }
 
         var actionMenu = new StaticSelectMenu
         {
-            ActionId = ResourceActionTypes.ActionsMenu, Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto), Options = []
+            ActionId = ResourceActionTypes.ActionsMenu,
+            Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
+            Options = [],
         };
 
         if (canModify)
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{ResourceActionTypes.EditResource}{resource.Id}", Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
+                Value = $"{ResourceActionTypes.EditResource}{resource.Id}",
+                Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit),
             });
         }
 
@@ -136,7 +159,8 @@ public class ResourceComponents(ICustomerService customerService, ILocationPermi
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{ResourceActionTypes.RemoveResource}{resource.Id}", Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
+                Value = $"{ResourceActionTypes.RemoveResource}{resource.Id}",
+                Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove),
             });
         }
 
@@ -145,7 +169,10 @@ public class ResourceComponents(ICustomerService customerService, ILocationPermi
             buttons.Add(actionMenu);
         }
 
-        blocks.Add(new ActionsBlock { Elements = buttons });
+        blocks.Add(new ActionsBlock
+        {
+            Elements = buttons,
+        });
 
         return blocks;
     }

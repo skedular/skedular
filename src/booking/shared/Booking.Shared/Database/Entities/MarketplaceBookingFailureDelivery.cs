@@ -41,7 +41,16 @@ public class MarketplaceBookingFailureDeliveryConfiguration : IEntityTypeConfigu
             .WithMany(item => item.Deliveries)
             .HasForeignKey(item => item.MarketplaceBookingFailureId);
 
-        builder.HasIndex(item => new { item.MarketplaceBookingFailureId, item.RecipientKey, item.Channel }).IsUnique();
-        builder.HasIndex(item => new { item.Status, item.LastAttemptAt });
+        builder.HasIndex(item => new
+        {
+            item.MarketplaceBookingFailureId,
+            item.RecipientKey,
+            item.Channel,
+        }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.Status,
+            item.LastAttemptAt,
+        });
     }
 }

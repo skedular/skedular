@@ -11,8 +11,10 @@ public class StartActivityShould
     [Theory]
     [AutoFakeItEasyData]
     public void Use_TextMapPropagator(
-        [Frozen] IPropagatorFunctionProvider<string> functionProvider,
-        [Frozen] TextMapPropagator propagator,
+        [Frozen]
+        IPropagatorFunctionProvider<string> functionProvider,
+        [Frozen]
+        TextMapPropagator propagator,
         ActivityPropagator<string> sut,
         string location)
     {
@@ -24,8 +26,10 @@ public class StartActivityShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_New_Context(
-        [Frozen] IPropagatorFunctionProvider<string> functionProvider,
-        [Frozen] TextMapPropagator propagator,
+        [Frozen]
+        IPropagatorFunctionProvider<string> functionProvider,
+        [Frozen]
+        TextMapPropagator propagator,
         ActivityPropagator<string> sut,
         string location)
     {

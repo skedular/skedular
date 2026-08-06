@@ -260,7 +260,11 @@ public class OrganizationSsoService(
         // Validate active SSO settings before enabling sign-in.
         var validationResult = ssoSettings.IsActive
             ? await ValidateSsoConfigurationAsync(ssoSettings, cancellationToken)
-            : new OrganizationSsoValidationResult { IsMetadataValid = true, IsCertificateValid = true };
+            : new OrganizationSsoValidationResult
+            {
+                IsMetadataValid = true,
+                IsCertificateValid = true,
+            };
         if (!validationResult.IsMetadataValid || !validationResult.IsCertificateValid)
         {
             throw new InvalidSsoConfiguration();

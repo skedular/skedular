@@ -18,10 +18,14 @@ public class XeroIntegrationsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_False_When_Connection_Has_No_Refresh_Token(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IXeroTokenRefreshService xeroTokenRefreshService,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IXeroTokenRefreshService xeroTokenRefreshService,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
         XeroIntegrations sut)
     {
         var environment = new ActivityEnvironment();
@@ -31,8 +35,11 @@ public class XeroIntegrationsShould
             Name = "Org 1",
             OrganizationXeroConnection = new OrganizationXeroConnection
             {
-                Id = "xero-1", OrganizationId = "org-1", BillingMode = XeroBillingModeConstants.Disabled, RefreshTokenEncrypted = string.Empty
-            }
+                Id = "xero-1",
+                OrganizationId = "org-1",
+                BillingMode = XeroBillingModeConstants.Disabled,
+                RefreshTokenEncrypted = string.Empty,
+            },
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -52,14 +59,22 @@ public class XeroIntegrationsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Deactivate_Connection_When_Refresh_Token_Is_Expired(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationXeroConnectionRepository organizationXeroConnectionRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationXeroConnectionRepository organizationXeroConnectionRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
         XeroIntegrations sut)
     {
         var environment = new ActivityEnvironment();
@@ -71,10 +86,19 @@ public class XeroIntegrationsShould
             BillingMode = XeroBillingModeConstants.Enabled,
             RefreshTokenEncrypted = "refresh-token",
             RefreshTokenExpiresAt = now.AddMinutes(-1),
-            IsActive = true
+            IsActive = true,
         };
-        var organization = new Database.Entities.Organization { Id = "org-1", Name = "Org 1", OrganizationXeroConnection = connection };
-        var mappedOrganization = new Models.Organization { Id = organization.Id, Name = organization.Name };
+        var organization = new Database.Entities.Organization
+        {
+            Id = "org-1",
+            Name = "Org 1",
+            OrganizationXeroConnection = connection,
+        };
+        var mappedOrganization = new Models.Organization
+        {
+            Id = organization.Id,
+            Name = organization.Name,
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationXeroConnectionRepository).Returns(organizationXeroConnectionRepository);
@@ -103,15 +127,24 @@ public class XeroIntegrationsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Next_Maintenance_After_Successful_Refresh(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationXeroConnectionRepository organizationXeroConnectionRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] IXeroTokenRefreshService xeroTokenRefreshService,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationXeroConnectionRepository organizationXeroConnectionRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        IXeroTokenRefreshService xeroTokenRefreshService,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
         XeroIntegrations sut)
     {
         var environment = new ActivityEnvironment();
@@ -125,10 +158,19 @@ public class XeroIntegrationsShould
             BillingMode = XeroBillingModeConstants.Enabled,
             RefreshTokenEncrypted = "old-refresh-token",
             RefreshTokenExpiresAt = now.AddDays(30),
-            LastError = "old-error"
+            LastError = "old-error",
         };
-        var organization = new Database.Entities.Organization { Id = "org-1", Name = "Org 1", OrganizationXeroConnection = connection };
-        var mappedOrganization = new Models.Organization { Id = organization.Id, Name = organization.Name };
+        var organization = new Database.Entities.Organization
+        {
+            Id = "org-1",
+            Name = "Org 1",
+            OrganizationXeroConnection = connection,
+        };
+        var mappedOrganization = new Models.Organization
+        {
+            Id = organization.Id,
+            Name = organization.Name,
+        };
         var refreshResult = new XeroTokenRefreshResult(
             true,
             false,

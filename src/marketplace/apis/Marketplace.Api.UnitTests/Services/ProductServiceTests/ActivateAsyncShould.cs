@@ -18,11 +18,16 @@ public class ActivateAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Incomplete_Host_Location_Draft(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IProductRepository productRepository,
-        [Frozen] IOrganizationRepository organizationRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IProductRepository productRepository,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
         ProductService sut,
         string locationId,
         string organizationId,
@@ -30,12 +35,32 @@ public class ActivateAsyncShould
         CancellationToken cancellationToken)
     {
         var productId = HostLocationSystemIds.Product(locationId);
-        var customer = new Customer { Id = customerId };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customerId };
-        var organization = new Organization { Id = organizationId, Type = OrganizationTypeConstants.Host, IsOwnershipVerified = true };
+        var customer = new Customer
+        {
+            Id = customerId,
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customerId,
+        };
+        var organization = new Organization
+        {
+            Id = organizationId,
+            Type = OrganizationTypeConstants.Host,
+            IsOwnershipVerified = true,
+        };
         var product = new Product
         {
-            Id = productId, Organization = organization, ProductVersions = [new ProductVersion { PricingOptions = [], ListingMetadata = null }]
+            Id = productId,
+            Organization = organization,
+            ProductVersions =
+            [
+                new ProductVersion
+                {
+                    PricingOptions = [],
+                    ListingMetadata = null,
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.ProductRepository).Returns(productRepository);
@@ -54,20 +79,39 @@ public class ActivateAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Unverified_Host_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IProductRepository productRepository,
-        [Frozen] IOrganizationRepository organizationRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IProductRepository productRepository,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
         ProductService sut,
         string productId,
         string organizationId,
         string customerId,
         CancellationToken cancellationToken)
     {
-        var customer = new Customer { Id = customerId };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customerId };
-        var organization = new Organization { Id = organizationId, Type = OrganizationTypeConstants.Host, IsOwnershipVerified = false };
-        var product = new Product { Id = productId, Organization = organization };
+        var customer = new Customer
+        {
+            Id = customerId,
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customerId,
+        };
+        var organization = new Organization
+        {
+            Id = organizationId,
+            Type = OrganizationTypeConstants.Host,
+            IsOwnershipVerified = false,
+        };
+        var product = new Product
+        {
+            Id = productId,
+            Organization = organization,
+        };
 
         A.CallTo(() => repositoryFactory.ProductRepository).Returns(productRepository);
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -85,24 +129,44 @@ public class ActivateAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Expired_Spaces_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerService customerService,
-        [Frozen] ISpacesAccessEvaluator spacesAccessEvaluator,
-        [Frozen] IProductRepository productRepository,
-        [Frozen] IOrganizationRepository organizationRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        ISpacesAccessEvaluator spacesAccessEvaluator,
+        [Frozen]
+        IProductRepository productRepository,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
         ProductService sut,
         string productId,
         string organizationId,
         string customerId,
         CancellationToken cancellationToken)
     {
-        var customer = new Customer { Id = customerId };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customerId };
+        var customer = new Customer
+        {
+            Id = customerId,
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customerId,
+        };
         var organization = new Organization
         {
-            Id = organizationId, Type = OrganizationTypeConstants.Marketplace, Offering = new Offering { Code = OfferingCode.SpacesFreeTierV1 }
+            Id = organizationId,
+            Type = OrganizationTypeConstants.Marketplace,
+            Offering = new Offering
+            {
+                Code = OfferingCode.SpacesFreeTierV1,
+            },
         };
-        var product = new Product { Id = productId, Organization = organization };
+        var product = new Product
+        {
+            Id = productId,
+            Organization = organization,
+        };
         var denied = new SpacesAccessDecision(
             false,
             SpacesSubscriptionStatus.TrialExpired,

@@ -31,7 +31,15 @@ public class UpdatePrivateShould(
         await SeedPrivateBookingAsync(bookingId, customerId, identityId, originalNotes, from, until, cancellationToken);
 
         var result = await bookingServiceClient.UpdatePrivateAsync(
-            new UpdatePrivateInput { Id = bookingId, Notes = updatedNotes, FieldsToUpdate = { PrivateBookingPatchField.Notes } },
+            new UpdatePrivateInput
+            {
+                Id = bookingId,
+                Notes = updatedNotes,
+                FieldsToUpdate =
+                {
+                    PrivateBookingPatchField.Notes,
+                },
+            },
             bookingConfiguration.ApiKey.CreateMetadata(identityId),
             cancellationToken: cancellationToken);
 
@@ -56,7 +64,11 @@ public class UpdatePrivateShould(
     {
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, true, cancellationToken);
 
-        repositoryFactory.IdentityRepository.Add(new Identity { Id = identityId, Customer = customer });
+        repositoryFactory.IdentityRepository.Add(new Identity
+        {
+            Id = identityId,
+            Customer = customer,
+        });
         repositoryFactory.BookingRepository.Add(new BookingEntity
         {
             Id = bookingId,
@@ -68,7 +80,7 @@ public class UpdatePrivateShould(
             Schedules = [],
             InvolvedCustomers = [customer],
             CreatedByCustomer = customer,
-            LastModifiedByCustomer = customer
+            LastModifiedByCustomer = customer,
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

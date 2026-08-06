@@ -15,21 +15,39 @@ public class DeleteAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Add_Skipped_Date_And_Signal_Workflow_When_Preserving_Recurring_Series(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ICachedBookingService cachedBookingService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         PrivateBookingService sut,
         CancellationToken cancellationToken)
     {
-        var deletedByCustomer = new Customer { Id = "customer-1" };
-        var recurringBooking = new RecurringBooking { Id = "recurring-1", Channel = BookingChannelConstants.Private, SkippedDates = [] };
+        var deletedByCustomer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var recurringBooking = new RecurringBooking
+        {
+            Id = "recurring-1",
+            Channel = BookingChannelConstants.Private,
+            SkippedDates = [],
+        };
         var existingBooking = new Database.Entities.Booking
         {
             Id = "booking-1",
@@ -38,9 +56,12 @@ public class DeleteAsyncShould
             Until = new DateTimeOffset(2026, 4, 20, 10, 0, 0, TimeSpan.Zero),
             InvolvedResources = [],
             ResourceBookingSlots = [],
-            RecurringBooking = recurringBooking
+            RecurringBooking = recurringBooking,
         };
-        var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
+        var deletedBooking = new Shared.Models.Booking
+        {
+            Id = existingBooking.Id,
+        };
 
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
@@ -68,18 +89,31 @@ public class DeleteAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Not_Update_Recurring_Series_When_PreserveRecurringSeries_Is_False(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         PrivateBookingService sut,
         CancellationToken cancellationToken)
     {
-        var recurringBooking = new RecurringBooking { Id = "recurring-1", Channel = BookingChannelConstants.Private, SkippedDates = [] };
+        var recurringBooking = new RecurringBooking
+        {
+            Id = "recurring-1",
+            Channel = BookingChannelConstants.Private,
+            SkippedDates = [],
+        };
         var existingBooking = new Database.Entities.Booking
         {
             Id = "booking-1",
@@ -88,9 +122,12 @@ public class DeleteAsyncShould
             Until = new DateTimeOffset(2026, 4, 20, 10, 0, 0, TimeSpan.Zero),
             InvolvedResources = [],
             ResourceBookingSlots = [],
-            RecurringBooking = recurringBooking
+            RecurringBooking = recurringBooking,
         };
-        var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
+        var deletedBooking = new Shared.Models.Booking
+        {
+            Id = existingBooking.Id,
+        };
 
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);

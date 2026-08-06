@@ -4,7 +4,7 @@ public enum ProductPricingBillingMode
 {
     NotSet = 0,
     Upfront = 1,
-    InArrears = 2
+    InArrears = 2,
 }
 
 public static class ProductPricingBillingModeConstants
@@ -25,7 +25,7 @@ public static class ProductPricingBillingModeExtensions
                 ProductPricingBillingMode.Upfront => ProductPricingBillingModeConstants.Upfront,
                 ProductPricingBillingMode.InArrears => ProductPricingBillingModeConstants.InArrears,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToProductPricingBillingModeName() =>
@@ -35,7 +35,7 @@ public static class ProductPricingBillingModeExtensions
                 ProductPricingBillingMode.Upfront => "Upfront",
                 ProductPricingBillingMode.InArrears => "In Arrears",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -48,7 +48,7 @@ public static class ProductPricingBillingModeExtensions
                 ProductPricingBillingModeConstants.Upfront => ProductPricingBillingMode.Upfront,
                 ProductPricingBillingModeConstants.InArrears => ProductPricingBillingMode.InArrears,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

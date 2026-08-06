@@ -8,7 +8,7 @@ public enum OrganizationTagPatchField
 {
     Name,
     Description,
-    Color
+    Color,
 }
 
 public record OrganizationTagPatchRequest(

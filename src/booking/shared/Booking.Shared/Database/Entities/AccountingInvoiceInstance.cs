@@ -47,7 +47,11 @@ public class AccountingInvoiceInstanceConfiguration : IEntityTypeConfiguration<A
 
         builder.HasIndex(item => item.OrganizationId);
         builder.HasIndex(item => item.AccountingInvoiceExportLinkId);
-        builder.HasIndex(item => new { item.Provider, item.ExternalInvoiceId }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.Provider,
+            item.ExternalInvoiceId,
+        }).IsUnique();
         builder.HasIndex(item => item.ExternalStatus);
     }
 }

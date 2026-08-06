@@ -13,7 +13,8 @@ public class StartActivityFromContextShould
     [Theory]
     [AutoFakeItEasyData]
     public void Create_Trace_If_Default(
-        [Frozen] IActivityAccessor activityAccessor,
+        [Frozen]
+        IActivityAccessor activityAccessor,
         IActivitySource activitySource,
         KafkaActivityStarter starter)
     {
@@ -47,7 +48,8 @@ public class StartActivityFromContextShould
     [Theory]
     [AutoFakeItEasyData]
     public void Use_Trace_If_Provided(
-        [Frozen] IActivityAccessor activityAccessor,
+        [Frozen]
+        IActivityAccessor activityAccessor,
         IActivitySource activitySource,
         KafkaActivityStarter starter)
     {

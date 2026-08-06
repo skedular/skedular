@@ -13,12 +13,19 @@ public class RootQuery(IVersionService versionService)
     {
         var version = versionService.GetVersion();
 
-        return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
+        return new Version
+        {
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
+        };
     }
 
     [UseResolverScope]
     public async Task<bool> CustomerReadinessSyncedAsync(
-        [Service] ICustomerReadinessAccessService customerReadinessAccessService,
+        [Service]
+        ICustomerReadinessAccessService customerReadinessAccessService,
         CancellationToken cancellationToken) =>
         await customerReadinessAccessService.IsReadyAsync(cancellationToken);
 }

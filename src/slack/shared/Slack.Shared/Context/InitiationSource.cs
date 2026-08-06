@@ -4,5 +4,5 @@ public enum InitiationSource
 {
     App,
     LocationDailyUpdateChannel,
-    TeamDailyUpdateChannel
+    TeamDailyUpdateChannel,
 }

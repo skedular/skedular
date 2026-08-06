@@ -7,7 +7,7 @@ public enum XeroRecurringInvoiceExportPath
 {
     StandardInvoice,
     RepeatingInvoice,
-    FreezeExistingRepeatingInvoice
+    FreezeExistingRepeatingInvoice,
 }
 
 public record XeroRecurringInvoiceTransitionDecision(
@@ -79,7 +79,7 @@ public class XeroRecurringInvoiceTransitionService : IXeroRecurringInvoiceTransi
             _ => new XeroRecurringInvoiceTransitionDecision(
                 XeroRecurringInvoiceExportPath.StandardInvoice,
                 AccountingInvoiceExportConfigurationStateConstants.Active,
-                null)
+                null),
         };
     }
 }

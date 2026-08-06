@@ -20,6 +20,10 @@ public class NotifyMarketplaceBookingFailure
                 TaskQueue = Workflow.Info.TaskQueue,
                 // Delivery state is durable. Keep retrying transport failures so an outage
                 // cannot leave a finalized failure permanently undispatched.
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 0, MaximumInterval = TimeSpan.FromHours(1) }
+                RetryPolicy = new RetryPolicy
+                {
+                    MaximumAttempts = 0,
+                    MaximumInterval = TimeSpan.FromHours(1),
+                },
             });
 }

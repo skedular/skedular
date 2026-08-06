@@ -14,7 +14,10 @@ public class SlackCoreController(IVersionService versionService) : SlackCoreCont
 
         return Task.FromResult<ActionResult<Version>>(new Version
         {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
         });
     }
 }

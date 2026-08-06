@@ -4,10 +4,12 @@ import {
   hasRebookAction,
   isAvailabilityConflictFailure,
   isPaymentFailure,
+  type FailureCategoryType,
+  type FailureCustomerActionType,
   type MarketplaceBookingFailureSummary,
 } from './marketplace-booking-failure-eligibility';
 
-const makeFailure = (categoryType: string, customerActionType = 'None'): MarketplaceBookingFailureSummary => ({
+const makeFailure = (categoryType: FailureCategoryType, customerActionType: FailureCustomerActionType = 'None'): MarketplaceBookingFailureSummary => ({
   category: { type: categoryType },
   customerAction: { type: customerActionType },
   finalizedAt: '2026-07-22T10:00:00Z',

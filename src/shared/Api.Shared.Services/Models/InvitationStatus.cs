@@ -6,7 +6,7 @@ public enum InvitationStatus
     Accepted,
     Rejected,
     Cancelled,
-    Expired
+    Expired,
 }
 
 public static class InvitationStatusConstants
@@ -31,7 +31,7 @@ public static class InvitationStatusExtensions
                 InvitationStatusConstants.Cancelled => InvitationStatus.Cancelled,
                 InvitationStatusConstants.Expired => InvitationStatus.Expired,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -46,7 +46,7 @@ public static class InvitationStatusExtensions
                 InvitationStatus.Cancelled => InvitationStatusConstants.Cancelled,
                 InvitationStatus.Expired => InvitationStatusConstants.Expired,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToInvitationStatusName() =>
@@ -58,7 +58,7 @@ public static class InvitationStatusExtensions
                 InvitationStatus.Cancelled => "Cancelled",
                 InvitationStatus.Expired => "Expired",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

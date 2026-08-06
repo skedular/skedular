@@ -44,6 +44,10 @@ public class StripePaymentMethodConfiguration : IEntityTypeConfiguration<StripeP
 
         builder.HasIndex(item => item.SetupIntentId).IsUnique();
         builder.HasIndex(item => item.PaymentMethodId);
-        builder.HasIndex(item => new { item.CardExpiryMonth, item.CardExpiryYear });
+        builder.HasIndex(item => new
+        {
+            item.CardExpiryMonth,
+            item.CardExpiryYear,
+        });
     }
 }

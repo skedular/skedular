@@ -42,7 +42,12 @@ public class TeamComponents(IOrganizationPermissionsService organizationPermissi
 
         return
         [
-            new Button { ActionId = TeamActionTypes.AddTeam, Text = "Add Team".ToPlainTextWithIcon(Icons.New), Value = context }
+            new Button
+            {
+                ActionId = TeamActionTypes.AddTeam,
+                Text = "Add Team".ToPlainTextWithIcon(Icons.New),
+                Value = context,
+            },
         ];
     }
 
@@ -69,11 +74,26 @@ public class TeamComponents(IOrganizationPermissionsService organizationPermissi
         var primaryLocation = team.PrimaryLocation is null ? "N/A" : team.PrimaryLocation.Name;
         var blocks = new List<Block>
         {
-            new SectionBlock { Text = $"*Name*: {team.Name.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*About*: {team.About.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*Timezone*: {team.Timezone.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*Daily update channel*: {dailyUpdateChannel}".ToMarkdown() },
-            new SectionBlock { Text = $"*Primary Location*: {primaryLocation}".ToMarkdown() }
+            new SectionBlock
+            {
+                Text = $"*Name*: {team.Name.ToSafeString()}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*About*: {team.About.ToSafeString()}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*Timezone*: {team.Timezone.ToSafeString()}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*Daily update channel*: {dailyUpdateChannel}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*Primary Location*: {primaryLocation}".ToMarkdown(),
+            },
         };
 
         var buttons = new List<IActionElement>();
@@ -83,15 +103,20 @@ public class TeamComponents(IOrganizationPermissionsService organizationPermissi
             Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
             Options =
             [
-                new Option { Value = $"{BookingActionTypes.Bookings}{team.Id}", Text = "Bookings".ToOptionPlainTextWithIcon(Icons.Bookings) }
-            ]
+                new Option
+                {
+                    Value = $"{BookingActionTypes.Bookings}{team.Id}",
+                    Text = "Bookings".ToOptionPlainTextWithIcon(Icons.Bookings),
+                },
+            ],
         };
 
         if (permissions.CanModify)
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{TeamActionTypes.EditTeam}{team.Id}", Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
+                Value = $"{TeamActionTypes.EditTeam}{team.Id}",
+                Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit),
             });
         }
 
@@ -99,12 +124,16 @@ public class TeamComponents(IOrganizationPermissionsService organizationPermissi
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{TeamActionTypes.RemoveTeam}{team.Id}", Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
+                Value = $"{TeamActionTypes.RemoveTeam}{team.Id}",
+                Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove),
             });
         }
 
         buttons.Add(actionMenu);
-        blocks.Add(new ActionsBlock { Elements = buttons });
+        blocks.Add(new ActionsBlock
+        {
+            Elements = buttons,
+        });
 
         return blocks;
     }

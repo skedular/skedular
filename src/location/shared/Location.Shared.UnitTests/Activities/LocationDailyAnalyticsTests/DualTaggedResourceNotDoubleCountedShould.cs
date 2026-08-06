@@ -18,20 +18,37 @@ public class DualTaggedResourceNotDoubleCountedShould
         var tags = new List<OrganizationTag>();
         if (hasDesk)
         {
-            tags.Add(new OrganizationTag { Id = $"tag-desk-{id}", Type = OrganizationTagTypeConstants.ResourceDesk });
+            tags.Add(new OrganizationTag
+            {
+                Id = $"tag-desk-{id}",
+                Type = OrganizationTagTypeConstants.ResourceDesk,
+            });
         }
 
         if (hasRoom)
         {
-            tags.Add(new OrganizationTag { Id = $"tag-room-{id}", Type = OrganizationTagTypeConstants.ResourceRoom });
+            tags.Add(new OrganizationTag
+            {
+                Id = $"tag-room-{id}",
+                Type = OrganizationTagTypeConstants.ResourceRoom,
+            });
         }
 
-        return new LocationResource { Id = id, Name = name, OrganizationTags = tags };
+        return new LocationResource
+        {
+            Id = id,
+            Name = name,
+            OrganizationTags = tags,
+        };
     }
 
     private static Database.Entities.Location MakeLocation(string locationId, IEnumerable<LocationResource> resources)
     {
-        var location = new Database.Entities.Location { Id = locationId, Name = "Test Location" };
+        var location = new Database.Entities.Location
+        {
+            Id = locationId,
+            Name = "Test Location",
+        };
         foreach (var item in resources)
         {
             location.Resources.Add(item);
@@ -43,11 +60,16 @@ public class DualTaggedResourceNotDoubleCountedShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Dual_Tagged_Resource_Is_Counted_In_Desk_Count_Only(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyDeskCountRecordingRepository deskCountRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] DailyDeskCountRecording deskCountRecording,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyDeskCountRecordingRepository deskCountRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        DailyDeskCountRecording deskCountRecording,
         LocationDailyAnalytics sut)
     {
         // Arrange – one resource tagged as both desk AND room
@@ -77,12 +99,18 @@ public class DualTaggedResourceNotDoubleCountedShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Emits_Warning_Log_For_Dual_Tagged_Resource(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyDeskCountRecordingRepository deskCountRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<LocationDailyAnalytics> logger,
-        [Frozen] DailyDeskCountRecording deskCountRecording,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyDeskCountRecordingRepository deskCountRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<LocationDailyAnalytics> logger,
+        [Frozen]
+        DailyDeskCountRecording deskCountRecording,
         LocationDailyAnalytics sut)
     {
         // Arrange
@@ -106,12 +134,18 @@ public class DualTaggedResourceNotDoubleCountedShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Pure_Desk_Resource_Is_Not_Warned(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyDeskCountRecordingRepository deskCountRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<LocationDailyAnalytics> logger,
-        [Frozen] DailyDeskCountRecording deskCountRecording,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyDeskCountRecordingRepository deskCountRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<LocationDailyAnalytics> logger,
+        [Frozen]
+        DailyDeskCountRecording deskCountRecording,
         LocationDailyAnalytics sut)
     {
         // Arrange – resource has only desk tag, no room tag

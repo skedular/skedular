@@ -47,7 +47,7 @@ public class OrganizationAuthorizationService(
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 
@@ -64,7 +64,7 @@ public class OrganizationAuthorizationService(
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 
@@ -86,7 +86,7 @@ public class OrganizationAuthorizationService(
                 OrganizationMemberRoleConstants.Member,
             OrganizationTypeConstants.Marketplace or OrganizationTypeConstants.Host => member.Role is OrganizationMemberRoleConstants.Owner or
                 OrganizationMemberRoleConstants.Administrator,
-            _ => false
+            _ => false,
         };
     }
 
@@ -103,7 +103,7 @@ public class OrganizationAuthorizationService(
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 
@@ -120,7 +120,7 @@ public class OrganizationAuthorizationService(
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 
@@ -132,7 +132,7 @@ public class OrganizationAuthorizationService(
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 
@@ -144,7 +144,7 @@ public class OrganizationAuthorizationService(
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 
@@ -156,7 +156,7 @@ public class OrganizationAuthorizationService(
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 
@@ -177,7 +177,7 @@ public class OrganizationAuthorizationService(
             CanAddBooking = await CanAddBookingAsync(organization.Id, customerId, cancellationToken),
             CanUpdateBooking = await CanUpdateBookingAsync(organization.Id, customerId, cancellationToken),
             CanDeleteBooking = await CanDeleteBookingAsync(organization.Id, customerId, cancellationToken),
-            CanModifyPaymentMethod = await CanModifyPaymentMethodAsync(organization.Id, customerId, cancellationToken)
+            CanModifyPaymentMethod = await CanModifyPaymentMethodAsync(organization.Id, customerId, cancellationToken),
         };
     }
 

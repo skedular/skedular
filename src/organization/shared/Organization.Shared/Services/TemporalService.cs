@@ -38,7 +38,10 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     public async Task StartOrSignalWorkflowRecomputeOrganizationBookingDerivedStateAsync(
@@ -51,7 +54,10 @@ public class TemporalService(
             TaskQueue = temporalConfiguration.Worker.TaskQueue,
             RetryPolicy = null,
             IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-            Rpc = new RpcOptions { CancellationToken = cancellationToken }
+            Rpc = new RpcOptions
+            {
+                CancellationToken = cancellationToken,
+            },
         };
 
         workflowOptions.SignalWithStart((RecomputeOrganizationBookingDerivedState workflow) => workflow.BookingChangedAsync());
@@ -70,7 +76,10 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     public async Task StartWorkflowAddOrganizationStripePaymentMethodAsync(
@@ -83,7 +92,10 @@ public class TemporalService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     public async Task<string> SignalAddOrganizationStripePaymentMethodAndGetResultAsync(
@@ -96,9 +108,18 @@ public class TemporalService(
 
         await handle.SignalAsync(
             workflow => workflow.StripePaymentMethodEventReceivedAsync(args),
-            new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
+            new WorkflowSignalOptions
+            {
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
+            }
         );
 
-        return await handle.GetResultAsync<string>(rpcOptions: new RpcOptions { CancellationToken = cancellationToken });
+        return await handle.GetResultAsync<string>(rpcOptions: new RpcOptions
+        {
+            CancellationToken = cancellationToken,
+        });
     }
 }

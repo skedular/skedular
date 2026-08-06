@@ -314,7 +314,7 @@ public class KafkaConsumeService<TKey, TEvent> : BackgroundService where TKey : 
             {
                 case
                 {
-                    Code: ErrorCode.Local_State
+                    Code: ErrorCode.Local_State,
                 }:
                     // Likely an issue with trying to store an offset to a partition that this consumer isn't managing anymore
                     // Log & Continue.

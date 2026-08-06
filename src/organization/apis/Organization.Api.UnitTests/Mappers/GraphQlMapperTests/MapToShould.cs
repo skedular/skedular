@@ -27,12 +27,12 @@ public class MapToShould
             [
                 OrganizationPatchField.Website,
                 OrganizationPatchField.ContactPhone,
-                OrganizationPatchField.BillingCycle
+                OrganizationPatchField.BillingCycle,
             ],
             Name = ignoredName,
             Website = string.Empty,
             ContactPhone = null,
-            BillingCycle = OrganizationBillingCycle.Monthly
+            BillingCycle = OrganizationBillingCycle.Monthly,
         };
 
         var result = sut.MapTo(input);
@@ -57,8 +57,13 @@ public class MapToShould
             Type = OrganizationType.Private,
             OrganizationOfferings =
             [
-                new OrganizationOffering { Id = "offering-1", Code = OfferingCode.FreeTierV1, Currency = Currency.Usd }
-            ]
+                new OrganizationOffering
+                {
+                    Id = "offering-1",
+                    Code = OfferingCode.FreeTierV1,
+                    Currency = Currency.Usd,
+                },
+            ],
         };
 
         var result = sut.MapTo(organization);
@@ -66,7 +71,7 @@ public class MapToShould
         result.ShouldNotBeNull();
         result.AvailableOfferings.Select(item => item.Code).ShouldBe([
             OfferingCode.PayAsYouGoV1.ToOfferingCode(),
-            OfferingCode.EnterpriseCustomV1.ToOfferingCode()
+            OfferingCode.EnterpriseCustomV1.ToOfferingCode(),
         ]);
     }
 
@@ -81,8 +86,13 @@ public class MapToShould
             Type = OrganizationType.Marketplace,
             OrganizationOfferings =
             [
-                new OrganizationOffering { Id = "offering-1", Code = OfferingCode.SpacesFreeTierV1, Currency = Currency.Usd }
-            ]
+                new OrganizationOffering
+                {
+                    Id = "offering-1",
+                    Code = OfferingCode.SpacesFreeTierV1,
+                    Currency = Currency.Usd,
+                },
+            ],
         };
 
         var result = sut.MapTo(organization);
@@ -91,7 +101,7 @@ public class MapToShould
         result.AvailableOfferings.Select(item => item.Code).ShouldBe([
             OfferingCode.SpacesGrowthV1.ToOfferingCode(),
             OfferingCode.SpacesBusinessV1.ToOfferingCode(),
-            OfferingCode.SpacesContactUsV1.ToOfferingCode()
+            OfferingCode.SpacesContactUsV1.ToOfferingCode(),
         ]);
     }
 
@@ -104,11 +114,14 @@ public class MapToShould
             Id = "offering-free",
             Code = OfferingCode.SpacesFreeTierV1,
             Currency = Currency.Usd.ToCurrency(),
-            DeletedAt = new DateTimeOffset(2026, 6, 22, 20, 55, 0, TimeSpan.Zero)
+            DeletedAt = new DateTimeOffset(2026, 6, 22, 20, 55, 0, TimeSpan.Zero),
         };
         var activeGrowthOffering = new Shared.Database.Entities.OrganizationOffering
         {
-            Id = "offering-growth", Code = OfferingCode.SpacesGrowthV1, Currency = Currency.Usd.ToCurrency(), PurchasedTeamCapacity = 500
+            Id = "offering-growth",
+            Code = OfferingCode.SpacesGrowthV1,
+            Currency = Currency.Usd.ToCurrency(),
+            PurchasedTeamCapacity = 500,
         };
         var organization = new Shared.Database.Entities.Organization
         {
@@ -116,7 +129,7 @@ public class MapToShould
             Name = "Marketplace organization",
             Type = OrganizationTypeConstants.Marketplace,
             BillingCycle = OrganizationBillingCycleConstants.Monthly,
-            OrganizationOfferings = [deletedFreeOffering, activeGrowthOffering]
+            OrganizationOfferings = [deletedFreeOffering, activeGrowthOffering],
         };
         deletedFreeOffering.Organization = organization;
         activeGrowthOffering.Organization = organization;

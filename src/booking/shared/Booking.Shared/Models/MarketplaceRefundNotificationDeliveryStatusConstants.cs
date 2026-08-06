@@ -17,6 +17,6 @@ public static class MarketplaceRefundNotificationDeliveryStatusExtensions
             MarketplaceRefundNotificationDeliveryStatusConstants.Pending => MarketplaceRefundNotificationDeliveryStatus.Pending,
             MarketplaceRefundNotificationDeliveryStatusConstants.Sent => MarketplaceRefundNotificationDeliveryStatus.Sent,
             MarketplaceRefundNotificationDeliveryStatusConstants.Failed => MarketplaceRefundNotificationDeliveryStatus.Failed,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown marketplace refund notification delivery status.")
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown marketplace refund notification delivery status."),
         };
 }

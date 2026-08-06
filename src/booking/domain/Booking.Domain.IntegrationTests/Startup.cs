@@ -31,7 +31,10 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        var environment = new HostingEnvironment { EnvironmentName = Environments.Production };
+        var environment = new HostingEnvironment
+        {
+            EnvironmentName = Environments.Production,
+        };
 
 #pragma warning disable VSTHRD104
 #pragma warning disable VSTHRD002
@@ -70,7 +73,10 @@ public class Startup
                 new InfrastructureTestService.InfrastructureTestServiceClient(infrastructureSharedGrpcChannel));
 
         var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>() ??
-                                   new BookingConfiguration { ApiKey = "XXX" };
+                                   new BookingConfiguration
+                                   {
+                                       ApiKey = "XXX",
+                                   };
         services.AddSingleton(bookingConfiguration);
 
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
@@ -106,7 +112,10 @@ public class Startup
                 builder => builder.AddHttpMessageHandler<TestBearerTokenHandler>())
             .ConfigureWebSocketClient(webSocketClient =>
             {
-                var wsUri = new UriBuilder(bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri()) { Scheme = "ws" }.Uri;
+                var wsUri = new UriBuilder(bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri())
+                {
+                    Scheme = "ws",
+                }.Uri;
                 webSocketClient.Uri = wsUri;
             });
     }

@@ -32,7 +32,11 @@ public class CachedCustomerService(
                 async ct => await repositoryFactory.CustomerRepository.AnyByVerifiableTokenUntrackedAsync(verifiableToken, ct)
                     ? true
                     : throw new CustomerNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(30), LocalCacheExpiration = TimeSpan.FromDays(7) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromDays(30),
+                    LocalCacheExpiration = TimeSpan.FromDays(7),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (CustomerNotFound)

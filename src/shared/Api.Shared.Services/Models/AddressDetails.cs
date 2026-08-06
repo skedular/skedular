@@ -25,7 +25,7 @@ public static class AddressDetailsExtensions
                     src.City,
                     src.Province,
                     src.Zipcode,
-                    src.Country
+                    src.Country,
                 }.Where(item => !string.IsNullOrWhiteSpace(item))
                 .Aggregate(string.Empty, (current, item) => $"{current}{Environment.NewLine}{item}").Trim();
 
@@ -38,7 +38,7 @@ public static class AddressDetailsExtensions
                     src.City,
                     src.Province,
                     src.Zipcode,
-                    src.Country
+                    src.Country,
                 }.Where(item => !string.IsNullOrWhiteSpace(item))
                 .Aggregate(string.Empty, (current, item) => $"{current}, {item}").Trim().Trim(',');
     }

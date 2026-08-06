@@ -12,15 +12,29 @@ public class GetActiveTermsOfUseShouldAsync
     [Theory]
     [AutoFakeItEasyData]
     public async Task Cache_The_Mapped_Active_Terms_Of_Use(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ITermsOfUseRepository termsOfUseRepository,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ITermsOfUseRepository termsOfUseRepository,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        TimeProvider timeProvider,
         CancellationToken cancellationToken)
     {
         using var memoryCache = new MemoryCache(new MemoryCacheOptions());
-        var entity = new TermsOfUse { Id = "terms-1", Active = true, Terms = "terms" };
-        var mapped = new Shared.Models.TermsOfUse { Id = entity.Id, Active = true, Terms = entity.Terms };
+        var entity = new TermsOfUse
+        {
+            Id = "terms-1",
+            Active = true,
+            Terms = "terms",
+        };
+        var mapped = new Shared.Models.TermsOfUse
+        {
+            Id = entity.Id,
+            Active = true,
+            Terms = entity.Terms,
+        };
 
         A.CallTo(() => repositoryFactory.TermsOfUseRepository).Returns(termsOfUseRepository);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 4, 19, 10, 0, 0, TimeSpan.Zero));
@@ -40,14 +54,22 @@ public class GetActiveTermsOfUseShouldAsync
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_The_Active_Terms_Entity(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ITermsOfUseRepository termsOfUseRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ITermsOfUseRepository termsOfUseRepository,
         IGraphQlMapper graphQlMapper,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         CancellationToken cancellationToken)
     {
         using var memoryCache = new MemoryCache(new MemoryCacheOptions());
-        var entity = new TermsOfUse { Id = "terms-1", Active = true, Terms = "terms" };
+        var entity = new TermsOfUse
+        {
+            Id = "terms-1",
+            Active = true,
+            Terms = "terms",
+        };
 
         A.CallTo(() => repositoryFactory.TermsOfUseRepository).Returns(termsOfUseRepository);
         A.CallTo(() => termsOfUseRepository.GetActiveAsync(cancellationToken)).Returns(entity);

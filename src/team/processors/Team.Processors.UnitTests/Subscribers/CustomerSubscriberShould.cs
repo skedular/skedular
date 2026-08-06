@@ -18,20 +18,42 @@ public class CustomerSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Publish_Provisioned_After_Fresh_CustomerUpserted(
-        [Frozen] IEventMapper eventMapper,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ICustomerReadinessPublisher customerReadinessPublisher,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IEventMapper eventMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ICustomerReadinessPublisher customerReadinessPublisher,
+        [Frozen]
+        EventContext eventContext,
         CustomerSubscriber sut,
         string customerId,
         string correlationId,
         CancellationToken cancellationToken)
     {
-        var model = new CustomerModel { Id = customerId, EventRaisedAt = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero), Identities = [] };
-        var existing = new CustomerEntity { Id = customerId, EventRaisedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero) };
-        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.CustomerUpserted, CorrelationId = correlationId } };
+        var model = new CustomerModel
+        {
+            Id = customerId,
+            EventRaisedAt = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero),
+            Identities = [],
+        };
+        var existing = new CustomerEntity
+        {
+            Id = customerId,
+            EventRaisedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+        };
+        var @event = new Event
+        {
+            Metadata = new ValueMetadata
+            {
+                Type = ValueType.CustomerUpserted,
+                CorrelationId = correlationId,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -49,18 +71,38 @@ public class CustomerSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Not_Publish_After_Stale_CustomerUpserted(
-        [Frozen] IEventMapper eventMapper,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] ICustomerReadinessPublisher customerReadinessPublisher,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IEventMapper eventMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        ICustomerReadinessPublisher customerReadinessPublisher,
+        [Frozen]
+        EventContext eventContext,
         CustomerSubscriber sut,
         string customerId,
         CancellationToken cancellationToken)
     {
-        var model = new CustomerModel { Id = customerId, EventRaisedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), Identities = [] };
-        var existing = new CustomerEntity { Id = customerId, EventRaisedAt = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero) };
-        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.CustomerUpserted } };
+        var model = new CustomerModel
+        {
+            Id = customerId,
+            EventRaisedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            Identities = [],
+        };
+        var existing = new CustomerEntity
+        {
+            Id = customerId,
+            EventRaisedAt = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero),
+        };
+        var @event = new Event
+        {
+            Metadata = new ValueMetadata
+            {
+                Type = ValueType.CustomerUpserted,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => eventMapper.MapTo(@event)).Returns(model);
@@ -76,19 +118,40 @@ public class CustomerSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Not_Publish_After_CustomerDeleted(
-        [Frozen] IEventMapper eventMapper,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ICustomerReadinessPublisher customerReadinessPublisher,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IEventMapper eventMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ICustomerReadinessPublisher customerReadinessPublisher,
+        [Frozen]
+        EventContext eventContext,
         CustomerSubscriber sut,
         string customerId,
         CancellationToken cancellationToken)
     {
-        var model = new CustomerModel { Id = customerId, EventRaisedAt = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero), Identities = [] };
-        var existing = new CustomerEntity { Id = customerId, EventRaisedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero) };
-        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.CustomerDeleted } };
+        var model = new CustomerModel
+        {
+            Id = customerId,
+            EventRaisedAt = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero),
+            Identities = [],
+        };
+        var existing = new CustomerEntity
+        {
+            Id = customerId,
+            EventRaisedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+        };
+        var @event = new Event
+        {
+            Metadata = new ValueMetadata
+            {
+                Type = ValueType.CustomerDeleted,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);

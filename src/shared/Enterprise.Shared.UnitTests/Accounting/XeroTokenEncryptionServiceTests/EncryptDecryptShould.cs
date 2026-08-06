@@ -10,8 +10,10 @@ public class EncryptDecryptShould
     [Theory]
     [AutoFakeItEasyData]
     public void Encrypt_delegates_to_algorithm(
-        [Frozen] IStringEncryptionAlgorithm algorithm,
-        [Frozen] XeroConfiguration xeroConfiguration,
+        [Frozen]
+        IStringEncryptionAlgorithm algorithm,
+        [Frozen]
+        XeroConfiguration xeroConfiguration,
         XeroTokenEncryptionService sut,
         string plainText,
         string expectedCipherText)
@@ -24,8 +26,10 @@ public class EncryptDecryptShould
     [Theory]
     [AutoFakeItEasyData]
     public void Decrypt_delegates_to_algorithm(
-        [Frozen] IStringEncryptionAlgorithm algorithm,
-        [Frozen] XeroConfiguration xeroConfiguration,
+        [Frozen]
+        IStringEncryptionAlgorithm algorithm,
+        [Frozen]
+        XeroConfiguration xeroConfiguration,
         XeroTokenEncryptionService sut,
         string cipherText,
         string expectedPlainText)

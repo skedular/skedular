@@ -250,18 +250,22 @@ public class UpdateOrganizationShould
             Website = website,
             Type = OrganizationTypeConstants.Private,
             BillingCycle = OrganizationBillingCycleConstants.Monthly,
-            InvoiceDueInDays = 7
+            InvoiceDueInDays = 7,
         });
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, cancellationToken);
 
-        repositoryFactory.IdentityRepository.Add(new Identity { Id = identityId, Customer = customer });
+        repositoryFactory.IdentityRepository.Add(new Identity
+        {
+            Id = identityId,
+            Customer = customer,
+        });
         repositoryFactory.OrganizationMemberRepository.Add(new OrganizationMember
         {
             Id = memberId,
             Organization = organization,
             Customer = customer,
             Role = OrganizationMemberRoleConstants.Owner,
-            Status = OrganizationMemberStatusConstants.Active
+            Status = OrganizationMemberStatusConstants.Active,
         });
         repositoryFactory.OrganizationOfferingRepository.Add(new OrganizationOffering
         {
@@ -271,7 +275,7 @@ public class UpdateOrganizationShould
             Start = timeProvider.GetUtcNow().AddDays(-1),
             End = timeProvider.GetUtcNow().AddDays(1),
             AutoRenew = true,
-            UnitPrice = OfferingCode.FreeTierV1.GetOffering().UnitPrice
+            UnitPrice = OfferingCode.FreeTierV1.GetOffering().UnitPrice,
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

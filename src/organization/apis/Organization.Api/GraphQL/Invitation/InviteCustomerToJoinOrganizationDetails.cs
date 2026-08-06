@@ -10,12 +10,23 @@ namespace Organization.Api.GraphQL.Invitation;
 [GraphQLName("InviteCustomerToJoinOrganizationDetails")]
 public class InviteCustomerToJoinOrganizationDetails : Node
 {
-    [GraphQLName("email")] public string? Email { get; set; }
-    [GraphQLName("status")] public OrganizationInvitationStatusDetails Status { get; set; } = new();
-    [GraphQLName("role")] public OrganizationMemberRole Role { get; set; }
-    [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
-    [GraphQLName("createdById")] public string CreatedById { get; set; } = string.Empty;
-    [GraphQLName("inviteeId")] public string? InviteeId { get; set; }
+    [GraphQLName("email")]
+    public string? Email { get; set; }
+
+    [GraphQLName("status")]
+    public OrganizationInvitationStatusDetails Status { get; set; } = new();
+
+    [GraphQLName("role")]
+    public OrganizationMemberRole Role { get; set; }
+
+    [GraphQLName("organization")]
+    public OrganizationDetails Organization { get; set; } = new();
+
+    [GraphQLName("createdById")]
+    public string CreatedById { get; set; } = string.Empty;
+
+    [GraphQLName("inviteeId")]
+    public string? InviteeId { get; set; }
 }
 
 [ObjectType<InviteCustomerToJoinOrganizationDetails>]

@@ -24,14 +24,20 @@ public class OrganizationService(
     IMemoryCache memoryCache)
     : IOrganizationService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<Organization> AdminGetAsync(string organizationId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(organizationId),
             async _ => grpcMapper.MapTo(
                 await organizationServiceClient.Admin_GetAsync(
-                    new Admin_GetInput { Id = organizationId },
+                    new Admin_GetInput
+                    {
+                        Id = organizationId,
+                    },
                     organizationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -53,7 +59,7 @@ public class OrganizationService(
                     TermsOfUseId = activeTermsOfUse.Id,
                     Type = OrganizationType.Private,
                     BillingCycle = OrganizationBillingCycle.Monthly,
-                    InvoiceDueInDays = 7
+                    InvoiceDueInDays = 7,
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken));
@@ -68,7 +74,10 @@ public class OrganizationService(
             CreateKeyById(organizationId),
             async _ => grpcMapper.MapTo(
                 await organizationServiceClient.GetAsync(
-                    new GetInput { Id = organizationId },
+                    new GetInput
+                    {
+                        Id = organizationId,
+                    },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;

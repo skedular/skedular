@@ -15,13 +15,20 @@ public class MarketplaceExternalRefundReconciliationsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Expose_Organization_Scoped_Filtered_Connection(
-        [Frozen] IMarketplaceRefundOperationsService operationsService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IMarketplaceRefundOperationsService operationsService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken)
     {
-        var organization = new OrganizationEntity { Id = "org-1" };
+        var organization = new OrganizationEntity
+        {
+            Id = "org-1",
+        };
         var reconciliation = new ReconciliationModel
         {
             Id = "reconciliation-1",
@@ -30,7 +37,7 @@ public class MarketplaceExternalRefundReconciliationsShould
             ExternalRefundId = "po_1",
             Status = MarketplaceExternalRefundReconciliationStatus.Open,
             FirstSeenAt = TimeProvider.System.GetUtcNow(),
-            LastSeenAt = TimeProvider.System.GetUtcNow()
+            LastSeenAt = TimeProvider.System.GetUtcNow(),
         };
         var pagination = new PaginationInputParam("after-1", 10, null, null);
         var providerEdge = (reconciliation, "cursor-1");

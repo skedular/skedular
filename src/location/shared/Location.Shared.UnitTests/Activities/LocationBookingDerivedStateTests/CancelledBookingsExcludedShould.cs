@@ -34,24 +34,45 @@ public class CancelledBookingsExcludedShould
 
     private static BookingConnection BookingConnectionWith(params BookingEdge[] edges)
     {
-        var conn = new BookingConnection { PageInfo = new PageInfo { HasNextPage = false, EndCursor = string.Empty } };
+        var conn = new BookingConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = false,
+                EndCursor = string.Empty,
+            },
+        };
         conn.Edges.AddRange(edges);
         return conn;
     }
 
-    private static BookingEdge MakeEdge(DateTimeOffset from) => new() { Node = new BookingProto { From = Timestamp.FromDateTimeOffset(from) } };
+    private static BookingEdge MakeEdge(DateTimeOffset from) => new()
+    {
+        Node = new BookingProto
+        {
+            From = Timestamp.FromDateTimeOffset(from),
+        },
+    };
 
     [Theory]
     [AutoFakeItEasyData]
     public async Task Records_Correct_Daily_Count_For_Server_Returned_Bookings(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] ILocationBookingRecordingRepository locationBookingRecordingRepository,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedLocationService cachedLocationService)
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        ILocationBookingRecordingRepository locationBookingRecordingRepository,
+        [Frozen]
+        BookingConfiguration bookingConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedLocationService cachedLocationService)
     {
         var sut = new LocationBookingDerivedState(
             repositoryFactory,
@@ -64,7 +85,10 @@ public class CancelledBookingsExcludedShould
         const string LocationId = "loc-test";
         var location = new LocationEntity
         {
-            Id = LocationId, Name = "Test Office", OrganizationId = "org-test", Type = LocationTypeConstants.Private
+            Id = LocationId,
+            Name = "Test Office",
+            OrganizationId = "org-test",
+            Type = LocationTypeConstants.Private,
         };
 
         var counter = 0;
@@ -112,14 +136,22 @@ public class CancelledBookingsExcludedShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Records_Zero_Bookings_When_Server_Returns_None(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] ILocationBookingRecordingRepository locationBookingRecordingRepository,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedLocationService cachedLocationService)
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        ILocationBookingRecordingRepository locationBookingRecordingRepository,
+        [Frozen]
+        BookingConfiguration bookingConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedLocationService cachedLocationService)
     {
         var sut = new LocationBookingDerivedState(
             repositoryFactory,
@@ -132,7 +164,10 @@ public class CancelledBookingsExcludedShould
         const string LocationId = "loc-empty";
         var location = new LocationEntity
         {
-            Id = LocationId, Name = "Empty Office", OrganizationId = "org-empty", Type = LocationTypeConstants.Private
+            Id = LocationId,
+            Name = "Empty Office",
+            OrganizationId = "org-empty",
+            Type = LocationTypeConstants.Private,
         };
 
         var counter = 0;
@@ -155,7 +190,14 @@ public class CancelledBookingsExcludedShould
                 A<IReadOnlyList<string>>._, A<CancellationToken>._))
             .Returns(Array.Empty<LocationResource>());
 
-        var emptyResponse = new BookingConnection { PageInfo = new PageInfo { HasNextPage = false, EndCursor = string.Empty } };
+        var emptyResponse = new BookingConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = false,
+                EndCursor = string.Empty,
+            },
+        };
 
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetPaginatedBookingsInput, BookingConnection>>._,

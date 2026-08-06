@@ -13,10 +13,14 @@ public class RootSubscription
     public async IAsyncEnumerable<ResourceDayViewConnection> OnResourceAvailabilityChanged(
         string subscriptionKey,
         ResourceAvailabilityFilterInput filter,
-        [Service] ITopicEventReceiver topicEventReceiver,
-        [Service] IServiceProvider serviceProvider,
-        [Service] ILogger<RootSubscription> logger,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
+        [Service]
+        ITopicEventReceiver topicEventReceiver,
+        [Service]
+        IServiceProvider serviceProvider,
+        [Service]
+        ILogger<RootSubscription> logger,
+        [EnumeratorCancellation]
+        CancellationToken cancellationToken)
     {
         logger.LogDebug("ResourceAvailability subscription established. SubscriptionKey={SubscriptionKey}", subscriptionKey);
 
@@ -57,7 +61,7 @@ public class RootSubscription
             FloorId = filter.FloorId,
             ZoneId = filter.ZoneId,
             ResourceType = filter.ResourceType,
-            Statuses = filter.Statuses.ToList()
+            Statuses = filter.Statuses.ToList(),
         };
 
         var result = await service.GetAsync(domainFilter, [], [], cancellationToken);
@@ -90,10 +94,10 @@ public class RootSubscription
                     IsCheckedIn = bookingWindow.IsCheckedIn,
                     BookedByName = bookingWindow.BookedByName,
                     BookedByUserId = bookingWindow.BookedByUserId,
-                    Notes = bookingWindow.Notes
-                })
+                    Notes = bookingWindow.Notes,
+                }),
             }),
-            SubscriptionKey = result.SubscriptionKey
+            SubscriptionKey = result.SubscriptionKey,
         };
     }
 }

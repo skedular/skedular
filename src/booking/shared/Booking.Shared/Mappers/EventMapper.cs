@@ -36,15 +36,15 @@ public class EventMapper : IEventMapper
                 BookingCategory.TravelingForWork => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             Channel = src.Channel switch
             {
                 BookingChannel.Private => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingChannel.Private,
                 BookingChannel.Marketplace => Api.Shared.Clients.Events.Skedular.Booking.V1.BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
-            }
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
+            },
         };
 
         if (src.CreatedByCustomer is not null)
@@ -77,10 +77,17 @@ public class EventMapper : IEventMapper
         return booking;
     }
 
-    private static IEnumerable<Resource> MapTo(IEnumerable<ResourceCustomersPair> src) => src.Select(item => new Resource { Id = item.Resource.Id });
+    private static IEnumerable<Resource> MapTo(IEnumerable<ResourceCustomersPair> src) => src.Select(item => new Resource
+    {
+        Id = item.Resource.Id,
+    });
 
     private static IEnumerable<BookingSchedule> MapTo(IEnumerable<Api.Shared.Services.Models.BookingSchedule> src) => src.Select(MapTo);
 
     private static BookingSchedule MapTo(Api.Shared.Services.Models.BookingSchedule src) =>
-        new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
+        new()
+        {
+            From = src.From.ToTimestamp(),
+            Until = src.Until.ToTimestamp(),
+        };
 }

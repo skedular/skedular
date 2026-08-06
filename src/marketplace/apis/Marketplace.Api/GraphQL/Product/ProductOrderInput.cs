@@ -7,6 +7,9 @@ namespace Marketplace.Api.GraphQL.Product;
 [GraphQLName("ProductOrderInput")]
 public class ProductOrderInput
 {
-    [GraphQLName("direction")] public OrderDirection Direction { get; set; }
-    [GraphQLName("field")] public ProductOrderField Field { get; set; }
+    [GraphQLName("direction")]
+    public OrderDirection Direction { get; set; }
+
+    [GraphQLName("field")]
+    public ProductOrderField Field { get; set; }
 }

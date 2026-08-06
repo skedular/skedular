@@ -16,20 +16,41 @@ public class GetByIdAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Mapped_Refund_When_Id_Exists(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         MarketplaceRefundReadService sut,
         CancellationToken cancellationToken)
     {
-        var refund = new MarketplaceRefund { Id = "refund-1", OrganizationId = "org-1" };
-        var refundEvent = new MarketplaceRefundEvent { Id = "refund-event-1", MarketplaceRefundId = "refund-1" };
-        var mappedRefund = new MarketplaceRefundDetails { Id = "refund-1" };
-        var mappedRefundEvent = new MarketplaceRefundEventDetails { Id = "refund-event-1" };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            OrganizationId = "org-1",
+        };
+        var refundEvent = new MarketplaceRefundEvent
+        {
+            Id = "refund-event-1",
+            MarketplaceRefundId = "refund-1",
+        };
+        var mappedRefund = new MarketplaceRefundDetails
+        {
+            Id = "refund-1",
+        };
+        var mappedRefundEvent = new MarketplaceRefundEventDetails
+        {
+            Id = "refund-event-1",
+        };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundEventRepository).Returns(marketplaceRefundEventRepository);
@@ -54,14 +75,22 @@ public class GetByIdAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_When_Customer_Cannot_Modify_Payment_Method(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         MarketplaceRefundReadService sut,
         CancellationToken cancellationToken)
     {
-        var refund = new MarketplaceRefund { Id = "refund-1", OrganizationId = "org-1" };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            OrganizationId = "org-1",
+        };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => marketplaceRefundRepository.GetByIdAsync("refund-1", cancellationToken)).Returns(refund);

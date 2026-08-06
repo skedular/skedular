@@ -6,7 +6,8 @@ namespace Location.Api.GraphQL.Analytics;
 [GraphQLName("LocationAnalytics")]
 public class LocationAnalytics
 {
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
 
     [GraphQLName("desksOccupancyPercentage")]
     public IEnumerable<DesksOccupancyPercentage> DesksOccupancyPercentage { get; set; } = [];
@@ -14,7 +15,8 @@ public class LocationAnalytics
     [GraphQLName("roomsOccupancyPercentage")]
     public IEnumerable<RoomsOccupancyPercentage> RoomsOccupancyPercentage { get; set; } = [];
 
-    [GraphQLName("dailyBookingsTotals")] public IEnumerable<LocationDailyBookingsTotal> DailyBookingsTotals { get; set; } = [];
+    [GraphQLName("dailyBookingsTotals")]
+    public IEnumerable<LocationDailyBookingsTotal> DailyBookingsTotals { get; set; } = [];
 
     [GraphQLName("resourceAvailabilitySnapshots")]
     public IEnumerable<ResourceAvailabilityDailySnapshot> ResourceAvailabilitySnapshots { get; set; } = [];

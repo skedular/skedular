@@ -24,7 +24,7 @@ public class EntityMapper : IEntityMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Type = src.Type.ToNullableCustomerType()
+                Type = src.Type.ToNullableCustomerType(),
             };
 
     public CdnFile MapTo(Database.Entities.CdnFile src) =>
@@ -43,7 +43,7 @@ public class EntityMapper : IEntityMapper
             ThumbnailContentType = src.ThumbnailContentType,
             ThumbnailWidth = src.ThumbnailWidth,
             ThumbnailHeight = src.ThumbnailHeight,
-            UploadedBy = MapTo(src.UploadedBy)!
+            UploadedBy = MapTo(src.UploadedBy)!,
         };
 
     public PrivateFile MapTo(Database.Entities.PrivateFile src) =>
@@ -60,6 +60,6 @@ public class EntityMapper : IEntityMapper
             ThumbnailContentType = src.ThumbnailContentType,
             ThumbnailWidth = src.ThumbnailWidth,
             ThumbnailHeight = src.ThumbnailHeight,
-            UploadedBy = MapTo(src.UploadedBy)!
+            UploadedBy = MapTo(src.UploadedBy)!,
         };
 }

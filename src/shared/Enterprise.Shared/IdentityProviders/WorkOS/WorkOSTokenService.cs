@@ -60,7 +60,7 @@ public class WorkOSTokenService(
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKeys = jws.Keys,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
                 });
 
             var sub = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
@@ -75,7 +75,11 @@ public class WorkOSTokenService(
                 logger.LogDebug("Customer not found locally. Fetching WorkOS profile");
 
                 var userProfile = await workOsClient.MakeAPIRequest<Profile>(
-                    new WorkOSRequest { Method = HttpMethod.Get, Path = $"/user_management/users/{sub}" },
+                    new WorkOSRequest
+                    {
+                        Method = HttpMethod.Get,
+                        Path = $"/user_management/users/{sub}",
+                    },
                     cancellationToken);
 
                 context.SetEmail(userProfile.Email);

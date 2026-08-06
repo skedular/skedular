@@ -24,6 +24,9 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 }

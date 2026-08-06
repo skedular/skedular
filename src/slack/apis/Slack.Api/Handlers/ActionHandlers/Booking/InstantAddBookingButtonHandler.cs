@@ -56,11 +56,29 @@ public class InstantAddBookingButtonHandler(
                     From = context.From,
                     Until = context.Until,
                     Category = BookingCategory.WorkingFromOffice,
-                    InvolvedCustomers = [new Customer { Id = customerId }],
-                    InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }],
+                    InvolvedCustomers =
+                    [
+                        new Customer
+                        {
+                            Id = customerId,
+                        },
+                    ],
+                    InvolvedOrganizations =
+                    [
+                        new Organization
+                        {
+                            Id = workspace.Organization.Id,
+                        },
+                    ],
                     InvolvedTeams = string.IsNullOrWhiteSpace(context.TeamId.ToSafeString())
                         ? []
-                        : [new Shared.Models.Team { Id = context.TeamId.ToSafeString() }]
+                        :
+                        [
+                            new Shared.Models.Team
+                            {
+                                Id = context.TeamId.ToSafeString(),
+                            },
+                        ],
                 },
                 cancellationToken);
 
@@ -117,28 +135,66 @@ public class InstantAddBookingButtonHandler(
                     From = context.From,
                     Until = context.Until,
                     Category = BookingCategory.WorkingFromOffice,
-                    InvolvedCustomers = [new Customer { Id = customerId }],
-                    InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }],
+                    InvolvedCustomers =
+                    [
+                        new Customer
+                        {
+                            Id = customerId,
+                        },
+                    ],
+                    InvolvedOrganizations =
+                    [
+                        new Organization
+                        {
+                            Id = workspace.Organization.Id,
+                        },
+                    ],
                     InvolvedTeams = string.IsNullOrWhiteSpace(context.TeamId.ToSafeString())
                         ? []
-                        : [new Shared.Models.Team { Id = context.TeamId.ToSafeString() }]
+                        :
+                        [
+                            new Shared.Models.Team
+                            {
+                                Id = context.TeamId.ToSafeString(),
+                            },
+                        ],
                 },
                 cancellationToken);
 
-            var blocks = new List<Block> { new SectionBlock { Text = "Your booking on is now confirmed.".ToMarkdown() } };
+            var blocks = new List<Block>
+            {
+                new SectionBlock
+                {
+                    Text = "Your booking on is now confirmed.".ToMarkdown(),
+                },
+            };
             var bookingCardBlocks = bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, context.PageContext);
             blocks.AddRange(bookingCardBlocks);
-            var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
+            var message = new Message
+            {
+                Channel = request.Channel.Id,
+                Blocks = blocks,
+            };
             await slackApiClient.Chat.PostEphemeral(workspaceMember.Id, message, cancellationToken);
         }
         else
         {
-            var blocks = new List<Block> { new SectionBlock { Text = "Found a matching booking".ToMarkdown() } };
+            var blocks = new List<Block>
+            {
+                new SectionBlock
+                {
+                    Text = "Found a matching booking".ToMarkdown(),
+                },
+            };
             var booking = bookingConnection.Edges.Select(item => item.Node).First();
             var bookingCardBlocks = bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, context.PageContext);
             blocks.AddRange(bookingCardBlocks);
 
-            var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
+            var message = new Message
+            {
+                Channel = request.Channel.Id,
+                Blocks = blocks,
+            };
             await slackApiClient.Chat.PostEphemeral(workspaceMember.Id, message, cancellationToken);
         }
     }

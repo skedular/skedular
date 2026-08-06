@@ -27,5 +27,8 @@ public record SpacesQuotaDecision(
 public static class SpacesQuotaDecisionExtensions
 {
     public static SpacesQuotaDecision WithUpgradePlans(this SpacesQuotaDecision decision, IReadOnlyList<SpacesQuotaUpgradePlan> upgradePlans) =>
-        decision with { UpgradePlans = upgradePlans };
+        decision with
+        {
+            UpgradePlans = upgradePlans,
+        };
 }

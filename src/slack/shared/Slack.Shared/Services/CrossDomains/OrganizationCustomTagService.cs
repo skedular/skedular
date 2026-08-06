@@ -48,14 +48,20 @@ public class OrganizationCustomTagService(
     IGrpcMapper grpcMapper,
     IMemoryCache memoryCache) : IOrganizationCustomTagService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<OrganizationCustomTag> AdminGetAsync(string customTagId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(customTagId),
             async _ => grpcMapper.MapTo(
                 await organizationTagsServiceClient.Admin_GetCustomTagAsync(
-                    new Admin_GetCustomTagInput { Id = customTagId },
+                    new Admin_GetCustomTagInput
+                    {
+                        Id = customTagId,
+                    },
                     organizationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -73,7 +79,7 @@ public class OrganizationCustomTagService(
                     Name = organizationCustomTag.Name,
                     Description = organizationCustomTag.Description,
                     Color = organizationCustomTag.Color,
-                    OrganizationId = organizationCustomTag.Organization.Id
+                    OrganizationId = organizationCustomTag.Organization.Id,
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -96,7 +102,12 @@ public class OrganizationCustomTagService(
                     Name = organizationCustomTag.Name,
                     Description = organizationCustomTag.Description,
                     Color = organizationCustomTag.Color,
-                    FieldsToUpdate = { TagPatchField.Name, TagPatchField.Description, TagPatchField.Color }
+                    FieldsToUpdate =
+                    {
+                        TagPatchField.Name,
+                        TagPatchField.Description,
+                        TagPatchField.Color,
+                    },
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -109,7 +120,10 @@ public class OrganizationCustomTagService(
     public async Task RemoveAsync(string workspaceMemberId, string customTagId, CancellationToken cancellationToken)
     {
         await organizationTagsServiceClient.RemoveCustomTagAsync(
-            new RemoveCustomTagInput { Id = customTagId },
+            new RemoveCustomTagInput
+            {
+                Id = customTagId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
 
@@ -123,7 +137,10 @@ public class OrganizationCustomTagService(
             CreateKeyById(customTagId),
             async _ => grpcMapper.MapTo(
                 await organizationTagsServiceClient.GetCustomTagAsync(
-                    new GetCustomTagInput { Id = customTagId },
+                    new GetCustomTagInput
+                    {
+                        Id = customTagId,
+                    },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -142,12 +159,16 @@ public class OrganizationCustomTagService(
                     After = string.Empty,
                     Before = string.Empty,
                     Last = ((int?)null).ToNullInt(),
-                    Where = new CustomTagWhereInput { OrganizationId = organizationId }
+                    Where = new CustomTagWhereInput
+                    {
+                        OrganizationId = organizationId,
+                    },
                 };
 
                 getPaginatedCustomTagsInput.OrderBy.Add(new CustomTagOrderInput
                 {
-                    Direction = OrderDirection.Ascending, Field = CustomTagOrderField.Name
+                    Direction = OrderDirection.Ascending,
+                    Field = CustomTagOrderField.Name,
                 });
 
                 var connection = await organizationTagsServiceClient.GetPaginatedCustomTagsAsync(
@@ -162,10 +183,10 @@ public class OrganizationCustomTagService(
                         StartCursor = connection.PageInfo.StartCursor,
                         EndCursor = connection.PageInfo.EndCursor,
                         HasNextPage = connection.PageInfo.HasNextPage,
-                        HasPreviousPage = connection.PageInfo.HasPreviousPage
+                        HasPreviousPage = connection.PageInfo.HasPreviousPage,
                     },
                     TotalCount = connection.TotalCount,
-                    Edges = connection.Edges.Select(item => new OrganizationCustomTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
+                    Edges = connection.Edges.Select(item => new OrganizationCustomTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList(),
                 };
 
                 Cache(result.Edges.Select(item => item.Node).ToList());
@@ -191,10 +212,18 @@ public class OrganizationCustomTagService(
             After = after.ToSafeString(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new CustomTagWhereInput { OrganizationId = organizationId, NameContains = nameContains.ToSafeString() }
+            Where = new CustomTagWhereInput
+            {
+                OrganizationId = organizationId,
+                NameContains = nameContains.ToSafeString(),
+            },
         };
 
-        getPaginatedCustomTagsInput.OrderBy.Add(new CustomTagOrderInput { Direction = OrderDirection.Ascending, Field = CustomTagOrderField.Name });
+        getPaginatedCustomTagsInput.OrderBy.Add(new CustomTagOrderInput
+        {
+            Direction = OrderDirection.Ascending,
+            Field = CustomTagOrderField.Name,
+        });
 
         var connection = await organizationTagsServiceClient.GetPaginatedCustomTagsAsync(
             getPaginatedCustomTagsInput,
@@ -208,10 +237,10 @@ public class OrganizationCustomTagService(
                 StartCursor = connection.PageInfo.StartCursor,
                 EndCursor = connection.PageInfo.EndCursor,
                 HasNextPage = connection.PageInfo.HasNextPage,
-                HasPreviousPage = connection.PageInfo.HasPreviousPage
+                HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges.Select(item => new OrganizationCustomTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
+            Edges = connection.Edges.Select(item => new OrganizationCustomTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList(),
         };
 
         Cache(result.Edges.Select(item => item.Node).ToList());

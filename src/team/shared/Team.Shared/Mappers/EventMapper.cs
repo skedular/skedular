@@ -26,7 +26,7 @@ public class EventMapper : IEventMapper
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
             OrganizationId = src.Organization.Id,
-            PrimaryLocationId = src.PrimaryLocation is null ? string.Empty : src.PrimaryLocation.Id
+            PrimaryLocationId = src.PrimaryLocation is null ? string.Empty : src.PrimaryLocation.Id,
         };
 
         team.Members.AddRange(src.TeamMembers.Select(item => new TeamMember
@@ -39,14 +39,14 @@ public class EventMapper : IEventMapper
                 TeamMemberRole.Administrator => Role.Administrator,
                 TeamMemberRole.Member => Role.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
-                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
             },
             Status = item.Status switch
             {
                 TeamMemberStatus.Active => Status.Active,
                 TeamMemberStatus.Inactive => Status.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
-                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
             },
             OrganizationMember = item.OrganizationMember is null
                 ? null
@@ -54,8 +54,8 @@ public class EventMapper : IEventMapper
                 {
                     OrganizationMemberId = item.OrganizationMember.Id,
                     CustomerId = item.OrganizationMember.Customer.Id,
-                    OrganizationId = item.OrganizationMember.Organization.Id
-                }
+                    OrganizationId = item.OrganizationMember.Organization.Id,
+                },
         }));
 
         team.FeatureImages.AddRange(MapTo(src.FeatureImages));
@@ -67,8 +67,19 @@ public class EventMapper : IEventMapper
         src.Select(MapTo);
 
     private static CdnImageFile MapTo(Api.Shared.Services.Models.CdnImageFile src) =>
-        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+        new()
+        {
+            Original = MapTo(src.Original),
+            Thumbnail = MapTo(src.Thumbnail),
+        };
 
     private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
-        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
+        src is null
+            ? null
+            : new CdnFile
+            {
+                Url = src.Url.ToSafeString(),
+                Height = src.Height.ToNullInt(),
+                Width = src.Width.ToNullInt(),
+            };
 }

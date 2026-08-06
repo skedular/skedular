@@ -24,8 +24,15 @@ public class UploadAndGetShould
         var tempDir = CreateTempDir();
         try
         {
-            var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { FileServerFilePath = tempDir, FileEndpoint = "files" };
+            var config = new ApplicationConfiguration
+            {
+                ApiBaseDomain = new Uri("https://example.com"),
+            };
+            var fileStorageConfig = new FileStorageConfiguration
+            {
+                FileServerFilePath = tempDir,
+                FileEndpoint = "files",
+            };
             var sut = new LocalFileService(config, fileStorageConfig, logger);
             var content = "image content"u8.ToArray();
             using var stream = new MemoryStream(content);
@@ -54,8 +61,15 @@ public class UploadAndGetShould
         var tempDir = CreateTempDir();
         try
         {
-            var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { FileServerFilePath = tempDir, FileEndpoint = "files" };
+            var config = new ApplicationConfiguration
+            {
+                ApiBaseDomain = new Uri("https://example.com"),
+            };
+            var fileStorageConfig = new FileStorageConfiguration
+            {
+                FileServerFilePath = tempDir,
+                FileEndpoint = "files",
+            };
             var sut = new LocalFileService(config, fileStorageConfig, logger);
             using var stream = new MemoryStream("data"u8.ToArray());
 
@@ -79,8 +93,15 @@ public class UploadAndGetShould
         var tempDir = CreateTempDir();
         try
         {
-            var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { FileServerFilePath = tempDir, FileEndpoint = "files" };
+            var config = new ApplicationConfiguration
+            {
+                ApiBaseDomain = new Uri("https://example.com"),
+            };
+            var fileStorageConfig = new FileStorageConfiguration
+            {
+                FileServerFilePath = tempDir,
+                FileEndpoint = "files",
+            };
             var sut = new LocalFileService(config, fileStorageConfig, logger);
 
             var (exists, contentType, bytes) = await sut.GetAsync(missingFileName, cancellationToken);
@@ -105,8 +126,15 @@ public class UploadAndGetShould
         var tempDir = CreateTempDir();
         try
         {
-            var config = new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") };
-            var fileStorageConfig = new FileStorageConfiguration { FileServerFilePath = tempDir, FileEndpoint = "files" };
+            var config = new ApplicationConfiguration
+            {
+                ApiBaseDomain = new Uri("https://example.com"),
+            };
+            var fileStorageConfig = new FileStorageConfiguration
+            {
+                FileServerFilePath = tempDir,
+                FileEndpoint = "files",
+            };
             var sut = new LocalFileService(config, fileStorageConfig, logger);
             var fileName = baseName + ".unknownext123";
             await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), "x"u8.ToArray(), cancellationToken);

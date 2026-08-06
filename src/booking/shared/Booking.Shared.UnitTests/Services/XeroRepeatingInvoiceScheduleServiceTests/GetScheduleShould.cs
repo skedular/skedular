@@ -17,13 +17,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
             TotalAmount = 600m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.SixMonths }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.SixMonths,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Fortnightly);
@@ -43,13 +47,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 12, 31, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 12, 31, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
             TotalAmount = 1200m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Yearly }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Yearly,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Weekly);
@@ -69,13 +77,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 4, 30, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 4, 30, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
             TotalAmount = 100m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Weekly }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Weekly,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
@@ -95,13 +107,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 12, 31, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 12, 31, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
             TotalAmount = 1200m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Yearly }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Yearly,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Weekly);
@@ -120,13 +136,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 6, 30, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 6, 30, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
             TotalAmount = 300m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Quarterly }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Quarterly,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Weekly);
@@ -146,13 +166,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 4, 14, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 4, 14, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
             TotalAmount = 140m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Fortnightly }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Fortnightly,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
@@ -171,13 +195,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 5, 31, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 5, 31, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
             TotalAmount = 200m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.TwoMonths }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.TwoMonths,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
@@ -197,13 +225,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 7, 31, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 7, 31, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
             TotalAmount = 400m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.FourMonths }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.FourMonths,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
@@ -223,13 +255,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 8, 31, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 8, 31, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
             TotalAmount = 500m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.FiveMonths }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.FiveMonths,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
@@ -249,13 +285,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
             TotalAmount = 600m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.SixMonths }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.SixMonths,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
@@ -275,13 +315,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 12, 31, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 12, 31, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
             TotalAmount = 1200m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Yearly }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Yearly,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Weekly);
@@ -299,12 +343,18 @@ public class GetScheduleShould
         string pricingId)
     {
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
-        var recurringBooking = new RecurringBooking { StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero) };
+        var recurringBooking = new RecurringBooking
+        {
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+        };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
             TotalAmount = 100m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Yearly }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Yearly,
+            },
         };
 
         Should.Throw<ArgumentOutOfRangeException>(() => sut.GetSchedule(recurringBooking, marketplaceBooking, (OrganizationBillingCycle)999));
@@ -318,13 +368,17 @@ public class GetScheduleShould
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
             BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
             TotalAmount = 58m,
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Daily }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Daily,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);

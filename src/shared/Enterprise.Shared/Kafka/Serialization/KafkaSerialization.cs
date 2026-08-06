@@ -40,7 +40,7 @@ public static class KafkaSerialization
         typeof(string),
         typeof(float),
         typeof(double),
-        typeof(byte[])
+        typeof(byte[]),
     ];
 
     public static bool CanSerializeNatively<T>() => NativelyAvailableSerializers.Contains(typeof(T));

@@ -13,18 +13,20 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<LocationPayload> AddLocationPhysicalAddressAsync(
         AddLocationPhysicalAddressInput input,
-        [Service] ILocationPhysicalAddressService organizationPhysicalAddressService,
+        [Service]
+        ILocationPhysicalAddressService organizationPhysicalAddressService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = graphQlMapper.MapTo(await organizationPhysicalAddressService.AddAsync(graphQlMapper.MapTo(input), cancellationToken))!
+            Location = graphQlMapper.MapTo(await organizationPhysicalAddressService.AddAsync(graphQlMapper.MapTo(input), cancellationToken))!,
         };
 
     [UseResolverScope]
     public async Task<LocationPayload> UpdateLocationPhysicalAddressAsync(
         UpdateLocationPhysicalAddressInput input,
-        [Service] ILocationPhysicalAddressService organizationPhysicalAddressService,
+        [Service]
+        ILocationPhysicalAddressService organizationPhysicalAddressService,
         CancellationToken cancellationToken) =>
         new()
         {
@@ -32,6 +34,6 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             Location = graphQlMapper.MapTo(
                 await organizationPhysicalAddressService.UpdateAsync(
                     new LocationPhysicalAddressPatchRequest(graphQlMapper.MapTo(input), input.FieldsToUpdate),
-                    cancellationToken))!
+                    cancellationToken))!,
         };
 }

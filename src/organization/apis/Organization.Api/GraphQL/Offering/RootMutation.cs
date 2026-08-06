@@ -12,7 +12,8 @@ public class RootMutation
     [UseResolverScope]
     public async Task<UpdateOrganizationOfferingPayload> UpdateOrganizationOfferingAsync(
         UpdateOrganizationOfferingInput input,
-        [Service] IOrganizationOfferingService organizationOfferingService,
+        [Service]
+        IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)
     {
         await organizationOfferingService.UpdateOfferingPatchAsync(
@@ -22,16 +23,23 @@ public class RootMutation
                 input.FieldsToUpdate,
                 string.IsNullOrWhiteSpace(input.OfferingCode) ? null : input.OfferingCode.ToOfferingCode()),
             cancellationToken);
-        return new UpdateOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
+        return new UpdateOrganizationOfferingPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+        };
     }
 
     [UseResolverScope]
     public async Task<CancelOrganizationOfferingPayload> CancelOrganizationOfferingAsync(
         CancelOrganizationOfferingInput input,
-        [Service] IOrganizationOfferingService organizationOfferingService,
+        [Service]
+        IOrganizationOfferingService organizationOfferingService,
         CancellationToken cancellationToken)
     {
         await organizationOfferingService.CancelOfferingAsync(input.OrganizationId, input.OrganizationCustomDomain, cancellationToken);
-        return new CancelOrganizationOfferingPayload { ClientMutationId = input.ClientMutationId };
+        return new CancelOrganizationOfferingPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+        };
     }
 }

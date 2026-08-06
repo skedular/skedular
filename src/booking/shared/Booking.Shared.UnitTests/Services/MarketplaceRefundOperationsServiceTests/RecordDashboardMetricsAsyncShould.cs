@@ -10,8 +10,10 @@ public class RecordDashboardMetricsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Read_The_Repository_Backend_Snapshot(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
         MarketplaceRefundOperationsService sut,
         DateTimeOffset now,
         CancellationToken cancellationToken)
@@ -30,8 +32,10 @@ public class RecordDashboardMetricsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Publish_The_Repository_Snapshot_Values_To_The_Gauges(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
         MarketplaceRefundOperationsService sut,
         DateTimeOffset now,
         CancellationToken cancellationToken)
@@ -77,7 +81,7 @@ public class RecordDashboardMetricsAsyncShould
             new MarketplaceRefundOperationsMetric("STRIPE", "ProviderPending", "org-1", 2),
             new MarketplaceRefundOperationsMetric("STRIPE", "Processing", "org-1", 3),
             new MarketplaceRefundOperationsMetric("XERO", "Failed", "org-2", 4),
-            new MarketplaceRefundOperationsMetric("STRIPE", "ReconciliationRequired", "org-3", 5)
+            new MarketplaceRefundOperationsMetric("STRIPE", "ReconciliationRequired", "org-3", 5),
         ],
         [new MarketplaceRefundOperationsMetric("XERO", "Approved", "org-2", 6)],
         [new MarketplaceRefundOperationsMetric("none", "NoRefundDecision", "org-4", 7)]);

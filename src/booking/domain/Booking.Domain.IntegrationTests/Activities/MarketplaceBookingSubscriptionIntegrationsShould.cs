@@ -34,7 +34,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould(IRepositoryFactory
             Until = baseDate.AddHours(1),
             Category = BookingCategory.WorkingFromCoworkingSpace.ToBookingCategory(),
             Channel = BookingChannel.Marketplace.ToBookingChannel(),
-            Schedules = []
+            Schedules = [],
         });
 
         // Two separate occurrence-level failures for the same recurring booking / subscription.
@@ -47,7 +47,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould(IRepositoryFactory
             Category = MarketplaceBookingFailureCategoryConstants.AvailabilityConflict,
             Scope = MarketplaceBookingFailureScopeConstants.RecurringOccurrence,
             FinalizedAt = baseDate.AddDays(1),
-            CustomerAction = MarketplaceBookingFailureCustomerActionConstants.ReviewSubscription
+            CustomerAction = MarketplaceBookingFailureCustomerActionConstants.ReviewSubscription,
         });
         repositoryFactory.MarketplaceBookingFailureRepository.Add(new MarketplaceBookingFailure
         {
@@ -58,7 +58,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould(IRepositoryFactory
             Category = MarketplaceBookingFailureCategoryConstants.AvailabilityConflict,
             Scope = MarketplaceBookingFailureScopeConstants.RecurringOccurrence,
             FinalizedAt = baseDate.AddDays(2),
-            CustomerAction = MarketplaceBookingFailureCustomerActionConstants.ReviewSubscription
+            CustomerAction = MarketplaceBookingFailureCustomerActionConstants.ReviewSubscription,
         });
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 

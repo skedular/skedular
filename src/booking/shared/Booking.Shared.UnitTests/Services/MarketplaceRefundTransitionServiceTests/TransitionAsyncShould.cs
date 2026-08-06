@@ -14,13 +14,20 @@ public class TransitionAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Publish_GraphQl_Update_For_Payout_Failure_Transition(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IMarketplaceRefundEventService refundEventService,
-        [Frozen] IMarketplaceRefundNotificationService notificationService,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IMarketplaceRefundEventService refundEventService,
+        [Frozen]
+        IMarketplaceRefundNotificationService notificationService,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundTransitionService sut,
         CancellationToken cancellationToken)
     {
@@ -29,7 +36,7 @@ public class TransitionAsyncShould
             Id = "refund-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "booking-1",
-            Status = MarketplaceRefundStatusConstants.Processing
+            Status = MarketplaceRefundStatusConstants.Processing,
         };
         var now = new DateTimeOffset(2026, 7, 29, 10, 0, 0, TimeSpan.Zero);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);

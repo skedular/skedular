@@ -121,7 +121,11 @@ public class MarketplaceRefundConfiguration : IEntityTypeConfiguration<Marketpla
         builder.Property(item => item.StripeChargeId).HasMaxLength(Constants.MaxRefundStripeChargeIdLength);
         builder.Property(item => item.StripePaymentIntentId).HasMaxLength(Constants.MaxRefundStripePaymentIntentIdLength);
         builder.Property(item => item.ReconciliationLeaseOwner).HasMaxLength(Constants.MaxRefundLeaseOwnerLength);
-        builder.HasIndex(item => new { item.ReconciliationLeaseExpiresAt, item.Status });
+        builder.HasIndex(item => new
+        {
+            item.ReconciliationLeaseExpiresAt,
+            item.Status,
+        });
 
         builder.HasOne(item => item.Organization).WithMany().HasForeignKey(item => item.OrganizationId);
         builder.HasOne(item => item.RequestedByCustomer).WithMany().HasForeignKey(item => item.RequestedByCustomerId);
@@ -130,11 +134,29 @@ public class MarketplaceRefundConfiguration : IEntityTypeConfiguration<Marketpla
 
         builder.HasIndex(item => item.OrganizationId);
         builder.HasIndex(item => item.Status);
-        builder.HasIndex(item => new { item.OrganizationId, item.LocalEntityType, item.LocalEntityId });
-        builder.HasIndex(item => new { item.AccountingProvider, item.ExternalRefundId }).IsUnique();
-        builder.HasIndex(item => new { item.PaymentProvider, item.ExternalPaymentRefundId }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.OrganizationId,
+            item.LocalEntityType,
+            item.LocalEntityId,
+        });
+        builder.HasIndex(item => new
+        {
+            item.AccountingProvider,
+            item.ExternalRefundId,
+        }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.PaymentProvider,
+            item.ExternalPaymentRefundId,
+        }).IsUnique();
         builder.HasIndex(item => item.IdempotencyKey).IsUnique();
-        builder.HasIndex(item => new { item.LocalEntityType, item.LocalEntityId, item.RefundKind })
+        builder.HasIndex(item => new
+            {
+                item.LocalEntityType,
+                item.LocalEntityId,
+                item.RefundKind,
+            })
             .IsUnique()
             .HasFilter(
                 $"\"{nameof(MarketplaceRefund.RefundKind)}\" = 'Cancellation' AND \"{nameof(MarketplaceRefund.Status)}\" NOT IN ('Completed', 'Failed', 'Rejected', 'Cancelled')")

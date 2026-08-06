@@ -17,7 +17,10 @@ public class OrganizationInternalPublisher(ApplicationConfiguration applicationC
 {
     public async Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken)
     {
-        var key = new Key { StripeConnectAccountWebhookKey = id };
+        var key = new Key
+        {
+            StripeConnectAccountWebhookKey = id,
+        };
         var @event = new Event
         {
             Metadata = Event.NewMetadata(
@@ -25,7 +28,7 @@ public class OrganizationInternalPublisher(ApplicationConfiguration applicationC
                 applicationConfiguration.AppSource,
                 Type.StripeConnectAccountWebhookEventReceived,
                 context.GetCorrelationId()),
-            StripeConnectAccountWebhookEventPayload = payload
+            StripeConnectAccountWebhookEventPayload = payload,
         };
 
         await publisher.PublishAsync(key, @event, cancellationToken);

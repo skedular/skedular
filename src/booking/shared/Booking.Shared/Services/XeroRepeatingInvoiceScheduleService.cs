@@ -74,7 +74,7 @@ public class XeroRepeatingInvoiceScheduleService(IRecurringInvoiceBillingSchedul
                 Schedule.UnitEnum.MONTHLY,
                 12,
                 billingDefinition.InvoiceAmount),
-            _ => null
+            _ => null,
         };
     }
 }

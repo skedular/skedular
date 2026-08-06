@@ -12,7 +12,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<LocationPayload> ClaimLocationOwnershipAsync(
         ClaimLocationOwnershipInput input,
-        [Service] ILocationOwnershipService locationOwnershipService,
+        [Service]
+        ILocationOwnershipService locationOwnershipService,
         CancellationToken cancellationToken) =>
         new()
         {
@@ -21,6 +22,6 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
                 input.UniqueClaimCode,
                 input.OrganizationId,
                 input.OrganizationCustomDomain,
-                cancellationToken))!
+                cancellationToken))!,
         };
 }

@@ -17,10 +17,14 @@ public class DoesTenantExistShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_False_When_There_Is_No_Tenant_In_Context(
-        [Frozen] IContext context,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder dbTransactionBuilder,
-        [Frozen] IHttpContextAccessor httpContextAccessor,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder dbTransactionBuilder,
+        [Frozen]
+        IHttpContextAccessor httpContextAccessor,
         IRandomHelper randomHelper,
         IAzureTenantOnboardingService azureTenantOnboardingService,
         ITemporalOutboxService temporalOutboxService,
@@ -52,11 +56,16 @@ public class DoesTenantExistShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Cache_Positive_Tenant_Existence_Lookups(
-        [Frozen] IContext context,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAzureTenantRepository azureTenantRepository,
-        [Frozen] IDbTransactionBuilder dbTransactionBuilder,
-        [Frozen] IHttpContextAccessor httpContextAccessor,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAzureTenantRepository azureTenantRepository,
+        [Frozen]
+        IDbTransactionBuilder dbTransactionBuilder,
+        [Frozen]
+        IHttpContextAccessor httpContextAccessor,
         IRandomHelper randomHelper,
         IAzureTenantOnboardingService azureTenantOnboardingService,
         ITemporalOutboxService temporalOutboxService,

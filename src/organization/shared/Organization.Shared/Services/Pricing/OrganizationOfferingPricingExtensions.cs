@@ -79,7 +79,7 @@ public static class OrganizationOfferingPricingExtensions
             {
                 0 => totalCost,
                 100 => 0,
-                var discountPercentage => totalCost * (100 - discountPercentage) / 100
+                var discountPercentage => totalCost * (100 - discountPercentage) / 100,
             };
         }
     }
@@ -97,7 +97,7 @@ public static class OrganizationOfferingPricingExtensions
             {
                 _ when offeringCode.IsSpacesOffering() => PricingCatalogConstants.CurrentSpacesCatalogVersion,
                 _ when offeringCode.IsHostOffering() => PricingCatalogConstants.CurrentHostCatalogVersion,
-                _ => PricingCatalogConstants.CurrentTeamsCatalogVersion
+                _ => PricingCatalogConstants.CurrentTeamsCatalogVersion,
             };
 
         private bool IsSpacesOffering() =>

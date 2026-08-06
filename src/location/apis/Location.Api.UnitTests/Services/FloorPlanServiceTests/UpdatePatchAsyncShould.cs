@@ -16,25 +16,55 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Authorization_Rejection_And_Rethrow(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IFloorPlanRepository floorPlanRepository,
-        [Frozen] ICachedLocationService cachedLocationService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ILogger<FloorPlanService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IFloorPlanRepository floorPlanRepository,
+        [Frozen]
+        ICachedLocationService cachedLocationService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ILogger<FloorPlanService> logger,
         FloorPlanService sut,
         ILocationRepository locationRepository,
         CancellationToken cancellationToken)
     {
-        var locationModel = new Shared.Models.Location { Id = "location-1", Organization = new Organization { Id = "org-1" } };
+        var locationModel = new Shared.Models.Location
+        {
+            Id = "location-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
+        };
         var locationEntity = new Shared.Database.Entities.Location
         {
-            Id = "location-1", OrganizationId = "org-1", Organization = new Shared.Database.Entities.Organization { Id = "org-1" }
+            Id = "location-1",
+            OrganizationId = "org-1",
+            Organization = new Shared.Database.Entities.Organization
+            {
+                Id = "org-1",
+            },
         };
-        var floorPlanEntity = new FloorPlan { Id = "fp-1", Location = locationEntity };
+        var floorPlanEntity = new FloorPlan
+        {
+            Id = "fp-1",
+            Location = locationEntity,
+        };
         var request = new FloorPlanPatchRequest(
-            new Shared.Models.FloorPlan { Id = "fp-1", Name = "Updated Floor", Location = locationModel },
-            new HashSet<FloorPlanPatchField> { FloorPlanPatchField.Name });
+            new Shared.Models.FloorPlan
+            {
+                Id = "fp-1",
+                Name = "Updated Floor",
+                Location = locationModel,
+            },
+            new HashSet<FloorPlanPatchField>
+            {
+                FloorPlanPatchField.Name,
+            });
 
         A.CallTo(() => repositoryFactory.FloorPlanRepository).Returns(floorPlanRepository);
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
@@ -56,15 +86,29 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Error_And_Rethrow_On_General_Failure(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IFloorPlanRepository floorPlanRepository,
-        [Frozen] ILogger<FloorPlanService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IFloorPlanRepository floorPlanRepository,
+        [Frozen]
+        ILogger<FloorPlanService> logger,
         FloorPlanService sut,
         CancellationToken cancellationToken)
     {
         var request = new FloorPlanPatchRequest(
-            new Shared.Models.FloorPlan { Id = "fp-1", Name = "Updated Floor", Location = new Shared.Models.Location { Id = "location-1" } },
-            new HashSet<FloorPlanPatchField> { FloorPlanPatchField.Name });
+            new Shared.Models.FloorPlan
+            {
+                Id = "fp-1",
+                Name = "Updated Floor",
+                Location = new Shared.Models.Location
+                {
+                    Id = "location-1",
+                },
+            },
+            new HashSet<FloorPlanPatchField>
+            {
+                FloorPlanPatchField.Name,
+            });
 
         A.CallTo(() => repositoryFactory.FloorPlanRepository).Returns(floorPlanRepository);
         A.CallTo(() => floorPlanRepository.GetByIdAsync("fp-1", cancellationToken))
@@ -81,15 +125,29 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Autosave_Started(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IFloorPlanRepository floorPlanRepository,
-        [Frozen] ILogger<FloorPlanService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IFloorPlanRepository floorPlanRepository,
+        [Frozen]
+        ILogger<FloorPlanService> logger,
         FloorPlanService sut,
         CancellationToken cancellationToken)
     {
         var request = new FloorPlanPatchRequest(
-            new Shared.Models.FloorPlan { Id = "fp-1", Name = "Updated Floor", Location = new Shared.Models.Location { Id = "location-1" } },
-            new HashSet<FloorPlanPatchField> { FloorPlanPatchField.Name });
+            new Shared.Models.FloorPlan
+            {
+                Id = "fp-1",
+                Name = "Updated Floor",
+                Location = new Shared.Models.Location
+                {
+                    Id = "location-1",
+                },
+            },
+            new HashSet<FloorPlanPatchField>
+            {
+                FloorPlanPatchField.Name,
+            });
 
         A.CallTo(() => repositoryFactory.FloorPlanRepository).Returns(floorPlanRepository);
         A.CallTo(() => floorPlanRepository.GetByIdAsync("fp-1", cancellationToken))

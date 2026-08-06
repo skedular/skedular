@@ -21,7 +21,10 @@ public class GraphServiceClientFactory(AzureEntraConfiguration azureEntraOptions
                 tenantId,
                 azureEntraOptions.ClientId,
                 azureEntraOptions.ClientSecret,
-                new ClientSecretCredentialOptions { AuthorityHost = AzureAuthorityHosts.AzurePublicCloud }),
+                new ClientSecretCredentialOptions
+                {
+                    AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+                }),
             ["https://graph.microsoft.com/.default"]);
     }
 }

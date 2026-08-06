@@ -4,7 +4,7 @@ public enum OrganizationMemberRole
 {
     Owner,
     Administrator,
-    Member
+    Member,
 }
 
 public static class OrganizationMemberRoleConstants
@@ -25,7 +25,7 @@ public static class OrganizationMemberRoleExtensions
                 OrganizationMemberRoleConstants.Administrator => OrganizationMemberRole.Administrator,
                 OrganizationMemberRoleConstants.Member => OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -40,7 +40,7 @@ public static class OrganizationMemberRoleExtensions
                     OrganizationMemberRoleConstants.Administrator => OrganizationMemberRole.Administrator,
                     OrganizationMemberRoleConstants.Member => OrganizationMemberRole.Member,
                     _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
                 };
     }
 
@@ -53,7 +53,7 @@ public static class OrganizationMemberRoleExtensions
                 OrganizationMemberRole.Administrator => OrganizationMemberRoleConstants.Administrator,
                 OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToOrganizationMemberRoleName() =>
@@ -63,7 +63,7 @@ public static class OrganizationMemberRoleExtensions
                 OrganizationMemberRole.Administrator => "Administrator",
                 OrganizationMemberRole.Member => "Member",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -78,7 +78,7 @@ public static class OrganizationMemberRoleExtensions
                     OrganizationMemberRole.Administrator => OrganizationMemberRoleConstants.Administrator,
                     OrganizationMemberRole.Member => OrganizationMemberRoleConstants.Member,
                     _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
                 };
     }
 }

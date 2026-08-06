@@ -12,12 +12,22 @@ public class GetOpenExternalRefundsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Open_External_Reconciliation_Records(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
         MarketplaceRefundOperationsService sut,
         CancellationToken cancellationToken)
     {
-        var records = new[] { new MarketplaceExternalRefundReconciliation { Provider = "STRIPE", ExternalRefundId = "po_1", Status = "Open" } };
+        var records = new[]
+        {
+            new MarketplaceExternalRefundReconciliation
+            {
+                Provider = "STRIPE",
+                ExternalRefundId = "po_1",
+                Status = "Open",
+            },
+        };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         var pagination = new PaginationInputParam(null, 25, null, null);
         var edges = records.Select(record => new Edge<MarketplaceExternalRefundReconciliation>(record, "cursor")).ToArray();
@@ -37,8 +47,10 @@ public class GetOpenExternalRefundsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Apply_Default_Page_Size_When_No_Page_Size_Is_Requested(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
         MarketplaceRefundOperationsService sut,
         CancellationToken cancellationToken)
     {

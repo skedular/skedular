@@ -25,41 +25,92 @@ namespace Organization.Api.GraphQL.Organization;
 [Shareable]
 public class OrganizationDetails : Node
 {
-    [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("website")] public string? Website { get; set; }
+    [GraphQLName("customDomain")]
+    public string? CustomDomain { get; set; }
+
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [GraphQLName("website")]
+    public string? Website { get; set; }
 
     [GraphQLName("customerFacingTermsAndConditionsUrl")]
     public string? CustomerFacingTermsAndConditionsUrl { get; set; }
 
-    [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
-    [GraphQLName("type")] public OrganizationTypeDetails Type { get; set; } = new();
-    [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
-    [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }
-    [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
-    [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
+    [GraphQLName("logoUrl")]
+    public string? LogoUrl { get; set; }
+
+    [GraphQLName("type")]
+    public OrganizationTypeDetails Type { get; set; } = new();
+
+    [GraphQLName("agreedToTermsOfUse")]
+    public bool AgreedToTermsOfUse { get; set; }
+
+    [GraphQLName("termsOfUse")]
+    public OrganizationTermsOfUse? TermsOfUse { get; set; }
+
+    [GraphQLName("contactEmail")]
+    public string? ContactEmail { get; set; }
+
+    [GraphQLName("contactPhone")]
+    public string? ContactPhone { get; set; }
 
     [GraphQLName("refundNotificationEmails")]
     public IEnumerable<string> RefundNotificationEmails { get; set; } = [];
 
-    [GraphQLName("isOwnershipVerified")] public bool IsOwnershipVerified { get; set; }
-    [GraphQLName("physicalAddress")] public OrganizationPhysicalAddressDetails? PhysicalAddress { get; set; }
-    [GraphQLName("billingDetails")] public OrganizationBillingDetails? BillingDetails { get; set; }
-    [GraphQLName("availableOfferings")] public IEnumerable<OrganizationOfferingDetails> AvailableOfferings { get; set; } = [];
-    [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; } = new();
-    [GraphQLName("canModify")] public bool CanModify { get; set; }
-    [GraphQLName("canDelete")] public bool CanDelete { get; set; }
-    [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
-    [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
-    [GraphQLName("isMyOnboardingDone")] public bool IsMyOnboardingDone { get; set; }
-    [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
-    [GraphQLName("locationSpaceTypes")] public IEnumerable<OrganizationTagDetails> LocationSpaceTypes { get; set; } = [];
-    [GraphQLName("amenities")] public IEnumerable<OrganizationTagDetails> Amenities { get; set; } = [];
-    [GraphQLName("paymentMethods")] public IEnumerable<OrganizationPaymentMethod> PaymentMethods { get; set; } = [];
-    [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
-    [GraphQLName("taxDetails")] public OrganizationTaxDetails? TaxDetails { get; set; }
-    [GraphQLName("xeroConnection")] public OrganizationXeroConnectionDetails? XeroConnection { get; set; }
-    [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
+    [GraphQLName("isOwnershipVerified")]
+    public bool IsOwnershipVerified { get; set; }
+
+    [GraphQLName("physicalAddress")]
+    public OrganizationPhysicalAddressDetails? PhysicalAddress { get; set; }
+
+    [GraphQLName("billingDetails")]
+    public OrganizationBillingDetails? BillingDetails { get; set; }
+
+    [GraphQLName("availableOfferings")]
+    public IEnumerable<OrganizationOfferingDetails> AvailableOfferings { get; set; } = [];
+
+    [GraphQLName("activeOffering")]
+    public OrganizationActiveOfferingDetails ActiveOffering { get; set; } = new();
+
+    [GraphQLName("canModify")]
+    public bool CanModify { get; set; }
+
+    [GraphQLName("canDelete")]
+    public bool CanDelete { get; set; }
+
+    [GraphQLName("canInvitePeople")]
+    public bool CanInvitePeople { get; set; }
+
+    [GraphQLName("canViewAnalytics")]
+    public bool CanViewAnalytics { get; set; }
+
+    [GraphQLName("isMyOnboardingDone")]
+    public bool IsMyOnboardingDone { get; set; }
+
+    [GraphQLName("resourceTypes")]
+    public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
+
+    [GraphQLName("locationSpaceTypes")]
+    public IEnumerable<OrganizationTagDetails> LocationSpaceTypes { get; set; } = [];
+
+    [GraphQLName("amenities")]
+    public IEnumerable<OrganizationTagDetails> Amenities { get; set; } = [];
+
+    [GraphQLName("paymentMethods")]
+    public IEnumerable<OrganizationPaymentMethod> PaymentMethods { get; set; } = [];
+
+    [GraphQLName("ssoSettings")]
+    public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
+
+    [GraphQLName("taxDetails")]
+    public OrganizationTaxDetails? TaxDetails { get; set; }
+
+    [GraphQLName("xeroConnection")]
+    public OrganizationXeroConnectionDetails? XeroConnection { get; set; }
+
+    [GraphQLName("featureImages")]
+    public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
 
     [GraphQLName("industrySubCategories")]
     public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> IndustrySubCategories { get; set; } = [];
@@ -73,8 +124,11 @@ public class OrganizationDetails : Node
     [GraphQLName("marketplaceListingMetadata")]
     public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty;
 
-    [GraphQLName("billingCycle")] public OrganizationBillingCycleDetails BillingCycle { get; set; } = new();
-    [GraphQLName("invoiceDueInDays")] public int InvoiceDueInDays { get; set; }
+    [GraphQLName("billingCycle")]
+    public OrganizationBillingCycleDetails BillingCycle { get; set; } = new();
+
+    [GraphQLName("invoiceDueInDays")]
+    public int InvoiceDueInDays { get; set; }
 
     [UseResolverScope]
     public async Task<Connection<OrganizationMemberEdge>> MembersAsync(
@@ -83,9 +137,12 @@ public class OrganizationDetails : Node
         string? before, int? last,
         OrganizationMemberWhereInput? where,
         IEnumerable<OrganizationMemberOrderInput>? orderBy,
-        [Parent] OrganizationDetails organization,
-        [Service] IOrganizationMemberService organizationMemberService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Parent]
+        OrganizationDetails organization,
+        [Service]
+        IOrganizationMemberService organizationMemberService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
@@ -101,10 +158,10 @@ public class OrganizationDetails : Node
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
@@ -116,9 +173,12 @@ public class OrganizationDetails : Node
         int? last,
         CustomTagOrganizationTagWhereInput? where,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
-        [Parent] OrganizationDetails organization,
-        [Service] ITagService tagService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Parent]
+        OrganizationDetails organization,
+        [Service]
+        ITagService tagService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
             after,
@@ -143,9 +203,12 @@ public class OrganizationDetails : Node
         int? last,
         ZoneOrganizationTagWhereInput? where,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
-        [Parent] OrganizationDetails organization,
-        [Service] ITagService tagService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Parent]
+        OrganizationDetails organization,
+        [Service]
+        ITagService tagService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
             after,
@@ -170,9 +233,12 @@ public class OrganizationDetails : Node
         int? last,
         ProductTagOrganizationTagWhereInput? where,
         IEnumerable<OrganizationTagOrderInput>? orderBy,
-        [Parent] OrganizationDetails organization,
-        [Service] ITagService tagService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Parent]
+        OrganizationDetails organization,
+        [Service]
+        ITagService tagService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         await OrganizationTagsAsync(
             after,
@@ -193,8 +259,10 @@ public class OrganizationDetails : Node
     public async Task<OrganizationAnalytics> AnalyticsAsync(
         DateTimeOffset from,
         DateTimeOffset until,
-        [Parent] OrganizationDetails organization,
-        [Service] IOrganizationAnalyticsService organizationAnalyticsService,
+        [Parent]
+        OrganizationDetails organization,
+        [Service]
+        IOrganizationAnalyticsService organizationAnalyticsService,
         CancellationToken cancellationToken)
     {
         var organizationAnalytics = await organizationAnalyticsService.GetAnalyticsAsync(
@@ -208,16 +276,20 @@ public class OrganizationDetails : Node
 
     [UseResolverScope]
     public async Task<bool> IsSsoTokenValidAsync(
-        [Parent] OrganizationDetails organization,
-        [Service] IOrganizationSsoService organizationSsoService,
+        [Parent]
+        OrganizationDetails organization,
+        [Service]
+        IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
         await organizationSsoService.IsSsoTokenValidAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
     [UseResolverScope]
     public async Task<string> SsoLoginUrlAsync(
         string redirectUrl,
-        [Parent] OrganizationDetails organization,
-        [Service] IOrganizationSsoService organizationSsoService,
+        [Parent]
+        OrganizationDetails organization,
+        [Service]
+        IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
         await organizationSsoService.SsoLoginAsync(organization.Id, organization.CustomDomain, redirectUrl, cancellationToken);
 
@@ -246,10 +318,10 @@ public class OrganizationDetails : Node
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 }

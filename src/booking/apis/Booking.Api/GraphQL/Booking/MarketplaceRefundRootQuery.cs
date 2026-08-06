@@ -18,24 +18,30 @@ public class MarketplaceRefundRootQuery
     [UseResolverScope]
     public Task<MarketplaceRefundPreviewDetails> MarketplaceBookingRefundPreviewAsync(
         string bookingId,
-        [Service] IMarketplaceRefundPreviewService marketplaceRefundPreviewService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Service]
+        IMarketplaceRefundPreviewService marketplaceRefundPreviewService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         MapPreviewAsync(marketplaceRefundPreviewService.GetByBookingIdAsync(bookingId, cancellationToken), graphQlMapper);
 
     [UseResolverScope]
     public Task<MarketplaceRefundPreviewDetails> MarketplaceBookingSubscriptionRefundPreviewAsync(
         string subscriptionId,
-        [Service] IMarketplaceRefundPreviewService marketplaceRefundPreviewService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Service]
+        IMarketplaceRefundPreviewService marketplaceRefundPreviewService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         MapPreviewAsync(marketplaceRefundPreviewService.GetByMarketplaceBookingSubscriptionIdAsync(subscriptionId, cancellationToken), graphQlMapper);
 
     [UseResolverScope]
     public Task<MarketplaceRefundDetails?> MarketplaceRefundAsync(
         string id,
-        [Service] IMarketplaceRefundReadService marketplaceRefundReadService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Service]
+        IMarketplaceRefundReadService marketplaceRefundReadService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         MapRefundAsync(marketplaceRefundReadService.GetByIdAsync(id, cancellationToken), graphQlMapper);
 
@@ -43,8 +49,10 @@ public class MarketplaceRefundRootQuery
     public async Task<IEnumerable<MarketplaceRefundDetails>> MarketplaceRefundsAsync(
         string organizationCustomDomain,
         IEnumerable<string>? statuses,
-        [Service] IMarketplaceRefundReadService marketplaceRefundReadService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Service]
+        IMarketplaceRefundReadService marketplaceRefundReadService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
         (await marketplaceRefundReadService.GetByOrganizationCustomDomainAsync(organizationCustomDomain, statuses?.ToList(), cancellationToken))
         .Select(graphQlMapper.MapTo).ToList();
@@ -56,8 +64,10 @@ public class MarketplaceRefundRootQuery
         string? before,
         int? last,
         MarketplaceRefundWhereInput where,
-        [Service] IMarketplaceRefundReadService marketplaceRefundReadService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Service]
+        IMarketplaceRefundReadService marketplaceRefundReadService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await marketplaceRefundReadService
@@ -75,10 +85,10 @@ public class MarketplaceRefundRootQuery
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(edge => new MarketplaceRefundEdge(graphQlMapper.MapTo(edge.Node), edge.Cursor)),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
@@ -100,10 +110,14 @@ public class MarketplaceRefundRootQuery
         int? last,
         string? provider,
         string? status,
-        [Service] IMarketplaceRefundOperationsService marketplaceRefundOperationsService,
-        [Service] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Service] ICachedOrganizationService cachedOrganizationService,
-        [Service] ICachedCustomerService cachedCustomerService,
+        [Service]
+        IMarketplaceRefundOperationsService marketplaceRefundOperationsService,
+        [Service]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Service]
+        ICachedOrganizationService cachedOrganizationService,
+        [Service]
+        ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>
         await GetAuthorizedExternalRefundsAsync(organizationCustomDomain, marketplaceRefundOperationsService, organizationAuthorizationService,
             cachedOrganizationService,
@@ -121,8 +135,10 @@ public class MarketplaceRefundRootQuery
         int? last,
         string? provider,
         string? status,
-        [Service] IMarketplaceRefundOperationsService marketplaceRefundOperationsService,
-        [Service] IPlatformOperationsAuthorizationService platformOperationsAuthorizationService,
+        [Service]
+        IMarketplaceRefundOperationsService marketplaceRefundOperationsService,
+        [Service]
+        IPlatformOperationsAuthorizationService platformOperationsAuthorizationService,
         CancellationToken cancellationToken)
     {
         if (!platformOperationsAuthorizationService.IsAuthorized())
@@ -139,7 +155,7 @@ public class MarketplaceRefundRootQuery
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(edge => new MarketplaceExternalRefundReconciliationEdge(
                 new MarketplaceExternalRefundReconciliationDetails
@@ -154,9 +170,9 @@ public class MarketplaceRefundRootQuery
                     LastSeenAt = edge.Node.LastSeenAt,
                     ResolutionReason = edge.Node.ResolutionReason,
                     ResolutionActorCustomerId = edge.Node.ResolutionActorCustomerId,
-                    ResolutionCorrelationId = edge.Node.ResolutionCorrelationId
+                    ResolutionCorrelationId = edge.Node.ResolutionCorrelationId,
                 }, edge.Cursor)),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
@@ -189,7 +205,7 @@ public class MarketplaceRefundRootQuery
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(edge => new MarketplaceExternalRefundReconciliationEdge(
                 new MarketplaceExternalRefundReconciliationDetails
@@ -204,22 +220,34 @@ public class MarketplaceRefundRootQuery
                     LastSeenAt = edge.Node.LastSeenAt,
                     ResolutionReason = edge.Node.ResolutionReason,
                     ResolutionActorCustomerId = edge.Node.ResolutionActorCustomerId,
-                    ResolutionCorrelationId = edge.Node.ResolutionCorrelationId
+                    ResolutionCorrelationId = edge.Node.ResolutionCorrelationId,
                 },
                 edge.Cursor)),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
     public IEnumerable<MarketplaceRefundStatusDetails> MarketplaceRefundStatuses() =>
         Enum.GetValues<MarketplaceRefundStatus>()
-            .Select(status => new MarketplaceRefundStatusDetails { Type = status, Name = status.ToMarketplaceRefundStatusName() });
+            .Select(status => new MarketplaceRefundStatusDetails
+            {
+                Type = status,
+                Name = status.ToMarketplaceRefundStatusName(),
+            });
 
     public IEnumerable<MarketplaceRefundKindDetails> MarketplaceRefundKinds() =>
         Enum.GetValues<MarketplaceRefundKind>()
-            .Select(kind => new MarketplaceRefundKindDetails { Type = kind, Name = kind.ToString() });
+            .Select(kind => new MarketplaceRefundKindDetails
+            {
+                Type = kind,
+                Name = kind.ToString(),
+            });
 
     public IEnumerable<MarketplaceRefundEventTypeDetails> MarketplaceRefundEventTypes() =>
         Enum.GetValues<MarketplaceRefundEventType>()
-            .Select(eventType => new MarketplaceRefundEventTypeDetails { Type = eventType, Name = eventType.ToMarketplaceRefundEventTypeName() });
+            .Select(eventType => new MarketplaceRefundEventTypeDetails
+            {
+                Type = eventType,
+                Name = eventType.ToMarketplaceRefundEventTypeName(),
+            });
 }

@@ -9,7 +9,8 @@ public class ReleaseContextAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Dispose_context_on_release_context_async(
-        [Frozen] IDbContextFactory<DbContext> factory,
+        [Frozen]
+        IDbContextFactory<DbContext> factory,
         FactoryBasedOutboxDbContextAccessor<DbContext> sut,
         CancellationToken cancellationToken)
     {

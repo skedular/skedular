@@ -26,7 +26,7 @@ public static class DayOfWeekExtensions
                 DayOfWeekConstants.Saturday => DayOfWeek.Saturday,
                 DayOfWeekConstants.Sunday => DayOfWeek.Sunday,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -43,7 +43,7 @@ public static class DayOfWeekExtensions
                 DayOfWeek.Saturday => DayOfWeekConstants.Saturday,
                 DayOfWeek.Sunday => DayOfWeekConstants.Sunday,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToDayOfWeekName() =>
@@ -57,7 +57,7 @@ public static class DayOfWeekExtensions
                 DayOfWeek.Saturday => "Saturday",
                 DayOfWeek.Sunday => "Sunday",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

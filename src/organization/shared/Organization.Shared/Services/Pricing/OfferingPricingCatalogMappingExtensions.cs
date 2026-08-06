@@ -19,7 +19,7 @@ public static class OfferingPricingCatalogMappingExtensions
                 OfferingCode.SpacesBusinessV1 => PricingCatalogSubscriptionPlanCode.Business,
                 OfferingCode.SpacesContactUsV1 => PricingCatalogSubscriptionPlanCode.ContactUs,
                 _ => throw new ArgumentOutOfRangeException(nameof(offeringCode), offeringCode,
-                    $"Unexpected value for {nameof(offeringCode)}: {offeringCode}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(offeringCode)}: {offeringCode}. Update enum mapping or caller input."),
             };
     }
 }

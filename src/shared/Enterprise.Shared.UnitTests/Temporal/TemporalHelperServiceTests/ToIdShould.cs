@@ -28,7 +28,10 @@ public class ToIdShould
         string workflowId)
     {
         var sut = new TemporalHelperService(
-            new ApplicationConfiguration { Environment = "   " },
+            new ApplicationConfiguration
+            {
+                Environment = "   ",
+            },
             temporalClient,
             logger);
 
@@ -51,7 +54,10 @@ public class ToIdShould
         }
 
         var sut = new TemporalHelperService(
-            new ApplicationConfiguration { Environment = environment },
+            new ApplicationConfiguration
+            {
+                Environment = environment,
+            },
             temporalClient,
             logger);
 

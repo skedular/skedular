@@ -22,8 +22,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<TeamDetails?> TeamByIdAsync(
-        [ID] string id,
-        [Service] ITeamService teamService,
+        [ID]
+        string id,
+        [Service]
+        ITeamService teamService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await teamService.GetByIdAsync(id, true, cancellationToken));
 
@@ -35,7 +37,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         TeamWhereInput? where,
         IEnumerable<TeamOrderInput>? orderBy,
-        [Service] ITeamService teamService,
+        [Service]
+        ITeamService teamService,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
@@ -56,10 +59,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
@@ -71,7 +74,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         CustomerTeamWhereInput? where,
         IEnumerable<TeamOrderInput>? orderBy,
-        [Service] ITeamService teamService,
+        [Service]
+        ITeamService teamService,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await teamService.GetPaginatedTeamsAsync(
@@ -92,10 +96,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
@@ -103,7 +107,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     public async Task<IEnumerable<TeamDetails>> MyTeamsAsync(
         string? organizationId,
         string? organizationCustomDomain,
-        [Service] ITeamService teamService,
+        [Service]
+        ITeamService teamService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await teamService.GetMyTeamsAsync(organizationId, organizationCustomDomain, cancellationToken));
 }

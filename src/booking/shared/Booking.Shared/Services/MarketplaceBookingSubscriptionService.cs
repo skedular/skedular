@@ -211,6 +211,8 @@ public class MarketplaceBookingSubscriptionService(
             new BookMarketplaceBookingSubscriptionResourcesInput(subscription.Id),
             repositoryFactory.UnitOfWork);
 
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
+            subscriptionEntity, null, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -352,6 +354,8 @@ public class MarketplaceBookingSubscriptionService(
                     existingSubscription.Id,
                     repositoryFactory.UnitOfWork);
 
+                await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
+                    existingSubscription, refund, cancellationToken);
                 await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
 
@@ -365,6 +369,8 @@ public class MarketplaceBookingSubscriptionService(
                 return entityMapper.MapTo(existingSubscription);
             }
 
+            await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
+                existingSubscription, null, cancellationToken);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 
@@ -490,6 +496,6 @@ public class MarketplaceBookingSubscriptionService(
             ProductPricingCadence.SixMonths => startedAt.AddMonths(6),
             ProductPricingCadence.Yearly => startedAt.AddYears(1),
             _ => throw new ArgumentOutOfRangeException(nameof(cadence), cadence,
-                $"Unexpected value for {nameof(cadence)}: {cadence}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(cadence)}: {cadence}. Update enum mapping or caller input."),
         };
 }

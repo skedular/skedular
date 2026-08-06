@@ -18,16 +18,26 @@ public class SetEnterpriseOfferingAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Use_Spaces_Catalog_For_Existing_Marketplace_Organization_Regardless_Of_Offering_Code(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationOfferingRepository organizationOfferingRepository,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationOfferingRepository organizationOfferingRepository,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
         OrganizationOfferingService sut,
         CancellationToken cancellationToken)
     {
@@ -39,7 +49,7 @@ public class SetEnterpriseOfferingAsyncShould
             Currency = Currency.Usd.ToCurrency(),
             Start = now.AddMonths(-1),
             End = now,
-            AutoRenew = true
+            AutoRenew = true,
         };
         var organization = new Shared.Database.Entities.Organization
         {
@@ -48,11 +58,21 @@ public class SetEnterpriseOfferingAsyncShould
             CustomDomain = "co-work",
             Type = OrganizationTypeConstants.Marketplace,
             OrganizationOfferings = [existingOffering],
-            OrganizationStripePaymentMethods = [new OrganizationStripePaymentMethod { Id = "payment-method-1" }]
+            OrganizationStripePaymentMethods =
+            [
+                new OrganizationStripePaymentMethod
+                {
+                    Id = "payment-method-1",
+                },
+            ],
         };
         existingOffering.Organization = organization;
         var stripeUrl = new Uri("https://example.test/authorize");
-        var mappedOrganization = new Shared.Models.Organization { Id = organization.Id, Name = organization.Name };
+        var mappedOrganization = new Shared.Models.Organization
+        {
+            Id = organization.Id,
+            Name = organization.Name,
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationOfferingRepository).Returns(organizationOfferingRepository);
@@ -96,9 +116,12 @@ public class SetEnterpriseOfferingAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Chargeable_Offering_When_Organization_Has_No_Payment_Method(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
         OrganizationOfferingService sut,
         CancellationToken cancellationToken)
     {
@@ -108,7 +131,7 @@ public class SetEnterpriseOfferingAsyncShould
             Name = "Co Work",
             CustomDomain = "co-work",
             Type = OrganizationTypeConstants.Marketplace,
-            OrganizationOfferings = []
+            OrganizationOfferings = [],
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -133,13 +156,20 @@ public class SetEnterpriseOfferingAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Store_Temporary_Discount_For_Paid_Catalog_Offering(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationOfferingRepository organizationOfferingRepository,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationOfferingRepository organizationOfferingRepository,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationOfferingService sut,
         CancellationToken cancellationToken)
     {
@@ -151,7 +181,7 @@ public class SetEnterpriseOfferingAsyncShould
             Currency = Currency.Usd.ToCurrency(),
             Start = now.AddMonths(-1),
             End = now,
-            AutoRenew = true
+            AutoRenew = true,
         };
         var organization = new Shared.Database.Entities.Organization
         {
@@ -160,7 +190,13 @@ public class SetEnterpriseOfferingAsyncShould
             CustomDomain = "co-work",
             Type = OrganizationTypeConstants.Marketplace,
             OrganizationOfferings = [existingOffering],
-            OrganizationStripePaymentMethods = [new OrganizationStripePaymentMethod { Id = "payment-method-1" }]
+            OrganizationStripePaymentMethods =
+            [
+                new OrganizationStripePaymentMethod
+                {
+                    Id = "payment-method-1",
+                },
+            ],
         };
         existingOffering.Organization = organization;
 
@@ -193,13 +229,20 @@ public class SetEnterpriseOfferingAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Allow_Discount_For_Custom_Offering(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationOfferingRepository organizationOfferingRepository,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationOfferingRepository organizationOfferingRepository,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationOfferingService sut,
         CancellationToken cancellationToken)
     {
@@ -211,7 +254,7 @@ public class SetEnterpriseOfferingAsyncShould
             Currency = Currency.Usd.ToCurrency(),
             Start = now.AddMonths(-1),
             End = now,
-            AutoRenew = true
+            AutoRenew = true,
         };
         var organization = new Shared.Database.Entities.Organization
         {
@@ -220,7 +263,13 @@ public class SetEnterpriseOfferingAsyncShould
             CustomDomain = "org-1",
             Type = OrganizationTypeConstants.Private,
             OrganizationOfferings = [existingOffering],
-            OrganizationStripePaymentMethods = [new OrganizationStripePaymentMethod { Id = "payment-method-1" }]
+            OrganizationStripePaymentMethods =
+            [
+                new OrganizationStripePaymentMethod
+                {
+                    Id = "payment-method-1",
+                },
+            ],
         };
         existingOffering.Organization = organization;
 

@@ -49,6 +49,7 @@ public static class Extensions
                 .AddScoped<ICancellationDecisionService, CancellationDecisionService>()
                 .AddScoped<IMarketplaceBookingFailureReadService, MarketplaceBookingFailureReadService>()
                 .AddScoped<IMarketplaceBookingSubscriptionService, MarketplaceBookingSubscriptionService>()
+                .AddScoped<IMarketplacePurchaseHistoryService, MarketplacePurchaseHistoryService>()
                 .AddScoped<IResourceService, ResourceService>()
                 .AddScoped<IGraphQlTopicEventSender, GraphQlTopicEventSender>()
                 .AddScoped<IWorkaroundService, WorkaroundService>();

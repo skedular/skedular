@@ -27,7 +27,11 @@ public class GenerateLocationResourcesSlots
             {
                 StartToCloseTimeout = TimeSpan.FromSeconds(30),
                 TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                RetryPolicy = new RetryPolicy
+                {
+                    MaximumAttempts = 3,
+                    MaximumInterval = TimeSpan.FromSeconds(5),
+                },
             });
 
         if (!response.ShallContinue)
@@ -43,7 +47,11 @@ public class GenerateLocationResourcesSlots
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
         }
 

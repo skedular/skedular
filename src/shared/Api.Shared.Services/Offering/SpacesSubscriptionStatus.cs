@@ -10,7 +10,7 @@ public enum SpacesSubscriptionStatus
     PaidActive = 5,
     PaidInactive = 6,
     LegacyActive = 7,
-    MissingState = 8
+    MissingState = 8,
 }
 
 public static class SpacesSubscriptionStatusExtensions
@@ -30,7 +30,7 @@ public static class SpacesSubscriptionStatusExtensions
                 SpacesSubscriptionStatus.LegacyActive => "Legacy Active",
                 SpacesSubscriptionStatus.MissingState => "Missing State",
                 _ => throw new ArgumentOutOfRangeException(nameof(status), status,
-                    $"Unexpected value for {nameof(status)}: {status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(status)}: {status}. Update enum mapping or caller input."),
             };
     }
 }

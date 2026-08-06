@@ -46,7 +46,14 @@ public class EditTeamButtonHandler(
 
         var existingTeam = await teamService.GetAsync(workspaceMember.Id, context.TeamId, cancellationToken);
         var values = viewSubmission.View.State.Values;
-        var team = new Shared.Models.Team { Id = context.TeamId, Organization = new Organization { Id = workspace.Organization.Id } };
+        var team = new Shared.Models.Team
+        {
+            Id = context.TeamId,
+            Organization = new Organization
+            {
+                Id = workspace.Organization.Id,
+            },
+        };
 
         if (values.TryGetValue(TeamActionTypes.Name, out var nameBlock))
         {
@@ -126,7 +133,10 @@ public class EditTeamButtonHandler(
                 {
                     team.PrimaryLocation = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
                         ? null
-                        : new Shared.Models.Location { Id = value.SelectedOption.Value };
+                        : new Shared.Models.Location
+                        {
+                            Id = value.SelectedOption.Value,
+                        };
                 }
                 else
                 {
@@ -179,11 +189,21 @@ public class EditTeamButtonHandler(
                                         TeamMemberRole.Administrator => TeamMemberRole.Administrator,
                                         TeamMemberRole.Member => TeamMemberRole.Member,
                                         _ => throw new ArgumentOutOfRangeException(nameof(existingMember.Role), existingMember.Role,
-                                            $"Unexpected value for {nameof(existingMember.Role)}: {existingMember.Role}. Update enum mapping or caller input.")
+                                            $"Unexpected value for {nameof(existingMember.Role)}: {existingMember.Role}. Update enum mapping or caller input."),
                                     },
                                 Status = TeamMemberStatus.Active,
-                                Customer = new Customer { Id = customerId },
-                                OrganizationMember = new OrganizationMember { Id = organizationMemberId, Customer = new Customer { Id = customerId } }
+                                Customer = new Customer
+                                {
+                                    Id = customerId,
+                                },
+                                OrganizationMember = new OrganizationMember
+                                {
+                                    Id = organizationMemberId,
+                                    Customer = new Customer
+                                    {
+                                        Id = customerId,
+                                    },
+                                },
                             };
                         }).ToList();
                 }

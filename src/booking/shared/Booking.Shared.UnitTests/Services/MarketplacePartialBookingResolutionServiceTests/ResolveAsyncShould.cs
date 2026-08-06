@@ -17,9 +17,12 @@ public class ResolveAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Existing_Resolution_Without_Replaying_Refund_On_Timeout(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingFailureRepository failureRepository,
-        [Frozen] IMarketplaceRefundService refundService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingFailureRepository failureRepository,
+        [Frozen]
+        IMarketplaceRefundService refundService,
         MarketplacePartialBookingResolutionService sut,
         CancellationToken cancellationToken)
     {
@@ -27,7 +30,7 @@ public class ResolveAsyncShould
         {
             Id = "failure",
             ResolutionDecision = MarketplaceBookingFailureResolutionDecisionConstants.Accepted,
-            ResolutionDecidedAt = TimeProvider.System.GetUtcNow().AddMinutes(-1)
+            ResolutionDecidedAt = TimeProvider.System.GetUtcNow().AddMinutes(-1),
         };
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);
         A.CallTo(() => failureRepository.GetByIdAsync(failure.Id, cancellationToken)).Returns(failure);
@@ -43,13 +46,20 @@ public class ResolveAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Cancel_Created_Occurrences_And_Automate_Full_Refund_On_Expiry(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingFailureRepository failureRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IMarketplaceRefundService refundService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMarketplaceRefundOwnershipService ownershipService,
-        [Frozen] IRandomHelper randomHelper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingFailureRepository failureRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IMarketplaceRefundService refundService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IMarketplaceRefundOwnershipService ownershipService,
+        [Frozen]
+        IRandomHelper randomHelper,
         MarketplacePartialBookingResolutionService sut,
         CancellationToken cancellationToken)
     {
@@ -58,11 +68,24 @@ public class ResolveAsyncShould
             Id = "failure",
             BookingId = "booking",
             ResolutionDeadlineAt = TimeProvider.System.GetUtcNow().AddHours(-1),
-            CreatedOccurrenceIds = ["occurrence"]
+            CreatedOccurrenceIds = ["occurrence"],
         };
-        var occurrence = new BookingEntity { Id = "occurrence" };
-        var booking = new BookingEntity { Id = "booking", MarketplaceBooking = new MarketplaceBookingEntity { Id = "marketplace" } };
-        var refund = new MarketplaceRefund { Id = "refund" };
+        var occurrence = new BookingEntity
+        {
+            Id = "occurrence",
+        };
+        var booking = new BookingEntity
+        {
+            Id = "booking",
+            MarketplaceBooking = new MarketplaceBookingEntity
+            {
+                Id = "marketplace",
+            },
+        };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund",
+        };
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);
         A.CallTo(() => ownershipService.Resolve(failure)).Returns(new MarketplaceRefundOwnership(MarketplaceRefundOwnershipScope.OneTimeBooking,
             MarketplaceRefundEntityTypeConstants.MarketplaceBooking, "booking", "booking", null, null));
@@ -86,22 +109,42 @@ public class ResolveAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Automate_Allocated_Refund_On_Acceptance(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingFailureRepository failureRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IMarketplaceRefundService refundService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMarketplaceRefundOwnershipService ownershipService,
-        [Frozen] IRandomHelper randomHelper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingFailureRepository failureRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IMarketplaceRefundService refundService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IMarketplaceRefundOwnershipService ownershipService,
+        [Frozen]
+        IRandomHelper randomHelper,
         MarketplacePartialBookingResolutionService sut,
         CancellationToken cancellationToken)
     {
-        var failure = new MarketplaceBookingFailure { Id = "failure", BookingId = "booking", AllocatedRefundAmount = 25m };
+        var failure = new MarketplaceBookingFailure
+        {
+            Id = "failure",
+            BookingId = "booking",
+            AllocatedRefundAmount = 25m,
+        };
         var booking = new BookingEntity
         {
-            Id = "booking", MarketplaceBooking = new MarketplaceBookingEntity { Id = "marketplace", TotalAmount = 100m }
+            Id = "booking",
+            MarketplaceBooking = new MarketplaceBookingEntity
+            {
+                Id = "marketplace",
+                TotalAmount = 100m,
+            },
         };
-        var refund = new MarketplaceRefund { Id = "refund" };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund",
+        };
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);
         A.CallTo(() => ownershipService.Resolve(failure)).Returns(new MarketplaceRefundOwnership(MarketplaceRefundOwnershipScope.OneTimeBooking,
             MarketplaceRefundEntityTypeConstants.MarketplaceBooking, "booking", "booking", null, null));
@@ -122,27 +165,44 @@ public class ResolveAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Automate_A_Full_Subscription_Refund_When_The_Partial_Offer_Expires(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingFailureRepository failureRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IMarketplaceBookingSubscriptionRepository subscriptionRepository,
-        [Frozen] IMarketplaceRefundService refundService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IMarketplaceRefundOwnershipService ownershipService,
-        [Frozen] IRandomHelper randomHelper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingFailureRepository failureRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository subscriptionRepository,
+        [Frozen]
+        IMarketplaceRefundService refundService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IMarketplaceRefundOwnershipService ownershipService,
+        [Frozen]
+        IRandomHelper randomHelper,
         MarketplacePartialBookingResolutionService sut,
         CancellationToken cancellationToken)
     {
         var failure = new MarketplaceBookingFailure
         {
-            Id = "failure", MarketplaceBookingSubscriptionId = "subscription", CreatedOccurrenceIds = ["occurrence"]
+            Id = "failure",
+            MarketplaceBookingSubscriptionId = "subscription",
+            CreatedOccurrenceIds = ["occurrence"],
         };
         var subscription =
             new MarketplaceBookingSubscriptionEntity
             {
-                Id = "subscription", MarketplaceBooking = new MarketplaceBookingEntity { Id = "marketplace" }
+                Id = "subscription",
+                MarketplaceBooking = new MarketplaceBookingEntity
+                {
+                    Id = "marketplace",
+                },
             };
-        var refund = new MarketplaceRefund { Id = "refund" };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund",
+        };
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(subscriptionRepository);

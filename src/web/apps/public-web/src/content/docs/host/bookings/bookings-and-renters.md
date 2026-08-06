@@ -55,4 +55,6 @@ Host checks availability again while creating a renter's Booking. If another Boo
 
 ## Next step
 
+Use **Marketplace purchases** to review retained one-time Bookings and Subscriptions together. The page keeps canceled and deleted purchase evidence, shows payment and renewal state, and supports list/grid views with pagination.
+
 After you understand how to review and manage Bookings, continue to [Payments and refunds](/docs/host/payments-and-refunds) to learn how payment and refund workflows related to those Bookings are handled.

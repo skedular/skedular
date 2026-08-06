@@ -144,7 +144,10 @@ public class TemporalOutboxBackgroundService<TDbContext>(
                 await using var scope = serviceProvider.CreateAsyncScope();
                 var temporalOutboxExecutor = scope.ServiceProvider.GetRequiredService<ITemporalOutboxExecutor>();
 
-                outboxEvent.WorkflowOptions.Rpc = new RpcOptions { CancellationToken = cancellationToken };
+                outboxEvent.WorkflowOptions.Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                };
                 await temporalOutboxExecutor.StartWorkflowAsync(
                     outboxEvent.WorkflowType,
                     outboxEvent.ExecutionArgs,
@@ -154,7 +157,10 @@ public class TemporalOutboxBackgroundService<TDbContext>(
                 activityAccessor.AddEvent(
                     "Publish Temporal Outbox Message",
                     "publish_temporal_outbox_message",
-                    new Dictionary<string, string> { [nameof(outboxEvent.WorkflowType)] = outboxEvent.WorkflowType });
+                    new Dictionary<string, string>
+                    {
+                        [nameof(outboxEvent.WorkflowType)] = outboxEvent.WorkflowType,
+                    });
 
                 logger.LogInformation(
                     "Temporal workflow {WorkflowType} with outbox ID {OutboxId} started successfully; removing its outbox record",
@@ -175,7 +181,8 @@ public class TemporalOutboxBackgroundService<TDbContext>(
                     "retry_temporal_outbox_message",
                     new Dictionary<string, string>
                     {
-                        [nameof(TemporalOutbox.LastRetry)] = timeProvider.GetUtcNow().ToString("O"), [nameof(LogLevel)] = level.ToString("G")
+                        [nameof(TemporalOutbox.LastRetry)] = timeProvider.GetUtcNow().ToString("O"),
+                        [nameof(LogLevel)] = level.ToString("G"),
                     });
 
                 logger.Log(

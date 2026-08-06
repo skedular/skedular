@@ -27,7 +27,11 @@ public class ReSyncSlackWorkspace
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromMinutes(1),
+                    },
                 }))
         {
             return;
@@ -39,7 +43,11 @@ public class ReSyncSlackWorkspace
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(10),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromMinutes(1),
+                    },
                 }))
         {
             return;
@@ -51,7 +59,11 @@ public class ReSyncSlackWorkspace
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(5),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromMinutes(1),
+                    },
                 }))
         {
             return;

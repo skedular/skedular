@@ -27,7 +27,11 @@ public class InviteToJoinTeam
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromMinutes(1),
+                    },
                 });
         }
         else
@@ -38,7 +42,11 @@ public class InviteToJoinTeam
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromMinutes(1),
+                    },
                 });
         }
 
@@ -53,7 +61,11 @@ public class InviteToJoinTeam
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromMinutes(1),
+                    },
                 });
         }
     }
@@ -63,7 +75,10 @@ public class InviteToJoinTeam
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { InvitationStateChanged = true };
+        _state = _state with
+        {
+            InvitationStateChanged = true,
+        };
         return Task.CompletedTask;
     }
 }

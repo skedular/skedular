@@ -120,6 +120,13 @@ public class MarketplaceBookingSubscriptionIntegrations(
             subscription.RecurringBookings.Add(currentCycleRecurringBooking);
         }
 
+        // Creating or selecting the current cycle changes the authoritative payment source
+        // for the subscription purchase. Refresh the durable history row before further
+        // reconciliation so payment, amount, currency, and activity stay in sync.
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
+            subscription, null, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
         var from = timeProvider.GetUtcNow();
         var hasAnyMoreRequiredBookingDays = false;
 
@@ -179,6 +186,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
             repositoryFactory.RecurringBookingRepository.Remove(recurringBooking);
         }
 
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
+            subscription, null, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         // Cleanup happens asynchronously after the original delete mutation returns, so publish the
         // subscription topic again once release is complete. This lets the UI move from the
@@ -200,8 +209,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
         }
 
         await accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, cancellationToken);
-        MarkRecurringBookingPaymentAsTerminal(recurringBooking);
-        MarkSubscriptionPaymentAsTerminal(recurringBooking, args.FailureCategory);
+        await MarkRecurringBookingPaymentAsTerminalAsync(recurringBooking, cancellationToken);
+        await MarkSubscriptionPaymentAsTerminalAsync(recurringBooking, args.FailureCategory, cancellationToken);
 
         await marketplaceBookingFailureService.FinalizeAsync(
             new MarketplaceBookingFailureFinalization(
@@ -481,7 +490,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 booking.Schedules = [new BookingSchedule(booking.From, booking.Until)];
                 booking.Resources = dailyPlan.Resources
                     .Select(item => new ResourceCustomersPair(
-                        new Resource { Id = item.Id },
+                        new Resource
+                        {
+                            Id = item.Id,
+                        },
                         booking.InvolvedCustomers.ToList()))
                     .ToList();
             }
@@ -494,7 +506,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             {
                 // Generated recurring marketplace instances always use the recurring-compatible
                 // daily booking cadence. The purchase cadence remains on the parent subscription/template.
-                BookingCadence = ResolveInstanceBookingCadence(marketplaceBooking.ProductPricing.PurchaseCadence)
+                BookingCadence = ResolveInstanceBookingCadence(marketplaceBooking.ProductPricing.PurchaseCadence),
             };
 
             booking.MarketplaceBooking = marketplaceBooking;
@@ -699,7 +711,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 LastModifiedByCustomer = null,
                 DeletedByCustomer = null,
                 MarketplaceBookingSubscription = subscription,
-                MarketplaceBooking = recurringMarketplaceBooking
+                MarketplaceBooking = recurringMarketplaceBooking,
             });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -856,6 +868,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
             }
 
             subscription = repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(subscription);
+            await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
+                subscription, null, cancellationToken);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
             return subscription;
@@ -912,7 +926,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 // retained pattern against the renewed price's available-day pool rather than
                 // letting the no-rule compatibility branch clear it and widen recurrence to daily.
                 var validationPricing = renewedProductPricing.RequiredDaysPerWeek is null && selectedDays.Count > 0
-                    ? renewedProductPricing with { RequiredDaysPerWeek = selectedDays.Count }
+                    ? renewedProductPricing with
+                    {
+                        RequiredDaysPerWeek = selectedDays.Count,
+                    }
                     : renewedProductPricing;
                 subscription.WeeklySelectedDays = marketplaceBookingWeeklyDaySelectionService.Validate(
                         validationPricing,
@@ -956,6 +973,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
         }
 
         subscription = repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(subscription);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
+            subscription, null, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return subscription;
@@ -982,7 +1001,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
                 IsPaymentRequired = requiresPaymentForCurrentCycle,
                 Quantity = marketplaceBooking.Quantity,
-                ProductPricing = marketplaceBooking.ProductPricing with { BookingCadence = bookingCadence },
+                ProductPricing = marketplaceBooking.ProductPricing with
+                {
+                    BookingCadence = bookingCadence,
+                },
                 PaymentMethod = marketplaceBooking.PaymentMethod,
                 PaymentExpiry = paymentExpiry,
                 TotalAmountExcludeTax = marketplaceBooking.TotalAmountExcludeTax,
@@ -998,7 +1020,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 ProductVersion = subscription.MarketplaceBooking.ProductVersion,
                 PaidByCustomer = subscription.MarketplaceBooking.PaidByCustomer,
                 PaidByOrganization = subscription.MarketplaceBooking.PaidByOrganization,
-                StripeCheckoutSession = null
+                StripeCheckoutSession = null,
             });
     }
 
@@ -1017,7 +1039,9 @@ public class MarketplaceBookingSubscriptionIntegrations(
         marketplaceBooking.IsPaymentRequired &&
         marketplaceBooking.PaymentStatus.ToPaymentStatus() is PaymentStatus.Expired or PaymentStatus.Rejected or PaymentStatus.RecordNeverCreated;
 
-    private void MarkRecurringBookingPaymentAsTerminal(RecurringBooking recurringBooking)
+    private async Task MarkRecurringBookingPaymentAsTerminalAsync(
+        RecurringBooking recurringBooking,
+        CancellationToken cancellationToken)
     {
         var marketplaceBooking = recurringBooking.MarketplaceBooking;
         if (marketplaceBooking is null || !marketplaceBooking.IsPaymentRequired)
@@ -1030,9 +1054,12 @@ public class MarketplaceBookingSubscriptionIntegrations(
             ? PaymentStatusConstants.RecordNeverCreated
             : PaymentStatusConstants.Expired;
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
     }
 
-    private void MarkSubscriptionPaymentAsTerminal(RecurringBooking recurringBooking, string failureCategory)
+    private async Task MarkSubscriptionPaymentAsTerminalAsync(
+        RecurringBooking recurringBooking, string failureCategory, CancellationToken cancellationToken)
     {
         var subscription = recurringBooking.MarketplaceBookingSubscription;
         if (subscription is null || subscription.Status.ToMarketplaceBookingSubscriptionStatus() is
@@ -1050,6 +1077,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
         subscription.AutoRenew = false;
         subscription.NextRenewalAt = null;
         repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(subscription);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
+            subscription, null, cancellationToken);
     }
 
     private static int GetBookingPaymentExpiryInMinutes(ProductPricing pricing, PaymentMethod paymentMethod) =>
@@ -1058,7 +1087,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             PaymentMethod.Card => pricing.MaxAllowedResourcesLockTimePaidViaCard,
             PaymentMethod.BankTransfer => pricing.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             _ => throw new ArgumentOutOfRangeException(nameof(paymentMethod), paymentMethod,
-                $"Unexpected value for {nameof(paymentMethod)}: {paymentMethod}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(paymentMethod)}: {paymentMethod}. Update enum mapping or caller input."),
         };
 
     private static DateTimeOffset ResolvePlanningWindowEndExclusive(MarketplaceBookingSubscription subscription) =>
@@ -1105,7 +1134,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             ProductPricingCadence.FiveMonths => cycleEndExclusive.AddMonths(-5),
             ProductPricingCadence.SixMonths => cycleEndExclusive.AddMonths(-6),
             ProductPricingCadence.Yearly => cycleEndExclusive.AddYears(-1),
-            _ => cycleEndExclusive.AddDays(-1)
+            _ => cycleEndExclusive.AddDays(-1),
         };
 
     private static DateTimeOffset ResolveNextRenewalAt(DateTimeOffset start, ProductPricingCadence cadence) =>
@@ -1120,7 +1149,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             ProductPricingCadence.FiveMonths => start.AddMonths(5),
             ProductPricingCadence.SixMonths => start.AddMonths(6),
             ProductPricingCadence.Yearly => start.AddYears(1),
-            _ => start.AddDays(1)
+            _ => start.AddDays(1),
         };
 
     private static DateTimeOffset ResolveRecurringInstanceFrom(MarketplaceBookingSubscription subscription) =>
@@ -1139,7 +1168,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             ProductPricingCadence.Per30Minutes => from.AddMinutes(30),
             ProductPricingCadence.PerHour => from.AddHours(1),
             ProductPricingCadence.HalfDay => from.AddHours(4),
-            _ => new DateTimeOffset(from.UtcDateTime.Date.AddDays(1).AddTicks(-1), TimeSpan.Zero)
+            _ => new DateTimeOffset(from.UtcDateTime.Date.AddDays(1).AddTicks(-1), TimeSpan.Zero),
         };
     }
 
@@ -1153,6 +1182,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
             ProductPricingCadence.HalfDay => ProductPricingCadence.HalfDay,
             // Day-or-longer subscriptions are materialized one day at a time under the
             // recurring marketplace flow while the purchase cadence stays on the parent object.
-            _ => ProductPricingCadence.Daily
+            _ => ProductPricingCadence.Daily,
         };
 }

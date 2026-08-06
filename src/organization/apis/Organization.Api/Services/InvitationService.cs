@@ -117,7 +117,7 @@ public class InvitationService(
                     Status = InvitationStatusConstants.Pending,
                     Role = OrganizationMemberRoleConstants.Member,
                     CreatedBy = customerEntity,
-                    Invitee = matchingCustomerByEmail
+                    Invitee = matchingCustomerByEmail,
                 })
                 : repositoryFactory.JoinInvitationRepository.Update(existingJoinInvitation);
 
@@ -160,13 +160,13 @@ public class InvitationService(
                 Role = joinInvitation.Role,
                 Status = OrganizationMemberStatusConstants.Active,
                 Organization = organization,
-                Customer = customerEntity
+                Customer = customerEntity,
             });
 
             organizationOutboxPublisher.PublishOrganizations(
                 [
                     graphQlMapper.MapTo(organization,
-                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))
+                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)),
                 ],
                 repositoryFactory.UnitOfWork);
         }
@@ -266,7 +266,7 @@ public class InvitationService(
         searchCriteria = searchCriteria with
         {
             InviteeId = customer.Id,
-            CustomerEmails = customer.Identities.Select(i => i.Email).Where(e => !string.IsNullOrWhiteSpace(e)).Cast<string>().ToList()
+            CustomerEmails = customer.Identities.Select(i => i.Email).Where(e => !string.IsNullOrWhiteSpace(e)).Cast<string>().ToList(),
         };
 
         var (paginatedInfo, edges, totalCount) =

@@ -81,7 +81,7 @@ public class AutoResourceService(IRepositoryFactory repositoryFactory, ILogger<A
             Capacity = 1,
             Inactive = false,
             RequireBookingApproval = false,
-            OrganizationTags = [resourceType, productTag]
+            OrganizationTags = [resourceType, productTag],
         };
 
         repositoryFactory.ResourceRepository.Add(resource);

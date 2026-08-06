@@ -19,11 +19,16 @@ public class GetByMarketplaceBookingSubscriptionIdAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Mapped_Preview_For_Subscription(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         MarketplaceRefundPreviewService sut,
         CancellationToken cancellationToken)
     {
@@ -64,8 +69,14 @@ public class GetByMarketplaceBookingSubscriptionIdAsyncShould
                 Id = "marketplace-booking-1",
                 ProductVersion = new ProductVersionEntity
                 {
-                    Product = new ProductEntity { Organization = new OrganizationEntity { Id = "org-1" } }
-                }
-            }
+                    Product = new ProductEntity
+                    {
+                        Organization = new OrganizationEntity
+                        {
+                            Id = "org-1",
+                        },
+                    },
+                },
+            },
         };
 }

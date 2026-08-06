@@ -14,9 +14,12 @@ public class StartWorkflowSubmitCustomerFeedbackShould
     [Theory]
     [AutoFakeItEasyData]
     public void Enqueue_Workflow_With_Correct_Options(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] IWorkflowIdService workflowIdService,
-        [Frozen] ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
+        [Frozen]
+        TemporalConfiguration temporalConfiguration,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
         TemporalOutboxService sut,
         SubmitCustomerFeedbackInput args,
         IUnitOfWork unitOfWork,

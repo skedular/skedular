@@ -21,7 +21,8 @@ public class VerifyAndEnrichShould
     [Theory]
     [AutoFakeItEasyData]
     public void Throw_when_api_key_does_not_match(
-        [Frozen] IHttpContextAccessor accessor,
+        [Frozen]
+        IHttpContextAccessor accessor,
         GrpcAuthenticator sut,
         string expectedKey,
         string receivedKey)
@@ -47,8 +48,10 @@ public class VerifyAndEnrichShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_verifiable_token_when_header_present(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] IContext context,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        IContext context,
         GrpcAuthenticator sut,
         string apiKey,
         string token)
@@ -66,8 +69,10 @@ public class VerifyAndEnrichShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_first_verifiable_token_when_multiple_in_header(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] IContext context,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        IContext context,
         GrpcAuthenticator sut,
         string apiKey,
         string token1,
@@ -86,8 +91,10 @@ public class VerifyAndEnrichShould
     [Theory]
     [AutoFakeItEasyData]
     public void Not_set_verifiable_token_when_header_is_whitespace(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] IContext context,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        IContext context,
         GrpcAuthenticator sut,
         string apiKey)
     {

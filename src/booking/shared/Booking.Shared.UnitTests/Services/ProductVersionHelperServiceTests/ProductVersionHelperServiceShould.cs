@@ -17,7 +17,7 @@ public class ProductVersionHelperServiceShould
             PurchaseCadence = ProductPricingCadence.Daily,
             BookingCadence = ProductPricingCadence.Daily,
             NumberOfResourcesToBook = 1,
-            BillingMode = ProductPricingBillingMode.Upfront
+            BillingMode = ProductPricingBillingMode.Upfront,
         };
         var pricingOptions = new[]
         {
@@ -26,9 +26,9 @@ public class ProductVersionHelperServiceShould
                 PurchaseCadence = ProductPricingCadence.Daily,
                 BookingCadence = ProductPricingCadence.Daily,
                 NumberOfResourcesToBook = 1,
-                BillingMode = ProductPricingBillingMode.Upfront
+                BillingMode = ProductPricingBillingMode.Upfront,
             },
-            pricing
+            pricing,
         };
 
         var result = sut.FindMatchingPricing(pricingOptions, pricing);
@@ -46,14 +46,14 @@ public class ProductVersionHelperServiceShould
             PurchaseCadence = ProductPricingCadence.Daily,
             BookingCadence = ProductPricingCadence.Daily,
             NumberOfResourcesToBook = 1,
-            BillingMode = ProductPricingBillingMode.Upfront
+            BillingMode = ProductPricingBillingMode.Upfront,
         };
         var matchingPricing = ProductPricing.Empty("pricing-2") with
         {
             PurchaseCadence = ProductPricingCadence.Daily,
             BookingCadence = ProductPricingCadence.Daily,
             NumberOfResourcesToBook = 1,
-            BillingMode = ProductPricingBillingMode.Upfront
+            BillingMode = ProductPricingBillingMode.Upfront,
         };
         var pricingOptions = new[] { matchingPricing };
 
@@ -73,9 +73,13 @@ public class ProductVersionHelperServiceShould
             BookingCadence = ProductPricingCadence.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
-            AvailableDays = [DayOfWeek.Sunday]
+            AvailableDays = [DayOfWeek.Sunday],
         };
-        var matchingPricing = pricing with { Id = "pricing-2", AvailableDays = [DayOfWeek.Saturday] };
+        var matchingPricing = pricing with
+        {
+            Id = "pricing-2",
+            AvailableDays = [DayOfWeek.Saturday],
+        };
 
         var result = sut.FindMatchingPricing([matchingPricing], pricing);
 
@@ -93,10 +97,17 @@ public class ProductVersionHelperServiceShould
             BookingCadence = ProductPricingCadence.Weekly,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
-            RequiredDaysPerWeek = 2
+            RequiredDaysPerWeek = 2,
         };
-        var nonMatchingPricing = pricing with { Id = "pricing-3-days", RequiredDaysPerWeek = 3 };
-        var matchingPricing = pricing with { Id = "pricing-2-days-current" };
+        var nonMatchingPricing = pricing with
+        {
+            Id = "pricing-3-days",
+            RequiredDaysPerWeek = 3,
+        };
+        var matchingPricing = pricing with
+        {
+            Id = "pricing-2-days-current",
+        };
 
         var result = sut.FindMatchingPricing([nonMatchingPricing, matchingPricing], pricing);
 
@@ -113,7 +124,7 @@ public class ProductVersionHelperServiceShould
             PurchaseCadence = ProductPricingCadence.Daily,
             BookingCadence = ProductPricingCadence.Daily,
             NumberOfResourcesToBook = 1,
-            BillingMode = ProductPricingBillingMode.Upfront
+            BillingMode = ProductPricingBillingMode.Upfront,
         };
         var pricingOptions = new[]
         {
@@ -122,8 +133,8 @@ public class ProductVersionHelperServiceShould
                 PurchaseCadence = ProductPricingCadence.PerHour,
                 BookingCadence = ProductPricingCadence.PerHour,
                 NumberOfResourcesToBook = 2,
-                BillingMode = ProductPricingBillingMode.InArrears
-            }
+                BillingMode = ProductPricingBillingMode.InArrears,
+            },
         };
 
         var result = sut.FindMatchingPricing(pricingOptions, pricing);
@@ -138,7 +149,9 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily, NumberOfResourcesToBook = 1, BillingMode = ProductPricingBillingMode.Upfront
+            PurchaseCadence = ProductPricingCadence.Daily,
+            NumberOfResourcesToBook = 1,
+            BillingMode = ProductPricingBillingMode.Upfront,
         };
         var stripeProduct = new StripeProduct
         {
@@ -146,7 +159,7 @@ public class ProductVersionHelperServiceShould
             ProductPricingId = "pricing-1",
             PricingCadence = ProductPricingCadence.Daily.ToProductPricingCadence(),
             NumberOfResourcesToBook = 1,
-            BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode()
+            BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
         };
         var stripeProducts = new[] { stripeProduct };
 
@@ -162,7 +175,9 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily, NumberOfResourcesToBook = 1, BillingMode = ProductPricingBillingMode.Upfront
+            PurchaseCadence = ProductPricingCadence.Daily,
+            NumberOfResourcesToBook = 1,
+            BillingMode = ProductPricingBillingMode.Upfront,
         };
         var matchingStripeProduct = new StripeProduct
         {
@@ -170,7 +185,7 @@ public class ProductVersionHelperServiceShould
             ProductPricingId = "pricing-2",
             PricingCadence = ProductPricingCadence.Daily.ToProductPricingCadence(),
             NumberOfResourcesToBook = 1,
-            BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode()
+            BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
         };
         var stripeProducts = new[] { matchingStripeProduct };
 
@@ -189,13 +204,25 @@ public class ProductVersionHelperServiceShould
             PurchaseCadence = ProductPricingCadence.Weekly,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
-            RequiredDaysPerWeek = 2
+            RequiredDaysPerWeek = 2,
         };
-        var threeDayPricing = twoDayPricing with { Id = "pricing-3-days", RequiredDaysPerWeek = 3 };
+        var threeDayPricing = twoDayPricing with
+        {
+            Id = "pricing-3-days",
+            RequiredDaysPerWeek = 3,
+        };
         var stripeProducts = new[]
         {
-            new StripeProduct { Id = "stripe-product-2-days", ProductPricingId = twoDayPricing.Id },
-            new StripeProduct { Id = "stripe-product-3-days", ProductPricingId = threeDayPricing.Id }
+            new StripeProduct
+            {
+                Id = "stripe-product-2-days",
+                ProductPricingId = twoDayPricing.Id,
+            },
+            new StripeProduct
+            {
+                Id = "stripe-product-3-days",
+                ProductPricingId = threeDayPricing.Id,
+            },
         };
 
         var result = sut.FindMatchingPricing(stripeProducts, threeDayPricing);
@@ -210,7 +237,9 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily, NumberOfResourcesToBook = 1, BillingMode = ProductPricingBillingMode.Upfront
+            PurchaseCadence = ProductPricingCadence.Daily,
+            NumberOfResourcesToBook = 1,
+            BillingMode = ProductPricingBillingMode.Upfront,
         };
         var stripeProducts = new[]
         {
@@ -219,8 +248,8 @@ public class ProductVersionHelperServiceShould
                 Id = "pricing-2",
                 PricingCadence = ProductPricingCadence.PerHour.ToProductPricingCadence(),
                 NumberOfResourcesToBook = 2,
-                BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode()
-            }
+                BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
+            },
         };
 
         var result = sut.FindMatchingPricing(stripeProducts, pricing);

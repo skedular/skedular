@@ -26,35 +26,65 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_Only_Selected_Name_And_Return_Latest_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationPatchMapper organizationPatchMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<OrganizationService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationPatchMapper organizationPatchMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<OrganizationService> logger,
         OrganizationService sut,
         CancellationToken cancellationToken)
     {
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1", CustomDomain = "acme", Name = "Old name", Type = OrganizationTypeConstants.Private
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Old name",
+            Type = OrganizationTypeConstants.Private,
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var updatedOrganization =
-            new Shared.Models.Organization { Id = organization.Id, CustomDomain = organization.CustomDomain, Name = "New name" };
+            new Shared.Models.Organization
+            {
+                Id = organization.Id,
+                CustomDomain = organization.CustomDomain,
+                Name = "New name",
+            };
         var stripeAuthorizeUrl = Constants.EmptyUri;
         var request = new OrganizationPatchRequest(
             organization.Id,
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.Name,
+            },
             "New name");
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -96,18 +126,30 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Evict_Previous_Custom_Domain_And_All_Member_Organization_Lists_When_Custom_Domain_Changes(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationPatchMapper organizationPatchMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationPatchMapper organizationPatchMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationService sut,
         CancellationToken cancellationToken)
     {
@@ -119,19 +161,39 @@ public class UpdatePatchAsyncShould
             Type = OrganizationTypeConstants.Private,
             OrganizationMembers =
             [
-                new OrganizationMember { CustomerId = "customer-1" },
-                new OrganizationMember { CustomerId = "customer-2" }
-            ]
+                new OrganizationMember
+                {
+                    CustomerId = "customer-1",
+                },
+                new OrganizationMember
+                {
+                    CustomerId = "customer-2",
+                },
+            ],
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var updatedOrganization =
-            new Shared.Models.Organization { Id = organization.Id, CustomDomain = "new-domain", Name = organization.Name };
+            new Shared.Models.Organization
+            {
+                Id = organization.Id,
+                CustomDomain = "new-domain",
+                Name = organization.Name,
+            };
         var stripeAuthorizeUrl = Constants.EmptyUri;
         var request = new OrganizationPatchRequest(
             organization.Id,
             updatedOrganization.CustomDomain,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.CustomDomain },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.CustomDomain,
+            },
             organization.Name);
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -169,32 +231,58 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Add_Physical_Address_When_Selected_Organization_Has_None(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationPhysicalAddressRepository organizationPhysicalAddressRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationPatchMapper organizationPatchMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationPhysicalAddressRepository organizationPhysicalAddressRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationPatchMapper organizationPatchMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationService sut,
         CancellationToken cancellationToken)
     {
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1", CustomDomain = "acme", Name = "Existing name", Type = OrganizationTypeConstants.Private
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Existing name",
+            Type = OrganizationTypeConstants.Private,
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var physicalAddress = new OrganizationPhysicalAddress
         {
-            AddressLine1 = "1 Example Road", City = "Auckland", Zipcode = "1010", Country = "New Zealand"
+            AddressLine1 = "1 Example Road",
+            City = "Auckland",
+            Zipcode = "1010",
+            Country = "New Zealand",
         };
         var physicalAddressEntity = new Shared.Database.Entities.OrganizationPhysicalAddress
         {
@@ -203,15 +291,23 @@ public class UpdatePatchAsyncShould
             City = physicalAddress.City,
             Zipcode = physicalAddress.Zipcode,
             Country = physicalAddress.Country,
-            Organization = organization
+            Organization = organization,
         };
         var updatedOrganization =
-            new Shared.Models.Organization { Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name };
+            new Shared.Models.Organization
+            {
+                Id = organization.Id,
+                CustomDomain = organization.CustomDomain,
+                Name = organization.Name,
+            };
         var stripeAuthorizeUrl = Constants.EmptyUri;
         var request = new OrganizationPatchRequest(
             organization.Id,
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.PhysicalAddress },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.PhysicalAddress,
+            },
             organization.Name,
             PhysicalAddress: physicalAddress);
 
@@ -247,33 +343,61 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Latest_Organization_Without_Saving_When_Selected_Values_Are_Unchanged(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationPatchMapper organizationPatchMapper,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<OrganizationService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationPatchMapper organizationPatchMapper,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<OrganizationService> logger,
         OrganizationService sut,
         CancellationToken cancellationToken)
     {
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1", CustomDomain = "acme", Name = "Existing name", Type = OrganizationTypeConstants.Private
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Existing name",
+            Type = OrganizationTypeConstants.Private,
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var latestOrganization =
-            new Shared.Models.Organization { Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name };
+            new Shared.Models.Organization
+            {
+                Id = organization.Id,
+                CustomDomain = organization.CustomDomain,
+                Name = organization.Name,
+            };
         var stripeAuthorizeUrl = Constants.EmptyUri;
         var request = new OrganizationPatchRequest(
             organization.Id,
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.Name,
+            },
             organization.Name);
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -300,19 +424,32 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Retry_Selected_Fields_Against_Latest_Organization_After_Concurrency_Conflict(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationPatchMapper organizationPatchMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<OrganizationService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationPatchMapper organizationPatchMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<OrganizationService> logger,
         OrganizationService sut,
         CancellationToken cancellationToken)
     {
@@ -322,25 +459,40 @@ public class UpdatePatchAsyncShould
                     "Host=localhost;Database=local.test;Username=test;Password=test",
                     builder => builder.UseNetTopologySuite())
                 .Options,
-            new CustomDbContextOptions<OrganizationDbContext> { IsPostgisEnabled = true });
+            new CustomDbContextOptions<OrganizationDbContext>
+            {
+                IsPostgisEnabled = true,
+            });
         var staleOrganization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1", CustomDomain = "acme", Name = "Old name", Type = OrganizationTypeConstants.Private
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Old name",
+            Type = OrganizationTypeConstants.Private,
         };
         var latestOrganization = new Shared.Database.Entities.Organization
         {
             Id = staleOrganization.Id,
             CustomDomain = staleOrganization.CustomDomain,
             Name = staleOrganization.Name,
-            Type = OrganizationTypeConstants.Private
+            Type = OrganizationTypeConstants.Private,
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var stripeAuthorizeUrl = Constants.EmptyUri;
         var request = new OrganizationPatchRequest(
             staleOrganization.Id,
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.Name,
+            },
             "New name");
         var saveAttempt = 0;
 
@@ -363,7 +515,12 @@ public class UpdatePatchAsyncShould
             .ReturnsLazily((Shared.Database.Entities.Organization organization) => organization);
         A.CallTo(() => graphQlMapper.MapTo(A<Shared.Database.Entities.Organization>._, stripeAuthorizeUrl))
             .ReturnsLazily((Shared.Database.Entities.Organization organization, Uri _) =>
-                new Shared.Models.Organization { Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name });
+                new Shared.Models.Organization
+                {
+                    Id = organization.Id,
+                    CustomDomain = organization.CustomDomain,
+                    Name = organization.Name,
+                });
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken))
             .ReturnsLazily(() =>
             {
@@ -398,15 +555,20 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Invalid_Field_Selection(
-        [Frozen] IOrganizationPatchMapper organizationPatchMapper,
-        [Frozen] ILogger<OrganizationService> logger,
+        [Frozen]
+        IOrganizationPatchMapper organizationPatchMapper,
+        [Frozen]
+        ILogger<OrganizationService> logger,
         OrganizationService sut,
         CancellationToken cancellationToken)
     {
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
-            new HashSet<OrganizationPatchField> { (OrganizationPatchField)999 },
+            new HashSet<OrganizationPatchField>
+            {
+                (OrganizationPatchField)999,
+            },
             "Name");
 
         A.CallTo(() => organizationPatchMapper.Validate(request))
@@ -423,15 +585,20 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Blank_Selected_Name(
-        [Frozen] IOrganizationPatchMapper organizationPatchMapper,
-        [Frozen] ILogger<OrganizationService> logger,
+        [Frozen]
+        IOrganizationPatchMapper organizationPatchMapper,
+        [Frozen]
+        ILogger<OrganizationService> logger,
         OrganizationService sut,
         CancellationToken cancellationToken)
     {
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.Name,
+            },
             " ");
 
         A.CallTo(() => organizationPatchMapper.Validate(request))
@@ -447,11 +614,16 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Authorization_Rejection(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ILogger<OrganizationService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ILogger<OrganizationService> logger,
         OrganizationService sut,
         string organizationId,
         string customDomain,
@@ -466,7 +638,10 @@ public class UpdatePatchAsyncShould
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
-            .Returns((customer, new Shared.Database.Entities.Customer { Id = customer.Id }));
+            .Returns((customer, new Shared.Database.Entities.Customer
+            {
+                Id = customer.Id,
+            }));
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(organization.Id, null, cancellationToken)).Returns(organization);
         A.CallTo(() => organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken)).Returns(false);
 
@@ -481,17 +656,28 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Persistence_Failure(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationPatchMapper organizationPatchMapper,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<OrganizationService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationPatchMapper organizationPatchMapper,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<OrganizationService> logger,
         OrganizationService sut,
         string organizationId,
         string customDomain,
@@ -508,7 +694,10 @@ public class UpdatePatchAsyncShould
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
-            .Returns((customer, new Shared.Database.Entities.Customer { Id = customer.Id }));
+            .Returns((customer, new Shared.Database.Entities.Customer
+            {
+                Id = customer.Id,
+            }));
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(organization.Id, null, cancellationToken)).Returns(organization);
         A.CallTo(() => organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken)).Returns(true);
         A.CallTo(() => organizationPatchMapper.ApplyTo(request, organization, A<IReadOnlyList<IndustrySubCategory>>._))
@@ -518,7 +707,12 @@ public class UpdatePatchAsyncShould
             .Returns(stripeAuthorizeUrl);
         A.CallTo(() => organizationRepository.Update(organization)).Returns(organization);
         A.CallTo(() => graphQlMapper.MapTo(organization, stripeAuthorizeUrl))
-            .Returns(new Shared.Models.Organization { Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name });
+            .Returns(new Shared.Models.Organization
+            {
+                Id = organization.Id,
+                CustomDomain = organization.CustomDomain,
+                Name = organization.Name,
+            });
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).ThrowsAsync(new InvalidOperationException("save failed"));
 
         await Should.ThrowAsync<InvalidOperationException>(() => sut.UpdatePatchAsync(request, cancellationToken));

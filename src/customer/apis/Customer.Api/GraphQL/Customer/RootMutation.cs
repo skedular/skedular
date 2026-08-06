@@ -12,22 +12,32 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<CustomerPayload> UpdateMyCustomerDetailsAsync(
         UpdateMyCustomerDetailsInput input,
-        [Service] ICustomerDetailsService customerDetailsService,
+        [Service]
+        ICustomerDetailsService customerDetailsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerDetailsService.UpdateMyCustomerDetailsAsync(ToPatchRequest(input), cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> UpdateCustomerDetailsAsync(
         UpdateCustomerDetailsInput input,
-        [Service] ICustomerDetailsService customerDetailsService,
+        [Service]
+        ICustomerDetailsService customerDetailsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerDetailsService.UpdateCustomerDetailsAsync(input.Id, ToPatchRequest(input), cancellationToken);
 
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     private static CustomerDetailsPatchRequest ToPatchRequest(UpdateMyCustomerDetailsInput input) =>

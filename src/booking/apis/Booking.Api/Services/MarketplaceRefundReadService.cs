@@ -285,8 +285,8 @@ public class MarketplaceRefundReadService(
             SourcePaymentReference = item.SourcePaymentReference,
             SourcePaymentAmount = item.SourceCapturedAmount,
             AllocatedRefundAmount = item.AllocatedRefundAmount,
-            Currency = item.Currency.ToCurrency()
-        }).ToList()
+            Currency = item.Currency.ToCurrency(),
+        }).ToList(),
     };
 
     private static MarketplaceRefundEventModel MapToModel(MarketplaceRefundEvent src) => new()
@@ -304,7 +304,7 @@ public class MarketplaceRefundReadService(
         ActorCustomerId = src.ActorCustomerId,
         PreviousStatus = src.PreviousStatus?.ToMarketplaceRefundStatus(),
         NewStatus = src.NewStatus?.ToMarketplaceRefundStatus(),
-        CorrelationId = src.CorrelationId
+        CorrelationId = src.CorrelationId,
     };
 
     private async Task<IReadOnlyDictionary<string, string>> GetActorsByIdAsync(

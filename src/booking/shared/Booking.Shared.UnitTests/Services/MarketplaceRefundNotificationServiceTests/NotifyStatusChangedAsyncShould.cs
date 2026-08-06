@@ -19,9 +19,12 @@ public class NotifyStatusChangedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Skip_Send_When_Durable_Delivery_Is_Already_Sent(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IEmailService emailService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IEmailService emailService,
         MarketplaceRefundNotificationService sut,
         CancellationToken cancellationToken)
     {
@@ -32,16 +35,25 @@ public class NotifyStatusChangedAsyncShould
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             Status = MarketplaceRefundStatusConstants.Completed,
             RefundAmount = 25m,
-            Currency = "NZD"
+            Currency = "NZD",
         };
-        var organization = new Organization { Id = "org-1", Name = "Acme Coworking", ContactEmail = "ops@acme.test" };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Name = "Acme Coworking",
+            ContactEmail = "ops@acme.test",
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, false, false, cancellationToken))
             .Returns(organization);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository.GetNotificationDeliveryAsync(
                 refund.Id, refund.Status, "ops@acme.test", cancellationToken))
-            .Returns(new MarketplaceRefundNotificationDelivery { Status = "Sent", RecipientId = "ops@acme.test" });
+            .Returns(new MarketplaceRefundNotificationDelivery
+            {
+                Status = "Sent",
+                RecipientId = "ops@acme.test",
+            });
 
         await sut.NotifyStatusChangedAsync(refund, cancellationToken);
 
@@ -55,11 +67,16 @@ public class NotifyStatusChangedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Send_Customer_And_Internal_Emails_When_Recipients_Are_Available(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IEmailService emailService,
-        [Frozen] EmailConfiguration emailConfiguration,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IEmailService emailService,
+        [Frozen]
+        EmailConfiguration emailConfiguration,
         MarketplaceRefundNotificationService sut,
         CancellationToken cancellationToken)
     {
@@ -73,7 +90,7 @@ public class NotifyStatusChangedAsyncShould
             Status = MarketplaceRefundStatusConstants.Processing,
             RefundAmount = 25m,
             Currency = "NZD",
-            Reason = "Approved by admin"
+            Reason = "Approved by admin",
         };
         var organization = new Organization
         {
@@ -86,16 +103,33 @@ public class NotifyStatusChangedAsyncShould
                 {
                     Status = OrganizationMemberStatusConstants.Active,
                     Role = OrganizationMemberRoleConstants.Owner,
-                    Customer = new Customer { Identities = [new Identity { Email = "owner@acme.test", EmailVerified = true }] }
-                }
-            ]
+                    Customer = new Customer
+                    {
+                        Identities =
+                        [
+                            new Identity
+                            {
+                                Email = "owner@acme.test",
+                                EmailVerified = true,
+                            },
+                        ],
+                    },
+                },
+            ],
         };
         var customer = new Customer
         {
             Id = "customer-1",
             GivenName = "Jamie",
             FamilyName = "Doe",
-            Identities = [new Identity { Email = "jamie@example.com", EmailVerified = true }]
+            Identities =
+            [
+                new Identity
+                {
+                    Email = "jamie@example.com",
+                    EmailVerified = true,
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -135,10 +169,14 @@ public class NotifyStatusChangedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Do_Nothing_When_No_Recipients_Can_Be_Resolved(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IEmailService emailService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IEmailService emailService,
         MarketplaceRefundNotificationService sut,
         CancellationToken cancellationToken)
     {
@@ -148,10 +186,26 @@ public class NotifyStatusChangedAsyncShould
             OrganizationId = "org-1",
             RequestedByCustomerId = "customer-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
-            Status = MarketplaceRefundStatusConstants.Completed
+            Status = MarketplaceRefundStatusConstants.Completed,
         };
-        var organization = new Organization { Id = "org-1", Name = "Acme Coworking", ContactEmail = null };
-        var customer = new Customer { Id = "customer-1", Identities = [new Identity { Email = "jamie@example.com", EmailVerified = false }] };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Name = "Acme Coworking",
+            ContactEmail = null,
+        };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+            Identities =
+            [
+                new Identity
+                {
+                    Email = "jamie@example.com",
+                    EmailVerified = false,
+                },
+            ],
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -176,11 +230,16 @@ public class NotifyStatusChangedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Avoid_Duplicate_Send_When_Customer_And_Internal_Email_Are_The_Same(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IEmailService emailService,
-        [Frozen] EmailConfiguration emailConfiguration,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IEmailService emailService,
+        [Frozen]
+        EmailConfiguration emailConfiguration,
         MarketplaceRefundNotificationService sut,
         CancellationToken cancellationToken)
     {
@@ -192,7 +251,7 @@ public class NotifyStatusChangedAsyncShould
             RequestedByCustomerId = "customer-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             Status = MarketplaceRefundStatusConstants.Completed,
-            AccountingProvider = AccountingProviderConstants.Xero
+            AccountingProvider = AccountingProviderConstants.Xero,
         };
         var organization = new Organization
         {
@@ -209,19 +268,34 @@ public class NotifyStatusChangedAsyncShould
                     {
                         Identities =
                         [
-                            new Identity { Email = "jamie@example.com", EmailVerified = true },
-                            new Identity { Email = "owner2@acme.test", EmailVerified = true }
-                        ]
-                    }
-                }
-            ]
+                            new Identity
+                            {
+                                Email = "jamie@example.com",
+                                EmailVerified = true,
+                            },
+                            new Identity
+                            {
+                                Email = "owner2@acme.test",
+                                EmailVerified = true,
+                            },
+                        ],
+                    },
+                },
+            ],
         };
         var customer = new Customer
         {
             Id = "customer-1",
             GivenName = "Jamie",
             FamilyName = "Doe",
-            Identities = [new Identity { Email = "jamie@example.com", EmailVerified = true }]
+            Identities =
+            [
+                new Identity
+                {
+                    Email = "jamie@example.com",
+                    EmailVerified = true,
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -258,11 +332,16 @@ public class NotifyStatusChangedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Include_Manual_Follow_Up_Language_For_Failed_Refunds(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IEmailService emailService,
-        [Frozen] EmailConfiguration emailConfiguration,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IEmailService emailService,
+        [Frozen]
+        EmailConfiguration emailConfiguration,
         MarketplaceRefundNotificationService sut,
         CancellationToken cancellationToken)
     {
@@ -274,7 +353,7 @@ public class NotifyStatusChangedAsyncShould
             RequestedByCustomerId = "customer-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
             Status = MarketplaceRefundStatusConstants.Failed,
-            LastError = "Concrete invoice instance has not been correlated yet."
+            LastError = "Concrete invoice instance has not been correlated yet.",
         };
         var organization = new Organization
         {
@@ -287,16 +366,33 @@ public class NotifyStatusChangedAsyncShould
                 {
                     Status = OrganizationMemberStatusConstants.Active,
                     Role = OrganizationMemberRoleConstants.Administrator,
-                    Customer = new Customer { Identities = [new Identity { Email = "admin@acme.test", EmailVerified = true }] }
-                }
-            ]
+                    Customer = new Customer
+                    {
+                        Identities =
+                        [
+                            new Identity
+                            {
+                                Email = "admin@acme.test",
+                                EmailVerified = true,
+                            },
+                        ],
+                    },
+                },
+            ],
         };
         var customer = new Customer
         {
             Id = "customer-1",
             GivenName = "Jamie",
             FamilyName = "Doe",
-            Identities = [new Identity { Email = "jamie@example.com", EmailVerified = true }]
+            Identities =
+            [
+                new Identity
+                {
+                    Email = "jamie@example.com",
+                    EmailVerified = true,
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -322,11 +418,16 @@ public class NotifyStatusChangedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Include_Organization_Specific_Internal_Recipients_And_Manual_Status_Copy(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IEmailService emailService,
-        [Frozen] EmailConfiguration emailConfiguration,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IEmailService emailService,
+        [Frozen]
+        EmailConfiguration emailConfiguration,
         MarketplaceRefundNotificationService sut,
         CancellationToken cancellationToken)
     {
@@ -338,21 +439,28 @@ public class NotifyStatusChangedAsyncShould
             RequestedByCustomerId = "customer-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             Status = MarketplaceRefundStatusConstants.Failed,
-            LastError = "Manual bank transfer required"
+            LastError = "Manual bank transfer required",
         };
         var organization = new Organization
         {
             Id = "org-1",
             Name = "Acme Coworking",
             ContactEmail = "ops@acme.test",
-            RefundNotificationEmails = ["finance@acme.test", "ops@acme.test"]
+            RefundNotificationEmails = ["finance@acme.test", "ops@acme.test"],
         };
         var customer = new Customer
         {
             Id = "customer-1",
             GivenName = "Jamie",
             FamilyName = "Doe",
-            Identities = [new Identity { Email = "jamie@example.com", EmailVerified = true }]
+            Identities =
+            [
+                new Identity
+                {
+                    Email = "jamie@example.com",
+                    EmailVerified = true,
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);

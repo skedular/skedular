@@ -33,7 +33,7 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
                     new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero),
                     ProductPricingCadence.Daily,
                     PaymentStatus.Pending,
-                    "INV-APR-2")
+                    "INV-APR-2"),
             ]);
 
         var result = subscription.ResolveCurrentBillingWindowPaymentProjection(new DateTimeOffset(2026, 4, 20, 10, 0, 0, TimeSpan.Zero));
@@ -70,7 +70,7 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
                     new DateTimeOffset(2026, 5, 2, 0, 0, 0, TimeSpan.Zero),
                     ProductPricingCadence.Daily,
                     PaymentStatus.Confirmed,
-                    "INV-MAY-2")
+                    "INV-MAY-2"),
             ]);
 
         var result = subscription.ResolveCurrentBillingWindowPaymentProjection(new DateTimeOffset(2026, 5, 20, 10, 0, 0, TimeSpan.Zero));
@@ -93,7 +93,7 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
                     new DateTimeOffset(2026, 6, 30, 0, 0, 0, TimeSpan.Zero),
                     ProductPricingCadence.Quarterly,
                     PaymentStatus.Confirmed,
-                    "INV-Q2")
+                    "INV-Q2"),
             ]);
 
         var result = subscription.ResolveCurrentBillingWindowPaymentProjection(new DateTimeOffset(2026, 4, 20, 10, 0, 0, TimeSpan.Zero));
@@ -130,14 +130,23 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
             {
                 Id = "subscription-marketplace-booking",
                 PaymentStatus = PaymentStatus.Pending,
-                ProductPricing = ProductPricing.Empty("pricing-1") with { PurchaseCadence = ProductPricingCadence.Monthly },
+                ProductPricing = ProductPricing.Empty("pricing-1") with
+                {
+                    PurchaseCadence = ProductPricingCadence.Monthly,
+                },
                 ProductVersion = new ProductVersion
                 {
                     Id = "pv-subscription",
-                    Product = new Product { Organization = new Organization { BillingCycle = organizationBillingCycle } }
-                }
+                    Product = new Product
+                    {
+                        Organization = new Organization
+                        {
+                            BillingCycle = organizationBillingCycle,
+                        },
+                    },
+                },
             },
-            RecurringBookings = recurringBookings
+            RecurringBookings = recurringBookings,
         };
 
     private static RecurringBooking CreateRecurringBooking(
@@ -158,12 +167,21 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
                 IsPaymentRequired = true,
                 PaymentStatus = paymentStatus,
                 InvoiceNumber = invoiceNumber,
-                ProductPricing = ProductPricing.Empty($"pricing-{id}") with { PurchaseCadence = purchaseCadence },
+                ProductPricing = ProductPricing.Empty($"pricing-{id}") with
+                {
+                    PurchaseCadence = purchaseCadence,
+                },
                 ProductVersion = new ProductVersion
                 {
                     Id = $"pv-{id}",
-                    Product = new Product { Organization = new Organization { BillingCycle = OrganizationBillingCycle.Monthly } }
-                }
-            }
+                    Product = new Product
+                    {
+                        Organization = new Organization
+                        {
+                            BillingCycle = OrganizationBillingCycle.Monthly,
+                        },
+                    },
+                },
+            },
         };
 }

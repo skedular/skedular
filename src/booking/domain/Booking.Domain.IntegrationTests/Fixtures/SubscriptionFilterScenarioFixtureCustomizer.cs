@@ -21,10 +21,15 @@ public class SubscriptionFilterScenarioFixtureCustomizer : IFixtureCustomizer
             CustomDomain = $"filter-{Guid.CreateVersion7():N}",
             Type = OrganizationType.Private.ToOrganizationType(),
             BillingCycle = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycle(),
-            ContactEmail = "test@filter.test"
+            ContactEmail = "test@filter.test",
         };
 
-        var product = new ProductEntity { Id = NewId(), Organization = organization, OrganizationId = organization.Id };
+        var product = new ProductEntity
+        {
+            Id = NewId(),
+            Organization = organization,
+            OrganizationId = organization.Id,
+        };
 
         var pricing = new ProductPricing(
             NewId(),
@@ -53,7 +58,7 @@ public class SubscriptionFilterScenarioFixtureCustomizer : IFixtureCustomizer
             Type = ProductType.Resource.ToProductType(),
             Currency = Currency.Nzd.ToCurrency(),
             ListingMetadata = new ListingMetadata("Filter Product", "For filtering tests", null, []),
-            PricingOptions = [pricing]
+            PricingOptions = [pricing],
         };
 
         var activePending = CreateSubscriptionPair(
@@ -110,7 +115,7 @@ public class SubscriptionFilterScenarioFixtureCustomizer : IFixtureCustomizer
             AutoRenew = false,
             CancelAtPeriodEnd = false,
             ProductVersion = productVersion,
-            InvolvedOrganizations = [organization]
+            InvolvedOrganizations = [organization],
         };
 
         var marketplaceBooking = new MarketplaceBookingEntity
@@ -129,7 +134,7 @@ public class SubscriptionFilterScenarioFixtureCustomizer : IFixtureCustomizer
             InvoiceEmailList = [],
             BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
             MarketplaceBookingSubscription = subscription,
-            MarketplaceBookingSubscriptionId = subscriptionId
+            MarketplaceBookingSubscriptionId = subscriptionId,
         };
 
         return (subscription, marketplaceBooking);

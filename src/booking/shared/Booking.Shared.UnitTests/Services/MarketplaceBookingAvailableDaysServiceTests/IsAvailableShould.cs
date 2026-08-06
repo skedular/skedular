@@ -25,7 +25,10 @@ public class IsAvailableShould
     [AutoFakeItEasyData]
     public void Use_The_Booking_Calendar_Day(MarketplaceBookingAvailableDaysService sut)
     {
-        var pricing = ProductPricing.Empty("price") with { AvailableDays = [DayOfWeek.Friday] };
+        var pricing = ProductPricing.Empty("price") with
+        {
+            AvailableDays = [DayOfWeek.Friday],
+        };
 
         var available = sut.IsAvailable(
             pricing,

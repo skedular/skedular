@@ -14,7 +14,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<MarketplaceBookingSubscriptionPayload> AddMarketplaceBookingSubscriptionAsync(
         AddMarketplaceBookingSubscriptionInput input,
-        [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+        [Service]
+        IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken)
     {
         try
@@ -22,7 +23,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             var subscription = await marketplaceBookingSubscriptionService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
             return new MarketplaceBookingSubscriptionPayload
             {
-                ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = graphQlMapper.MapTo(subscription)
+                ClientMutationId = input.ClientMutationId,
+                MarketplaceBookingSubscription = graphQlMapper.MapTo(subscription),
             };
         }
         catch (SpacesAccessDenied exception)
@@ -36,8 +38,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
                     Status = exception.Status,
                     ReasonCode = exception.ReasonCode,
                     UpgradeRequired = exception.UpgradeRequired,
-                    Message = exception.Message
-                }
+                    Message = exception.Message,
+                },
             };
         }
     }
@@ -45,7 +47,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<MarketplaceBookingSubscriptionPayload> DeleteMarketplaceBookingSubscriptionAsync(
         DeleteMarketplaceBookingSubscriptionInput input,
-        [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+        [Service]
+        IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken)
     {
         try
@@ -57,7 +60,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
                 cancellationToken);
             return new MarketplaceBookingSubscriptionPayload
             {
-                ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = graphQlMapper.MapTo(subscription)
+                ClientMutationId = input.ClientMutationId,
+                MarketplaceBookingSubscription = graphQlMapper.MapTo(subscription),
             };
         }
         catch (MarketplaceBookingSubscriptionCancellationNotAllowed exception)
@@ -65,7 +69,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             return new MarketplaceBookingSubscriptionPayload
             {
                 ClientMutationId = input.ClientMutationId,
-                CancellationError = new CancellationErrorDetails { Code = CancellationErrorCode.PolicyRestriction, Message = exception.Message }
+                CancellationError = new CancellationErrorDetails
+                {
+                    Code = CancellationErrorCode.PolicyRestriction,
+                    Message = exception.Message,
+                },
             };
         }
         catch (MarketplaceBookingSubscriptionCancellationOverrideReasonRequired exception)
@@ -74,7 +82,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             {
                 ClientMutationId = input.ClientMutationId,
                 CancellationError =
-                    new CancellationErrorDetails { Code = CancellationErrorCode.OverrideReasonRequired, Message = exception.Message }
+                    new CancellationErrorDetails
+                    {
+                        Code = CancellationErrorCode.OverrideReasonRequired,
+                        Message = exception.Message,
+                    },
             };
         }
         catch (UnauthorizedAccessException exception)
@@ -84,8 +96,9 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
                 ClientMutationId = input.ClientMutationId,
                 CancellationError = new CancellationErrorDetails
                 {
-                    Code = CancellationErrorCode.InsufficientManagementPermission, Message = exception.Message
-                }
+                    Code = CancellationErrorCode.InsufficientManagementPermission,
+                    Message = exception.Message,
+                },
             };
         }
         catch (MarketplaceBookingSubscriptionCannotBeUpdated exception)
@@ -94,7 +107,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             {
                 ClientMutationId = input.ClientMutationId,
                 CancellationError =
-                    new CancellationErrorDetails { Code = CancellationErrorCode.InvalidTerminalState, Message = exception.Message }
+                    new CancellationErrorDetails
+                    {
+                        Code = CancellationErrorCode.InvalidTerminalState,
+                        Message = exception.Message,
+                    },
             };
         }
     }

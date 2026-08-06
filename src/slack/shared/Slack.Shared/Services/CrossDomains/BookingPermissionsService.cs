@@ -25,7 +25,10 @@ public class BookingPermissionsService(
     IGrpcMapper grpcMapper,
     IMemoryCache memoryCache) : IBookingPermissionsService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<OrganizationBookingPermissions> GetOrganizationPermissionsAsync(
         string workspaceMemberId,
@@ -35,7 +38,10 @@ public class BookingPermissionsService(
             CreateOrganizationKeyById(workspaceMemberId, organizationId),
             async _ => grpcMapper.MapTo(
                 await bookingServiceClient.GetOrganizationPermissionsAsync(
-                    new GetOrganizationPermissionsInput { OrganizationId = organizationId },
+                    new GetOrganizationPermissionsInput
+                    {
+                        OrganizationId = organizationId,
+                    },
                     bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -45,7 +51,10 @@ public class BookingPermissionsService(
             CreateTeamKeyById(workspaceMemberId, teamId),
             async _ => grpcMapper.MapTo(
                 await bookingServiceClient.GetTeamPermissionsAsync(
-                    new GetTeamPermissionsInput { TeamId = teamId },
+                    new GetTeamPermissionsInput
+                    {
+                        TeamId = teamId,
+                    },
                     bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;

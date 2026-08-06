@@ -27,7 +27,10 @@ public class BookingOutboxPublisher(
         foreach (var booking in bookings)
         {
             publisher.Publish(
-                new Key { BookingId = booking.Id },
+                new Key
+                {
+                    BookingId = booking.Id,
+                },
                 new Event
                 {
                     Metadata = Event.NewMetadata(
@@ -35,7 +38,10 @@ public class BookingOutboxPublisher(
                         applicationConfiguration.AppSource,
                         booking.IsDeleted() ? Type.BookingDeleted : Type.BookingUpserted,
                         context.GetCorrelationId()),
-                    Data = new Data { Booking = eventMapper.MapTo(booking) }
+                    Data = new Data
+                    {
+                        Booking = eventMapper.MapTo(booking),
+                    },
                 },
                 unitOfWork);
         }

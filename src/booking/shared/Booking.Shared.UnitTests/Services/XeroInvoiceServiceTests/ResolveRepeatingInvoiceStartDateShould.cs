@@ -13,7 +13,10 @@ public class ResolveRepeatingInvoiceStartDateShould
     public void Return_Recurring_Booking_Start_Date(
         DateTimeOffset startDate)
     {
-        var recurringBooking = new RecurringBookingEntity { StartDate = startDate };
+        var recurringBooking = new RecurringBookingEntity
+        {
+            StartDate = startDate,
+        };
 
         Invoke(recurringBooking).ShouldBe(startDate.UtcDateTime.Date);
     }
@@ -23,7 +26,10 @@ public class ResolveRepeatingInvoiceStartDateShould
     public void Return_Next_Billing_Boundary_When_Initial_Invoice_Is_Created_Immediately(
         DateTimeOffset startDate)
     {
-        var recurringBooking = new RecurringBookingEntity { StartDate = startDate };
+        var recurringBooking = new RecurringBookingEntity
+        {
+            StartDate = startDate,
+        };
         var scheduleDefinition = new XeroRepeatingInvoiceScheduleDefinition(
             "OrganizationBillingCycle",
             Schedule.UnitEnum.MONTHLY,

@@ -10,8 +10,15 @@ namespace Organization.Api.GraphQL.Tag;
 [Shareable]
 public class OrganizationTagDetails : Node
 {
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("description")] public string? Description { get; set; }
-    [GraphQLName("type")] public OrganizationTagType Type { get; set; }
-    [GraphQLName("color")] public string? Color { get; set; }
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [GraphQLName("description")]
+    public string? Description { get; set; }
+
+    [GraphQLName("type")]
+    public OrganizationTagType Type { get; set; }
+
+    [GraphQLName("color")]
+    public string? Color { get; set; }
 }

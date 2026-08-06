@@ -71,7 +71,7 @@ public static class OrganizationBankAccountExtensions
                     ? originalQuery.OrderBy(x => x.Name)
                     : originalQuery.OrderByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             }, (query, orderField) =>
                 orderField.Field switch
                 {
@@ -79,7 +79,7 @@ public static class OrganizationBankAccountExtensions
                         ? query.ThenBy(x => x.Name)
                         : query.ThenByDescending(x => x.Name),
                     _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
                 }).ThenBy(query => query.Id);
         }
     }
@@ -147,7 +147,7 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
                 KeysetPaginationField<OrganizationBankAccount>.Create(
                     nameof(OrganizationBankAccount.Name),
                     query => query.Name,
-                    OrderDirection.Ascending)
+                    OrderDirection.Ascending),
             ];
         }
 
@@ -158,7 +158,7 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
                     query => query.Name,
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             })
             .ToList();
     }

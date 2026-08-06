@@ -22,7 +22,10 @@ public class SpacesBookingUsageRolloverShould(IRepositoryFactory repositoryFacto
         organization.Type = OrganizationTypeConstants.Marketplace;
         organization.Offering = new OfferingModel
         {
-            SpacesPlanCode = 5, SpacesQuotaLimit = 500, SpacesPeriodStart = oldPeriodStart, SpacesPeriodEnd = currentPeriodStart
+            SpacesPlanCode = 5,
+            SpacesQuotaLimit = 500,
+            SpacesPeriodStart = oldPeriodStart,
+            SpacesPeriodEnd = currentPeriodStart,
         };
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -9,7 +9,7 @@ public enum SpacesQuotaReasonCode
     CustomCapacityExceeded = 4,
     MissingOfferingState = 5,
     OutOfPeriodExcluded = 6,
-    TrialExpired = 7
+    TrialExpired = 7,
 }
 
 public static class SpacesQuotaReasonCodeExtensions
@@ -28,7 +28,7 @@ public static class SpacesQuotaReasonCodeExtensions
                 SpacesQuotaReasonCode.OutOfPeriodExcluded => "Out Of Period Excluded",
                 SpacesQuotaReasonCode.TrialExpired => "Trial Expired",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

@@ -31,7 +31,12 @@ public class OrganizationArrearsBillingPlannerService(IOrganizationArrearsCharge
             // do not emit duplicate invoices for the same earned usage slice.
             .Where(item => billingPeriod.Contains(item.EarnedAt))
             .Where(item => excludedSegmentKeys is null || !excludedSegmentKeys.Contains(item.SegmentKey))
-            .GroupBy(item => new { item.OrganizationId, item.CustomerId, item.Currency })
+            .GroupBy(item => new
+            {
+                item.OrganizationId,
+                item.CustomerId,
+                item.Currency,
+            })
             .Select(group => new ArrearsInvoiceDraft(
                 group.Key.OrganizationId,
                 group.Key.CustomerId,
@@ -56,7 +61,12 @@ public class OrganizationArrearsBillingPlannerService(IOrganizationArrearsCharge
         organizationArrearsChargeSegmentService.BuildInitialRecurringChargeSegments(recurringBooking, billingCycle)
             .Where(item => excludedSegmentKeys is null || !excludedSegmentKeys.Contains(item.SegmentKey))
             .OrderBy(item => item.EarnedAt)
-            .GroupBy(item => new { item.OrganizationId, item.CustomerId, item.Currency })
+            .GroupBy(item => new
+            {
+                item.OrganizationId,
+                item.CustomerId,
+                item.Currency,
+            })
             .Select(group =>
             {
                 var firstSegment = group.First();
@@ -73,7 +83,7 @@ public class OrganizationArrearsBillingPlannerService(IOrganizationArrearsCharge
                             firstSegment.ServicePeriod,
                             firstSegment.EarnedAt,
                             firstSegment.Amount,
-                            firstSegment.Description)
+                            firstSegment.Description),
                     ]);
             })
             .FirstOrDefault();

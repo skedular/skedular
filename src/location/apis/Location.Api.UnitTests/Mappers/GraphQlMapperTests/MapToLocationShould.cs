@@ -16,12 +16,22 @@ public class MapToLocationShould
             Id = "location-1",
             Name = "HQ",
             Type = LocationType.Private,
-            Organization = new Organization { Id = "organization-1", CustomDomain = "acme" },
+            Organization = new Organization
+            {
+                Id = "organization-1",
+                CustomDomain = "acme",
+            },
             FloorPlans =
             [
-                new FloorPlan { Id = "floor-plan-1" },
-                new FloorPlan { Id = "floor-plan-2" }
-            ]
+                new FloorPlan
+                {
+                    Id = "floor-plan-1",
+                },
+                new FloorPlan
+                {
+                    Id = "floor-plan-2",
+                },
+            ],
         };
 
         var result = sut.MapTo(location);

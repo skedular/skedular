@@ -9,9 +9,12 @@ public class PropagateActivityShould
     [Theory]
     [AutoFakeItEasyData]
     public void Call_Inject(
-        [Frozen] IPropagationContextGetter propagationContext,
-        [Frozen] TextMapPropagator textMapPropagator,
-        [Frozen] IPropagatorFunctionProvider<string> propagatorFunctionProvider,
+        [Frozen]
+        IPropagationContextGetter propagationContext,
+        [Frozen]
+        TextMapPropagator textMapPropagator,
+        [Frozen]
+        IPropagatorFunctionProvider<string> propagatorFunctionProvider,
         ActivityPropagator<string> activityAccessor)
     {
         var carrier = "my context string";
@@ -37,8 +40,10 @@ public class PropagateActivityShould
     [Theory]
     [AutoFakeItEasyData]
     public void HandleNullPropagationContext(
-        [Frozen] TextMapPropagator textMapPropagator,
-        [Frozen] IPropagationContextGetter getter,
+        [Frozen]
+        TextMapPropagator textMapPropagator,
+        [Frozen]
+        IPropagationContextGetter getter,
         ActivityPropagator<string> accessor)
     {
         A.CallTo(() => getter.GetPropagationContext()).Returns(null);

@@ -30,7 +30,10 @@ public class TemporalService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     public async Task<string> SignalAddCustomerStripePaymentMethodAndGetResultAsync(
@@ -43,9 +46,18 @@ public class TemporalService(
 
         await handle.SignalAsync(
             workflow => workflow.StripePaymentMethodEventReceivedAsync(args),
-            new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
+            new WorkflowSignalOptions
+            {
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
+            }
         );
 
-        return await handle.GetResultAsync<string>(rpcOptions: new RpcOptions { CancellationToken = cancellationToken });
+        return await handle.GetResultAsync<string>(rpcOptions: new RpcOptions
+        {
+            CancellationToken = cancellationToken,
+        });
     }
 }

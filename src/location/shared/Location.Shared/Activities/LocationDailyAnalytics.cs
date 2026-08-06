@@ -54,7 +54,10 @@ public class LocationDailyAnalytics(
 
         _ = repositoryFactory.DailyDeskCountRecordingRepository.Add(new DailyDeskCountRecording
         {
-            Id = randomHelper.Generate(), Count = deskResources.Count, Date = startOfToday, Location = location
+            Id = randomHelper.Generate(),
+            Count = deskResources.Count,
+            Date = startOfToday,
+            Location = location,
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -82,7 +85,7 @@ public class LocationDailyAnalytics(
                     !item.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceDesk) &&
                     item.IsNotDeleted()),
             Date = startOfToday,
-            Location = location
+            Location = location,
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -153,7 +156,7 @@ public class LocationDailyAnalytics(
             OrganizationTagTypeConstants.ResourceDesk,
             OrganizationTagTypeConstants.ResourceRoom,
             OrganizationTagTypeConstants.ResourceParking,
-            OrganizationTagTypeConstants.ResourceOthers
+            OrganizationTagTypeConstants.ResourceOthers,
         };
 
         var typedResources = location.Resources
@@ -207,7 +210,7 @@ public class LocationDailyAnalytics(
                 ResourceId = resource.Id,
                 Resource = resource,
                 Date = snapshotDate,
-                Classification = classification.ToResourceAvailabilityClassification()
+                Classification = classification.ToResourceAvailabilityClassification(),
             });
         }
 
@@ -241,11 +244,21 @@ public class LocationDailyAnalytics(
                     Last = ((int?)null).ToNullInt(),
                     Where = new BookingWhereInput
                     {
-                        LocationIds = { locationId },
+                        LocationIds =
+                        {
+                            locationId,
+                        },
                         FromGte = Timestamp.FromDateTimeOffset(from),
-                        FromLt = Timestamp.FromDateTimeOffset(until)
+                        FromLt = Timestamp.FromDateTimeOffset(until),
                     },
-                    OrderBy = { new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From } }
+                    OrderBy =
+                    {
+                        new BookingOrderInput
+                        {
+                            Direction = OrderDirection.Ascending,
+                            Field = BookingOrderField.From,
+                        },
+                    },
                 },
                 bookingConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);

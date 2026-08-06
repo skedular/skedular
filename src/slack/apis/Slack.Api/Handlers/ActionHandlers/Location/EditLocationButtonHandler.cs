@@ -47,8 +47,11 @@ public class EditLocationButtonHandler(
         var location = new Shared.Models.Location
         {
             Id = context.LocationId,
-            Organization = new Organization { Id = workspace.Organization.Id },
-            Type = existingLocation.Type ?? LocationType.Private
+            Organization = new Organization
+            {
+                Id = workspace.Organization.Id,
+            },
+            Type = existingLocation.Type ?? LocationType.Private,
         };
 
         if (values.TryGetValue(LocationActionTypes.Name, out var nameBlock))
@@ -81,7 +84,10 @@ public class EditLocationButtonHandler(
             {
                 if (block is PlainTextInputValue value)
                 {
-                    location.ListingMetadata = location.ListingMetadata with { About = value.Value.ToSafeString() };
+                    location.ListingMetadata = location.ListingMetadata with
+                    {
+                        About = value.Value.ToSafeString(),
+                    };
                 }
                 else
                 {

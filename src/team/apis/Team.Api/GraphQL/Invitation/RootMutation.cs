@@ -11,20 +11,22 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
     [UseResolverScope]
     public async Task<InviteCustomersToJoinTeamPayload> InviteCustomersToJoinTeamAsync(
         InviteCustomersToJoinTeamInput input,
-        [Service] IInvitationService invitationService,
+        [Service]
+        IInvitationService invitationService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
             InvitesCustomersToJoinTeam = graphQlMapper.MapTo(
                     await invitationService.InviteMembersByEmailsAsync(input.TeamId, input.Emails.ToList(), cancellationToken))
-                .ToList()
+                .ToList(),
         };
 
     [UseResolverScope]
     public async Task<InvitationToJoinTeamPayload> AcceptInvitationToJoinTeamAsync(
         AcceptInvitationToJoinTeamInput input,
-        [Service] IInvitationService invitationService,
+        [Service]
+        IInvitationService invitationService,
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting {OperationName}", nameof(AcceptInvitationToJoinTeamAsync));
@@ -33,29 +35,32 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
 
         return new InvitationToJoinTeamPayload
         {
-            ClientMutationId = input.ClientMutationId, InviteCustomerToJoinTeam = graphQlMapper.MapTo(invitation)
+            ClientMutationId = input.ClientMutationId,
+            InviteCustomerToJoinTeam = graphQlMapper.MapTo(invitation),
         };
     }
 
     [UseResolverScope]
     public async Task<InvitationToJoinTeamPayload> RejectInvitationToJoinTeamAsync(
         RejectInvitationToJoinTeamInput input,
-        [Service] IInvitationService invitationService,
+        [Service]
+        IInvitationService invitationService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            InviteCustomerToJoinTeam = graphQlMapper.MapTo(await invitationService.RejectInvitationToJoinAsync(input.Id, cancellationToken))
+            InviteCustomerToJoinTeam = graphQlMapper.MapTo(await invitationService.RejectInvitationToJoinAsync(input.Id, cancellationToken)),
         };
 
     [UseResolverScope]
     public async Task<InvitationToJoinTeamPayload> CancelInvitationToJoinTeamAsync(
         CancelInvitationToJoinTeamInput input,
-        [Service] IInvitationService invitationService,
+        [Service]
+        IInvitationService invitationService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            InviteCustomerToJoinTeam = graphQlMapper.MapTo(await invitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken))
+            InviteCustomerToJoinTeam = graphQlMapper.MapTo(await invitationService.CancelInvitationToJoinAsync(input.Id, cancellationToken)),
         };
 }

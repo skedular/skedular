@@ -37,5 +37,5 @@ public enum MarketplaceBookingSubscriptionOrderField
     StartedAt,
     CancelledAt,
     NextRenewalAt,
-    Status
+    Status,
 }

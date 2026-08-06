@@ -20,7 +20,7 @@ public class MapToRecurringBookingShould
             InvolvedCustomers = [],
             InvolvedOrganizations = [],
             InvolvedTeams = [],
-            RequestedResources = []
+            RequestedResources = [],
         };
 
         var result = sut.MapTo(recurringBooking, new DateOnly(2026, 4, 14));
@@ -44,14 +44,14 @@ public class MapToRecurringBookingShould
             InvolvedCustomers = [],
             InvolvedOrganizations = [],
             InvolvedTeams = [],
-            RequestedResources = []
+            RequestedResources = [],
         };
         var existingBooking = new Shared.Models.Booking
         {
             Id = "booking-1",
             From = new DateTimeOffset(2026, 4, 12, 22, 0, 0, TimeSpan.Zero),
             Until = new DateTimeOffset(2026, 4, 13, 2, 30, 0, TimeSpan.Zero),
-            Resources = []
+            Resources = [],
         };
 
         var result = sut.MapTo(recurringBooking, existingBooking, null, new DateOnly(2026, 4, 16));

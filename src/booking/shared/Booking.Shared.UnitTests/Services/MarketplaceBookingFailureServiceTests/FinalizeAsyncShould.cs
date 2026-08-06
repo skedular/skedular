@@ -11,14 +11,17 @@ public class FinalizeAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_The_Existing_Failure_For_The_Same_Stable_Key(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingFailureRepository failureRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingFailureRepository failureRepository,
         MarketplaceBookingFailureService sut,
         CancellationToken cancellationToken)
     {
         var existing = new MarketplaceBookingFailure
         {
-            Id = "failure-1", FailureKey = "marketplace-booking-failure:OneTimeBooking:booking-1:PaymentExpired"
+            Id = "failure-1",
+            FailureKey = "marketplace-booking-failure:OneTimeBooking:booking-1:PaymentExpired",
         };
         var finalization = new MarketplaceBookingFailureFinalization(
             null,

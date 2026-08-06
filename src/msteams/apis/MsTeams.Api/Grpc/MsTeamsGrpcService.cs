@@ -11,6 +11,12 @@ public class MsTeamsGrpcService(IVersionService versionService) : MsTeamsService
     {
         var version = versionService.GetVersion();
 
-        return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
+        return Task.FromResult(new Version
+        {
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
+        });
     }
 }

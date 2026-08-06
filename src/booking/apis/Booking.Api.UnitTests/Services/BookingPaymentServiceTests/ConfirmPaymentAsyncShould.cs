@@ -25,20 +25,36 @@ public class ConfirmPaymentAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_The_Marketplace_Booking_And_Raise_The_Booking_Event(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IProductVersionRepository productVersionRepository,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IBookingOutboxPublisher bookingOutboxPublisher,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IProductVersionRepository productVersionRepository,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplacePurchaseHistoryRepository marketplacePurchaseHistoryRepository,
         BookingPaymentService sut,
         string bookingId,
         string customerId,
@@ -47,21 +63,38 @@ public class ConfirmPaymentAsyncShould
     {
         var marketplaceBooking = new MarketplaceBookingEntity
         {
-            ProductVersion = new ProductVersionEntity { Id = "product-version-1" },
+            ProductVersion = new ProductVersionEntity
+            {
+                Id = "product-version-1",
+            },
             PaymentMethod = PaymentMethod.BankTransfer.ToPaymentMethod(),
-            PaymentStatus = PaymentStatus.Pending.ToPaymentStatus()
+            PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
         };
         var existingBooking = new BookingEntity
         {
-            Id = bookingId, Channel = BookingChannel.Marketplace.ToBookingChannel(), MarketplaceBooking = marketplaceBooking
+            Id = bookingId,
+            Channel = BookingChannel.Marketplace.ToBookingChannel(),
+            MarketplaceBooking = marketplaceBooking,
         };
         var productVersion = new ProductVersionEntity
         {
             Id = marketplaceBooking.ProductVersion.Id,
-            Product = new ProductEntity { Organization = new OrganizationEntity { Id = organizationId } }
+            Product = new ProductEntity
+            {
+                Organization = new OrganizationEntity
+                {
+                    Id = organizationId,
+                },
+            },
         };
-        var organization = new OrganizationEntity { Id = organizationId };
-        var mappedBooking = new Shared.Models.Booking { Id = bookingId };
+        var organization = new OrganizationEntity
+        {
+            Id = organizationId,
+        };
+        var mappedBooking = new Shared.Models.Booking
+        {
+            Id = bookingId,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customerId);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -69,6 +102,7 @@ public class ConfirmPaymentAsyncShould
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingRepository).Returns(marketplaceBookingRepository);
+        A.CallTo(() => repositoryFactory.MarketplacePurchaseHistoryRepository).Returns(marketplacePurchaseHistoryRepository);
         A.CallTo(() => bookingRepository.GetByIdAsync(bookingId, cancellationToken)).Returns(existingBooking);
         A.CallTo(() => productVersionRepository.GetByIdAsync(productVersion.Id, cancellationToken)).Returns(productVersion);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(organizationId, null, false, false, cancellationToken))
@@ -87,6 +121,9 @@ public class ConfirmPaymentAsyncShould
                 unitOfWork))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingRepository.Update(marketplaceBooking)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => marketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+                marketplaceBooking.Id, cancellationToken))
+            .MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingOutboxPublisher.PublishBookings(
                 A<IReadOnlyList<Shared.Models.Booking>>.That.Matches(items => items.Count == 1 && items.Single().Id == bookingId),
                 unitOfWork))

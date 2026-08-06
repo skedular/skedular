@@ -6,7 +6,11 @@ public class RewriteHostHandler(Uri target) : DelegatingHandler
     {
         if (request.RequestUri is not null)
         {
-            request.RequestUri = new UriBuilder(target) { Path = request.RequestUri.AbsolutePath, Query = request.RequestUri.Query.TrimStart('?') }
+            request.RequestUri = new UriBuilder(target)
+                {
+                    Path = request.RequestUri.AbsolutePath,
+                    Query = request.RequestUri.Query.TrimStart('?'),
+                }
                 .Uri;
         }
 

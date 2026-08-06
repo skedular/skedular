@@ -20,11 +20,16 @@ public class AdjustRequiredResourcesForPrivateRecurringBookingAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Suppress_New_Instance_And_Keep_Workflow_Alive_When_Trial_Is_Expired(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRecurringBookingScheduleService recurringBookingScheduleService,
-        [Frozen] IPrivateBookingService privateBookingService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ILogger<PrivateRecurringBookingIntegrations> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRecurringBookingScheduleService recurringBookingScheduleService,
+        [Frozen]
+        IPrivateBookingService privateBookingService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ILogger<PrivateRecurringBookingIntegrations> logger,
         PrivateRecurringBookingIntegrations sut,
         string recurringBookingId,
         string bookingId,
@@ -37,9 +42,12 @@ public class AdjustRequiredResourcesForPrivateRecurringBookingAsyncShould
             InvolvedCustomers = [new Customer()],
             InvolvedOrganizations = [new Organization()],
             InvolvedTeams = [],
-            Bookings = []
+            Bookings = [],
         };
-        var booking = new BookingModel { Id = bookingId };
+        var booking = new BookingModel
+        {
+            Id = bookingId,
+        };
         var accessDecision = new SpacesAccessDecision(
             false,
             SpacesSubscriptionStatus.TrialExpired,
@@ -87,11 +95,16 @@ public class AdjustRequiredResourcesForPrivateRecurringBookingAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Blocked_Recurring_Instance_When_Quota_Is_Exceeded(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRecurringBookingScheduleService recurringBookingScheduleService,
-        [Frozen] IPrivateBookingService privateBookingService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ILogger<PrivateRecurringBookingIntegrations> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRecurringBookingScheduleService recurringBookingScheduleService,
+        [Frozen]
+        IPrivateBookingService privateBookingService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ILogger<PrivateRecurringBookingIntegrations> logger,
         PrivateRecurringBookingIntegrations sut)
     {
         var recurringBooking = new RecurringBooking
@@ -99,10 +112,22 @@ public class AdjustRequiredResourcesForPrivateRecurringBookingAsyncShould
             Id = "recurring-1",
             From = new DateTimeOffset(2026, 6, 15, 9, 0, 0, TimeSpan.Zero),
             Until = new DateTimeOffset(2026, 6, 15, 10, 0, 0, TimeSpan.Zero),
-            InvolvedCustomers = [new Customer { Id = "customer-1" }],
-            InvolvedOrganizations = [new Organization { Id = "org-1" }],
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                },
+            ],
             InvolvedTeams = [],
-            Bookings = []
+            Bookings = [],
         };
         var missingDay = new DateOnly(2026, 6, 16);
         var booking = new BookingModel
@@ -110,8 +135,20 @@ public class AdjustRequiredResourcesForPrivateRecurringBookingAsyncShould
             Id = "booking-1",
             From = new DateTimeOffset(2026, 6, 16, 9, 0, 0, TimeSpan.Zero),
             Until = new DateTimeOffset(2026, 6, 16, 10, 0, 0, TimeSpan.Zero),
-            InvolvedCustomers = [new CustomerModel { Id = "customer-1" }],
-            InvolvedOrganizations = [new OrganizationModel { Id = "org-1" }]
+            InvolvedCustomers =
+            [
+                new CustomerModel
+                {
+                    Id = "customer-1",
+                },
+            ],
+            InvolvedOrganizations =
+            [
+                new OrganizationModel
+                {
+                    Id = "org-1",
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.RecurringBookingRepository.GetByIdAsync(

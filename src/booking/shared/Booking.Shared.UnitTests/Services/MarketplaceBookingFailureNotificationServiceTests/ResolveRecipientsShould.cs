@@ -17,9 +17,12 @@ public class ResolveRecipientsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Resolve_Only_Verified_Customer_And_Active_Stakeholder_Recipients(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IOrganizationRepository organizationRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
         MarketplaceBookingFailureNotificationService sut,
         CancellationToken cancellationToken)
     {
@@ -28,13 +31,29 @@ public class ResolveRecipientsShould
             Id = "customer-1",
             Identities =
             [
-                new Identity { Email = "customer@example.test", EmailVerified = true },
-                new Identity { Email = "unverified@example.test", EmailVerified = false }
-            ]
+                new Identity
+                {
+                    Email = "customer@example.test",
+                    EmailVerified = true,
+                },
+                new Identity
+                {
+                    Email = "unverified@example.test",
+                    EmailVerified = false,
+                },
+            ],
         };
         var booking = new Database.Entities.Booking
         {
-            Id = "booking-1", CreatedByCustomer = customer, InvolvedOrganizations = [new Organization { Id = "organization-1" }]
+            Id = "booking-1",
+            CreatedByCustomer = customer,
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "organization-1",
+                },
+            ],
         };
         var organization = new Organization
         {
@@ -47,7 +66,18 @@ public class ResolveRecipientsShould
                     CustomerId = "owner-1",
                     Status = OrganizationMemberStatusConstants.Active,
                     Role = OrganizationMemberRoleConstants.Owner,
-                    Customer = new Customer { Id = "owner-1", Identities = [new Identity { Email = "owner@example.test", EmailVerified = true }] }
+                    Customer = new Customer
+                    {
+                        Id = "owner-1",
+                        Identities =
+                        [
+                            new Identity
+                            {
+                                Email = "owner@example.test",
+                                EmailVerified = true,
+                            },
+                        ],
+                    },
                 },
                 new OrganizationMember
                 {
@@ -56,10 +86,18 @@ public class ResolveRecipientsShould
                     Role = OrganizationMemberRoleConstants.Administrator,
                     Customer = new Customer
                     {
-                        Id = "former-admin", Identities = [new Identity { Email = "former@example.test", EmailVerified = true }]
-                    }
-                }
-            ]
+                        Id = "former-admin",
+                        Identities =
+                        [
+                            new Identity
+                            {
+                                Email = "former@example.test",
+                                EmailVerified = true,
+                            },
+                        ],
+                    },
+                },
+            ],
         };
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -67,7 +105,10 @@ public class ResolveRecipientsShould
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("organization-1", null, false, false, cancellationToken))
             .Returns(organization);
 
-        var recipients = await sut.ResolveRecipientsAsync(new MarketplaceBookingFailure { BookingId = "booking-1" }, cancellationToken);
+        var recipients = await sut.ResolveRecipientsAsync(new MarketplaceBookingFailure
+        {
+            BookingId = "booking-1",
+        }, cancellationToken);
 
         recipients.Count.ShouldBe(4);
         recipients.ShouldContain(item => item.RecipientEmail == "customer@example.test");
@@ -78,19 +119,40 @@ public class ResolveRecipientsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Resolve_Recipients_From_Recurring_Booking_When_No_Concrete_Booking_Exists(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
         MarketplaceBookingFailureNotificationService sut,
         CancellationToken cancellationToken)
     {
-        var customer = new Customer { Id = "customer-1", Identities = [new Identity { Email = "customer@example.test", EmailVerified = true }] };
-        var recurringBooking = new RecurringBooking { Id = "recurring-1", CreatedByCustomer = customer, InvolvedOrganizations = [] };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+            Identities =
+            [
+                new Identity
+                {
+                    Email = "customer@example.test",
+                    EmailVerified = true,
+                },
+            ],
+        };
+        var recurringBooking = new RecurringBooking
+        {
+            Id = "recurring-1",
+            CreatedByCustomer = customer,
+            InvolvedOrganizations = [],
+        };
 
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBooking.Id, cancellationToken)).Returns(recurringBooking);
 
         var recipients = await sut.ResolveRecipientsAsync(
-            new MarketplaceBookingFailure { RecurringBookingId = recurringBooking.Id },
+            new MarketplaceBookingFailure
+            {
+                RecurringBookingId = recurringBooking.Id,
+            },
             cancellationToken);
 
         recipients.ShouldContain(item =>

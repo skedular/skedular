@@ -45,7 +45,12 @@ public class LocationComponents(
 
         return
         [
-            new Button { ActionId = LocationActionTypes.AddLocation, Text = "Add Location".ToPlainTextWithIcon(Icons.New), Value = context }
+            new Button
+            {
+                ActionId = LocationActionTypes.AddLocation,
+                Text = "Add Location".ToPlainTextWithIcon(Icons.New),
+                Value = context,
+            },
         ];
     }
 
@@ -80,11 +85,26 @@ public class LocationComponents(
         var permissions = await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, location.Id, cancellationToken);
         var blocks = new List<Block>
         {
-            new SectionBlock { Text = $"*Name*: {location.Name.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*About*: {location.ListingMetadata.About.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*Timezone*: {location.Timezone.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*Resource capacity*: {resourceCapacity}".ToMarkdown() },
-            new SectionBlock { Text = $"*Daily update channel*: {dailyUpdateChannel}".ToMarkdown() }
+            new SectionBlock
+            {
+                Text = $"*Name*: {location.Name.ToSafeString()}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*About*: {location.ListingMetadata.About.ToSafeString()}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*Timezone*: {location.Timezone.ToSafeString()}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*Resource capacity*: {resourceCapacity}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*Daily update channel*: {dailyUpdateChannel}".ToMarkdown(),
+            },
         };
 
         var buttons = new List<IActionElement>();
@@ -95,7 +115,7 @@ public class LocationComponents(
             {
                 ActionId = LocationActionTypes.RemovePreferredLocation,
                 Text = "Remove preferred location".ToPlainTextWithIcon(Icons.ClearDefault),
-                Value = new ClearPreferredLocationContext(pageContext, location.Id).Serialize()
+                Value = new ClearPreferredLocationContext(pageContext, location.Id).Serialize(),
             });
         }
         else
@@ -104,7 +124,7 @@ public class LocationComponents(
             {
                 ActionId = LocationActionTypes.AddAsPreferredLocation,
                 Text = "Add as preferred location".ToPlainTextWithIcon(Icons.SetAsDefault),
-                Value = new AddAsPreferredLocationContext(pageContext, location.Id).Serialize()
+                Value = new AddAsPreferredLocationContext(pageContext, location.Id).Serialize(),
             });
         }
 
@@ -114,18 +134,35 @@ public class LocationComponents(
             Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
             Options =
             [
-                new Option { Value = $"{BookingActionTypes.Bookings}{location.Id}", Text = "Bookings".ToOptionPlainTextWithIcon(Icons.Bookings) },
-                new Option { Value = $"{ZoneActionTypes.Zones}{location.Id}", Text = "Zones".ToOptionPlainTextWithIcon(Icons.Zones) },
-                new Option { Value = $"{CustomTagActionTypes.CustomTags}{location.Id}", Text = "Tags".ToOptionPlainTextWithIcon(Icons.CustomTags) },
-                new Option { Value = $"{ResourceActionTypes.Resources}{location.Id}", Text = "Resources".ToOptionPlainTextWithIcon(Icons.Resources) }
-            ]
+                new Option
+                {
+                    Value = $"{BookingActionTypes.Bookings}{location.Id}",
+                    Text = "Bookings".ToOptionPlainTextWithIcon(Icons.Bookings),
+                },
+                new Option
+                {
+                    Value = $"{ZoneActionTypes.Zones}{location.Id}",
+                    Text = "Zones".ToOptionPlainTextWithIcon(Icons.Zones),
+                },
+                new Option
+                {
+                    Value = $"{CustomTagActionTypes.CustomTags}{location.Id}",
+                    Text = "Tags".ToOptionPlainTextWithIcon(Icons.CustomTags),
+                },
+                new Option
+                {
+                    Value = $"{ResourceActionTypes.Resources}{location.Id}",
+                    Text = "Resources".ToOptionPlainTextWithIcon(Icons.Resources),
+                },
+            ],
         };
 
         if (permissions.CanModify)
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{LocationActionTypes.EditLocation}{location.Id}", Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
+                Value = $"{LocationActionTypes.EditLocation}{location.Id}",
+                Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit),
             });
         }
 
@@ -133,12 +170,16 @@ public class LocationComponents(
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{LocationActionTypes.RemoveLocation}{location.Id}", Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
+                Value = $"{LocationActionTypes.RemoveLocation}{location.Id}",
+                Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove),
             });
         }
 
         buttons.Add(actionMenu);
-        blocks.Add(new ActionsBlock { Elements = buttons });
+        blocks.Add(new ActionsBlock
+        {
+            Elements = buttons,
+        });
 
         return blocks;
     }

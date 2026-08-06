@@ -14,7 +14,7 @@ public static class MetricTaggingExtensions
                 { "request-path", ctx.Request.Path },
                 { "http-scheme", ctx.Request.Scheme },
                 { "http-method", ctx.Request.Method },
-                { "http-status-code", ctx.Response.StatusCode.ToString() }
+                { "http-status-code", ctx.Response.StatusCode.ToString() },
             };
     }
 }

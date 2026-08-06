@@ -54,7 +54,7 @@ public class EntityMapper : IEntityMapper
             CardFunding = paymentMethod.Card?.Funding,
             CardIssuer = paymentMethod.Card?.Issuer,
             CardLastFourDigit = paymentMethod.Card?.Last4,
-            Organization = organization
+            Organization = organization,
         };
 
     public Models.Organization MapTo(Database.Entities.Organization src) => MapTo(src, true);
@@ -68,7 +68,7 @@ public class EntityMapper : IEntityMapper
             Name = src.DisplayName,
             GivenName = src.GivenName,
             FamilyName = src.Surname,
-            PreferredLanguage = src.PreferredLanguage
+            PreferredLanguage = src.PreferredLanguage,
         };
 
     public Database.Entities.AzureTenantMember MapTo(AzureTenantMember src, AzureTenant azureTenant) =>
@@ -98,10 +98,22 @@ public class EntityMapper : IEntityMapper
     }
 
     Admin_AddIdentityInput IEntityMapper.MapTo(Database.Entities.AzureTenantMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = true,
+            CustomerId = customerId,
+        };
 
     public Admin_UpdateIdentityInput MapToUpdateIdentityInput(Database.Entities.AzureTenantMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = true,
+            CustomerId = customerId,
+        };
 
     public Admin_AddInput MapTo(Database.Entities.AzureTenantMember src, string customerId, Database.Entities.Organization defaultOrganization)
     {
@@ -114,10 +126,15 @@ public class EntityMapper : IEntityMapper
             IsOnboardingDone = true,
             DefaultOrganizationId = defaultOrganization.Id,
             PersonalInformationVisibility = PersonalInformationVisibility.Visible,
-            Type = CustomerType.Registered
+            Type = CustomerType.Registered,
         };
 
-        input.Identities.Add(new Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
+        input.Identities.Add(new Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity
+        {
+            Id = src.Id,
+            Email = src.Email,
+            EmailVerified = true,
+        });
 
         return input;
     }
@@ -148,7 +165,7 @@ public class EntityMapper : IEntityMapper
             PurchasedTeamCapacity = src.PurchasedTeamCapacity,
             DiscountPercentage = src.DiscountPercentage,
             SpacesBillingStartsAt = src.SpacesBillingStartsAt,
-            Organization = organization
+            Organization = organization,
         };
 
         organizationOffering.OrganizationOfferingActiveMembers = src.OrganizationOfferingActiveMembers
@@ -158,7 +175,7 @@ public class EntityMapper : IEntityMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 OrganizationMember = MapTo(item.OrganizationMember, organization),
-                OrganizationOffering = organizationOffering
+                OrganizationOffering = organizationOffering,
             })
             .ToList();
 
@@ -189,7 +206,7 @@ public class EntityMapper : IEntityMapper
             IsOwnershipVerified = src.IsOwnershipVerified,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             TermsOfUse = MapTo(src.TermsOfUse),
-            IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList()
+            IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList(),
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
@@ -215,7 +232,10 @@ public class EntityMapper : IEntityMapper
             ? null
             : new OrganizationStripeConnectAccountAuthorization
             {
-                Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                IsAuthorized = src.IsAuthorized,
             };
 
     private static OrganizationXeroConnection? MapTo(
@@ -249,7 +269,7 @@ public class EntityMapper : IEntityMapper
                 RefreshTokenEncrypted = src.RefreshTokenEncrypted,
                 HasAccessToken = !string.IsNullOrWhiteSpace(src.AccessTokenEncrypted),
                 HasRefreshToken = !string.IsNullOrWhiteSpace(src.RefreshTokenEncrypted),
-                Organization = organization
+                Organization = organization,
             };
 
     private static TermsOfUse? MapTo(Database.Entities.TermsOfUse? src) =>
@@ -262,7 +282,7 @@ public class EntityMapper : IEntityMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 Active = src.Active,
-                Terms = src.Terms
+                Terms = src.Terms,
             };
 
     private static IEnumerable<IndustrySubCategory> MapTo(IEnumerable<Database.Entities.IndustrySubCategory> src) => src.Select(MapTo)!;
@@ -277,7 +297,7 @@ public class EntityMapper : IEntityMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 Name = src.Name,
-                IndustryMainCategory = MapTo(src.IndustryMainCategory)
+                IndustryMainCategory = MapTo(src.IndustryMainCategory),
             };
 
     private static IndustryMainCategory MapTo(Database.Entities.IndustryMainCategory src) =>
@@ -287,7 +307,7 @@ public class EntityMapper : IEntityMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Name = src.Name
+            Name = src.Name,
         };
 
     private static IEnumerable<Models.OrganizationMember> MapTo(
@@ -306,7 +326,7 @@ public class EntityMapper : IEntityMapper
             Status = src.Status.ToOrganizationMemberStatus(),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = MapTo(src.Customer)!,
-            Organization = organization
+            Organization = organization,
         };
 
     private static Customer? MapTo(Database.Entities.Customer? src) =>
@@ -332,7 +352,7 @@ public class EntityMapper : IEntityMapper
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
                 Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList()
+                Identities = MapTo(src.Identities).ToList(),
             };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Database.Entities.Identity> src) => src.Select(MapTo);
@@ -345,7 +365,7 @@ public class EntityMapper : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified
+            EmailVerified = src.EmailVerified,
         };
 
     private IEnumerable<OrganizationOffering> MapTo(
@@ -370,7 +390,7 @@ public class EntityMapper : IEntityMapper
             RolloverDate = src.End,
             CustomCapacity = src.Code == OfferingCode.SpacesContactUsV1 ? src.PurchasedTeamCapacity : null,
             CatalogVersion = src.CatalogVersion ?? src.Code.GetCurrentCatalogVersion(),
-            Status = src.Code.IsEarlyBirdOffering() ? OrganizationOfferingPlanStatus.Legacy : OrganizationOfferingPlanStatus.Active
+            Status = src.Code.IsEarlyBirdOffering() ? OrganizationOfferingPlanStatus.Legacy : OrganizationOfferingPlanStatus.Active,
         };
 
     private static PricingCatalogCommercialModel GetSpacesCommercialModel(PricingCatalogSubscriptionPlanCode planCode) =>
@@ -379,7 +399,7 @@ public class EntityMapper : IEntityMapper
             PricingCatalogSubscriptionPlanCode.Free => PricingCatalogCommercialModel.Free,
             PricingCatalogSubscriptionPlanCode.Growth or PricingCatalogSubscriptionPlanCode.Business => PricingCatalogCommercialModel.UsageBased,
             PricingCatalogSubscriptionPlanCode.ContactUs => PricingCatalogCommercialModel.CapacityBased,
-            _ => PricingCatalogCommercialModel.Free
+            _ => PricingCatalogCommercialModel.Free,
         };
 
     private static bool IsSpacesOffering(Database.Entities.Organization organization, Database.Entities.OrganizationOffering offering) =>
@@ -405,7 +425,7 @@ public class EntityMapper : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             Organization = organization,
             Date = src.Date,
-            Count = src.Count
+            Count = src.Count,
         };
 
     private static IEnumerable<JoinInvitation> MapTo(IEnumerable<Database.Entities.JoinInvitation> src, Models.Organization organization) =>
@@ -421,7 +441,7 @@ public class EntityMapper : IEntityMapper
             Status = src.Status.ToInvitationStatus(),
             Organization = organization,
             CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
+            Invitee = MapTo(src.Invitee),
         };
 
     private static IEnumerable<Tag> MapTo(IEnumerable<Database.Entities.Tag> src, Models.Organization organization) =>
@@ -438,7 +458,7 @@ public class EntityMapper : IEntityMapper
             Description = src.Description,
             Type = src.Type.ToOrganizationTagType(),
             Color = src.Color,
-            Organization = organization
+            Organization = organization,
         };
 
 
@@ -452,7 +472,7 @@ public class EntityMapper : IEntityMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 StripeCustomerId = src.StripeCustomerId,
-                Organization = organization
+                Organization = organization,
             };
 
     private static IEnumerable<Models.OrganizationStripePaymentMethod> MapTo(
@@ -478,7 +498,7 @@ public class EntityMapper : IEntityMapper
             CardFunding = src.CardFunding,
             CardIssuer = src.CardIssuer,
             CardLastFourDigit = src.CardLastFourDigit,
-            Organization = organization
+            Organization = organization,
         };
 
     private static IEnumerable<OrganizationStripeConnectAccount> MapTo(
@@ -511,7 +531,7 @@ public class EntityMapper : IEntityMapper
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
             Organization = organization,
-            OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
+            OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization),
         };
 
     private static OrganizationMember MergeToEntity(

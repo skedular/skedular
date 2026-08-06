@@ -13,8 +13,10 @@ public class SpacesTrialExpiryShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Access_Error_Separate_From_Paid_Quota_Error(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IPrivateBookingService privateBookingService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IPrivateBookingService privateBookingService,
         RootMutation sut,
         SpacesAccessEvaluator evaluator,
         string clientMutationId,
@@ -22,11 +24,18 @@ public class SpacesTrialExpiryShould
         DateTimeOffset now,
         CancellationToken cancellationToken)
     {
-        var input = new AddPrivateBookingInput { ClientMutationId = clientMutationId, FullOpeningHoursDate = fullOpeningHoursDate };
+        var input = new AddPrivateBookingInput
+        {
+            ClientMutationId = clientMutationId,
+            FullOpeningHoursDate = fullOpeningHoursDate,
+        };
         var booking = new Shared.Models.Booking();
         var offering = new Offering
         {
-            Code = OfferingCode.SpacesFreeTierV1, SpacesProductEnabled = true, SpacesTrialStartedAt = now.AddDays(-14), SpacesTrialEndsAt = now
+            Code = OfferingCode.SpacesFreeTierV1,
+            SpacesProductEnabled = true,
+            SpacesTrialStartedAt = now.AddDays(-14),
+            SpacesTrialEndsAt = now,
         };
         var decision = evaluator.Evaluate(now, offering, SpacesAccessAction.CreateBookingInstance);
         A.CallTo(() => graphQlMapper.MapTo(input)).Returns(booking);

@@ -51,7 +51,7 @@ public class OrganizationAuthorizationService(
         ValueTask.FromResult(organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
         });
 
     public async ValueTask<bool> CanViewAsync(
@@ -61,7 +61,7 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
     public async ValueTask<bool> CanModifyAsync(
@@ -71,7 +71,7 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
     public async ValueTask<bool> CanDeleteAsync(
@@ -81,7 +81,7 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner
+            Role: OrganizationMemberRoleConstants.Owner,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
     public async ValueTask<bool> CanInvitePeopleAsync(Shared.Database.Entities.Organization organization, string customerId,
@@ -89,7 +89,7 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
     public async ValueTask<bool> CanCancelPeopleExistingInvitationsAsync(
@@ -98,7 +98,7 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
     public async ValueTask<bool> CanViewAnalyticsAsync(
@@ -108,7 +108,7 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
     public async ValueTask<bool> CanManagePaymentMethodAsync(
@@ -118,7 +118,7 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
     public async ValueTask<bool> CanViewStripeConnectAccountAsync(
@@ -128,7 +128,7 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
     public async ValueTask<bool> CanManageStripeConnectAccountAsync(
@@ -138,7 +138,7 @@ public class OrganizationAuthorizationService(
         organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
 
     public async ValueTask<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
@@ -154,7 +154,7 @@ public class OrganizationAuthorizationService(
             CanDelete = await CanDeleteAsync(organization, customerId, cancellationToken),
             CanInvitePeople = await CanInvitePeopleAsync(organization, customerId, cancellationToken),
             CanCancelPeopleExistingInvitations = await CanCancelPeopleExistingInvitationsAsync(organization, customerId, cancellationToken),
-            CanViewAnalytics = await CanViewAnalyticsAsync(organization, customerId, cancellationToken)
+            CanViewAnalytics = await CanViewAnalyticsAsync(organization, customerId, cancellationToken),
         };
     }
 }

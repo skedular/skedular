@@ -11,12 +11,18 @@ public class RootQuery
     public async Task<OrganizationBookingPermissions> OrganizationBookingPermissionsAsync(
         string? organizationId,
         string? organizationCustomDomain,
-        [Service] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Service]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(organizationId) && string.IsNullOrWhiteSpace(organizationCustomDomain))
         {
-            return new OrganizationBookingPermissions { CanAddBooking = false, CanUpdateBooking = false, CanDeleteBooking = false };
+            return new OrganizationBookingPermissions
+            {
+                CanAddBooking = false,
+                CanUpdateBooking = false,
+                CanDeleteBooking = false,
+            };
         }
 
         var permissions = await organizationAuthorizationService.GetPermissionsAsync(
@@ -30,19 +36,25 @@ public class RootQuery
             CanAddBooking = permissions.CanAddBooking,
             CanUpdateBooking = permissions.CanUpdateBooking,
             CanDeleteBooking = permissions.CanDeleteBooking,
-            CanModifyPaymentMethod = permissions.CanModifyPaymentMethod
+            CanModifyPaymentMethod = permissions.CanModifyPaymentMethod,
         };
     }
 
     [UseResolverScope]
     public async Task<TeamBookingPermissions> TeamBookingPermissionsAsync(
         string teamId,
-        [Service] ITeamAuthorizationService teamAuthorizationService,
+        [Service]
+        ITeamAuthorizationService teamAuthorizationService,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(teamId))
         {
-            return new TeamBookingPermissions { CanAddBooking = false, CanUpdateBooking = false, CanDeleteBooking = false };
+            return new TeamBookingPermissions
+            {
+                CanAddBooking = false,
+                CanUpdateBooking = false,
+                CanDeleteBooking = false,
+            };
         }
 
         var permissions = await teamAuthorizationService.GetPermissionsAsync(teamId, cancellationToken);
@@ -50,7 +62,7 @@ public class RootQuery
         {
             CanAddBooking = permissions.CanAddBooking,
             CanUpdateBooking = permissions.CanUpdateBooking,
-            CanDeleteBooking = permissions.CanDeleteBooking
+            CanDeleteBooking = permissions.CanDeleteBooking,
         };
     }
 }

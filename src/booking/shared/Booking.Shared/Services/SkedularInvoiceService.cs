@@ -61,6 +61,8 @@ public class SkedularInvoiceService(
 
         marketplaceBooking.InvoiceUrl = await UploadInvoicePdfAsync(pdfStream, cancellationToken);
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         if (hostEnvironment.IsDevelopment())
@@ -94,6 +96,8 @@ public class SkedularInvoiceService(
 
         marketplaceBooking.InvoiceUrl = await UploadInvoicePdfAsync(pdfStream, cancellationToken);
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         if (hostEnvironment.IsDevelopment())
@@ -121,7 +125,12 @@ public class SkedularInvoiceService(
         while ((bytesRead = await pdfStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
         {
             await call.RequestStream.WriteAsync(
-                new UploadFileRequest { Extension = ".pdf", ContentType = "application/pdf", Chunk = ByteString.CopyFrom(buffer, 0, bytesRead) },
+                new UploadFileRequest
+                {
+                    Extension = ".pdf",
+                    ContentType = "application/pdf",
+                    Chunk = ByteString.CopyFrom(buffer, 0, bytesRead),
+                },
                 cancellationToken);
         }
 
@@ -175,7 +184,10 @@ public class SkedularInvoiceService(
             .Replace("{{INVOICE_NUMBER}}", marketplaceBooking.InvoiceNumber)
             .Replace("{{RECIPIENT_NAME}}", booking.CreatedByCustomer is null ? string.Empty : booking.CreatedByCustomer.ToDisplayableName());
 
-        var attachments = new List<EmailAttachment> { new(pdfStream, $"{marketplaceBooking.InvoiceNumber}.pdf", "application/pdf") };
+        var attachments = new List<EmailAttachment>
+        {
+            new(pdfStream, $"{marketplaceBooking.InvoiceNumber}.pdf", "application/pdf"),
+        };
         var subject = $"Invoice #{marketplaceBooking.InvoiceNumber} from {organization.Name}";
 
         await emailService.SendRawEmailAsync(
@@ -239,7 +251,10 @@ public class SkedularInvoiceService(
             .Replace("{{INVOICE_NUMBER}}", marketplaceBooking.InvoiceNumber)
             .Replace("{{RECIPIENT_NAME}}", recipientName);
 
-        var attachments = new List<EmailAttachment> { new(pdfStream, $"{marketplaceBooking.InvoiceNumber}.pdf", "application/pdf") };
+        var attachments = new List<EmailAttachment>
+        {
+            new(pdfStream, $"{marketplaceBooking.InvoiceNumber}.pdf", "application/pdf"),
+        };
         var subject = $"Invoice #{marketplaceBooking.InvoiceNumber} from {organization.Name}";
 
         await emailService.SendRawEmailAsync(

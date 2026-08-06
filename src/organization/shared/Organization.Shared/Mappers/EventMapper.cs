@@ -47,7 +47,7 @@ public class EventMapper : IEventMapper
                 PurchasedUserCapacity = organizationOffering.PurchasedUserCapacity,
                 PurchasedLocationCapacity = organizationOffering.PurchasedLocationCapacity,
                 PurchasedTeamCapacity = organizationOffering.PurchasedTeamCapacity,
-                ActiveCustomerIds = activeCustomerIds
+                ActiveCustomerIds = activeCustomerIds,
             },
             activeCustomerIds.Length);
 
@@ -69,8 +69,8 @@ public class EventMapper : IEventMapper
                 Currency.Nzd => Api.Shared.Clients.Events.Skedular.Organization.V1.Currency.Nzd,
                 Currency.Usd => Api.Shared.Clients.Events.Skedular.Organization.V1.Currency.Usd,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
-            }
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
+            },
         };
         if (organizationOffering.UnitPrice.HasValue)
         {
@@ -129,7 +129,7 @@ public class EventMapper : IEventMapper
                 OrganizationType.Marketplace => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType.Marketplace,
                 OrganizationType.Host => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType.Host,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             BillingCycle = src.BillingCycle switch
             {
@@ -137,17 +137,20 @@ public class EventMapper : IEventMapper
                 OrganizationBillingCycle.Fortnightly => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle.Fortnightly,
                 OrganizationBillingCycle.Monthly => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationBillingCycle.Monthly,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
-            RefundNotificationEmails = { src.RefundNotificationEmails },
+            RefundNotificationEmails =
+            {
+                src.RefundNotificationEmails,
+            },
             Offering = eventOffering,
             SsoSettings = MapTo(src.OrganizationSsoSettings),
             TaxDetails = MapTo(src.OrganizationTaxDetails),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
-            IsOwnershipVerified = src.IsOwnershipVerified ?? false
+            IsOwnershipVerified = src.IsOwnershipVerified ?? false,
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
@@ -158,7 +161,7 @@ public class EventMapper : IEventMapper
             Name = item.Name.ToSafeString(),
             Description = item.Description.ToSafeString(),
             Type = item.Type.ToOrganizationTagType(),
-            Color = item.Color.ToSafeString()
+            Color = item.Color.ToSafeString(),
         }));
 
         organization.Offering.ActiveCustomerIds.AddRange(activeCustomerIds);
@@ -173,15 +176,15 @@ public class EventMapper : IEventMapper
                 OrganizationMemberRole.Administrator => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             Status = item.Status switch
             {
                 OrganizationMemberStatus.Active => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
-            }
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
+            },
         }));
 
         organization.FeatureImages.AddRange(MapTo(src.FeatureImages.ToArray()));
@@ -205,7 +208,7 @@ public class EventMapper : IEventMapper
                 IsActive = src.IsActive,
                 EntityId = src.EntityId.ToSafeString(),
                 LoginUrl = src.LoginUrl.ToSafeString(),
-                AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString()
+                AppFederationMetadataUrl = src.AppFederationMetadataUrl.ToSafeString(),
             };
 
     private static Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
@@ -213,7 +216,9 @@ public class EventMapper : IEventMapper
             ? null
             : new Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationTaxDetails
             {
-                Id = src.Id, TaxId = src.TaxId.ToSafeString(), TaxRatePercentage = Convert.ToDouble(src.TaxRatePercentage)
+                Id = src.Id,
+                TaxId = src.TaxId.ToSafeString(),
+                TaxRatePercentage = Convert.ToDouble(src.TaxRatePercentage),
             };
 
     private static PhysicalAddress? MapTo(OrganizationPhysicalAddress? src) =>
@@ -236,14 +241,20 @@ public class EventMapper : IEventMapper
                 PlaceId = src.PlaceId.ToSafeString(),
                 Coordinates = src.Coordinates is null
                     ? null
-                    : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
+                    : new Coordinates
+                    {
+                        Longitude = src.Coordinates.X,
+                        Latitude = src.Coordinates.Y,
+                    },
             };
 
     private static Api.Shared.Clients.Events.Skedular.Organization.V1.ListingMetadata MapTo(ListingMetadata src)
     {
         var listingMetadata = new Api.Shared.Clients.Events.Skedular.Organization.V1.ListingMetadata
         {
-            About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
+            About = src.About.ToSafeString(),
+            Title = src.Title.ToSafeString(),
+            SubTitle = src.SubTitle.ToSafeString(),
         };
 
         listingMetadata.IncludedFeatures.AddRange(src.IncludedFeatures.ToSafeCollection().Select(item => item.ToSafeString()));
@@ -255,8 +266,19 @@ public class EventMapper : IEventMapper
         src.Select(MapTo).ToArray();
 
     private static CdnImageFile MapTo(Models_CdnImageFile src) =>
-        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+        new()
+        {
+            Original = MapTo(src.Original),
+            Thumbnail = MapTo(src.Thumbnail),
+        };
 
     private static CdnFile? MapTo(Models_CdnFile? src) =>
-        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
+        src is null
+            ? null
+            : new CdnFile
+            {
+                Url = src.Url.ToSafeString(),
+                Height = src.Height.ToNullInt(),
+                Width = src.Width.ToNullInt(),
+            };
 }

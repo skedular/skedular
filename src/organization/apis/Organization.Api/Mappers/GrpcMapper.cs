@@ -64,7 +64,11 @@ public interface IGrpcMapper
 
 public class GrpcMapper : IGrpcMapper
 {
-    public TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src) => new() { Id = src.Id, Terms = src.Terms };
+    public TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src) => new()
+    {
+        Id = src.Id,
+        Terms = src.Terms,
+    };
 
     public Shared.Models.Organization MapTo(Admin_AddInput src) =>
         new()
@@ -81,14 +85,22 @@ public class GrpcMapper : IGrpcMapper
                 OrganizationType.Marketplace => global::Api.Shared.Services.Models.OrganizationType.Marketplace,
                 OrganizationType.Host => global::Api.Shared.Services.Models.OrganizationType.Host,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
-                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input."),
             },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
-            TermsOfUse = string.IsNullOrWhiteSpace(src.TermsOfUseId) ? null : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
+            TermsOfUse = string.IsNullOrWhiteSpace(src.TermsOfUseId)
+                ? null
+                : new Shared.Models.TermsOfUse
+                {
+                    Id = src.TermsOfUseId,
+                },
             LogoUrl = src.LogoUrl,
-            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
+            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory
+            {
+                Id = item,
+            }).ToList(),
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             BillingCycle = src.BillingCycle switch
             {
@@ -96,9 +108,9 @@ public class GrpcMapper : IGrpcMapper
                 OrganizationBillingCycle.Fortnightly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Fortnightly,
                 OrganizationBillingCycle.Monthly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Monthly,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.BillingCycle), src.BillingCycle,
-                    $"Unexpected value for {nameof(src.BillingCycle)}: {src.BillingCycle}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.BillingCycle)}: {src.BillingCycle}. Update enum mapping or caller input."),
             },
-            InvoiceDueInDays = src.InvoiceDueInDays
+            InvoiceDueInDays = src.InvoiceDueInDays,
         };
 
 
@@ -119,8 +131,8 @@ public class GrpcMapper : IGrpcMapper
                 Currency.Nzd => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Currency.Nzd,
                 Currency.Usd => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Currency.Usd,
                 _ => throw new ArgumentOutOfRangeException(nameof(organizationOffering.Currency), organizationOffering.Currency,
-                    $"Unexpected value for {nameof(organizationOffering.Currency)}: {organizationOffering.Currency}. Update enum mapping or caller input.")
-            }
+                    $"Unexpected value for {nameof(organizationOffering.Currency)}: {organizationOffering.Currency}. Update enum mapping or caller input."),
+            },
         };
         if (organizationOffering.UnitPrice.HasValue)
         {
@@ -163,7 +175,7 @@ public class GrpcMapper : IGrpcMapper
                 global::Api.Shared.Services.Models.OrganizationType.Marketplace => OrganizationType.Marketplace,
                 global::Api.Shared.Services.Models.OrganizationType.Host => OrganizationType.Host,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
-                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input."),
             },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
@@ -173,7 +185,7 @@ public class GrpcMapper : IGrpcMapper
             Offering = offering,
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             TaxDetails = MapToGrpcResponse(src.OrganizationTaxDetails),
-            PhysicalAddress = MapToGrpcResponse(src.PhysicalAddress)
+            PhysicalAddress = MapToGrpcResponse(src.PhysicalAddress),
         };
 
         organization.Tags.AddRange(MapToGrpcResponse(src.Tags));
@@ -185,7 +197,9 @@ public class GrpcMapper : IGrpcMapper
         organization.IndustrySubCategories.AddRange(src.IndustrySubCategories.Select(item =>
             new global::Api.Shared.Grpc.Skedular.Organization.Core.V1.IndustrySubCategory
             {
-                Id = item.Id, Name = item.Name, MainCategoryName = item.IndustryMainCategory.Name
+                Id = item.Id,
+                Name = item.Name,
+                MainCategoryName = item.IndustryMainCategory.Name,
             }));
 
         organization.Members.AddRange(MapToGrpcResponse(src.OrganizationMembers));
@@ -221,13 +235,20 @@ public class GrpcMapper : IGrpcMapper
                 AccessTokenEncrypted = src.AccessTokenEncrypted.ToSafeString(),
                 RefreshTokenEncrypted = src.RefreshTokenEncrypted.ToSafeString(),
                 HasAccessToken = src.HasAccessToken,
-                HasRefreshToken = src.HasRefreshToken
+                HasRefreshToken = src.HasRefreshToken,
             };
 
 
-    public OrganizationMember MapTo(Admin_AddMemberInput src) => MapTo(src.Member, new Shared.Models.Organization { Id = src.Id });
+    public OrganizationMember MapTo(Admin_AddMemberInput src) => MapTo(src.Member, new Shared.Models.Organization
+    {
+        Id = src.Id,
+    });
 
-    public MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+    public MemberEdge MapToGrpcResponse(Edge<OrganizationMember> src) => new()
+    {
+        Cursor = src.Cursor,
+        Node = MapToGrpcResponse(src.Node),
+    };
 
     public global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag MapToGrpcResponseTag(Tag src) =>
         new()
@@ -236,16 +257,30 @@ public class GrpcMapper : IGrpcMapper
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
             TagType = src.Type.ToOrganizationTagType(),
-            Color = src.Color.ToSafeString()
+            Color = src.Color.ToSafeString(),
         };
 
 
-    public TagEdge MapToGrpcResponseTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseTag(src.Node) };
+    public TagEdge MapToGrpcResponseTag(Edge<Tag> src) => new()
+    {
+        Cursor = src.Cursor,
+        Node = MapToGrpcResponseTag(src.Node),
+    };
 
     public CustomTag MapToGrpcResponseCustomTag(Tag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+        };
 
-    public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseCustomTag(src.Node) };
+    public CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src) => new()
+    {
+        Cursor = src.Cursor,
+        Node = MapToGrpcResponseCustomTag(src.Node),
+    };
 
     public Tag MapTo(AddCustomTagInput src) =>
         new()
@@ -255,16 +290,29 @@ public class GrpcMapper : IGrpcMapper
             Description = src.Description.ToSafeString(),
             Type = OrganizationTagType.Custom,
             Color = src.Color.ToSafeString(),
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId,
+            },
         };
 
     public OrganizationTagPatchRequest MapTo(UpdateTagInput src, OrganizationTagType type) =>
         new(src.Id, type, src.FieldsToUpdate.Select(MapTo).ToHashSet(), src.Name, src.Description, src.Color);
 
     public Zone MapToGrpcResponseZone(Tag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+        };
 
-    public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseZone(src.Node) };
+    public ZoneEdge MapToGrpcResponseZone(Edge<Tag> src) => new()
+    {
+        Cursor = src.Cursor,
+        Node = MapToGrpcResponseZone(src.Node),
+    };
 
     public Tag MapTo(AddZoneInput src) =>
         new()
@@ -274,16 +322,29 @@ public class GrpcMapper : IGrpcMapper
             Description = src.Description.ToSafeString(),
             Type = OrganizationTagType.Zone,
             Color = src.Color.ToSafeString(),
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId,
+            },
         };
 
     public OrganizationTagPatchRequest MapTo(UpdateZoneInput src) =>
         new(src.Id, OrganizationTagType.Zone, src.FieldsToUpdate.Select(MapTo).ToHashSet(), src.Name, src.Description, src.Color);
 
     public ProductTag MapToGrpcResponseProductTag(Tag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+        };
 
-    public ProductTagEdge MapToGrpcResponseProductTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseProductTag(src.Node) };
+    public ProductTagEdge MapToGrpcResponseProductTag(Edge<Tag> src) => new()
+    {
+        Cursor = src.Cursor,
+        Node = MapToGrpcResponseProductTag(src.Node),
+    };
 
     public Tag MapTo(AddProductTagInput src) =>
         new()
@@ -293,12 +354,18 @@ public class GrpcMapper : IGrpcMapper
             Description = src.Description.ToSafeString(),
             Type = OrganizationTagType.Product,
             Color = src.Color.ToSafeString(),
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId,
+            },
         };
 
     public BillingDetails MapToGrpcResponse(OrganizationBillingDetails? src) =>
         src is null
-            ? new BillingDetails { Id = string.Empty }
+            ? new BillingDetails
+            {
+                Id = string.Empty,
+            }
             : new BillingDetails
             {
                 Id = src.Id,
@@ -316,14 +383,28 @@ public class GrpcMapper : IGrpcMapper
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
                 PlaceId = src.PlaceId.ToSafeString(),
-                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
+                Coordinates = src.Coordinates is null
+                    ? null
+                    : new Coordinates
+                    {
+                        Longitude = src.Coordinates.X,
+                        Latitude = src.Coordinates.Y,
+                    },
             };
 
     public StripeConnectAccountEdge MapToGrpcResponse(Edge<OrganizationStripeConnectAccount> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+        new()
+        {
+            Cursor = src.Cursor,
+            Node = MapToGrpcResponse(src.Node),
+        };
 
     public BankAccountEdge MapToGrpcResponse(Edge<OrganizationBankAccount> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+        new()
+        {
+            Cursor = src.Cursor,
+            Node = MapToGrpcResponse(src.Node),
+        };
 
     public Tag MapTo(AddTagInput src) =>
         new()
@@ -333,7 +414,10 @@ public class GrpcMapper : IGrpcMapper
             Description = src.Description.ToSafeString(),
             Type = src.Type.ToOrganizationTagType(),
             Color = src.Color.ToSafeString(),
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId,
+            },
         };
 
     public OrganizationBillingDetails MapTo(AddBillingDetailsInput src) =>
@@ -350,7 +434,10 @@ public class GrpcMapper : IGrpcMapper
             Zipcode = src.Zipcode,
             Country = src.Country,
             CountryCode = src.CountryCode,
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId,
+            },
         };
 
     public OrganizationBillingDetailsPatchRequest MapTo(UpdateBillingDetailsInput src) =>
@@ -381,7 +468,7 @@ public class GrpcMapper : IGrpcMapper
             TagPatchField.Name => OrganizationTagPatchField.Name,
             TagPatchField.Description => OrganizationTagPatchField.Description,
             TagPatchField.Color => OrganizationTagPatchField.Color,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, "This organisation tag gRPC patch field is not supported.")
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, "This organisation tag gRPC patch field is not supported."),
         };
 
     private static OrganizationTagPatchField MapTo(ZonePatchField src) =>
@@ -390,7 +477,7 @@ public class GrpcMapper : IGrpcMapper
             ZonePatchField.Name => OrganizationTagPatchField.Name,
             ZonePatchField.Description => OrganizationTagPatchField.Description,
             ZonePatchField.Color => OrganizationTagPatchField.Color,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, "This organisation zone gRPC patch field is not supported.")
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, "This organisation zone gRPC patch field is not supported."),
         };
 
     private static OrganizationBillingDetailsPatchField MapTo(BillingDetailsPatchField src) =>
@@ -399,14 +486,20 @@ public class GrpcMapper : IGrpcMapper
             BillingDetailsPatchField.CompanyName => OrganizationBillingDetailsPatchField.CompanyName,
             BillingDetailsPatchField.Email => OrganizationBillingDetailsPatchField.Email,
             BillingDetailsPatchField.BillingAddress => OrganizationBillingDetailsPatchField.BillingAddress,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, "This organisation billing details gRPC patch field is not supported.")
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, "This organisation billing details gRPC patch field is not supported."),
         };
 
     private static IEnumerable<global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
 
     private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag MapToGrpcResponse(Tag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+        };
 
     private static IEnumerable<ResourceType> MapToGrpcResponseResourceType(IEnumerable<Tag> src) =>
         src
@@ -420,7 +513,7 @@ public class GrpcMapper : IGrpcMapper
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
             Color = src.Color.ToSafeString(),
-            TagType = src.Type.ToOrganizationTagType()
+            TagType = src.Type.ToOrganizationTagType(),
         };
 
     private static Member MapToGrpcResponse(OrganizationMember src) =>
@@ -433,17 +526,17 @@ public class GrpcMapper : IGrpcMapper
                 global::Api.Shared.Services.Models.OrganizationMemberRole.Administrator => OrganizationMemberRole.Administrator,
                 global::Api.Shared.Services.Models.OrganizationMemberRole.Member => OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Role), src.Role,
-                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input."),
             },
             Status = src.Status switch
             {
                 OrganizationMemberStatus.Active => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Status), src.Status,
-                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input."),
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-            CustomerId = src.Customer.Id
+            CustomerId = src.Customer.Id,
         };
 
     private static IEnumerable<Member> MapToGrpcResponse(IEnumerable<OrganizationMember> src) => src.Select(MapToGrpcResponse);
@@ -458,18 +551,21 @@ public class GrpcMapper : IGrpcMapper
                 OrganizationMemberRole.Administrator => global::Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => global::Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             Status = src.Status switch
             {
                 global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Active => OrganizationMemberStatus.Active,
                 global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Inactive => OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
-            Customer = new Customer { Id = src.CustomerId },
-            Organization = organization
+            Customer = new Customer
+            {
+                Id = src.CustomerId,
+            },
+            Organization = organization,
         };
 
     private static StripeConnectAccount MapToGrpcResponse(OrganizationStripeConnectAccount src) =>
@@ -494,7 +590,7 @@ public class GrpcMapper : IGrpcMapper
             CapabilitiesTransfers = src.CapabilitiesTransfers.ToSafeString(),
             CapabilitiesCardPayments = src.CapabilitiesCardPayments.ToSafeString(),
             OnboardingUrl = src.OnboardingUrl.ToSafeString(),
-            OnboardingCompleted = src.IsOnboardingCompleted()
+            OnboardingCompleted = src.IsOnboardingCompleted(),
         };
 
     private static BankAccount MapToGrpcResponse(OrganizationBankAccount src) =>
@@ -506,7 +602,7 @@ public class GrpcMapper : IGrpcMapper
             BankName = src.BankName.ToSafeString(),
             AccountHolderName = src.AccountHolderName.ToSafeString(),
             AccountNumber = src.AccountNumber.ToSafeString(),
-            Country = src.Country.ToSafeString()
+            Country = src.Country.ToSafeString(),
         };
 
     private static TaxDetails? MapToGrpcResponse(OrganizationTaxDetails? src) =>
@@ -517,7 +613,7 @@ public class GrpcMapper : IGrpcMapper
                 Id = src.Id,
                 IsRegistered = src.IsRegistered,
                 TaxId = src.TaxId.ToSafeString(),
-                TaxRatePercentage = Convert.ToDouble(src.TaxRatePercentage)
+                TaxRatePercentage = Convert.ToDouble(src.TaxRatePercentage),
             };
 
     private static PhysicalAddress? MapToGrpcResponse(OrganizationPhysicalAddress? src) =>
@@ -538,7 +634,13 @@ public class GrpcMapper : IGrpcMapper
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
                 PlaceId = src.PlaceId.ToSafeString(),
-                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
+                Coordinates = src.Coordinates is null
+                    ? null
+                    : new Coordinates
+                    {
+                        Longitude = src.Coordinates.X,
+                        Latitude = src.Coordinates.Y,
+                    },
             };
 
 
@@ -555,14 +657,20 @@ public class GrpcMapper : IGrpcMapper
         src.Select(MapTo);
 
     private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnImageFile MapTo(CdnImageFile src) =>
-        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+        new()
+        {
+            Original = MapTo(src.Original),
+            Thumbnail = MapTo(src.Thumbnail),
+        };
 
     private static global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnFile? MapTo(CdnFile? src) =>
         src is null
             ? null
             : new global::Api.Shared.Grpc.Skedular.Organization.Core.V1.CdnFile
             {
-                Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt()
+                Url = src.Url.ToSafeString(),
+                Height = src.Height.ToNullInt(),
+                Width = src.Width.ToNullInt(),
             };
 
     private static ListingMetadata MapTo(global::Api.Shared.Grpc.Skedular.Organization.Core.V1.ListingMetadata? src) =>
@@ -575,7 +683,9 @@ public class GrpcMapper : IGrpcMapper
     {
         var listingMetadata = new global::Api.Shared.Grpc.Skedular.Organization.Core.V1.ListingMetadata
         {
-            About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
+            About = src.About.ToSafeString(),
+            Title = src.Title.ToSafeString(),
+            SubTitle = src.SubTitle.ToSafeString(),
         };
 
         listingMetadata.IncludedFeatures.AddRange(src.IncludedFeatures.ToSafeCollection().Select(item => item.ToSafeString()));

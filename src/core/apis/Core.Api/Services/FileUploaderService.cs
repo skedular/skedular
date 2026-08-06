@@ -58,7 +58,7 @@ public class FileUploaderService(
             ContentType = contentType,
             Width = response.IsImage ? response.Width : null,
             Height = response.IsImage ? response.Height : null,
-            UploadedBy = customer
+            UploadedBy = customer,
         };
 
         if (response.IsImage)
@@ -110,7 +110,7 @@ public class FileUploaderService(
             ContentType = contentType,
             Width = response.IsImage ? response.Width : null,
             Height = response.IsImage ? response.Height : null,
-            UploadedBy = customer
+            UploadedBy = customer,
         };
 
         if (response.IsImage)

@@ -19,7 +19,7 @@ public class GetCatalogShould
         teams.Plans.Select(plan => plan.Code).ShouldBe([
             PricingCatalogSubscriptionPlanCode.Free,
             PricingCatalogSubscriptionPlanCode.PayAsYouGo,
-            PricingCatalogSubscriptionPlanCode.EnterpriseCapacity
+            PricingCatalogSubscriptionPlanCode.EnterpriseCapacity,
         ]);
     }
 
@@ -47,7 +47,7 @@ public class GetCatalogShould
         result.ProductOfferings.Select(offering => offering.Code).ShouldBe([
             PricingCatalogProductOfferingCode.Teams,
             PricingCatalogProductOfferingCode.Spaces,
-            PricingCatalogProductOfferingCode.Host
+            PricingCatalogProductOfferingCode.Host,
         ]);
     }
 
@@ -63,7 +63,7 @@ public class GetCatalogShould
             PricingCatalogSubscriptionPlanCode.Free,
             PricingCatalogSubscriptionPlanCode.Growth,
             PricingCatalogSubscriptionPlanCode.Business,
-            PricingCatalogSubscriptionPlanCode.ContactUs
+            PricingCatalogSubscriptionPlanCode.ContactUs,
         ]);
         spaces.Plans.ShouldAllBe(plan => plan.Limits.All(limit => limit.Code != "monthly-active-users"));
     }

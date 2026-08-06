@@ -12,9 +12,12 @@ public class RootSubscription
 {
     public async IAsyncEnumerable<HostListingProductReadyDetails> OnListingProductReady(
         string locationId,
-        [Service] ITopicEventReceiver topicEventReceiver,
-        [Service] IServiceProvider serviceProvider,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
+        [Service]
+        ITopicEventReceiver topicEventReceiver,
+        [Service]
+        IServiceProvider serviceProvider,
+        [EnumeratorCancellation]
+        CancellationToken cancellationToken)
     {
         var sourceStream = await topicEventReceiver.SubscribeAsync<string>(Constants.ListingProductReadyTopicName, cancellationToken);
 
@@ -46,7 +49,11 @@ public class RootSubscription
             LocationId = locationId,
             Product = product is null
                 ? null
-                : new HostListingProductReadyProductDetails { Id = product.Id, Inactive = product.Inactive }
+                : new HostListingProductReadyProductDetails
+                {
+                    Id = product.Id,
+                    Inactive = product.Inactive,
+                },
         };
     }
 }

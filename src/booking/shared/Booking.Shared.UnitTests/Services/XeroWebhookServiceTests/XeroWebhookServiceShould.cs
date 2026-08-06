@@ -38,9 +38,12 @@ public class XeroWebhookServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Signal_Accounting_Invoice_Monitor_For_Invoice_Events(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        [Frozen] ITemporalService temporalService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen]
+        ITemporalService temporalService,
         XeroWebhookService sut,
         CancellationToken cancellationToken)
     {
@@ -71,7 +74,7 @@ public class XeroWebhookServiceShould
             LocalEntityType = AccountingEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "marketplace-booking-1",
             ExternalInvoiceId = "invoice-1",
-            ExternalStatus = AccountingStatusConstants.PendingExport
+            ExternalStatus = AccountingStatusConstants.PendingExport,
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
@@ -100,9 +103,12 @@ public class XeroWebhookServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Signal_Arrears_Invoice_Monitor_For_Arrears_Invoice_Events(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        [Frozen] ITemporalService temporalService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen]
+        ITemporalService temporalService,
         XeroWebhookService sut,
         CancellationToken cancellationToken)
     {
@@ -125,7 +131,7 @@ public class XeroWebhookServiceShould
             LocalEntityType = AccountingEntityTypeConstants.OrganizationArrearsInvoice,
             LocalEntityId = "arrears-invoice-1",
             ExternalInvoiceId = "invoice-1",
-            ExternalStatus = AccountingStatusConstants.PendingExport
+            ExternalStatus = AccountingStatusConstants.PendingExport,
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
@@ -152,17 +158,28 @@ public class XeroWebhookServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Resolve_Repeating_Invoice_Webhook_To_Stored_Template_Link(
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
-        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        [Frozen] ILogger<XeroWebhookService> logger,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] XeroConfiguration xeroConfiguration,
-        [Frozen] OrganizationConfiguration organizationConfiguration,
-        [Frozen] AccountingApi accountingApi,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        ILogger<XeroWebhookService> logger,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        XeroConfiguration xeroConfiguration,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        AccountingApi accountingApi,
         Guid generatedInvoiceId,
         Guid repeatingTemplateId,
         string tenantId,
@@ -185,9 +202,13 @@ public class XeroWebhookServiceShould
             {
                 _Invoices =
                 [
-                    new Invoice { InvoiceID = generatedInvoiceId, RepeatingInvoiceID = repeatingTemplateId }
-                ]
-            }
+                    new Invoice
+                    {
+                        InvoiceID = generatedInvoiceId,
+                        RepeatingInvoiceID = repeatingTemplateId,
+                    },
+                ],
+            },
         };
         var payloadJson =
             $$"""
@@ -209,14 +230,14 @@ public class XeroWebhookServiceShould
             LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
             LocalEntityId = "recurring-booking-1",
             ExternalInvoiceId = repeatingTemplateId.ToString(),
-            ExternalStatus = AccountingStatusConstants.PendingExport
+            ExternalStatus = AccountingStatusConstants.PendingExport,
         };
         var xeroConnection = new XeroConnection
         {
             Id = "xero-1",
             TenantId = tenantId,
             AccessTokenEncrypted = "encrypted-access",
-            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30))
+            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30)),
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
@@ -233,7 +254,10 @@ public class XeroWebhookServiceShould
                     options.Headers != null &&
                     options.Headers.Any(item => item.Key == Constants.ApiKey && item.Value == organizationConfiguration.ApiKey)),
                 A<Admin_GetByXeroTenantIdInput>.That.Matches(input => input.TenantId == tenantId)))
-            .Returns(CreateResponse(new OrganizationModel { Id = "org-1" }));
+            .Returns(CreateResponse(new OrganizationModel
+            {
+                Id = "org-1",
+            }));
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetXeroConnectionInput, XeroConnection>>._,
                 A<string?>._,
@@ -266,18 +290,30 @@ public class XeroWebhookServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Prefer_Concrete_Repeating_Invoice_Event_Over_Template_Event_When_Both_Appear(
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
-        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        [Frozen] ILogger<XeroWebhookService> logger,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] XeroConfiguration xeroConfiguration,
-        [Frozen] OrganizationConfiguration organizationConfiguration,
-        [Frozen] AccountingApi accountingApi,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen]
+        IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        ILogger<XeroWebhookService> logger,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        XeroConfiguration xeroConfiguration,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        AccountingApi accountingApi,
         Guid generatedInvoiceId,
         Guid repeatingTemplateId,
         string tenantId,
@@ -300,9 +336,13 @@ public class XeroWebhookServiceShould
             {
                 _Invoices =
                 [
-                    new Invoice { InvoiceID = generatedInvoiceId, RepeatingInvoiceID = repeatingTemplateId }
-                ]
-            }
+                    new Invoice
+                    {
+                        InvoiceID = generatedInvoiceId,
+                        RepeatingInvoiceID = repeatingTemplateId,
+                    },
+                ],
+            },
         };
         var payloadJson =
             $$"""
@@ -332,7 +372,7 @@ public class XeroWebhookServiceShould
             LocalEntityId = "recurring-booking-1",
             ExternalInvoiceId = repeatingTemplateId.ToString(),
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
-            ExternalStatus = AccountingStatusConstants.PendingExport
+            ExternalStatus = AccountingStatusConstants.PendingExport,
         };
 
         var generatedInvoiceInstance = new AccountingInvoiceInstance
@@ -343,7 +383,7 @@ public class XeroWebhookServiceShould
             Provider = AccountingProviderConstants.Xero,
             ExternalInvoiceId = generatedInvoiceId.ToString(),
             OrganizationId = repeatingLink.OrganizationId,
-            ExternalStatus = AccountingStatusConstants.Exported
+            ExternalStatus = AccountingStatusConstants.Exported,
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);

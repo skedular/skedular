@@ -124,7 +124,7 @@ public class TeamAuthorizationService(
             CanModify = await CanModifyAsync(team, customerId, cancellationToken),
             CanDelete = await CanDeleteAsync(team, customerId, cancellationToken),
             CanInvitePeople = await CanInvitePeopleAsync(team, customerId, cancellationToken),
-            CanCancelPeopleExistingInvitations = await CanCancelPeopleExistingInvitationsAsync(team, customerId, cancellationToken)
+            CanCancelPeopleExistingInvitations = await CanCancelPeopleExistingInvitationsAsync(team, customerId, cancellationToken),
         };
     }
 }

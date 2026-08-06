@@ -25,12 +25,17 @@ public class LocationResourceBookingSlotsHelperServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public void CreateAllAvailableSlots_Generates_Slots_For_Resource(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         LocationResourceBookingSlotsHelperService sut)
     {
         // Arrange
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(TimeProvider.System.GetUtcNow());
-        var resource = new Resource { Id = "resource-1", Name = "Test Resource" };
+        var resource = new Resource
+        {
+            Id = "resource-1",
+            Name = "Test Resource",
+        };
 
         // Act
         var result = sut.CreateAllAvailableSlots(resource);

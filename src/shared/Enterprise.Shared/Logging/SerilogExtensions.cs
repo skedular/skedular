@@ -25,7 +25,8 @@ public static class SerilogExtensions
                         .Enrich.FromLogContext()
                         .Enrich.WithSensitiveDataMasking(new SensitiveDataEnricherOptions
                         {
-                            Mode = MaskingMode.Globally, MaskValue = "***REDACTED***"
+                            Mode = MaskingMode.Globally,
+                            MaskValue = "***REDACTED***",
                         })
                         .Filter.ByExcluding(logEvent =>
                         {

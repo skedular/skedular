@@ -12,7 +12,7 @@ public static class PriceExtensions
                 Currency.Nzd => "NZ$" + price,
                 Currency.Usd => "US$" + price,
                 _ => throw new ArgumentOutOfRangeException(nameof(currency), currency,
-                    $"Unexpected value for {nameof(currency)}: {currency}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(currency)}: {currency}. Update enum mapping or caller input."),
             };
     }
 }

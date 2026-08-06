@@ -17,7 +17,15 @@ public class ExceptionContextGenerator : ISpecimenBuilder
         }
 
         return new ExceptionContext(
-            new ActionContext { HttpContext = new DefaultHttpContext(), RouteData = new RouteData(), ActionDescriptor = new ActionDescriptor() },
-            new List<IFilterMetadata>()) { Exception = new Exception() };
+            new ActionContext
+            {
+                HttpContext = new DefaultHttpContext(),
+                RouteData = new RouteData(),
+                ActionDescriptor = new ActionDescriptor(),
+            },
+            new List<IFilterMetadata>())
+        {
+            Exception = new Exception(),
+        };
     }
 }

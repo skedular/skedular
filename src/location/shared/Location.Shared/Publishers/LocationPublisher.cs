@@ -23,7 +23,10 @@ public class LocationPublisher(
 {
     public async Task PublishLocationsAsync(IReadOnlyList<Models.Location> locations, CancellationToken cancellationToken) =>
         await Task.WhenAll(locations.Select(location => publisher.PublishAsync(
-            new Key { LocationId = location.Id },
+            new Key
+            {
+                LocationId = location.Id,
+            },
             new Event
             {
                 Metadata = Event.NewMetadata(
@@ -31,7 +34,10 @@ public class LocationPublisher(
                     applicationConfiguration.AppSource,
                     location.IsDeleted() ? Type.LocationDeleted : Type.LocationUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Location = eventMapper.MapTo(location) }
+                Data = new Data
+                {
+                    Location = eventMapper.MapTo(location),
+                },
             },
             cancellationToken)));
 }

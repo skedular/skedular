@@ -302,6 +302,6 @@ public class GetRequiredBookingDaysShould
             ByWeekDays = byWeekDays.ToSafeCollection().ToList(),
             EndDate = endDate,
             OccurrenceCount = occurrenceCount,
-            SkippedDates = []
+            SkippedDates = [],
         };
 }

@@ -12,8 +12,10 @@ public class MarketplaceBookingSubscriptionsWithStatusFilterShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Pass_Statuses_From_SearchCriteria_To_Repository(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -55,8 +57,10 @@ public class MarketplaceBookingSubscriptionsWithStatusFilterShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Pass_Empty_Statuses_From_SearchCriteria_To_Repository(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {

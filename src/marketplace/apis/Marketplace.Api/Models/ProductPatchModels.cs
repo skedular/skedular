@@ -11,7 +11,7 @@ public enum ProductPatchField
     Tags,
     FeatureImages,
     PricingOptions,
-    ListingMetadata
+    ListingMetadata,
 }
 
 public record ProductPatchRequest(

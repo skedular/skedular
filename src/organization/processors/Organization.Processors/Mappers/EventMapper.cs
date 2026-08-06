@@ -62,11 +62,16 @@ public class EventMapper : IEventMapper
                 CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
                 CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException(nameof(customer.Type), customer.Type,
-                    $"Unexpected value for {nameof(customer.Type)}: {customer.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(customer.Type)}: {customer.Type}. Update enum mapping or caller input."),
             },
             Identities = customer.Identities
-                .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
-                .ToList()
+                .Select(item => new Identity
+                {
+                    Id = item.Id,
+                    Email = item.Email.ToSafeString(),
+                    EmailVerified = item.EmailVerified,
+                })
+                .ToList(),
         };
     }
 
@@ -134,7 +139,7 @@ public class EventMapper : IEventMapper
             IsOwnershipVerified = src.IsOwnershipVerified,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             TermsOfUse = MapTo(src.TermsOfUse),
-            IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList()
+            IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList(),
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
@@ -185,7 +190,7 @@ public class EventMapper : IEventMapper
             Status = src.Status.ToOrganizationMemberStatus(),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = MapTo(src.Customer)!,
-            Organization = organization
+            Organization = organization,
         };
 
     private static Customer? MapTo(Shared.Database.Entities.Customer? src) =>
@@ -211,7 +216,7 @@ public class EventMapper : IEventMapper
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
                 Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList()
+                Identities = MapTo(src.Identities).ToList(),
             };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
@@ -224,7 +229,7 @@ public class EventMapper : IEventMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified
+            EmailVerified = src.EmailVerified,
         };
 
     private static TermsOfUse? MapTo(Shared.Database.Entities.TermsOfUse? src) =>
@@ -237,7 +242,7 @@ public class EventMapper : IEventMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 Active = src.Active,
-                Terms = src.Terms
+                Terms = src.Terms,
             };
 
     private static IEnumerable<Shared.Models.OrganizationOffering> MapTo(
@@ -264,7 +269,7 @@ public class EventMapper : IEventMapper
             PurchasedLocationCapacity = src.PurchasedLocationCapacity,
             PurchasedTeamCapacity = src.PurchasedTeamCapacity,
             DiscountPercentage = src.DiscountPercentage,
-            Organization = organization
+            Organization = organization,
         };
 
         organizationOffering.OrganizationOfferingActiveMembers = src.OrganizationOfferingActiveMembers
@@ -274,7 +279,7 @@ public class EventMapper : IEventMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 OrganizationMember = MapTo(item.OrganizationMember, organization),
-                OrganizationOffering = organizationOffering
+                OrganizationOffering = organizationOffering,
             })
             .ToList();
 
@@ -294,7 +299,7 @@ public class EventMapper : IEventMapper
             ModifiedAt = src.ModifiedAt,
             Organization = organization,
             Date = src.Date,
-            Count = src.Count
+            Count = src.Count,
         };
 
     private static IEnumerable<IndustrySubCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustrySubCategory> src) => src.Select(MapTo)!;
@@ -309,7 +314,7 @@ public class EventMapper : IEventMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 Name = src.Name,
-                IndustryMainCategory = MapTo(src.IndustryMainCategory)
+                IndustryMainCategory = MapTo(src.IndustryMainCategory),
             };
 
     private static IndustryMainCategory MapTo(Shared.Database.Entities.IndustryMainCategory src) =>
@@ -319,7 +324,7 @@ public class EventMapper : IEventMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Name = src.Name
+            Name = src.Name,
         };
 
     private static IEnumerable<JoinInvitation> MapTo(
@@ -337,7 +342,7 @@ public class EventMapper : IEventMapper
             Status = src.Status.ToInvitationStatus(),
             Organization = organization,
             CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
+            Invitee = MapTo(src.Invitee),
         };
 
     private static IEnumerable<Tag> MapTo(IEnumerable<Shared.Database.Entities.Tag> src, Shared.Models.Organization organization) =>
@@ -354,7 +359,7 @@ public class EventMapper : IEventMapper
             Description = src.Description,
             Type = src.Type.ToOrganizationTagType(),
             Color = src.Color,
-            Organization = organization
+            Organization = organization,
         };
 
     private static OrganizationStripeCustomer? MapTo(
@@ -369,7 +374,7 @@ public class EventMapper : IEventMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 StripeCustomerId = src.StripeCustomerId,
-                Organization = organization
+                Organization = organization,
             };
 
     private static IEnumerable<OrganizationStripePaymentMethod> MapTo(
@@ -397,7 +402,7 @@ public class EventMapper : IEventMapper
             CardFunding = src.CardFunding,
             CardIssuer = src.CardIssuer,
             CardLastFourDigit = src.CardLastFourDigit,
-            Organization = organization
+            Organization = organization,
         };
 
     private static IEnumerable<Shared.Models.OrganizationStripeConnectAccount> MapTo(
@@ -431,7 +436,7 @@ public class EventMapper : IEventMapper
         CapabilitiesTransfers = src.CapabilitiesTransfers,
         OnboardingUrl = src.OnboardingUrl,
         Organization = organization,
-        OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
+        OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization),
     };
 
     private static OrganizationStripeConnectAccountAuthorization? MapTo(
@@ -440,6 +445,9 @@ public class EventMapper : IEventMapper
             ? null
             : new OrganizationStripeConnectAccountAuthorization
             {
-                Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                IsAuthorized = src.IsAuthorized,
             };
 }

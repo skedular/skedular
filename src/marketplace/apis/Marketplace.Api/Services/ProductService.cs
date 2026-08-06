@@ -114,11 +114,15 @@ public class ProductService(
             Type = ProductType.Event,
             Currency = Currency.Nzd,
             ListingMetadata = new ListingMetadata($"Complete the listing details for {locationName}.", locationName, "", []),
-            PricingOptions = []
+            PricingOptions = [],
         };
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-        var productEntity = entityMapper.MapTo(new Product { Id = id, Inactive = true }, organization);
+        var productEntity = entityMapper.MapTo(new Product
+        {
+            Id = id,
+            Inactive = true,
+        }, organization);
         var productVersionEntity = entityMapper.MapTo(productVersion, productEntity, organizationTags);
         productEntity.ProductVersions.Add(productVersionEntity);
         repositoryFactory.ProductVersionRepository.Add(productVersionEntity);
@@ -239,7 +243,11 @@ public class ProductService(
 
         var organizationTags = tags.Where(item => tagIds.Contains(item.Id)).ToList();
         ValidateHostLocationProductTag(existingOrganization, organizationTags);
-        var productEntity = entityMapper.MapTo(new Product { Id = id, Inactive = true }, existingOrganization);
+        var productEntity = entityMapper.MapTo(new Product
+        {
+            Id = id,
+            Inactive = true,
+        }, existingOrganization);
 
         var productVersionEntity = entityMapper.MapTo(productVersion, productEntity, organizationTags);
         productEntity.ProductVersions.Add(productVersionEntity);
@@ -340,7 +348,7 @@ public class ProductService(
         if (existingProduct?.Organization is
             {
                 Type: OrganizationTypeConstants.Host,
-                IsOwnershipVerified: not true
+                IsOwnershipVerified: not true,
             })
         {
             return null;
@@ -482,7 +490,10 @@ public class ProductService(
                 }
             }
 
-            searchCriteria = searchCriteria with { IncludeUnverifiedHost = true };
+            searchCriteria = searchCriteria with
+            {
+                IncludeUnverifiedHost = true,
+            };
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.ProductRepository.GetPaginatedProductsUntrackedAsync(
@@ -642,7 +653,7 @@ public class ProductService(
             ProductPricingCadence.Per15Minutes => (15, "15-minute"),
             ProductPricingCadence.Per30Minutes => (30, "30-minute"),
             ProductPricingCadence.PerHour => (60, "60-minute"),
-            _ => (OpeningHoursDetails.BookingSlotSizeInMinutes, $"{OpeningHoursDetails.BookingSlotSizeInMinutes}-minute")
+            _ => (OpeningHoursDetails.BookingSlotSizeInMinutes, $"{OpeningHoursDetails.BookingSlotSizeInMinutes}-minute"),
         };
 
     public static void Validate(ProductType productType, ProductPricing pricing, bool allowHostRecurringEvent)

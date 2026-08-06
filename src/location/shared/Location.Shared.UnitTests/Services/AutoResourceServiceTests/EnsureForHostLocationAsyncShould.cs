@@ -16,12 +16,18 @@ public class EnsureForHostLocationAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task EnsureOnlyMatchingHostLocationsForProduct(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<AutoResourceService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<AutoResourceService> logger,
         string locationId,
         string productTagId,
         CancellationToken cancellationToken)
@@ -29,12 +35,16 @@ public class EnsureForHostLocationAsyncShould
         var matching = CreateLocation(locationId, OrganizationTypeConstants.Host);
         var productTag = new OrganizationTagEntity
         {
-            Id = productTagId, Type = OrganizationTagTypeConstants.Product, Organization = matching.Organization
+            Id = productTagId,
+            Type = OrganizationTagTypeConstants.Product,
+            Organization = matching.Organization,
         };
         matching.OrganizationTags.Add(productTag);
         var resourceType = new OrganizationTagEntity
         {
-            Id = "resource-tag", Type = OrganizationTagTypeConstants.ResourceEntireLocation, Organization = matching.Organization
+            Id = "resource-tag",
+            Type = OrganizationTagTypeConstants.ResourceEntireLocation,
+            Organization = matching.Organization,
         };
         var sut = new AutoResourceService(repositoryFactory, logger);
 
@@ -59,10 +69,14 @@ public class EnsureForHostLocationAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task IgnoreNonHostLocation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<AutoResourceService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<AutoResourceService> logger,
         string locationId,
         string productTagId,
         CancellationToken cancellationToken)
@@ -83,18 +97,29 @@ public class EnsureForHostLocationAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task RemainIdempotentWhenHiddenResourceExists(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<AutoResourceService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<AutoResourceService> logger,
         string locationId,
         string productTagId,
         CancellationToken cancellationToken)
     {
         var location = CreateLocation(locationId, OrganizationTypeConstants.Host);
-        location.Resources.Add(new ResourceEntity { Id = $"host-location-resource-{location.Id}", Name = "Old host name", Location = location });
+        location.Resources.Add(new ResourceEntity
+        {
+            Id = $"host-location-resource-{location.Id}",
+            Name = "Old host name",
+            Location = location,
+        });
         var sut = new AutoResourceService(repositoryFactory, logger);
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
@@ -103,7 +128,11 @@ public class EnsureForHostLocationAsyncShould
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => locationRepository.GetByIdAsync(locationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => organizationTagRepository.UpsertNakedAsync(productTagId, location.Organization, A<CancellationToken>._))
-            .Returns(new OrganizationTagEntity { Id = productTagId, Organization = location.Organization });
+            .Returns(new OrganizationTagEntity
+            {
+                Id = productTagId,
+                Organization = location.Organization,
+            });
 
         await sut.EnsureForHostLocationAsync(locationId, productTagId, cancellationToken);
 
@@ -114,12 +143,18 @@ public class EnsureForHostLocationAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task RestoreSoftDeletedHiddenResource(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<AutoResourceService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<AutoResourceService> logger,
         string locationId,
         string productTagId,
         CancellationToken cancellationToken)
@@ -130,7 +165,7 @@ public class EnsureForHostLocationAsyncShould
             Id = $"host-location-resource-{location.Id}",
             Name = "Archived resource",
             Location = location,
-            DeletedAt = TimeProvider.System.GetUtcNow()
+            DeletedAt = TimeProvider.System.GetUtcNow(),
         };
         location.Resources.Add(hiddenResource);
         var sut = new AutoResourceService(repositoryFactory, logger);
@@ -141,7 +176,11 @@ public class EnsureForHostLocationAsyncShould
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => locationRepository.GetByIdAsync(locationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => organizationTagRepository.UpsertNakedAsync(productTagId, location.Organization, A<CancellationToken>._))
-            .Returns(new OrganizationTagEntity { Id = productTagId, Organization = location.Organization });
+            .Returns(new OrganizationTagEntity
+            {
+                Id = productTagId,
+                Organization = location.Organization,
+            });
 
         await sut.EnsureForHostLocationAsync(locationId, productTagId, cancellationToken);
 
@@ -154,12 +193,18 @@ public class EnsureForHostLocationAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task CreateOneHiddenResourceForHostLocation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<AutoResourceService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<AutoResourceService> logger,
         string locationId,
         string productTagId,
         CancellationToken cancellationToken)
@@ -167,7 +212,9 @@ public class EnsureForHostLocationAsyncShould
         var location = CreateLocation(locationId, OrganizationTypeConstants.Host);
         var resourceType = new OrganizationTagEntity
         {
-            Id = "tag-resource-others", Type = OrganizationTagTypeConstants.ResourceEntireLocation, Organization = location.Organization
+            Id = "tag-resource-others",
+            Type = OrganizationTagTypeConstants.ResourceEntireLocation,
+            Organization = location.Organization,
         };
         var sut = new AutoResourceService(repositoryFactory, logger);
 
@@ -181,7 +228,11 @@ public class EnsureForHostLocationAsyncShould
                 OrganizationTagTypeConstants.ResourceEntireLocation,
                 A<CancellationToken>._))
             .Returns(resourceType);
-        var productTag = new OrganizationTagEntity { Id = productTagId, Organization = location.Organization };
+        var productTag = new OrganizationTagEntity
+        {
+            Id = productTagId,
+            Organization = location.Organization,
+        };
         A.CallTo(() => organizationTagRepository.UpsertNakedAsync(productTagId, location.Organization, A<CancellationToken>._))
             .Returns(productTag);
 
@@ -203,7 +254,11 @@ public class EnsureForHostLocationAsyncShould
 
     private static LocationEntity CreateLocation(string locationId, string organizationType)
     {
-        var organization = new OrganizationEntity { Id = "organization-1", Type = organizationType };
+        var organization = new OrganizationEntity
+        {
+            Id = "organization-1",
+            Type = organizationType,
+        };
 
         return new LocationEntity
         {
@@ -213,7 +268,7 @@ public class EnsureForHostLocationAsyncShould
             OrganizationId = organization.Id,
             Organization = organization,
             Resources = [],
-            OrganizationTags = []
+            OrganizationTags = [],
         };
     }
 }

@@ -16,13 +16,20 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Publish_Changes_And_Stop_When_Xero_Service_Handles_Recurring_Invoice(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IProductVersionRepository productVersionRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IXeroInvoiceService xeroInvoiceService,
-        [Frozen] ISkedularInvoiceService skedularInvoiceService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IProductVersionRepository productVersionRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IXeroInvoiceService xeroInvoiceService,
+        [Frozen]
+        ISkedularInvoiceService skedularInvoiceService,
         InvoiceIntegrations sut,
         string recurringBookingId,
         string productVersionId,
@@ -37,19 +44,38 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         {
             Id = recurringBookingId,
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
-            MarketplaceBookingSubscription = new MarketplaceBookingSubscription { Id = subscriptionId },
+            MarketplaceBookingSubscription = new MarketplaceBookingSubscription
+            {
+                Id = subscriptionId,
+            },
             MarketplaceBooking = new MarketplaceBooking
             {
                 InvoiceNumber = "INV-001",
                 ProductPricing = ProductPricing.Empty(pricingId),
-                ProductVersion = new ProductVersion { Id = productVersionId }
-            }
+                ProductVersion = new ProductVersion
+                {
+                    Id = productVersionId,
+                },
+            },
         };
         var productVersion = new ProductVersion
         {
-            Id = productVersionId, Product = new Product { Organization = new Organization { Id = organizationId } }
+            Id = productVersionId,
+            Product = new Product
+            {
+                Organization = new Organization
+                {
+                    Id = organizationId,
+                },
+            },
         };
-        var relatedBookings = (IReadOnlyList<BookingEntity>)new List<BookingEntity> { new() { Id = relatedBookingId } };
+        var relatedBookings = (IReadOnlyList<BookingEntity>)new List<BookingEntity>
+        {
+            new()
+            {
+                Id = relatedBookingId,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
@@ -96,13 +122,20 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Fall_Back_To_Skedular_And_Publish_Changes_When_Xero_Service_Does_Not_Handle_Recurring_Invoice(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IProductVersionRepository productVersionRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IXeroInvoiceService xeroInvoiceService,
-        [Frozen] ISkedularInvoiceService skedularInvoiceService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IProductVersionRepository productVersionRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IXeroInvoiceService xeroInvoiceService,
+        [Frozen]
+        ISkedularInvoiceService skedularInvoiceService,
         InvoiceIntegrations sut,
         string recurringBookingId,
         string productVersionId,
@@ -117,19 +150,38 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         {
             Id = recurringBookingId,
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
-            MarketplaceBookingSubscription = new MarketplaceBookingSubscription { Id = subscriptionId },
+            MarketplaceBookingSubscription = new MarketplaceBookingSubscription
+            {
+                Id = subscriptionId,
+            },
             MarketplaceBooking = new MarketplaceBooking
             {
                 InvoiceNumber = "INV-001",
                 ProductPricing = ProductPricing.Empty(pricingId),
-                ProductVersion = new ProductVersion { Id = productVersionId }
-            }
+                ProductVersion = new ProductVersion
+                {
+                    Id = productVersionId,
+                },
+            },
         };
         var productVersion = new ProductVersion
         {
-            Id = productVersionId, Product = new Product { Organization = new Organization { Id = organizationId } }
+            Id = productVersionId,
+            Product = new Product
+            {
+                Organization = new Organization
+                {
+                    Id = organizationId,
+                },
+            },
         };
-        var relatedBookings = (IReadOnlyList<BookingEntity>)new List<BookingEntity> { new() { Id = relatedBookingId } };
+        var relatedBookings = (IReadOnlyList<BookingEntity>)new List<BookingEntity>
+        {
+            new()
+            {
+                Id = relatedBookingId,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);

@@ -8,9 +8,6 @@ const muiRequire = createRequire(path.join(path.dirname(muiPackagePath), 'intern
 const transitionGroupContextPath = muiRequire.resolve('react-transition-group/cjs/TransitionGroupContext.js');
 
 export default defineConfig({
-  esbuild: {
-    jsx: 'automatic',
-  },
   plugins: [
     {
       name: 'resolve-react-transition-group-context',

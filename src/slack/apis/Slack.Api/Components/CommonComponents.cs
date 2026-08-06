@@ -24,7 +24,12 @@ public class CommonComponents(IHomePageContextService homePageContextService) : 
 
         return
         [
-            new Button { ActionId = CommonActionTypes.SendUsFeedback, Text = "Send us feedback".ToPlainTextWithIcon(Icons.Feedback), Value = context }
+            new Button
+            {
+                ActionId = CommonActionTypes.SendUsFeedback,
+                Text = "Send us feedback".ToPlainTextWithIcon(Icons.Feedback),
+                Value = context,
+            },
         ];
     }
 
@@ -38,7 +43,15 @@ public class CommonComponents(IHomePageContextService homePageContextService) : 
         pageContext = pageContext.Clone();
         var context = new CommonPageContext(pageContext).Serialize();
 
-        return [new Button { ActionId = CommonActionTypes.Back, Text = "Back".ToPlainTextWithIcon(Icons.Back), Value = context }];
+        return
+        [
+            new Button
+            {
+                ActionId = CommonActionTypes.Back,
+                Text = "Back".ToPlainTextWithIcon(Icons.Back),
+                Value = context,
+            },
+        ];
     }
 
     private IReadOnlyList<IActionElement> GetHomeButtons(PageContext pageContext)
@@ -47,6 +60,14 @@ public class CommonComponents(IHomePageContextService homePageContextService) : 
         pageContext.HomePage ??= homePageContextService.GetDefaultHomePageContext();
         var context = new CommonPageContext(pageContext).Serialize();
 
-        return [new Button { ActionId = HomeActionTypes.Home, Text = Icons.Home, Value = context }];
+        return
+        [
+            new Button
+            {
+                ActionId = HomeActionTypes.Home,
+                Text = Icons.Home,
+                Value = context,
+            },
+        ];
     }
 }

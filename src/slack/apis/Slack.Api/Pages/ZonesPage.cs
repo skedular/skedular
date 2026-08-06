@@ -371,7 +371,7 @@ public class ZonesPage(
             GetTitle(),
             asyncBlocks[0],
             GetZonesSearchCriteriaAndPaginationBlocks(zoneConnection, commonPageContext.PageContext),
-            asyncBlocks[1]
+            asyncBlocks[1],
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -381,7 +381,7 @@ public class ZonesPage(
             {
                 CallbackId = ZonesCallback,
                 Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
             cancellationToken);
@@ -399,7 +399,10 @@ public class ZonesPage(
 
     private static IReadOnlyList<Block> GetTitle() =>
     [
-        new SectionBlock { Text = "*Zones*".ToMarkdown() }
+        new SectionBlock
+        {
+            Text = "*Zones*".ToMarkdown(),
+        },
     ];
 
     private async Task<IReadOnlyList<Block>> GetToolbarAsync(
@@ -416,8 +419,8 @@ public class ZonesPage(
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addZoneButton).Concat(feedbackButton).ToList()
-            }
+                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addZoneButton).Concat(feedbackButton).ToList(),
+            },
         ];
     }
 
@@ -425,10 +428,19 @@ public class ZonesPage(
     {
         if (!zoneConnection.Edges.Any())
         {
-            return [new SectionBlock { Text = "No zone found".ToMarkdown() }];
+            return
+            [
+                new SectionBlock
+                {
+                    Text = "No zone found".ToMarkdown(),
+                },
+            ];
         }
 
-        var totalZonesCount = new SectionBlock { Text = $"Total zones: {zoneConnection.TotalCount}".ToMarkdown() };
+        var totalZonesCount = new SectionBlock
+        {
+            Text = $"Total zones: {zoneConnection.TotalCount}".ToMarkdown(),
+        };
         if (zoneConnection.TotalCount <= ZonesPageSize)
         {
             return [totalZonesCount];
@@ -447,7 +459,9 @@ public class ZonesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageZones, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageZones,
+                Text = Icons.FirstPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.ZonesPage.Pagination.First = null;
@@ -457,7 +471,9 @@ public class ZonesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageZones, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageZones,
+                Text = Icons.PreviousPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
@@ -470,7 +486,9 @@ public class ZonesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageZones, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageZones,
+                Text = Icons.NextPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.ZonesPage.Pagination.First = null;
@@ -480,11 +498,16 @@ public class ZonesPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageZones, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageZones,
+                Text = Icons.LastPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
-        var paginationActionBlock = new ActionsBlock { Elements = paginationButtons };
+        var paginationActionBlock = new ActionsBlock
+        {
+            Elements = paginationButtons,
+        };
 
         return [totalZonesCount, paginationActionBlock];
     }
@@ -501,8 +524,12 @@ public class ZonesPage(
         {
             BlockId = ZoneActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = ZoneActionTypes.Name, InitialValue = zone.Name.ToSafeString() },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = ZoneActionTypes.Name,
+                InitialValue = zone.Name.ToSafeString(),
+            },
+            Optional = false,
         };
 
         var description = new InputBlock
@@ -511,9 +538,11 @@ public class ZonesPage(
             Label = "Description".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = ZoneActionTypes.Description, InitialValue = zone.Description.ToSafeString(), Multiline = true
+                ActionId = ZoneActionTypes.Description,
+                InitialValue = zone.Description.ToSafeString(),
+                Multiline = true,
             },
-            Optional = true
+            Optional = true,
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -526,7 +555,7 @@ public class ZonesPage(
                 Close = "Cancel",
                 Submit = "Save",
                 Blocks = [name, description],
-                PrivateMetadata = context.Serialize()
+                PrivateMetadata = context.Serialize(),
             },
             cancellationToken);
     }
@@ -539,7 +568,10 @@ public class ZonesPage(
         CancellationToken cancellationToken)
     {
         var zone = await organizationZoneService.GetAsync(workspaceMember.Id, context.ZoneId, cancellationToken);
-        var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the zone {zone.Name.ToSafeString()}?" };
+        var confirmationMessage = new SectionBlock
+        {
+            Text = $"Are you sure you want to remove the zone {zone.Name.ToSafeString()}?",
+        };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(
@@ -551,7 +583,7 @@ public class ZonesPage(
                 Close = "No",
                 Submit = "Yes",
                 Blocks = [confirmationMessage],
-                PrivateMetadata = context.Serialize()
+                PrivateMetadata = context.Serialize(),
             },
             cancellationToken);
     }

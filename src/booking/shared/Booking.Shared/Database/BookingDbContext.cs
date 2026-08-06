@@ -15,6 +15,7 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     public DbSet<RecurringBooking> RecurringBooking { get; set; }
     public DbSet<Entities.Booking> Booking { get; set; }
     public DbSet<MarketplaceBooking> MarketplaceBooking { get; set; }
+    public DbSet<MarketplacePurchaseHistory> MarketplacePurchaseHistory { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Location> Location { get; set; }
@@ -56,6 +57,10 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     {
         public BookingDbContext CreateDbContext(string[] args) =>
             new(args.ToDbContextOption<BookingDbContext>(true),
-                new CustomDbContextOptions<BookingDbContext> { IsPooled = false, IsPostgisEnabled = true });
+                new CustomDbContextOptions<BookingDbContext>
+                {
+                    IsPooled = false,
+                    IsPostgisEnabled = true,
+                });
     }
 }

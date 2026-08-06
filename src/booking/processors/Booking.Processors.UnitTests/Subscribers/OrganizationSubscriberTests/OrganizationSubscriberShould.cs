@@ -24,10 +24,14 @@ public class OrganizationSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Clear_Booking_Quota_For_Early_Bird_Marketplace_Organization(
-        [Frozen] IEventMapper eventMapper,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IEventMapper eventMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        EventContext eventContext,
         OrganizationSubscriber sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -42,17 +46,26 @@ public class OrganizationSubscriberShould
                 Code = OfferingCode.EarlyBirdV1,
                 PurchasedTeamCapacity = 100,
                 Start = TimeProvider.System.GetUtcNow(),
-                End = TimeProvider.System.GetUtcNow().AddMonths(1)
-            }
+                End = TimeProvider.System.GetUtcNow().AddMonths(1),
+            },
         };
         var existing = new Organization
         {
             Id = organizationId,
             Type = OrganizationTypeConstants.Marketplace,
             BillingCycle = OrganizationBillingCycleConstants.Monthly,
-            Offering = new OfferingModel { SpacesQuotaLimit = 100 }
+            Offering = new OfferingModel
+            {
+                SpacesQuotaLimit = 100,
+            },
         };
-        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.OrganizationUpserted } };
+        var @event = new Event
+        {
+            Metadata = new ValueMetadata
+            {
+                Type = ValueType.OrganizationUpserted,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => eventMapper.MapTo(@event)).Returns(incoming);
@@ -71,12 +84,18 @@ public class OrganizationSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Arrears_Billing_Workflow_For_New_Marketplace_Organization(
-        [Frozen] IEventMapper eventMapper,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IEventMapper eventMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        EventContext eventContext,
         OrganizationSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -85,23 +104,29 @@ public class OrganizationSubscriberShould
             Id = "org-1",
             Type = OrganizationTypeModel.Marketplace,
             BillingCycle = OrganizationBillingCycleModel.Monthly,
-            EventRaisedAt = new DateTimeOffset(2026, 3, 23, 0, 0, 0, TimeSpan.Zero)
+            EventRaisedAt = new DateTimeOffset(2026, 3, 23, 0, 0, 0, TimeSpan.Zero),
         };
         var organizationEntity = new Organization
         {
             Id = "org-1",
             CreatedAt = new DateTimeOffset(2026, 3, 23, 0, 0, 0, TimeSpan.Zero),
             Type = OrganizationTypeConstants.Private,
-            BillingCycle = OrganizationBillingCycleConstants.Monthly
+            BillingCycle = OrganizationBillingCycleConstants.Monthly,
         };
         var updatedEntity = new Organization
         {
             Id = "org-1",
             CreatedAt = organizationEntity.CreatedAt,
             Type = OrganizationTypeConstants.Marketplace,
-            BillingCycle = OrganizationBillingCycleConstants.Monthly
+            BillingCycle = OrganizationBillingCycleConstants.Monthly,
         };
-        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.OrganizationUpserted } };
+        var @event = new Event
+        {
+            Metadata = new ValueMetadata
+            {
+                Type = ValueType.OrganizationUpserted,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => eventMapper.MapTo(@event)).Returns(organization);
@@ -132,12 +157,18 @@ public class OrganizationSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Signal_Arrears_Billing_Workflow_When_Marketplace_Billing_Cycle_Changes(
-        [Frozen] IEventMapper eventMapper,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IEventMapper eventMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        EventContext eventContext,
         OrganizationSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -146,7 +177,7 @@ public class OrganizationSubscriberShould
             Id = "org-1",
             Type = OrganizationTypeModel.Marketplace,
             BillingCycle = OrganizationBillingCycleModel.Fortnightly,
-            EventRaisedAt = new DateTimeOffset(2026, 3, 23, 0, 0, 0, TimeSpan.Zero)
+            EventRaisedAt = new DateTimeOffset(2026, 3, 23, 0, 0, 0, TimeSpan.Zero),
         };
         var existingEntity = new Organization
         {
@@ -154,7 +185,7 @@ public class OrganizationSubscriberShould
             CreatedAt = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero),
             Type = OrganizationTypeConstants.Marketplace,
             BillingCycle = OrganizationBillingCycleConstants.Monthly,
-            EventRaisedAt = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero)
+            EventRaisedAt = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero),
         };
         var updatedEntity = new Organization
         {
@@ -162,9 +193,15 @@ public class OrganizationSubscriberShould
             CreatedAt = existingEntity.CreatedAt,
             Type = OrganizationTypeConstants.Marketplace,
             BillingCycle = OrganizationBillingCycleConstants.Fortnightly,
-            EventRaisedAt = organization.EventRaisedAt
+            EventRaisedAt = organization.EventRaisedAt,
         };
-        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.OrganizationUpserted } };
+        var @event = new Event
+        {
+            Metadata = new ValueMetadata
+            {
+                Type = ValueType.OrganizationUpserted,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => eventMapper.MapTo(@event)).Returns(organization);
@@ -189,24 +226,40 @@ public class OrganizationSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Stop_Arrears_Billing_Workflow_When_Marketplace_Organization_Is_Deleted(
-        [Frozen] IEventMapper eventMapper,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IEventMapper eventMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        EventContext eventContext,
         OrganizationSubscriber sut,
         CancellationToken cancellationToken)
     {
         var organization = new Shared.Models.Organization
         {
-            Id = "org-1", Type = OrganizationTypeModel.Marketplace, EventRaisedAt = new DateTimeOffset(2026, 3, 23, 0, 0, 0, TimeSpan.Zero)
+            Id = "org-1",
+            Type = OrganizationTypeModel.Marketplace,
+            EventRaisedAt = new DateTimeOffset(2026, 3, 23, 0, 0, 0, TimeSpan.Zero),
         };
         var existingEntity = new Organization
         {
-            Id = "org-1", Type = OrganizationTypeConstants.Marketplace, EventRaisedAt = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero)
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Marketplace,
+            EventRaisedAt = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero),
         };
-        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.OrganizationDeleted } };
+        var @event = new Event
+        {
+            Metadata = new ValueMetadata
+            {
+                Type = ValueType.OrganizationDeleted,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => eventMapper.MapTo(@event)).Returns(organization);
@@ -225,12 +278,18 @@ public class OrganizationSubscriberShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Stop_Arrears_Billing_Workflow_When_Organization_Stops_Being_Marketplace(
-        [Frozen] IEventMapper eventMapper,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IEventMapper eventMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        EventContext eventContext,
         OrganizationSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -239,7 +298,7 @@ public class OrganizationSubscriberShould
             Id = "org-1",
             Type = OrganizationTypeModel.Private,
             BillingCycle = OrganizationBillingCycleModel.Monthly,
-            EventRaisedAt = new DateTimeOffset(2026, 3, 23, 0, 0, 0, TimeSpan.Zero)
+            EventRaisedAt = new DateTimeOffset(2026, 3, 23, 0, 0, 0, TimeSpan.Zero),
         };
         var existingEntity = new Organization
         {
@@ -247,7 +306,7 @@ public class OrganizationSubscriberShould
             CreatedAt = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero),
             Type = OrganizationTypeConstants.Marketplace,
             BillingCycle = OrganizationBillingCycleConstants.Monthly,
-            EventRaisedAt = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero)
+            EventRaisedAt = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero),
         };
         var updatedEntity = new Organization
         {
@@ -255,9 +314,15 @@ public class OrganizationSubscriberShould
             CreatedAt = existingEntity.CreatedAt,
             Type = OrganizationTypeConstants.Private,
             BillingCycle = OrganizationBillingCycleConstants.Monthly,
-            EventRaisedAt = organization.EventRaisedAt
+            EventRaisedAt = organization.EventRaisedAt,
         };
-        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.OrganizationUpserted } };
+        var @event = new Event
+        {
+            Metadata = new ValueMetadata
+            {
+                Type = ValueType.OrganizationUpserted,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => eventMapper.MapTo(@event)).Returns(organization);

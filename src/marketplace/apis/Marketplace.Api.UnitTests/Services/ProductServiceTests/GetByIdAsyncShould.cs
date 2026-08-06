@@ -12,14 +12,20 @@ public class GetByIdAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Hide_Unverified_Host_Product(
-        [Frozen] ICachedProductService cachedProductService,
+        [Frozen]
+        ICachedProductService cachedProductService,
         ProductService sut,
         string productId,
         CancellationToken cancellationToken)
     {
         var product = new ProductEntity
         {
-            Id = productId, Organization = new OrganizationEntity { Type = OrganizationTypeConstants.Host, IsOwnershipVerified = false }
+            Id = productId,
+            Organization = new OrganizationEntity
+            {
+                Type = OrganizationTypeConstants.Host,
+                IsOwnershipVerified = false,
+            },
         };
         A.CallTo(() => cachedProductService.GetByIdAsync(productId, cancellationToken)).Returns(product);
 

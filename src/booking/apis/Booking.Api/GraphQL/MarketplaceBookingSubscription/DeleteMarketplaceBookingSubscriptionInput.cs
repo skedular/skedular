@@ -6,8 +6,11 @@ namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 [GraphQLName("DeleteMarketplaceBookingSubscriptionInput")]
 public class DeleteMarketplaceBookingSubscriptionInput
 {
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public required string Id { get; set; }
+    [GraphQLName("clientMutationId")]
+    public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")]
+    public required string Id { get; set; }
 
     [GraphQLName("cancellationMode")]
     public MarketplaceBookingSubscriptionCancellationMode CancellationMode { get; set; } =

@@ -52,11 +52,16 @@ public class UpdateAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Initialize_Trial_Once_On_First_Spaces_Enablement(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IOrganizationAuthorizationService authorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IOrganizationAuthorizationService authorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         OrganizationSpacesSubscriptionService sut,
         IDbContextTransaction transaction,
         string organizationId,
@@ -66,7 +71,9 @@ public class UpdateAsyncShould
     {
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = organizationId, Type = OrganizationTypeConstants.Marketplace, OrganizationOfferings = []
+            Id = organizationId,
+            Type = OrganizationTypeConstants.Marketplace,
+            OrganizationOfferings = [],
         };
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
@@ -89,11 +96,16 @@ public class UpdateAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Preserve_Existing_Trial_Anchor_Across_Plan_Changes(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IOrganizationAuthorizationService authorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IOrganizationAuthorizationService authorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         OrganizationSpacesSubscriptionService sut,
         IDbContextTransaction transaction,
         OrganizationOffering existingOffering,
@@ -112,7 +124,7 @@ public class UpdateAsyncShould
             Type = OrganizationTypeConstants.Marketplace,
             SpacesTrialStartedAt = trialStartedAt,
             OrganizationOfferings = [existingOffering],
-            OrganizationStripePaymentMethods = [paymentMethod]
+            OrganizationStripePaymentMethods = [paymentMethod],
         };
         existingOffering.Organization = organization;
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
@@ -139,11 +151,16 @@ public class UpdateAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Persist_Creation_Date_Fallback_When_Existing_Free_Organization_Upgrades(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IOrganizationAuthorizationService authorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IOrganizationAuthorizationService authorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         OrganizationSpacesSubscriptionService sut,
         IDbContextTransaction transaction,
         OrganizationOffering existingOffering,
@@ -163,7 +180,7 @@ public class UpdateAsyncShould
             Type = OrganizationTypeConstants.Marketplace,
             SpacesTrialStartedAt = null,
             OrganizationOfferings = [existingOffering],
-            OrganizationStripePaymentMethods = [paymentMethod]
+            OrganizationStripePaymentMethods = [paymentMethod],
         };
         existingOffering.Organization = organization;
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
@@ -187,9 +204,12 @@ public class UpdateAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Require_Payment_Method_When_Upgrading_Free_Trial(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationAuthorizationService authorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationAuthorizationService authorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         OrganizationSpacesSubscriptionService sut,
         OrganizationOffering existingOffering,
         string organizationId,
@@ -203,7 +223,7 @@ public class UpdateAsyncShould
             Id = organizationId,
             Type = OrganizationTypeConstants.Marketplace,
             OrganizationOfferings = [existingOffering],
-            OrganizationStripePaymentMethods = []
+            OrganizationStripePaymentMethods = [],
         };
         existingOffering.Organization = organization;
         A.CallTo(() => repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
@@ -222,12 +242,18 @@ public class UpdateAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Keep_Paid_Update_Idempotent_Without_Starting_Another_Bridge(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IOrganizationAuthorizationService authorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IOrganizationAuthorizationService authorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
         OrganizationSpacesSubscriptionService sut,
         IDbContextTransaction transaction,
         OrganizationOffering existingOffering,
@@ -245,7 +271,7 @@ public class UpdateAsyncShould
             Id = organizationId,
             Type = OrganizationTypeConstants.Marketplace,
             SpacesTrialStartedAt = trialStartedAt,
-            OrganizationOfferings = [existingOffering]
+            OrganizationOfferings = [existingOffering],
         };
         existingOffering.Organization = organization;
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);

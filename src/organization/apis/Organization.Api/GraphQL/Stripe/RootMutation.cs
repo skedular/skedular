@@ -12,7 +12,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountPayload> AddOrganizationStripeConnectAccountAsync(
         AddOrganizationStripeConnectAccountInput input,
-        [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Service]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken) =>
         new()
         {
@@ -24,56 +25,62 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
                     input.OrganizationCustomDomain,
                     input.Name,
                     input.RedirectUrl,
-                    cancellationToken))!
+                    cancellationToken))!,
         };
 
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountPayload> UpdateOrganizationStripeConnectAccountAsync(
         UpdateOrganizationStripeConnectAccountInput input,
-        [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Service]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
             OrganizationStripeConnectAccount =
-                graphQlMapper.MapTo(await organizationStripeConnectAccountService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken))!
+                graphQlMapper.MapTo(await organizationStripeConnectAccountService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken))!,
         };
 
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountPayload> DeleteOrganizationStripeConnectAccountAsync(
         DeleteOrganizationStripeConnectAccountInput input,
-        [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Service]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
             OrganizationStripeConnectAccount =
-                graphQlMapper.MapTo(await organizationStripeConnectAccountService.DeleteAsync(input.Id, cancellationToken))!
+                graphQlMapper.MapTo(await organizationStripeConnectAccountService.DeleteAsync(input.Id, cancellationToken))!,
         };
 
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountsPayload> DeleteOrganizationStripeConnectAccountsAsync(
         DeleteOrganizationStripeConnectAccountsInput input,
-        [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Service]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
     {
         var accounts = await organizationStripeConnectAccountService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new OrganizationStripeConnectAccountsPayload
         {
-            ClientMutationId = input.ClientMutationId, OrganizationStripeConnectAccounts = accounts.Select(item => graphQlMapper.MapTo(item)!)
+            ClientMutationId = input.ClientMutationId,
+            OrganizationStripeConnectAccounts = accounts.Select(item => graphQlMapper.MapTo(item)!),
         };
     }
 
     [UseResolverScope]
     public async Task<OrganizationStripeConnectAccountPayload> SetOrganizationStripeConnectAccountAsDefaultAsync(
         SetOrganizationStripeConnectAccountAsDefaultInput input,
-        [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Service]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
     {
         var account = await organizationStripeConnectAccountService.SetAsDefaultAsync(input.Id, cancellationToken);
         return new OrganizationStripeConnectAccountPayload
         {
-            ClientMutationId = input.ClientMutationId, OrganizationStripeConnectAccount = graphQlMapper.MapTo(account)!
+            ClientMutationId = input.ClientMutationId,
+            OrganizationStripeConnectAccount = graphQlMapper.MapTo(account)!,
         };
     }
 }

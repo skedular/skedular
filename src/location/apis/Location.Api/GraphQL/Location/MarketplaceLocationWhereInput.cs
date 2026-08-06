@@ -6,16 +6,30 @@ namespace Location.Api.GraphQL.Location;
 [GraphQLName("MarketplaceLocationWhereInput")]
 public class MarketplaceLocationWhereInput
 {
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("organizationId")]
+    public string? OrganizationId { get; set; }
 
     [GraphQLName("organizationCustomDomain")]
     public string? OrganizationCustomDomain { get; set; }
 
-    [GraphQLName("locationIds")] public IEnumerable<string>? LocationIds { get; set; } = [];
-    [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
-    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
-    [GraphQLName("searchBoundaries")] public Polygon? SearchBoundaries { get; set; }
-    [GraphQLName("resourceType")] public OrganizationTagType? ResourceType { get; set; }
-    [GraphQLName("productIds")] public IEnumerable<string>? ProductIds { get; set; }
+    [GraphQLName("locationIds")]
+    public IEnumerable<string>? LocationIds { get; set; } = [];
+
+    [GraphQLName("nameContains")]
+    public string? NameContains { get; set; }
+
+    [GraphQLName("customTagIds")]
+    public IEnumerable<string>? CustomTagIds { get; set; }
+
+    [GraphQLName("zoneIds")]
+    public IEnumerable<string>? ZoneIds { get; set; }
+
+    [GraphQLName("searchBoundaries")]
+    public Polygon? SearchBoundaries { get; set; }
+
+    [GraphQLName("resourceType")]
+    public OrganizationTagType? ResourceType { get; set; }
+
+    [GraphQLName("productIds")]
+    public IEnumerable<string>? ProductIds { get; set; }
 }

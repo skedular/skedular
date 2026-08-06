@@ -19,37 +19,68 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Apply_Sso_Settings_Patch_And_Return_Latest_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationSsoSettingsRepository organizationSsoSettingsRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] ISamlAssertionConsumerService samlAssertionConsumerService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationSsoSettingsRepository organizationSsoSettingsRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        ISamlAssertionConsumerService samlAssertionConsumerService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationSsoService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Shared.Database.Entities.Organization { Id = "org-1", Name = "Acme", CustomDomain = "acme" };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Id = "org-1",
+            Name = "Acme",
+            CustomDomain = "acme",
+        };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var ssoSettings = new OrganizationSsoSettings
         {
             EntityId = "entity",
             LoginUrl = "https://login.example.com",
             AppFederationMetadataUrl = "https://login.example.com/metadata",
             IsActive = true,
-            Organization = new Shared.Models.Organization { Id = organization.Id, CustomDomain = organization.CustomDomain }
+            Organization = new Shared.Models.Organization
+            {
+                Id = organization.Id,
+                CustomDomain = organization.CustomDomain,
+            },
         };
         var request = new OrganizationSsoSettingsPatchRequest(
             organization.Id,
             organization.CustomDomain,
-            new HashSet<OrganizationSsoSettingsPatchField> { OrganizationSsoSettingsPatchField.SsoSettings },
+            new HashSet<OrganizationSsoSettingsPatchField>
+            {
+                OrganizationSsoSettingsPatchField.SsoSettings,
+            },
             ssoSettings);
         var entity = new OrganizationSsoSettingsEntity
         {
@@ -57,11 +88,13 @@ public class UpdatePatchAsyncShould
             EntityId = ssoSettings.EntityId,
             LoginUrl = ssoSettings.LoginUrl,
             AppFederationMetadataUrl = ssoSettings.AppFederationMetadataUrl,
-            IsActive = true
+            IsActive = true,
         };
         var updatedOrganization = new Shared.Models.Organization
         {
-            Id = organization.Id, Name = organization.Name, CustomDomain = organization.CustomDomain
+            Id = organization.Id,
+            Name = organization.Name,
+            CustomDomain = organization.CustomDomain,
         };
         var stripeAuthorizeUrl = new Uri("https://stripe.example.com/acme");
 

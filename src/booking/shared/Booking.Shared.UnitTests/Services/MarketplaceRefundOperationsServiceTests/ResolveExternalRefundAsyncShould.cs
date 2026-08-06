@@ -12,13 +12,21 @@ public class ResolveExternalRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_And_Return_The_Resolved_External_Record(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         MarketplaceRefundOperationsService sut,
         CancellationToken cancellationToken)
     {
-        var record = new MarketplaceExternalRefundReconciliation { Provider = "STRIPE", ExternalRefundId = "po_1", Status = "Open" };
+        var record = new MarketplaceExternalRefundReconciliation
+        {
+            Provider = "STRIPE",
+            ExternalRefundId = "po_1",
+            Status = "Open",
+        };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => marketplaceRefundRepository.GetExternalReconciliationAsync("STRIPE", "po_1", "org-1", cancellationToken))

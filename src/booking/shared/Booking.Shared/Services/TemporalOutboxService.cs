@@ -188,7 +188,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.PayBookingViaCard(args.BookingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 
@@ -200,7 +200,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.GenerateInitialArrearsBookingInvoice(args.BookingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 
@@ -212,7 +212,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.PayBookingViaBankTransfer(args.BookingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 
@@ -224,7 +224,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.NotifyMarketplaceBookingFailure(args.FailureId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 
@@ -235,7 +235,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.ResolvePartialMarketplaceBooking(args.FailureId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             }, unitOfWork);
 
     public void StartWorkflowProcessMarketplaceRefund(ProcessMarketplaceRefundInput args, IUnitOfWork unitOfWork) =>
@@ -245,7 +245,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.ProcessMarketplaceRefund(args.RefundId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
             }, unitOfWork);
 
     public void StartBookPrivateRecurringResources(BookPrivateRecurringResourcesInput args, IUnitOfWork unitOfWork) =>
@@ -257,7 +257,7 @@ public class TemporalOutboxService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
             },
             unitOfWork);
 
@@ -272,7 +272,7 @@ public class TemporalOutboxService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
             },
             unitOfWork);
 
@@ -616,7 +616,7 @@ public class TemporalOutboxService(
                         TaskQueue = temporalConfiguration.Worker.TaskQueue,
                         RetryPolicy = null,
                         IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                        IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                        IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                     });
 
                 await workflowHandle.SignalAsync(
@@ -647,7 +647,7 @@ public class TemporalOutboxService(
                         TaskQueue = temporalConfiguration.Worker.TaskQueue,
                         RetryPolicy = null,
                         IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                        IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                        IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                     });
 
                 await workflowHandle.SignalAsync(
@@ -680,7 +680,7 @@ public class TemporalOutboxService(
                         TaskQueue = temporalConfiguration.Worker.TaskQueue,
                         RetryPolicy = null,
                         IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                        IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                        IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                     });
 
                 await workflowHandle.SignalAsync(

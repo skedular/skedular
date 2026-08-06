@@ -38,7 +38,7 @@ public class OrganizationTagsGrpcService(
                     TagOrderField.Name => OrganizationTagOrderField.Name,
                     TagOrderField.Description => OrganizationTagOrderField.Description,
                     _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
                 };
 
                 return new TagOrder(direction, field);
@@ -53,9 +53,9 @@ public class OrganizationTagsGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponseTag));
@@ -86,7 +86,7 @@ public class OrganizationTagsGrpcService(
                     TagOrderField.Name => OrganizationTagOrderField.Name,
                     TagOrderField.Description => OrganizationTagOrderField.Description,
                     _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
                 };
 
                 return new TagOrder(direction, field);
@@ -101,9 +101,9 @@ public class OrganizationTagsGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponseTag));
@@ -160,7 +160,7 @@ public class OrganizationTagsGrpcService(
                     CustomTagOrderField.Name => OrganizationTagOrderField.Name,
                     CustomTagOrderField.Description => OrganizationTagOrderField.Description,
                     _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
                 };
 
                 return new TagOrder(direction, field);
@@ -175,9 +175,9 @@ public class OrganizationTagsGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponseCustomTag));
@@ -238,7 +238,7 @@ public class OrganizationTagsGrpcService(
                     ProductTagOrderField.Name => OrganizationTagOrderField.Name,
                     ProductTagOrderField.Description => OrganizationTagOrderField.Description,
                     _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
                 };
 
                 return new TagOrder(direction, field);
@@ -253,9 +253,9 @@ public class OrganizationTagsGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponseProductTag));

@@ -10,7 +10,8 @@ public class OrganizationArrearsBillingPlannerServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public void Group_Charge_Segments_Into_Per_Customer_Drafts(
-        [Frozen] IOrganizationArrearsChargeSegmentService organizationArrearsChargeSegmentService,
+        [Frozen]
+        IOrganizationArrearsChargeSegmentService organizationArrearsChargeSegmentService,
         OrganizationArrearsBillingPlannerService sut)
     {
         var billingPeriod = new BillingPeriod(
@@ -43,7 +44,7 @@ public class OrganizationArrearsBillingPlannerServiceShould
                     new BillingPeriod(firstBooking.From, firstBooking.Until),
                     firstBooking.Until,
                     20m,
-                    "Area Pass")
+                    "Area Pass"),
             ]);
         A.CallTo(() => organizationArrearsChargeSegmentService.BuildChargeSegments(secondBooking, OrganizationBillingCycle.Monthly))
             .Returns(
@@ -57,7 +58,7 @@ public class OrganizationArrearsBillingPlannerServiceShould
                     new BillingPeriod(secondBooking.From, secondBooking.Until),
                     secondBooking.Until,
                     25m,
-                    "Area Pass")
+                    "Area Pass"),
             ]);
 
         var result = sut.BuildInvoiceDrafts(billingPeriod, OrganizationBillingCycle.Monthly, [firstBooking, secondBooking]);
@@ -71,7 +72,8 @@ public class OrganizationArrearsBillingPlannerServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public void Exclude_Already_Processed_Charge_Segments_From_Drafts(
-        [Frozen] IOrganizationArrearsChargeSegmentService organizationArrearsChargeSegmentService,
+        [Frozen]
+        IOrganizationArrearsChargeSegmentService organizationArrearsChargeSegmentService,
         OrganizationArrearsBillingPlannerService sut)
     {
         var billingPeriod = new BillingPeriod(
@@ -97,7 +99,7 @@ public class OrganizationArrearsBillingPlannerServiceShould
                     new BillingPeriod(booking.From, booking.Until),
                     booking.Until,
                     25m,
-                    "Area Pass")
+                    "Area Pass"),
             ]);
 
         var result = sut.BuildInvoiceDrafts(billingPeriod, OrganizationBillingCycle.Monthly, [booking], [excludedSegmentKey]);
@@ -118,9 +120,24 @@ public class OrganizationArrearsBillingPlannerServiceShould
             Id = "booking-1",
             From = from,
             Until = until,
-            InvolvedOrganizations = [new Organization { Id = "org-1" }],
-            InvolvedCustomers = [new Customer { Id = "customer-1" }],
-            CreatedByCustomer = new Customer { Id = "customer-1" },
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                },
+            ],
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+            CreatedByCustomer = new Customer
+            {
+                Id = "customer-1",
+            },
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = quantity,
@@ -132,8 +149,11 @@ public class OrganizationArrearsBillingPlannerServiceShould
                     BookingCadence = bookingCadence,
                     Price = price,
                     BillingMode = billingMode,
-                    ListingMetadata = ListingMetadata.Empty with { Title = "Area Pass" }
-                }
-            }
+                    ListingMetadata = ListingMetadata.Empty with
+                    {
+                        Title = "Area Pass",
+                    },
+                },
+            },
         };
 }

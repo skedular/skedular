@@ -9,13 +9,30 @@ public class LocationWhereInput
     [GraphQLName("organizationCustomDomain")]
     public string? OrganizationCustomDomain { get; set; }
 
-    [GraphQLName("locationIds")] public IEnumerable<string>? LocationIds { get; set; } = [];
-    [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
-    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
-    [GraphQLName("types")] public IEnumerable<LocationType>? Types { get; set; }
-    [GraphQLName("searchBoundaries")] public Polygon? SearchBoundaries { get; set; }
-    [GraphQLName("notContactedYet")] public bool? NotContactedYet { get; set; }
-    [GraphQLName("resourceType")] public OrganizationTagType? ResourceType { get; set; }
-    [GraphQLName("productIds")] public IEnumerable<string>? ProductIds { get; set; }
+    [GraphQLName("locationIds")]
+    public IEnumerable<string>? LocationIds { get; set; } = [];
+
+    [GraphQLName("nameContains")]
+    public string? NameContains { get; set; }
+
+    [GraphQLName("customTagIds")]
+    public IEnumerable<string>? CustomTagIds { get; set; }
+
+    [GraphQLName("zoneIds")]
+    public IEnumerable<string>? ZoneIds { get; set; }
+
+    [GraphQLName("types")]
+    public IEnumerable<LocationType>? Types { get; set; }
+
+    [GraphQLName("searchBoundaries")]
+    public Polygon? SearchBoundaries { get; set; }
+
+    [GraphQLName("notContactedYet")]
+    public bool? NotContactedYet { get; set; }
+
+    [GraphQLName("resourceType")]
+    public OrganizationTagType? ResourceType { get; set; }
+
+    [GraphQLName("productIds")]
+    public IEnumerable<string>? ProductIds { get; set; }
 }

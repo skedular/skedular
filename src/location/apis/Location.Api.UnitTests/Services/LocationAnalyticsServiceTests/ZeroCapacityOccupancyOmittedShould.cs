@@ -18,19 +18,29 @@ public class ZeroCapacityOccupancyOmittedShould
         var options = new DbContextOptionsBuilder<LocationDbContext>()
             .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
             .Options;
-        return new TestLocationDbContext(options, new CustomDbContextOptions<LocationDbContext> { IsPooled = false });
+        return new TestLocationDbContext(options, new CustomDbContextOptions<LocationDbContext>
+        {
+            IsPooled = false,
+        });
     }
 
     [Theory]
     [AutoFakeItEasyData]
     public async Task Desk_Day_With_Zero_Capacity_Is_Not_In_OccupancyPercentage(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyDeskCountRecordingRepository deskCountRepository,
-        [Frozen] IDailyRoomCountRecordingRepository roomCountRepository,
-        [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyDeskCountRecordingRepository deskCountRepository,
+        [Frozen]
+        IDailyRoomCountRecordingRepository roomCountRepository,
+        [Frozen]
+        IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         LocationAnalyticsService sut,
         CancellationToken cancellationToken)
     {
@@ -41,14 +51,31 @@ public class ZeroCapacityOccupancyOmittedShould
 
         await using var dbContext = CreateInMemoryContext();
 
-        var location = new LocationEntity { Id = LocationId, Name = "Zero Desk Office", OrganizationId = OrganizationId };
+        var location = new LocationEntity
+        {
+            Id = LocationId,
+            Name = "Zero Desk Office",
+            OrganizationId = OrganizationId,
+        };
         var from = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
         var until = new DateTimeOffset(2026, 4, 3, 0, 0, 0, TimeSpan.Zero);
 
         // Day 1: Count=5 (non-zero) — should appear in result
         // Day 2: Count=0 (zero capacity) — should be omitted
-        var deskDay1 = new DailyDeskCountRecording { Id = "ddcr-1", Date = from, Count = 5, Location = location };
-        var deskDay2 = new DailyDeskCountRecording { Id = "ddcr-2", Date = from.AddDays(1), Count = 0, Location = location };
+        var deskDay1 = new DailyDeskCountRecording
+        {
+            Id = "ddcr-1",
+            Date = from,
+            Count = 5,
+            Location = location,
+        };
+        var deskDay2 = new DailyDeskCountRecording
+        {
+            Id = "ddcr-2",
+            Date = from.AddDays(1),
+            Count = 0,
+            Location = location,
+        };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DailyDeskCountRecordingRepository).Returns(deskCountRepository);
@@ -89,10 +116,14 @@ public class ZeroCapacityOccupancyOmittedShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Auth_Fail_Returns_Empty_Analytics(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         LocationAnalyticsService sut,
         CancellationToken cancellationToken)
     {
@@ -102,7 +133,12 @@ public class ZeroCapacityOccupancyOmittedShould
         const string CustomerId = "cust-noauth";
 
         await using var dbContext = CreateInMemoryContext();
-        var location = new LocationEntity { Id = LocationId, Name = "No Auth Office", OrganizationId = OrganizationId };
+        var location = new LocationEntity
+        {
+            Id = LocationId,
+            Name = "No Auth Office",
+            OrganizationId = OrganizationId,
+        };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);

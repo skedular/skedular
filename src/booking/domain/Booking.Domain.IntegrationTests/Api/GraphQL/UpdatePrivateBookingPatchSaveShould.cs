@@ -85,7 +85,11 @@ public class UpdatePrivateBookingPatchSaveShould(
     {
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, true, cancellationToken);
 
-        repositoryFactory.IdentityRepository.Add(new Identity { Id = identityId, Customer = customer });
+        repositoryFactory.IdentityRepository.Add(new Identity
+        {
+            Id = identityId,
+            Customer = customer,
+        });
         repositoryFactory.BookingRepository.Add(new BookingEntity
         {
             Id = bookingId,
@@ -97,7 +101,7 @@ public class UpdatePrivateBookingPatchSaveShould(
             Schedules = [],
             InvolvedCustomers = [customer],
             CreatedByCustomer = customer,
-            LastModifiedByCustomer = customer
+            LastModifiedByCustomer = customer,
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

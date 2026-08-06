@@ -22,7 +22,7 @@ public class OrganizationAuthorizationService(
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization.Id, customerId, cancellationToken);
     }
 }

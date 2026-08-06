@@ -42,7 +42,12 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationPermi
 
         return
         [
-            new Button { ActionId = ZoneActionTypes.AddZone, Text = "Add Zone".ToPlainTextWithIcon(Icons.New), Value = context }
+            new Button
+            {
+                ActionId = ZoneActionTypes.AddZone,
+                Text = "Add Zone".ToPlainTextWithIcon(Icons.New),
+                Value = context,
+            },
         ];
     }
 
@@ -71,8 +76,14 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationPermi
 
         var blocks = new List<Block>
         {
-            new SectionBlock { Text = $"*Name*: {zone.Name.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*Description*: {zone.Description.ToSafeString()}".ToMarkdown() }
+            new SectionBlock
+            {
+                Text = $"*Name*: {zone.Name.ToSafeString()}".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = $"*Description*: {zone.Description.ToSafeString()}".ToMarkdown(),
+            },
         };
 
         var buttons = new List<IActionElement>();
@@ -83,7 +94,7 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationPermi
             {
                 ActionId = ZoneActionTypes.RemovePreferredZone,
                 Text = "Remove preferred zone".ToPlainTextWithIcon(Icons.ClearDefault),
-                Value = new RemovePreferredZoneContext(pageContext, zone.Id).Serialize()
+                Value = new RemovePreferredZoneContext(pageContext, zone.Id).Serialize(),
             });
         }
         else
@@ -92,20 +103,23 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationPermi
             {
                 ActionId = ZoneActionTypes.SetPreferredZone,
                 Text = "Set preferred zone".ToPlainTextWithIcon(Icons.SetAsDefault),
-                Value = new SetPreferredZoneContext(pageContext, zone.Id).Serialize()
+                Value = new SetPreferredZoneContext(pageContext, zone.Id).Serialize(),
             });
         }
 
         var actionMenu = new StaticSelectMenu
         {
-            ActionId = ZoneActionTypes.ActionsMenu, Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto), Options = []
+            ActionId = ZoneActionTypes.ActionsMenu,
+            Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
+            Options = [],
         };
 
         if (canModify)
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{ZoneActionTypes.EditZone}{zone.Id}", Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit)
+                Value = $"{ZoneActionTypes.EditZone}{zone.Id}",
+                Text = "Edit".ToOptionPlainTextWithIcon(Icons.Edit),
             });
         }
 
@@ -113,7 +127,8 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationPermi
         {
             actionMenu.Options.Add(new Option
             {
-                Value = $"{ZoneActionTypes.RemoveZone}{zone.Id}", Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove)
+                Value = $"{ZoneActionTypes.RemoveZone}{zone.Id}",
+                Text = "Remove".ToOptionPlainTextWithIcon(Icons.Remove),
             });
         }
 
@@ -122,7 +137,10 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationPermi
             buttons.Add(actionMenu);
         }
 
-        blocks.Add(new ActionsBlock { Elements = buttons });
+        blocks.Add(new ActionsBlock
+        {
+            Elements = buttons,
+        });
 
         return blocks;
     }

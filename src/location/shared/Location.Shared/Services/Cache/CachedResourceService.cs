@@ -24,7 +24,11 @@ public class CachedResourceService(ApplicationConfiguration applicationConfigura
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.ResourceRepository.GetByIdAsync(id, ct) ?? throw new ResourceNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (ResourceNotFound)
@@ -40,7 +44,11 @@ public class CachedResourceService(ApplicationConfiguration applicationConfigura
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromMinutes(30),
+                LocalCacheExpiration = TimeSpan.FromSeconds(30),
+            },
             cancellationToken: cancellationToken);
     }
 
@@ -53,7 +61,11 @@ public class CachedResourceService(ApplicationConfiguration applicationConfigura
             await hybridCache.SetAsync(
                 CreateKeyById(item.Id),
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
     }

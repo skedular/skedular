@@ -14,5 +14,5 @@ public record JoinOrganizationInvitationOrder(OrderDirection Direction, JoinOrga
 public enum JoinOrganizationInvitationOrderField
 {
     CreatedAt,
-    Status
+    Status,
 }

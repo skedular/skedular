@@ -51,7 +51,11 @@ public class PaymentService(
         customerEntity.StripeCustomer ??= await stripeCustomerService.AddAsync(customerEntity.Id, cancellationToken);
 
         var setupIntent = await setupIntentCreateService.CreateAsync(
-            new SetupIntentCreateOptions { Customer = customerEntity.StripeCustomer.StripeCustomerId, PaymentMethodTypes = ["card"] },
+            new SetupIntentCreateOptions
+            {
+                Customer = customerEntity.StripeCustomer.StripeCustomerId,
+                PaymentMethodTypes = ["card"],
+            },
             new RequestOptions(),
             cancellationToken);
 
@@ -77,7 +81,10 @@ public class PaymentService(
             await paymentMethodService.DetachAsync(
                 stripePaymentMethod.PaymentMethodId,
                 new PaymentMethodDetachOptions(),
-                new RequestOptions { IdempotencyKey = $"DetachPaymentMethod-{stripePaymentMethod.Id}" },
+                new RequestOptions
+                {
+                    IdempotencyKey = $"DetachPaymentMethod-{stripePaymentMethod.Id}",
+                },
                 cancellationToken);
         }
 

@@ -17,40 +17,41 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         new()
         {
             Type = ResourceAvailabilityClassification.Available,
-            Name = ResourceAvailabilityClassification.Available.ToResourceAvailabilityClassificationName()
+            Name = ResourceAvailabilityClassification.Available.ToResourceAvailabilityClassificationName(),
         },
         new()
         {
             Type = ResourceAvailabilityClassification.PartiallyBooked,
-            Name = ResourceAvailabilityClassification.PartiallyBooked.ToResourceAvailabilityClassificationName()
+            Name = ResourceAvailabilityClassification.PartiallyBooked.ToResourceAvailabilityClassificationName(),
         },
         new()
         {
             Type = ResourceAvailabilityClassification.FullyBooked,
-            Name = ResourceAvailabilityClassification.FullyBooked.ToResourceAvailabilityClassificationName()
+            Name = ResourceAvailabilityClassification.FullyBooked.ToResourceAvailabilityClassificationName(),
         },
         new()
         {
             Type = ResourceAvailabilityClassification.Unavailable,
-            Name = ResourceAvailabilityClassification.Unavailable.ToResourceAvailabilityClassificationName()
+            Name = ResourceAvailabilityClassification.Unavailable.ToResourceAvailabilityClassificationName(),
         },
         new()
         {
             Type = ResourceAvailabilityClassification.Occupied,
-            Name = ResourceAvailabilityClassification.Occupied.ToResourceAvailabilityClassificationName()
+            Name = ResourceAvailabilityClassification.Occupied.ToResourceAvailabilityClassificationName(),
         },
         new()
         {
             Type = ResourceAvailabilityClassification.Blocked,
-            Name = ResourceAvailabilityClassification.Blocked.ToResourceAvailabilityClassificationName()
-        }
+            Name = ResourceAvailabilityClassification.Blocked.ToResourceAvailabilityClassificationName(),
+        },
     ];
 
     [UseResolverScope]
     public async Task<ResourceDayViewConnection> ResourceDayViewsAsync(
         ResourceAvailabilityFilterInput filter,
         IEnumerable<ResourceAvailabilityOrderByInput> orderBy,
-        [Service] IResourceAvailabilityDayViewService service,
+        [Service]
+        IResourceAvailabilityDayViewService service,
         CancellationToken cancellationToken)
     {
         var domainFilter = new ResourceAvailabilityDayFilter
@@ -61,7 +62,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
             FloorId = filter.FloorId,
             ZoneId = filter.ZoneId,
             ResourceType = filter.ResourceType,
-            Statuses = filter.Statuses.ToList()
+            Statuses = filter.Statuses.ToList(),
         };
 
         var result = await service.GetAsync(
@@ -98,17 +99,18 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                     IsCheckedIn = bookingWindow.IsCheckedIn,
                     BookedByName = bookingWindow.BookedByName,
                     BookedByUserId = bookingWindow.BookedByUserId,
-                    Notes = bookingWindow.Notes
-                })
+                    Notes = bookingWindow.Notes,
+                }),
             }),
-            SubscriptionKey = result.SubscriptionKey
+            SubscriptionKey = result.SubscriptionKey,
         };
     }
 
     [UseResolverScope]
     public async Task<IEnumerable<BookingResourceDetails>> AvailableResourcesAsync(
         AvailableResourcesWhereInput where,
-        [Service] IResourceService resourceService,
+        [Service]
+        IResourceService resourceService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(
             await resourceService.GetAvailableResourcesAsync(
@@ -126,7 +128,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<int> AvailableResourcesCountAsync(
         AvailableResourcesCountWhereInput where,
-        [Service] IResourceService resourceService,
+        [Service]
+        IResourceService resourceService,
         CancellationToken cancellationToken) =>
         await resourceService.GetAvailableResourcesCountAsync(
             where.OrganizationId,
@@ -143,7 +146,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<OrganizationAvailableResources> OrganizationResourcesAvailabilityAsync(
         OrganizationAvailableResourcesWhereInput where,
-        [Service] IResourceService resourceService,
+        [Service]
+        IResourceService resourceService,
         CancellationToken cancellationToken)
     {
         var (resourcesCount, availableResourcesCount) = await resourceService.GetOrganizationResourceAvailabilityAsync(
@@ -153,6 +157,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
             where.Until,
             cancellationToken);
 
-        return new OrganizationAvailableResources { ResourcesCount = resourcesCount, AvailableResourcesCount = availableResourcesCount };
+        return new OrganizationAvailableResources
+        {
+            ResourcesCount = resourcesCount,
+            AvailableResourcesCount = availableResourcesCount,
+        };
     }
 }

@@ -12,9 +12,12 @@ public class SignalWorkflowInviteToJoinInvitationStatusChangedShould
     [Theory]
     [AutoFakeItEasyData]
     public void Enqueue_Signal_With_Correct_Workflow_Id(
-        [Frozen] IWorkflowIdService workflowIdService,
-        [Frozen] ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
-        [Frozen] ILogger<TemporalOutboxService> logger,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
+        [Frozen]
+        ILogger<TemporalOutboxService> logger,
         TemporalOutboxService sut,
         IUnitOfWork unitOfWork,
         string joinInvitationId,

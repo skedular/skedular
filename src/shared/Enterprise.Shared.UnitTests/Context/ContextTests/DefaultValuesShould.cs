@@ -8,7 +8,8 @@ public class DefaultValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_empty_string_for_correlation_id_when_no_http_context(
-        [Frozen] IHttpContextAccessor accessor,
+        [Frozen]
+        IHttpContextAccessor accessor,
         Shared.Context.Context sut)
     {
         A.CallTo(() => accessor.HttpContext).Returns(null);
@@ -19,7 +20,8 @@ public class DefaultValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_empty_string_for_missing_string_keys(
-        [Frozen] IHttpContextAccessor accessor,
+        [Frozen]
+        IHttpContextAccessor accessor,
         Shared.Context.Context sut)
     {
         A.CallTo(() => accessor.HttpContext).Returns(new DefaultHttpContext());

@@ -57,6 +57,8 @@ public class RecurringBookingPaymentService(
 
         recurringBooking.MarketplaceBooking.PaymentStatus = paymentStatus.ToPaymentStatus();
         repositoryFactory.MarketplaceBookingRepository.Update(recurringBooking.MarketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            recurringBooking.MarketplaceBooking.Id, cancellationToken);
 
         if (recurringBooking.MarketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.Card)
         {

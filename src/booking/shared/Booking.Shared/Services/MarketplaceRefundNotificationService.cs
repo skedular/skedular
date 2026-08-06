@@ -83,7 +83,7 @@ public class MarketplaceRefundNotificationService(
                     EventType = eventType,
                     RecipientId = customerEmail,
                     Status = "Sending",
-                    AttemptCount = 1
+                    AttemptCount = 1,
                 });
             }
             else
@@ -136,7 +136,7 @@ public class MarketplaceRefundNotificationService(
                     RecipientId = customerEmail,
                     Status = "Sent",
                     AttemptCount = 1,
-                    SentAt = timeProvider.GetUtcNow()
+                    SentAt = timeProvider.GetUtcNow(),
                 });
             }
             else
@@ -167,7 +167,7 @@ public class MarketplaceRefundNotificationService(
                     EventType = eventType,
                     RecipientId = internalEmail,
                     Status = "Sending",
-                    AttemptCount = 1
+                    AttemptCount = 1,
                 });
             }
             else
@@ -222,7 +222,7 @@ public class MarketplaceRefundNotificationService(
                         RecipientId = internalEmail,
                         Status = "Sent",
                         AttemptCount = 1,
-                        SentAt = timeProvider.GetUtcNow()
+                        SentAt = timeProvider.GetUtcNow(),
                     });
                 }
                 else
@@ -302,7 +302,7 @@ public class MarketplaceRefundNotificationService(
                 reference,
                 note,
                 error,
-                refund.Status)
+                refund.Status),
         };
     }
 

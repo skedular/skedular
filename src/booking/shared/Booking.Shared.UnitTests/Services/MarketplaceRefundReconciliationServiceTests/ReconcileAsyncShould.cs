@@ -14,10 +14,14 @@ public class ReconcileAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Request_A_Bounded_Reconciliation_Batch(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -38,11 +42,16 @@ public class ReconcileAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reconcile_A_Completed_Xero_Refund_When_Its_Last_Check_Is_Older_Than_The_Threshold(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -53,7 +62,7 @@ public class ReconcileAsyncShould
             AccountingProvider = AccountingProviderConstants.Xero,
             ExternalRefundId = Guid.NewGuid().ToString(),
             LastReconciledAt = TimeProvider.System.GetUtcNow().AddDays(-1),
-            RefundAmount = 25m
+            RefundAmount = 25m,
         };
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(TimeProvider.System.GetUtcNow());
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -89,11 +98,16 @@ public class ReconcileAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Preserve_A_Completed_Xero_Refund_When_The_Credit_Note_Is_Not_Yet_Settled(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -104,7 +118,7 @@ public class ReconcileAsyncShould
             AccountingProvider = AccountingProviderConstants.Xero,
             ExternalRefundId = Guid.NewGuid().ToString(),
             LastReconciledAt = TimeProvider.System.GetUtcNow().AddDays(-1),
-            RefundAmount = 25m
+            RefundAmount = 25m,
         };
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(TimeProvider.System.GetUtcNow());
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -129,12 +143,18 @@ public class ReconcileAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Prefer_Xero_Reconciliation_When_A_Stripe_Refund_Has_A_Xero_Projection(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] IStripeHostRefundService stripeHostRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        IStripeHostRefundService stripeHostRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -147,7 +167,7 @@ public class ReconcileAsyncShould
             AccountingProvider = AccountingProviderConstants.Xero,
             ExternalRefundId = Guid.NewGuid().ToString(),
             LastReconciledAt = TimeProvider.System.GetUtcNow().AddDays(-1),
-            RefundAmount = 25m
+            RefundAmount = 25m,
         };
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(TimeProvider.System.GetUtcNow());
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -172,11 +192,16 @@ public class ReconcileAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Keep_An_Unknown_Stripe_Path_Out_Of_Matched_Reconciliation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundService stripeHostRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundService stripeHostRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -187,7 +212,7 @@ public class ReconcileAsyncShould
             PaymentProvider = "STRIPE",
             ExternalPaymentRefundId = "re_1",
             ReconciliationStatus = "UnknownStripeRefundPath",
-            RefundAmount = 25m
+            RefundAmount = 25m,
         };
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(TimeProvider.System.GetUtcNow());
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -198,7 +223,11 @@ public class ReconcileAsyncShould
                 refund.Id, A<string>._, A<DateTimeOffset>._, A<TimeSpan>._, cancellationToken))
             .Returns(true);
         A.CallTo(() => stripeHostRefundService.GetProviderRefundAsync("re_1", null, cancellationToken))
-            .Returns(new Refund { Id = "re_1", Status = "succeeded" });
+            .Returns(new Refund
+            {
+                Id = "re_1",
+                Status = "succeeded",
+            });
         A.CallTo(() => stripeHostRefundService.ReconcileAsync(
                 A<Refund>._, cancellationToken, A<string?>._))
             .Returns(refund);

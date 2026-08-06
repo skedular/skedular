@@ -13,9 +13,12 @@ public class RootSubscription(IGraphQlMapper graphQlMapper)
 {
     public async IAsyncEnumerable<MarketplaceBookingSubscriptionDetails> OnMarketplaceBookingSubscriptionUpdated(
         string id,
-        [Service] ITopicEventReceiver topicEventReceiver,
-        [Service] IServiceProvider serviceProvider,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
+        [Service]
+        ITopicEventReceiver topicEventReceiver,
+        [Service]
+        IServiceProvider serviceProvider,
+        [EnumeratorCancellation]
+        CancellationToken cancellationToken)
     {
         var sourceStream = await topicEventReceiver.SubscribeAsync<string>(Constants.MarketplaceBookingSubscriptionTopicName, cancellationToken);
 

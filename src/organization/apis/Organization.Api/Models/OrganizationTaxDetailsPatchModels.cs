@@ -7,7 +7,7 @@ public enum OrganizationTaxDetailsPatchField
 {
     IsRegistered,
     TaxId,
-    TaxRatePercentage
+    TaxRatePercentage,
 }
 
 public record OrganizationTaxDetailsPatchRequest(

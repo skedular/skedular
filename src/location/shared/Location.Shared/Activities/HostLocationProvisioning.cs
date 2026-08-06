@@ -35,7 +35,7 @@ public class HostLocationProvisioning(
                 OrganizationId = organizationId,
                 Name = $"Host Location {locationId}",
                 Description = "System-managed product tag for a Host location.",
-                Color = "#4169E1"
+                Color = "#4169E1",
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -48,7 +48,7 @@ public class HostLocationProvisioning(
                 Id = HostLocationSystemIds.Product(locationId),
                 OrganizationId = organizationId,
                 ProductTagId = productTag.Id,
-                LocationName = locationName
+                LocationName = locationName,
             },
             marketplaceConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -65,7 +65,11 @@ public class HostLocationProvisioning(
         await cachedLocationService.RemoveByIdAsync(locationId, cancellationToken);
 
         await locationGraphqlServiceClient.RaiseGraphqlChangeAsync(
-            new RaiseGraphqlChangeInput { TopicName = GraphQlConstants.ListingProductReadyTopicName, Id = locationId },
+            new RaiseGraphqlChangeInput
+            {
+                TopicName = GraphQlConstants.ListingProductReadyTopicName,
+                Id = locationId,
+            },
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
     }
@@ -75,7 +79,11 @@ public class HostLocationProvisioning(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         await marketplaceServiceClient.RemoveHostLocationDraftProductAsync(
-            new RemoveHostLocationDraftProductInput { Id = HostLocationSystemIds.Product(locationId), OrganizationId = organizationId },
+            new RemoveHostLocationDraftProductInput
+            {
+                Id = HostLocationSystemIds.Product(locationId),
+                OrganizationId = organizationId,
+            },
             marketplaceConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
     }

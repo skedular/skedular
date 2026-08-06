@@ -139,7 +139,10 @@ public class KafkaOutboxBackgroundService<TDbContext>(
         {
             var message = new Message<byte[]?, byte[]>
             {
-                Headers = kafkaHeaders, Key = outboxEvent.Key, Value = outboxEvent.Payload, Timestamp = new Timestamp(outboxEvent.Timestamp)
+                Headers = kafkaHeaders,
+                Key = outboxEvent.Key,
+                Value = outboxEvent.Payload,
+                Timestamp = new Timestamp(outboxEvent.Timestamp),
             };
 
             try
@@ -153,7 +156,10 @@ public class KafkaOutboxBackgroundService<TDbContext>(
                 activityAccessor.AddEvent(
                     "Publish Kafka Outbox Message",
                     "publish_kafka_outbox_message",
-                    new Dictionary<string, string> { [nameof(outboxEvent.Topic)] = outboxEvent.Topic });
+                    new Dictionary<string, string>
+                    {
+                        [nameof(outboxEvent.Topic)] = outboxEvent.Topic,
+                    });
 
                 logger.LogTrace("Message {MessageKey} posted. Removing from outbox", message.Key);
                 // Kafka accepted the message, so the outbox row can be removed.
@@ -171,7 +177,8 @@ public class KafkaOutboxBackgroundService<TDbContext>(
                     "retry_kafka_outbox_message",
                     new Dictionary<string, string>
                     {
-                        [nameof(KafkaOutbox.LastRetry)] = timeProvider.GetUtcNow().ToString("O"), [nameof(LogLevel)] = level.ToString("G")
+                        [nameof(KafkaOutbox.LastRetry)] = timeProvider.GetUtcNow().ToString("O"),
+                        [nameof(LogLevel)] = level.ToString("G"),
                     });
 
                 logger.Log(

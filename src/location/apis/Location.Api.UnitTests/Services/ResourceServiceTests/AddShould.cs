@@ -15,8 +15,10 @@ public class AddShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Direct_Resource_Creation_For_Host_Organizations(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
         ResourceService sut,
         string locationId,
         string organizationId,
@@ -27,9 +29,21 @@ public class AddShould
         {
             Id = locationId,
             OrganizationId = organizationId,
-            Organization = new Organization { Id = organizationId, Type = OrganizationTypeConstants.Host }
+            Organization = new Organization
+            {
+                Id = organizationId,
+                Type = OrganizationTypeConstants.Host,
+            },
         };
-        var resourceToAdd = new Resource { Name = resourceName, Location = new Shared.Models.Location { Id = locationId }, Tags = [] };
+        var resourceToAdd = new Resource
+        {
+            Name = resourceName,
+            Location = new Shared.Models.Location
+            {
+                Id = locationId,
+            },
+            Tags = [],
+        };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => locationRepository.GetByIdAsync(locationId, cancellationToken)).Returns(existingLocation);
@@ -42,20 +56,40 @@ public class AddShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_When_Another_Active_Resource_Already_Uses_The_Name(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
         ResourceService sut,
         CancellationToken cancellationToken)
     {
         var existingLocation = new Shared.Database.Entities.Location
         {
-            Id = "location-1", OrganizationId = "org-1", Organization = new Organization { Id = "org-1" }
+            Id = "location-1",
+            OrganizationId = "org-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
         };
         var resourceToAdd = new Resource
         {
-            Name = "Desk A", Location = new Shared.Models.Location { Id = "location-1" }, Tags = [new OrganizationTag { Id = "tag-1" }]
+            Name = "Desk A",
+            Location = new Shared.Models.Location
+            {
+                Id = "location-1",
+            },
+            Tags =
+            [
+                new OrganizationTag
+                {
+                    Id = "tag-1",
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);

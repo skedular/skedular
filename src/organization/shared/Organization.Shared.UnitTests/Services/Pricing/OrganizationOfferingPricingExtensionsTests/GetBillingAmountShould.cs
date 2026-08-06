@@ -16,7 +16,10 @@ public class GetBillingAmountShould
     {
         var organizationOffering = new OrganizationOffering
         {
-            Code = OfferingCode.SpacesGrowthV1, FixedPrice = fixedPrice, UnitPrice = null, DiscountPercentage = discountPercentage
+            Code = OfferingCode.SpacesGrowthV1,
+            FixedPrice = fixedPrice,
+            UnitPrice = null,
+            DiscountPercentage = discountPercentage,
         };
 
         organizationOffering.GetBillingAmount().ShouldBe(expectedAmount);
@@ -34,8 +37,8 @@ public class GetBillingAmountShould
             OrganizationOfferingActiveMembers =
             [
                 new OrganizationOfferingActiveMember(),
-                new OrganizationOfferingActiveMember()
-            ]
+                new OrganizationOfferingActiveMember(),
+            ],
         };
 
         organizationOffering.GetBillingAmount().ShouldBe(450);

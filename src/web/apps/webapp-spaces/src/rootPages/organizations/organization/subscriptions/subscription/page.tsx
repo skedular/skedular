@@ -1,6 +1,6 @@
 'use client';
 
-import { RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
+import { buildMarketplaceBookingInstancesQueryVariables, RelayError, getRelayErrorMessage, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { getOrganizationRefundBaseLink, getOrganizationSubscriptionsBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import {
@@ -35,7 +35,7 @@ import Box from '@mui/system/Box';
 import { BodyIconTypography, DefaultDialogTitle, defaultPadding, PageHeaderPanel, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
-import { memo, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -50,7 +50,7 @@ const surfaceSx: SxProps<Theme> = {
 };
 
 const RootQuery = graphql`
-  query pageOrganizationSubscriptionDetail_rootQuery($organizationCustomDomain: String!, $subscriptionId: String!) {
+  query pageOrganizationSubscriptionDetail_rootQuery($organizationCustomDomain: String!, $subscriptionId: String!, $bookingAfter: String) {
     marketplaceBookingSubscriptionCancellationModes {
       type
       name
@@ -151,6 +151,30 @@ const RootQuery = graphql`
           }
         }
       }
+      bookingInstances(after: $bookingAfter, first: 50) {
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        edges {
+          cursor
+          node {
+            id
+            startDate
+            endDate
+            marketplaceBooking {
+              id
+              paymentStatus {
+                type
+                name
+              }
+            }
+          }
+        }
+      }
     }
   }
 `;
@@ -165,6 +189,7 @@ type Props = {
   queryReference: PreloadedQuery<pageOrganizationSubscriptionDetail_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationCustomDomain: string;
+  onBookingAfterChange: (cursor: string | undefined) => void;
 };
 
 const getCustomerDisplayName = (customer: { name?: string | null; givenName?: string | null; middleName?: string | null; familyName?: string | null }) => {
@@ -174,7 +199,7 @@ const getCustomerDisplayName = (customer: { name?: string | null; givenName?: st
 
 const toStoredDate = (date?: string | null) => (date ? dayjs.utc(date).format('D MMM YYYY') : 'Not scheduled');
 
-const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, onBookingAfterChange }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationSubscriptionDetail_rootQuery>(RootQuery, queryReference);
   const { integratedPlatform } = useIntegratedPlatform();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
@@ -383,7 +408,9 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     );
   }
 
-  const sortedRecurringBookings = [...(subscription?.recurringBookings ?? [])].sort((left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime());
+  const sortedRecurringBookings = [...(subscription?.bookingInstances.edges.map((edge) => edge.node) ?? [])].sort(
+    (left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime(),
+  );
   const lifecycleDisplay = subscription
     ? toMarketplaceBookingSubscriptionLifecycleDisplay({
         autoRenew: subscription.autoRenew,
@@ -501,16 +528,8 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                                 <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 1, flexWrap: 'wrap' }}>
                                   <StackColumn spacing={0.35}>
                                     <BodyIconTypography label={cycleLabel} />
-                                    <BodyIconTypography
-                                      label={`Payment: ${cycleMarketplaceBooking?.paymentStatus.name ?? 'Not set'} • Payment method: ${cycleMarketplaceBooking?.paymentMethod.name ?? 'Not set'} • Quantity: ${cycleMarketplaceBooking?.quantity ?? subscription.marketplaceBooking.quantity}`}
-                                      sx={{ opacity: 0.78 }}
-                                    />
+                                    <BodyIconTypography label={`Payment: ${cycleMarketplaceBooking?.paymentStatus.name ?? 'Not set'}`} sx={{ opacity: 0.78 }} />
                                   </StackColumn>
-                                  {cycleMarketplaceBooking?.invoiceUrl ? (
-                                    <Button variant="text" size="small" href={cycleMarketplaceBooking.invoiceUrl} target="_blank" rel="noreferrer" sx={{ textTransform: 'none' }}>
-                                      Download invoice
-                                    </Button>
-                                  ) : null}
                                 </StackRow>
 
                                 {cycleMarketplaceBooking?.paymentStatus.type === 'PENDING' ? (
@@ -553,6 +572,17 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                         </>
                       )}
                     </StackColumn>
+                    <StackRow sx={{ justifyContent: 'flex-end', gap: 1, mt: 1 }}>
+                      <Button disabled={!subscription.bookingInstances.pageInfo.hasPreviousPage} onClick={() => onBookingAfterChange(undefined)}>
+                        Previous
+                      </Button>
+                      <Button
+                        disabled={!subscription.bookingInstances.pageInfo.hasNextPage}
+                        onClick={() => onBookingAfterChange(subscription.bookingInstances.pageInfo.endCursor ?? undefined)}
+                      >
+                        Next
+                      </Button>
+                    </StackRow>
                   </CardContent>
                 </Card>
               </StackColumn>
@@ -651,6 +681,19 @@ const MemoRootPage = memo(RootPage);
 const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationSubscriptionDetail_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
+  const [bookingAfter, setBookingAfter] = useState<string | undefined>();
+  const bookingAfterHistory = useRef<Array<string | undefined>>([]);
+  const handleBookingAfterChange = useCallback(
+    (cursor: string | undefined) => {
+      if (cursor === undefined) {
+        setBookingAfter(bookingAfterHistory.current.pop());
+      } else {
+        bookingAfterHistory.current.push(bookingAfter);
+        setBookingAfter(cursor);
+      }
+    },
+    [bookingAfter],
+  );
   const [, startTransition] = useTransition();
   const { organizationCustomDomain, subscriptionId } = useKnownParams();
 
@@ -667,12 +710,13 @@ const RootPageWithRelay = () => {
       {
         organizationCustomDomain,
         subscriptionId,
+        ...buildMarketplaceBookingInstancesQueryVariables(bookingAfter),
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, organizationCustomDomain, subscriptionId, triggerReloadId]);
+  }, [loadQuery, organizationCustomDomain, subscriptionId, triggerReloadId, bookingAfter]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -686,7 +730,12 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
+      <MemoRootPage
+        queryReference={queryReference}
+        onReloadRequired={handleReloadRequired}
+        organizationCustomDomain={organizationCustomDomain}
+        onBookingAfterChange={handleBookingAfterChange}
+      />
     </ErrorBoundary>
   );
 };

@@ -26,13 +26,13 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
         new()
         {
             Type = MarketplaceBookingSubscriptionCancellationMode.Immediate,
-            Name = MarketplaceBookingSubscriptionCancellationMode.Immediate.ToMarketplaceBookingSubscriptionCancellationModeName()
+            Name = MarketplaceBookingSubscriptionCancellationMode.Immediate.ToMarketplaceBookingSubscriptionCancellationModeName(),
         },
         new()
         {
             Type = MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd,
-            Name = MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd.ToMarketplaceBookingSubscriptionCancellationModeName()
-        }
+            Name = MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd.ToMarketplaceBookingSubscriptionCancellationModeName(),
+        },
     ];
 
     public IEnumerable<MarketplaceBookingSubscriptionStatusDetails> MarketplaceBookingSubscriptionStatuses()
@@ -41,11 +41,12 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
             {
                 MarketplaceBookingSubscriptionStatus.Active, MarketplaceBookingSubscriptionStatus.Cancelled,
                 MarketplaceBookingSubscriptionStatus.Expired, MarketplaceBookingSubscriptionStatus.RenewalFailed,
-                MarketplaceBookingSubscriptionStatus.Paused
+                MarketplaceBookingSubscriptionStatus.Paused,
             }
             .Select(status => new MarketplaceBookingSubscriptionStatusDetails
             {
-                Type = status, Name = status.ToMarketplaceBookingSubscriptionStatusName()
+                Type = status,
+                Name = status.ToMarketplaceBookingSubscriptionStatusName(),
             })
             .ToList();
 
@@ -57,9 +58,13 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
         var statuses = new[]
             {
                 PaymentStatus.NotSet, PaymentStatus.Pending, PaymentStatus.Rejected, PaymentStatus.Confirmed, PaymentStatus.Expired,
-                PaymentStatus.NoPaymentRequired
+                PaymentStatus.NoPaymentRequired,
             }
-            .Select(status => new MarketplaceBookingPaymentStatusDetails { Type = status, Name = status.ToMarketplaceBookingPaymentStatusName() })
+            .Select(status => new MarketplaceBookingPaymentStatusDetails
+            {
+                Type = status,
+                Name = status.ToMarketplaceBookingPaymentStatusName(),
+            })
             .ToList();
 
         return statuses;
@@ -68,7 +73,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
     [UseResolverScope]
     public async Task<MarketplaceBookingSubscriptionDetails?> MarketplaceBookingSubscriptionAsync(
         string id,
-        [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+        [Service]
+        IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await marketplaceBookingSubscriptionService.GetByIdAsync(id, cancellationToken));
 
@@ -76,8 +82,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
     [Lookup]
     [Internal]
     public async Task<MarketplaceBookingSubscriptionDetails?> MarketplaceBookingSubscriptionByIdAsync(
-        [ID] string id,
-        [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+        [ID]
+        string id,
+        [Service]
+        IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken) =>
         await MarketplaceBookingSubscriptionAsync(id, marketplaceBookingSubscriptionService, cancellationToken);
 
@@ -89,7 +97,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
         int? last,
         MarketplaceBookingSubscriptionWhereInput where,
         IEnumerable<MarketplaceBookingSubscriptionOrderInput>? orderBy,
-        [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+        [Service]
+        IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken)
     {
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
@@ -162,17 +171,18 @@ public class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
     [UseResolverScope]
     public async Task<IEnumerable<MarketplaceBookingSubscriptionDetails>> AllMarketplaceBookingSubscriptionsAsync(
         MarketplaceBookingSubscriptionWhereInput where,
-        [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+        [Service]
+        IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken)
     {
         var result = await MarketplaceBookingSubscriptionsAsync(

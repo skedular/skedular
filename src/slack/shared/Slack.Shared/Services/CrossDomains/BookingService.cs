@@ -64,7 +64,10 @@ public class BookingService(
     ILocationResourceService locationResourceService)
     : IBookingService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<Connection<BookingEdge>> Admin_GetPaginatedBookingsAsync(
         BookingSearchCriteria bookingSearchCriteria,
@@ -95,8 +98,8 @@ public class BookingService(
                 Category = bookingSearchCriteria.Category.ToNullableBookingCategory().ToSafeString(),
                 IncludeMineOnly = bookingSearchCriteria.IncludeMineOnly ?? false,
                 IncludeFutureBookingsOnly = bookingSearchCriteria.IncludeFutureBookingsOnly ?? false,
-                OrganizationId = bookingSearchCriteria.OrganizationId.ToSafeString()
-            }
+                OrganizationId = bookingSearchCriteria.OrganizationId.ToSafeString(),
+            },
         };
 
         adminGetPaginatedBookingsInput.Where.PaymentStatuses.Add(bookingSearchCriteria.PaymentStatuses.Select(item => item.ToPaymentStatus()));
@@ -104,7 +107,11 @@ public class BookingService(
         adminGetPaginatedBookingsInput.Where.TeamIds.Add(bookingSearchCriteria.TeamIds);
         adminGetPaginatedBookingsInput.Where.CustomerIds.Add(bookingSearchCriteria.CustomerIds);
 
-        adminGetPaginatedBookingsInput.OrderBy.Add(new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From });
+        adminGetPaginatedBookingsInput.OrderBy.Add(new BookingOrderInput
+        {
+            Direction = OrderDirection.Ascending,
+            Field = BookingOrderField.From,
+        });
 
         var connection = await bookingServiceClient.Admin_GetPaginatedBookingsAsync(
             adminGetPaginatedBookingsInput,
@@ -127,10 +134,10 @@ public class BookingService(
                 StartCursor = connection.PageInfo.StartCursor,
                 EndCursor = connection.PageInfo.EndCursor,
                 HasNextPage = connection.PageInfo.HasNextPage,
-                HasPreviousPage = connection.PageInfo.HasPreviousPage
+                HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = enrichedEdges
+            Edges = enrichedEdges,
         };
 
         return result;
@@ -143,7 +150,10 @@ public class BookingService(
                 CreateKeyById(bookingId),
                 async _ => grpcMapper.MapTo(
                     await bookingServiceClient.GetAsync(
-                        new GetInput { Id = bookingId },
+                        new GetInput
+                        {
+                            Id = bookingId,
+                        },
                         bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                         cancellationToken: cancellationToken)),
                 _cacheEntryOptions))!,
@@ -169,9 +179,9 @@ public class BookingService(
                 BookingCategory.TravelingForWork => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException(nameof(booking.Category), booking.Category,
-                    $"Unexpected value for {nameof(booking.Category)}: {booking.Category}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(booking.Category)}: {booking.Category}. Update enum mapping or caller input."),
             },
-            Notes = booking.Notes.ToSafeString()
+            Notes = booking.Notes.ToSafeString(),
         };
 
         addInput.CustomerIds.AddRange(booking.InvolvedCustomers.Select(item => item.Id));
@@ -210,9 +220,9 @@ public class BookingService(
                 BookingCategory.TravelingForWork => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException(nameof(booking.Category), booking.Category,
-                    $"Unexpected value for {nameof(booking.Category)}: {booking.Category}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(booking.Category)}: {booking.Category}. Update enum mapping or caller input."),
             },
-            Notes = booking.Notes.ToSafeString()
+            Notes = booking.Notes.ToSafeString(),
         };
 
         updateInput.CustomerIds.AddRange(booking.InvolvedCustomers.Select(item => item.Id));
@@ -225,7 +235,7 @@ public class BookingService(
             PrivateBookingPatchField.Schedule,
             PrivateBookingPatchField.Notes,
             PrivateBookingPatchField.Category,
-            PrivateBookingPatchField.Resources
+            PrivateBookingPatchField.Resources,
         ]);
 
         var mappedBooking = grpcMapper.MapTo(
@@ -242,7 +252,10 @@ public class BookingService(
     public async Task DeletePrivateAsync(string workspaceMemberId, string bookingId, CancellationToken cancellationToken)
     {
         await bookingServiceClient.DeletePrivateAsync(
-            new DeletePrivateInput { Id = bookingId },
+            new DeletePrivateInput
+            {
+                Id = bookingId,
+            },
             bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
 
@@ -281,8 +294,8 @@ public class BookingService(
                 Category = bookingSearchCriteria.Category.ToNullableBookingCategory().ToSafeString(),
                 IncludeMineOnly = bookingSearchCriteria.IncludeMineOnly ?? false,
                 IncludeFutureBookingsOnly = bookingSearchCriteria.IncludeFutureBookingsOnly ?? false,
-                OrganizationId = bookingSearchCriteria.OrganizationId.ToSafeString()
-            }
+                OrganizationId = bookingSearchCriteria.OrganizationId.ToSafeString(),
+            },
         };
 
         getPaginatedBookingsInput.Where.PaymentStatuses.Add(bookingSearchCriteria.PaymentStatuses.Select(item => item.ToPaymentStatus()));
@@ -290,7 +303,11 @@ public class BookingService(
         getPaginatedBookingsInput.Where.TeamIds.Add(bookingSearchCriteria.TeamIds);
         getPaginatedBookingsInput.Where.CustomerIds.Add(bookingSearchCriteria.CustomerIds);
 
-        getPaginatedBookingsInput.OrderBy.Add(new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From });
+        getPaginatedBookingsInput.OrderBy.Add(new BookingOrderInput
+        {
+            Direction = OrderDirection.Ascending,
+            Field = BookingOrderField.From,
+        });
 
         var connection = await bookingServiceClient.GetPaginatedBookingsAsync(
             getPaginatedBookingsInput,
@@ -313,10 +330,10 @@ public class BookingService(
                 StartCursor = connection.PageInfo.StartCursor,
                 EndCursor = connection.PageInfo.EndCursor,
                 HasNextPage = connection.PageInfo.HasNextPage,
-                HasPreviousPage = connection.PageInfo.HasPreviousPage
+                HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = enrichedEdges
+            Edges = enrichedEdges,
         };
 
         return result;
@@ -332,7 +349,9 @@ public class BookingService(
     {
         var getAvailableResourcesInput = new GetAvailableResourcesInput
         {
-            OrganizationId = organizationId, From = from.ToTimestamp(), Until = until.ToTimestamp()
+            OrganizationId = organizationId,
+            From = from.ToTimestamp(),
+            Until = until.ToTimestamp(),
         };
 
         getAvailableResourcesInput.ResourceIdsToInclude.AddRange(resourceIdsToInclude);

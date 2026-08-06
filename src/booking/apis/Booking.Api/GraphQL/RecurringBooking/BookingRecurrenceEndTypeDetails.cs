@@ -6,6 +6,9 @@ namespace Booking.Api.GraphQL.RecurringBooking;
 [GraphQLName("BookingRecurrenceEndTypeDetails")]
 public class BookingRecurrenceEndTypeDetails
 {
-    [GraphQLName("endType")] public RecurringBookingEndType EndType { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("endType")]
+    public RecurringBookingEndType EndType { get; set; }
+
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
 }

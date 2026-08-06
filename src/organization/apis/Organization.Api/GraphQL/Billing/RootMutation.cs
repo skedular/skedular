@@ -12,11 +12,16 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<OrganizationPayload> UpdateOrganizationBillingDetailsAsync(
         UpdateOrganizationBillingDetailsInput input,
-        [Service] IOrganizationBillingService organizationBillingService,
+        [Service]
+        IOrganizationBillingService organizationBillingService,
         CancellationToken cancellationToken)
     {
         var organizationBillingDetails = await organizationBillingService.UpdatePatchAsync(graphQlMapper.MapTo(input), cancellationToken);
 
-        return new OrganizationPayload { ClientMutationId = input.ClientMutationId, Organization = graphQlMapper.MapTo(organizationBillingDetails)! };
+        return new OrganizationPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Organization = graphQlMapper.MapTo(organizationBillingDetails)!,
+        };
     }
 }

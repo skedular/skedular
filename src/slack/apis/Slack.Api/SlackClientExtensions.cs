@@ -36,7 +36,7 @@ public static class SlackClientExtensions
             workspaceMember.Locale switch
             {
                 "en-US" => DayOfWeek.Sunday,
-                _ => DayOfWeek.Monday
+                _ => DayOfWeek.Monday,
             };
     }
 }

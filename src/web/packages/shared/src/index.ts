@@ -9,6 +9,7 @@ export * from './hooks/index';
 export * from './image-file-uploader/index';
 export * from './mui/index';
 export * from './notification/index';
+export * from './marketplace-purchase-history';
 export * from './providers/index';
 export * from './relay-error/index';
 export * from './utils/index';

@@ -42,7 +42,14 @@ public class EditCustomTagButtonHandler(
 
         var values = viewSubmission.View.State.Values;
         var organizationCustomTag =
-            new OrganizationCustomTag { Id = context.CustomTagId, Organization = new Organization { Id = workspace.Organization.Id } };
+            new OrganizationCustomTag
+            {
+                Id = context.CustomTagId,
+                Organization = new Organization
+                {
+                    Id = workspace.Organization.Id,
+                },
+            };
 
         if (values.TryGetValue(CustomTagActionTypes.Name, out var nameBlock))
         {

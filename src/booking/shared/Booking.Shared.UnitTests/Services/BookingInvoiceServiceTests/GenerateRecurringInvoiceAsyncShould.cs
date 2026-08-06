@@ -25,16 +25,26 @@ public class GenerateRecurringInvoiceAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Use_Shared_Recurring_Billing_Schedule_For_Non_Xero_Recurring_Invoices(
-        [Frozen] OrganizationConfiguration organizationConfiguration,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IProductVersionRepository productVersionRepository,
-        [Frozen] IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
-        [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
-        [Frozen] IProductVersionHelperService productVersionHelperService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
-        [Frozen] CallInvoker callInvoker,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IProductVersionRepository productVersionRepository,
+        [Frozen]
+        IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
+        [Frozen]
+        IInvoicePaymentTermsService invoicePaymentTermsService,
+        [Frozen]
+        IProductVersionHelperService productVersionHelperService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
+        [Frozen]
+        CallInvoker callInvoker,
         string recurringBookingId,
         string productVersionId,
         string pricingId,
@@ -64,9 +74,15 @@ public class GenerateRecurringInvoiceAsyncShould
                 Quantity = 1,
                 PaymentMethod = PaymentMethod.BankTransfer.ToPaymentMethod(),
                 BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
-                ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Quarterly },
-                ProductVersion = new ProductVersionEntity { Id = productVersionId }
-            }
+                ProductPricing = ProductPricing.Empty(pricingId) with
+                {
+                    PurchaseCadence = ProductPricingCadence.Quarterly,
+                },
+                ProductVersion = new ProductVersionEntity
+                {
+                    Id = productVersionId,
+                },
+            },
         };
         var productVersion = new ProductVersionEntity
         {
@@ -75,11 +91,19 @@ public class GenerateRecurringInvoiceAsyncShould
             {
                 Organization = new OrganizationEntity
                 {
-                    Id = organizationId, BillingCycle = OrganizationBillingCycleModel.Weekly.ToOrganizationBillingCycle()
-                }
-            }
+                    Id = organizationId,
+                    BillingCycle = OrganizationBillingCycleModel.Weekly.ToOrganizationBillingCycle(),
+                },
+            },
         };
-        var organization = new Organization { Id = organizationId, BillingDetails = new BillingDetails { InvoiceDueInDays = 7 } };
+        var organization = new Organization
+        {
+            Id = organizationId,
+            BillingDetails = new BillingDetails
+            {
+                InvoiceDueInDays = 7,
+            },
+        };
         var bankAccountConnection = new BankAccountConnection
         {
             Edges =
@@ -93,10 +117,10 @@ public class GenerateRecurringInvoiceAsyncShould
                         BankName = "Test Bank",
                         AccountHolderName = "Operations",
                         AccountNumber = "12-1234-1234567-00",
-                        Country = "NZ"
-                    }
-                }
-            }
+                        Country = "NZ",
+                    },
+                },
+            },
         };
         var billingDefinition = new RecurringInvoiceBillingDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,

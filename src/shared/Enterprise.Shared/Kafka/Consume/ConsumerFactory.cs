@@ -65,7 +65,7 @@ public class ConsumerFactory(
             EnableAutoOffsetStore = false,
             AutoOffsetReset = kafkaConfiguration.AutoOffsetReset ?? AutoOffsetReset.Earliest,
             GroupId = groupId,
-            BootstrapServers = kafkaConfiguration.BootstrapServers
+            BootstrapServers = kafkaConfiguration.BootstrapServers,
         };
 
         if (kafkaConfiguration.SecurityProtocol is not null)

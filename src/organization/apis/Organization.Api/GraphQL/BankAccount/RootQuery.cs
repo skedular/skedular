@@ -17,7 +17,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<OrganizationBankAccountDetails?> OrganizationBankAccountAsync(
         string id,
-        [Service] IOrganizationBankAccountService organizationBankAccountService,
+        [Service]
+        IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await organizationBankAccountService.GetByIdAsync(id, cancellationToken));
 
@@ -25,8 +26,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<OrganizationBankAccountDetails?> OrganizationBankAccountByIdAsync(
-        [ID] string id,
-        [Service] IOrganizationBankAccountService organizationBankAccountService,
+        [ID]
+        string id,
+        [Service]
+        IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken) =>
         await OrganizationBankAccountAsync(id, organizationBankAccountService, cancellationToken);
 
@@ -38,7 +41,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         OrganizationBankAccountWhereInput where,
         IEnumerable<OrganizationBankAccountOrderInput>? orderBy,
-        [Service] IOrganizationBankAccountService organizationBankAccountService,
+        [Service]
+        IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await organizationBankAccountService.GetPaginatedAccountsAsync(
@@ -55,10 +59,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 }

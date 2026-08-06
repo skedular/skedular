@@ -28,17 +28,47 @@ public class RecordDeskAvailabilitySnapshotShould
             () => new Metadata(),
             () => { });
 
-    private static BookingConnection EmptyBookingConnection() => new() { PageInfo = new PageInfo { HasNextPage = false, EndCursor = string.Empty } };
+    private static BookingConnection EmptyBookingConnection() => new()
+    {
+        PageInfo = new PageInfo
+        {
+            HasNextPage = false,
+            EndCursor = string.Empty,
+        },
+    };
 
     private static BookingConnection BookingConnectionWithResource(string resourceId) => new()
     {
-        PageInfo = new PageInfo { HasNextPage = false, EndCursor = string.Empty },
-        Edges = { new BookingEdge { Node = new BookingProto { Resources = { new BookingResource { Id = resourceId } } } } }
+        PageInfo = new PageInfo
+        {
+            HasNextPage = false,
+            EndCursor = string.Empty,
+        },
+        Edges =
+        {
+            new BookingEdge
+            {
+                Node = new BookingProto
+                {
+                    Resources =
+                    {
+                        new BookingResource
+                        {
+                            Id = resourceId,
+                        },
+                    },
+                },
+            },
+        },
     };
 
     private static Database.Entities.Location MakeLocation(string locationId, IEnumerable<LocationResource> resources)
     {
-        var location = new Database.Entities.Location { Id = locationId, Name = "Test Location" };
+        var location = new Database.Entities.Location
+        {
+            Id = locationId,
+            Name = "Test Location",
+        };
         foreach (var r in resources)
         {
             location.Resources.Add(r);
@@ -49,20 +79,39 @@ public class RecordDeskAvailabilitySnapshotShould
 
     private static LocationResource MakeDeskResource(string id, string name, bool inactive = false, bool alsoRoom = false)
     {
-        var tags = new List<OrganizationTag> { new() { Id = "tag-desk", Type = OrganizationTagTypeConstants.ResourceDesk } };
+        var tags = new List<OrganizationTag>
+        {
+            new()
+            {
+                Id = "tag-desk",
+                Type = OrganizationTagTypeConstants.ResourceDesk,
+            },
+        };
         if (alsoRoom)
         {
-            tags.Add(new OrganizationTag { Id = "tag-room", Type = OrganizationTagTypeConstants.ResourceRoom });
+            tags.Add(new OrganizationTag
+            {
+                Id = "tag-room",
+                Type = OrganizationTagTypeConstants.ResourceRoom,
+            });
         }
 
-        return new LocationResource { Id = id, Name = name, Inactive = inactive, OrganizationTags = tags };
+        return new LocationResource
+        {
+            Id = id,
+            Name = name,
+            Inactive = inactive,
+            OrganizationTags = tags,
+        };
     }
 
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_False_When_Location_Not_Found(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
         LocationDailyAnalytics sut)
     {
         var environment = new ActivityEnvironment();
@@ -78,12 +127,19 @@ public class RecordDeskAvailabilitySnapshotShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_False_When_Location_Is_Deleted(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
         LocationDailyAnalytics sut)
     {
         var environment = new ActivityEnvironment();
-        var deletedLocation = new Database.Entities.Location { Id = "loc-del", Name = "Deleted", DeletedAt = TimeProvider.System.GetUtcNow() };
+        var deletedLocation = new Database.Entities.Location
+        {
+            Id = "loc-del",
+            Name = "Deleted",
+            DeletedAt = TimeProvider.System.GetUtcNow(),
+        };
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => locationRepository.GetByIdAsync("loc-del", environment.CancellationTokenSource.Token)).Returns(deletedLocation);
 
@@ -95,16 +151,26 @@ public class RecordDeskAvailabilitySnapshotShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Classify_Active_Desk_With_No_Bookings_As_Available(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] ILogger<LocationDailyAnalytics> logger,
-        [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        BookingConfiguration bookingConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        ILogger<LocationDailyAnalytics> logger,
+        [Frozen]
+        DailyResourceAvailabilitySnapshot snapshotResult)
     {
         var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
             new BookingService.BookingServiceClient(callInvoker), logger);
@@ -145,16 +211,26 @@ public class RecordDeskAvailabilitySnapshotShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Classify_Inactive_Desk_As_Unavailable(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] ILogger<LocationDailyAnalytics> logger,
-        [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        BookingConfiguration bookingConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        ILogger<LocationDailyAnalytics> logger,
+        [Frozen]
+        DailyResourceAvailabilitySnapshot snapshotResult)
     {
         var sut = new LocationDailyAnalytics(
             repositoryFactory,
@@ -196,16 +272,26 @@ public class RecordDeskAvailabilitySnapshotShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Classify_Booked_Desk_As_Booked(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] ILogger<LocationDailyAnalytics> logger,
-        [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        BookingConfiguration bookingConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        ILogger<LocationDailyAnalytics> logger,
+        [Frozen]
+        DailyResourceAvailabilitySnapshot snapshotResult)
     {
         var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
             new BookingService.BookingServiceClient(callInvoker), logger);
@@ -242,16 +328,26 @@ public class RecordDeskAvailabilitySnapshotShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Classify_DualTagged_Resource_Using_Primary_Type_And_Emit_Warning(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] ILogger<LocationDailyAnalytics> logger,
-        [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        BookingConfiguration bookingConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        ILogger<LocationDailyAnalytics> logger,
+        [Frozen]
+        DailyResourceAvailabilitySnapshot snapshotResult)
     {
         var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
             new BookingService.BookingServiceClient(callInvoker), logger);
@@ -291,16 +387,26 @@ public class RecordDeskAvailabilitySnapshotShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Delete_Existing_Snapshots_Before_Inserting_For_Idempotency(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] ILogger<LocationDailyAnalytics> logger,
-        [Frozen] DailyResourceAvailabilitySnapshot snapshotResult)
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        BookingConfiguration bookingConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        ILogger<LocationDailyAnalytics> logger,
+        [Frozen]
+        DailyResourceAvailabilitySnapshot snapshotResult)
     {
         var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
             new BookingService.BookingServiceClient(callInvoker), logger);

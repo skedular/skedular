@@ -7,13 +7,17 @@ namespace Organization.Api.GraphQL.Member;
 [GraphQLName("OrganizationMemberDetails")]
 public class OrganizationMemberDetails : Node
 {
-    [GraphQLName("role")] public OrganizationMemberRoleDetails Role { get; set; } = new();
-    [GraphQLName("status")] public OrganizationMemberStatusDetails Status { get; set; } = new();
+    [GraphQLName("role")]
+    public OrganizationMemberRoleDetails Role { get; set; } = new();
+
+    [GraphQLName("status")]
+    public OrganizationMemberStatusDetails Status { get; set; } = new();
 
     [GraphQLName("isOrganizationOnboardingDone")]
     public bool IsOrganizationOnboardingDone { get; set; }
 
-    [GraphQLName("customerId")] public string CustomerId { get; set; } = string.Empty;
+    [GraphQLName("customerId")]
+    public string CustomerId { get; set; } = string.Empty;
 }
 
 [ObjectType<OrganizationMemberDetails>]

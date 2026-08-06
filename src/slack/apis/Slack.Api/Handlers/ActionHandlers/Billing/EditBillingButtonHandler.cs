@@ -35,7 +35,13 @@ public class EditBillingButtonHandler(
         var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
-        var organizationBillingDetails = new OrganizationBillingDetails { Organization = new Organization { Id = workspace.Organization.Id } };
+        var organizationBillingDetails = new OrganizationBillingDetails
+        {
+            Organization = new Organization
+            {
+                Id = workspace.Organization.Id,
+            },
+        };
 
         if (values.TryGetValue(BillingActionTypes.CompanyName, out var companyNameBlock))
         {

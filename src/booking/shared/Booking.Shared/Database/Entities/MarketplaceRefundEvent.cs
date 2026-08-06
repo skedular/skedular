@@ -51,6 +51,11 @@ public class MarketplaceRefundEventConfiguration : IEntityTypeConfiguration<Mark
         builder.HasOne(item => item.MarketplaceRefund).WithMany(item => item.Events).HasForeignKey(item => item.MarketplaceRefundId);
         builder.HasOne(item => item.ActorCustomer).WithMany().HasForeignKey(item => item.ActorCustomerId);
 
-        builder.HasIndex(item => new { item.MarketplaceRefundId, item.OccurredAt, item.CreatedAt });
+        builder.HasIndex(item => new
+        {
+            item.MarketplaceRefundId,
+            item.OccurredAt,
+            item.CreatedAt,
+        });
     }
 }

@@ -16,13 +16,20 @@ public class ApproveAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Approve_An_Existing_Refund_Without_Rechecking_Mutable_Payment_Status(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundTransitionService refundTransitionService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundTransitionService refundTransitionService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
@@ -32,7 +39,7 @@ public class ApproveAsyncShould
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "booking-1",
-            Status = MarketplaceRefundStatusConstants.UnderReview
+            Status = MarketplaceRefundStatusConstants.UnderReview,
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);

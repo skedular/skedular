@@ -46,7 +46,15 @@ public class UpdateResourceShould(
             cancellationToken);
 
         var result = await locationResourcesServiceClient.UpdateResourceAsync(
-            new UpdateResourceInput { Id = resourceId, Name = updatedName, FieldsToUpdate = { ResourcePatchField.Name } },
+            new UpdateResourceInput
+            {
+                Id = resourceId,
+                Name = updatedName,
+                FieldsToUpdate =
+                {
+                    ResourcePatchField.Name,
+                },
+            },
             locationConfiguration.ApiKey.CreateMetadata(identityId),
             cancellationToken: cancellationToken);
 
@@ -75,30 +83,43 @@ public class UpdateResourceShould(
         var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken);
         organization.Offering = new Offering
         {
-            Id = organizationId, Code = OfferingCode.EnterpriseCustomV1, Start = now.AddDays(-1), End = now.AddDays(1)
+            Id = organizationId,
+            Code = OfferingCode.EnterpriseCustomV1,
+            Start = now.AddDays(-1),
+            End = now.AddDays(1),
         };
 
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, cancellationToken);
 
-        repositoryFactory.IdentityRepository.Add(new Identity { Id = identityId, Customer = customer });
+        repositoryFactory.IdentityRepository.Add(new Identity
+        {
+            Id = identityId,
+            Customer = customer,
+        });
         repositoryFactory.OrganizationMemberRepository.Add(new OrganizationMember
         {
             Id = memberId,
             Organization = organization,
             Customer = customer,
             Role = OrganizationMemberRoleConstants.Owner,
-            Status = OrganizationMemberStatusConstants.Active
+            Status = OrganizationMemberStatusConstants.Active,
         });
 
         var location = new LocationEntity
         {
-            Id = locationId, Organization = organization, Name = "test-location", Type = LocationTypeConstants.Private
+            Id = locationId,
+            Organization = organization,
+            Name = "test-location",
+            Type = LocationTypeConstants.Private,
         };
         repositoryFactory.LocationRepository.Add(location);
 
         var resourceTypeTag = repositoryFactory.OrganizationTagRepository.Add(new OrganizationTag
         {
-            Id = tagId, Organization = organization, Type = OrganizationTagTypeConstants.ResourceDesk, Name = "Desk"
+            Id = tagId,
+            Organization = organization,
+            Type = OrganizationTagTypeConstants.ResourceDesk,
+            Name = "Desk",
         });
 
         repositoryFactory.ResourceRepository.Add(new Resource
@@ -108,7 +129,7 @@ public class UpdateResourceShould(
             Name = name,
             Color = color[..Math.Min(color.Length, 32)],
             Capacity = 1,
-            OrganizationTags = [resourceTypeTag]
+            OrganizationTags = [resourceTypeTag],
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

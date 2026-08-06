@@ -18,16 +18,26 @@ public class VerifyAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Clear_Organization_And_My_Organizations_Caches(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<OrganizationOwnershipService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<OrganizationOwnershipService> logger,
         OrganizationOwnershipService sut,
         CancellationToken cancellationToken)
     {
@@ -40,13 +50,22 @@ public class VerifyAsyncShould
             IsOwnershipVerified = false,
             OrganizationMembers =
             [
-                new OrganizationMember { CustomerId = "customer-1" },
-                new OrganizationMember { CustomerId = "customer-2" }
-            ]
+                new OrganizationMember
+                {
+                    CustomerId = "customer-1",
+                },
+                new OrganizationMember
+                {
+                    CustomerId = "customer-2",
+                },
+            ],
         };
         var mappedOrganization = new Shared.Models.Organization
         {
-            Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name, IsOwnershipVerified = true
+            Id = organization.Id,
+            CustomDomain = organization.CustomDomain,
+            Name = organization.Name,
+            IsOwnershipVerified = true,
         };
         var stripeAuthorizeUrl = new Uri("https://example.test/authorize");
 

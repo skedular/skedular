@@ -131,7 +131,7 @@ public class TagService(
         [
             graphQlMapper.MapTo(
                 existingOrganization,
-                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))
+                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id)),
         ], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -183,7 +183,7 @@ public class TagService(
         [
             graphQlMapper.MapTo(
                 existingOrganization,
-                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))
+                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id)),
         ], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -353,7 +353,7 @@ public class TagService(
         [
             graphQlMapper.MapTo(
                 existingOrganization,
-                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id))
+                organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id)),
         ], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -425,7 +425,7 @@ public class TagService(
                 OrganizationTagPatchField.Description => ApplyValue(request.Description, tag.Description, value => tag.Description = value) ||
                                                          changed,
                 OrganizationTagPatchField.Color => ApplyValue(request.Color, tag.Color, value => tag.Color = value) || changed,
-                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation tag patch field is not supported.")
+                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation tag patch field is not supported."),
             };
         }
 

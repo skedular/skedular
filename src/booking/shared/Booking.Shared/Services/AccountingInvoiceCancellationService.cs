@@ -112,7 +112,7 @@ public class AccountingInvoiceCancellationService(
                         ExternalStatus = AccountingStatusConstants.Cancelled,
                         ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.Cancelled,
                         ExportConfigurationMessage = cancelledMessage,
-                        OrganizationId = organizationId
+                        OrganizationId = organizationId,
                     });
 
                 return;
@@ -291,7 +291,10 @@ public class AccountingInvoiceCancellationService(
     private async Task<XeroConnection?> GetOrganizationXeroConnectionAsync(string organizationId, CancellationToken cancellationToken)
     {
         var response = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
-            new Admin_GetXeroConnectionInput { OrganizationId = organizationId },
+            new Admin_GetXeroConnectionInput
+            {
+                OrganizationId = organizationId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -313,8 +316,12 @@ public class AccountingInvoiceCancellationService(
             {
                 _RepeatingInvoices =
                 [
-                    new RepeatingInvoice { RepeatingInvoiceID = externalInvoiceId, Status = RepeatingInvoice.StatusEnum.DELETED }
-                ]
+                    new RepeatingInvoice
+                    {
+                        RepeatingInvoiceID = externalInvoiceId,
+                        Status = RepeatingInvoice.StatusEnum.DELETED,
+                    },
+                ],
             },
             idempotencyKey,
             cancellationToken);
@@ -334,8 +341,12 @@ public class AccountingInvoiceCancellationService(
             {
                 _Invoices =
                 [
-                    new XeroInvoice { InvoiceID = externalInvoiceId, Status = XeroInvoice.StatusEnum.VOIDED }
-                ]
+                    new XeroInvoice
+                    {
+                        InvoiceID = externalInvoiceId,
+                        Status = XeroInvoice.StatusEnum.VOIDED,
+                    },
+                ],
             },
             null,
             idempotencyKey,
@@ -361,7 +372,10 @@ public class AccountingInvoiceCancellationService(
         }
 
         var refreshedToken = (XeroOAuth2Token)await xeroSdkClientFactory.CreateClient().RefreshAccessTokenAsync(
-            new XeroOAuth2Token { RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted) });
+            new XeroOAuth2Token
+            {
+                RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted),
+            });
         var now = timeProvider.GetUtcNow();
         var accessTokenEncrypted = xeroTokenEncryptionService.Encrypt(refreshedToken.AccessToken);
         var refreshTokenEncrypted = xeroTokenEncryptionService.Encrypt(
@@ -375,7 +389,7 @@ public class AccountingInvoiceCancellationService(
                 AccessTokenEncrypted = accessTokenEncrypted,
                 RefreshTokenEncrypted = refreshTokenEncrypted,
                 AccessTokenExpiresAt = now.AddMinutes(30).ToTimestamp(),
-                RefreshTokenExpiresAt = now.AddDays(60).ToTimestamp()
+                RefreshTokenExpiresAt = now.AddDays(60).ToTimestamp(),
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);

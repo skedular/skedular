@@ -15,7 +15,8 @@ public class CalculateShould
         decimal commissionRate,
         decimal expectedCommission,
         decimal expectedPayout,
-        [Frozen] ILogger<HostCommissionService> logger,
+        [Frozen]
+        ILogger<HostCommissionService> logger,
         HostCommissionService sut)
     {
         var result = sut.Calculate(OrganizationTypeConstants.Host, commissionRate, bookingTotal);
@@ -29,7 +30,8 @@ public class CalculateShould
     [Theory]
     [AutoFakeItEasyData]
     public void IgnoreNonHostOrganization(
-        [Frozen] ILogger<HostCommissionService> logger,
+        [Frozen]
+        ILogger<HostCommissionService> logger,
         HostCommissionService sut,
         decimal commissionRate,
         decimal bookingTotal)

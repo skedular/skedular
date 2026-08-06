@@ -25,7 +25,10 @@ public class SpacesQuotaStatusShould(
         organization.Type = OrganizationTypeConstants.Marketplace;
         organization.Offering = new OfferingModel
         {
-            SpacesPlanCode = 1, SpacesQuotaLimit = 100, SpacesPeriodStart = periodStart, SpacesPeriodEnd = periodEnd
+            SpacesPlanCode = 1,
+            SpacesQuotaLimit = 100,
+            SpacesPeriodStart = periodStart,
+            SpacesPeriodEnd = periodEnd,
         };
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

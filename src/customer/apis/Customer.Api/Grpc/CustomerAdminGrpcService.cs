@@ -36,7 +36,8 @@ public class CustomerAdminGrpcService(
 
         return new AnyCustomerExistByVerifiableTokenResponse
         {
-            Exist = exist, Customer = customer is null ? null : grpcMapper.MapToGrpcResponse(customer)
+            Exist = exist,
+            Customer = customer is null ? null : grpcMapper.MapToGrpcResponse(customer),
         };
     }
 
@@ -48,7 +49,11 @@ public class CustomerAdminGrpcService(
 
         var (exist, customer) = await customerService.AnyCustomerExistByEmailAsync(request.Email, context.CancellationToken);
 
-        return new AnyCustomerExistByEmailResponse { Exist = exist, Customer = customer is null ? null : grpcMapper.MapToGrpcResponse(customer) };
+        return new AnyCustomerExistByEmailResponse
+        {
+            Exist = exist,
+            Customer = customer is null ? null : grpcMapper.MapToGrpcResponse(customer),
+        };
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Customer.Core.V1.Customer> Admin_Add(
@@ -84,7 +89,7 @@ public class CustomerAdminGrpcService(
                         IdentityPatchField.Email => CustomerIdentityPatchField.Email,
                         IdentityPatchField.EmailVerified => CustomerIdentityPatchField.EmailVerified,
                         _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
-                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.")
+                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input."),
                     }).ToHashSet()),
                 context.CancellationToken));
     }

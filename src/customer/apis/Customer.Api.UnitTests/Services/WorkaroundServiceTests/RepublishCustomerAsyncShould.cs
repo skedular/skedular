@@ -11,7 +11,8 @@ public class RepublishCustomerAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Call_GetByIdAsync(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         string customerId,
@@ -27,9 +28,12 @@ public class RepublishCustomerAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Not_Publish_Customer_If_Customer_Not_Found(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerPublisher customerPublisher,
-        [Frozen] IEntityMapper entityMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerPublisher customerPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         string customerId,
@@ -48,8 +52,10 @@ public class RepublishCustomerAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Map_Customer_Entity_To_Model(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IEntityMapper entityMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IEntityMapper entityMapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         string customerId,
@@ -69,9 +75,12 @@ public class RepublishCustomerAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Publish_Customer_If_Customer_Found(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerPublisher customerPublisher,
-        [Frozen] IEntityMapper entityMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerPublisher customerPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         string customerId,

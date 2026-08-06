@@ -29,26 +29,46 @@ public class HandleRecurringBookingInvoiceAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Freeze_Existing_Live_Repeating_Invoice_When_Current_Cadence_Differs(
-        [Frozen] OrganizationConfiguration organizationConfiguration,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
-        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
-        [Frozen] IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
-        [Frozen] IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
-        [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] ILogger<XeroInvoiceService> logger,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IBookingOutboxPublisher bookingOutboxPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
+        [Frozen]
+        IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
+        [Frozen]
+        IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
+        [Frozen]
+        IInvoicePaymentTermsService invoicePaymentTermsService,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        ILogger<XeroInvoiceService> logger,
         string recurringBookingId,
         string productVersionId,
         string pricingId,
@@ -82,14 +102,23 @@ public class HandleRecurringBookingInvoiceAsyncShould
         {
             Id = recurringBookingId,
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
-            MarketplaceBookingSubscription = new MarketplaceBookingSubscription { AutoRenew = true },
+            MarketplaceBookingSubscription = new MarketplaceBookingSubscription
+            {
+                AutoRenew = true,
+            },
             MarketplaceBooking = new MarketplaceBooking
             {
                 InvoiceNumber = "INV-001",
                 BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
-                ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Monthly },
-                ProductVersion = new ProductVersion { Id = productVersionId }
-            }
+                ProductPricing = ProductPricing.Empty(pricingId) with
+                {
+                    PurchaseCadence = ProductPricingCadence.Monthly,
+                },
+                ProductVersion = new ProductVersion
+                {
+                    Id = productVersionId,
+                },
+            },
         };
         var marketplaceBooking = recurringBooking.MarketplaceBooking;
         var productVersion = new ProductVersion
@@ -99,9 +128,10 @@ public class HandleRecurringBookingInvoiceAsyncShould
             {
                 Organization = new OrganizationEntity
                 {
-                    Id = organizationId, BillingCycle = OrganizationBillingCycleModel.Weekly.ToOrganizationBillingCycle()
-                }
-            }
+                    Id = organizationId,
+                    BillingCycle = OrganizationBillingCycleModel.Weekly.ToOrganizationBillingCycle(),
+                },
+            },
         };
         var existingLink = new AccountingInvoiceExportLink
         {
@@ -114,7 +144,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
             RepeatingScheduleUnit = nameof(Schedule.UnitEnum.MONTHLY),
-            RepeatingSchedulePeriod = 3
+            RepeatingSchedulePeriod = 3,
         };
         var xeroConnection = new XeroConnection
         {
@@ -122,7 +152,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             IsActive = true,
             HasRefreshToken = true,
             TenantId = "tenant-1",
-            BillingMode = XeroBillingModeConstants.RepeatingInvoices
+            BillingMode = XeroBillingModeConstants.RepeatingInvoices,
         };
         var desiredSchedule = new XeroRepeatingInvoiceScheduleDefinition(
             Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
@@ -183,26 +213,46 @@ public class HandleRecurringBookingInvoiceAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Avoid_Repeating_Template_When_Subscription_Is_Not_Auto_Renew_And_Schedule_Comes_From_Purchase_Cadence(
-        [Frozen] OrganizationConfiguration organizationConfiguration,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
-        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
-        [Frozen] IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
-        [Frozen] IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
-        [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] ILogger<XeroInvoiceService> logger,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IBookingOutboxPublisher bookingOutboxPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
+        [Frozen]
+        IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
+        [Frozen]
+        IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
+        [Frozen]
+        IInvoicePaymentTermsService invoicePaymentTermsService,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        ILogger<XeroInvoiceService> logger,
         string recurringBookingId,
         string productVersionId,
         string pricingId,
@@ -235,14 +285,23 @@ public class HandleRecurringBookingInvoiceAsyncShould
         {
             Id = recurringBookingId,
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
-            MarketplaceBookingSubscription = new MarketplaceBookingSubscription { AutoRenew = false },
+            MarketplaceBookingSubscription = new MarketplaceBookingSubscription
+            {
+                AutoRenew = false,
+            },
             MarketplaceBooking = new MarketplaceBooking
             {
                 InvoiceNumber = "INV-001",
                 BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
-                ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Monthly },
-                ProductVersion = new ProductVersion { Id = productVersionId }
-            }
+                ProductPricing = ProductPricing.Empty(pricingId) with
+                {
+                    PurchaseCadence = ProductPricingCadence.Monthly,
+                },
+                ProductVersion = new ProductVersion
+                {
+                    Id = productVersionId,
+                },
+            },
         };
         var marketplaceBooking = recurringBooking.MarketplaceBooking;
         var productVersion = new ProductVersion
@@ -252,9 +311,10 @@ public class HandleRecurringBookingInvoiceAsyncShould
             {
                 Organization = new OrganizationEntity
                 {
-                    Id = organizationId, BillingCycle = OrganizationBillingCycleModel.Monthly.ToOrganizationBillingCycle()
-                }
-            }
+                    Id = organizationId,
+                    BillingCycle = OrganizationBillingCycleModel.Monthly.ToOrganizationBillingCycle(),
+                },
+            },
         };
         var xeroConnection = new XeroConnection
         {
@@ -262,7 +322,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             IsActive = true,
             HasRefreshToken = true,
             TenantId = "tenant-3",
-            BillingMode = XeroBillingModeConstants.RepeatingInvoices
+            BillingMode = XeroBillingModeConstants.RepeatingInvoices,
         };
         var desiredSchedule = new XeroRepeatingInvoiceScheduleDefinition(
             Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
@@ -314,26 +374,46 @@ public class HandleRecurringBookingInvoiceAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Freeze_Existing_Live_Repeating_Invoice_When_Repeating_Mode_Is_Turned_Off(
-        [Frozen] OrganizationConfiguration organizationConfiguration,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
-        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
-        [Frozen] IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
-        [Frozen] IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
-        [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] ILogger<XeroInvoiceService> logger,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IBookingOutboxPublisher bookingOutboxPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
+        [Frozen]
+        IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
+        [Frozen]
+        IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
+        [Frozen]
+        IInvoicePaymentTermsService invoicePaymentTermsService,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        ILogger<XeroInvoiceService> logger,
         string recurringBookingId,
         string productVersionId,
         string pricingId,
@@ -371,9 +451,15 @@ public class HandleRecurringBookingInvoiceAsyncShould
             {
                 InvoiceNumber = "INV-001",
                 BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
-                ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Monthly },
-                ProductVersion = new ProductVersion { Id = productVersionId }
-            }
+                ProductPricing = ProductPricing.Empty(pricingId) with
+                {
+                    PurchaseCadence = ProductPricingCadence.Monthly,
+                },
+                ProductVersion = new ProductVersion
+                {
+                    Id = productVersionId,
+                },
+            },
         };
         var marketplaceBooking = recurringBooking.MarketplaceBooking;
         var productVersion = new ProductVersion
@@ -383,9 +469,10 @@ public class HandleRecurringBookingInvoiceAsyncShould
             {
                 Organization = new OrganizationEntity
                 {
-                    Id = organizationId, BillingCycle = OrganizationBillingCycleModel.Monthly.ToOrganizationBillingCycle()
-                }
-            }
+                    Id = organizationId,
+                    BillingCycle = OrganizationBillingCycleModel.Monthly.ToOrganizationBillingCycle(),
+                },
+            },
         };
         var existingLink = new AccountingInvoiceExportLink
         {
@@ -398,7 +485,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             RepeatingScheduleUnit = nameof(Schedule.UnitEnum.MONTHLY),
-            RepeatingSchedulePeriod = 1
+            RepeatingSchedulePeriod = 1,
         };
         var xeroConnection = new XeroConnection
         {
@@ -406,7 +493,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             IsActive = true,
             HasRefreshToken = true,
             TenantId = "tenant-2",
-            BillingMode = XeroBillingModeConstants.Enabled
+            BillingMode = XeroBillingModeConstants.Enabled,
         };
         var transitionDecision = new XeroRecurringInvoiceTransitionDecision(
             XeroRecurringInvoiceExportPath.FreezeExistingRepeatingInvoice,

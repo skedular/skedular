@@ -28,7 +28,10 @@ public class TeamOutboxPublisher(
         foreach (var team in teams)
         {
             publisher.Publish(
-                new Key { TeamId = team.Id },
+                new Key
+                {
+                    TeamId = team.Id,
+                },
                 new Event
                 {
                     Metadata = Event.NewMetadata(
@@ -36,7 +39,10 @@ public class TeamOutboxPublisher(
                         applicationConfiguration.AppSource,
                         team.IsDeleted() ? Type.TeamDeleted : Type.TeamUpserted,
                         context.GetCorrelationId()),
-                    Data = new Data { Team = eventMapper.MapTo(team) }
+                    Data = new Data
+                    {
+                        Team = eventMapper.MapTo(team),
+                    },
                 },
                 unitOfWork);
         }

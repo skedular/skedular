@@ -31,14 +31,17 @@ public class EventMapper : IEventMapper
             DeletedAt = src.DeletedAt?.ToTimestamp(),
             Inactive = src.Inactive,
             OrganizationId = src.Organization.Id,
-            LatestProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First())
+            LatestProductVersion = MapTo(src.ProductVersions.OrderByDescending(item => item.CreatedAt).First()),
         };
 
     private static ProductVersion MapTo(Models.ProductVersion src)
     {
         var productVersion = new ProductVersion
         {
-            Id = src.Id, ListingMetadata = MapTo(src.ListingMetadata), Type = MapTo(src.Type), Currency = MapTo(src.Currency)
+            Id = src.Id,
+            ListingMetadata = MapTo(src.ListingMetadata),
+            Type = MapTo(src.Type),
+            Currency = MapTo(src.Currency),
         };
 
         productVersion.TagIds.AddRange(src.OrganizationTags.Select(item => item.Id));
@@ -52,10 +55,21 @@ public class EventMapper : IEventMapper
         src.Select(MapTo);
 
     private static CdnImageFile MapTo(Api.Shared.Services.Models.CdnImageFile src) =>
-        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+        new()
+        {
+            Original = MapTo(src.Original),
+            Thumbnail = MapTo(src.Thumbnail),
+        };
 
     private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
-        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
+        src is null
+            ? null
+            : new CdnFile
+            {
+                Url = src.Url.ToSafeString(),
+                Height = src.Height.ToNullInt(),
+                Width = src.Width.ToNullInt(),
+            };
 
     private static IEnumerable<ProductPricing> MapTo(IEnumerable<Api.Shared.Services.Models.ProductPricing> src) =>
         src.Select(MapTo);
@@ -79,7 +93,7 @@ public class EventMapper : IEventMapper
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             CancellationPolicyType = MapTo(src.CancellationPolicyType),
             BillingMode = MapTo(src.BillingMode),
-            RequiredDaysPerWeek = src.RequiredDaysPerWeek.ToNullInt()
+            RequiredDaysPerWeek = src.RequiredDaysPerWeek.ToNullInt(),
         };
 
         productPricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));
@@ -94,7 +108,11 @@ public class EventMapper : IEventMapper
         src.Select(MapTo);
 
     private static ProductPricingCancellationRefundRule MapTo(Api.Shared.Services.Models.ProductPricingCancellationRefundRule src) =>
-        new() { MinutesBefore = src.MinutesBefore, RefundPercentage = src.RefundPercentage };
+        new()
+        {
+            MinutesBefore = src.MinutesBefore,
+            RefundPercentage = src.RefundPercentage,
+        };
 
     private static IEnumerable<PaymentMethod> MapTo(IEnumerable<Api.Shared.Services.Models.PaymentMethod> src) =>
         src.Select(MapTo);
@@ -105,7 +123,7 @@ public class EventMapper : IEventMapper
             Api.Shared.Services.Models.PaymentMethod.Card => PaymentMethod.Card,
             Api.Shared.Services.Models.PaymentMethod.BankTransfer => PaymentMethod.BankTransfer,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 
     private static Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence MapTo(ProductPricingCadence src) =>
@@ -129,7 +147,7 @@ public class EventMapper : IEventMapper
             ProductPricingCadence.SixMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.SixMonths,
             ProductPricingCadence.Yearly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Yearly,
             _ => throw new ArgumentOutOfRangeException(null,
-                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                "Unexpected value encountered. Update enum mapping or caller input to include this case."),
         };
 
     private static ProductPricingBillingMode MapTo(Api.Shared.Services.Models.ProductPricingBillingMode src) =>
@@ -139,7 +157,7 @@ public class EventMapper : IEventMapper
             Api.Shared.Services.Models.ProductPricingBillingMode.Upfront => ProductPricingBillingMode.Upfront,
             Api.Shared.Services.Models.ProductPricingBillingMode.InArrears => ProductPricingBillingMode.InArrears,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 
     private static ProductPricingCancellationPolicyType MapTo(Api.Shared.Services.Models.ProductPricingCancellationPolicyType src) =>
@@ -151,7 +169,7 @@ public class EventMapper : IEventMapper
                 .FullRefundBeforeCutoff,
             Api.Shared.Services.Models.ProductPricingCancellationPolicyType.TieredRefund => ProductPricingCancellationPolicyType.TieredRefund,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 
     private static Currency MapTo(Api.Shared.Services.Models.Currency src) =>
@@ -160,14 +178,16 @@ public class EventMapper : IEventMapper
             Api.Shared.Services.Models.Currency.Nzd => Currency.Nzd,
             Api.Shared.Services.Models.Currency.Usd => Currency.Usd,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 
     private static ListingMetadata MapTo(Api.Shared.Services.Models.ListingMetadata src)
     {
         var listingMetadata = new ListingMetadata
         {
-            About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
+            About = src.About.ToSafeString(),
+            Title = src.Title.ToSafeString(),
+            SubTitle = src.SubTitle.ToSafeString(),
         };
 
         listingMetadata.IncludedFeatures.AddRange(src.IncludedFeatures.ToSafeCollection().Select(item => item.ToSafeString()));
@@ -181,6 +201,6 @@ public class EventMapper : IEventMapper
             Api.Shared.Services.Models.ProductType.Resource => ProductType.Resource,
             Api.Shared.Services.Models.ProductType.Event => ProductType.Event,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 }

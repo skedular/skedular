@@ -27,14 +27,18 @@ public class LocationDeskAvailabilityAnalyticsShould(
         var locationId = await Nanoid.GenerateAsync();
         var now = timeProvider.GetUtcNow();
 
-        var organization = new Organization { Id = organizationId, CreatedAt = now };
+        var organization = new Organization
+        {
+            Id = organizationId,
+            CreatedAt = now,
+        };
         var location = new LocationEntity
         {
             Id = locationId,
             Name = "Analytics Integration Test Location",
             OrganizationId = organizationId,
             Type = LocationTypeConstants.Private,
-            CreatedAt = now
+            CreatedAt = now,
         };
         await repositoryFactory.DbContext.Organization.AddAsync(organization, cancellationToken);
         await repositoryFactory.DbContext.Location.AddAsync(location, cancellationToken);
@@ -45,7 +49,10 @@ public class LocationDeskAvailabilityAnalyticsShould(
             var resourceId = await Nanoid.GenerateAsync();
             var deskTag = new OrganizationTag
             {
-                Id = await Nanoid.GenerateAsync(), Type = OrganizationTagTypeConstants.ResourceDesk, CreatedAt = now, Organization = organization
+                Id = await Nanoid.GenerateAsync(),
+                Type = OrganizationTagTypeConstants.ResourceDesk,
+                CreatedAt = now,
+                Organization = organization,
             };
             var resource = new ResourceEntity
             {
@@ -53,7 +60,7 @@ public class LocationDeskAvailabilityAnalyticsShould(
                 Name = $"Desk {d + 1:D2}",
                 CreatedAt = now,
                 Location = location,
-                OrganizationTags = [deskTag]
+                OrganizationTags = [deskTag],
             };
             await repositoryFactory.DbContext.Resource.AddAsync(resource, cancellationToken);
             await repositoryFactory.DbContext.DailyResourceAvailabilitySnapshot.AddAsync(
@@ -65,7 +72,7 @@ public class LocationDeskAvailabilityAnalyticsShould(
                     Resource = resource,
                     Date = snapshotDate,
                     Classification = ResourceAvailabilityClassificationConstants.Available,
-                    CreatedAt = now
+                    CreatedAt = now,
                 }, cancellationToken);
         }
 

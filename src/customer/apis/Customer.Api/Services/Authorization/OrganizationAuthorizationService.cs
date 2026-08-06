@@ -31,7 +31,7 @@ public class OrganizationAuthorizationService(
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner
-            or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
+            or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
     }
 }

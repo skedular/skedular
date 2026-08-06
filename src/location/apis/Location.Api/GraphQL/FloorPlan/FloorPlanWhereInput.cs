@@ -5,5 +5,6 @@ namespace Location.Api.GraphQL.FloorPlan;
 [GraphQLName("FloorPlanWhereInput")]
 public class FloorPlanWhereInput
 {
-    [GraphQLName("locationId")] public string LocationId { get; set; } = string.Empty;
+    [GraphQLName("locationId")]
+    public string LocationId { get; set; } = string.Empty;
 }

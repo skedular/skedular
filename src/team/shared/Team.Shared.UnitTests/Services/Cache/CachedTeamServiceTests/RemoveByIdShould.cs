@@ -10,8 +10,10 @@ public class RemoveByIdShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Debug_When_Cache_Entry_Is_Evicted(
-        [Frozen] HybridCache hybridCache,
-        [Frozen] ILogger<CachedTeamService> logger,
+        [Frozen]
+        HybridCache hybridCache,
+        [Frozen]
+        ILogger<CachedTeamService> logger,
         CachedTeamService sut,
         CancellationToken cancellationToken)
     {

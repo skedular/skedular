@@ -44,7 +44,8 @@ public class DecideShould
     {
         var existingLink = new AccountingInvoiceExportLink
         {
-            ExternalInvoiceId = "invoice-1", ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice
+            ExternalInvoiceId = "invoice-1",
+            ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice,
         };
         var scheduleDefinition = new XeroRepeatingInvoiceScheduleDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
@@ -64,7 +65,10 @@ public class DecideShould
     public void Return_Repeating_Invoice_Path_When_Repeating_Mode_Is_Selected_And_Existing_Standard_Link_Has_Not_Been_Exported_Yet(
         XeroRecurringInvoiceTransitionService sut)
     {
-        var existingLink = new AccountingInvoiceExportLink { ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice };
+        var existingLink = new AccountingInvoiceExportLink
+        {
+            ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice,
+        };
         var scheduleDefinition = new XeroRepeatingInvoiceScheduleDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             Schedule.UnitEnum.WEEKLY,
@@ -84,7 +88,10 @@ public class DecideShould
         Return_Standard_Invoice_Path_When_Repeating_Mode_Is_Selected_But_Existing_Standard_Link_Has_Not_Been_Exported_Yet_And_The_Cadence_Is_Unsupported(
             XeroRecurringInvoiceTransitionService sut)
     {
-        var existingLink = new AccountingInvoiceExportLink { ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice };
+        var existingLink = new AccountingInvoiceExportLink
+        {
+            ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice,
+        };
 
         var result = sut.Decide(existingLink, true, null);
 
@@ -121,7 +128,7 @@ public class DecideShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             RepeatingScheduleUnit = Schedule.UnitEnum.WEEKLY.ToString(),
-            RepeatingSchedulePeriod = 1
+            RepeatingSchedulePeriod = 1,
         };
 
         var result = sut.Decide(existingLink, false, null);
@@ -141,7 +148,7 @@ public class DecideShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             RepeatingScheduleUnit = Schedule.UnitEnum.WEEKLY.ToString(),
-            RepeatingSchedulePeriod = 1
+            RepeatingSchedulePeriod = 1,
         };
 
         var result = sut.Decide(existingLink, false, null);
@@ -161,7 +168,7 @@ public class DecideShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             RepeatingScheduleUnit = Schedule.UnitEnum.WEEKLY.ToString(),
-            RepeatingSchedulePeriod = 1
+            RepeatingSchedulePeriod = 1,
         };
 
         var result = sut.Decide(existingLink, true, null);
@@ -181,7 +188,7 @@ public class DecideShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             RepeatingScheduleUnit = Schedule.UnitEnum.WEEKLY.ToString(),
-            RepeatingSchedulePeriod = 1
+            RepeatingSchedulePeriod = 1,
         };
         var scheduleDefinition = new XeroRepeatingInvoiceScheduleDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
@@ -207,7 +214,7 @@ public class DecideShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
             RepeatingScheduleUnit = Schedule.UnitEnum.MONTHLY.ToString(),
-            RepeatingSchedulePeriod = 3
+            RepeatingSchedulePeriod = 3,
         };
         var scheduleDefinition = new XeroRepeatingInvoiceScheduleDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
@@ -232,7 +239,7 @@ public class DecideShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
             RepeatingScheduleUnit = Schedule.UnitEnum.MONTHLY.ToString(),
-            RepeatingSchedulePeriod = 3
+            RepeatingSchedulePeriod = 3,
         };
         var scheduleDefinition = new XeroRepeatingInvoiceScheduleDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
@@ -257,7 +264,7 @@ public class DecideShould
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
             RepeatingScheduleUnit = Schedule.UnitEnum.MONTHLY.ToString(),
-            RepeatingSchedulePeriod = 3
+            RepeatingSchedulePeriod = 3,
         };
 
         var result = sut.Decide(existingLink, true, null);

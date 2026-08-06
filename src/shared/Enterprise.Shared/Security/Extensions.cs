@@ -53,7 +53,7 @@ public static class Extensions
                         ValidIssuer = authenticationConfiguration.Jwt.Issuer,
                         ValidateAudience = false,
                         ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true
+                        ValidateIssuerSigningKey = true,
                     };
 
                     options.Events = new JwtBearerEvents
@@ -76,11 +76,11 @@ public static class Extensions
                                 title = "Unauthorized",
                                 status = (int)HttpStatusCode.Unauthorized,
                                 detail = "A valid bearer token is required.",
-                                instance = context.Request.Path.Value
+                                instance = context.Request.Path.Value,
                             };
 
                             await context.Response.WriteAsync(JsonSerializer.Serialize(payload));
-                        }
+                        },
                     };
                 });
 

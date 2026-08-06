@@ -178,7 +178,10 @@ public class Context(IHttpContextAccessor httpContextAccessor, ILogger<Context> 
         }
         else
         {
-            GetHttpContext().Items[UserSsoContextKey] = new ConcurrentDictionary<string, UserSsoContext> { [organizationId] = userSsoContext };
+            GetHttpContext().Items[UserSsoContextKey] = new ConcurrentDictionary<string, UserSsoContext>
+            {
+                [organizationId] = userSsoContext,
+            };
             logger.LogDebug("Created user SSO context collection in request context");
         }
     }

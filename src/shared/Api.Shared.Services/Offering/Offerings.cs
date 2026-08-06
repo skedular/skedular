@@ -28,7 +28,7 @@ public enum OfferingCode
     SpacesGrowthV1 = 50000,
     SpacesBusinessV1 = 60000,
     SpacesContactUsV1 = 70000,
-    HostStandardV1 = 80000
+    HostStandardV1 = 80000,
 }
 
 public static class Offerings
@@ -36,7 +36,7 @@ public static class Offerings
     public static readonly IReadOnlyList<OfferingCode> TeamsOfferings =
     [
         OfferingCode.PayAsYouGoV1,
-        OfferingCode.EnterpriseCustomV1
+        OfferingCode.EnterpriseCustomV1,
     ];
 
     public static readonly IReadOnlyList<OfferingCode> SpacesOfferings =
@@ -44,19 +44,19 @@ public static class Offerings
         OfferingCode.SpacesFreeTierV1,
         OfferingCode.SpacesGrowthV1,
         OfferingCode.SpacesBusinessV1,
-        OfferingCode.SpacesContactUsV1
+        OfferingCode.SpacesContactUsV1,
     ];
 
     public static readonly IReadOnlyList<OfferingCode> HostOfferings =
     [
-        OfferingCode.HostStandardV1
+        OfferingCode.HostStandardV1,
     ];
 
     public static readonly IReadOnlyList<OfferingCode> AllOfferings =
     [
         .. TeamsOfferings,
         .. SpacesOfferings,
-        .. HostOfferings
+        .. HostOfferings,
     ];
 
     public static IDictionary<OfferingCode, Offering> OfferingSet { get; } = new Dictionary<OfferingCode, Offering>
@@ -69,7 +69,7 @@ public static class Offerings
                 [
                     FeatureSetCode.OrganizationUnlimitedLocations,
                     FeatureSetCode.OrganizationUnlimitedTeams,
-                    FeatureSetCode.OrganizationUnlimitedBookings
+                    FeatureSetCode.OrganizationUnlimitedBookings,
                 ],
                 UnitPrice = null,
                 FixedPrice = null,
@@ -79,7 +79,7 @@ public static class Offerings
                 MaxTeamCount = null,
                 MaxResourceCount = null,
                 MaxBookingInstanceCount = null,
-                UnderPriceLines = ["Completely Free"]
+                UnderPriceLines = ["Completely Free"],
             }
         },
         {
@@ -90,7 +90,7 @@ public static class Offerings
                 [
                     FeatureSetCode.OrganizationUpToOneLocation,
                     FeatureSetCode.OrganizationUpToOneTeam,
-                    FeatureSetCode.OrganizationUnlimitedBookings
+                    FeatureSetCode.OrganizationUnlimitedBookings,
                 ],
                 UnitPrice = null,
                 FixedPrice = null,
@@ -100,7 +100,7 @@ public static class Offerings
                 MaxTeamCount = 1,
                 MaxResourceCount = null,
                 MaxBookingInstanceCount = null,
-                UnderPriceLines = ["Completely Free", "Up to 10 Monthly Active Users"]
+                UnderPriceLines = ["Completely Free", "Up to 10 Monthly Active Users"],
             }
         },
         {
@@ -111,7 +111,7 @@ public static class Offerings
                 [
                     FeatureSetCode.OrganizationUnlimitedLocations,
                     FeatureSetCode.OrganizationUnlimitedTeams,
-                    FeatureSetCode.OrganizationUnlimitedBookings
+                    FeatureSetCode.OrganizationUnlimitedBookings,
                 ],
                 UnitPrice = 300,
                 FixedPrice = null,
@@ -121,7 +121,7 @@ public static class Offerings
                 MaxTeamCount = null,
                 MaxResourceCount = null,
                 MaxBookingInstanceCount = null,
-                UnderPriceLines = ["Per monthly active user/month", "Best for most users"]
+                UnderPriceLines = ["Per monthly active user/month", "Best for most users"],
             }
         },
         {
@@ -132,7 +132,7 @@ public static class Offerings
                 [
                     FeatureSetCode.OrganizationCompanyResources,
                     FeatureSetCode.OrganizationAnalytics,
-                    FeatureSetCode.OrganizationPremiumSupport
+                    FeatureSetCode.OrganizationPremiumSupport,
                 ],
                 UnitPrice = null,
                 FixedPrice = null,
@@ -142,7 +142,7 @@ public static class Offerings
                 MaxTeamCount = null,
                 MaxResourceCount = null,
                 MaxBookingInstanceCount = null,
-                UnderPriceLines = ["Best for large organizations with multiple locations"]
+                UnderPriceLines = ["Best for large organizations with multiple locations"],
             }
         },
         {
@@ -153,7 +153,7 @@ public static class Offerings
                 [
                     FeatureSetCode.OrganizationUnlimitedLocations,
                     FeatureSetCode.OrganizationUnlimitedBookings,
-                    FeatureSetCode.OrganizationAnalytics
+                    FeatureSetCode.OrganizationAnalytics,
                 ],
                 UnitPrice = null,
                 FixedPrice = null,
@@ -163,7 +163,7 @@ public static class Offerings
                 MaxTeamCount = null,
                 MaxResourceCount = null,
                 MaxBookingInstanceCount = 100,
-                UnderPriceLines = ["Free for 14 days", "Up to 100 booking instances per month"]
+                UnderPriceLines = ["Free for 14 days", "Up to 100 booking instances per month"],
             }
         },
         {
@@ -175,7 +175,7 @@ public static class Offerings
                     FeatureSetCode.OrganizationUnlimitedLocations,
                     FeatureSetCode.OrganizationUnlimitedBookings,
                     FeatureSetCode.OrganizationAnalytics,
-                    FeatureSetCode.OrganizationPremiumSupport
+                    FeatureSetCode.OrganizationPremiumSupport,
                 ],
                 UnitPrice = null,
                 FixedPrice = 4900,
@@ -185,7 +185,7 @@ public static class Offerings
                 MaxTeamCount = null,
                 MaxResourceCount = null,
                 MaxBookingInstanceCount = 500,
-                UnderPriceLines = ["Per month", "Up to 500 booking instances/month"]
+                UnderPriceLines = ["Per month", "Up to 500 booking instances/month"],
             }
         },
         {
@@ -198,7 +198,7 @@ public static class Offerings
                     FeatureSetCode.OrganizationUnlimitedBookings,
                     FeatureSetCode.OrganizationCompanyResources,
                     FeatureSetCode.OrganizationAnalytics,
-                    FeatureSetCode.OrganizationPremiumSupport
+                    FeatureSetCode.OrganizationPremiumSupport,
                 ],
                 UnitPrice = null,
                 FixedPrice = 14900,
@@ -208,7 +208,7 @@ public static class Offerings
                 MaxTeamCount = null,
                 MaxResourceCount = null,
                 MaxBookingInstanceCount = 1000,
-                UnderPriceLines = ["Per month", "Up to 1,000 booking instances/month"]
+                UnderPriceLines = ["Per month", "Up to 1,000 booking instances/month"],
             }
         },
         {
@@ -218,7 +218,7 @@ public static class Offerings
                 FeatureSets =
                 [
                     FeatureSetCode.OrganizationUnlimitedLocations,
-                    FeatureSetCode.OrganizationUnlimitedBookings
+                    FeatureSetCode.OrganizationUnlimitedBookings,
                 ],
                 UnitPrice = null,
                 FixedPrice = null,
@@ -228,7 +228,7 @@ public static class Offerings
                 MaxTeamCount = null,
                 MaxResourceCount = null,
                 MaxBookingInstanceCount = null,
-                UnderPriceLines = ["Custom pricing", "Custom booking instance capacity"]
+                UnderPriceLines = ["Custom pricing", "Custom booking instance capacity"],
             }
         },
         {
@@ -238,7 +238,7 @@ public static class Offerings
                 FeatureSets =
                 [
                     FeatureSetCode.OrganizationUnlimitedLocations,
-                    FeatureSetCode.OrganizationUnlimitedBookings
+                    FeatureSetCode.OrganizationUnlimitedBookings,
                 ],
                 UnitPrice = null,
                 FixedPrice = null,
@@ -249,9 +249,9 @@ public static class Offerings
                 MaxResourceCount = null,
                 MaxBookingInstanceCount = null,
                 HostCommissionPercentage = 5m,
-                UnderPriceLines = ["5% commission per booking", "Free to list"]
+                UnderPriceLines = ["5% commission per booking", "Free to list"],
             }
-        }
+        },
     };
 
     extension(OfferingCode offeringCode)
@@ -281,7 +281,7 @@ public static class Offerings
                 "SPACES_BUSINESS_V1" => OfferingCode.SpacesBusinessV1,
                 "SPACES_CONTACT_US_V1" => OfferingCode.SpacesContactUsV1,
                 "HOST_STANDARD_V1" => OfferingCode.HostStandardV1,
-                _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code))
+                _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code)),
             };
     }
 
@@ -299,7 +299,7 @@ public static class Offerings
                 OfferingCode.SpacesBusinessV1 => "SPACES_BUSINESS_V1",
                 OfferingCode.SpacesContactUsV1 => "SPACES_CONTACT_US_V1",
                 OfferingCode.HostStandardV1 => "HOST_STANDARD_V1",
-                _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code))
+                _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code)),
             };
     }
 

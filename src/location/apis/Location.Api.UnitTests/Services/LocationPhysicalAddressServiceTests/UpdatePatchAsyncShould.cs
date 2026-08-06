@@ -15,23 +15,48 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Authorization_Rejection_And_Rethrow(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationPhysicalAddressRepository physicalAddressRepository,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ILogger<LocationPhysicalAddressService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationPhysicalAddressRepository physicalAddressRepository,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ILogger<LocationPhysicalAddressService> logger,
         LocationPhysicalAddressService sut,
         CancellationToken cancellationToken)
     {
         var locationEntity = new Shared.Database.Entities.Location
         {
-            Id = "location-1", OrganizationId = "org-1", Organization = new Organization { Id = "org-1" }
+            Id = "location-1",
+            OrganizationId = "org-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
         };
-        var physicalAddressEntity = new LocationPhysicalAddress { Id = "pa-1", Location = locationEntity };
+        var physicalAddressEntity = new LocationPhysicalAddress
+        {
+            Id = "pa-1",
+            Location = locationEntity,
+        };
         var request = new LocationPhysicalAddressPatchRequest(
-            new Shared.Models.LocationPhysicalAddress { Id = "pa-1", Location = new Shared.Models.Location { Id = "location-1" } },
-            new HashSet<LocationPhysicalAddressPatchField> { LocationPhysicalAddressPatchField.Address });
+            new Shared.Models.LocationPhysicalAddress
+            {
+                Id = "pa-1",
+                Location = new Shared.Models.Location
+                {
+                    Id = "location-1",
+                },
+            },
+            new HashSet<LocationPhysicalAddressPatchField>
+            {
+                LocationPhysicalAddressPatchField.Address,
+            });
 
         A.CallTo(() => repositoryFactory.LocationPhysicalAddressRepository).Returns(physicalAddressRepository);
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
@@ -52,16 +77,30 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Error_And_Rethrow_On_General_Failure(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationPhysicalAddressRepository physicalAddressRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ILogger<LocationPhysicalAddressService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationPhysicalAddressRepository physicalAddressRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ILogger<LocationPhysicalAddressService> logger,
         LocationPhysicalAddressService sut,
         CancellationToken cancellationToken)
     {
         var request = new LocationPhysicalAddressPatchRequest(
-            new Shared.Models.LocationPhysicalAddress { Id = "pa-1", Location = new Shared.Models.Location { Id = "location-1" } },
-            new HashSet<LocationPhysicalAddressPatchField> { LocationPhysicalAddressPatchField.Address });
+            new Shared.Models.LocationPhysicalAddress
+            {
+                Id = "pa-1",
+                Location = new Shared.Models.Location
+                {
+                    Id = "location-1",
+                },
+            },
+            new HashSet<LocationPhysicalAddressPatchField>
+            {
+                LocationPhysicalAddressPatchField.Address,
+            });
 
         A.CallTo(() => repositoryFactory.LocationPhysicalAddressRepository).Returns(physicalAddressRepository);
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken))
@@ -78,14 +117,26 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Autosave_Started(
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ILogger<LocationPhysicalAddressService> logger,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ILogger<LocationPhysicalAddressService> logger,
         LocationPhysicalAddressService sut,
         CancellationToken cancellationToken)
     {
         var request = new LocationPhysicalAddressPatchRequest(
-            new Shared.Models.LocationPhysicalAddress { Id = "pa-1", Location = new Shared.Models.Location { Id = "location-1" } },
-            new HashSet<LocationPhysicalAddressPatchField> { LocationPhysicalAddressPatchField.Address });
+            new Shared.Models.LocationPhysicalAddress
+            {
+                Id = "pa-1",
+                Location = new Shared.Models.Location
+                {
+                    Id = "location-1",
+                },
+            },
+            new HashSet<LocationPhysicalAddressPatchField>
+            {
+                LocationPhysicalAddressPatchField.Address,
+            });
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken))
             .ThrowsAsync(new InvalidOperationException("forced early failure"));

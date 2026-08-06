@@ -14,7 +14,7 @@ public enum ResourceAvailabilityClassification
     PartiallyBooked, // at least one booking but free time remains in opening hours
     FullyBooked, // all opening-hour time covered by bookings
     Occupied, // checked-in (current date only, where check-in data available)
-    Blocked // location ClosedDates or resource IsActive == false (v1)
+    Blocked, // location ClosedDates or resource IsActive == false (v1)
 }
 
 /// <summary>
@@ -46,7 +46,7 @@ public static class ResourceAvailabilityClassificationExtensions
                 ResourceAvailabilityClassification.Occupied => "Occupied",
                 ResourceAvailabilityClassification.Blocked => "Blocked",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

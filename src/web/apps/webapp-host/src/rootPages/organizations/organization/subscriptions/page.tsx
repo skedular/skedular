@@ -1,4 +1,4 @@
-import { getOrganizationSubscriptionBaseLink } from '@/components/links';
+import { getOrganizationRefundBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import {
@@ -19,7 +19,17 @@ import SubscriptionCancellationSection from '@/components/marketplaceProductSubs
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { MultipleChoicesMarketplaceBookingPaymentStatuses, MultipleChoicesMarketplaceBookingSubscriptionStatuses } from '@/components/organization';
-import { getRelayErrorMessage, RelayError, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
+import {
+  buildMarketplacePurchaseQueryVariables,
+  formatMarketplacePurchaseDisplay,
+  formatMarketplacePurchaseInactiveEvidence,
+  getRelayErrorMessage,
+  RelayError,
+  toRootError,
+  updateMarketplacePurchaseSearchParams,
+  useIntegratedPlatform,
+  useKnownParams,
+} from '@skedular/shared';
 
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
@@ -94,7 +104,16 @@ const clickablePanelSx: SxProps<Theme> = {
 };
 
 const RootQuery = graphql`
-  query pageOrganizationSubscriptions_rootQuery($organizationCustomDomain: String!, $statuses: [MarketplaceBookingSubscriptionStatus!], $paymentStatuses: [PaymentStatus!]) {
+  query pageOrganizationSubscriptions_rootQuery(
+    $organizationCustomDomain: String!
+    $statuses: [MarketplaceBookingSubscriptionStatus!]
+    $paymentStatuses: [PaymentStatus!]
+    $purchaseAfter: String
+    $purchaseFirst: Int
+    $purchaseSourceTypes: [MarketplacePurchaseSourceType!]
+    $purchaseLifecycleStates: [MarketplacePurchaseLifecycleState!]
+    $purchaseOrderBy: [MarketplacePurchaseHistoryOrderInput!]
+  ) {
     ...multipleChoicesMarketplaceBookingSubscriptionStatuses_query
     ...multipleChoicesMarketplaceBookingPaymentStatuses_query
     marketplaceBookingSubscriptionCancellationModes {
@@ -205,6 +224,64 @@ const RootQuery = graphql`
         }
       }
     }
+    marketplacePurchases(
+      after: $purchaseAfter
+      first: $purchaseFirst
+      organizationCustomDomain: $organizationCustomDomain
+      sourceTypes: $purchaseSourceTypes
+      lifecycleStates: $purchaseLifecycleStates
+      orderBy: $purchaseOrderBy
+    ) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      edges {
+        cursor
+        node {
+          id
+          sourceType
+          sourceTypeName
+          lifecycleState
+          lifecycleStateName
+          renewalState
+          renewalStateName
+          purchasedAt
+          activityAt
+          bookingFrom
+          bookingUntil
+          paymentStatus
+          productVersionId
+          productTitle
+          totalAmount
+          currency
+          customerId
+          deletedByCustomerId
+          cancellationReason
+          refundId
+          refund {
+            id
+            status {
+              name
+            }
+            requestedAt
+            lastProcessedAt
+            refundAmount
+            events {
+              id
+              occurredAt
+              eventType {
+                name
+              }
+            }
+          }
+          isDeleted
+        }
+      }
+    }
   }
 `;
 
@@ -239,6 +316,12 @@ type Props = {
   onFiltersChange: (statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[], paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[]) => void;
   isLoading: boolean;
   initialFormValues: { statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[]; paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[] };
+  onPurchaseAfterChange: (cursor: string | undefined) => void;
+  purchaseSourceType: string;
+  purchaseLifecycleState: string;
+  onPurchaseFiltersChange: (sourceType: string, lifecycleState: string) => void;
+  purchaseSort: string;
+  onPurchaseSortChange: (sort: string) => void;
 };
 
 const getCustomerDisplayName = (customer: { name?: string | null; givenName?: string | null; middleName?: string | null; familyName?: string | null }) => {
@@ -246,7 +329,20 @@ const getCustomerDisplayName = (customer: { name?: string | null; givenName?: st
   return structuredName || customer.name || 'Customer';
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, onFiltersChange, isLoading, initialFormValues }: Props) => {
+const RootPage = ({
+  queryReference,
+  onReloadRequired,
+  organizationCustomDomain,
+  onFiltersChange,
+  isLoading,
+  initialFormValues,
+  onPurchaseAfterChange,
+  purchaseSourceType,
+  purchaseLifecycleState,
+  onPurchaseFiltersChange,
+  purchaseSort,
+  onPurchaseSortChange,
+}: Props) => {
   const prevFiltersRef = useRef({ statuses: initialFormValues.statuses, paymentStatuses: initialFormValues.paymentStatuses });
   const rootData = usePreloadedQuery<pageOrganizationSubscriptions_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
@@ -638,6 +734,41 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
                 <Box sx={{ width: 'min(100%, 300px)' }}>
                   <MultipleChoicesMarketplaceBookingPaymentStatuses rootDataRelay={rootData} name="paymentStatuses" label="Payment status" />
                 </Box>
+                <TextField
+                  select
+                  size="small"
+                  label="Purchase type"
+                  value={purchaseSourceType}
+                  onChange={(event) => onPurchaseFiltersChange(event.target.value, purchaseLifecycleState)}
+                  sx={{ minWidth: 180 }}
+                >
+                  <MenuItem value="">All purchase types</MenuItem>
+                  <MenuItem value="BOOKING">One-time booking</MenuItem>
+                  <MenuItem value="SUBSCRIPTION">Subscription</MenuItem>
+                </TextField>
+                <TextField
+                  select
+                  size="small"
+                  label="Lifecycle"
+                  value={purchaseLifecycleState}
+                  onChange={(event) => onPurchaseFiltersChange(purchaseSourceType, event.target.value)}
+                  sx={{ minWidth: 180 }}
+                >
+                  <MenuItem value="">All lifecycle states</MenuItem>
+                  <MenuItem value="ACTIVE">Active</MenuItem>
+                  <MenuItem value="CANCELLED">Canceled</MenuItem>
+                  <MenuItem value="DELETED">Deleted</MenuItem>
+                  <MenuItem value="EXPIRED">Expired</MenuItem>
+                  <MenuItem value="PAYMENT_FAILED">Payment failed</MenuItem>
+                  <MenuItem value="PENDING">Pending</MenuItem>
+                </TextField>
+                <TextField select size="small" label="Sort purchases" value={purchaseSort} onChange={(event) => onPurchaseSortChange(event.target.value)} sx={{ minWidth: 190 }}>
+                  <MenuItem value="ACTIVITY_DESC">Newest activity</MenuItem>
+                  <MenuItem value="ACTIVITY_ASC">Oldest activity</MenuItem>
+                  <MenuItem value="PURCHASED_DESC">Newest purchase</MenuItem>
+                  <MenuItem value="BOOKING_FROM_ASC">Booking start</MenuItem>
+                  <MenuItem value="BOOKING_UNTIL_ASC">Booking end</MenuItem>
+                </TextField>
               </GridContainer>
             </>
           )}
@@ -652,11 +783,78 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
         <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pb: defaultPadding }} spacing={2}>
           <PageHeaderPanel
-            title="Marketplace subscriptions"
-            description="Review customer subscriptions, update recurring payments, manage refunds, and stop future billing now or at the end of the current period."
+            title="Marketplace purchases"
+            description="Review retained marketplace purchases, including subscriptions and one-time bookings, manage payments and refunds, and inspect their history."
           />
 
           {pageToolbar}
+
+          {rootData.marketplacePurchases.totalCount > 0 && (
+            <Box sx={{ ...surfaceSx, p: 2 }}>
+              <SubtitleIconTypography label={`All marketplace purchases (${rootData.marketplacePurchases.totalCount})`} />
+              <StackColumn
+                spacing={1}
+                sx={{ mt: 1, display: viewMode === 'card' ? 'grid' : 'flex', gridTemplateColumns: viewMode === 'card' ? 'repeat(auto-fit, minmax(280px, 1fr))' : undefined }}
+              >
+                {rootData.marketplacePurchases.edges.map(({ node }) => (
+                  <Box
+                    key={node.id}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      gap: 2,
+                      alignItems: 'center',
+                      p: viewMode === 'card' ? 1.5 : 0,
+                      border: viewMode === 'card' ? 1 : 0,
+                      borderColor: 'divider',
+                      borderRadius: 2,
+                    }}
+                  >
+                    <StackColumn spacing={0}>
+                      <BodyIconTypography label={formatMarketplacePurchaseDisplay(node).source} />
+                      <SmallIconTypography
+                        label={`Activity ${new Date(node.activityAt).toLocaleString()} · ${node.renewalStateName} · Payment ${node.paymentStatus}`}
+                        sx={{ opacity: 0.72 }}
+                      />
+                      <SmallIconTypography
+                        label={`${formatMarketplacePurchaseDisplay(node).product} · Customer ${formatMarketplacePurchaseDisplay(node).customer}${node.bookingFrom ? ` · Booking ${new Date(node.bookingFrom).toLocaleString()}–${node.bookingUntil ? new Date(node.bookingUntil).toLocaleString() : 'open'}` : ''}`}
+                        sx={{ opacity: 0.62 }}
+                      />
+                      {formatMarketplacePurchaseInactiveEvidence(node).lifecycle ? (
+                        <SmallIconTypography
+                          label={`${formatMarketplacePurchaseInactiveEvidence(node).lifecycle}${formatMarketplacePurchaseInactiveEvidence(node).actor ? ` by ${formatMarketplacePurchaseInactiveEvidence(node).actor}` : ''}${formatMarketplacePurchaseInactiveEvidence(node).reason ? ` · Reason: ${formatMarketplacePurchaseInactiveEvidence(node).reason}` : ''}`}
+                          sx={{ opacity: 0.72 }}
+                        />
+                      ) : null}
+                      {node.refund ? (
+                        <SmallIconTypography label={`Refund ${node.refund.status.name} · ${node.refund.events.length} timeline events`} sx={{ opacity: 0.72 }} />
+                      ) : null}
+                      {node.refundId ? (
+                        <Button size="small" onClick={() => router.push(getOrganizationRefundBaseLink(integratedPlatform, organizationCustomDomain, node.refundId!))}>
+                          View refund
+                        </Button>
+                      ) : null}
+                    </StackColumn>
+                    <SmallIconTypography
+                      label={`${node.totalAmount ?? 'Amount unavailable'} ${node.currency ?? ''} · ${node.isDeleted ? 'Deleted record' : node.lifecycleStateName}`}
+                      sx={{ opacity: 0.78 }}
+                    />
+                  </Box>
+                ))}
+              </StackColumn>
+              <StackRow sx={{ mt: 2, justifyContent: 'flex-end' }}>
+                <Button disabled={!rootData.marketplacePurchases.pageInfo.hasPreviousPage} onClick={() => onPurchaseAfterChange(undefined)}>
+                  Previous
+                </Button>
+                <Button
+                  disabled={!rootData.marketplacePurchases.pageInfo.hasNextPage}
+                  onClick={() => onPurchaseAfterChange(rootData.marketplacePurchases.pageInfo.endCursor ?? undefined)}
+                >
+                  Next
+                </Button>
+              </StackRow>
+            </Box>
+          )}
 
           {isLoading && <LinearProgress />}
 
@@ -666,11 +864,11 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
             </Box>
           ) : subscriptions.length === 0 ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
-              <SmallIconTypography label="This organization does not have any subscriptions yet." sx={{ opacity: 0.78 }} />
+              <SmallIconTypography label="This organization does not have any marketplace purchases yet." sx={{ opacity: 0.78 }} />
             </Box>
           ) : filteredSubscriptions.length === 0 ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>
-              <SmallIconTypography label="No subscriptions match current filters." sx={{ opacity: 0.78 }} />
+              <SmallIconTypography label="No marketplace purchases match the current filters." sx={{ opacity: 0.78 }} />
             </Box>
           ) : viewMode === 'list' ? (
             <Box sx={{ ...surfaceSx, p: 1.5 }}>
@@ -972,6 +1170,10 @@ const RootPageWithRelay = () => {
   const [selectedPaymentStatuses, setSelectedPaymentStatuses] = useState<SupportedMarketplaceBookingPaymentStatusForFilter[]>(
     () => searchParams.get('paymentStatuses')?.split(',').filter(isSupportedMarketplaceBookingPaymentStatusForFilter) ?? [],
   );
+  const [purchaseAfter, setPurchaseAfter] = useState<string | undefined>();
+  const [purchaseSourceType, setPurchaseSourceType] = useState(() => searchParams.get('purchaseSourceType') ?? '');
+  const [purchaseLifecycleState, setPurchaseLifecycleState] = useState(() => searchParams.get('purchaseLifecycleState') ?? '');
+  const [purchaseSort, setPurchaseSort] = useState(() => searchParams.get('purchaseSort') ?? 'ACTIVITY_DESC');
   const initialFormValues = useMemo(
     () => ({ statuses: selectedStatuses, paymentStatuses: selectedPaymentStatuses }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -984,12 +1186,35 @@ const RootPageWithRelay = () => {
         organizationCustomDomain,
         statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
         paymentStatuses: selectedPaymentStatuses.length > 0 ? selectedPaymentStatuses : undefined,
+        ...buildMarketplacePurchaseQueryVariables({ after: purchaseAfter, sourceType: purchaseSourceType, lifecycleState: purchaseLifecycleState, sort: purchaseSort }),
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationCustomDomain, selectedStatuses, selectedPaymentStatuses]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain, selectedStatuses, selectedPaymentStatuses, purchaseAfter, purchaseSourceType, purchaseLifecycleState, purchaseSort]);
+
+  const handlePurchaseFiltersChange = useCallback(
+    (sourceType: string, lifecycleState: string) => {
+      startTransition(() => {
+        setPurchaseSourceType(sourceType);
+        setPurchaseLifecycleState(lifecycleState);
+        setPurchaseAfter(undefined);
+        const qs = updateMarketplacePurchaseSearchParams(searchParams.toString(), { sourceType, lifecycleState });
+        router.replace(qs ? `?${qs}` : pathname);
+      });
+    },
+    [pathname, router, searchParams],
+  );
+  const handlePurchaseSortChange = useCallback(
+    (sort: string) => {
+      setPurchaseSort(sort);
+      setPurchaseAfter(undefined);
+      const qs = updateMarketplacePurchaseSearchParams(searchParams.toString(), { sourceType: purchaseSourceType, lifecycleState: purchaseLifecycleState, sort });
+      router.replace(`?${qs}`);
+    },
+    [purchaseLifecycleState, purchaseSourceType, router, searchParams],
+  );
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -1033,6 +1258,12 @@ const RootPageWithRelay = () => {
         onFiltersChange={handleFiltersChange}
         isLoading={isPending}
         initialFormValues={initialFormValues}
+        onPurchaseAfterChange={setPurchaseAfter}
+        purchaseSourceType={purchaseSourceType}
+        purchaseLifecycleState={purchaseLifecycleState}
+        onPurchaseFiltersChange={handlePurchaseFiltersChange}
+        purchaseSort={purchaseSort}
+        onPurchaseSortChange={handlePurchaseSortChange}
       />
     </ErrorBoundary>
   );

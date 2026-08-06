@@ -7,7 +7,7 @@ await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), CancellationToken.None);
 
 var builder = DistributedApplication.CreateBuilder(args);
-builder.AddGraphQLOrchestrator();
+builder.AddNitroComposition();
 var redpanda = builder
     .AddContainer("redpanda", "redpandadata/redpanda", "latest")
     .WithEndpoint(targetPort: 19092, name: "kafka")
@@ -25,7 +25,7 @@ redpanda.WithArgs(async context =>
                  "redpanda", "start", "--overprovisioned", "--smp", "1", "--memory", "1G", "--reserve-memory", "0M", "--node-id", "0",
                  "--check=false", "--kafka-addr", "internal://0.0.0.0:29092,external://0.0.0.0:19092", "--advertise-kafka-addr",
                  $"internal://redpanda:29092,external://localhost:{kafkaPort}", "--schema-registry-addr", "0.0.0.0:8081", "--rpc-addr",
-                 "redpanda:33145", "--advertise-rpc-addr", "redpanda:33145"
+                 "redpanda:33145", "--advertise-rpc-addr", "redpanda:33145",
              })
     {
         context.Args.Add(argument);
@@ -79,7 +79,7 @@ var bookingApi = builder
     .WaitFor(redis)
     .WaitFor(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure)
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLHttpEndpoint();
 
 var bookingProcessors = builder
     .AddProject<Booking_Processors>("bookingprocessors")
@@ -143,7 +143,7 @@ var coreApi = builder
     .WaitFor(redis)
     .WaitFor(coreDatabase)
     .WaitForCompletion(coreInfrastructure)
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLHttpEndpoint();
 
 var coreProcessors = builder
     .AddProject<Core_Processors>("coreprocessors")
@@ -207,7 +207,7 @@ var customerApi = builder
     .WaitFor(redis)
     .WaitFor(customerDatabase)
     .WaitForCompletion(customerInfrastructure)
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLHttpEndpoint();
 
 var customerProcessors = builder
     .AddProject<Customer_Processors>("customerprocessors")
@@ -271,7 +271,7 @@ var locationApi = builder
     .WaitFor(redis)
     .WaitFor(locationDatabase)
     .WaitForCompletion(locationInfrastructure)
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLHttpEndpoint();
 
 var locationProcessors = builder
     .AddProject<Location_Processors>("locationprocessors")
@@ -335,7 +335,7 @@ var marketplaceApi = builder
     .WaitFor(redis)
     .WaitFor(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure)
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLHttpEndpoint();
 
 var marketplaceProcessors = builder
     .AddProject<Marketplace_Processors>("marketplaceprocessors")
@@ -399,7 +399,7 @@ var msteamsApi = builder
     .WaitFor(redis)
     .WaitFor(msteamsDatabase)
     .WaitForCompletion(msteamsInfrastructure)
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLHttpEndpoint();
 
 var msteamsProcessors = builder
     .AddProject<MsTeams_Processors>("msteamsprocessors")
@@ -463,7 +463,7 @@ var organizationApi = builder
     .WaitFor(redis)
     .WaitFor(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure)
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLHttpEndpoint();
 
 var organizationProcessors = builder
     .AddProject<Organization_Processors>("organizationprocessors")
@@ -527,7 +527,7 @@ var slackApi = builder
     .WaitFor(redis)
     .WaitFor(slackDatabase)
     .WaitForCompletion(slackInfrastructure)
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLHttpEndpoint();
 
 var slackProcessors = builder
     .AddProject<Slack_Processors>("slackprocessors")
@@ -591,7 +591,7 @@ var teamApi = builder
     .WaitFor(redis)
     .WaitFor(teamDatabase)
     .WaitForCompletion(teamInfrastructure)
-    .WithGraphQLSchemaEndpoint();
+    .WithGraphQLHttpEndpoint();
 
 var teamProcessors = builder
     .AddProject<Team_Processors>("teamprocessors")
@@ -646,7 +646,11 @@ _ = builder
     .WithEnvironment("Subgraphs__slack-api__Url", $"{slackApi.GetEndpoint("http")}/v1/graphql")
     .WithEnvironment("Subgraphs__team-api__Url", $"{teamApi.GetEndpoint("http")}/v1/graphql")
     .WithHttpHealthCheck(Constants.ReadinessPath)
-    .WithGraphQLSchemaComposition()
+    .WithNitroComposition(
+        new GraphQLCompositionSettings
+        {
+            EnableGlobalObjectIdentification = true,
+        })
     .WithReference(bookingApi)
     .WaitFor(bookingApi)
     .WithReference(coreApi)
@@ -671,7 +675,7 @@ foreach (var project in new[]
              bookingApi, bookingProcessors, bookingJobs, coreApi, coreProcessors, coreJobs, customerApi, customerProcessors, customerJobs,
              locationApi, locationProcessors, locationJobs, marketplaceApi, marketplaceProcessors, marketplaceJobs, msteamsApi, msteamsProcessors,
              msteamsJobs, organizationApi, organizationProcessors, organizationJobs, slackApi, slackProcessors, slackJobs, teamApi,
-             teamProcessors, teamJobs
+             teamProcessors, teamJobs,
          })
 {
     ConfigureGrpcUrls(project, bookingApi, coreApi, customerApi, locationApi, marketplaceApi, msteamsApi, organizationApi, slackApi, teamApi);

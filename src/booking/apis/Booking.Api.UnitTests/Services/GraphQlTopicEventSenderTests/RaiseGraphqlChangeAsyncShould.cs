@@ -11,9 +11,12 @@ public class RaiseGraphqlChangeAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Remove_Booking_Cache_And_Send_Event_When_Topic_Is_Booking(
-        [Frozen] ITopicEventSender topicEventSender,
-        [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
+        [Frozen]
+        ITopicEventSender topicEventSender,
+        [Frozen]
+        ICachedBookingService cachedBookingService,
+        [Frozen]
+        ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
         GraphQlTopicEventSender sut,
         string id,
         CancellationToken cancellationToken)
@@ -31,9 +34,12 @@ public class RaiseGraphqlChangeAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Remove_Subscription_Cache_And_Send_Event_When_Topic_Is_Marketplace_Booking_Subscription(
-        [Frozen] ITopicEventSender topicEventSender,
-        [Frozen] ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
-        [Frozen] ICachedBookingService cachedBookingService,
+        [Frozen]
+        ITopicEventSender topicEventSender,
+        [Frozen]
+        ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
+        [Frozen]
+        ICachedBookingService cachedBookingService,
         GraphQlTopicEventSender sut,
         string id,
         CancellationToken cancellationToken)
@@ -51,9 +57,12 @@ public class RaiseGraphqlChangeAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Only_Send_Event_When_Topic_Does_Not_Require_Cache_Invalidation(
-        [Frozen] ITopicEventSender topicEventSender,
-        [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
+        [Frozen]
+        ITopicEventSender topicEventSender,
+        [Frozen]
+        ICachedBookingService cachedBookingService,
+        [Frozen]
+        ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
         GraphQlTopicEventSender sut,
         string topicName,
         string id,

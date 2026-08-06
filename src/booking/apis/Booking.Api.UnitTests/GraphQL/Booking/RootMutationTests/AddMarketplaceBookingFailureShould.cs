@@ -15,8 +15,10 @@ public class AddMarketplaceBookingFailureShould
     [Theory]
     [AutoFakeItEasyData([typeof(BookingFailureQueryFixtureCustomizer)])]
     public async Task Return_Failure_Details_When_Availability_Conflict_Is_Finalized(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] ApiMarketplaceBookingService marketplaceBookingService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        ApiMarketplaceBookingService marketplaceBookingService,
         RootMutation sut,
         AddMarketplaceBookingInput input,
         MarketplaceBookingFailure failure,
@@ -41,8 +43,10 @@ public class AddMarketplaceBookingFailureShould
     [Theory]
     [AutoFakeItEasyData([typeof(BookingFailureQueryFixtureCustomizer)])]
     public async Task Return_Availability_Error_When_Conflict_Has_No_Finalized_Failure(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] ApiMarketplaceBookingService marketplaceBookingService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        ApiMarketplaceBookingService marketplaceBookingService,
         RootMutation sut,
         AddMarketplaceBookingInput input,
         IReadOnlyCollection<string> unavailableResourceIds,
@@ -63,8 +67,10 @@ public class AddMarketplaceBookingFailureShould
     [Theory]
     [AutoFakeItEasyData([typeof(BookingFailureQueryFixtureCustomizer)])]
     public async Task Return_Booking_On_Success(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] ApiMarketplaceBookingService marketplaceBookingService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        ApiMarketplaceBookingService marketplaceBookingService,
         RootMutation sut,
         AddMarketplaceBookingInput input,
         Shared.Models.Booking bookingModel,

@@ -15,13 +15,20 @@ public class ConfirmBankTransferReceivedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Complete_An_Approved_Bank_Transfer_Workflow(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IMarketplaceRefundTransitionService refundTransitionService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IMarketplaceRefundTransitionService refundTransitionService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
@@ -41,9 +48,9 @@ public class ConfirmBankTransferReceivedAsyncShould
                     SourceCapturedAmount = 100,
                     AllocatedRefundAmount = 0,
                     IsSourcePayment = true,
-                    Currency = "USD"
-                }
-            ]
+                    Currency = "USD",
+                },
+            ],
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -70,11 +77,16 @@ public class ConfirmBankTransferReceivedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_When_The_Bank_Transfer_Reference_Is_Missing(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
@@ -84,7 +96,7 @@ public class ConfirmBankTransferReceivedAsyncShould
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "booking-1",
-            Status = MarketplaceRefundStatusConstants.Processing
+            Status = MarketplaceRefundStatusConstants.Processing,
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);

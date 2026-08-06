@@ -91,7 +91,7 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
             OrganizationBillingCycle.Weekly => startInclusive.AddDays(7),
             OrganizationBillingCycle.Fortnightly => startInclusive.AddDays(14),
             OrganizationBillingCycle.Monthly => startInclusive.AddMonths(1),
-            _ => throw new ArgumentOutOfRangeException(nameof(organizationBillingCycle))
+            _ => throw new ArgumentOutOfRangeException(nameof(organizationBillingCycle)),
         };
 
     private static DateTimeOffset ResolveRecurringBookingCycleEndExclusive(RecurringBooking recurringBooking)
@@ -109,7 +109,7 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
             ProductPricingCadence.FiveMonths => recurringBooking.StartDate.AddMonths(5),
             ProductPricingCadence.SixMonths => recurringBooking.StartDate.AddMonths(6),
             ProductPricingCadence.Yearly => recurringBooking.StartDate.AddYears(1),
-            _ => recurringBooking.StartDate.AddDays(1)
+            _ => recurringBooking.StartDate.AddDays(1),
         };
     }
 

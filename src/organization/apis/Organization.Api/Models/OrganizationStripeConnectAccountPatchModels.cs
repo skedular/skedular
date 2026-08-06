@@ -5,7 +5,7 @@ namespace Organization.Api.Models;
 [GraphQLName("OrganizationStripeConnectAccountPatchField")]
 public enum OrganizationStripeConnectAccountPatchField
 {
-    Name
+    Name,
 }
 
 public record OrganizationStripeConnectAccountPatchRequest(

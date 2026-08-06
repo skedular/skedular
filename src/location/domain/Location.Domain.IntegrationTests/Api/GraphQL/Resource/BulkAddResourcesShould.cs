@@ -42,8 +42,11 @@ public class BulkAddResourcesShould(
             CreatedAt = now,
             Offering = new Offering
             {
-                Id = await Nanoid.GenerateAsync(), Code = OfferingCode.EnterpriseCustomV1, Start = now.AddYears(-1), End = now.AddYears(1)
-            }
+                Id = await Nanoid.GenerateAsync(),
+                Code = OfferingCode.EnterpriseCustomV1,
+                Start = now.AddYears(-1),
+                End = now.AddYears(1),
+            },
         };
         var location = new LocationEntity
         {
@@ -51,7 +54,7 @@ public class BulkAddResourcesShould(
             Name = "Bulk Import Test Location",
             OrganizationId = organizationId,
             Type = LocationTypeConstants.Private,
-            CreatedAt = now
+            CreatedAt = now,
         };
         var resourceTypeTag = new OrganizationTag
         {
@@ -59,10 +62,19 @@ public class BulkAddResourcesShould(
             Type = tagType,
             Name = tagName,
             Organization = organization,
-            CreatedAt = now
+            CreatedAt = now,
         };
-        var customer = new Customer { Id = customerId, CreatedAt = now };
-        var identity = new Identity { Id = verifiableToken, Customer = customer, CreatedAt = now };
+        var customer = new Customer
+        {
+            Id = customerId,
+            CreatedAt = now,
+        };
+        var identity = new Identity
+        {
+            Id = verifiableToken,
+            Customer = customer,
+            CreatedAt = now,
+        };
         var member = new OrganizationMember
         {
             Id = memberId,
@@ -70,7 +82,7 @@ public class BulkAddResourcesShould(
             CustomerId = customerId,
             Role = OrganizationMemberRoleConstants.Owner,
             Status = OrganizationMemberStatusConstants.Active,
-            CreatedAt = now
+            CreatedAt = now,
         };
 
         await repositoryFactory.DbContext.Organization.AddAsync(organization, cancellationToken);
@@ -104,7 +116,7 @@ public class BulkAddResourcesShould(
             Type = tagType,
             Name = resourceName,
             Organization = location!.Organization,
-            CreatedAt = now
+            CreatedAt = now,
         };
         var resource = new ResourceEntity
         {
@@ -112,7 +124,7 @@ public class BulkAddResourcesShould(
             Name = resourceName,
             CreatedAt = now,
             Location = location,
-            OrganizationTags = [tag]
+            OrganizationTags = [tag],
         };
 
         await repositoryFactory.DbContext.OrganizationTag.AddAsync(tag, cancellationToken);
@@ -141,8 +153,8 @@ public class BulkAddResourcesShould(
                     Quantity = 3,
                     CustomTagIds = [],
                     ZoneIds = [],
-                    ProductTagIds = []
-                }
+                    ProductTagIds = [],
+                },
             ];
 
             var result = await bulkAddResourcesMutation.ExecuteAsync(locationId, rows, cancellationToken);
@@ -189,7 +201,7 @@ public class BulkAddResourcesShould(
                     Quantity = 1,
                     CustomTagIds = [],
                     ZoneIds = [],
-                    ProductTagIds = []
+                    ProductTagIds = [],
                 },
                 new()
                 {
@@ -198,8 +210,8 @@ public class BulkAddResourcesShould(
                     Quantity = 1,
                     CustomTagIds = [],
                     ZoneIds = [],
-                    ProductTagIds = []
-                }
+                    ProductTagIds = [],
+                },
             ];
 
             var result = await bulkAddResourcesMutation.ExecuteAsync(locationId, rows, cancellationToken);
@@ -241,8 +253,8 @@ public class BulkAddResourcesShould(
                     Quantity = 2,
                     CustomTagIds = [],
                     ZoneIds = [],
-                    ProductTagIds = []
-                }
+                    ProductTagIds = [],
+                },
             ];
 
             var result = await bulkAddResourcesMutation.ExecuteAsync(locationId, rows, cancellationToken);
@@ -285,8 +297,8 @@ public class BulkAddResourcesShould(
                     Quantity = 2,
                     CustomTagIds = [],
                     ZoneIds = [],
-                    ProductTagIds = []
-                }
+                    ProductTagIds = [],
+                },
             ];
 
             var result = await bulkAddResourcesMutation.ExecuteAsync(locationId, rows, cancellationToken);
@@ -323,8 +335,8 @@ public class BulkAddResourcesShould(
                 Quantity = 101,
                 CustomTagIds = [],
                 ZoneIds = [],
-                ProductTagIds = []
-            }
+                ProductTagIds = [],
+            },
         ];
 
         var result = await bulkAddResourcesMutation.ExecuteAsync(locationId, rows, cancellationToken);

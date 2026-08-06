@@ -42,7 +42,10 @@ public class AzureEntraTokenService(
                 {
                     cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddMinutes(15);
 
-                    var documentRetriever = new HttpDocumentRetriever { RequireHttps = true };
+                    var documentRetriever = new HttpDocumentRetriever
+                    {
+                        RequireHttps = true,
+                    };
                     var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
                         $"{authority}/.well-known/openid-configuration",
                         new OpenIdConnectConfigurationRetriever(),
@@ -64,7 +67,7 @@ public class AzureEntraTokenService(
                     ValidAudience = azureEntraConfiguration.ClientId,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKeys = openIdConnectConfiguration.SigningKeys,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
                 });
 
             if (!Guid.TryParse(tenantId, out var tenant))

@@ -9,7 +9,8 @@ public class AddCustomerStripePaymentMethodShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_The_Deterministic_Workflow_Id(
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen]
+        ITemporalHelperService temporalHelperService,
         WorkflowIdService sut,
         string clientSecret,
         string expectedWorkflowId)

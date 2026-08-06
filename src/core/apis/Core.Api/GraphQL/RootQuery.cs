@@ -11,6 +11,12 @@ public class RootQuery(IVersionService versionService)
     {
         var version = versionService.GetVersion();
 
-        return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
+        return new Version
+        {
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
+        };
     }
 }

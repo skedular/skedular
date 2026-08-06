@@ -16,30 +16,55 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task AddAsync_Throws_MarketplaceEventProductRecurringBookingNotSupported_When_Product_Is_Event(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         MarketplaceBookingSubscriptionService sut,
         ICustomerRepository customerRepository,
         IProductVersionRepository productVersionRepository,
         CancellationToken cancellationToken)
     {
-        var customer = new Customer { Id = "customer-1" };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
         var subscription = new Shared.Models.MarketplaceBookingSubscription
         {
-            InvolvedCustomers = [new Shared.Models.Customer { Id = "customer-1" }],
+            InvolvedCustomers =
+            [
+                new Shared.Models.Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
             MarketplaceBooking = new Shared.Models.MarketplaceBooking
             {
-                ProductVersion = new ProductVersion { Id = "product-version-1" },
+                ProductVersion = new ProductVersion
+                {
+                    Id = "product-version-1",
+                },
                 ProductPricing = ProductPricing.Empty("pricing-1"),
-                PaymentMethod = PaymentMethod.Card
-            }
+                PaymentMethod = PaymentMethod.Card,
+            },
         };
         var productVersion = new Database.Entities.ProductVersion
         {
             Id = "product-version-1",
             Type = ProductTypeConstants.Event,
-            OrganizationTags = [new OrganizationTag { Type = OrganizationTagTypeConstants.Product }],
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Type = OrganizationTagTypeConstants.Product,
+                },
+            ],
             PricingOptions = [ProductPricing.Empty("pricing-1")],
-            Product = new Product { Organization = new Organization { Id = "org-1" } }
+            Product = new Product
+            {
+                Organization = new Organization
+                {
+                    Id = "org-1",
+                },
+            },
         };
 
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -56,11 +81,16 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task AddAsync_Uses_Selected_Weekly_Days_Instead_Of_The_Subscription_Start_Date(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IProductVersionHelperService productVersionHelperService,
-        [Frozen] IMarketplaceBookingWeeklyDaySelectionService marketplaceBookingWeeklyDaySelectionService,
-        [Frozen] IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IProductVersionHelperService productVersionHelperService,
+        [Frozen]
+        IMarketplaceBookingWeeklyDaySelectionService marketplaceBookingWeeklyDaySelectionService,
+        [Frozen]
+        IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
         MarketplaceBookingSubscriptionService sut,
         ICustomerRepository customerRepository,
         IResourceRepository resourceRepository,
@@ -68,8 +98,14 @@ public class MarketplaceBookingSubscriptionServiceShould
         IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)
     {
-        var customer = new Customer { Id = "customer-1" };
-        var resource = new Resource { Id = "resource-1" };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var resource = new Resource
+        {
+            Id = "resource-1",
+        };
         var pricing = ProductPricing.Empty("weekly-price") with
         {
             PurchaseCadence = ProductPricingCadence.Weekly,
@@ -77,26 +113,57 @@ public class MarketplaceBookingSubscriptionServiceShould
             RequiredDaysPerWeek = 2,
             AvailableDays = [DayOfWeek.Tuesday, DayOfWeek.Wednesday],
             AcceptedPaymentMethods = [PaymentMethod.Card],
-            NumberOfResourcesToBook = 1
+            NumberOfResourcesToBook = 1,
         };
         var subscription = new Shared.Models.MarketplaceBookingSubscription
         {
             StartedAt = new DateTimeOffset(2026, 3, 16, 0, 0, 0, TimeSpan.Zero), // Monday
-            InvolvedCustomers = [new Shared.Models.Customer { Id = customer.Id }],
-            RequestedResources = [new Shared.Models.Resource { Id = resource.Id }],
+            InvolvedCustomers =
+            [
+                new Shared.Models.Customer
+                {
+                    Id = customer.Id,
+                },
+            ],
+            RequestedResources =
+            [
+                new Shared.Models.Resource
+                {
+                    Id = resource.Id,
+                },
+            ],
             MarketplaceBooking = new Shared.Models.MarketplaceBooking
             {
-                ProductVersion = new ProductVersion { Id = "product-version-1" }, ProductPricing = pricing, PaymentMethod = PaymentMethod.Card
+                ProductVersion = new ProductVersion
+                {
+                    Id = "product-version-1",
+                },
+                ProductPricing = pricing,
+                PaymentMethod = PaymentMethod.Card,
             },
-            WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Wednesday]
+            WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Wednesday],
         };
         var productVersion = new Database.Entities.ProductVersion
         {
             Id = "product-version-1",
             Type = ProductTypeConstants.Resource,
-            OrganizationTags = [new OrganizationTag { Id = "tag-1", Type = OrganizationTagTypeConstants.Product }],
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Id = "tag-1",
+                    Type = OrganizationTagTypeConstants.Product,
+                },
+            ],
             PricingOptions = [pricing],
-            Product = new Product { Organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Host } }
+            Product = new Product
+            {
+                Organization = new Organization
+                {
+                    Id = "org-1",
+                    Type = OrganizationTypeConstants.Host,
+                },
+            },
         };
         var expectedException = new InvalidOperationException("stop after scheduling guards");
 
@@ -134,7 +201,8 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Throws_MarketplaceBookingSubscriptionCancellationNotAllowed_When_User_Delete_Has_No_Cancellation_Policy(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -157,7 +225,8 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Throws_MarketplaceBookingSubscriptionCancellationNotAllowed_When_User_Delete_Is_After_Cancellation_Deadline(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -180,15 +249,24 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Allows_Operator_Delete_When_Cancellation_Policy_Blocks_Cancellation(
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -200,7 +278,10 @@ public class MarketplaceBookingSubscriptionServiceShould
             now.AddDays(3),
             ProductPricingCancellationPolicyType.NoCancellation,
             []);
-        var deletedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var deletedSubscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            Id = existingSubscription.Id,
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -242,15 +323,24 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Schedules_Cancellation_At_Period_End_When_Requested(
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -263,7 +353,10 @@ public class MarketplaceBookingSubscriptionServiceShould
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(120, 100)]);
         existingSubscription.AutoRenew = true;
-        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            Id = existingSubscription.Id,
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -305,13 +398,20 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Derives_Next_Renewal_At_When_Scheduling_Cancellation_At_Period_End(
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -325,9 +425,12 @@ public class MarketplaceBookingSubscriptionServiceShould
         existingSubscription.AutoRenew = true;
         existingSubscription.MarketplaceBooking.ProductPricing = existingSubscription.MarketplaceBooking.ProductPricing with
         {
-            PurchaseCadence = ProductPricingCadence.Monthly
+            PurchaseCadence = ProductPricingCadence.Monthly,
         };
-        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            Id = existingSubscription.Id,
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -351,13 +454,20 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Allows_At_Period_End_Cancellation_Even_When_Immediate_Cancellation_Window_Has_Passed(
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -369,7 +479,10 @@ public class MarketplaceBookingSubscriptionServiceShould
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(30, 100)]);
         existingSubscription.AutoRenew = true;
-        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            Id = existingSubscription.Id,
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -396,13 +509,20 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Allows_At_Period_End_Cancellation_When_Product_Has_No_Immediate_Cancellation_Policy(
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -414,7 +534,10 @@ public class MarketplaceBookingSubscriptionServiceShould
             ProductPricingCancellationPolicyType.NoCancellation,
             []);
         existingSubscription.AutoRenew = true;
-        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+        var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription
+        {
+            Id = existingSubscription.Id,
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -441,15 +564,24 @@ public class MarketplaceBookingSubscriptionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Preserves_Current_Cycle_Accounting_Billing_Without_Refunding_Current_Period(
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
@@ -458,7 +590,9 @@ public class MarketplaceBookingSubscriptionServiceShould
         subscription.AutoRenew = true;
         var recurringBooking = new RecurringBooking
         {
-            Id = "recurring-1", StartDate = subscription.StartedAt, MarketplaceBooking = subscription.MarketplaceBooking
+            Id = "recurring-1",
+            StartDate = subscription.StartedAt,
+            MarketplaceBooking = subscription.MarketplaceBooking,
         };
         subscription.RecurringBookings = [recurringBooking];
 
@@ -467,7 +601,10 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdForUpdateAsync(subscription.Id, cancellationToken)).Returns(subscription);
-        A.CallTo(() => entityMapper.MapTo(subscription)).Returns(new Shared.Models.MarketplaceBookingSubscription { Id = subscription.Id });
+        A.CallTo(() => entityMapper.MapTo(subscription)).Returns(new Shared.Models.MarketplaceBookingSubscription
+        {
+            Id = subscription.Id,
+        });
 
         await sut.DeleteAsync(subscription, new Customer(), MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd, false, null,
             cancellationToken);
@@ -493,8 +630,9 @@ public class MarketplaceBookingSubscriptionServiceShould
             {
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    CancellationPolicyType = cancellationPolicyType, CancellationRefundRules = cancellationRefundRules
-                }
-            }
+                    CancellationPolicyType = cancellationPolicyType,
+                    CancellationRefundRules = cancellationRefundRules,
+                },
+            },
         };
 }

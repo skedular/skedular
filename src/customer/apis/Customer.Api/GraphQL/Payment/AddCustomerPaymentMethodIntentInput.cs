@@ -7,5 +7,6 @@ namespace Customer.Api.GraphQL.Payment;
 [GraphQLName("AddCustomerPaymentMethodIntentInput")]
 public class AddCustomerPaymentMethodIntentInput
 {
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("clientMutationId")]
+    public string? ClientMutationId { get; set; }
 }

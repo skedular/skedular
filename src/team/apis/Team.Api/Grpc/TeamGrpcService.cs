@@ -33,7 +33,13 @@ public class TeamGrpcService(
     {
         var version = versionService.GetVersion();
 
-        return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
+        return Task.FromResult(new Version
+        {
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
+        });
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Team.Core.V1.Team> Admin_Get(Admin_GetInput request, ServerCallContext context)
@@ -75,7 +81,7 @@ public class TeamGrpcService(
                     TeamOrderField.Name => Shared.Models.TeamOrderField.Name,
                     TeamOrderField.About => Shared.Models.TeamOrderField.About,
                     _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
                 };
 
                 var direction = item.Direction == OrderDirection.Ascending
@@ -92,9 +98,9 @@ public class TeamGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
@@ -119,7 +125,7 @@ public class TeamGrpcService(
             CanModify = permissions.CanModify,
             CanDelete = permissions.CanDelete,
             CanInvitePeople = permissions.CanInvitePeople,
-            CanCancelPeopleExistingInvitations = permissions.CanCancelPeopleExistingInvitations
+            CanCancelPeopleExistingInvitations = permissions.CanCancelPeopleExistingInvitations,
         };
     }
 
@@ -153,7 +159,7 @@ public class TeamGrpcService(
                 TeamPatchField.PrimaryLocation => Models.TeamPatchField.PrimaryLocation,
                 TeamPatchField.FeatureImages => Models.TeamPatchField.FeatureImages,
                 _ => throw new ArgumentOutOfRangeException(nameof(f), f,
-                    $"Unexpected value for {nameof(f)}: {f}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(f)}: {f}. Update enum mapping or caller input."),
             })
             .ToHashSet();
         var hasMembers = protoFields.Contains(TeamPatchField.Members);
@@ -167,7 +173,10 @@ public class TeamGrpcService(
         }
         else
         {
-            var patchFields = new HashSet<TeamAndMembersPatchField> { TeamAndMembersPatchField.Members };
+            var patchFields = new HashSet<TeamAndMembersPatchField>
+            {
+                TeamAndMembersPatchField.Members,
+            };
             if (teamFields.Count > 0)
             {
                 patchFields.Add(TeamAndMembersPatchField.Team);

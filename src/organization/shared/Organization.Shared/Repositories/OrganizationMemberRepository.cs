@@ -145,7 +145,7 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
                 KeysetPaginationField<OrganizationMember>.Create(
                     nameof(Customer.Name),
                     query => query.Customer.Name,
-                    OrderDirection.Ascending)
+                    OrderDirection.Ascending),
             ];
         }
 
@@ -180,7 +180,7 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
                     query => query.Customer.PhoneNumber,
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             })
             .ToList();
     }

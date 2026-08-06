@@ -12,7 +12,7 @@ public class LegacyDecryptShould
     private static EncryptionKeyConfiguration ValidKey => new()
     {
         Key = "12345678901234567890123456789012", // 32 bytes
-        Iv = "1234567890123456" // 16 bytes
+        Iv = "1234567890123456", // 16 bytes
     };
 
     [Theory]

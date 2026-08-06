@@ -41,7 +41,7 @@ public class EntityMapper : IEntityMapper
             Role = src.Role.ToTeamMemberRole(),
             Status = src.Status.ToTeamMemberStatus(),
             Customer = MapTo(src.Customer)!,
-            OrganizationMember = MapTo(src.OrganizationMember)
+            OrganizationMember = MapTo(src.OrganizationMember),
         };
 
     public Models.Team MapTo(Database.Entities.Team src)
@@ -57,7 +57,7 @@ public class EntityMapper : IEntityMapper
             Timezone = src.Timezone,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization = MapTo(src.Organization),
-            PrimaryLocation = MapTo(src.PrimaryLocation)
+            PrimaryLocation = MapTo(src.PrimaryLocation),
         };
 
         team.TeamMembers = MapTo(src.TeamMembers, team).ToList();
@@ -96,7 +96,7 @@ public class EntityMapper : IEntityMapper
             Status = src.Status.ToTeamMemberStatus(),
             Customer = MapTo(src.Customer)!,
             Team = team,
-            OrganizationMember = MapTo(src.OrganizationMember)
+            OrganizationMember = MapTo(src.OrganizationMember),
         };
 
     public JoinInvitation MapTo(Database.Entities.JoinInvitation src) =>
@@ -110,7 +110,7 @@ public class EntityMapper : IEntityMapper
             Role = src.Role.ToTeamMemberRole(),
             Team = MapTo(src.Team),
             CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
+            Invitee = MapTo(src.Invitee),
         };
 
     public IEnumerable<Edge<TeamMember>> MapTo(IEnumerable<Edge<Database.Entities.TeamMember>> src, Models.Team team) =>
@@ -134,7 +134,7 @@ public class EntityMapper : IEntityMapper
                 MiddleName = src.MiddleName,
                 FamilyName = src.FamilyName,
                 Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList()
+                Identities = MapTo(src.Identities).ToList(),
             };
 
     private IEnumerable<TeamMember> MapTo(IEnumerable<Database.Entities.TeamMember> src, Models.Team team) =>
@@ -153,7 +153,7 @@ public class EntityMapper : IEntityMapper
             LogoUrl = src.LogoUrl,
             Offering = src.Offering,
             Type = src.Type.ToOrganizationType(),
-            IsOwnershipVerified = src.IsOwnershipVerified
+            IsOwnershipVerified = src.IsOwnershipVerified,
         };
 
     private OrganizationMember? MapTo(Database.Entities.OrganizationMember? src) =>
@@ -168,7 +168,7 @@ public class EntityMapper : IEntityMapper
                 Role = src.Role.ToNullableOrganizationMemberRole(),
                 Status = src.Status.ToOrganizationMemberStatus(),
                 Customer = MapTo(src.Customer)!,
-                Organization = MapTo(src.Organization)
+                Organization = MapTo(src.Organization),
             };
 
     private static Models.Location? MapTo(Location? src) =>
@@ -180,7 +180,7 @@ public class EntityMapper : IEntityMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt
+                EventRaisedAt = src.EventRaisedAt,
             };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Database.Entities.Identity> src) =>
@@ -194,7 +194,7 @@ public class EntityMapper : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified
+            EmailVerified = src.EmailVerified,
         };
 
     private IEnumerable<JoinInvitation> MapTo(IEnumerable<Database.Entities.JoinInvitation> src, Models.Team team) =>
@@ -210,7 +210,7 @@ public class EntityMapper : IEntityMapper
             Status = src.Status.ToInvitationStatus(),
             Team = team,
             CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
+            Invitee = MapTo(src.Invitee),
         };
 
     private Edge<TeamMember> MapTo(Edge<Database.Entities.TeamMember> src, Models.Team team) =>

@@ -19,7 +19,7 @@ public class EvaluatePerformanceShould
             End = now.AddDays(14),
             SpacesProductEnabled = true,
             SpacesTrialStartedAt = now,
-            SpacesTrialEndsAt = now.AddDays(14)
+            SpacesTrialEndsAt = now.AddDays(14),
         };
         var elapsed = new double[1_000];
 

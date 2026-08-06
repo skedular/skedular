@@ -52,7 +52,7 @@ public class GrpcMapper : IGrpcMapper
                 global::Api.Shared.Services.Models.LocationType.Private => LocationType.Private,
                 global::Api.Shared.Services.Models.LocationType.Marketplace => LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             OpeningHours = MapToGrpcResponse(src.OpeningHours),
             OrganizationId = src.Organization.Id,
@@ -62,7 +62,7 @@ public class GrpcMapper : IGrpcMapper
                     CanView = src.Permissions.CanView,
                     CanModify = src.Permissions.CanModify,
                     CanDelete = src.Permissions.CanDelete,
-                    CanViewAnalytics = src.Permissions.CanViewAnalytics
+                    CanViewAnalytics = src.Permissions.CanViewAnalytics,
                 },
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapToGrpcResponse(src.PhysicalAddress),
@@ -70,7 +70,7 @@ public class GrpcMapper : IGrpcMapper
             ContactedViaEmail = src.ContactedViaEmail,
             ContactedViaSms = src.ContactedViaSms,
             ContactedViaCall = src.ContactedViaCall,
-            ContactedViaWhatsapp = src.ContactedViaWhatsapp
+            ContactedViaWhatsapp = src.ContactedViaWhatsapp,
         };
 
         location.Resources.AddRange(MapToGrpcResponse(src.Resources));
@@ -94,7 +94,7 @@ public class GrpcMapper : IGrpcMapper
             Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
             AvailableHours = src.AvailableHours is null ? null : MapToGrpcResponse(src.AvailableHours),
-            ResourceTypeId = src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)).Id
+            ResourceTypeId = src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)).Id,
         };
 
         resource.CustomTagIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id));
@@ -105,10 +105,18 @@ public class GrpcMapper : IGrpcMapper
     }
 
     public LocationEdge MapToGrpcResponse(Edge<Shared.Models.Location> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+        new()
+        {
+            Cursor = src.Cursor,
+            Node = MapToGrpcResponse(src.Node),
+        };
 
     public ResourceEdge MapToGrpcResponse(Edge<Shared.Models.Resource> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+        new()
+        {
+            Cursor = src.Cursor,
+            Node = MapToGrpcResponse(src.Node),
+        };
 
     public Shared.Models.Location MapTo(Admin_AddInput src) =>
         new()
@@ -122,14 +130,20 @@ public class GrpcMapper : IGrpcMapper
                 LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
-            Organization = new Organization { Id = src.OrganizationId },
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Organization = new Organization
+            {
+                Id = src.OrganizationId,
+            },
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
+            {
+                Id = item,
+            }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
-            UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
+            UniqueClaimCode = src.UniqueClaimCode.ToSafeString(),
         };
 
     public Shared.Models.Location MapTo(Admin_UpdateInput src) =>
@@ -144,14 +158,20 @@ public class GrpcMapper : IGrpcMapper
                 LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
-            Organization = new Organization { Id = src.OrganizationId },
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Organization = new Organization
+            {
+                Id = src.OrganizationId,
+            },
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
+            {
+                Id = item,
+            }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
-            UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
+            UniqueClaimCode = src.UniqueClaimCode.ToSafeString(),
         };
 
     public Shared.Models.Location MapTo(AddInput src) =>
@@ -166,14 +186,20 @@ public class GrpcMapper : IGrpcMapper
                 LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
-            Organization = new Organization { Id = src.OrganizationId },
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Organization = new Organization
+            {
+                Id = src.OrganizationId,
+            },
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
+            {
+                Id = item,
+            }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
-            UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
+            UniqueClaimCode = src.UniqueClaimCode.ToSafeString(),
         };
 
     public Shared.Models.Location MapTo(UpdateInput src) =>
@@ -188,14 +214,20 @@ public class GrpcMapper : IGrpcMapper
                 LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
-            Organization = new Organization { Id = src.OrganizationId },
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Organization = new Organization
+            {
+                Id = src.OrganizationId,
+            },
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
+            {
+                Id = item,
+            }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
-            UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
+            UniqueClaimCode = src.UniqueClaimCode.ToSafeString(),
         };
 
     public Shared.Models.Resource MapTo(AddResourceInput src) =>
@@ -207,8 +239,14 @@ public class GrpcMapper : IGrpcMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
             Capacity = src.Capacity,
-            Location = new Shared.Models.Location { Id = src.LocationId },
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            Location = new Shared.Models.Location
+            {
+                Id = src.LocationId,
+            },
+            Tags = src.TagIds.Select(item => new OrganizationTag
+            {
+                Id = item,
+            }).ToList(),
         };
 
     public Shared.Models.Resource MapTo(UpdateResourceInput src) =>
@@ -220,7 +258,10 @@ public class GrpcMapper : IGrpcMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
             Capacity = src.Capacity,
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            Tags = src.TagIds.Select(item => new OrganizationTag
+            {
+                Id = item,
+            }).ToList(),
         };
 
     private IEnumerable<Resource> MapToGrpcResponse(
@@ -241,17 +282,21 @@ public class GrpcMapper : IGrpcMapper
                     Thursday = MapToGrpcDefault(),
                     Friday = MapToGrpcDefault(),
                     Saturday = MapToGrpcDefault(),
-                    Sunday = MapToGrpcDefault()
-                }
+                    Sunday = MapToGrpcDefault(),
+                },
             };
         }
 
         var openingHours =
-            new global::Api.Shared.Grpc.Skedular.Location.Core.V1.OpeningHours { WeekOpeningHours = MapToGrpcResponse(src.WeekOpeningHours) };
+            new global::Api.Shared.Grpc.Skedular.Location.Core.V1.OpeningHours
+            {
+                WeekOpeningHours = MapToGrpcResponse(src.WeekOpeningHours),
+            };
         openingHours.ClosedDates.AddRange(src.ClosedDates.Select(item => item.ToTimestamp()));
         openingHours.DatesWithVariedOpeningHours.AddRange(src.DatesWithVariedOpeningHours.Select(item => new VariedDateOpeningHours
         {
-            Date = item.Key.ToTimestamp(), OpeningHoursDetails = MapToGrpcResponse(item.Value)
+            Date = item.Key.ToTimestamp(),
+            OpeningHoursDetails = MapToGrpcResponse(item.Value),
         }));
 
         return openingHours;
@@ -266,7 +311,7 @@ public class GrpcMapper : IGrpcMapper
             Thursday = MapToGrpcResponse(src.Thursday),
             Friday = MapToGrpcResponse(src.Friday),
             Saturday = MapToGrpcResponse(src.Saturday),
-            Sunday = MapToGrpcResponse(src.Sunday)
+            Sunday = MapToGrpcResponse(src.Sunday),
         };
 
     private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.OpeningHoursDetails MapToGrpcResponse(OpeningHoursDetails src) =>
@@ -275,11 +320,17 @@ public class GrpcMapper : IGrpcMapper
             Closed = src.Closed,
             OpenAllDay = src.OpenAllDay,
             From = src.From is null ? string.Empty : $"{src.From.Value.Hour}:{src.From.Value.Minute}",
-            Until = src.Until is null ? string.Empty : $"{src.Until.Value.Hour}:{src.Until.Value.Minute}"
+            Until = src.Until is null ? string.Empty : $"{src.Until.Value.Hour}:{src.Until.Value.Minute}",
         };
 
     private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.OpeningHoursDetails MapToGrpcDefault() =>
-        new() { Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty };
+        new()
+        {
+            Closed = false,
+            OpenAllDay = true,
+            From = string.Empty,
+            Until = string.Empty,
+        };
 
     private static IEnumerable<global::Api.Shared.Services.Models.CdnImageFile> MapTo(IEnumerable<CdnImageFile> src) =>
         src.Select(MapTo);
@@ -293,10 +344,21 @@ public class GrpcMapper : IGrpcMapper
         src.Select(MapTo);
 
     private static CdnImageFile MapTo(global::Api.Shared.Services.Models.CdnImageFile src) =>
-        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+        new()
+        {
+            Original = MapTo(src.Original),
+            Thumbnail = MapTo(src.Thumbnail),
+        };
 
     private static CdnFile? MapTo(global::Api.Shared.Services.Models.CdnFile? src) =>
-        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
+        src is null
+            ? null
+            : new CdnFile
+            {
+                Url = src.Url.ToSafeString(),
+                Height = src.Height.ToNullInt(),
+                Width = src.Width.ToNullInt(),
+            };
 
     private static LocationExtraMetadata? MapTo(ExtraMetadata? src) =>
         src is null
@@ -331,7 +393,7 @@ public class GrpcMapper : IGrpcMapper
             ContactDetails = MapTo(src.ContactDetails),
             AreaRange = MapTo(src.AreaRange),
             PeopleCapacity = MapTo(src.PeopleCapacity),
-            Website = src.Website.ToSafeString()
+            Website = src.Website.ToSafeString(),
         };
 
         if (src.RelatedImageLinks is not null)
@@ -384,13 +446,18 @@ public class GrpcMapper : IGrpcMapper
             ? null
             : new global::Api.Shared.Grpc.Skedular.Location.Core.V1.AreaRange
             {
-                FromInSqm = src.FromInSqm.ToSafeString(), ToInSqm = src.ToInSqm.ToSafeString()
+                FromInSqm = src.FromInSqm.ToSafeString(),
+                ToInSqm = src.ToInSqm.ToSafeString(),
             };
 
     private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.PeopleCapacity? MapTo(PeopleCapacity? src) =>
         src is null
             ? null
-            : new global::Api.Shared.Grpc.Skedular.Location.Core.V1.PeopleCapacity { From = src.From.ToSafeString(), To = src.To.ToSafeString() };
+            : new global::Api.Shared.Grpc.Skedular.Location.Core.V1.PeopleCapacity
+            {
+                From = src.From.ToSafeString(),
+                To = src.To.ToSafeString(),
+            };
 
     private static PhysicalAddress? MapToGrpcResponse(LocationPhysicalAddress? src) =>
         src is null
@@ -401,7 +468,13 @@ public class GrpcMapper : IGrpcMapper
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
                 PlaceId = src.PlaceId.ToSafeString(),
-                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y },
+                Coordinates = src.Coordinates is null
+                    ? null
+                    : new Coordinates
+                    {
+                        Longitude = src.Coordinates.X,
+                        Latitude = src.Coordinates.Y,
+                    },
                 FormattedAddress = src.FormattedAddress.ToSafeString(),
                 AddressLine1 = src.AddressLine1.ToSafeString(),
                 AddressLine2 = src.AddressLine2.ToSafeString(),
@@ -410,7 +483,7 @@ public class GrpcMapper : IGrpcMapper
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode.ToSafeString(),
                 Country = src.Country.ToSafeString(),
-                CountryCode = src.CountryCode.ToSafeString()
+                CountryCode = src.CountryCode.ToSafeString(),
             };
 
     private static LocationPhysicalAddress? MapTo(PhysicalAddress? src) =>
@@ -434,7 +507,7 @@ public class GrpcMapper : IGrpcMapper
                 Province = src.Province.ToSafeString(),
                 Zipcode = src.Zipcode.ToSafeString(),
                 Country = src.Country.ToSafeString(),
-                CountryCode = src.CountryCode.ToSafeString()
+                CountryCode = src.CountryCode.ToSafeString(),
             };
 
     private static ListingMetadata MapTo(global::Api.Shared.Grpc.Skedular.Location.Core.V1.ListingMetadata? src) =>
@@ -443,5 +516,10 @@ public class GrpcMapper : IGrpcMapper
             : new ListingMetadata(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 
     private static global::Api.Shared.Grpc.Skedular.Location.Core.V1.ListingMetadata MapTo(ListingMetadata src) =>
-        new() { About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString() };
+        new()
+        {
+            About = src.About.ToSafeString(),
+            Title = src.Title.ToSafeString(),
+            SubTitle = src.SubTitle.ToSafeString(),
+        };
 }

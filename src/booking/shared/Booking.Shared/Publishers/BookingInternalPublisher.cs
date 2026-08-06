@@ -18,7 +18,10 @@ public class BookingInternalPublisher(ApplicationConfiguration applicationConfig
 {
     public async Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken)
     {
-        var key = new Key { StripeConnectAccountWebhookKey = id };
+        var key = new Key
+        {
+            StripeConnectAccountWebhookKey = id,
+        };
         var @event = new Event
         {
             Metadata = Event.NewMetadata(
@@ -26,7 +29,7 @@ public class BookingInternalPublisher(ApplicationConfiguration applicationConfig
                 applicationConfiguration.AppSource,
                 Type.StripeConnectAccountWebhookEventReceived,
                 context.GetCorrelationId()),
-            StripeConnectAccountWebhookEventPayload = payload
+            StripeConnectAccountWebhookEventPayload = payload,
         };
 
         await publisher.PublishAsync(key, @event, cancellationToken);
@@ -34,7 +37,10 @@ public class BookingInternalPublisher(ApplicationConfiguration applicationConfig
 
     public async Task PublishXeroWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken)
     {
-        var key = new Key { XeroWebhookKey = id };
+        var key = new Key
+        {
+            XeroWebhookKey = id,
+        };
         var @event = new Event
         {
             Metadata = Event.NewMetadata(
@@ -42,7 +48,7 @@ public class BookingInternalPublisher(ApplicationConfiguration applicationConfig
                 applicationConfiguration.AppSource,
                 Type.XeroWebhookEventReceived,
                 context.GetCorrelationId()),
-            XeroWebhookEventPayload = payload
+            XeroWebhookEventPayload = payload,
         };
 
         await publisher.PublishAsync(key, @event, cancellationToken);

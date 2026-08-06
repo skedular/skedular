@@ -4,7 +4,7 @@ public enum FeedbackChannelType
 {
     Web = 0,
     Slack = 1,
-    MsTeams = 2
+    MsTeams = 2,
 }
 
 public static class FeedbackChannelTypeConstants

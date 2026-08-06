@@ -4,7 +4,7 @@ public enum ResourceAvailabilityClassification
 {
     Available,
     Unavailable,
-    Booked
+    Booked,
 }
 
 public static class ResourceAvailabilityClassificationConstants
@@ -25,7 +25,7 @@ public static class ResourceAvailabilityClassificationExtensions
                 ResourceAvailabilityClassification.Unavailable => ResourceAvailabilityClassificationConstants.Unavailable,
                 ResourceAvailabilityClassification.Booked => ResourceAvailabilityClassificationConstants.Booked,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 
@@ -38,7 +38,7 @@ public static class ResourceAvailabilityClassificationExtensions
                 ResourceAvailabilityClassificationConstants.Unavailable => ResourceAvailabilityClassification.Unavailable,
                 ResourceAvailabilityClassificationConstants.Booked => ResourceAvailabilityClassification.Booked,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 }

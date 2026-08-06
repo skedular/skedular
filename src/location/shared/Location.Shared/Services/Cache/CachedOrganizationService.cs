@@ -33,7 +33,11 @@ public class CachedOrganizationService(
                     async ct =>
                         await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainUntrackedAsync(id, null, false, false, ct) ??
                         throw new OrganizationNotFound(),
-                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                    new HybridCacheEntryOptions
+                    {
+                        Expiration = TimeSpan.FromMinutes(30),
+                        LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                    },
                     cancellationToken: cancellationToken);
             }
 
@@ -49,7 +53,11 @@ public class CachedOrganizationService(
                             false,
                             ct) ??
                         throw new OrganizationNotFound(),
-                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                    new HybridCacheEntryOptions
+                    {
+                        Expiration = TimeSpan.FromMinutes(30),
+                        LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                    },
                     cancellationToken: cancellationToken);
             }
 
@@ -72,7 +80,11 @@ public class CachedOrganizationService(
                 await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainUntrackedAsync(id, null, false, false,
                     cancellationToken) ??
                 throw new OrganizationNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
 
@@ -87,7 +99,11 @@ public class CachedOrganizationService(
                     false,
                     cancellationToken) ??
                 throw new OrganizationNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
     }

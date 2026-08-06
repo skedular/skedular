@@ -13,12 +13,16 @@ public class MarketplaceBookingSubscriptionsWithUnrecognisedStatusShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Warning_For_Unrecognised_Subscription_Status_Value(
-        [Frozen] ILogger<RootQuery> logger,
+        [Frozen]
+        ILogger<RootQuery> logger,
         RootQuery sut,
         IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken)
     {
-        var whereInput = new MarketplaceBookingSubscriptionWhereInput { Statuses = [(MarketplaceBookingSubscriptionStatus)999] };
+        var whereInput = new MarketplaceBookingSubscriptionWhereInput
+        {
+            Statuses = [(MarketplaceBookingSubscriptionStatus)999],
+        };
 
         A.CallTo(() => marketplaceBookingSubscriptionService.GetPaginatedMarketplaceBookingSubscriptionsAsync(
                 A<PaginationInputParam>._,
@@ -45,12 +49,16 @@ public class MarketplaceBookingSubscriptionsWithUnrecognisedStatusShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Warning_For_Unrecognised_Payment_Status_Value(
-        [Frozen] ILogger<RootQuery> logger,
+        [Frozen]
+        ILogger<RootQuery> logger,
         RootQuery sut,
         IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken)
     {
-        var whereInput = new MarketplaceBookingSubscriptionWhereInput { PaymentStatuses = [(PaymentStatus)999] };
+        var whereInput = new MarketplaceBookingSubscriptionWhereInput
+        {
+            PaymentStatuses = [(PaymentStatus)999],
+        };
 
         A.CallTo(() => marketplaceBookingSubscriptionService.GetPaginatedMarketplaceBookingSubscriptionsAsync(
                 A<PaginationInputParam>._,

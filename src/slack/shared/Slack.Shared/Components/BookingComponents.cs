@@ -15,7 +15,13 @@ public class BookingComponents : IBookingComponents
     {
         if (booking.Resources.Count == 0)
         {
-            return [new SectionBlock { Text = "No resource booked!".ToPlainTextWithIcon(Icons.Resource) }];
+            return
+            [
+                new SectionBlock
+                {
+                    Text = "No resource booked!".ToPlainTextWithIcon(Icons.Resource),
+                },
+            ];
         }
 
         return booking.Resources.Select(Block (item) =>
@@ -32,7 +38,10 @@ public class BookingComponents : IBookingComponents
                 resourceLabel += $" {Icons.CustomTags} {string.Join(",", item.CustomTags.Select(tag => tag.Name))}";
             }
 
-            return new SectionBlock { Text = resourceLabel.ToMarkdown() };
+            return new SectionBlock
+            {
+                Text = resourceLabel.ToMarkdown(),
+            };
         }).ToList();
     }
 }

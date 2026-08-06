@@ -46,7 +46,7 @@ public class AzureTenantOnboardingService(
             CreatedAt = start,
             Start = start,
             End = start.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
-            AutoRenew = true
+            AutoRenew = true,
         };
         organizationOffering.ApplyOfferingTemplate(OfferingCode.FreeTierV1);
         var organization = new Shared.Database.Entities.Organization
@@ -57,18 +57,25 @@ public class AzureTenantOnboardingService(
             Type = OrganizationTypeConstants.Private,
             IsOwnershipVerified = false,
             TermsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseEntityAsync(cancellationToken),
-            OrganizationOfferings = [organizationOffering]
+            OrganizationOfferings = [organizationOffering],
         };
         var azureTenant = new AzureTenant
         {
-            Id = tenantId, InstalledByUserId = azureInstallStateUserIdLookup.InstalledByUserId, Organization = organization
+            Id = tenantId,
+            InstalledByUserId = azureInstallStateUserIdLookup.InstalledByUserId,
+            Organization = organization,
         };
         organization.AzureTenants = [azureTenant];
 
         var tenant = repositoryFactory.AzureTenantRepository.Add(azureTenant);
 
         await locationServiceClient.Admin_AddAsync(
-            new Admin_AddInput { Id = randomHelper.Generate(), Name = "Office", OrganizationId = organization.Id },
+            new Admin_AddInput
+            {
+                Id = randomHelper.Generate(),
+                Name = "Office",
+                OrganizationId = organization.Id,
+            },
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 

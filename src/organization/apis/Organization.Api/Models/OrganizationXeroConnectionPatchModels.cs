@@ -18,7 +18,7 @@ public enum OrganizationXeroConnectionPatchField
     DefaultTrackingCategory1,
     DefaultTrackingCategory2,
     DefaultBrandingThemeId,
-    DefaultReferencePrefix
+    DefaultReferencePrefix,
 }
 
 public record OrganizationXeroConnectionPatchRequest(

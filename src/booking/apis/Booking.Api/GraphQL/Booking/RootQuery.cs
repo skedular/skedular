@@ -21,8 +21,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     [UseResolverScope]
     public async Task<IReadOnlyList<MarketplaceBookingFailureDetails>> MarketplaceBookingFailuresAsync(
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IMarketplaceBookingFailureReadService failureReadService,
+        [Service]
+        ICachedCustomerService cachedCustomerService,
+        [Service]
+        IMarketplaceBookingFailureReadService failureReadService,
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
@@ -32,31 +34,75 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
 
     public IEnumerable<BookingCategoryDetails> BookingCategories() =>
     [
-        new() { Category = BookingCategory.WorkingFromHome, Name = BookingCategoryConstants.WorkingFromHome.ToBookingCategoryName() },
-        new() { Category = BookingCategory.WorkingFromOffice, Name = BookingCategoryConstants.WorkingFromOffice.ToBookingCategoryName() },
+        new()
+        {
+            Category = BookingCategory.WorkingFromHome,
+            Name = BookingCategoryConstants.WorkingFromHome.ToBookingCategoryName(),
+        },
+        new()
+        {
+            Category = BookingCategory.WorkingFromOffice,
+            Name = BookingCategoryConstants.WorkingFromOffice.ToBookingCategoryName(),
+        },
         new()
         {
             Category = BookingCategory.WorkingFromCoworkingSpace,
-            Name = BookingCategoryConstants.WorkingFromCoworkingSpace.ToBookingCategoryName()
+            Name = BookingCategoryConstants.WorkingFromCoworkingSpace.ToBookingCategoryName(),
         },
-        new() { Category = BookingCategory.SickLeave, Name = BookingCategoryConstants.SickLeave.ToBookingCategoryName() },
-        new() { Category = BookingCategory.AnnualLeave, Name = BookingCategoryConstants.AnnualLeave.ToBookingCategoryName() },
-        new() { Category = BookingCategory.WellbeingLeave, Name = BookingCategoryConstants.WellbeingLeave.ToBookingCategoryName() },
-        new() { Category = BookingCategory.ClientOffice, Name = BookingCategoryConstants.ClientOffice.ToBookingCategoryName() },
-        new() { Category = BookingCategory.Vacation, Name = BookingCategoryConstants.Vacation.ToBookingCategoryName() },
-        new() { Category = BookingCategory.TravelingForWork, Name = BookingCategoryConstants.TravelingForWork.ToBookingCategoryName() },
-        new() { Category = BookingCategory.NonWorkingDay, Name = BookingCategoryConstants.NonWorkingDay.ToBookingCategoryName() }
+        new()
+        {
+            Category = BookingCategory.SickLeave,
+            Name = BookingCategoryConstants.SickLeave.ToBookingCategoryName(),
+        },
+        new()
+        {
+            Category = BookingCategory.AnnualLeave,
+            Name = BookingCategoryConstants.AnnualLeave.ToBookingCategoryName(),
+        },
+        new()
+        {
+            Category = BookingCategory.WellbeingLeave,
+            Name = BookingCategoryConstants.WellbeingLeave.ToBookingCategoryName(),
+        },
+        new()
+        {
+            Category = BookingCategory.ClientOffice,
+            Name = BookingCategoryConstants.ClientOffice.ToBookingCategoryName(),
+        },
+        new()
+        {
+            Category = BookingCategory.Vacation,
+            Name = BookingCategoryConstants.Vacation.ToBookingCategoryName(),
+        },
+        new()
+        {
+            Category = BookingCategory.TravelingForWork,
+            Name = BookingCategoryConstants.TravelingForWork.ToBookingCategoryName(),
+        },
+        new()
+        {
+            Category = BookingCategory.NonWorkingDay,
+            Name = BookingCategoryConstants.NonWorkingDay.ToBookingCategoryName(),
+        },
     ];
 
     public IEnumerable<BookingCategoryDetails> MarketplaceBookingCategories() =>
     [
-        new() { Category = BookingCategory.WorkingFromOffice, Name = BookingCategoryConstants.WorkingFromOffice.ToBookingCategoryName() },
+        new()
+        {
+            Category = BookingCategory.WorkingFromOffice,
+            Name = BookingCategoryConstants.WorkingFromOffice.ToBookingCategoryName(),
+        },
         new()
         {
             Category = BookingCategory.WorkingFromCoworkingSpace,
-            Name = BookingCategoryConstants.WorkingFromCoworkingSpace.ToBookingCategoryName()
+            Name = BookingCategoryConstants.WorkingFromCoworkingSpace.ToBookingCategoryName(),
         },
-        new() { Category = BookingCategory.ClientOffice, Name = BookingCategoryConstants.ClientOffice.ToBookingCategoryName() }
+        new()
+        {
+            Category = BookingCategory.ClientOffice,
+            Name = BookingCategoryConstants.ClientOffice.ToBookingCategoryName(),
+        },
     ];
 
     [UseResolverScope]
@@ -66,7 +112,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<BookingSpacesQuotaStatusDetails> BookingSpacesQuotaStatusAsync(
         string organizationId,
-        [Service] ISpacesBookingQuotaService spacesBookingQuotaService,
+        [Service]
+        ISpacesBookingQuotaService spacesBookingQuotaService,
         CancellationToken cancellationToken)
     {
         var decision = await spacesBookingQuotaService.GetQuotaStatusAsync(organizationId, cancellationToken);
@@ -85,18 +132,26 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
             RemainingQuota = decision.PlanCode == 4 ? null : decision.RemainingQuota,
             QuotaExceeded = !decision.CanCreate && decision.ReasonCode != SpacesQuotaReasonCode.MissingOfferingState,
             ReasonCode =
-                new SpacesQuotaReasonCodeDetails { Type = decision.ReasonCode, Name = decision.ReasonCode.ToSpacesQuotaReasonCodeName() },
+                new SpacesQuotaReasonCodeDetails
+                {
+                    Type = decision.ReasonCode,
+                    Name = decision.ReasonCode.ToSpacesQuotaReasonCodeName(),
+                },
             UpgradePlans = decision.UpgradePlans.Select(upgrade => new UpgradePlanDetails
             {
-                PlanCode = upgrade.PlanCode, Name = upgrade.Name, Availability = upgrade.Availability, PriceDescription = upgrade.PriceDescription
-            }).ToList()
+                PlanCode = upgrade.PlanCode,
+                Name = upgrade.Name,
+                Availability = upgrade.Availability,
+                PriceDescription = upgrade.PriceDescription,
+            }).ToList(),
         };
     }
 
     [UseResolverScope]
     public async Task<SpacesPublicBookingAvailabilityDetails> SpacesPublicBookingAvailabilityAsync(
         string organizationId,
-        [Service] ISpacesBookingQuotaService spacesBookingQuotaService,
+        [Service]
+        ISpacesBookingQuotaService spacesBookingQuotaService,
         CancellationToken cancellationToken)
     {
         var decision = await spacesBookingQuotaService.GetQuotaStatusAsync(organizationId, cancellationToken);
@@ -105,7 +160,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
             Available = decision.CanCreate,
             Message = decision.CanCreate
                 ? "Bookings are available."
-                : "Bookings are currently unavailable for this workspace."
+                : "Bookings are currently unavailable for this workspace.",
         };
     }
 
@@ -113,8 +168,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<BookingDetails?> BookingByIdAsync(
-        [ID] string id,
-        [Service] IBookingService bookingService,
+        [ID]
+        string id,
+        [Service]
+        IBookingService bookingService,
         CancellationToken cancellationToken) =>
         await BookingAsync(id, bookingService, cancellationToken);
 
@@ -130,7 +187,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         BookingWhereInput where,
         IEnumerable<BookingOrderInput>? orderBy,
-        [Service] IBookingService bookingService,
+        [Service]
+        IBookingService bookingService,
         CancellationToken cancellationToken)
     {
         where.LocationIds = where.LocationIds.RemoveInvalidIds();
@@ -173,17 +231,18 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
     [UseResolverScope]
     public async Task<IEnumerable<BookingDetails>> AllBookingsAsync(
         BookingWhereInput where,
-        [Service] IBookingService bookingService,
+        [Service]
+        IBookingService bookingService,
         CancellationToken cancellationToken)
     {
         var result = await BookingsAsync(null, null, null, null, where, [], bookingService, cancellationToken);

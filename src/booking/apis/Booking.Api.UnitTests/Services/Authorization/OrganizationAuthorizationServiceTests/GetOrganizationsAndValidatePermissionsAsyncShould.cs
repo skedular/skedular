@@ -25,8 +25,10 @@ public class GetOrganizationsAndValidatePermissionsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_When_Any_Organization_Is_Not_Found(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
         OrganizationAuthorizationService sut,
         string customerId,
         string organizationId,
@@ -44,18 +46,27 @@ public class GetOrganizationsAndValidatePermissionsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_When_A_New_Organization_Booking_Is_Not_Allowed_By_Offering(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
         OrganizationAuthorizationService sut,
         string customerId,
         string organizationId,
         CancellationToken cancellationToken)
     {
         IReadOnlyList<string> organizationIds = [organizationId];
-        var organization = new OrganizationEntity { Id = organizationId, Type = OrganizationTypeConstants.Marketplace };
+        var organization = new OrganizationEntity
+        {
+            Id = organizationId,
+            Type = OrganizationTypeConstants.Marketplace,
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(organizationIds, null, false, false, cancellationToken))
@@ -71,18 +82,27 @@ public class GetOrganizationsAndValidatePermissionsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Organizations_When_Add_Permission_And_Offering_Allow_It(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
         OrganizationAuthorizationService sut,
         string customerId,
         string organizationId,
         CancellationToken cancellationToken)
     {
         IReadOnlyList<string> organizationIds = [organizationId];
-        var organization = new OrganizationEntity { Id = organizationId, Type = OrganizationTypeConstants.Marketplace };
+        var organization = new OrganizationEntity
+        {
+            Id = organizationId,
+            Type = OrganizationTypeConstants.Marketplace,
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(organizationIds, null, false, false, cancellationToken))

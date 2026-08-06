@@ -26,7 +26,10 @@ public class OrganizationBillingService(
     IGrpcMapper grpcMapper,
     IMemoryCache memoryCache) : IOrganizationBillingService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<OrganizationBillingDetails> AddAsync(
         string workspaceMemberId,
@@ -48,7 +51,7 @@ public class OrganizationBillingService(
                     Zipcode = organizationBillingDetails.Zipcode.ToSafeString(),
                     CountryCode = organizationBillingDetails.CountryCode.ToSafeString(),
                     Country = organizationBillingDetails.Country.ToSafeString(),
-                    OrganizationId = organizationBillingDetails.Organization.Id.ToSafeString()
+                    OrganizationId = organizationBillingDetails.Organization.Id.ToSafeString(),
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -63,7 +66,10 @@ public class OrganizationBillingService(
             CreateKeyById(organizationId),
             async _ => grpcMapper.MapTo(
                 await organizationBillingServiceClient.GetBillingDetailsAsync(
-                    new GetBillingDetailsInput { OrganizationId = organizationId },
+                    new GetBillingDetailsInput
+                    {
+                        OrganizationId = organizationId,
+                    },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;

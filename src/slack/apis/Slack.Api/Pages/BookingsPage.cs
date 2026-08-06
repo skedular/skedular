@@ -380,7 +380,7 @@ public class BookingsPage(
                 bookings,
                 myBookings,
                 commonPageContext.PageContext,
-                cancellationToken)
+                cancellationToken),
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -390,7 +390,7 @@ public class BookingsPage(
             {
                 CallbackId = BookingsCallback,
                 Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
             cancellationToken);
@@ -408,7 +408,10 @@ public class BookingsPage(
 
     private static IReadOnlyList<Block> GetTitle() =>
     [
-        new SectionBlock { Text = "*Bookings*".ToMarkdown() }
+        new SectionBlock
+        {
+            Text = "*Bookings*".ToMarkdown(),
+        },
     ];
 
     private IReadOnlyList<Block> GetToolbar(PageContext pageContext, string timezone)
@@ -425,8 +428,8 @@ public class BookingsPage(
                     .Concat(homeAndBackButtons)
                     .Concat(addBookingButton)
                     .Concat(feedbackButton)
-                    .ToList()
-            }
+                    .ToList(),
+            },
         ];
     }
 
@@ -518,22 +521,39 @@ public class BookingsPage(
     {
         ArgumentNullException.ThrowIfNull(pageContext.BookingsPage);
 
-        var fromDatePicker = new DatePicker { ActionId = BookingsFromDatePickerKey, InitialDate = from.ToDateTime() };
-        var untilDatePicker = new DatePicker { ActionId = BookingsUntilDatePickerKey, InitialDate = until.ToDateTime() };
+        var fromDatePicker = new DatePicker
+        {
+            ActionId = BookingsFromDatePickerKey,
+            InitialDate = from.ToDateTime(),
+        };
+        var untilDatePicker = new DatePicker
+        {
+            ActionId = BookingsUntilDatePickerKey,
+            InitialDate = until.ToDateTime(),
+        };
 
         List<Block> dateRangeActionBlock =
         [
-            new ActionsBlock { Elements = [fromDatePicker, untilDatePicker] },
+            new ActionsBlock
+            {
+                Elements = [fromDatePicker, untilDatePicker],
+            },
             bookingComponents.GetOnlyShowMyBookingCheckbox(IncludeMyBookingsOnly, pageContext.BookingsPage.IncludeMyBookingsOnly),
-            new DividerBlock()
+            new DividerBlock(),
         ];
 
         if (!bookingConnection.Edges.Any())
         {
-            return dateRangeActionBlock.Append(new SectionBlock { Text = "No booking found".ToMarkdown() }).ToList();
+            return dateRangeActionBlock.Append(new SectionBlock
+            {
+                Text = "No booking found".ToMarkdown(),
+            }).ToList();
         }
 
-        var totalBookingsCount = new SectionBlock { Text = $"Total bookings: {bookingConnection.TotalCount}".ToMarkdown() };
+        var totalBookingsCount = new SectionBlock
+        {
+            Text = $"Total bookings: {bookingConnection.TotalCount}".ToMarkdown(),
+        };
         if (bookingConnection.TotalCount <= BookingsPageSize)
         {
             return dateRangeActionBlock.Append(totalBookingsCount).ToList();
@@ -552,7 +572,9 @@ public class BookingsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageBookings, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageBookings,
+                Text = Icons.FirstPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.BookingsPage.Pagination.First = null;
@@ -562,7 +584,9 @@ public class BookingsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageBookings, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageBookings,
+                Text = Icons.PreviousPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
@@ -575,7 +599,9 @@ public class BookingsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageBookings, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageBookings,
+                Text = Icons.NextPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.BookingsPage.Pagination.First = null;
@@ -585,11 +611,16 @@ public class BookingsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageBookings, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageBookings,
+                Text = Icons.LastPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
-        var paginationActionBlock = new ActionsBlock { Elements = paginationButtons };
+        var paginationActionBlock = new ActionsBlock
+        {
+            Elements = paginationButtons,
+        };
 
         return dateRangeActionBlock.Concat([totalBookingsCount, paginationActionBlock]).ToList();
     }

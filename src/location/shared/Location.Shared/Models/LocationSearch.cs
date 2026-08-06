@@ -23,5 +23,5 @@ public enum LocationOrderField
 {
     Name,
     Timezone,
-    Type
+    Type,
 }

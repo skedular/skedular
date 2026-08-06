@@ -189,7 +189,7 @@ public class SettingsPage(
             GetTitle(),
             await GetToolbarAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
             GetWorkspaceMemberSettings(workspaceMember),
-            GetOrganizationSettings(workspace)
+            GetOrganizationSettings(workspace),
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -199,7 +199,7 @@ public class SettingsPage(
             {
                 CallbackId = SettingsCallback,
                 Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
             cancellationToken);
@@ -213,7 +213,10 @@ public class SettingsPage(
 
     private static IReadOnlyList<Block> GetTitle() =>
     [
-        new SectionBlock { Text = "*Settings*".ToMarkdown() }
+        new SectionBlock
+        {
+            Text = "*Settings*".ToMarkdown(),
+        },
     ];
 
     private async Task<IReadOnlyList<Block>> GetToolbarAsync(
@@ -232,22 +235,36 @@ public class SettingsPage(
             {
                 ActionId = ActionsMenu,
                 Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
-                Options = [new Option { Value = BillingActionTypes.Billing, Text = "Billing".ToPlainTextWithIcon(Icons.Billing) }]
+                Options =
+                [
+                    new Option
+                    {
+                        Value = BillingActionTypes.Billing,
+                        Text = "Billing".ToPlainTextWithIcon(Icons.Billing),
+                    },
+                ],
             });
         }
 
         return
         [
-            new ActionsBlock { Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(feedbackButton).Concat(actionMenus).ToList() }
+            new ActionsBlock
+            {
+                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(feedbackButton).Concat(actionMenus).ToList(),
+            },
         ];
     }
 
     private static IReadOnlyList<Block> GetWorkspaceMemberSettings(WorkspaceMember workspaceMember)
     {
-        var title = new SectionBlock { Text = "*Personal settings*".ToMarkdown() };
+        var title = new SectionBlock
+        {
+            Text = "*Personal settings*".ToMarkdown(),
+        };
         var automaticallyUpdateProfileStatusOption = new Option
         {
-            Text = "Automatically update profile status".ToPlainText(), Value = AutomaticallyUpdateProfileStatus
+            Text = "Automatically update profile status".ToPlainText(),
+            Value = AutomaticallyUpdateProfileStatus,
         };
         var automaticallyUpdateProfileStatus = new ActionsBlock
         {
@@ -256,42 +273,52 @@ public class SettingsPage(
                 new CheckboxGroup
                 {
                     ActionId = AutomaticallyUpdateProfileStatus,
-                    Options = new List<Option> { automaticallyUpdateProfileStatusOption },
+                    Options = new List<Option>
+                    {
+                        automaticallyUpdateProfileStatusOption,
+                    },
                     InitialOptions =
                         workspaceMember.AutomaticallyUpdateProfileStatus is null || !workspaceMember.AutomaticallyUpdateProfileStatus.Value
                             ? []
-                            : [automaticallyUpdateProfileStatusOption]
-                }
-            ]
+                            : [automaticallyUpdateProfileStatusOption],
+                },
+            ],
         };
 
         return
         [
             title,
-            automaticallyUpdateProfileStatus
+            automaticallyUpdateProfileStatus,
         ];
     }
 
     private static IReadOnlyList<Block> GetOrganizationSettings(Workspace workspace)
     {
-        var title = new SectionBlock { Text = "*Organization settings*".ToMarkdown() };
-        var slackUpdateChannelTitle = new SectionBlock { Text = "*Slack update channel*".ToMarkdown() };
+        var title = new SectionBlock
+        {
+            Text = "*Organization settings*".ToMarkdown(),
+        };
+        var slackUpdateChannelTitle = new SectionBlock
+        {
+            Text = "*Slack update channel*".ToMarkdown(),
+        };
         var channels = new ActionsBlock
         {
             Elements =
             [
                 new ChannelSelectMenu
                 {
-                    ActionId = UpdateOrganizationSlackUpdateChannel, InitialChannel = workspace.Organization.DailyUpdateChannel?.Id
-                }
-            ]
+                    ActionId = UpdateOrganizationSlackUpdateChannel,
+                    InitialChannel = workspace.Organization.DailyUpdateChannel?.Id,
+                },
+            ],
         };
 
         return
         [
             title,
             slackUpdateChannelTitle,
-            channels
+            channels,
         ];
     }
 
@@ -303,14 +330,38 @@ public class SettingsPage(
         CancellationToken cancellationToken)
     {
         var organizationBillingDetails = await organizationBillingService.GetAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
-        var email = new SectionBlock { Text = $"Email: {organizationBillingDetails.Email.ToSafeString()}".ToPlainText() };
-        var addressLine1 = new SectionBlock { Text = $"Address Line 1: {organizationBillingDetails.AddressLine1.ToSafeString()}".ToPlainText() };
-        var addressLine2 = new SectionBlock { Text = $"Address Line 2: {organizationBillingDetails.AddressLine2.ToSafeString()}".ToPlainText() };
-        var suburb = new SectionBlock { Text = $"Suburb: {organizationBillingDetails.Suburb.ToSafeString()}".ToPlainText() };
-        var city = new SectionBlock { Text = $"City: {organizationBillingDetails.City.ToSafeString()}".ToPlainText() };
-        var province = new SectionBlock { Text = $"Province: {organizationBillingDetails.Province.ToSafeString()}".ToPlainText() };
-        var zipcode = new SectionBlock { Text = $"Zipcode: {organizationBillingDetails.Zipcode.ToSafeString()}".ToPlainText() };
-        var country = new SectionBlock { Text = $"Country: {organizationBillingDetails.Country.ToSafeString()}".ToPlainText() };
+        var email = new SectionBlock
+        {
+            Text = $"Email: {organizationBillingDetails.Email.ToSafeString()}".ToPlainText(),
+        };
+        var addressLine1 = new SectionBlock
+        {
+            Text = $"Address Line 1: {organizationBillingDetails.AddressLine1.ToSafeString()}".ToPlainText(),
+        };
+        var addressLine2 = new SectionBlock
+        {
+            Text = $"Address Line 2: {organizationBillingDetails.AddressLine2.ToSafeString()}".ToPlainText(),
+        };
+        var suburb = new SectionBlock
+        {
+            Text = $"Suburb: {organizationBillingDetails.Suburb.ToSafeString()}".ToPlainText(),
+        };
+        var city = new SectionBlock
+        {
+            Text = $"City: {organizationBillingDetails.City.ToSafeString()}".ToPlainText(),
+        };
+        var province = new SectionBlock
+        {
+            Text = $"Province: {organizationBillingDetails.Province.ToSafeString()}".ToPlainText(),
+        };
+        var zipcode = new SectionBlock
+        {
+            Text = $"Zipcode: {organizationBillingDetails.Zipcode.ToSafeString()}".ToPlainText(),
+        };
+        var country = new SectionBlock
+        {
+            Text = $"Country: {organizationBillingDetails.Country.ToSafeString()}".ToPlainText(),
+        };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(
@@ -322,7 +373,7 @@ public class SettingsPage(
                 Close = "Cancel",
                 Submit = "Close",
                 Blocks = [email, new DividerBlock(), addressLine1, addressLine2, suburb, city, province, zipcode, country],
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             cancellationToken);
     }
@@ -344,9 +395,9 @@ public class SettingsPage(
                 ActionId = BillingActionTypes.CompanyName,
                 InitialValue = string.IsNullOrWhiteSpace(organizationBillingDetails.CompanyName)
                     ? null
-                    : organizationBillingDetails.CompanyName.ToSafeString()
+                    : organizationBillingDetails.CompanyName.ToSafeString(),
             },
-            Optional = false
+            Optional = false,
         };
 
         var email = new InputBlock
@@ -358,9 +409,9 @@ public class SettingsPage(
                 ActionId = BillingActionTypes.Email,
                 InitialValue = string.IsNullOrWhiteSpace(organizationBillingDetails.Email)
                     ? null
-                    : organizationBillingDetails.Email.ToSafeString()
+                    : organizationBillingDetails.Email.ToSafeString(),
             },
-            Optional = false
+            Optional = false,
         };
 
         var addressLine1 = new InputBlock
@@ -369,9 +420,10 @@ public class SettingsPage(
             Label = "Address line 1".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = BillingActionTypes.AddressLine1, InitialValue = organizationBillingDetails.AddressLine1.ToSafeString()
+                ActionId = BillingActionTypes.AddressLine1,
+                InitialValue = organizationBillingDetails.AddressLine1.ToSafeString(),
             },
-            Optional = true
+            Optional = true,
         };
 
         var addressLine2 = new InputBlock
@@ -380,9 +432,10 @@ public class SettingsPage(
             Label = "Address line 2".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = BillingActionTypes.AddressLine2, InitialValue = organizationBillingDetails.AddressLine2.ToSafeString()
+                ActionId = BillingActionTypes.AddressLine2,
+                InitialValue = organizationBillingDetails.AddressLine2.ToSafeString(),
             },
-            Optional = true
+            Optional = true,
         };
 
         var suburb = new InputBlock
@@ -390,16 +443,24 @@ public class SettingsPage(
             BlockId = BillingActionTypes.Suburb,
             Label = "Suburb".ToPlainText(),
             Element =
-                new PlainTextInput { ActionId = BillingActionTypes.Suburb, InitialValue = organizationBillingDetails.Suburb.ToSafeString() },
-            Optional = true
+                new PlainTextInput
+                {
+                    ActionId = BillingActionTypes.Suburb,
+                    InitialValue = organizationBillingDetails.Suburb.ToSafeString(),
+                },
+            Optional = true,
         };
 
         var city = new InputBlock
         {
             BlockId = BillingActionTypes.City,
             Label = "City".ToPlainText(),
-            Element = new PlainTextInput { ActionId = BillingActionTypes.City, InitialValue = organizationBillingDetails.City.ToSafeString() },
-            Optional = true
+            Element = new PlainTextInput
+            {
+                ActionId = BillingActionTypes.City,
+                InitialValue = organizationBillingDetails.City.ToSafeString(),
+            },
+            Optional = true,
         };
 
         var province = new InputBlock
@@ -408,9 +469,10 @@ public class SettingsPage(
             Label = "Province".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = BillingActionTypes.Province, InitialValue = organizationBillingDetails.Province.ToSafeString()
+                ActionId = BillingActionTypes.Province,
+                InitialValue = organizationBillingDetails.Province.ToSafeString(),
             },
-            Optional = true
+            Optional = true,
         };
 
         var zipcode = new InputBlock
@@ -419,9 +481,10 @@ public class SettingsPage(
             Label = "Zipcode".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = BillingActionTypes.Zipcode, InitialValue = organizationBillingDetails.Zipcode.ToSafeString()
+                ActionId = BillingActionTypes.Zipcode,
+                InitialValue = organizationBillingDetails.Zipcode.ToSafeString(),
             },
-            Optional = true
+            Optional = true,
         };
 
         var country = new InputBlock
@@ -433,10 +496,14 @@ public class SettingsPage(
                 ActionId = OptionLoaderKeys.CountryKey,
                 InitialOption = string.IsNullOrWhiteSpace(organizationBillingDetails.Country)
                     ? null
-                    : new Option { Text = organizationBillingDetails.Country.ToOptionText(), Value = organizationBillingDetails.Country },
-                MinQueryLength = 3
+                    : new Option
+                    {
+                        Text = organizationBillingDetails.Country.ToOptionText(),
+                        Value = organizationBillingDetails.Country,
+                    },
+                MinQueryLength = 3,
             },
-            Optional = true
+            Optional = true,
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -450,9 +517,9 @@ public class SettingsPage(
                 Submit = "Save",
                 Blocks =
                 [
-                    companyName, email, new DividerBlock(), addressLine1, addressLine2, suburb, city, province, zipcode, country
+                    companyName, email, new DividerBlock(), addressLine1, addressLine2, suburb, city, province, zipcode, country,
                 ],
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             cancellationToken);
     }

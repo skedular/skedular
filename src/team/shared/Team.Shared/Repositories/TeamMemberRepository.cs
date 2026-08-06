@@ -163,7 +163,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
                 KeysetPaginationField<TeamMember>.Create(
                     nameof(Customer.Name),
                     query => query.Customer.Name,
-                    OrderDirection.Ascending)
+                    OrderDirection.Ascending),
             ];
         }
 
@@ -193,7 +193,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
                     query => query.Customer.FamilyName,
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(nameof(orderField.Field), orderField.Field,
-                    $"Unexpected value for {nameof(orderField.Field)}: {orderField.Field}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(orderField.Field)}: {orderField.Field}. Update enum mapping or caller input."),
             })
             .ToList();
     }

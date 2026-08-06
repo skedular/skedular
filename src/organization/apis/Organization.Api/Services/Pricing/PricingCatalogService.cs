@@ -18,7 +18,7 @@ public class PricingCatalogService(
         var offerings = new[]
         {
             TeamsPricingCatalogProvider.GetTeamsOffering(), SpacesPricingCatalogProvider.GetSpacesOffering(),
-            HostPricingCatalogProvider.GetHostOffering()
+            HostPricingCatalogProvider.GetHostOffering(),
         };
         var filteredOfferings = productOfferingCode is null or PricingCatalogProductOfferingCode.NotSet
             ? offerings
@@ -42,6 +42,6 @@ public class PricingCatalogService(
         {
             PricingCatalogProductOfferingCode.Spaces => pricingCatalogVersionService.GetCurrentSpacesVersion(),
             PricingCatalogProductOfferingCode.Host => pricingCatalogVersionService.GetCurrentHostVersion(),
-            _ => pricingCatalogVersionService.GetCurrentTeamsVersion()
+            _ => pricingCatalogVersionService.GetCurrentTeamsVersion(),
         };
 }

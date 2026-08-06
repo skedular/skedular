@@ -145,7 +145,10 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     /// <summary>
@@ -166,7 +169,10 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     /// <summary>
@@ -183,7 +189,10 @@ public class TemporalService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     /// <summary>
@@ -202,7 +211,10 @@ public class TemporalService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     public async Task StartWorkflowGenerateInitialArrearsRecurringBookingInvoiceAsync(
@@ -216,7 +228,10 @@ public class TemporalService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     /// <summary>
@@ -233,7 +248,13 @@ public class TemporalService(
             .GetWorkflowHandle<PayRecurringBookingViaCard>(workflowIdService.PayRecurringBookingViaCard(recurringBookingId))
             .SignalAsync(
                 workflow => workflow.SetPaymentStatusAsync(args),
-                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
+                new WorkflowSignalOptions
+                {
+                    Rpc = new RpcOptions
+                    {
+                        CancellationToken = cancellationToken,
+                    },
+                }
             );
 
     /// <summary>
@@ -247,7 +268,13 @@ public class TemporalService(
             .GetWorkflowHandle<PayBookingViaCard>(workflowIdService.PayBookingViaCard(bookingId))
             .SignalAsync(
                 workflow => workflow.SetPaymentStatusAsync(args),
-                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
+                new WorkflowSignalOptions
+                {
+                    Rpc = new RpcOptions
+                    {
+                        CancellationToken = cancellationToken,
+                    },
+                }
             );
 
     public async Task StartWorkflowRunOrganizationArrearsBillingAsync(RunOrganizationArrearsBillingInput args, CancellationToken cancellationToken) =>
@@ -264,7 +291,10 @@ public class TemporalService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdConflictPolicy = WorkflowIdConflictPolicy.UseExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     public async Task SignalRunOrganizationArrearsBillingWorkflowUpdateConfigurationAsync(
@@ -280,7 +310,13 @@ public class TemporalService(
                 .GetWorkflowHandle<RunOrganizationArrearsBilling>(workflowId)
                 .SignalAsync(
                     workflow => workflow.UpdateConfigurationAsync(configuration),
-                    new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+                    new WorkflowSignalOptions
+                    {
+                        Rpc = new RpcOptions
+                        {
+                            CancellationToken = cancellationToken,
+                        },
+                    });
             return;
         }
 
@@ -299,7 +335,13 @@ public class TemporalService(
                 .GetWorkflowHandle<RunOrganizationArrearsBilling>(workflowId)
                 .SignalAsync(
                     workflow => workflow.RunNowAsync(),
-                    new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+                    new WorkflowSignalOptions
+                    {
+                        Rpc = new RpcOptions
+                        {
+                            CancellationToken = cancellationToken,
+                        },
+                    });
             return;
         }
 
@@ -320,7 +362,13 @@ public class TemporalService(
             .GetWorkflowHandle<RunOrganizationArrearsBilling>(workflowId)
             .SignalAsync(
                 workflow => workflow.StopAsync(),
-                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+                new WorkflowSignalOptions
+                {
+                    Rpc = new RpcOptions
+                    {
+                        CancellationToken = cancellationToken,
+                    },
+                });
     }
 
     public async Task StartWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(
@@ -335,7 +383,10 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     public async Task StartWorkflowMaintainAccountingInvoiceStateAsync(
@@ -350,7 +401,10 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     public async Task SignalWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(
@@ -365,7 +419,13 @@ public class TemporalService(
                 .GetWorkflowHandle<MaintainOrganizationArrearsInvoiceAccountingState>(workflowId)
                 .SignalAsync(
                     workflow => workflow.RefreshNowAsync(args),
-                    new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+                    new WorkflowSignalOptions
+                    {
+                        Rpc = new RpcOptions
+                        {
+                            CancellationToken = cancellationToken,
+                        },
+                    });
             return;
         }
 
@@ -384,7 +444,13 @@ public class TemporalService(
                 .GetWorkflowHandle<MaintainAccountingInvoiceState>(workflowId)
                 .SignalAsync(
                     workflow => workflow.RefreshNowAsync(args),
-                    new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+                    new WorkflowSignalOptions
+                    {
+                        Rpc = new RpcOptions
+                        {
+                            CancellationToken = cancellationToken,
+                        },
+                    });
             return;
         }
 
@@ -406,7 +472,13 @@ public class TemporalService(
             .GetWorkflowHandle<PayRecurringBookingViaBankTransfer>(workflowId)
             .SignalAsync(
                 workflow => workflow.SetPaymentStatusAsync(args),
-                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
+                new WorkflowSignalOptions
+                {
+                    Rpc = new RpcOptions
+                    {
+                        CancellationToken = cancellationToken,
+                    },
+                }
             );
     }
 
@@ -424,7 +496,13 @@ public class TemporalService(
             .GetWorkflowHandle<PayRecurringBookingViaBankTransfer>(workflowId)
             .SignalAsync(
                 workflow => workflow.DeleteRecurringBookingAsync(),
-                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+                new WorkflowSignalOptions
+                {
+                    Rpc = new RpcOptions
+                    {
+                        CancellationToken = cancellationToken,
+                    },
+                });
     }
 
     public async Task SignalPayRecurringBookingViaCardWorkflowDeleteRecurringBookingAsync(
@@ -441,7 +519,13 @@ public class TemporalService(
             .GetWorkflowHandle<PayRecurringBookingViaCard>(workflowId)
             .SignalAsync(
                 workflow => workflow.DeleteRecurringBookingAsync(),
-                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+                new WorkflowSignalOptions
+                {
+                    Rpc = new RpcOptions
+                    {
+                        CancellationToken = cancellationToken,
+                    },
+                });
     }
 
     private string ToOrganizationArrearsBillingWorkflowId(string organizationId) =>
@@ -457,6 +541,9 @@ public class TemporalService(
             RetryPolicy = null,
             IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
             IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-            Rpc = new RpcOptions { CancellationToken = cancellationToken }
+            Rpc = new RpcOptions
+            {
+                CancellationToken = cancellationToken,
+            },
         };
 }

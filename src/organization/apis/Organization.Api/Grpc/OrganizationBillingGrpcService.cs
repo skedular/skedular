@@ -47,7 +47,7 @@ public class OrganizationBillingGrpcService(
                 {
                     StripeConnectAccountOrderField.Name => OrganizationStripeConnectAccountOrderField.Name,
                     _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
                 };
 
                 return new OrganizationStripeConnectAccountOrder(direction, field);
@@ -62,9 +62,9 @@ public class OrganizationBillingGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
@@ -87,7 +87,7 @@ public class OrganizationBillingGrpcService(
                 {
                     BankAccountOrderField.Name => OrganizationBankAccountOrderField.Name,
                     _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
                 };
 
                 return new OrganizationBankAccountOrder(direction, field);
@@ -102,9 +102,9 @@ public class OrganizationBillingGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));

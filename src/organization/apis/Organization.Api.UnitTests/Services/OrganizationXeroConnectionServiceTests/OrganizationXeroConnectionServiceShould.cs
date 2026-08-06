@@ -21,11 +21,16 @@ public class OrganizationXeroConnectionServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Build_Authorize_Url_Using_The_Generated_Callback_Route(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
         IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         IXeroTokenRefreshService xeroTokenRefreshService,
         IXeroSdkClientFactory xeroSdkClientFactory,
@@ -38,16 +43,30 @@ public class OrganizationXeroConnectionServiceShould
         TimeProvider timeProvider,
         CancellationToken cancellationToken)
     {
-        var applicationConfiguration = new ApplicationConfiguration { ApiBaseDomain = new Uri("http://localhost:10200/") };
+        var applicationConfiguration = new ApplicationConfiguration
+        {
+            ApiBaseDomain = new Uri("http://localhost:10200/"),
+        };
         var xeroConfiguration = new XeroConfiguration
         {
             AuthorizeEndpoint = "https://login.xero.com/identity/connect/authorize",
             ClientId = "client-id-1",
-            Scopes = "offline_access accounting.transactions"
+            Scopes = "offline_access accounting.transactions",
         };
-        var organization = new Shared.Database.Entities.Organization { Id = "org-1", Name = "Org 1", CustomDomain = "org-1" };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = "customer-1" };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Id = "org-1",
+            Name = "Org 1",
+            CustomDomain = "org-1",
+        };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = "customer-1",
+        };
         const string encryptedState = "encrypted-state";
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);

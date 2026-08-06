@@ -20,9 +20,19 @@ public class MergeToShould
             Id = "resource-1",
             ResourceBookingSlots =
             [
-                new ResourceBookingSlot { Id = "monday-slot", ResourceId = "resource-1", Start = from },
-                new ResourceBookingSlot { Id = "wednesday-slot", ResourceId = "resource-1", Start = from.AddDays(2) }
-            ]
+                new ResourceBookingSlot
+                {
+                    Id = "monday-slot",
+                    ResourceId = "resource-1",
+                    Start = from,
+                },
+                new ResourceBookingSlot
+                {
+                    Id = "wednesday-slot",
+                    ResourceId = "resource-1",
+                    Start = from.AddDays(2),
+                },
+            ],
         };
         var booking = new BookingModel
         {
@@ -31,7 +41,7 @@ public class MergeToShould
             Until = until,
             Category = BookingCategory.WorkingFromOffice,
             Channel = BookingChannel.Marketplace,
-            Schedules = [new BookingSchedule(from, until)]
+            Schedules = [new BookingSchedule(from, until)],
         };
 
         var result = sut.MapTo(booking, [], [], [], [], [resource], null, null, null, null, null);

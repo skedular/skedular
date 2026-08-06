@@ -16,26 +16,46 @@ public class UpdateAvailableHoursPatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Authorization_Rejection_And_Rethrow(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] ILogger<ResourceAvailableHoursService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        ILogger<ResourceAvailableHoursService> logger,
         ResourceAvailableHoursService sut,
         CancellationToken cancellationToken)
     {
         var locationEntity = new Shared.Database.Entities.Location
         {
-            Id = "location-1", OrganizationId = "org-1", Organization = new Organization { Id = "org-1" }
+            Id = "location-1",
+            OrganizationId = "org-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
         };
-        var existingResource = new Resource { Id = "resource-1", Location = locationEntity, OrganizationTags = [] };
+        var existingResource = new Resource
+        {
+            Id = "resource-1",
+            Location = locationEntity,
+            OrganizationTags = [],
+        };
         var request = new ResourceAvailableHoursPatchRequest(
             "resource-1",
             true,
             WeekOpeningHours.Default,
-            new HashSet<LocationResourceAvailableHoursPatchField> { LocationResourceAvailableHoursPatchField.AvailableHours });
+            new HashSet<LocationResourceAvailableHoursPatchField>
+            {
+                LocationResourceAvailableHoursPatchField.AvailableHours,
+            });
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
@@ -59,8 +79,10 @@ public class UpdateAvailableHoursPatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Error_And_Rethrow_On_General_Failure(
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ILogger<ResourceAvailableHoursService> logger,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ILogger<ResourceAvailableHoursService> logger,
         ResourceAvailableHoursService sut,
         CancellationToken cancellationToken)
     {
@@ -68,7 +90,10 @@ public class UpdateAvailableHoursPatchAsyncShould
             "resource-1",
             true,
             WeekOpeningHours.Default,
-            new HashSet<LocationResourceAvailableHoursPatchField> { LocationResourceAvailableHoursPatchField.AvailableHours });
+            new HashSet<LocationResourceAvailableHoursPatchField>
+            {
+                LocationResourceAvailableHoursPatchField.AvailableHours,
+            });
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken))
             .ThrowsAsync(new InvalidOperationException("cache failure"));
@@ -85,8 +110,10 @@ public class UpdateAvailableHoursPatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Autosave_Started(
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ILogger<ResourceAvailableHoursService> logger,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ILogger<ResourceAvailableHoursService> logger,
         ResourceAvailableHoursService sut,
         CancellationToken cancellationToken)
     {
@@ -94,7 +121,10 @@ public class UpdateAvailableHoursPatchAsyncShould
             "resource-1",
             true,
             WeekOpeningHours.Default,
-            new HashSet<LocationResourceAvailableHoursPatchField> { LocationResourceAvailableHoursPatchField.AvailableHours });
+            new HashSet<LocationResourceAvailableHoursPatchField>
+            {
+                LocationResourceAvailableHoursPatchField.AvailableHours,
+            });
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken))
             .ThrowsAsync(new InvalidOperationException("forced early failure"));

@@ -17,8 +17,10 @@ public class UserSsoContextShould
     [Theory]
     [AutoFakeItEasyData]
     public void Add_and_retrieve_user_sso_context(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string organizationId, string email)
     {
         var sut = BuildSut(accessor, logger);
@@ -34,8 +36,10 @@ public class UserSsoContextShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_null_when_organization_not_found(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string organizationId)
     {
         var sut = BuildSut(accessor, logger);
@@ -46,8 +50,10 @@ public class UserSsoContextShould
     [Theory]
     [AutoFakeItEasyData]
     public void Overwrite_existing_sso_context(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string organizationId, string email1, string email2)
     {
         var sut = BuildSut(accessor, logger);

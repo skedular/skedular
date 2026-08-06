@@ -25,7 +25,10 @@ public class AddOpenApiAuthenticationShould
     {
         var services = new ServiceCollection();
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["Authentication:Jwt:Issuer"] = string.Empty })
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Authentication:Jwt:Issuer"] = string.Empty,
+            })
             .Build();
 
         var error = Should.Throw<InvalidOperationException>(() => services.AddOpenApiAuthentication(configuration));
@@ -40,7 +43,8 @@ public class AddOpenApiAuthenticationShould
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["Authentication:Jwt:Issuer"] = "http://identityserver", ["ASPNETCORE_ENVIRONMENT"] = "Development"
+                ["Authentication:Jwt:Issuer"] = "http://identityserver",
+                ["ASPNETCORE_ENVIRONMENT"] = "Development",
             })
             .Build();
 

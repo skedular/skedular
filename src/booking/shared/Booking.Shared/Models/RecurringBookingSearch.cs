@@ -33,5 +33,5 @@ public enum RecurringBookingOrderField
     From,
     To,
     Category,
-    Channel
+    Channel,
 }

@@ -25,7 +25,7 @@ public class TeamsPricingCatalogProvider
                     [
                         new PlanFeature("booking", "Desk, room, and resource booking", 1),
                         new PlanFeature("teams", "One team", 2),
-                        new PlanFeature("locations", "One location", 3)
+                        new PlanFeature("locations", "One location", 3),
                     ],
                     [
                         new PlanLimit(
@@ -52,7 +52,7 @@ public class TeamsPricingCatalogProvider
                             "booking-instances",
                             "Booking instances",
                             freeTierOffering.MaxBookingInstanceCount,
-                            !freeTierOffering.MaxBookingInstanceCount.HasValue)
+                            !freeTierOffering.MaxBookingInstanceCount.HasValue),
                     ],
                     // ReSharper disable once PossibleLossOfFraction
                     [new PlanPrice(freeTierOffering.Currency, (freeTierOffering.UnitPrice ?? 0) / 100, "month", false)],
@@ -68,7 +68,7 @@ public class TeamsPricingCatalogProvider
                     [
                         new PlanFeature("unlimited-teams", "Unlimited teams", 1),
                         new PlanFeature("unlimited-locations", "Unlimited locations", 2),
-                        new PlanFeature("active-user-billing", "Monthly active-user billing", 3)
+                        new PlanFeature("active-user-billing", "Monthly active-user billing", 3),
                     ],
                     [
                         new PlanLimit(
@@ -95,7 +95,7 @@ public class TeamsPricingCatalogProvider
                             "booking-instances",
                             "Booking instances",
                             payAsYouGoOffering.MaxBookingInstanceCount,
-                            !payAsYouGoOffering.MaxBookingInstanceCount.HasValue)
+                            !payAsYouGoOffering.MaxBookingInstanceCount.HasValue),
                     ],
                     // ReSharper disable once PossibleLossOfFraction
                     [new PlanPrice(payAsYouGoOffering.Currency, (payAsYouGoOffering.UnitPrice ?? 0) / 100, "active user/month", false)],
@@ -111,7 +111,7 @@ public class TeamsPricingCatalogProvider
                     [
                         new PlanFeature("capacity", "Purchased active-user capacity", 1),
                         new PlanFeature("procurement", "Procurement-ready billing", 2),
-                        new PlanFeature("support", "Priority support", 3)
+                        new PlanFeature("support", "Priority support", 3),
                     ],
                     [
                         new PlanLimit(
@@ -138,13 +138,13 @@ public class TeamsPricingCatalogProvider
                             "booking-instances",
                             "Booking instances",
                             enterpriseCustomOffering.MaxBookingInstanceCount,
-                            !enterpriseCustomOffering.MaxBookingInstanceCount.HasValue)
+                            !enterpriseCustomOffering.MaxBookingInstanceCount.HasValue),
                     ],
                     [],
                     [new CapacityOption("teams-custom", null, "Contact Us", null, PricingCatalogPlanAvailability.ContactUs, 1)],
                     PricingCatalogPlanAvailability.ContactUs,
                     false,
-                    3)
+                    3),
             ]);
     }
 }

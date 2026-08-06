@@ -204,7 +204,7 @@ public class GraphQlMapper : IGraphQlMapper
             Status = src.Status.ToOrganizationMemberStatus(),
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone,
             Customer = MapTo(src.Customer)!,
-            Organization = organization
+            Organization = organization,
         };
 
     public JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src) =>
@@ -218,7 +218,7 @@ public class GraphQlMapper : IGraphQlMapper
             Role = src.Role.ToOrganizationMemberRole(),
             Organization = MapTo(src.Organization, Constants.EmptyUri),
             CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
+            Invitee = MapTo(src.Invitee),
         };
 
     public Shared.Database.Entities.Organization MapTo(
@@ -244,7 +244,7 @@ public class GraphQlMapper : IGraphQlMapper
             IsOwnershipVerified = src.IsOwnershipVerified,
             FeatureImages = src.FeatureImages.ToList(),
             TermsOfUse = termsOfUse,
-            IndustrySubCategories = industrySubCategories.ToList()
+            IndustrySubCategories = industrySubCategories.ToList(),
         };
 
     public Shared.Database.Entities.Organization MergeTo(
@@ -295,7 +295,7 @@ public class GraphQlMapper : IGraphQlMapper
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
                 Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList()
+                Identities = MapTo(src.Identities).ToList(),
             };
 
     public Shared.Models.TermsOfUse? MapTo(TermsOfUse? src) =>
@@ -308,13 +308,19 @@ public class GraphQlMapper : IGraphQlMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 Active = src.Active,
-                Terms = src.Terms
+                Terms = src.Terms,
             };
 
     public IEnumerable<IndustryMainCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustryMainCategory> src) => src.Select(MapTo);
 
     public OrganizationTermsOfUse? MapTo(Shared.Models.TermsOfUse? src) =>
-        src is null ? null : new OrganizationTermsOfUse { Id = src.Id, Terms = src.Terms };
+        src is null
+            ? null
+            : new OrganizationTermsOfUse
+            {
+                Id = src.Id,
+                Terms = src.Terms,
+            };
 
     public IEnumerable<OrganizationIndustryMainCategoryReferenceDetails> MapTo(IEnumerable<IndustryMainCategory> src) => src.Select(MapTo);
 
@@ -342,7 +348,11 @@ public class GraphQlMapper : IGraphQlMapper
                         Name = offering.Name,
                         UnitPrice = offering.UnitPrice,
                         FixedPrice = offering.FixedPrice,
-                        Currency = new CurrencyDetails { Type = offering.Currency, Name = offering.Currency.ToCurrencyName() },
+                        Currency = new CurrencyDetails
+                        {
+                            Type = offering.Currency,
+                            Name = offering.Currency.ToCurrencyName(),
+                        },
                         PurchasedUserCapacity = offering.MaxUserCount,
                         PurchasedLocationCapacity = offering.MaxLocationCount,
                         PurchasedTeamCapacity = offering.MaxTeamCount,
@@ -350,7 +360,7 @@ public class GraphQlMapper : IGraphQlMapper
                         UnderPriceLines = offering.UnderPriceLines,
                         Free = item.IsFreeOffering(),
                         EarlyBird = item.IsEarlyBirdOffering(),
-                        HostCommissionPercentage = offering.HostCommissionPercentage
+                        HostCommissionPercentage = offering.HostCommissionPercentage,
                     };
                 });
 
@@ -364,7 +374,11 @@ public class GraphQlMapper : IGraphQlMapper
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
-            Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
+            Type = new OrganizationTypeDetails
+            {
+                Type = src.Type,
+                Name = src.Type.ToOrganizationTypeName(),
+            },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             RefundNotificationEmails = src.RefundNotificationEmails,
@@ -396,8 +410,12 @@ public class GraphQlMapper : IGraphQlMapper
             SsoSettings = MapTo(src.OrganizationSsoSettings),
             TaxDetails = MapTo(src.OrganizationTaxDetails),
             XeroConnection = MapTo(src.OrganizationXeroConnection),
-            BillingCycle = new OrganizationBillingCycleDetails { Type = src.BillingCycle, Name = src.BillingCycle.ToOrganizationBillingCycleName() },
-            InvoiceDueInDays = src.InvoiceDueInDays
+            BillingCycle = new OrganizationBillingCycleDetails
+            {
+                Type = src.BillingCycle,
+                Name = src.BillingCycle.ToOrganizationBillingCycleName(),
+            },
+            InvoiceDueInDays = src.InvoiceDueInDays,
         };
     }
 
@@ -426,17 +444,25 @@ public class GraphQlMapper : IGraphQlMapper
                     .Select(item => MapTo(item)!),
                 Amenities = src.Tags
                     .Where(item => OrganizationTagTypeConstants.Amenities.Any(resourceType => resourceType == item.Type))
-                    .Select(item => MapTo(item)!)
+                    .Select(item => MapTo(item)!),
             };
 
     public OrganizationMemberDetails MapTo(OrganizationMember src) =>
         new()
         {
             Id = src.Id,
-            Role = new OrganizationMemberRoleDetails { Type = src.Role, Name = src.Role.ToOrganizationMemberRoleName() },
-            Status = new OrganizationMemberStatusDetails { Type = src.Status, Name = src.Status.ToOrganizationMemberStatusName() },
+            Role = new OrganizationMemberRoleDetails
+            {
+                Type = src.Role,
+                Name = src.Role.ToOrganizationMemberRoleName(),
+            },
+            Status = new OrganizationMemberStatusDetails
+            {
+                Type = src.Status,
+                Name = src.Status.ToOrganizationMemberStatusName(),
+            },
             IsOrganizationOnboardingDone = src.IsOrganizationOnboardingDone ?? false,
-            CustomerId = src.Customer.Id
+            CustomerId = src.Customer.Id,
         };
 
     public OrganizationAnalytics MapTo(
@@ -445,9 +471,17 @@ public class GraphQlMapper : IGraphQlMapper
         new()
         {
             MemberAttendancePercentage = organizationMemberAttendancePercentages
-                .Select(item => new GraphQL.Analytics.OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = item.Percentage }),
+                .Select(item => new GraphQL.Analytics.OrganizationMemberAttendancePercentage
+                {
+                    Date = item.Date,
+                    Percentage = item.Percentage,
+                }),
             DailyBookingsTotals = organizationDailyBookingsTotals
-                .Select(item => new GraphQL.Analytics.OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Total })
+                .Select(item => new GraphQL.Analytics.OrganizationDailyBookingsTotal
+                {
+                    Date = item.Date,
+                    Total = item.Total,
+                }),
         };
 
     public Shared.Models.Organization MapTo(AddOrganizationInput src) =>
@@ -468,8 +502,14 @@ public class GraphQlMapper : IGraphQlMapper
             RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
-            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
-            TermsOfUse = new Shared.Models.TermsOfUse { Id = src.TermsOfUseId }
+            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory
+            {
+                Id = item,
+            }).ToList(),
+            TermsOfUse = new Shared.Models.TermsOfUse
+            {
+                Id = src.TermsOfUseId,
+            },
         };
 
     public OrganizationPatchRequest MapTo(UpdateOrganizationInput src) =>
@@ -531,7 +571,7 @@ public class GraphQlMapper : IGraphQlMapper
             Name = src.Name,
             Description = src.Description,
             Type = src.Type.ToOrganizationTagType(),
-            Color = src.Color
+            Color = src.Color,
         };
 
     public Shared.Database.Entities.Tag MapTo(Tag src, Shared.Database.Entities.Organization organization) =>
@@ -562,10 +602,11 @@ public class GraphQlMapper : IGraphQlMapper
             Description = src.Description,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(),
+                CustomDomain = src.OrganizationCustomDomain.ToSafeString(),
             },
             Type = OrganizationTagType.Custom,
-            Color = src.Color
+            Color = src.Color,
         };
 
     public Tag MapTo(AddZoneInput src) =>
@@ -576,10 +617,11 @@ public class GraphQlMapper : IGraphQlMapper
             Description = src.Description,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(),
+                CustomDomain = src.OrganizationCustomDomain.ToSafeString(),
             },
             Type = OrganizationTagType.Zone,
-            Color = src.Color
+            Color = src.Color,
         };
 
     public OrganizationTagDetails? MapTo(Tag? src) =>
@@ -591,7 +633,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Name = src.Name,
                 Description = src.Description,
                 Type = src.Type,
-                Color = src.Color
+                Color = src.Color,
             };
 
     public OrganizationTagEdge MapTo(Edge<Tag> src) => new(MapTo(src.Node)!, src.Cursor);
@@ -602,7 +644,8 @@ public class GraphQlMapper : IGraphQlMapper
     {
         var organization = new Shared.Models.Organization
         {
-            Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
+            Id = src.OrganizationId.ToSafeString(),
+            CustomDomain = src.OrganizationCustomDomain.ToSafeString(),
         };
 
         return new OrganizationSsoSettingsPatchRequest(
@@ -615,7 +658,7 @@ public class GraphQlMapper : IGraphQlMapper
                 EntityId = src.EntityId,
                 LoginUrl = src.LoginUrl,
                 AppFederationMetadataUrl = src.AppFederationMetadataUrl,
-                Organization = organization
+                Organization = organization,
             });
     }
 
@@ -646,10 +689,11 @@ public class GraphQlMapper : IGraphQlMapper
             Description = src.Description,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(),
+                CustomDomain = src.OrganizationCustomDomain.ToSafeString(),
             },
             Type = OrganizationTagType.Product,
-            Color = src.Color
+            Color = src.Color,
         };
 
     public OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src, Shared.Database.Entities.Organization organization) =>
@@ -686,7 +730,11 @@ public class GraphQlMapper : IGraphQlMapper
             Name = src.Name,
             Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
             Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
-            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
+            Metadata = new Dictionary<string, string>
+            {
+                { "type", "organization" },
+                { "organizationId", src.Id },
+            },
         };
 
     public OrganizationBillingDetailsPatchRequest MapTo(UpdateOrganizationBillingDetailsInput src) =>
@@ -726,7 +774,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode
+                CountryCode = src.CountryCode,
             };
 
     public AccountCreateOptions MapToStripeAccountRequest(Shared.Database.Entities.Organization src) =>
@@ -738,7 +786,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Url = string.IsNullOrWhiteSpace(src.Website) ? null : src.Website,
                 SupportUrl = string.IsNullOrWhiteSpace(src.Website) ? null : src.Website,
                 SupportEmail = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
-                SupportPhone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone
+                SupportPhone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
             },
             Company = new AccountCompanyOptions
             {
@@ -752,20 +800,29 @@ public class GraphQlMapper : IGraphQlMapper
                         City = src.PhysicalAddress?.City.ToSafeString(),
                         State = src.PhysicalAddress?.Province.ToSafeString(),
                         PostalCode = src.PhysicalAddress?.Zipcode.ToSafeString(),
-                        Country = src.PhysicalAddress?.Country.ToSafeString()
+                        Country = src.PhysicalAddress?.Country.ToSafeString(),
                     },
-                Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone
+                Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
             },
             BusinessType = "company",
             Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
             Capabilities =
                 new AccountCapabilitiesOptions
                 {
-                    CardPayments = new AccountCapabilitiesCardPaymentsOptions { Requested = true },
-                    Transfers = new AccountCapabilitiesTransfersOptions { Requested = true }
+                    CardPayments = new AccountCapabilitiesCardPaymentsOptions
+                    {
+                        Requested = true,
+                    },
+                    Transfers = new AccountCapabilitiesTransfersOptions
+                    {
+                        Requested = true,
+                    },
                 },
             Type = "standard",
-            Metadata = new Dictionary<string, string> { { "organizationId", src.Id } }
+            Metadata = new Dictionary<string, string>
+            {
+                { "organizationId", src.Id },
+            },
         };
 
     public OrganizationStripeConnectAccount MapTo(
@@ -794,7 +851,7 @@ public class GraphQlMapper : IGraphQlMapper
             DetailsSubmitted = src.DetailsSubmitted,
             CapabilitiesCardPayments = src.Capabilities.CardPayments.ToSafeString(),
             CapabilitiesTransfers = src.Capabilities.Transfers.ToSafeString(),
-            Organization = organization
+            Organization = organization,
         };
 
     public Shared.Models.OrganizationStripeConnectAccount MapTo(OrganizationStripeConnectAccount src) =>
@@ -823,7 +880,7 @@ public class GraphQlMapper : IGraphQlMapper
             CapabilitiesTransfers = src.CapabilitiesTransfers,
             OnboardingUrl = src.OnboardingUrl,
             Organization = MapTo(src.Organization, Constants.EmptyUri),
-            OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
+            OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization),
         };
 
     public OrganizationStripeConnectAccountDetails? MapTo(Shared.Models.OrganizationStripeConnectAccount? src) =>
@@ -851,7 +908,7 @@ public class GraphQlMapper : IGraphQlMapper
                 OnboardingUrl = src.OnboardingUrl,
                 IsOnboardingCompleted = src.IsOnboardingCompleted(),
                 IsAuthorized = src.IsAuthorized(),
-                Organization = MapTo(src.Organization)!
+                Organization = MapTo(src.Organization)!,
             };
 
     public OrganizationStripeConnectAccountEdge MapTo(Edge<Shared.Models.OrganizationStripeConnectAccount> src) => new(MapTo(src.Node)!, src.Cursor);
@@ -891,7 +948,7 @@ public class GraphQlMapper : IGraphQlMapper
             AccountHolderName = src.AccountHolderName,
             AccountNumber = src.AccountNumber,
             Country = src.Country,
-            Organization = MapTo(src.Organization, Constants.EmptyUri)
+            Organization = MapTo(src.Organization, Constants.EmptyUri),
         };
 
     public Shared.Models.OrganizationBankAccount MapTo(AddOrganizationBankAccountInput src) =>
@@ -905,8 +962,9 @@ public class GraphQlMapper : IGraphQlMapper
             Country = src.Country,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
-            }
+                Id = src.OrganizationId.ToSafeString(),
+                CustomDomain = src.OrganizationCustomDomain.ToSafeString(),
+            },
         };
 
     public OrganizationBankAccountPatchRequest MapTo(UpdateOrganizationBankAccountInput src) =>
@@ -924,7 +982,7 @@ public class GraphQlMapper : IGraphQlMapper
                 AccountHolderName = src.AccountHolderName,
                 AccountNumber = src.AccountNumber,
                 Country = src.Country,
-                Organization = MapTo(src.Organization)!
+                Organization = MapTo(src.Organization)!,
             };
 
     public OrganizationBankAccountEdge MapTo(Edge<Shared.Models.OrganizationBankAccount> src) => new(MapTo(src.Node)!, src.Cursor);
@@ -999,7 +1057,7 @@ public class GraphQlMapper : IGraphQlMapper
                 LastSuccessfulSyncAt = src.LastSuccessfulSyncAt,
                 LastError = src.LastError,
                 HasAccessToken = src.HasAccessToken,
-                HasRefreshToken = src.HasRefreshToken
+                HasRefreshToken = src.HasRefreshToken,
             };
 
     public OrganizationPhysicalAddress MapTo(Shared.Models.OrganizationPhysicalAddress src, Shared.Database.Entities.Organization organization) =>
@@ -1036,11 +1094,15 @@ public class GraphQlMapper : IGraphQlMapper
         {
             Id = src.Id,
             Email = src.Email,
-            Status = new OrganizationInvitationStatusDetails { Type = src.Status, Name = src.Status.ToInvitationStatusName() },
+            Status = new OrganizationInvitationStatusDetails
+            {
+                Type = src.Status,
+                Name = src.Status.ToInvitationStatusName(),
+            },
             Role = src.Role,
             Organization = MapTo(src.Organization)!,
             CreatedById = src.CreatedBy.Id,
-            InviteeId = src.Invitee?.Id
+            InviteeId = src.Invitee?.Id,
         };
 
     public Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
@@ -1077,17 +1139,17 @@ public class GraphQlMapper : IGraphQlMapper
                 Status = src.ActiveVersion.Status,
                 EffectiveFrom = src.ActiveVersion.EffectiveFrom,
                 EffectiveUntil = src.ActiveVersion.EffectiveUntil,
-                CompatibilityNotes = src.ActiveVersion.CompatibilityNotes
+                CompatibilityNotes = src.ActiveVersion.CompatibilityNotes,
             },
             ProductOfferings = src.ProductOfferings.Select(MapToPricingProductOffering),
-            GeneratedAt = src.GeneratedAt
+            GeneratedAt = src.GeneratedAt,
         };
 
     private static IReadOnlyList<OfferingCode> GetAvailableOfferingCodes(OrganizationType organizationType) =>
         organizationType switch
         {
             OrganizationType.Marketplace => Offerings.SpacesOfferings,
-            _ => Offerings.TeamsOfferings
+            _ => Offerings.TeamsOfferings,
         };
 
     private Shared.Models.Organization MapTo(
@@ -1121,7 +1183,7 @@ public class GraphQlMapper : IGraphQlMapper
             IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList(),
             OrganizationSsoSettings = MapTo(src.OrganizationSsoSettings),
             OrganizationTaxDetails = MapTo(src.OrganizationTaxDetails),
-            OrganizationXeroConnection = MapTo(src.OrganizationXeroConnection)
+            OrganizationXeroConnection = MapTo(src.OrganizationXeroConnection),
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
@@ -1150,7 +1212,7 @@ public class GraphQlMapper : IGraphQlMapper
             Name = offering.Name,
             Description = offering.Description,
             Visibility = offering.Visibility,
-            Plans = offering.Plans.OrderBy(plan => plan.DisplayOrder).Select(MapToPricingSubscriptionPlan)
+            Plans = offering.Plans.OrderBy(plan => plan.DisplayOrder).Select(MapToPricingSubscriptionPlan),
         };
 
     private static PricingSubscriptionPlanDetails MapToPricingSubscriptionPlan(SubscriptionPlan plan) =>
@@ -1166,7 +1228,7 @@ public class GraphQlMapper : IGraphQlMapper
             CapacityOptions = plan.CapacityOptions.OrderBy(option => option.DisplayOrder).Select(MapToPricingCapacityOption),
             Availability = plan.Availability,
             Recommended = plan.Recommended,
-            DisplayOrder = plan.DisplayOrder
+            DisplayOrder = plan.DisplayOrder,
         };
 
     private static PricingCapacityOptionDetails MapToPricingCapacityOption(CapacityOption option) =>
@@ -1177,17 +1239,34 @@ public class GraphQlMapper : IGraphQlMapper
             Label = option.Label,
             Price = option.Price is null ? null : MapToPricingPlanPrice(option.Price),
             Availability = option.Availability,
-            DisplayOrder = option.DisplayOrder
+            DisplayOrder = option.DisplayOrder,
         };
 
     private static PricingPlanFeatureDetails MapToPricingPlanFeature(PlanFeature feature) =>
-        new() { Code = feature.Code, Name = feature.Name, DisplayOrder = feature.DisplayOrder };
+        new()
+        {
+            Code = feature.Code,
+            Name = feature.Name,
+            DisplayOrder = feature.DisplayOrder,
+        };
 
     private static PricingPlanLimitDetails MapToPricingPlanLimit(PlanLimit limit) =>
-        new() { Code = limit.Code, Name = limit.Name, Limit = limit.Limit, Unlimited = limit.Unlimited };
+        new()
+        {
+            Code = limit.Code,
+            Name = limit.Name,
+            Limit = limit.Limit,
+            Unlimited = limit.Unlimited,
+        };
 
     private static PricingPlanPriceDetails MapToPricingPlanPrice(PlanPrice price) =>
-        new() { Currency = price.Currency, Amount = price.Amount, Cadence = price.Cadence, TaxInclusive = price.TaxInclusive };
+        new()
+        {
+            Currency = price.Currency,
+            Amount = price.Amount,
+            Cadence = price.Cadence,
+            TaxInclusive = price.TaxInclusive,
+        };
 
     private static Shared.Models.OrganizationPhysicalAddress? MapTo(OrganizationPhysicalAddressPatchInput? src) =>
         src is null
@@ -1207,7 +1286,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode
+                CountryCode = src.CountryCode,
             };
 
     private IEnumerable<OrganizationMember> MapTo(
@@ -1234,18 +1313,26 @@ public class GraphQlMapper : IGraphQlMapper
             UnitPrice = src.UnitPrice,
             FixedPrice = src.FixedPrice,
             DiscountPercentage = src.DiscountPercentage,
-            Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
+            Currency = new CurrencyDetails
+            {
+                Type = src.Currency,
+                Name = src.Currency.ToCurrencyName(),
+            },
             PurchasedUserCapacity = src.PurchasedUserCapacity,
             PurchasedLocationCapacity = src.PurchasedLocationCapacity,
             PurchasedTeamCapacity = src.PurchasedTeamCapacity,
             CatalogVersion =
                 src.CatalogVersion is null
                     ? null
-                    : new CatalogVersionDetails { Type = src.CatalogVersion.Value, Name = src.CatalogVersion.Value.ToCatalogVersionName() },
+                    : new CatalogVersionDetails
+                    {
+                        Type = src.CatalogVersion.Value,
+                        Name = src.CatalogVersion.Value.ToCatalogVersionName(),
+                    },
             FeatureSet = MapTo(offering),
             UnderPriceLines = offering.UnderPriceLines,
             Free = src.Code.IsFreeOffering(),
-            EarlyBird = src.Code.IsEarlyBirdOffering()
+            EarlyBird = src.Code.IsEarlyBirdOffering(),
         };
     }
 
@@ -1253,7 +1340,11 @@ public class GraphQlMapper : IGraphQlMapper
 
     private static OrganizationIndustryMainCategoryReferenceDetails MapTo(IndustryMainCategory src)
     {
-        var organizationIndustryMainCategoryReferenceDetails = new OrganizationIndustryMainCategoryReferenceDetails { Id = src.Id, Name = src.Name };
+        var organizationIndustryMainCategoryReferenceDetails = new OrganizationIndustryMainCategoryReferenceDetails
+        {
+            Id = src.Id,
+            Name = src.Name,
+        };
 
         organizationIndustryMainCategoryReferenceDetails.SubCategories =
             MapTo(src.IndustrySubCategories, organizationIndustryMainCategoryReferenceDetails);
@@ -1275,7 +1366,7 @@ public class GraphQlMapper : IGraphQlMapper
             Name = src.Name,
             MainCategoryName = organizationIndustryMainCategoryReferenceDetails is null
                 ? src.IndustryMainCategory.Name
-                : organizationIndustryMainCategoryReferenceDetails.Name
+                : organizationIndustryMainCategoryReferenceDetails.Name,
         };
 
     private IndustrySubCategory? MapTo(Shared.Database.Entities.IndustrySubCategory? src, IndustryMainCategory? industryMainCategory)
@@ -1292,7 +1383,7 @@ public class GraphQlMapper : IGraphQlMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
-            IndustryMainCategory = industryMainCategory ?? MapTo(src.IndustryMainCategory)
+            IndustryMainCategory = industryMainCategory ?? MapTo(src.IndustryMainCategory),
         };
 
         return industrySubCategory;
@@ -1311,7 +1402,7 @@ public class GraphQlMapper : IGraphQlMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Name = src.Name
+            Name = src.Name,
         };
 
         industryMainCategory.IndustrySubCategories = MapTo(src.IndustrySubCategories, industryMainCategory).ToList();
@@ -1329,7 +1420,7 @@ public class GraphQlMapper : IGraphQlMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified
+            EmailVerified = src.EmailVerified,
         };
 
     private static IEnumerable<OrganizationOffering> MapTo(
@@ -1356,7 +1447,7 @@ public class GraphQlMapper : IGraphQlMapper
             PurchasedTeamCapacity = src.PurchasedTeamCapacity,
             DiscountPercentage = src.DiscountPercentage,
             CatalogVersion = src.CatalogVersion.ToNullableCatalogVersion(),
-            Organization = organization
+            Organization = organization,
         };
 
     private OrganizationSpacesSubscription MapToSpacesSubscription(
@@ -1376,7 +1467,7 @@ public class GraphQlMapper : IGraphQlMapper
             RolloverDate = src.End,
             CustomCapacity = src.Code == OfferingCode.SpacesContactUsV1 ? src.PurchasedTeamCapacity : null,
             CatalogVersion = src.CatalogVersion ?? src.Code.GetCurrentCatalogVersion(),
-            Status = src.Code.IsEarlyBirdOffering() ? OrganizationOfferingPlanStatus.Legacy : OrganizationOfferingPlanStatus.Active
+            Status = src.Code.IsEarlyBirdOffering() ? OrganizationOfferingPlanStatus.Legacy : OrganizationOfferingPlanStatus.Active,
         };
 
     private static PricingCatalogCommercialModel GetSpacesCommercialModel(PricingCatalogSubscriptionPlanCode planCode) =>
@@ -1386,7 +1477,7 @@ public class GraphQlMapper : IGraphQlMapper
             PricingCatalogSubscriptionPlanCode.Growth or PricingCatalogSubscriptionPlanCode.Business => PricingCatalogCommercialModel.UsageBased,
             PricingCatalogSubscriptionPlanCode.ContactUs => PricingCatalogCommercialModel.CapacityBased,
             PricingCatalogSubscriptionPlanCode.LegacyEarlyBird => PricingCatalogCommercialModel.Free,
-            _ => PricingCatalogCommercialModel.Free
+            _ => PricingCatalogCommercialModel.Free,
         };
 
     private static bool IsSpacesOffering(Shared.Database.Entities.Organization organization,
@@ -1413,7 +1504,7 @@ public class GraphQlMapper : IGraphQlMapper
             ModifiedAt = src.ModifiedAt,
             Organization = organization,
             Date = src.Date,
-            Count = src.Count
+            Count = src.Count,
         };
 
     private IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src, Shared.Models.Organization organization) =>
@@ -1429,7 +1520,7 @@ public class GraphQlMapper : IGraphQlMapper
             Status = src.Status.ToInvitationStatus(),
             Organization = organization,
             CreatedBy = MapTo(src.CreatedBy)!,
-            Invitee = MapTo(src.Invitee)
+            Invitee = MapTo(src.Invitee),
         };
 
     private Edge<OrganizationMember> MapTo(Edge<Shared.Database.Entities.OrganizationMember> src, Shared.Models.Organization organization) =>
@@ -1447,7 +1538,7 @@ public class GraphQlMapper : IGraphQlMapper
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
             Name = src.Name,
-            Organization = organization
+            Organization = organization,
         };
 
         azureTenant.AzureTenantMembers = MapTo(src.AzureTenantMembers, azureTenant).ToList();
@@ -1481,7 +1572,7 @@ public class GraphQlMapper : IGraphQlMapper
             PhotoUrl432 = src.PhotoUrl432,
             PhotoUrl504 = src.PhotoUrl504,
             PhotoUrl648 = src.PhotoUrl648,
-            AzureTenant = azureTenant
+            AzureTenant = azureTenant,
         };
 
     private Edge<Tag> MapTo(Edge<Shared.Database.Entities.Tag> src, Shared.Models.Organization organization)
@@ -1505,7 +1596,7 @@ public class GraphQlMapper : IGraphQlMapper
             Description = src.Description,
             Type = src.Type.ToOrganizationTagType(),
             Color = src.Color,
-            Organization = organization
+            Organization = organization,
         };
 
     private static Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src, Shared.Models.Organization organization) =>
@@ -1529,7 +1620,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Zipcode = src.Zipcode,
                 Country = src.Country,
                 CountryCode = src.CountryCode,
-                Organization = organization
+                Organization = organization,
             };
 
     private static GraphQL.Billing.OrganizationBillingDetails? MapToGraphQl(Shared.Models.OrganizationBillingDetails? src) =>
@@ -1554,7 +1645,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode
+                CountryCode = src.CountryCode,
             };
 
     private static IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<OrganizationStripePaymentMethod> src) => src.Select(MapTo);
@@ -1571,7 +1662,7 @@ public class GraphQlMapper : IGraphQlMapper
             CardFingerprint = src.CardFingerprint,
             CardFunding = src.CardFunding,
             CardIssuer = src.CardIssuer,
-            CardLastFourDigit = src.CardLastFourDigit
+            CardLastFourDigit = src.CardLastFourDigit,
         };
 
     private static OrganizationStripeCustomer? MapTo(
@@ -1586,7 +1677,7 @@ public class GraphQlMapper : IGraphQlMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 StripeCustomerId = src.StripeCustomerId,
-                Organization = organization
+                Organization = organization,
             };
 
     private static IEnumerable<OrganizationStripePaymentMethod> MapTo(
@@ -1613,7 +1704,7 @@ public class GraphQlMapper : IGraphQlMapper
             CardFunding = src.CardFunding,
             CardIssuer = src.CardIssuer,
             CardLastFourDigit = src.CardLastFourDigit,
-            Organization = organization
+            Organization = organization,
         };
 
     private static OrganizationSsoSettings? MapTo(Shared.Database.Entities.OrganizationSsoSettings? src) =>
@@ -1627,7 +1718,7 @@ public class GraphQlMapper : IGraphQlMapper
                 IsActive = src.IsActive,
                 EntityId = src.EntityId,
                 LoginUrl = src.LoginUrl,
-                AppFederationMetadataUrl = src.AppFederationMetadataUrl
+                AppFederationMetadataUrl = src.AppFederationMetadataUrl,
             };
 
     private static OrganizationTaxDetails? MapTo(Shared.Database.Entities.OrganizationTaxDetails? src) =>
@@ -1640,7 +1731,7 @@ public class GraphQlMapper : IGraphQlMapper
                 ModifiedAt = src.ModifiedAt,
                 IsRegistered = src.IsRegistered,
                 TaxId = src.TaxId,
-                TaxRatePercentage = src.TaxRatePercentage
+                TaxRatePercentage = src.TaxRatePercentage,
             };
 
     private static OrganizationStripeConnectAccountAuthorization? MapTo(
@@ -1649,7 +1740,10 @@ public class GraphQlMapper : IGraphQlMapper
             ? null
             : new OrganizationStripeConnectAccountAuthorization
             {
-                Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, IsAuthorized = src.IsAuthorized
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                IsAuthorized = src.IsAuthorized,
             };
 
     private static IEnumerable<Shared.Models.OrganizationStripeConnectAccount> MapTo(
@@ -1683,7 +1777,7 @@ public class GraphQlMapper : IGraphQlMapper
         CapabilitiesTransfers = src.CapabilitiesTransfers,
         OnboardingUrl = src.OnboardingUrl,
         Organization = organization,
-        OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization)
+        OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization),
     };
 
     private static OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSettings? src) =>
@@ -1695,7 +1789,7 @@ public class GraphQlMapper : IGraphQlMapper
                 IsActive = src.IsActive,
                 EntityId = src.EntityId,
                 LoginUrl = src.LoginUrl,
-                AppFederationMetadataUrl = src.AppFederationMetadataUrl
+                AppFederationMetadataUrl = src.AppFederationMetadataUrl,
             };
 
     private static GraphQL.TaxDetails.OrganizationTaxDetails? MapTo(OrganizationTaxDetails? src) =>
@@ -1703,7 +1797,10 @@ public class GraphQlMapper : IGraphQlMapper
             ? null
             : new GraphQL.TaxDetails.OrganizationTaxDetails
             {
-                Id = src.Id, IsRegistered = src.IsRegistered, TaxId = src.TaxId, TaxRatePercentage = src.TaxRatePercentage
+                Id = src.Id,
+                IsRegistered = src.IsRegistered,
+                TaxId = src.TaxId,
+                TaxRatePercentage = src.TaxRatePercentage,
             };
 
     private static OrganizationXeroConnection? MapTo(Shared.Database.Entities.OrganizationXeroConnection? src) =>
@@ -1734,7 +1831,7 @@ public class GraphQlMapper : IGraphQlMapper
                 AccessTokenEncrypted = src.AccessTokenEncrypted,
                 RefreshTokenEncrypted = src.RefreshTokenEncrypted,
                 HasAccessToken = !string.IsNullOrWhiteSpace(src.AccessTokenEncrypted),
-                HasRefreshToken = !string.IsNullOrWhiteSpace(src.RefreshTokenEncrypted)
+                HasRefreshToken = !string.IsNullOrWhiteSpace(src.RefreshTokenEncrypted),
             };
 
     private static OrganizationPhysicalAddressDetails? MapToGraphQl(Shared.Models.OrganizationPhysicalAddress? src) =>
@@ -1757,7 +1854,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode
+                CountryCode = src.CountryCode,
             };
 
     private static Shared.Models.OrganizationPhysicalAddress? MapTo(OrganizationPhysicalAddress? src, Shared.Models.Organization organization) =>
@@ -1779,7 +1876,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Zipcode = src.Zipcode,
                 Country = src.Country,
                 CountryCode = src.CountryCode,
-                Organization = organization
+                Organization = organization,
             };
 
     private static MyOrganizationDetails MapToMyOrganizationDetails(Shared.Models.Organization src) =>
@@ -1791,10 +1888,14 @@ public class GraphQlMapper : IGraphQlMapper
             Website = src.Website,
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             LogoUrl = src.LogoUrl,
-            Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
+            Type = new OrganizationTypeDetails
+            {
+                Type = src.Type,
+                Name = src.Type.ToOrganizationTypeName(),
+            },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             FeatureImages = src.FeatureImages,
-            IsMyOnboardingDone = src.IsMyOnboardingDone
+            IsMyOnboardingDone = src.IsMyOnboardingDone,
         };
 }

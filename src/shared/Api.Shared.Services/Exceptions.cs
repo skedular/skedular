@@ -91,7 +91,7 @@ public class SpacesAccessDenied(SpacesAccessDecision decision)
         SpacesAccessReasonCode.PaidInactive => "This organization's Spaces subscription is inactive. Update the subscription to continue.",
         SpacesAccessReasonCode.MissingOfferingState or SpacesAccessReasonCode.MissingTrialState =>
             "This organization's Spaces subscription state is incomplete. Update the subscription to continue.",
-        _ => "This organization cannot perform this Spaces action with its current subscription."
+        _ => "This organization cannot perform this Spaces action with its current subscription.",
     };
 }
 

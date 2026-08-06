@@ -13,15 +13,27 @@ public class CanCreateLocationShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_True_When_Entitlement_Allows_Location_Creation(
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IPricingEntitlementEvaluator pricingEntitlementEvaluator,
-        [Frozen] ISpacesAccessEvaluator spacesAccessEvaluator,
-        [Frozen] ILogger<OrganizationOfferingService> logger,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IPricingEntitlementEvaluator pricingEntitlementEvaluator,
+        [Frozen]
+        ISpacesAccessEvaluator spacesAccessEvaluator,
+        [Frozen]
+        ILogger<OrganizationOfferingService> logger,
         OrganizationOfferingService sut,
         SpacesAccessEvaluator evaluator,
         CancellationToken cancellationToken)
     {
-        var organization = new Organization { Id = "org-1", Offering = new Offering { Code = OfferingCode.PayAsYouGoV1 }, Locations = [] };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Offering = new Offering
+            {
+                Code = OfferingCode.PayAsYouGoV1,
+            },
+            Locations = [],
+        };
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync("org-1", null, cancellationToken))
             .Returns(organization);
@@ -43,14 +55,25 @@ public class CanCreateLocationShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_False_When_Entitlement_Denies_Location_Creation(
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IPricingEntitlementEvaluator pricingEntitlementEvaluator,
-        [Frozen] ISpacesAccessEvaluator spacesAccessEvaluator,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IPricingEntitlementEvaluator pricingEntitlementEvaluator,
+        [Frozen]
+        ISpacesAccessEvaluator spacesAccessEvaluator,
         OrganizationOfferingService sut,
         SpacesAccessEvaluator evaluator,
         CancellationToken cancellationToken)
     {
-        var organization = new Organization { Id = "org-1", Offering = new Offering { Code = OfferingCode.FreeTierV1 }, Locations = [] };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Offering = new Offering
+            {
+                Code = OfferingCode.FreeTierV1,
+            },
+            Locations = [],
+        };
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync("org-1", null, cancellationToken))
             .Returns(organization);
@@ -67,10 +90,14 @@ public class CanCreateLocationShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_False_At_Exact_Trial_Expiry_Before_Legacy_Entitlement_Check(
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IPricingEntitlementEvaluator pricingEntitlementEvaluator,
-        [Frozen] ISpacesAccessEvaluator spacesAccessEvaluator,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IPricingEntitlementEvaluator pricingEntitlementEvaluator,
+        [Frozen]
+        ISpacesAccessEvaluator spacesAccessEvaluator,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationOfferingService sut,
         SpacesAccessEvaluator evaluator,
         string organizationId,
@@ -79,9 +106,17 @@ public class CanCreateLocationShould
     {
         var offering = new Offering
         {
-            Code = OfferingCode.SpacesFreeTierV1, SpacesProductEnabled = true, SpacesTrialStartedAt = now.AddDays(-14), SpacesTrialEndsAt = now
+            Code = OfferingCode.SpacesFreeTierV1,
+            SpacesProductEnabled = true,
+            SpacesTrialStartedAt = now.AddDays(-14),
+            SpacesTrialEndsAt = now,
         };
-        var organization = new Organization { Id = organizationId, Offering = offering, Locations = [] };
+        var organization = new Organization
+        {
+            Id = organizationId,
+            Offering = offering,
+            Locations = [],
+        };
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken))
             .Returns(organization);

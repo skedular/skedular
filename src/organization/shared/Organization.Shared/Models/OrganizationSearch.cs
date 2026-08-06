@@ -8,5 +8,5 @@ public record OrganizationOrder(OrderDirection Direction, OrganizationOrderField
 
 public enum OrganizationOrderField
 {
-    Name
+    Name,
 }

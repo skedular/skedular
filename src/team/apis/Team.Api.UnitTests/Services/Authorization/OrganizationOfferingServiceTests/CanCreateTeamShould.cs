@@ -15,13 +15,20 @@ public class CanCreateTeamShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_When_Organization_Is_Not_Private(
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
         OrganizationOfferingService sut,
         CancellationToken cancellationToken)
     {
         var organization = new Organization
         {
-            Id = "org-1", Type = OrganizationTypeConstants.Marketplace, Offering = new Offering { Code = OfferingCode.PayAsYouGoV1 }, Teams = []
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Marketplace,
+            Offering = new Offering
+            {
+                Code = OfferingCode.PayAsYouGoV1,
+            },
+            Teams = [],
         };
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync("org-1", null, cancellationToken))
@@ -33,15 +40,24 @@ public class CanCreateTeamShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_True_When_Private_Organization_Is_Within_Offering_Limit(
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IPricingEntitlementEvaluator pricingEntitlementEvaluator,
-        [Frozen] ILogger<OrganizationOfferingService> logger,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IPricingEntitlementEvaluator pricingEntitlementEvaluator,
+        [Frozen]
+        ILogger<OrganizationOfferingService> logger,
         OrganizationOfferingService sut,
         CancellationToken cancellationToken)
     {
         var organization = new Organization
         {
-            Id = "org-1", Type = OrganizationTypeConstants.Private, Offering = new Offering { Code = OfferingCode.PayAsYouGoV1 }, Teams = []
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Private,
+            Offering = new Offering
+            {
+                Code = OfferingCode.PayAsYouGoV1,
+            },
+            Teams = [],
         };
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync("org-1", null, cancellationToken))

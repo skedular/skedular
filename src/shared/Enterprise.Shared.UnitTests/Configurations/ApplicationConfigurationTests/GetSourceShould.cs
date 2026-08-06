@@ -9,7 +9,12 @@ public class GetSourceShould
     [AutoFakeItEasyData]
     public void Return_formatted_source_string(string environment, string domainSource, string appSource)
     {
-        var config = new ApplicationConfiguration { Environment = environment, DomainSource = domainSource, AppSource = appSource };
+        var config = new ApplicationConfiguration
+        {
+            Environment = environment,
+            DomainSource = domainSource,
+            AppSource = appSource,
+        };
 
         config.GetSource().ShouldBe($"{environment}::{domainSource}::{appSource}");
     }

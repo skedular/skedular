@@ -98,18 +98,25 @@ public class UpdateTeamPatchSaveShould(
         var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken);
         organization.Offering = new Offering
         {
-            Id = organizationId, Code = OfferingCode.EnterpriseCustomV1, Start = now.AddDays(-1), End = now.AddDays(1)
+            Id = organizationId,
+            Code = OfferingCode.EnterpriseCustomV1,
+            Start = now.AddDays(-1),
+            End = now.AddDays(1),
         };
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, cancellationToken);
 
-        repositoryFactory.IdentityRepository.Add(new Identity { Id = identityId, Customer = customer });
+        repositoryFactory.IdentityRepository.Add(new Identity
+        {
+            Id = identityId,
+            Customer = customer,
+        });
         repositoryFactory.OrganizationMemberRepository.Add(new OrganizationMember
         {
             Id = memberId,
             Organization = organization,
             Customer = customer,
             Role = OrganizationMemberRoleConstants.Owner,
-            Status = OrganizationMemberStatusConstants.Active
+            Status = OrganizationMemberStatusConstants.Active,
         });
         repositoryFactory.TeamRepository.Add(new Shared.Database.Entities.Team
         {
@@ -117,7 +124,7 @@ public class UpdateTeamPatchSaveShould(
             Organization = organization,
             Name = originalName,
             About = originalAbout,
-            Timezone = originalTimezone
+            Timezone = originalTimezone,
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

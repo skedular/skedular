@@ -28,6 +28,6 @@ public static class EventMetadataFactory
             AppSource = appSource,
             Type = type!,
             Time = Timestamp.FromDateTimeOffset(DateTimeOffset.UtcNow),
-            CorrelationId = string.IsNullOrWhiteSpace(correlationId) ? Guid.NewGuid().ToString() : correlationId!
+            CorrelationId = string.IsNullOrWhiteSpace(correlationId) ? Guid.NewGuid().ToString() : correlationId!,
         };
 }

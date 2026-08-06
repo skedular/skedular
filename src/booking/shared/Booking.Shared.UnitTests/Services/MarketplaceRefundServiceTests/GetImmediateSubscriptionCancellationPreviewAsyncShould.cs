@@ -16,7 +16,8 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Use_Next_Renewal_At_As_Subscription_Reference_Time(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -43,7 +44,8 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Non_Refundable_Preview_When_Current_Billing_Window_Payment_Is_Not_Confirmed(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -61,9 +63,10 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
                 StartDate = requestedAt.AddDays(-5),
                 MarketplaceBooking = new MarketplaceBookingEntity
                 {
-                    PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(), ProductPricing = subscription.MarketplaceBooking.ProductPricing
-                }
-            }
+                    PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
+                    ProductPricing = subscription.MarketplaceBooking.ProductPricing,
+                },
+            },
         ];
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -79,7 +82,8 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Calculate_67_Percent_Refund_When_10_Of_30_Days_Consumed(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -99,9 +103,10 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
                 StartDate = startedAt,
                 MarketplaceBooking = new MarketplaceBookingEntity
                 {
-                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(), ProductPricing = subscription.MarketplaceBooking.ProductPricing
-                }
-            }
+                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(),
+                    ProductPricing = subscription.MarketplaceBooking.ProductPricing,
+                },
+            },
         ];
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -116,7 +121,8 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Calculate_0_Percent_Refund_When_Full_Cycle_Consumed(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -136,9 +142,10 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
                 StartDate = startedAt,
                 MarketplaceBooking = new MarketplaceBookingEntity
                 {
-                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(), ProductPricing = subscription.MarketplaceBooking.ProductPricing
-                }
-            }
+                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(),
+                    ProductPricing = subscription.MarketplaceBooking.ProductPricing,
+                },
+            },
         ];
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -153,7 +160,8 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Calculate_100_Percent_Refund_When_0_Days_Consumed(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -173,9 +181,10 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
                 StartDate = startedAt,
                 MarketplaceBooking = new MarketplaceBookingEntity
                 {
-                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(), ProductPricing = subscription.MarketplaceBooking.ProductPricing
-                }
-            }
+                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(),
+                    ProductPricing = subscription.MarketplaceBooking.ProductPricing,
+                },
+            },
         ];
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -190,7 +199,8 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Never_Exceed_100_Percent_When_Cancellation_Is_Requested_Before_The_Billing_Window(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -209,9 +219,10 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
                 StartDate = startedAt,
                 MarketplaceBooking = new MarketplaceBookingEntity
                 {
-                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(), ProductPricing = subscription.MarketplaceBooking.ProductPricing
-                }
-            }
+                    PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(),
+                    ProductPricing = subscription.MarketplaceBooking.ProductPricing,
+                },
+            },
         ];
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -244,9 +255,13 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
                 {
                     Product = new ProductEntity
                     {
-                        Organization = new OrganizationEntity { Id = "org-1", BillingCycle = OrganizationBillingCycleConstants.Monthly }
-                    }
-                }
+                        Organization = new OrganizationEntity
+                        {
+                            Id = "org-1",
+                            BillingCycle = OrganizationBillingCycleConstants.Monthly,
+                        },
+                    },
+                },
             },
             RecurringBookings =
             [
@@ -257,10 +272,10 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
                     MarketplaceBooking = new MarketplaceBookingEntity
                     {
                         PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(),
-                        ProductPricing = CreatePricing(cancellationPolicyType, cancellationRefundRules)
-                    }
-                }
-            ]
+                        ProductPricing = CreatePricing(cancellationPolicyType, cancellationRefundRules),
+                    },
+                },
+            ],
         };
 
     private static ProductPricing CreatePricing(

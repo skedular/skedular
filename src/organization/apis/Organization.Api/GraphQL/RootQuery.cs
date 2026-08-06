@@ -14,7 +14,13 @@ public class RootQuery(IVersionService versionService)
     {
         var version = versionService.GetVersion();
 
-        return new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision };
+        return new Version
+        {
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
+        };
     }
 
     [UseResolverScope]
@@ -23,12 +29,20 @@ public class RootQuery(IVersionService versionService)
     [UseResolverScope]
     public IEnumerable<OrganizationTagTypeDetails> ResourceTypes() =>
         OrganizationTagTypeConstants.ResourceTypes.Select(item =>
-            new OrganizationTagTypeDetails { Type = item, Name = item.ToOrganizationTagTypeName() });
+            new OrganizationTagTypeDetails
+            {
+                Type = item,
+                Name = item.ToOrganizationTagTypeName(),
+            });
 
     [UseResolverScope]
     public IEnumerable<OrganizationTagTypeDetails> LocationSpaceTypes() =>
         OrganizationTagTypeConstants.LocationSpaceTypes.Select(item =>
-            new OrganizationTagTypeDetails { Type = item, Name = item.ToOrganizationTagTypeName() });
+            new OrganizationTagTypeDetails
+            {
+                Type = item,
+                Name = item.ToOrganizationTagTypeName(),
+            });
 
     [UseResolverScope]
     public IEnumerable<string> EmailsToShowLatestCapabilities() => ["morteza.alizadeh@gmail.com", "leila.alavi78@gmail.com"];

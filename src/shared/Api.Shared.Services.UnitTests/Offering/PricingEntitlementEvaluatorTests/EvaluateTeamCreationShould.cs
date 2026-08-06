@@ -10,7 +10,11 @@ public class EvaluateTeamCreationShould
     [AutoFakeItEasyData]
     public void Block_Free_Second_Team(PricingEntitlementEvaluator sut)
     {
-        var offering = new SharedOffering { Code = OfferingCode.FreeTierV1, PurchasedTeamCapacity = 1 };
+        var offering = new SharedOffering
+        {
+            Code = OfferingCode.FreeTierV1,
+            PurchasedTeamCapacity = 1,
+        };
 
         var result = sut.EvaluateTeamCreation(offering, 1);
 
@@ -22,7 +26,11 @@ public class EvaluateTeamCreationShould
     [AutoFakeItEasyData]
     public void Allow_Pay_As_You_Go_Team_Creation(PricingEntitlementEvaluator sut)
     {
-        var offering = new SharedOffering { Code = OfferingCode.PayAsYouGoV1, PurchasedTeamCapacity = null };
+        var offering = new SharedOffering
+        {
+            Code = OfferingCode.PayAsYouGoV1,
+            PurchasedTeamCapacity = null,
+        };
 
         var result = sut.EvaluateTeamCreation(offering, 10);
 
@@ -34,7 +42,11 @@ public class EvaluateTeamCreationShould
     [AutoFakeItEasyData]
     public void Allow_Early_Bird_Team_Creation_Despite_Persisted_Capacity(PricingEntitlementEvaluator sut)
     {
-        var offering = new SharedOffering { Code = OfferingCode.EarlyBirdV1, PurchasedTeamCapacity = 1 };
+        var offering = new SharedOffering
+        {
+            Code = OfferingCode.EarlyBirdV1,
+            PurchasedTeamCapacity = 1,
+        };
 
         var result = sut.EvaluateTeamCreation(offering, 100);
 

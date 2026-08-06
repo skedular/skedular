@@ -18,19 +18,38 @@ public class BookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetByIdAsync_Returns_Booking_For_Involved_Customer(
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] IEntityMapper sharedEntityMapper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedBookingService cachedBookingService,
+        [Frozen]
+        IEntityMapper sharedEntityMapper,
         BookingService sut,
         CancellationToken cancellationToken)
     {
         var booking = new Shared.Database.Entities.Booking
         {
             Id = "booking-1",
-            InvolvedCustomers = [new Customer { Id = "customer-1" }],
-            InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                    Type = OrganizationTypeConstants.Marketplace,
+                },
+            ],
         };
-        var mappedBooking = new Shared.Models.Booking { Id = booking.Id };
+        var mappedBooking = new Shared.Models.Booking
+        {
+            Id = booking.Id,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
@@ -44,24 +63,46 @@ public class BookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetByIdAsync_Allows_Marketplace_Admin_To_View_Other_Customers_Booking(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] IEntityMapper sharedEntityMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedBookingService cachedBookingService,
+        [Frozen]
+        IEntityMapper sharedEntityMapper,
         BookingService sut,
         CancellationToken cancellationToken)
     {
         var booking = new Shared.Database.Entities.Booking
         {
             Id = "booking-1",
-            InvolvedCustomers = [new Customer { Id = "customer-2" }],
-            InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-2",
+                },
+            ],
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                    Type = OrganizationTypeConstants.Marketplace,
+                },
+            ],
         };
         var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1",
             OrganizationMemberRoleConstants.Administrator);
-        var mappedBooking = new Shared.Models.Booking { Id = booking.Id };
+        var mappedBooking = new Shared.Models.Booking
+        {
+            Id = booking.Id,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
@@ -85,16 +126,25 @@ public class BookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetPaginatedBookingsAsync_Allows_Requesting_Own_Marketplace_Bookings_By_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         BookingService sut,
         CancellationToken cancellationToken)
     {
         var searchCriteria = CreateSearchCriteria(["customer-1"], "org-1");
-        var organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Marketplace,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -125,10 +175,14 @@ public class BookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetPaginatedBookingsAsync_Throws_When_Marketplace_Member_Requests_Other_Customers_Bookings(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         BookingService sut,
         CancellationToken cancellationToken)
     {
@@ -148,11 +202,16 @@ public class BookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetPaginatedBookingsAsync_Allows_Private_Member_To_Request_Other_Customers_Bookings(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         BookingService sut,
         CancellationToken cancellationToken)
     {
@@ -220,11 +279,14 @@ public class BookingServiceShould
                 {
                     Id = "membership-1",
                     CustomerId = customerId,
-                    Customer = new Customer { Id = customerId },
+                    Customer = new Customer
+                    {
+                        Id = customerId,
+                    },
                     OrganizationId = id,
                     Status = OrganizationMemberStatusConstants.Active,
-                    Role = role
-                }
-            ]
+                    Role = role,
+                },
+            ],
         };
 }

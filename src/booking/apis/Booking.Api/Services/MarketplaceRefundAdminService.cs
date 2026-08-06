@@ -226,7 +226,7 @@ public class MarketplaceRefundAdminService(
             RefundAmount = amount,
             BaseAmount = amount,
             Currency = allocation.Currency,
-            Reason = reason
+            Reason = reason,
         });
         await repositoryFactory.MarketplaceRefundRepository.ReserveAllocationAsync(refund.Id, allocationId, amount, cancellationToken);
         logger.LogInformation(
@@ -303,8 +303,8 @@ public class MarketplaceRefundAdminService(
             SourcePaymentReference = item.SourcePaymentReference,
             SourcePaymentAmount = item.SourceCapturedAmount,
             AllocatedRefundAmount = item.AllocatedRefundAmount,
-            Currency = item.Currency.ToCurrency()
-        }).ToList()
+            Currency = item.Currency.ToCurrency(),
+        }).ToList(),
     };
 
     private async Task<MarketplaceRefund> GetAuthorizedRefundAsync(string id, CancellationToken cancellationToken)

@@ -24,7 +24,11 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.TagRepository.GetByIdAsync(id, ct) ?? throw new OrganizationTagNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (OrganizationTagNotFound)
@@ -40,7 +44,11 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.TagRepository.GetByIdAsync(id, cancellationToken) ?? throw new OrganizationTagNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromMinutes(30),
+                LocalCacheExpiration = TimeSpan.FromSeconds(30),
+            },
             cancellationToken: cancellationToken);
     }
 
@@ -53,7 +61,11 @@ public class CachedTagService(ApplicationConfiguration applicationConfiguration,
             await hybridCache.SetAsync(
                 CreateKeyById(item.Id),
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
     }

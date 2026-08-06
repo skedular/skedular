@@ -30,7 +30,10 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        var environment = new HostingEnvironment { EnvironmentName = Environments.Production };
+        var environment = new HostingEnvironment
+        {
+            EnvironmentName = Environments.Production,
+        };
 
 #pragma warning disable VSTHRD104
 #pragma warning disable VSTHRD002
@@ -64,7 +67,10 @@ public class Startup
             .AddSingleton(_ => new LocationResourcesService.LocationResourcesServiceClient(locationApiGrpcChannel));
 
         var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>() ??
-                                    new LocationConfiguration { ApiKey = "XXX" };
+                                    new LocationConfiguration
+                                    {
+                                        ApiKey = "XXX",
+                                    };
         services.AddSingleton(locationConfiguration);
 
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);

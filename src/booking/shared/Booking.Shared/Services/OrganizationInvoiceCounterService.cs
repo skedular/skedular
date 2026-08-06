@@ -50,7 +50,9 @@ public class OrganizationInvoiceCounterService(IRepositoryFactory repositoryFact
         {
             organizationInvoiceCounter = repositoryFactory.OrganizationInvoiceCounterRepository.Add(new OrganizationInvoiceCounter
             {
-                Id = randomHelper.Generate(), InvoiceNumber = 1, Organization = organization
+                Id = randomHelper.Generate(),
+                InvoiceNumber = 1,
+                Organization = organization,
             });
         }
         else

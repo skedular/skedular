@@ -23,8 +23,10 @@ public class GetBookingInvolvedTeamAndValidatePermissionsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_When_A_Team_Is_Not_Found(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ITeamRepository teamRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ITeamRepository teamRepository,
         TeamAuthorizationService sut,
         string customerId,
         CancellationToken cancellationToken)
@@ -41,14 +43,24 @@ public class GetBookingInvolvedTeamAndValidatePermissionsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_When_Add_Permission_Is_Denied(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ITeamRepository teamRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ITeamRepository teamRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         TeamAuthorizationService sut,
         string customerId,
         CancellationToken cancellationToken)
     {
-        var team = new Team { Id = "team-1", Organization = new Organization { Id = "org-1" } };
+        var team = new Team
+        {
+            Id = "team-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
+        };
 
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => teamRepository.GetByIdsAsync(A<IReadOnlyList<string>>._, false, cancellationToken)).Returns([team]);

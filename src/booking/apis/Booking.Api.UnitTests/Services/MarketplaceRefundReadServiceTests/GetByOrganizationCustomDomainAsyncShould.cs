@@ -18,27 +18,65 @@ public class GetByOrganizationCustomDomainAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Refunds_For_Organization_With_Actor_Names(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IXeroRefundService xeroRefundService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
         MarketplaceRefundReadService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Organization { Id = "org-1" };
-        var refund = new MarketplaceRefund { Id = "refund-1", OrganizationId = "org-1", RequestedByCustomerId = "requester-1" };
-        var refundEvent = new MarketplaceRefundEvent { Id = "refund-event-1", MarketplaceRefundId = "refund-1", ActorCustomerId = "actor-1" };
-        var mappedRefund = new MarketplaceRefundDetails { Id = "refund-1" };
-        var mappedEvent = new MarketplaceRefundEventDetails { Id = "refund-event-1" };
+        var organization = new Organization
+        {
+            Id = "org-1",
+        };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            OrganizationId = "org-1",
+            RequestedByCustomerId = "requester-1",
+        };
+        var refundEvent = new MarketplaceRefundEvent
+        {
+            Id = "refund-event-1",
+            MarketplaceRefundId = "refund-1",
+            ActorCustomerId = "actor-1",
+        };
+        var mappedRefund = new MarketplaceRefundDetails
+        {
+            Id = "refund-1",
+        };
+        var mappedEvent = new MarketplaceRefundEventDetails
+        {
+            Id = "refund-event-1",
+        };
         List<Customer> customers =
         [
-            new() { Id = "actor-1", GivenName = "Alex", FamilyName = "Operator" },
-            new() { Id = "requester-1", GivenName = "Jamie", FamilyName = "Buyer" }
+            new()
+            {
+                Id = "actor-1",
+                GivenName = "Alex",
+                FamilyName = "Operator",
+            },
+            new()
+            {
+                Id = "requester-1",
+                GivenName = "Jamie",
+                FamilyName = "Buyer",
+            },
         ];
 
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(null, "acme", false, false, cancellationToken)).Returns(organization);

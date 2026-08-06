@@ -44,9 +44,22 @@ public class MarketplaceExternalRefundReconciliationConfiguration
         builder.Property(item => item.ResolutionActorCustomerId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
         builder.Property(item => item.ResolutionCorrelationId).HasMaxLength(Constants.MaxRefundCorrelationIdLength);
 
-        builder.HasIndex(item => new { item.Status, item.NextRetryAt, item.RetryCount });
-        builder.HasIndex(item => new { item.Provider, item.ExternalRefundId }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.Status,
+            item.NextRetryAt,
+            item.RetryCount,
+        });
+        builder.HasIndex(item => new
+        {
+            item.Provider,
+            item.ExternalRefundId,
+        }).IsUnique();
         builder.HasIndex(item => item.Status);
-        builder.HasIndex(item => new { item.OrganizationId, item.Status });
+        builder.HasIndex(item => new
+        {
+            item.OrganizationId,
+            item.Status,
+        });
     }
 }

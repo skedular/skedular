@@ -47,7 +47,10 @@ public class LocationService(
         var rawLocations = csvLocationFileReaderService.ReadLocations();
 
         var organization = await organizationServiceClient.Admin_GetAsync(
-            new Admin_GetInput { CustomDomain = Constants.SkedularPublicLocationsCustomDomainName },
+            new Admin_GetInput
+            {
+                CustomDomain = Constants.SkedularPublicLocationsCustomDomainName,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -58,7 +61,10 @@ public class LocationService(
                 After = string.Empty,
                 Before = string.Empty,
                 Last = ((int?)null).ToNullInt(),
-                Where = new TagWhereInput { OrganizationId = organization.Id }
+                Where = new TagWhereInput
+                {
+                    OrganizationId = organization.Id,
+                },
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -81,7 +87,10 @@ public class LocationService(
                 After = string.Empty,
                 Before = string.Empty,
                 Last = ((int?)null).ToNullInt(),
-                Where = new LocationWhereInput { OrganizationCustomDomain = organization.CustomDomain }
+                Where = new LocationWhereInput
+                {
+                    OrganizationCustomDomain = organization.CustomDomain,
+                },
             },
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken)).Edges.Select(item => item.Node).Where(item => item.ExtraMetadata is not null).ToList();
@@ -100,7 +109,7 @@ public class LocationService(
                 "studio-space" => studioSpace.Id,
                 "commercial-kitchen" => commercialKitchen.Id,
                 "shoot-location" => shootLocation.Id,
-                _ => other.Id
+                _ => other.Id,
             };
 
             var matchingLocation = locations.FirstOrDefault(item => item.ExtraMetadata.OtherLinks.Contains(rawLocation.Url));
@@ -116,17 +125,33 @@ public class LocationService(
                     OrganizationId = organization.Id,
                     Type = LocationType.Marketplace,
                     Timezone = "Pacific/Auckland",
-                    ListingMetadata = new ListingMetadata { About = description.ToSafeString(), Title = string.Empty, SubTitle = string.Empty },
+                    ListingMetadata = new ListingMetadata
+                    {
+                        About = description.ToSafeString(),
+                        Title = string.Empty,
+                        SubTitle = string.Empty,
+                    },
                     ExtraMetadata = new ExtraMetadata
                     {
                         Website = rawLocation.Websites.ToSafeString(),
                         ContactDetails = new ContactDetails(),
-                        AreaRange = new AreaRange { FromInSqm = rawLocation.Area.ToSafeString(), ToInSqm = rawLocation.Area.ToSafeString() },
+                        AreaRange = new AreaRange
+                        {
+                            FromInSqm = rawLocation.Area.ToSafeString(),
+                            ToInSqm = rawLocation.Area.ToSafeString(),
+                        },
                         PeopleCapacity =
-                            new PeopleCapacity { From = rawLocation.People.ToSafeString(), To = rawLocation.People.ToSafeString() }
+                            new PeopleCapacity
+                            {
+                                From = rawLocation.People.ToSafeString(),
+                                To = rawLocation.People.ToSafeString(),
+                            },
                     },
-                    PhysicalAddress = new PhysicalAddress { AddressLine1 = rawLocation.Address.ToSafeString() },
-                    UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10).ToUpperInvariant()
+                    PhysicalAddress = new PhysicalAddress
+                    {
+                        AddressLine1 = rawLocation.Address.ToSafeString(),
+                    },
+                    UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10).ToUpperInvariant(),
                 };
 
                 adminAddInput.TagIds.Add(tagId);
@@ -169,17 +194,33 @@ public class LocationService(
                     OrganizationId = organization.Id,
                     Type = LocationType.Marketplace,
                     Timezone = "Pacific/Auckland",
-                    ListingMetadata = new ListingMetadata { About = description.ToSafeString(), Title = string.Empty, SubTitle = string.Empty },
+                    ListingMetadata = new ListingMetadata
+                    {
+                        About = description.ToSafeString(),
+                        Title = string.Empty,
+                        SubTitle = string.Empty,
+                    },
                     ExtraMetadata = new ExtraMetadata
                     {
                         Website = rawLocation.Websites.ToSafeString(),
                         ContactDetails = new ContactDetails(),
-                        AreaRange = new AreaRange { FromInSqm = rawLocation.Area.ToSafeString(), ToInSqm = rawLocation.Area.ToSafeString() },
+                        AreaRange = new AreaRange
+                        {
+                            FromInSqm = rawLocation.Area.ToSafeString(),
+                            ToInSqm = rawLocation.Area.ToSafeString(),
+                        },
                         PeopleCapacity =
-                            new PeopleCapacity { From = rawLocation.People.ToSafeString(), To = rawLocation.People.ToSafeString() }
+                            new PeopleCapacity
+                            {
+                                From = rawLocation.People.ToSafeString(),
+                                To = rawLocation.People.ToSafeString(),
+                            },
                     },
-                    PhysicalAddress = new PhysicalAddress { AddressLine1 = rawLocation.Address.ToSafeString() },
-                    UniqueClaimCode = matchingLocation.UniqueClaimCode.ToSafeString()
+                    PhysicalAddress = new PhysicalAddress
+                    {
+                        AddressLine1 = rawLocation.Address.ToSafeString(),
+                    },
+                    UniqueClaimCode = matchingLocation.UniqueClaimCode.ToSafeString(),
                 };
 
                 adminUpdateInput.TagIds.Add(tagId);
@@ -234,7 +275,7 @@ public class LocationService(
                         ---------------------
                         {rawLocation.Description}
                         ",
-                    stream = false
+                    stream = false,
                 },
                 cancellationToken: cancellationToken)
             .ReceiveJson<OllamaResponse>();
@@ -270,7 +311,7 @@ public class LocationService(
                         ---------------------
                         {rawLocation.Description}
                         ",
-                    stream = false
+                    stream = false,
                 },
                 cancellationToken: cancellationToken)
             .ReceiveJson<OllamaResponse>();

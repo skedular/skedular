@@ -72,9 +72,12 @@ public class OrganizationOfferings(
                 Amount = totalCost,
                 Currency = organizationOffering.Currency,
                 Confirm = true,
-                OffSession = true
+                OffSession = true,
             },
-            new RequestOptions { IdempotencyKey = organizationOffering.Id },
+            new RequestOptions
+            {
+                IdempotencyKey = organizationOffering.Id,
+            },
             cancellationToken);
 
         repositoryFactory.OrganizationStripePaymentIntentRepository.Add(
@@ -84,7 +87,7 @@ public class OrganizationOfferings(
                 OrganizationStripePaymentMethod = organizationStripePaymentMethod,
                 Amount = paymentIntent.Amount,
                 Currency = paymentIntent.Currency,
-                OrganizationOffering = organizationOffering
+                OrganizationOffering = organizationOffering,
             });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -130,7 +133,7 @@ public class OrganizationOfferings(
                     OrganizationStripePaymentMethod = organization.OrganizationStripePaymentMethods.First(),
                     Amount = paymentIntent.Amount,
                     Currency = paymentIntent.Currency,
-                    OrganizationOffering = newOrganizationOffering
+                    OrganizationOffering = newOrganizationOffering,
                 });
         }
 
@@ -208,7 +211,7 @@ public class OrganizationOfferings(
             PurchasedTeamCapacity = organizationOffering.PurchasedTeamCapacity,
             CatalogVersion = organizationOffering.CatalogVersion ?? organizationOffering.Code.GetCurrentCatalogVersion(),
             DiscountPercentage = organizationOffering.DiscountPercentage,
-            Organization = organization
+            Organization = organization,
         };
     }
 
@@ -242,9 +245,12 @@ public class OrganizationOfferings(
                 Amount = totalCost,
                 Currency = organizationOffering.Currency,
                 Confirm = true,
-                OffSession = true
+                OffSession = true,
             },
-            new RequestOptions { IdempotencyKey = idempotencyKey },
+            new RequestOptions
+            {
+                IdempotencyKey = idempotencyKey,
+            },
             cancellationToken);
     }
 

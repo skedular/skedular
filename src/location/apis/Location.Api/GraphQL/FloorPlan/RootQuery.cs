@@ -17,7 +17,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<FloorPlanDetails?> FloorPlanAsync(
         string id,
-        [Service] IFloorPlanService floorPlanService,
+        [Service]
+        IFloorPlanService floorPlanService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await floorPlanService.GetByIdAsync(id, cancellationToken));
 
@@ -25,8 +26,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<FloorPlanDetails?> FloorPlanByIdAsync(
-        [ID] string id,
-        [Service] IFloorPlanService floorPlanService,
+        [ID]
+        string id,
+        [Service]
+        IFloorPlanService floorPlanService,
         CancellationToken cancellationToken) =>
         await FloorPlanAsync(id, floorPlanService, cancellationToken);
 
@@ -38,7 +41,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         FloorPlanWhereInput where,
         IEnumerable<FloorPlanOrderInput>? orderBy,
-        [Service] IFloorPlanService floorPlanService,
+        [Service]
+        IFloorPlanService floorPlanService,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await floorPlanService.GetPaginatedFloorPlansAsync(
@@ -54,10 +58,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 }

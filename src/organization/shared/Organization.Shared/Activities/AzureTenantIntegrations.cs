@@ -80,10 +80,17 @@ public class AzureTenantIntegrations(
         {
             First = ((int?)null).ToNullInt(),
             Last = ((int?)null).ToNullInt(),
-            Where = new LocationWhereInput { OrganizationId = azureTenant.Organization.Id }
+            Where = new LocationWhereInput
+            {
+                OrganizationId = azureTenant.Organization.Id,
+            },
         };
         getPaginatedLocationsInput.OrderBy.AddRange([
-            new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
+            new LocationOrderInput
+            {
+                Direction = OrderDirection.Ascending,
+                Field = LocationOrderField.Name,
+            },
         ]);
         var getLocationsResponse = await locationServiceClient.Admin_GetPaginatedLocationsAsync(
             getPaginatedLocationsInput,
@@ -95,7 +102,10 @@ public class AzureTenantIntegrations(
         foreach (var tenantMember in azureTenant.AzureTenantMembers)
         {
             var anyCustomerExistByVerifiableTokenResponse = await customerAdminServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
-                new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = tenantMember.Id },
+                new Admin_AnyCustomerExistByVerifiableTokenInput
+                {
+                    VerifiableToken = tenantMember.Id,
+                },
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
             if (anyCustomerExistByVerifiableTokenResponse.Exist)
@@ -112,7 +122,8 @@ public class AzureTenantIntegrations(
                     await customerAdminServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
+                            OrganizationId = azureTenant.Organization.Id,
+                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id,
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -124,7 +135,7 @@ public class AzureTenantIntegrations(
                         new Admin_AddPreferredLocationInput
                         {
                             LocationId = getLocationsResponse.Edges.First().Node.Id,
-                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id
+                            CustomerId = anyCustomerExistByVerifiableTokenResponse.Customer.Id,
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -134,7 +145,10 @@ public class AzureTenantIntegrations(
             }
 
             var anyCustomerExistByEmailTokenResponse = await customerAdminServiceClient.Admin_AnyCustomerExistByEmailAsync(
-                new Admin_AnyCustomerExistByEmailInput { Email = tenantMember.Email },
+                new Admin_AnyCustomerExistByEmailInput
+                {
+                    Email = tenantMember.Email,
+                },
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
             if (anyCustomerExistByEmailTokenResponse.Exist)
@@ -151,7 +165,8 @@ public class AzureTenantIntegrations(
                     await customerAdminServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
                         {
-                            OrganizationId = azureTenant.Organization.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            OrganizationId = azureTenant.Organization.Id,
+                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id,
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -162,7 +177,8 @@ public class AzureTenantIntegrations(
                     await customerAdminServiceClient.Admin_AddPreferredLocationAsync(
                         new Admin_AddPreferredLocationInput
                         {
-                            LocationId = getLocationsResponse.Edges.First().Node.Id, CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id
+                            LocationId = getLocationsResponse.Edges.First().Node.Id,
+                            CustomerId = anyCustomerExistByEmailTokenResponse.Customer.Id,
                         },
                         customerConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken);
@@ -174,7 +190,10 @@ public class AzureTenantIntegrations(
             var customerId = randomHelper.Generate();
             customerIdsTenantMembersPair.Add((customerId, tenantMember));
             await customerAdminServiceClient.Admin_AddAsync(
-                entityMapper.MapTo(tenantMember, customerId, new Database.Entities.Organization { Id = azureTenant.Organization.Id }),
+                entityMapper.MapTo(tenantMember, customerId, new Database.Entities.Organization
+                {
+                    Id = azureTenant.Organization.Id,
+                }),
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
         }
@@ -189,24 +208,30 @@ public class AzureTenantIntegrations(
                 return new OrganizationMember
                 {
                     Id = randomHelper.Generate(),
-                    Customer = new Customer { Id = customerId },
+                    Customer = new Customer
+                    {
+                        Id = customerId,
+                    },
                     Status = OrganizationMemberStatus.Active,
                     Role = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
                         ? OrganizationMemberRole.Owner
                         : OrganizationMemberRole.Member,
-                    IsOrganizationOnboardingDone = true
+                    IsOrganizationOnboardingDone = true,
                 };
             }
 
             return new OrganizationMember
             {
                 Id = organizationMember.Id,
-                Customer = new Customer { Id = customerId },
+                Customer = new Customer
+                {
+                    Id = customerId,
+                },
                 Status = OrganizationMemberStatus.Active,
                 Role = customerIdsTenantMemberPair.Item2.Id == azureTenant.InstalledByUserId
                     ? OrganizationMemberRole.Owner
                     : OrganizationMemberRole.Member,
-                IsOrganizationOnboardingDone = true
+                IsOrganizationOnboardingDone = true,
             };
         }).ToList();
 

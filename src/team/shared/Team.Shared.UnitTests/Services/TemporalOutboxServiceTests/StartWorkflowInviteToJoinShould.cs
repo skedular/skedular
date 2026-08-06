@@ -15,10 +15,14 @@ public class StartWorkflowInviteToJoinShould
     [Theory]
     [AutoFakeItEasyData]
     public void Enqueue_Workflow_With_Correct_Options(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] IWorkflowIdService workflowIdService,
-        [Frozen] ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
-        [Frozen] ILogger<TemporalOutboxService> logger,
+        [Frozen]
+        TemporalConfiguration temporalConfiguration,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
+        [Frozen]
+        ILogger<TemporalOutboxService> logger,
         TemporalOutboxService sut,
         InviteToJoinTeamInput args,
         IUnitOfWork unitOfWork,

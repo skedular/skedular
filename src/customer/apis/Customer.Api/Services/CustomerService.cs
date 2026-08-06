@@ -308,9 +308,12 @@ public class CustomerService(
             var patch = new Identity
             {
                 Id = identity.Id,
-                Customer = new Shared.Models.Customer { Id = existingCustomer.Id },
+                Customer = new Shared.Models.Customer
+                {
+                    Id = existingCustomer.Id,
+                },
                 Email = identity.Email,
-                EmailVerified = identity.EmailVerified
+                EmailVerified = identity.EmailVerified,
             };
 
             foreach (var field in request.FieldsToUpdate)

@@ -98,6 +98,12 @@ Products and Prices define accepted payment methods, billing mode, and purchase 
 
 Subscription management is available to operators who have access to the organization's Subscription administration workflow. Customer and member access is contextual: customers can view their own subscription experience, while members only see subscription information exposed by the workflows they are permitted to view.
 
+## Marketplace purchase history
+
+Operators review marketplace purchases from the organization's **Marketplace purchases** area. This unified history includes both standalone marketplace Bookings and recurring Subscriptions, so a customer purchase can be followed from its commercial details through its related Booking activity in one place.
+
+The history includes canceled and deleted purchases when they have historical activity. These entries remain available for lifecycle, payment, and refund review; deleting or canceling a purchase does not erase its historical record. Access is limited to authorized organization operators.
+
 ## Managing Subscriptions in Skedular Spaces
 
 Operators can use the organization's Subscriptions area to review the Customer, Product, Price, status, next renewal date, and current Booking cycle. Where cancellation is allowed, they can end access immediately or choose cancel at period end. Use Commerce workflows for invoices, payment status, refunds, payouts, and accounting follow-up.

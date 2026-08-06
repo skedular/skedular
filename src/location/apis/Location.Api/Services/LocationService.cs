@@ -137,7 +137,7 @@ public class LocationService(
             {
                 RelatedImageLinks = location.ExtraMetadata.RelatedImageLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
                 RelatedVideoLinks = location.ExtraMetadata.RelatedVideoLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
-                OtherLinks = location.ExtraMetadata.OtherLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList()
+                OtherLinks = location.ExtraMetadata.OtherLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
             };
         }
 
@@ -320,7 +320,10 @@ public class LocationService(
             if (searchCriteria.Types.Count != 1 || searchCriteria.Types.First() != LocationType.Marketplace)
             {
                 // Ensure we do not return another customer location by forcing CustomerId as search criteria
-                searchCriteria = searchCriteria with { CustomerId = customer.Id };
+                searchCriteria = searchCriteria with
+                {
+                    CustomerId = customer.Id,
+                };
             }
         }
 
@@ -417,7 +420,7 @@ public class LocationService(
             {
                 RelatedImageLinks = location.ExtraMetadata.RelatedImageLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
                 RelatedVideoLinks = location.ExtraMetadata.RelatedVideoLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
-                OtherLinks = location.ExtraMetadata.OtherLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList()
+                OtherLinks = location.ExtraMetadata.OtherLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
             };
         }
 
@@ -557,7 +560,7 @@ public class LocationService(
             CanModify = await organizationAuthorizationService.CanModifyAsync(location.OrganizationId, customer.Id, cancellationToken),
             CanDelete = await organizationAuthorizationService.CanDeleteAsync(location.OrganizationId, customer.Id, cancellationToken),
             CanViewAnalytics =
-                await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken)
+                await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken),
         };
 
         if (!canViewRestrictedInformation)
@@ -582,7 +585,7 @@ public class LocationService(
             mappedLocation.ExtraMetadata = mappedLocation.ExtraMetadata with
             {
                 OtherLinks = mappedLocation.ExtraMetadata.OtherLinks.Where(item =>
-                    item.Contains("sharedspace.co.nz", StringComparison.InvariantCultureIgnoreCase)).ToList()
+                    item.Contains("sharedspace.co.nz", StringComparison.InvariantCultureIgnoreCase)).ToList(),
             };
         }
 

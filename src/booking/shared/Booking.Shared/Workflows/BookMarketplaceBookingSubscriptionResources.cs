@@ -32,7 +32,11 @@ public class BookMarketplaceBookingSubscriptionResources
                     {
                         StartToCloseTimeout = TimeSpan.FromMinutes(30),
                         TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 5, MaximumInterval = TimeSpan.FromSeconds(1) }
+                        RetryPolicy = new RetryPolicy
+                        {
+                            MaximumAttempts = 5,
+                            MaximumInterval = TimeSpan.FromSeconds(1),
+                        },
                     });
 
                 break;
@@ -46,7 +50,11 @@ public class BookMarketplaceBookingSubscriptionResources
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(30),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 5, MaximumInterval = TimeSpan.FromSeconds(1) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 5,
+                        MaximumInterval = TimeSpan.FromSeconds(1),
+                    },
                 });
 
             if (response.Deleted)
@@ -59,7 +67,11 @@ public class BookMarketplaceBookingSubscriptionResources
                     {
                         StartToCloseTimeout = TimeSpan.FromMinutes(30),
                         TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 5, MaximumInterval = TimeSpan.FromSeconds(1) }
+                        RetryPolicy = new RetryPolicy
+                        {
+                            MaximumAttempts = 5,
+                            MaximumInterval = TimeSpan.FromSeconds(1),
+                        },
                     });
             }
 
@@ -77,7 +89,10 @@ public class BookMarketplaceBookingSubscriptionResources
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { MarketplaceBookingSubscriptionDeleted = true };
+        _state = _state with
+        {
+            MarketplaceBookingSubscriptionDeleted = true,
+        };
 
         return Task.CompletedTask;
     }

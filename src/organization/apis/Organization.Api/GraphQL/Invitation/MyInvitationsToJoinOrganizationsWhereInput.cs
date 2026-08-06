@@ -9,5 +9,6 @@ public class MyInvitationsToJoinOrganizationsWhereInput
     [GraphQLName("organizationCustomDomain")]
     public string? OrganizationCustomDomain { get; set; }
 
-    [GraphQLName("status")] public InvitationStatus? Status { get; set; }
+    [GraphQLName("status")]
+    public InvitationStatus? Status { get; set; }
 }

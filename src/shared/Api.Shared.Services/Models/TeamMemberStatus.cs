@@ -3,7 +3,7 @@ namespace Api.Shared.Services.Models;
 public enum TeamMemberStatus
 {
     Active,
-    Inactive
+    Inactive,
 }
 
 public static class TeamMemberStatusConstants
@@ -22,7 +22,7 @@ public static class TeamMemberStatusExtensions
                 TeamMemberStatusConstants.Active => TeamMemberStatus.Active,
                 TeamMemberStatusConstants.Inactive => TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -34,7 +34,7 @@ public static class TeamMemberStatusExtensions
                 TeamMemberStatus.Active => TeamMemberStatusConstants.Active,
                 TeamMemberStatus.Inactive => TeamMemberStatusConstants.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToTeamMemberStatusName() =>
@@ -43,7 +43,7 @@ public static class TeamMemberStatusExtensions
                 TeamMemberStatus.Active => "Active",
                 TeamMemberStatus.Inactive => "Inactive",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

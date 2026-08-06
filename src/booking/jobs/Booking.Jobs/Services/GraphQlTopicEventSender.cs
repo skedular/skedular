@@ -12,7 +12,11 @@ public class GraphQlTopicEventSender(
 {
     public async Task RaiseGraphqlChangeAsync(string topicName, string id, CancellationToken cancellationToken) =>
         await bookingServiceClient.RaiseGraphqlChangeAsync(
-            new RaiseGraphqlChangeInput { TopicName = topicName, Id = id },
+            new RaiseGraphqlChangeInput
+            {
+                TopicName = topicName,
+                Id = id,
+            },
             bookingConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 }

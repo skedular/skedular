@@ -18,15 +18,24 @@ public class CreatePartialAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_And_Automatically_Process_A_Refund_Within_The_Source_Balance(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
@@ -39,7 +48,7 @@ public class CreatePartialAsyncShould
             SourceCapturedAmount = 100m,
             AllocatedRefundAmount = 0m,
             IsSourcePayment = true,
-            Currency = "NZD"
+            Currency = "NZD",
         };
         var parent = new MarketplaceRefund
         {
@@ -48,7 +57,7 @@ public class CreatePartialAsyncShould
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "booking-1",
             ReferenceTime = TimeProvider.System.GetUtcNow(),
-            IdempotencyKey = "cancellation:booking-1"
+            IdempotencyKey = "cancellation:booking-1",
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -80,27 +89,38 @@ public class CreatePartialAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_When_The_Requested_Amount_Exceeds_The_Remaining_Source_Balance(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
         var allocation = new MarketplaceRefundPaymentAllocation
         {
-            Id = "allocation-1", MarketplaceRefundId = "parent-1", SourceCapturedAmount = 100m, Currency = "NZD"
+            Id = "allocation-1",
+            MarketplaceRefundId = "parent-1",
+            SourceCapturedAmount = 100m,
+            Currency = "NZD",
         };
         var parent = new MarketplaceRefund
         {
             Id = "parent-1",
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
-            LocalEntityId = "booking-1"
+            LocalEntityId = "booking-1",
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -125,27 +145,38 @@ public class CreatePartialAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_When_Multiple_Partial_Refunds_Exceed_The_Original_Source_Amount(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
         var allocation = new MarketplaceRefundPaymentAllocation
         {
-            Id = "allocation-1", MarketplaceRefundId = "parent-1", SourceCapturedAmount = 100m, Currency = "NZD"
+            Id = "allocation-1",
+            MarketplaceRefundId = "parent-1",
+            SourceCapturedAmount = 100m,
+            Currency = "NZD",
         };
         var parent = new MarketplaceRefund
         {
             Id = "parent-1",
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
-            LocalEntityId = "booking-1"
+            LocalEntityId = "booking-1",
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -173,26 +204,43 @@ public class CreatePartialAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_The_Existing_Operation_When_The_Same_Partial_Refund_Is_Replayed(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
-        var allocation = new MarketplaceRefundPaymentAllocation { Id = "allocation-1", MarketplaceRefundId = "parent-1", Currency = "NZD" };
+        var allocation = new MarketplaceRefundPaymentAllocation
+        {
+            Id = "allocation-1",
+            MarketplaceRefundId = "parent-1",
+            Currency = "NZD",
+        };
         var parent = new MarketplaceRefund
         {
             Id = "parent-1",
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
-            LocalEntityId = "booking-1"
+            LocalEntityId = "booking-1",
         };
-        var existing = new MarketplaceRefund { Id = "partial-1", IdempotencyKey = "partial:org-1:request-5" };
+        var existing = new MarketplaceRefund
+        {
+            Id = "partial-1",
+            IdempotencyKey = "partial:org-1:request-5",
+        };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);

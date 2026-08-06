@@ -28,7 +28,7 @@ public class CrawlerService(SharedSpacesConfiguration sharedSpacesConfiguration,
         { "commercial-kitchen", Url.Combine(sharedSpacesConfiguration.BaseUrl, "listings", "commercial-kitchen") },
         { "shoot-location", Url.Combine(sharedSpacesConfiguration.BaseUrl, "listings", "shoot-location") },
         { "storage-space", Url.Combine(sharedSpacesConfiguration.BaseUrl, "listings", "storage-space") },
-        { "retail-space", Url.Combine(sharedSpacesConfiguration.BaseUrl, "listings", "retail-space") }
+        { "retail-space", Url.Combine(sharedSpacesConfiguration.BaseUrl, "listings", "retail-space") },
     };
 
     public async Task HandleAsync(CrawlSharedspacesOptions options, CancellationToken cancellationToken)
@@ -37,7 +37,12 @@ public class CrawlerService(SharedSpacesConfiguration sharedSpacesConfiguration,
             new StreamWriter(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "locations-output.csv"));
         await using var csv = new CsvWriter(
             writer,
-            new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = "|", ShouldQuote = _ => true, NewLine = Environment.NewLine });
+            new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = "|",
+                ShouldQuote = _ => true,
+                NewLine = Environment.NewLine,
+            });
         csv.Context.RegisterClassMap<LocationMap>();
 
         csv.WriteHeader<Location>();

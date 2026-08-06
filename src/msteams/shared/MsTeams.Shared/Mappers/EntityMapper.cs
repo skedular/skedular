@@ -26,7 +26,13 @@ public interface IEntityMapper
 public class EntityMapper : IEntityMapper
 {
     public AzureTenantTeam MapTo(Team src) =>
-        new() { Id = src.Id!, Name = src.DisplayName!, Description = src.Description!, WebUrl = src.WebUrl! };
+        new()
+        {
+            Id = src.Id!,
+            Name = src.DisplayName!,
+            Description = src.Description!,
+            WebUrl = src.WebUrl!,
+        };
 
     public AzureTenantTeamChannel MapTo(Channel src) =>
         new()
@@ -35,7 +41,7 @@ public class EntityMapper : IEntityMapper
             Name = src.DisplayName!,
             Description = src.Description!,
             WebUrl = src.WebUrl!,
-            Email = src.Email!
+            Email = src.Email!,
         };
 
     public Database.Entities.AzureTenantTeam MapTo(AzureTenantTeam src, AzureTenant azureTenant) =>
@@ -78,6 +84,6 @@ public class EntityMapper : IEntityMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Type = src.Type.ToNullableCustomerType()
+                Type = src.Type.ToNullableCustomerType(),
             };
 }

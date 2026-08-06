@@ -5,7 +5,7 @@ import OperatorCancelBookingButton from '@/components/booking/operator-cancel-bo
 import { CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, PaymentStatusIcon, PdfIcon } from '@/components/icons';
-import { getOrganizationBookingBaseLink } from '@/components/links';
+import { getOrganizationBookingBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
@@ -892,6 +892,15 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
                 <Tooltip title={`${recurringSeriesLabel}. ${recurringSeriesDateLabel ?? ''}`.trim()}>
                   <Chip label="Recurring" size="small" variant="outlined" />
                 </Tooltip>
+              ) : null}
+              {recurringBooking && recurringMarketplaceSubscriptionIds[recurringBooking.id] ? (
+                <Link
+                  component={NextLink}
+                  href={getOrganizationSubscriptionBaseLink(integratedPlatform, organizationCustomDomain, recurringMarketplaceSubscriptionIds[recurringBooking.id])}
+                  underline="hover"
+                >
+                  Subscription details
+                </Link>
               ) : null}
               {bookingDetails.marketplaceBooking?.isPaymentRequired ? (
                 <Chip

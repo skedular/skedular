@@ -33,7 +33,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.SubmitCustomerFeedback(args.CustomerFeedbackId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 
@@ -45,7 +45,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.NewCustomerJoined(args.CustomerId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 

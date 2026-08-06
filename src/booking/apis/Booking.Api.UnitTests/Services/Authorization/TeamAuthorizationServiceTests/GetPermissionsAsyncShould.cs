@@ -10,16 +10,26 @@ public class GetPermissionsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_The_Permissions_Built_From_Organization_Authorization(
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ICachedTeamService cachedTeamService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedTeamService cachedTeamService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         TeamAuthorizationService sut,
         string teamId,
         string customerId,
         string organizationId,
         CancellationToken cancellationToken)
     {
-        var team = new Team { Id = teamId, Organization = new Organization { Id = organizationId } };
+        var team = new Team
+        {
+            Id = teamId,
+            Organization = new Organization
+            {
+                Id = organizationId,
+            },
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customerId);
         A.CallTo(() => cachedTeamService.GetByIdAsync(teamId, cancellationToken)).Returns(team);

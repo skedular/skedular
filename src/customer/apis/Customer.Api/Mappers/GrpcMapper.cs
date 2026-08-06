@@ -49,21 +49,23 @@ public class GrpcMapper : IGrpcMapper
                 PersonalInformationVisibility.Redacted =>
                     global::Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility.Redacted,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.PersonalInformationVisibility), src.PersonalInformationVisibility,
-                    $"Unexpected value for {nameof(src.PersonalInformationVisibility)}: {src.PersonalInformationVisibility}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.PersonalInformationVisibility)}: {src.PersonalInformationVisibility}. Update enum mapping or caller input."),
             },
             Type = src.Type switch
             {
                 CustomerType.Guest => global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Guest,
                 CustomerType.Registered => global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
-                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
-            }
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input."),
+            },
         };
 
         customer.Identities.AddRange(src.Identities.Select(item =>
             new global::Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity
             {
-                Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
+                Id = item.Id,
+                Email = item.Email.ToSafeString(),
+                EmailVerified = item.EmailVerified ?? false,
             }));
 
         customer.PreferredLocationIds.AddRange(src.PreferredLocations.Select(item => item.Id));
@@ -95,18 +97,49 @@ public class GrpcMapper : IGrpcMapper
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
             Identities = src.Identities
-                .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+                .Select(item => new Identity
+                {
+                    Id = item.Id,
+                    Email = item.Email.ToSafeString(),
+                    EmailVerified = item.EmailVerified,
+                })
                 .ToList(),
             IsOnboardingDone = src.IsOnboardingDone,
-            DefaultOrganization = string.IsNullOrWhiteSpace(src.DefaultOrganizationId) ? null : new Organization { Id = src.DefaultOrganizationId },
+            DefaultOrganization = string.IsNullOrWhiteSpace(src.DefaultOrganizationId)
+                ? null
+                : new Organization
+                {
+                    Id = src.DefaultOrganizationId,
+                },
             PreferredLocations = src.PreferredLocations.Select(item =>
-                    new Location { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
+                    new Location
+                    {
+                        Id = item.Id,
+                        Organization = new Organization
+                        {
+                            Id = item.Organization.Id,
+                        },
+                    })
                 .ToList(),
             PreferredResources = src.PreferredResources
-                .Select(item => new Resource { Id = item.Id, Location = new Location { Id = item.Location.Id } })
+                .Select(item => new Resource
+                {
+                    Id = item.Id,
+                    Location = new Location
+                    {
+                        Id = item.Location.Id,
+                    },
+                })
                 .ToList(),
             PreferredOrganizationTags = src.PreferredOrganizationTags
-                .Select(item => new OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
+                .Select(item => new OrganizationTag
+                {
+                    Id = item.Id,
+                    Organization = new Organization
+                    {
+                        Id = item.Organization.Id,
+                    },
+                })
                 .ToList(),
             FavouriteLocations = [],
             PersonalInformationVisibility = src.PersonalInformationVisibility switch
@@ -115,15 +148,15 @@ public class GrpcMapper : IGrpcMapper
                 global::Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility.Redacted =>
                     PersonalInformationVisibility.Redacted,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.PersonalInformationVisibility), src.PersonalInformationVisibility,
-                    $"Unexpected value for {nameof(src.PersonalInformationVisibility)}: {src.PersonalInformationVisibility}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.PersonalInformationVisibility)}: {src.PersonalInformationVisibility}. Update enum mapping or caller input."),
             },
             Type = src.Type switch
             {
                 global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Guest => CustomerType.Guest,
                 global::Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered => CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
-                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
-            }
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input."),
+            },
         };
 
     public Identity MapTo(Admin_AddIdentityInput src) =>
@@ -132,7 +165,10 @@ public class GrpcMapper : IGrpcMapper
             Id = src.Id,
             Email = src.Email.ToSafeString(),
             EmailVerified = src.EmailVerified,
-            Customer = new Shared.Models.Customer { Id = src.CustomerId }
+            Customer = new Shared.Models.Customer
+            {
+                Id = src.CustomerId,
+            },
         };
 
     public Identity MapTo(Admin_UpdateIdentityInput src) =>
@@ -141,6 +177,9 @@ public class GrpcMapper : IGrpcMapper
             Id = src.Id,
             Email = src.Email.ToSafeString(),
             EmailVerified = src.EmailVerified,
-            Customer = new Shared.Models.Customer { Id = src.CustomerId }
+            Customer = new Shared.Models.Customer
+            {
+                Id = src.CustomerId,
+            },
         };
 }

@@ -4,7 +4,7 @@ public enum OrganizationType
 {
     Private,
     Marketplace,
-    Host
+    Host,
 }
 
 public static class OrganizationTypeConstants
@@ -25,7 +25,7 @@ public static class OrganizationTypeExtensions
                 OrganizationType.Marketplace => OrganizationTypeConstants.Marketplace,
                 OrganizationType.Host => OrganizationTypeConstants.Host,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToOrganizationTypeName() =>
@@ -35,7 +35,7 @@ public static class OrganizationTypeExtensions
                 OrganizationType.Marketplace => "Marketplace",
                 OrganizationType.Host => "Host",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -48,7 +48,7 @@ public static class OrganizationTypeExtensions
                 OrganizationTypeConstants.Marketplace => "Marketplace",
                 OrganizationTypeConstants.Host => "Host",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public OrganizationType ToOrganizationType() =>
@@ -58,7 +58,7 @@ public static class OrganizationTypeExtensions
                 OrganizationTypeConstants.Marketplace => OrganizationType.Marketplace,
                 OrganizationTypeConstants.Host => OrganizationType.Host,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

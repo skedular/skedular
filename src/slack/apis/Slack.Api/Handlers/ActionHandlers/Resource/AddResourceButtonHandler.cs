@@ -47,16 +47,24 @@ public class AddResourceButtonHandler(
             BlockId = OptionLoaderKeys.OrganizationResourceTypeKey,
             Label = "Resource Type".ToPlainText(),
             Element =
-                new ExternalSelectMenu { ActionId = OptionLoaderKeys.OrganizationResourceTypeKey, InitialOption = null, MinQueryLength = 0 },
-            Optional = false
+                new ExternalSelectMenu
+                {
+                    ActionId = OptionLoaderKeys.OrganizationResourceTypeKey,
+                    InitialOption = null,
+                    MinQueryLength = 0,
+                },
+            Optional = false,
         };
 
         var name = new InputBlock
         {
             BlockId = ResourceActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = ResourceActionTypes.Name },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = ResourceActionTypes.Name,
+            },
+            Optional = false,
         };
 
         var deactivated = new InputBlock
@@ -67,9 +75,16 @@ public class AddResourceButtonHandler(
                 new CheckboxGroup
                 {
                     ActionId = ResourceActionTypes.Inactive,
-                    Options = new List<Option> { new() { Text = "Inactive".ToPlainText(), Value = ResourceActionTypes.Inactive } }
+                    Options = new List<Option>
+                    {
+                        new()
+                        {
+                            Text = "Inactive".ToPlainText(),
+                            Value = ResourceActionTypes.Inactive,
+                        },
+                    },
                 },
-            Optional = true
+            Optional = true,
         };
 
         var requireBookingApproval = new InputBlock
@@ -82,18 +97,26 @@ public class AddResourceButtonHandler(
                     ActionId = ResourceActionTypes.RequireBookingApproval,
                     Options = new List<Option>
                     {
-                        new() { Text = "Require Booking Approval".ToPlainText(), Value = ResourceActionTypes.RequireBookingApproval }
-                    }
+                        new()
+                        {
+                            Text = "Require Booking Approval".ToPlainText(),
+                            Value = ResourceActionTypes.RequireBookingApproval,
+                        },
+                    },
                 },
-            Optional = true
+            Optional = true,
         };
 
         var capacity = new InputBlock
         {
             BlockId = ResourceActionTypes.Capacity,
             Label = "Capacity".ToPlainText(),
-            Element = new PlainTextInput { ActionId = ResourceActionTypes.Capacity, InitialValue = "1" },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = ResourceActionTypes.Capacity,
+                InitialValue = "1",
+            },
+            Optional = false,
         };
 
         var blocks = new List<Block>
@@ -102,7 +125,7 @@ public class AddResourceButtonHandler(
             name,
             deactivated,
             requireBookingApproval,
-            capacity
+            capacity,
         };
 
         var customTagConnection =
@@ -120,10 +143,10 @@ public class AddResourceButtonHandler(
                     {
                         Text = item.Name.ToOptionText(),
                         Value = item.Id,
-                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
-                    }).ToList()
+                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
+                    }).ToList(),
                 },
-                Optional = true
+                Optional = true,
             });
         }
 
@@ -141,10 +164,10 @@ public class AddResourceButtonHandler(
                     {
                         Text = item.Name.ToOptionText(),
                         Value = item.Id,
-                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
-                    }).ToList()
+                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
+                    }).ToList(),
                 },
-                Optional = true
+                Optional = true,
             });
         }
 
@@ -158,7 +181,7 @@ public class AddResourceButtonHandler(
                 Close = "Cancel",
                 Submit = "Add",
                 Blocks = blocks,
-                PrivateMetadata = action.Value
+                PrivateMetadata = action.Value,
             },
             cancellationToken);
     }
@@ -190,7 +213,14 @@ public class AddResourceButtonHandler(
         var context = AddResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var deskId = randomHelper.Generate();
-        var resource = new Shared.Models.Resource { Id = deskId, Location = new Shared.Models.Location { Id = context.LocationId } };
+        var resource = new Shared.Models.Resource
+        {
+            Id = deskId,
+            Location = new Shared.Models.Location
+            {
+                Id = context.LocationId,
+            },
+        };
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var resourceTypeBlock))
         {
@@ -199,7 +229,10 @@ public class AddResourceButtonHandler(
                 if (block is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
-                    resource.ResourceType = new ResourceType { Id = value.SelectedOption!.Value };
+                    resource.ResourceType = new ResourceType
+                    {
+                        Id = value.SelectedOption!.Value,
+                    };
                 }
                 else
                 {
@@ -327,7 +360,10 @@ public class AddResourceButtonHandler(
             {
                 if (block is StaticMultiSelectValue value)
                 {
-                    resource.CustomTags = value.SelectedOptions.Select(item => new OrganizationCustomTag { Id = item.Value }).ToList();
+                    resource.CustomTags = value.SelectedOptions.Select(item => new OrganizationCustomTag
+                    {
+                        Id = item.Value,
+                    }).ToList();
                 }
                 else
                 {
@@ -346,7 +382,10 @@ public class AddResourceButtonHandler(
             {
                 if (block is StaticMultiSelectValue value)
                 {
-                    resource.Zones = value.SelectedOptions.Select(item => new OrganizationZone { Id = item.Value }).ToList();
+                    resource.Zones = value.SelectedOptions.Select(item => new OrganizationZone
+                    {
+                        Id = item.Value,
+                    }).ToList();
                 }
                 else
                 {

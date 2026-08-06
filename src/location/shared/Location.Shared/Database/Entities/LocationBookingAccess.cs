@@ -30,8 +30,21 @@ public class LocationBookingAccessConfiguration : IEntityTypeConfiguration<Locat
         builder.HasIndex(item => item.LocationId);
         builder.HasIndex(item => item.OrganizationId);
         builder.HasIndex(item => item.ActiveBookingCount);
-        builder.HasIndex(item => new { item.CustomerId, item.LocationId });
-        builder.HasIndex(item => new { item.CustomerId, item.OrganizationId });
-        builder.HasIndex(item => new { item.CustomerId, item.LocationId, item.OrganizationId }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.CustomerId,
+            item.LocationId,
+        });
+        builder.HasIndex(item => new
+        {
+            item.CustomerId,
+            item.OrganizationId,
+        });
+        builder.HasIndex(item => new
+        {
+            item.CustomerId,
+            item.LocationId,
+            item.OrganizationId,
+        }).IsUnique();
     }
 }

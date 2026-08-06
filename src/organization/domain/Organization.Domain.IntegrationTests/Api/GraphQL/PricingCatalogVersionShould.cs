@@ -32,7 +32,7 @@ public class PricingCatalogVersionShould
             Name = organizationName,
             Type = OrganizationTypeConstants.Private,
             BillingCycle = OrganizationBillingCycleConstants.Monthly,
-            InvoiceDueInDays = 7
+            InvoiceDueInDays = 7,
         });
         var legacyOffering = new OrganizationOffering
         {
@@ -42,7 +42,7 @@ public class PricingCatalogVersionShould
             Start = now.AddDays(-1),
             End = now.AddDays(1),
             AutoRenew = true,
-            UnitPrice = OfferingCode.EarlyBirdV1.GetOffering().UnitPrice
+            UnitPrice = OfferingCode.EarlyBirdV1.GetOffering().UnitPrice,
         };
         repositoryFactory.OrganizationOfferingRepository.Add(legacyOffering);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -15,13 +15,15 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
 
     [UseResolverScope]
     public async Task<string> AzureTenantAdminConsentUrlAsync(
-        [Service] IAzureTenantService azureTenantService,
+        [Service]
+        IAzureTenantService azureTenantService,
         CancellationToken cancellationToken) =>
         await azureTenantService.GenerateAdminConsentUrlAsync(cancellationToken);
 
     [UseResolverScope]
     public async Task<OrganizationDetails?> AzureTenantOrganizationAsync(
-        [Service] IOrganizationService organizationService,
+        [Service]
+        IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await organizationService.GetByAzureTenantAsync(cancellationToken));
 }

@@ -39,7 +39,11 @@ public class BookingComponents(
 {
     public Block GetOnlyShowMyBookingCheckbox(string actionId, bool initialValue)
     {
-        var onlyShowMyBookingOption = new Option { Text = "Only show my bookings".ToPlainText(), Value = actionId };
+        var onlyShowMyBookingOption = new Option
+        {
+            Text = "Only show my bookings".ToPlainText(),
+            Value = actionId,
+        };
         return new ActionsBlock
         {
             Elements =
@@ -47,10 +51,13 @@ public class BookingComponents(
                 new CheckboxGroup
                 {
                     ActionId = actionId,
-                    Options = new List<Option> { onlyShowMyBookingOption },
-                    InitialOptions = initialValue ? [onlyShowMyBookingOption] : []
-                }
-            ]
+                    Options = new List<Option>
+                    {
+                        onlyShowMyBookingOption,
+                    },
+                    InitialOptions = initialValue ? [onlyShowMyBookingOption] : [],
+                },
+            ],
         };
     }
 
@@ -61,7 +68,12 @@ public class BookingComponents(
 
         return
         [
-            new Button { ActionId = BookingActionTypes.AddBooking, Text = "Make a booking".ToPlainTextWithIcon(Icons.New), Value = context }
+            new Button
+            {
+                ActionId = BookingActionTypes.AddBooking,
+                Text = "Make a booking".ToPlainTextWithIcon(Icons.New),
+                Value = context,
+            },
         ];
     }
 
@@ -94,24 +106,39 @@ public class BookingComponents(
     {
         pageContext = pageContext.Clone();
 
-        var blocks = new List<Block> { new SectionBlock { Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar) } };
+        var blocks = new List<Block>
+        {
+            new SectionBlock
+            {
+                Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar),
+            },
+        };
 
         blocks.AddRange(booking.InvolvedCustomers.Select(item => new SectionBlock
         {
             Text = sharedWorkspaceMemberService
                 .GetMentionedCustomerNameInSlackFormat(workspace, item.Identities.Select(identity => identity.Id).ToList(), item)
-                .ToMarkdown()
+                .ToMarkdown(),
         }));
 
         if (!string.IsNullOrWhiteSpace(booking.Notes))
         {
-            blocks.Add(new SectionBlock { Text = $"Notes: {booking.Notes}" });
+            blocks.Add(new SectionBlock
+            {
+                Text = $"Notes: {booking.Notes}",
+            });
         }
 
         blocks.AddRange(booking.InvolvedLocations.Select(item =>
-            new SectionBlock { Text = item.Name.ToSafeString().ToPlainTextWithIcon(Icons.Location) }));
+            new SectionBlock
+            {
+                Text = item.Name.ToSafeString().ToPlainTextWithIcon(Icons.Location),
+            }));
 
-        blocks.AddRange(booking.InvolvedTeams.Select(item => new SectionBlock { Text = item.Name.ToSafeString().ToPlainTextWithIcon(Icons.Team) }));
+        blocks.AddRange(booking.InvolvedTeams.Select(item => new SectionBlock
+        {
+            Text = item.Name.ToSafeString().ToPlainTextWithIcon(Icons.Team),
+        }));
         blocks.AddRange(bookingComponents.GetResourcesLines(booking));
 
         if (!includeActionButtons)
@@ -126,14 +153,14 @@ public class BookingComponents(
             {
                 ActionId = BookingActionTypes.EditBooking,
                 Text = "Edit".ToPlainTextWithIcon(Icons.Edit),
-                Value = new EditBookingContext(pageContext.PushCurrentPageToVisitedPagesAndClone(), booking.Id).Serialize()
+                Value = new EditBookingContext(pageContext.PushCurrentPageToVisitedPagesAndClone(), booking.Id).Serialize(),
             });
 
             buttons.Add(new Button
             {
                 ActionId = BookingActionTypes.CancelBooking,
                 Text = "Cancel".ToPlainTextWithIcon(Icons.Cancel),
-                Value = new CancelBookingContext(pageContext, booking.Id).Serialize()
+                Value = new CancelBookingContext(pageContext, booking.Id).Serialize(),
             });
         }
         else
@@ -143,14 +170,14 @@ public class BookingComponents(
                 {
                     ActionId = BookingActionTypes.EditBooking,
                     Text = "Edit".ToPlainTextWithIcon(Icons.Edit),
-                    Value = new EditBookingContext(pageContext.PushCurrentPageToVisitedPagesAndClone(), booking.Id).Serialize()
+                    Value = new EditBookingContext(pageContext.PushCurrentPageToVisitedPagesAndClone(), booking.Id).Serialize(),
                 },
                 new Button
                 {
                     ActionId = BookingActionTypes.CancelBooking,
                     Text = "Cancel".ToPlainTextWithIcon(Icons.Cancel),
-                    Value = new CancelBookingContext(pageContext, booking.Id).Serialize()
-                }
+                    Value = new CancelBookingContext(pageContext, booking.Id).Serialize(),
+                },
             ]);
 
             if (!myBookings.Any(item => item.From == booking.From && item.Until == booking.Until))
@@ -159,14 +186,17 @@ public class BookingComponents(
                 {
                     ActionId = BookingActionTypes.JoinBooking,
                     Text = "Join".ToPlainTextWithIcon(Icons.Join),
-                    Value = new JoinBookingContext(pageContext, booking.Id).Serialize()
+                    Value = new JoinBookingContext(pageContext, booking.Id).Serialize(),
                 });
             }
         }
 
         if (buttons.Count != 0)
         {
-            blocks.Add(new ActionsBlock { Elements = buttons });
+            blocks.Add(new ActionsBlock
+            {
+                Elements = buttons,
+            });
         }
 
         return blocks;

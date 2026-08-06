@@ -130,7 +130,7 @@ public class OrganizationOfferingService(
                 Start = now,
                 End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
                 AutoRenew = true,
-                Organization = organization
+                Organization = organization,
             };
             organizationOffering.ApplyOfferingTemplate(offeringCode);
             repositoryFactory.OrganizationOfferingRepository.Add(organizationOffering);
@@ -161,7 +161,7 @@ public class OrganizationOfferingService(
         organizationOutboxPublisher.PublishOrganizations(
             [
                 graphQlMapper.MapTo(organization!,
-                    organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization!.Id))
+                    organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization!.Id)),
             ],
             repositoryFactory.UnitOfWork);
 
@@ -197,7 +197,7 @@ public class OrganizationOfferingService(
                 [
                     graphQlMapper.MapTo(
                         organization,
-                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))
+                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)),
                 ],
                 repositoryFactory.UnitOfWork);
         }
@@ -305,7 +305,7 @@ public class OrganizationOfferingService(
                 Organization = organization,
                 Start = now,
                 End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
-                AutoRenew = true
+                AutoRenew = true,
             };
             activeOffering.ApplyNegotiatedOfferingTerms(
                 offeringCode,
@@ -347,7 +347,7 @@ public class OrganizationOfferingService(
             [
                 graphQlMapper.MapTo(
                     organization,
-                    organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))
+                    organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)),
             ],
             repositoryFactory.UnitOfWork);
 

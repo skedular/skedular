@@ -11,7 +11,8 @@ public class IsReadyAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_False_When_No_Customer_Found(
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         CustomerReadinessAccessService sut,
         CancellationToken cancellationToken)
     {
@@ -27,18 +28,21 @@ public class IsReadyAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_False_When_Partial_Domains_Remain_Partial_After_Refresh(
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         CustomerReadinessAccessService sut,
         string customerId,
         CancellationToken cancellationToken)
     {
         var initial = new CustomerEntity
         {
-            Id = customerId, ProvisionedDomains = [CustomerReadinessState.Domains.Booking, CustomerReadinessState.Domains.Organization]
+            Id = customerId,
+            ProvisionedDomains = [CustomerReadinessState.Domains.Booking, CustomerReadinessState.Domains.Organization],
         };
         var refreshed = new CustomerEntity
         {
-            Id = customerId, ProvisionedDomains = [CustomerReadinessState.Domains.Booking, CustomerReadinessState.Domains.Organization]
+            Id = customerId,
+            ProvisionedDomains = [CustomerReadinessState.Domains.Booking, CustomerReadinessState.Domains.Organization],
         };
 
         A.CallTo(() => cachedCustomerService.GetNullableAsync(cancellationToken)).Returns(initial);
@@ -57,12 +61,17 @@ public class IsReadyAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_True_When_All_Required_Domains_Provisioned_On_First_Read(
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         CustomerReadinessAccessService sut,
         string customerId,
         CancellationToken cancellationToken)
     {
-        var customer = new CustomerEntity { Id = customerId, ProvisionedDomains = CustomerReadinessState.RequiredDomains.ToList() };
+        var customer = new CustomerEntity
+        {
+            Id = customerId,
+            ProvisionedDomains = CustomerReadinessState.RequiredDomains.ToList(),
+        };
 
         A.CallTo(() => cachedCustomerService.GetNullableAsync(cancellationToken))
             .Returns(customer);
@@ -77,13 +86,22 @@ public class IsReadyAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_True_When_Refresh_Makes_Customer_Ready(
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         CustomerReadinessAccessService sut,
         string customerId,
         CancellationToken cancellationToken)
     {
-        var initial = new CustomerEntity { Id = customerId, ProvisionedDomains = [CustomerReadinessState.Domains.Booking] };
-        var refreshed = new CustomerEntity { Id = customerId, ProvisionedDomains = CustomerReadinessState.RequiredDomains.ToList() };
+        var initial = new CustomerEntity
+        {
+            Id = customerId,
+            ProvisionedDomains = [CustomerReadinessState.Domains.Booking],
+        };
+        var refreshed = new CustomerEntity
+        {
+            Id = customerId,
+            ProvisionedDomains = CustomerReadinessState.RequiredDomains.ToList(),
+        };
 
         A.CallTo(() => cachedCustomerService.GetNullableAsync(cancellationToken)).Returns(initial);
         A.CallTo(() => cachedCustomerService.GetAsync(cancellationToken)).Returns(refreshed);

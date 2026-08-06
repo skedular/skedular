@@ -38,7 +38,7 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
         IReadOnlyList<Block>[] blocks =
         [
             GetTitle(),
-            GetToolbar(commonPageContext.PageContext, workspaceMember.Timezone)
+            GetToolbar(commonPageContext.PageContext, workspaceMember.Timezone),
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -48,7 +48,7 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
             {
                 CallbackId = BillingCallback,
                 Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
             cancellationToken);
@@ -58,7 +58,10 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
 
     private static IReadOnlyList<Block> GetTitle() =>
     [
-        new SectionBlock { Text = "*Billing*".ToMarkdown() }
+        new SectionBlock
+        {
+            Text = "*Billing*".ToMarkdown(),
+        },
     ];
 
     private IReadOnlyList<Block> GetToolbar(PageContext pageContext, string timezone)
@@ -73,8 +76,8 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
                 Elements = new List<IActionElement>()
                     .Concat(homeAndBackButtons)
                     .Concat(feedbackButton)
-                    .ToList()
-            }
+                    .ToList(),
+            },
         ];
     }
 }

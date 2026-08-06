@@ -17,38 +17,77 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Authorization_Rejection_And_Rethrow(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ILogger<ResourceService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ILogger<ResourceService> logger,
         ResourceService sut,
         CancellationToken cancellationToken)
     {
         var locationEntity = new Shared.Database.Entities.Location
         {
-            Id = "location-1", OrganizationId = "org-1", Organization = new Organization { Id = "org-1" }
+            Id = "location-1",
+            OrganizationId = "org-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
         };
-        var existingResource = new Resource { Id = "resource-1", Location = locationEntity, OrganizationTags = [] };
+        var existingResource = new Resource
+        {
+            Id = "resource-1",
+            Location = locationEntity,
+            OrganizationTags = [],
+        };
         var resourceModel = new Shared.Models.Resource
         {
             Id = "resource-1",
             Name = "Desk A",
-            Location = new Shared.Models.Location { Id = "location-1" },
-            Tags = [new OrganizationTag { Id = "tag-1" }]
+            Location = new Shared.Models.Location
+            {
+                Id = "location-1",
+            },
+            Tags =
+            [
+                new OrganizationTag
+                {
+                    Id = "tag-1",
+                },
+            ],
         };
         var request = new ResourcePatchRequest(
             new Shared.Models.Resource
             {
                 Id = "resource-1",
                 Name = "Updated Desk",
-                Location = new Shared.Models.Location { Id = "location-1" },
-                Tags = [new OrganizationTag { Id = "tag-1" }]
+                Location = new Shared.Models.Location
+                {
+                    Id = "location-1",
+                },
+                Tags =
+                [
+                    new OrganizationTag
+                    {
+                        Id = "tag-1",
+                    },
+                ],
             },
-            new HashSet<ResourcePatchField> { ResourcePatchField.Name });
+            new HashSet<ResourcePatchField>
+            {
+                ResourcePatchField.Name,
+            });
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
@@ -72,15 +111,30 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Error_And_Rethrow_On_General_Failure(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] ILogger<ResourceService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        ILogger<ResourceService> logger,
         ResourceService sut,
         CancellationToken cancellationToken)
     {
         var request = new ResourcePatchRequest(
-            new Shared.Models.Resource { Id = "resource-1", Name = "Desk A", Location = new Shared.Models.Location { Id = "location-1" }, Tags = [] },
-            new HashSet<ResourcePatchField> { ResourcePatchField.Name });
+            new Shared.Models.Resource
+            {
+                Id = "resource-1",
+                Name = "Desk A",
+                Location = new Shared.Models.Location
+                {
+                    Id = "location-1",
+                },
+                Tags = [],
+            },
+            new HashSet<ResourcePatchField>
+            {
+                ResourcePatchField.Name,
+            });
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => resourceRepository.GetByIdAsync("resource-1", cancellationToken))
@@ -97,15 +151,30 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Autosave_Started(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] ILogger<ResourceService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        ILogger<ResourceService> logger,
         ResourceService sut,
         CancellationToken cancellationToken)
     {
         var request = new ResourcePatchRequest(
-            new Shared.Models.Resource { Id = "resource-1", Name = "Desk A", Location = new Shared.Models.Location { Id = "location-1" }, Tags = [] },
-            new HashSet<ResourcePatchField> { ResourcePatchField.Name });
+            new Shared.Models.Resource
+            {
+                Id = "resource-1",
+                Name = "Desk A",
+                Location = new Shared.Models.Location
+                {
+                    Id = "location-1",
+                },
+                Tags = [],
+            },
+            new HashSet<ResourcePatchField>
+            {
+                ResourcePatchField.Name,
+            });
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => resourceRepository.GetByIdAsync("resource-1", cancellationToken))

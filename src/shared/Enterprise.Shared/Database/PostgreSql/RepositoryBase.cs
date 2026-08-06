@@ -29,7 +29,7 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
             sql,
             [
                 new NpgsqlParameter("@Id", id),
-                new NpgsqlParameter("@CreatedAt", TimeProvider.GetUtcNow())
+                new NpgsqlParameter("@CreatedAt", TimeProvider.GetUtcNow()),
             ],
             cancellationToken);
     }
@@ -70,7 +70,7 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
             [
                 new NpgsqlParameter("@Id", id),
                 new NpgsqlParameter("@CreatedAt", TimeProvider.GetUtcNow()),
-                new NpgsqlParameter("@ForeignKeyId", foreignEntity.Id)
+                new NpgsqlParameter("@ForeignKeyId", foreignEntity.Id),
             ],
             cancellationToken);
     }
@@ -138,7 +138,7 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
                 new NpgsqlParameter("@Id", id),
                 new NpgsqlParameter("@CreatedAt", TimeProvider.GetUtcNow()),
                 new NpgsqlParameter("@ForeignKeyId1", foreignEntity1!.Id),
-                new NpgsqlParameter("@ForeignKeyId2", foreignEntity2!.Id)
+                new NpgsqlParameter("@ForeignKeyId2", foreignEntity2!.Id),
             ],
             cancellationToken);
     }

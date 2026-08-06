@@ -63,7 +63,7 @@ public class SubscriptionKeyService : ISubscriptionKeyService
             floor = filter.FloorId ?? string.Empty,
             zone = filter.ZoneId ?? string.Empty,
             type = filter.ResourceType ?? string.Empty,
-            date = filter.Date.ToString("yyyy-MM-dd")
+            date = filter.Date.ToString("yyyy-MM-dd"),
         });
         var hash = SHA256.HashData(Encoding.UTF8.GetBytes(canonical));
         return WebEncoders.Base64UrlEncode(hash);
@@ -93,7 +93,7 @@ public class SubscriptionKeyService : ISubscriptionKeyService
                 FloorId = floor,
                 ZoneId = zone,
                 ResourceType = type,
-                Date = date
+                Date = date,
             });
         }
     }

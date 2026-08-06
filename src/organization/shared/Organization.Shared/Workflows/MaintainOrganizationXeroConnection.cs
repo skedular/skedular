@@ -28,7 +28,11 @@ public class MaintainOrganizationXeroConnection
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(5),
                 TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(15) }
+                RetryPolicy = new RetryPolicy
+                {
+                    MaximumAttempts = 3,
+                    MaximumInterval = TimeSpan.FromMinutes(15),
+                },
             });
 
         if (!result.ShouldContinue || result.NextRefreshAt is null)

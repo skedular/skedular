@@ -26,7 +26,11 @@ public class CachedRecurringBookingService(
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.RecurringBookingRepository.GetByIdUntrackedAsync(id, ct) ?? throw new RecurringBookingNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (RecurringBookingNotFound)
@@ -42,7 +46,11 @@ public class CachedRecurringBookingService(
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.RecurringBookingRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new RecurringBookingNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromMinutes(30),
+                LocalCacheExpiration = TimeSpan.FromSeconds(30),
+            },
             cancellationToken: cancellationToken);
     }
 

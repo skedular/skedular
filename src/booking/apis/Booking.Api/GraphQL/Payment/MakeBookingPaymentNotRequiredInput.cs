@@ -5,6 +5,9 @@ namespace Booking.Api.GraphQL.Payment;
 [GraphQLName("MakeBookingPaymentNotRequiredInput")]
 public class MakeBookingPaymentNotRequiredInput
 {
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("clientMutationId")]
+    public string? ClientMutationId { get; set; }
+
+    [GraphQLName("id")]
+    public string Id { get; set; } = string.Empty;
 }

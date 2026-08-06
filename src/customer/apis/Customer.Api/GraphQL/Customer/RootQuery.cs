@@ -13,8 +13,16 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     public IEnumerable<PersonalInformationVisibilityDetails> PersonalInformationVisibilityTypes() =>
     [
-        new() { Type = PersonalInformationVisibility.Visible, Name = PersonalInformationVisibility.Visible.ToPersonalInformationVisibilityName() },
-        new() { Type = PersonalInformationVisibility.Redacted, Name = PersonalInformationVisibility.Redacted.ToPersonalInformationVisibilityName() }
+        new()
+        {
+            Type = PersonalInformationVisibility.Visible,
+            Name = PersonalInformationVisibility.Visible.ToPersonalInformationVisibilityName(),
+        },
+        new()
+        {
+            Type = PersonalInformationVisibility.Redacted,
+            Name = PersonalInformationVisibility.Redacted.ToPersonalInformationVisibilityName(),
+        },
     ];
 
     [UseResolverScope]
@@ -29,8 +37,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<CustomerDetails?> CustomerByIdAsync(
-        [ID] string id,
-        [Service] ICustomerService customerService,
+        [ID]
+        string id,
+        [Service]
+        ICustomerService customerService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await customerService.GetByIdAsync(id, true, cancellationToken));
 }

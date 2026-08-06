@@ -297,7 +297,10 @@ public class TeamService(
         if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) && string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
         {
             // Ensure we do not return another customer team by forcing CustomerId as search criteria
-            searchCriteria = searchCriteria with { CustomerId = customerId };
+            searchCriteria = searchCriteria with
+            {
+                CustomerId = customerId,
+            };
         }
         else
         {
@@ -567,7 +570,7 @@ public class TeamService(
                 CanDelete = await teamAuthorizationService.CanDeleteAsync(team, customerId, cancellationToken),
                 CanInvitePeople = await teamAuthorizationService.CanInvitePeopleAsync(team, customerId, cancellationToken),
                 CanCancelPeopleExistingInvitations =
-                    await teamAuthorizationService.CanCancelPeopleExistingInvitationsAsync(team, customerId, cancellationToken)
+                    await teamAuthorizationService.CanCancelPeopleExistingInvitationsAsync(team, customerId, cancellationToken),
             };
         }
 

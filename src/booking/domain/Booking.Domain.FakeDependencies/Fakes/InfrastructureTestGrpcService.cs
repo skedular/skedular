@@ -62,7 +62,7 @@ public class InfrastructureTestGrpcService(
                 HasAccessToken = xeroConnectionScenario.HasAccessToken,
                 HasRefreshToken = xeroConnectionScenario.HasRefreshToken,
                 AccessTokenEncrypted = xeroConnectionScenario.AccessTokenEncrypted,
-                RefreshTokenEncrypted = xeroConnectionScenario.RefreshTokenEncrypted
+                RefreshTokenEncrypted = xeroConnectionScenario.RefreshTokenEncrypted,
             });
         }
 
@@ -83,14 +83,14 @@ public class InfrastructureTestGrpcService(
                 Extension = item.Extension ?? string.Empty,
                 ContentType = item.ContentType ?? string.Empty,
                 ContentLength = item.ContentLength,
-                Content = ByteString.CopyFrom(item.Content)
+                Content = ByteString.CopyFrom(item.Content),
             }));
         response.OrganizationGetXeroConnectionRequests.AddRange(
             organizationRequests.Select(item => new OrganizationGetXeroConnectionRequest
             {
                 RequestedAtUtc = item.RequestedAtUtc.ToString("O"),
                 OrganizationId = item.OrganizationId ?? string.Empty,
-                OrganizationCustomDomain = item.OrganizationCustomDomain ?? string.Empty
+                OrganizationCustomDomain = item.OrganizationCustomDomain ?? string.Empty,
             }));
         response.OrganizationRefreshXeroConnectionTokensRequests.AddRange(
             organizationRefreshRequests.Select(item => new OrganizationRefreshXeroConnectionTokensRequest
@@ -100,7 +100,7 @@ public class InfrastructureTestGrpcService(
                 HasAccessTokenEncrypted = item.HasAccessTokenEncrypted,
                 HasRefreshTokenEncrypted = item.HasRefreshTokenEncrypted,
                 AccessTokenExpiresAtUtc = item.AccessTokenExpiresAtUtc?.ToString("O") ?? string.Empty,
-                RefreshTokenExpiresAtUtc = item.RefreshTokenExpiresAtUtc?.ToString("O") ?? string.Empty
+                RefreshTokenExpiresAtUtc = item.RefreshTokenExpiresAtUtc?.ToString("O") ?? string.Empty,
             }));
         response.CoreUploadToPrivateStorageRequestCount = coreRequests.Count;
         response.OrganizationGetXeroConnectionRequestCount = organizationRequests.Count;

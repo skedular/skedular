@@ -12,7 +12,7 @@ public enum PageType
     CustomTags = 6,
     Zones = 7,
     Desks = 8,
-    Billing = 9
+    Billing = 9,
 }
 
 public class DateRange(DateTimeOffset? from, DateTimeOffset? to)

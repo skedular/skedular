@@ -17,11 +17,29 @@ public sealed class BookingFailureQueryFixtureCustomizer : IFixtureCustomizer
 
         fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
-        fixture.Register(() => new MarketplaceBookingDetails { Id = Guid.CreateVersion7().ToString("N") });
-        fixture.Register(() => new BookingEntity { Id = Guid.CreateVersion7().ToString("N") });
-        fixture.Register(() => new MarketplaceBookingFailure { Id = Guid.CreateVersion7().ToString("N") });
-        fixture.Register(() => new MarketplaceBookingFailureDetails { Id = Guid.CreateVersion7().ToString("N") });
-        fixture.Register(() => new BookingModel { Id = Guid.CreateVersion7().ToString("N") });
-        fixture.Register(() => new BookingDetails { Id = Guid.CreateVersion7().ToString("N") });
+        fixture.Register(() => new MarketplaceBookingDetails
+        {
+            Id = Guid.CreateVersion7().ToString("N"),
+        });
+        fixture.Register(() => new BookingEntity
+        {
+            Id = Guid.CreateVersion7().ToString("N"),
+        });
+        fixture.Register(() => new MarketplaceBookingFailure
+        {
+            Id = Guid.CreateVersion7().ToString("N"),
+        });
+        fixture.Register(() => new MarketplaceBookingFailureDetails
+        {
+            Id = Guid.CreateVersion7().ToString("N"),
+        });
+        fixture.Register(() => new BookingModel
+        {
+            Id = Guid.CreateVersion7().ToString("N"),
+        });
+        fixture.Register(() => new BookingDetails
+        {
+            Id = Guid.CreateVersion7().ToString("N"),
+        });
     }
 }

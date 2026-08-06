@@ -16,6 +16,6 @@ public static class MarketplaceRefundKindExtensions
         {
             MarketplaceRefundKindConstants.Modification => MarketplaceRefundKind.Modification,
             MarketplaceRefundKindConstants.Partial => MarketplaceRefundKind.Partial,
-            _ => MarketplaceRefundKind.Cancellation
+            _ => MarketplaceRefundKind.Cancellation,
         };
 }

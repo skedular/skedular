@@ -39,14 +39,20 @@ public class OrganizationTagService(
     IGrpcMapper grpcMapper,
     IMemoryCache memoryCache) : IOrganizationTagService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<OrganizationTag> AdminGetAsync(string tagId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(tagId),
             async _ => grpcMapper.MapTo(
                 await organizationTagsServiceClient.Admin_GetTagAsync(
-                    new Admin_GetTagInput { Id = tagId },
+                    new Admin_GetTagInput
+                    {
+                        Id = tagId,
+                    },
                     organizationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -64,7 +70,7 @@ public class OrganizationTagService(
                     Name = organizationTag.Name,
                     Description = organizationTag.Description,
                     Color = organizationTag.Color,
-                    OrganizationId = organizationTag.Organization.Id
+                    OrganizationId = organizationTag.Organization.Id,
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -87,7 +93,12 @@ public class OrganizationTagService(
                     Name = organizationTag.Name,
                     Description = organizationTag.Description,
                     Color = organizationTag.Color,
-                    FieldsToUpdate = { TagPatchField.Name, TagPatchField.Description, TagPatchField.Color }
+                    FieldsToUpdate =
+                    {
+                        TagPatchField.Name,
+                        TagPatchField.Description,
+                        TagPatchField.Color,
+                    },
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -100,7 +111,10 @@ public class OrganizationTagService(
     public async Task RemoveAsync(string workspaceMemberId, string tagId, CancellationToken cancellationToken)
     {
         await organizationTagsServiceClient.RemoveTagAsync(
-            new RemoveTagInput { Id = tagId },
+            new RemoveTagInput
+            {
+                Id = tagId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
 
@@ -114,7 +128,10 @@ public class OrganizationTagService(
             CreateKeyById(tagId),
             async _ => grpcMapper.MapTo(
                 await organizationTagsServiceClient.GetTagAsync(
-                    new GetTagInput { Id = tagId },
+                    new GetTagInput
+                    {
+                        Id = tagId,
+                    },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -133,10 +150,17 @@ public class OrganizationTagService(
                     After = string.Empty,
                     Before = string.Empty,
                     Last = ((int?)null).ToNullInt(),
-                    Where = new TagWhereInput { OrganizationId = organizationId }
+                    Where = new TagWhereInput
+                    {
+                        OrganizationId = organizationId,
+                    },
                 };
 
-                getPaginatedTagsInput.OrderBy.Add(new TagOrderInput { Direction = OrderDirection.Ascending, Field = TagOrderField.Name });
+                getPaginatedTagsInput.OrderBy.Add(new TagOrderInput
+                {
+                    Direction = OrderDirection.Ascending,
+                    Field = TagOrderField.Name,
+                });
 
                 var connection = await organizationTagsServiceClient.GetPaginatedTagsAsync(
                     getPaginatedTagsInput,
@@ -150,10 +174,10 @@ public class OrganizationTagService(
                         StartCursor = connection.PageInfo.StartCursor,
                         EndCursor = connection.PageInfo.EndCursor,
                         HasNextPage = connection.PageInfo.HasNextPage,
-                        HasPreviousPage = connection.PageInfo.HasPreviousPage
+                        HasPreviousPage = connection.PageInfo.HasPreviousPage,
                     },
                     TotalCount = connection.TotalCount,
-                    Edges = connection.Edges.Select(item => new OrganizationTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
+                    Edges = connection.Edges.Select(item => new OrganizationTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList(),
                 };
 
                 Cache(result.Edges.Select(item => item.Node).ToList());
@@ -179,10 +203,18 @@ public class OrganizationTagService(
             After = after.ToSafeString(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new TagWhereInput { OrganizationId = organizationId, NameContains = nameContains.ToSafeString() }
+            Where = new TagWhereInput
+            {
+                OrganizationId = organizationId,
+                NameContains = nameContains.ToSafeString(),
+            },
         };
 
-        getPaginatedTagsInput.OrderBy.Add(new TagOrderInput { Direction = OrderDirection.Ascending, Field = TagOrderField.Name });
+        getPaginatedTagsInput.OrderBy.Add(new TagOrderInput
+        {
+            Direction = OrderDirection.Ascending,
+            Field = TagOrderField.Name,
+        });
 
         var connection = await organizationTagsServiceClient.GetPaginatedTagsAsync(
             getPaginatedTagsInput,
@@ -196,10 +228,10 @@ public class OrganizationTagService(
                 StartCursor = connection.PageInfo.StartCursor,
                 EndCursor = connection.PageInfo.EndCursor,
                 HasNextPage = connection.PageInfo.HasNextPage,
-                HasPreviousPage = connection.PageInfo.HasPreviousPage
+                HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges.Select(item => new OrganizationTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
+            Edges = connection.Edges.Select(item => new OrganizationTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList(),
         };
 
         Cache(result.Edges.Select(item => item.Node).ToList());

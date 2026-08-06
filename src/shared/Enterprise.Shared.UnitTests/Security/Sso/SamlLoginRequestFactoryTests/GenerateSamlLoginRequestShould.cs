@@ -8,7 +8,8 @@ public class GenerateSamlLoginRequestShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_url_with_saml_request_and_relay_state(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         SamlLoginRequestFactory sut,
         string id,
         string redirectUrl,

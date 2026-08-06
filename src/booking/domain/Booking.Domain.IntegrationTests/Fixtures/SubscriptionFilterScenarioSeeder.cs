@@ -38,7 +38,7 @@ public static class SubscriptionFilterScenarioSeeder
 
         foreach (var (subscription, marketplaceBooking) in new[]
                  {
-                     scenario.ActivePending, scenario.ActiveConfirmed, scenario.CancelledPending, scenario.CancelledConfirmed
+                     scenario.ActivePending, scenario.ActiveConfirmed, scenario.CancelledPending, scenario.CancelledConfirmed,
                  })
         {
             subscription.ProductVersion = productVersion;
@@ -49,6 +49,9 @@ public static class SubscriptionFilterScenarioSeeder
             marketplaceBooking.MarketplaceBookingSubscription = subscription;
             marketplaceBooking.MarketplaceBookingSubscriptionId = subscription.Id;
             repositoryFactory.MarketplaceBookingRepository.Add(marketplaceBooking);
+            subscription.MarketplaceBooking = marketplaceBooking;
+            await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
+                subscription, null, cancellationToken);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

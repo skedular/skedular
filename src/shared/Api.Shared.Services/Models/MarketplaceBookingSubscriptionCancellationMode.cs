@@ -3,7 +3,7 @@ namespace Api.Shared.Services.Models;
 public enum MarketplaceBookingSubscriptionCancellationMode
 {
     Immediate,
-    AtPeriodEnd
+    AtPeriodEnd,
 }
 
 public static class MarketplaceBookingSubscriptionCancellationModeExtensions
@@ -16,7 +16,7 @@ public static class MarketplaceBookingSubscriptionCancellationModeExtensions
                 MarketplaceBookingSubscriptionCancellationMode.Immediate => "Immediate",
                 MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd => "At Period End",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

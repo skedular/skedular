@@ -58,7 +58,10 @@ public class RecurringBookingService(
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.IncludeMineOnly == true)
         {
-            searchCriteria = searchCriteria with { CustomerIds = [customerId] };
+            searchCriteria = searchCriteria with
+            {
+                CustomerIds = [customerId],
+            };
         }
 
         RecurringBookingAccessScope? accessScope = null;
@@ -90,7 +93,11 @@ public class RecurringBookingService(
                 [scopedOrganization.Id],
                 scopedOrganization.Teams.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id).ToList());
 
-            searchCriteria = searchCriteria with { OrganizationId = null, OrganizationCustomDomain = null };
+            searchCriteria = searchCriteria with
+            {
+                OrganizationId = null,
+                OrganizationCustomDomain = null,
+            };
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.TeamIds.Count != 0)

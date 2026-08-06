@@ -364,7 +364,7 @@ public class TeamsPage(
             GetTitle(),
             asyncBlocks[0],
             GetTeamsSearchCriteriaAndPaginationBlocks(connection, commonPageContext.PageContext),
-            asyncBlocks[1]
+            asyncBlocks[1],
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -374,7 +374,7 @@ public class TeamsPage(
             {
                 CallbackId = TeamsCallback,
                 Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
             cancellationToken);
@@ -388,7 +388,13 @@ public class TeamsPage(
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(NextPageTeams)
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(PreviousPageTeams);
 
-    private static IReadOnlyList<Block> GetTitle() => [new SectionBlock { Text = "*Teams*".ToMarkdown() }];
+    private static IReadOnlyList<Block> GetTitle() =>
+    [
+        new SectionBlock
+        {
+            Text = "*Teams*".ToMarkdown(),
+        },
+    ];
 
     private async Task<IReadOnlyList<Block>> GetToolbarAsync(
         Workspace workspace,
@@ -404,8 +410,8 @@ public class TeamsPage(
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addTeamButton).Concat(feedbackButton).ToList()
-            }
+                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addTeamButton).Concat(feedbackButton).ToList(),
+            },
         ];
     }
 
@@ -413,11 +419,20 @@ public class TeamsPage(
     {
         if (!teamConnection.Edges.Any())
         {
-            return [new SectionBlock { Text = "No team found".ToMarkdown() }];
+            return
+            [
+                new SectionBlock
+                {
+                    Text = "No team found".ToMarkdown(),
+                },
+            ];
         }
 
         var totalTeamsCount =
-            new SectionBlock { Text = $"Total teams: {teamConnection.TotalCount}".ToMarkdown() };
+            new SectionBlock
+            {
+                Text = $"Total teams: {teamConnection.TotalCount}".ToMarkdown(),
+            };
         if (teamConnection.TotalCount <= TeamsPageSize)
         {
             return [totalTeamsCount];
@@ -436,7 +451,9 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageTeams, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageTeams,
+                Text = Icons.FirstPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.TeamsPage.Pagination.First = null;
@@ -446,7 +463,9 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageTeams, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageTeams,
+                Text = Icons.PreviousPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
@@ -459,7 +478,9 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageTeams, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageTeams,
+                Text = Icons.NextPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.TeamsPage.Pagination.First = null;
@@ -469,11 +490,16 @@ public class TeamsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageTeams, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageTeams,
+                Text = Icons.LastPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
-        var paginationActionBlock = new ActionsBlock { Elements = paginationButtons };
+        var paginationActionBlock = new ActionsBlock
+        {
+            Elements = paginationButtons,
+        };
 
         return [totalTeamsCount, paginationActionBlock];
     }
@@ -490,16 +516,25 @@ public class TeamsPage(
         {
             BlockId = TeamActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = TeamActionTypes.Name, InitialValue = team.Name.ToSafeString() },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = TeamActionTypes.Name,
+                InitialValue = team.Name.ToSafeString(),
+            },
+            Optional = false,
         };
 
         var about = new InputBlock
         {
             BlockId = TeamActionTypes.About,
             Label = "About".ToPlainText(),
-            Element = new PlainTextInput { ActionId = TeamActionTypes.About, InitialValue = team.About.ToSafeString(), Multiline = true },
-            Optional = true
+            Element = new PlainTextInput
+            {
+                ActionId = TeamActionTypes.About,
+                InitialValue = team.About.ToSafeString(),
+                Multiline = true,
+            },
+            Optional = true,
         };
 
         var timezone = new InputBlock
@@ -511,10 +546,14 @@ public class TeamsPage(
                 ActionId = OptionLoaderKeys.TimezoneKey,
                 InitialOption = string.IsNullOrWhiteSpace(team.Timezone)
                     ? null
-                    : new Option { Text = team.Timezone.ToOptionText(), Value = team.Timezone },
-                MinQueryLength = 3
+                    : new Option
+                    {
+                        Text = team.Timezone.ToOptionText(),
+                        Value = team.Timezone,
+                    },
+                MinQueryLength = 3,
             },
-            Optional = true
+            Optional = true,
         };
 
         var primaryLocation = new InputBlock
@@ -526,10 +565,14 @@ public class TeamsPage(
                 ActionId = OptionLoaderKeys.OrganizationLocationKey,
                 InitialOption = team.PrimaryLocation is null
                     ? null
-                    : new Option { Text = team.PrimaryLocation.Name.ToOptionText(), Value = team.PrimaryLocation.Id },
-                MinQueryLength = 3
+                    : new Option
+                    {
+                        Text = team.PrimaryLocation.Name.ToOptionText(),
+                        Value = team.PrimaryLocation.Id,
+                    },
+                MinQueryLength = 3,
             },
-            Optional = true
+            Optional = true,
         };
 
         var teamEntity = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
@@ -540,9 +583,10 @@ public class TeamsPage(
             Label = "Slack update channel".ToPlainText(),
             Element = new ChannelSelectMenu
             {
-                ActionId = TeamActionTypes.SlackUpdateChannel, InitialChannel = teamEntity?.DailyUpdateChannel?.Id
+                ActionId = TeamActionTypes.SlackUpdateChannel,
+                InitialChannel = teamEntity?.DailyUpdateChannel?.Id,
             },
-            Optional = true
+            Optional = true,
         };
 
         var organizationMembers = new InputBlock
@@ -555,11 +599,11 @@ public class TeamsPage(
                 InitialOptions = team.TeamMembers.Where(item => item.OrganizationMember is not null).Select(item => new Option
                 {
                     Text = item.Customer.DisplayableName.ToOptionText(),
-                    Value = $"{item.OrganizationMember!.Id}{Global.OptionLoaderValueSeparator}{item.Customer.Id}"
+                    Value = $"{item.OrganizationMember!.Id}{Global.OptionLoaderValueSeparator}{item.Customer.Id}",
                 }).ToList(),
-                MinQueryLength = 0
+                MinQueryLength = 0,
             },
-            Optional = false
+            Optional = false,
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -573,9 +617,9 @@ public class TeamsPage(
                 Submit = "Save",
                 Blocks =
                 [
-                    name, about, timezone, primaryLocation, updateChannel, organizationMembers
+                    name, about, timezone, primaryLocation, updateChannel, organizationMembers,
                 ],
-                PrivateMetadata = context.Serialize()
+                PrivateMetadata = context.Serialize(),
             },
             cancellationToken);
     }
@@ -588,7 +632,10 @@ public class TeamsPage(
         CancellationToken cancellationToken)
     {
         var team = await teamService.GetAsync(workspaceMember.Id, context.TeamId, cancellationToken);
-        var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the team {team.Name.ToSafeString()}?" };
+        var confirmationMessage = new SectionBlock
+        {
+            Text = $"Are you sure you want to remove the team {team.Name.ToSafeString()}?",
+        };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(
@@ -600,7 +647,7 @@ public class TeamsPage(
                 Close = "No",
                 Submit = "Yes",
                 Blocks = [confirmationMessage],
-                PrivateMetadata = context.Serialize()
+                PrivateMetadata = context.Serialize(),
             },
             cancellationToken);
     }

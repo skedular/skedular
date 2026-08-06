@@ -17,7 +17,12 @@ public class CsvLocationFileReaderService : ICsvLocationFileReaderService
         using var reader = new StreamReader("/Users/morteza/Downloads/locations-output.csv");
         using var csv = new CsvReader(
             reader,
-            new CsvConfiguration(CultureInfo.InvariantCulture) { Delimiter = "|", ShouldQuote = _ => true, NewLine = Environment.NewLine });
+            new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = "|",
+                ShouldQuote = _ => true,
+                NewLine = Environment.NewLine,
+            });
         csv.Context.RegisterClassMap<LocationMap>();
 
         return csv.GetRecords<Location>().ToList();

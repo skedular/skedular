@@ -41,7 +41,14 @@ public class EditZoneButtonHandler(
         }
 
         var values = viewSubmission.View.State.Values;
-        var organizationZone = new OrganizationZone { Id = context.ZoneId, Organization = new Organization { Id = workspace.Organization.Id } };
+        var organizationZone = new OrganizationZone
+        {
+            Id = context.ZoneId,
+            Organization = new Organization
+            {
+                Id = workspace.Organization.Id,
+            },
+        };
 
         if (values.TryGetValue(ZoneActionTypes.Name, out var nameBlock))
         {

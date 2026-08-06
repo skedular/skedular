@@ -9,7 +9,11 @@ public class UsesFixedWeeklyScheduleShould
     [Fact]
     public void Use_Selected_Weekly_Days_Instead_Of_The_Subscription_Start_Date()
     {
-        var weeklyPricing = ProductPricing.Empty("weekly") with { PurchaseCadence = ProductPricingCadence.Weekly, RequiredDaysPerWeek = 2 };
+        var weeklyPricing = ProductPricing.Empty("weekly") with
+        {
+            PurchaseCadence = ProductPricingCadence.Weekly,
+            RequiredDaysPerWeek = 2,
+        };
 
         MarketplaceBookingWeeklyDaySelectionService.UsesFixedWeeklySchedule(
                 weeklyPricing,
@@ -18,7 +22,10 @@ public class UsesFixedWeeklyScheduleShould
         MarketplaceBookingWeeklyDaySelectionService.UsesFixedWeeklySchedule(weeklyPricing, [])
             .ShouldBeFalse();
         MarketplaceBookingWeeklyDaySelectionService.UsesFixedWeeklySchedule(
-                weeklyPricing with { PurchaseCadence = ProductPricingCadence.Monthly },
+                weeklyPricing with
+                {
+                    PurchaseCadence = ProductPricingCadence.Monthly,
+                },
                 [DayOfWeek.Tuesday, DayOfWeek.Wednesday])
             .ShouldBeFalse();
     }

@@ -5,17 +5,17 @@ public enum PricingCatalogProductOfferingCode
     NotSet = 0,
     Teams = 1,
     Spaces = 2,
-    Host = 3
+    Host = 3,
 }
 
 public enum PricingCatalogVersionStatus
 {
-    Active = 0
+    Active = 0,
 }
 
 public enum PricingCatalogVisibility
 {
-    Public = 0
+    Public = 0,
 }
 
 public enum PricingCatalogSubscriptionPlanCode
@@ -27,14 +27,14 @@ public enum PricingCatalogSubscriptionPlanCode
     LegacyEarlyBird = 4,
     Growth = 5,
     Business = 6,
-    ContactUs = 7
+    ContactUs = 7,
 }
 
 public enum PricingCatalogCommercialModel
 {
     Free = 0,
     UsageBased = 1,
-    CapacityBased = 2
+    CapacityBased = 2,
 }
 
 public enum PricingCatalogPlanAvailability
@@ -45,7 +45,7 @@ public enum PricingCatalogPlanAvailability
     Hidden = 3,
     Deprecated = 4,
     Unavailable = 5,
-    ExistingCustomersOnly = 6
+    ExistingCustomersOnly = 6,
 }
 
 public enum OrganizationOfferingPlanStatus
@@ -56,7 +56,7 @@ public enum OrganizationOfferingPlanStatus
     ScheduledChange = 3,
     Canceled = 4,
     Expired = 5,
-    Legacy = 6
+    Legacy = 6,
 }
 
 public static class PricingCatalogConstants
@@ -78,7 +78,7 @@ public static class PricingCatalogNameExtensions
                 PricingCatalogProductOfferingCode.Host => "Host",
                 PricingCatalogProductOfferingCode.NotSet => "Not set",
                 _ => throw new ArgumentOutOfRangeException(nameof(code), code,
-                    $"Unexpected value for {nameof(code)}: {code}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(code)}: {code}. Update enum mapping or caller input."),
             };
     }
 
@@ -96,7 +96,7 @@ public static class PricingCatalogNameExtensions
                 PricingCatalogSubscriptionPlanCode.ContactUs => "Contact Us",
                 PricingCatalogSubscriptionPlanCode.NotSet => "Not set",
                 _ => throw new ArgumentOutOfRangeException(nameof(code), code,
-                    $"Unexpected value for {nameof(code)}: {code}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(code)}: {code}. Update enum mapping or caller input."),
             };
     }
 
@@ -113,7 +113,7 @@ public static class PricingCatalogNameExtensions
                 PricingCatalogPlanAvailability.ExistingCustomersOnly => "Existing customers only",
                 PricingCatalogPlanAvailability.NotSet => "Not set",
                 _ => throw new ArgumentOutOfRangeException(nameof(availability), availability,
-                    $"Unexpected value for {nameof(availability)}: {availability}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(availability)}: {availability}. Update enum mapping or caller input."),
             };
     }
 
@@ -130,7 +130,7 @@ public static class PricingCatalogNameExtensions
                 OrganizationOfferingPlanStatus.Legacy => "Legacy",
                 OrganizationOfferingPlanStatus.NotSet => "Not set",
                 _ => throw new ArgumentOutOfRangeException(nameof(status), status,
-                    $"Unexpected value for {nameof(status)}: {status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(status)}: {status}. Update enum mapping or caller input."),
             };
     }
 }

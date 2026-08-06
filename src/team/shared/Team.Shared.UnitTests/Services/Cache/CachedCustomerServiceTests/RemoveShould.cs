@@ -11,8 +11,10 @@ public class RemoveShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Debug_When_Cache_Entries_Are_Evicted(
-        [Frozen] HybridCache hybridCache,
-        [Frozen] ILogger<CachedCustomerService> logger,
+        [Frozen]
+        HybridCache hybridCache,
+        [Frozen]
+        ILogger<CachedCustomerService> logger,
         CachedCustomerService sut,
         CancellationToken cancellationToken)
     {
@@ -21,9 +23,15 @@ public class RemoveShould
             Id = "customer-1",
             Identities =
             [
-                new Identity { Id = "token-1" },
-                new Identity { Id = "token-2" }
-            ]
+                new Identity
+                {
+                    Id = "token-1",
+                },
+                new Identity
+                {
+                    Id = "token-2",
+                },
+            ],
         };
 
         await sut.RemoveAsync([customer], cancellationToken);

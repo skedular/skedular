@@ -19,21 +19,30 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Consume_Serialized_Charge_Webhook(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        EventContext eventContext,
         BookingInternalSubscriber sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { PaymentIntentId = "pi_1" };
+        var checkout = new StripeCheckoutSession
+        {
+            PaymentIntentId = "pi_1",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => checkoutRepository.GetByPaymentIntentIdAsync("pi_1", cancellationToken)).Returns(checkout);
         var payload =
             "{\"id\":\"evt_1\",\"type\":\"charge.succeeded\",\"data\":{\"object\":{\"id\":\"ch_1\",\"object\":\"charge\",\"payment_intent\":\"pi_1\",\"transfer\":\"tr_1\"}}}";
         var @event = new BookingInternalEvent
         {
-            Metadata = new BookingInternalMetadata { Type = BookingInternalType.StripeConnectAccountWebhookEventReceived },
-            StripeConnectAccountWebhookEventPayload = payload
+            Metadata = new BookingInternalMetadata
+            {
+                Type = BookingInternalType.StripeConnectAccountWebhookEventReceived,
+            },
+            StripeConnectAccountWebhookEventPayload = payload,
         };
 
         await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
@@ -45,8 +54,10 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Consume_Serialized_Paid_Payout_Webhook(
-        [Frozen] IStripePayoutReconciliationService payoutReconciliationService,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IStripePayoutReconciliationService payoutReconciliationService,
+        [Frozen]
+        EventContext eventContext,
         BookingInternalSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -54,8 +65,11 @@ public class BookingInternalSubscriberStripePayoutShould
             "{\"id\":\"evt_paid\",\"account\":\"acct_1\",\"created\":1785232800,\"type\":\"payout.paid\",\"data\":{\"object\":{\"id\":\"po_1\",\"object\":\"payout\",\"status\":\"paid\"}}}";
         var @event = new BookingInternalEvent
         {
-            Metadata = new BookingInternalMetadata { Type = BookingInternalType.StripeConnectAccountWebhookEventReceived },
-            StripeConnectAccountWebhookEventPayload = payload
+            Metadata = new BookingInternalMetadata
+            {
+                Type = BookingInternalType.StripeConnectAccountWebhookEventReceived,
+            },
+            StripeConnectAccountWebhookEventPayload = payload,
         };
 
         await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
@@ -69,8 +83,10 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Consume_Serialized_Failed_Payout_Webhook(
-        [Frozen] IStripePayoutReconciliationService payoutReconciliationService,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IStripePayoutReconciliationService payoutReconciliationService,
+        [Frozen]
+        EventContext eventContext,
         BookingInternalSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -78,8 +94,11 @@ public class BookingInternalSubscriberStripePayoutShould
             "{\"id\":\"evt_failed\",\"account\":\"acct_1\",\"type\":\"payout.failed\",\"data\":{\"object\":{\"id\":\"po_1\",\"object\":\"payout\",\"status\":\"failed\",\"failure_message\":\"bank rejected\"}}}";
         var @event = new BookingInternalEvent
         {
-            Metadata = new BookingInternalMetadata { Type = BookingInternalType.StripeConnectAccountWebhookEventReceived },
-            StripeConnectAccountWebhookEventPayload = payload
+            Metadata = new BookingInternalMetadata
+            {
+                Type = BookingInternalType.StripeConnectAccountWebhookEventReceived,
+            },
+            StripeConnectAccountWebhookEventPayload = payload,
         };
 
         await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
@@ -94,8 +113,10 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Consume_Serialized_Canceled_Payout_Webhook(
-        [Frozen] IStripePayoutReconciliationService payoutReconciliationService,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IStripePayoutReconciliationService payoutReconciliationService,
+        [Frozen]
+        EventContext eventContext,
         BookingInternalSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -103,8 +124,11 @@ public class BookingInternalSubscriberStripePayoutShould
             "{\"id\":\"evt_canceled\",\"account\":\"acct_1\",\"type\":\"payout.canceled\",\"data\":{\"object\":{\"id\":\"po_1\",\"object\":\"payout\",\"status\":\"canceled\"}}}";
         var @event = new BookingInternalEvent
         {
-            Metadata = new BookingInternalMetadata { Type = BookingInternalType.StripeConnectAccountWebhookEventReceived },
-            StripeConnectAccountWebhookEventPayload = payload
+            Metadata = new BookingInternalMetadata
+            {
+                Type = BookingInternalType.StripeConnectAccountWebhookEventReceived,
+            },
+            StripeConnectAccountWebhookEventPayload = payload,
         };
 
         await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
@@ -118,8 +142,10 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Consume_Serialized_Refund_Webhook_With_Provider_Correlation(
-        [Frozen] IStripeHostRefundService stripeHostRefundService,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IStripeHostRefundService stripeHostRefundService,
+        [Frozen]
+        EventContext eventContext,
         BookingInternalSubscriber sut,
         CancellationToken cancellationToken)
     {
@@ -127,8 +153,11 @@ public class BookingInternalSubscriberStripePayoutShould
             "{\"id\":\"evt_refund\",\"account\":\"acct_1\",\"type\":\"refund.updated\",\"data\":{\"object\":{\"id\":\"re_1\",\"object\":\"refund\",\"status\":\"succeeded\"}}}";
         var @event = new BookingInternalEvent
         {
-            Metadata = new BookingInternalMetadata { Type = BookingInternalType.StripeConnectAccountWebhookEventReceived },
-            StripeConnectAccountWebhookEventPayload = payload
+            Metadata = new BookingInternalMetadata
+            {
+                Type = BookingInternalType.StripeConnectAccountWebhookEventReceived,
+            },
+            StripeConnectAccountWebhookEventPayload = payload,
         };
 
         await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
@@ -144,18 +173,29 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Persist_Charge_Context(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         BookingInternalSubscriber sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { PaymentIntentId = "pi_1" };
+        var checkout = new StripeCheckoutSession
+        {
+            PaymentIntentId = "pi_1",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => checkoutRepository.GetByPaymentIntentIdAsync("pi_1", cancellationToken)).Returns(checkout);
 
-        await sut.HandleChargeSucceededAsync(new Charge { Id = "ch_1", PaymentIntentId = "pi_1", TransferId = "tr_1" }, cancellationToken);
+        await sut.HandleChargeSucceededAsync(new Charge
+        {
+            Id = "ch_1",
+            PaymentIntentId = "pi_1",
+            TransferId = "tr_1",
+        }, cancellationToken);
 
         checkout.ChargeId.ShouldBe("ch_1");
         checkout.TransferId.ShouldBe("tr_1");
@@ -165,23 +205,43 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Persist_An_Exactly_Matched_Payout(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { ChargeType = "Destination", ChargeId = "ch_1", DestinationAccountId = "acct_1" };
+        var checkout = new StripeCheckoutSession
+        {
+            ChargeType = "Destination",
+            ChargeId = "ch_1",
+            DestinationAccountId = "acct_1",
+        };
         var eventCreatedAt = new DateTimeOffset(2026, 7, 28, 10, 0, 0, TimeSpan.Zero);
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => checkoutRepository.GetDestinationChargeCandidatesAsync("acct_1", A<IReadOnlyCollection<string>>._, cancellationToken))
             .Returns([checkout]);
         A.CallTo(() => stripeClient.GetPayoutBalanceTransactionsAsync("po_1", "acct_1", cancellationToken))
-            .Returns(new[] { new BalanceTransaction { SourceId = "ch_1", Source = null } });
+            .Returns(new[]
+            {
+                new BalanceTransaction
+                {
+                    SourceId = "ch_1",
+                    Source = null,
+                },
+            });
 
-        await sut.HandlePaidAsync(new Payout { Id = "po_1", Status = "paid" }, "acct_1", cancellationToken, eventCreatedAt);
+        await sut.HandlePaidAsync(new Payout
+        {
+            Id = "po_1",
+            Status = "paid",
+        }, "acct_1", cancellationToken, eventCreatedAt);
 
         checkout.PayoutId.ShouldBe("po_1");
         checkout.PayoutStatus.ShouldBe("paid");
@@ -192,20 +252,30 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_Existing_Refund_Payout_Context_When_Payout_Is_Paid(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { ChargeType = "Destination", PaymentIntentId = "pi_1", ChargeId = "ch_1", TransferId = "tr_1" };
+        var checkout = new StripeCheckoutSession
+        {
+            ChargeType = "Destination",
+            PaymentIntentId = "pi_1",
+            ChargeId = "ch_1",
+            TransferId = "tr_1",
+        };
         var refund = new MarketplaceRefund
         {
             Id = "refund-1",
             StripePaymentIntentId = "pi_1",
             StripeChargeType = "Destination",
-            Status = MarketplaceRefundStatusConstants.Processing
+            Status = MarketplaceRefundStatusConstants.Processing,
         };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);
@@ -215,7 +285,15 @@ public class BookingInternalSubscriberStripePayoutShould
             .Returns([refund]);
 
         await sut.HandlePaidAsync(
-            new Payout { Id = "po_1", Status = "paid", Metadata = new Dictionary<string, string> { ["payment_intent_id"] = "pi_1" } },
+            new Payout
+            {
+                Id = "po_1",
+                Status = "paid",
+                Metadata = new Dictionary<string, string>
+                {
+                    ["payment_intent_id"] = "pi_1",
+                },
+            },
             "acct_1",
             cancellationToken);
 
@@ -228,20 +306,35 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Correlate_Payout_By_Authoritative_Payment_Intent_Metadata(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { PaymentIntentId = "pi_1" };
+        var checkout = new StripeCheckoutSession
+        {
+            PaymentIntentId = "pi_1",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => checkoutRepository.GetByPaymentIntentIdAsync("pi_1", cancellationToken)).Returns(checkout);
 
         await sut.HandlePaidAsync(
-            new Payout { Id = "po_metadata_pi", Status = "paid", Metadata = new Dictionary<string, string> { ["payment_intent_id"] = "pi_1" } },
+            new Payout
+            {
+                Id = "po_metadata_pi",
+                Status = "paid",
+                Metadata = new Dictionary<string, string>
+                {
+                    ["payment_intent_id"] = "pi_1",
+                },
+            },
             "acct_1",
             cancellationToken);
 
@@ -256,20 +349,35 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Correlate_Payout_By_Authoritative_Transfer_Metadata(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { TransferId = "tr_1" };
+        var checkout = new StripeCheckoutSession
+        {
+            TransferId = "tr_1",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => checkoutRepository.GetByTransferIdAsync("tr_1", cancellationToken)).Returns(checkout);
 
         await sut.HandlePaidAsync(
-            new Payout { Id = "po_metadata_transfer", Status = "paid", Metadata = new Dictionary<string, string> { ["transfer_id"] = "tr_1" } },
+            new Payout
+            {
+                Id = "po_metadata_transfer",
+                Status = "paid",
+                Metadata = new Dictionary<string, string>
+                {
+                    ["transfer_id"] = "tr_1",
+                },
+            },
             "acct_1",
             cancellationToken);
 
@@ -284,14 +392,21 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Correlate_Failed_Payout_By_Authoritative_Metadata(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { PaymentIntentId = "pi_failed" };
+        var checkout = new StripeCheckoutSession
+        {
+            PaymentIntentId = "pi_failed",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -309,7 +424,10 @@ public class BookingInternalSubscriberStripePayoutShould
                 Id = "po_failed_metadata",
                 Status = "failed",
                 FailureMessage = "bank rejected",
-                Metadata = new Dictionary<string, string> { ["payment_intent_id"] = "pi_failed" }
+                Metadata = new Dictionary<string, string>
+                {
+                    ["payment_intent_id"] = "pi_failed",
+                },
             },
             "payout.failed",
             cancellationToken,
@@ -326,22 +444,38 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Correlate_Canceled_Payout_By_Balance_Transaction(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { ChargeType = "Destination", ChargeId = "ch_canceled" };
+        var checkout = new StripeCheckoutSession
+        {
+            ChargeType = "Destination",
+            ChargeId = "ch_canceled",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => checkoutRepository.GetByPayoutIdAsync("po_canceled_balance", cancellationToken))
             .Returns(Task.FromResult<StripeCheckoutSession?>(null));
         A.CallTo(() => stripeClient.GetPayoutBalanceTransactionsAsync("po_canceled_balance", "acct_1", cancellationToken))
-            .Returns(new[] { new BalanceTransaction { SourceId = "ch_canceled", Source = null } });
+            .Returns(new[]
+            {
+                new BalanceTransaction
+                {
+                    SourceId = "ch_canceled",
+                    Source = null,
+                },
+            });
         A.CallTo(() => checkoutRepository.GetDestinationChargeCandidatesAsync(
                 "acct_1", A<IReadOnlyCollection<string>>._, cancellationToken))
             .Returns([checkout]);
@@ -351,7 +485,11 @@ public class BookingInternalSubscriberStripePayoutShould
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
 
         await sut.HandleStateChangedAsync(
-            new Payout { Id = "po_canceled_balance", Status = "canceled" },
+            new Payout
+            {
+                Id = "po_canceled_balance",
+                Status = "canceled",
+            },
             "payout.canceled",
             cancellationToken,
             "acct_1");
@@ -367,14 +505,21 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Correlate_Canceled_Payout_By_Authoritative_Metadata(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { PaymentIntentId = "pi_canceled" };
+        var checkout = new StripeCheckoutSession
+        {
+            PaymentIntentId = "pi_canceled",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -391,7 +536,10 @@ public class BookingInternalSubscriberStripePayoutShould
             {
                 Id = "po_canceled_metadata",
                 Status = "canceled",
-                Metadata = new Dictionary<string, string> { ["payment_intent_id"] = "pi_canceled" }
+                Metadata = new Dictionary<string, string>
+                {
+                    ["payment_intent_id"] = "pi_canceled",
+                },
             },
             "payout.canceled",
             cancellationToken,
@@ -407,22 +555,38 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Correlate_Failed_Payout_By_Balance_Transaction(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { ChargeType = "Destination", ChargeId = "ch_failed" };
+        var checkout = new StripeCheckoutSession
+        {
+            ChargeType = "Destination",
+            ChargeId = "ch_failed",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => checkoutRepository.GetByPayoutIdAsync("po_failed_balance", cancellationToken))
             .Returns(Task.FromResult<StripeCheckoutSession?>(null));
         A.CallTo(() => stripeClient.GetPayoutBalanceTransactionsAsync("po_failed_balance", "acct_1", cancellationToken))
-            .Returns(new[] { new BalanceTransaction { SourceId = "ch_failed", Source = null } });
+            .Returns(new[]
+            {
+                new BalanceTransaction
+                {
+                    SourceId = "ch_failed",
+                    Source = null,
+                },
+            });
         A.CallTo(() => checkoutRepository.GetDestinationChargeCandidatesAsync(
                 "acct_1", A<IReadOnlyCollection<string>>._, cancellationToken))
             .Returns([checkout]);
@@ -432,7 +596,11 @@ public class BookingInternalSubscriberStripePayoutShould
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
 
         await sut.HandleStateChangedAsync(
-            new Payout { Id = "po_failed_balance", Status = "failed" },
+            new Payout
+            {
+                Id = "po_failed_balance",
+                Status = "failed",
+            },
             "payout.failed",
             cancellationToken,
             "acct_1");
@@ -448,10 +616,14 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Record_Unresolved_Metadata_Payout_For_Reconciliation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -464,7 +636,15 @@ public class BookingInternalSubscriberStripePayoutShould
             .Returns(Task.FromResult<MarketplaceExternalRefundReconciliation?>(null));
 
         await sut.HandlePaidAsync(
-            new Payout { Id = "po_unresolved", Status = "paid", Metadata = new Dictionary<string, string> { ["payment_intent_id"] = "pi_missing" } },
+            new Payout
+            {
+                Id = "po_unresolved",
+                Status = "paid",
+                Metadata = new Dictionary<string, string>
+                {
+                    ["payment_intent_id"] = "pi_missing",
+                },
+            },
             "acct_1",
             cancellationToken);
 
@@ -480,15 +660,27 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Route_Conflicting_Metadata_Payout_To_Reconciliation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var paymentIntentCheckout = new StripeCheckoutSession { Id = "checkout_pi", PaymentIntentId = "pi_1" };
-        var transferCheckout = new StripeCheckoutSession { Id = "checkout_transfer", TransferId = "tr_1" };
+        var paymentIntentCheckout = new StripeCheckoutSession
+        {
+            Id = "checkout_pi",
+            PaymentIntentId = "pi_1",
+        };
+        var transferCheckout = new StripeCheckoutSession
+        {
+            Id = "checkout_transfer",
+            TransferId = "tr_1",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -502,7 +694,11 @@ public class BookingInternalSubscriberStripePayoutShould
             {
                 Id = "po_conflicting",
                 Status = "paid",
-                Metadata = new Dictionary<string, string> { ["payment_intent_id"] = "pi_1", ["transfer_id"] = "tr_1" }
+                Metadata = new Dictionary<string, string>
+                {
+                    ["payment_intent_id"] = "pi_1",
+                    ["transfer_id"] = "tr_1",
+                },
             },
             null,
             cancellationToken);
@@ -519,23 +715,44 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Match_Payout_When_Stripe_Leaves_Source_Unexpanded(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { ChargeType = "Destination", ChargeId = "ch_unexpanded", DestinationAccountId = "acct_1" };
+        var checkout = new StripeCheckoutSession
+        {
+            ChargeType = "Destination",
+            ChargeId = "ch_unexpanded",
+            DestinationAccountId = "acct_1",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => checkoutRepository.GetDestinationChargeCandidatesAsync("acct_1", A<IReadOnlyCollection<string>>._, cancellationToken))
             .Returns([checkout]);
         A.CallTo(() => stripeClient.GetPayoutBalanceTransactionsAsync("po_unexpanded", "acct_1", cancellationToken))
-            .Returns(new[] { new BalanceTransaction { SourceId = "ch_unexpanded", Source = null } });
+            .Returns(new[]
+            {
+                new BalanceTransaction
+                {
+                    SourceId = "ch_unexpanded",
+                    Source = null,
+                },
+            });
 
-        await sut.HandlePaidAsync(new Payout { Id = "po_unexpanded", Status = "paid" }, "acct_1", cancellationToken);
+        await sut.HandlePaidAsync(new Payout
+        {
+            Id = "po_unexpanded",
+            Status = "paid",
+        }, "acct_1", cancellationToken);
 
         checkout.PayoutId.ShouldBe("po_unexpanded");
         checkout.PayoutDisbursedAt.ShouldNotBeNull();
@@ -546,17 +763,32 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Match_Payout_When_Balance_Transaction_Result_Exceeds_One_Hundred_Items(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { ChargeType = "Destination", ChargeId = "ch_101", DestinationAccountId = "acct_1" };
+        var checkout = new StripeCheckoutSession
+        {
+            ChargeType = "Destination",
+            ChargeId = "ch_101",
+            DestinationAccountId = "acct_1",
+        };
         var transactions = Enumerable.Range(1, 100)
-            .Select(index => new BalanceTransaction { SourceId = $"ch_{index}" })
-            .Append(new BalanceTransaction { SourceId = "ch_101" })
+            .Select(index => new BalanceTransaction
+            {
+                SourceId = $"ch_{index}",
+            })
+            .Append(new BalanceTransaction
+            {
+                SourceId = "ch_101",
+            })
             .ToArray();
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -565,7 +797,11 @@ public class BookingInternalSubscriberStripePayoutShould
         A.CallTo(() => stripeClient.GetPayoutBalanceTransactionsAsync("po_101", "acct_1", cancellationToken))
             .Returns(transactions);
 
-        await sut.HandlePaidAsync(new Payout { Id = "po_101", Status = "paid" }, "acct_1", cancellationToken);
+        await sut.HandlePaidAsync(new Payout
+        {
+            Id = "po_101",
+            Status = "paid",
+        }, "acct_1", cancellationToken);
 
         checkout.PayoutDisbursedAt.ShouldNotBeNull();
     }
@@ -573,9 +809,12 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Record_Unmatched_Payout_For_Reconciliation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -585,7 +824,10 @@ public class BookingInternalSubscriberStripePayoutShould
         A.CallTo(() => refundRepository.GetExternalReconciliationAsync("STRIPE_PAYOUT", "po_1", null, cancellationToken))
             .Returns(Task.FromResult<MarketplaceExternalRefundReconciliation?>(null));
 
-        await sut.HandlePaidAsync(new Payout { Id = "po_1" }, "acct_1", cancellationToken);
+        await sut.HandlePaidAsync(new Payout
+        {
+            Id = "po_1",
+        }, "acct_1", cancellationToken);
 
         A.CallTo(() => refundRepository.AddExternalReconciliation(A<MarketplaceExternalRefundReconciliation>.That.Matches(item =>
             item.Provider == "STRIPE_PAYOUT" && item.ExternalRefundId == "po_1"))).MustHaveHappenedOnceExactly();
@@ -594,25 +836,52 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reconcile_All_Checkouts_In_A_Payout(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var firstCheckout = new StripeCheckoutSession { ChargeType = "Destination", ChargeId = "ch_1", DestinationAccountId = "acct_1" };
-        var secondCheckout = new StripeCheckoutSession { ChargeType = "Destination", ChargeId = "ch_2", DestinationAccountId = "acct_1" };
+        var firstCheckout = new StripeCheckoutSession
+        {
+            ChargeType = "Destination",
+            ChargeId = "ch_1",
+            DestinationAccountId = "acct_1",
+        };
+        var secondCheckout = new StripeCheckoutSession
+        {
+            ChargeType = "Destination",
+            ChargeId = "ch_2",
+            DestinationAccountId = "acct_1",
+        };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => checkoutRepository.GetDestinationChargeCandidatesAsync("acct_1", A<IReadOnlyCollection<string>>._, cancellationToken))
             .Returns([firstCheckout, secondCheckout]);
         A.CallTo(() => stripeClient.GetPayoutBalanceTransactionsAsync("po_1", "acct_1", cancellationToken))
-            .Returns(new[] { new BalanceTransaction { SourceId = "ch_1" }, new BalanceTransaction { SourceId = "ch_2" } });
+            .Returns(new[]
+            {
+                new BalanceTransaction
+                {
+                    SourceId = "ch_1",
+                },
+                new BalanceTransaction
+                {
+                    SourceId = "ch_2",
+                },
+            });
         A.CallTo(() => refundRepository.GetExternalReconciliationAsync("STRIPE_PAYOUT", "po_1", null, cancellationToken))
             .Returns(Task.FromResult<MarketplaceExternalRefundReconciliation?>(null));
 
-        await sut.HandlePaidAsync(new Payout { Id = "po_1" }, "acct_1", cancellationToken);
+        await sut.HandlePaidAsync(new Payout
+        {
+            Id = "po_1",
+        }, "acct_1", cancellationToken);
 
         firstCheckout.PayoutDisbursedAt.ShouldNotBeNull();
         secondCheckout.PayoutDisbursedAt.ShouldNotBeNull();
@@ -623,20 +892,32 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Clear_Disbursement_On_Failed_Or_Canceled_Payout(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken,
         string eventType)
     {
         eventType = eventType is "payout.failed" or "payout.canceled" ? eventType : "payout.failed";
-        var checkout = new StripeCheckoutSession { PayoutId = "po_1", PayoutDisbursedAt = TimeProvider.System.GetUtcNow() };
+        var checkout = new StripeCheckoutSession
+        {
+            PayoutId = "po_1",
+            PayoutDisbursedAt = TimeProvider.System.GetUtcNow(),
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => checkoutRepository.GetByPayoutIdAsync("po_1", cancellationToken)).Returns(checkout);
 
-        await sut.HandleStateChangedAsync(new Payout { Id = "po_1", Status = "failed", FailureMessage = "bank rejected" }, eventType,
+        await sut.HandleStateChangedAsync(new Payout
+            {
+                Id = "po_1",
+                Status = "failed",
+                FailureMessage = "bank rejected",
+            }, eventType,
             cancellationToken);
 
         checkout.PayoutDisbursedAt.ShouldBeNull();
@@ -647,20 +928,31 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Preserve_Disbursement_On_NonTerminal_Payout_Update(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
         var disbursedAt = TimeProvider.System.GetUtcNow();
-        var checkout = new StripeCheckoutSession { PayoutId = "po_1", PayoutDisbursedAt = disbursedAt };
+        var checkout = new StripeCheckoutSession
+        {
+            PayoutId = "po_1",
+            PayoutDisbursedAt = disbursedAt,
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => checkoutRepository.GetByPayoutIdAsync("po_1", cancellationToken)).Returns(checkout);
 
         await sut.HandleStateChangedAsync(
-            new Payout { Id = "po_1", Status = "in_transit" }, "payout.updated", cancellationToken);
+            new Payout
+            {
+                Id = "po_1",
+                Status = "in_transit",
+            }, "payout.updated", cancellationToken);
 
         checkout.PayoutDisbursedAt.ShouldBe(disbursedAt);
         checkout.PayoutStatus.ShouldBe("in_transit");
@@ -670,16 +962,28 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Record_Disbursement_For_Paid_Update(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
         var eventCreatedAt = new DateTimeOffset(2026, 7, 28, 10, 0, 0, TimeSpan.Zero);
-        var checkout = new StripeCheckoutSession { PayoutId = "po_1" };
-        var reconciliation = new MarketplaceExternalRefundReconciliation { Provider = "STRIPE_PAYOUT", ExternalRefundId = "po_1", Status = "Open" };
+        var checkout = new StripeCheckoutSession
+        {
+            PayoutId = "po_1",
+        };
+        var reconciliation = new MarketplaceExternalRefundReconciliation
+        {
+            Provider = "STRIPE_PAYOUT",
+            ExternalRefundId = "po_1",
+            Status = "Open",
+        };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -690,7 +994,11 @@ public class BookingInternalSubscriberStripePayoutShould
         A.CallTo(() => refundRepository.UpdateExternalReconciliation(reconciliation)).Returns(reconciliation);
 
         await sut.HandleStateChangedAsync(
-            new Payout { Id = "po_1", Status = "paid" }, "payout.updated", cancellationToken,
+            new Payout
+            {
+                Id = "po_1",
+                Status = "paid",
+            }, "payout.updated", cancellationToken,
             eventCreatedAt: eventCreatedAt);
 
         checkout.PayoutStatus.ShouldBe("paid");
@@ -706,10 +1014,14 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_Existing_Unmatched_Payout_Reconciliation_On_Later_State_Event(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -721,7 +1033,7 @@ public class BookingInternalSubscriberStripePayoutShould
             Status = "Open",
             FirstSeenAt = TimeProvider.System.GetUtcNow().AddMinutes(-5),
             LastSeenAt = TimeProvider.System.GetUtcNow().AddMinutes(-5),
-            ResolutionReason = "Initially unmatched payout."
+            ResolutionReason = "Initially unmatched payout.",
         };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => checkoutRepository.GetByPayoutIdAsync("po_1", cancellationToken))
@@ -732,7 +1044,12 @@ public class BookingInternalSubscriberStripePayoutShould
             .Returns(existing);
 
         await sut.HandleStateChangedAsync(
-            new Payout { Id = "po_1", Status = "failed", FailureMessage = "bank rejected" },
+            new Payout
+            {
+                Id = "po_1",
+                Status = "failed",
+                FailureMessage = "bank rejected",
+            },
             "payout.failed", cancellationToken, eventCreatedAt: eventCreatedAt);
 
         existing.Status.ShouldBe("Open");
@@ -747,18 +1064,32 @@ public class BookingInternalSubscriberStripePayoutShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Move_NonTerminal_Refund_To_Reconciliation_When_Payout_Fails(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository refundRepository,
-        [Frozen] IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IMarketplaceRefundTransitionService refundTransitionService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository refundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IMarketplaceRefundTransitionService refundTransitionService,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
-        var checkout = new StripeCheckoutSession { PayoutId = "po_1", TransferId = "tr_1", ChargeId = "", PaymentIntentId = "" };
+        var checkout = new StripeCheckoutSession
+        {
+            PayoutId = "po_1",
+            TransferId = "tr_1",
+            ChargeId = "",
+            PaymentIntentId = "",
+        };
         var refund = new MarketplaceRefund
         {
-            Id = "refund-1", Status = MarketplaceRefundStatusConstants.Processing, StripeTransferId = "tr_1", PostPayoutRefund = true
+            Id = "refund-1",
+            Status = MarketplaceRefundStatusConstants.Processing,
+            StripeTransferId = "tr_1",
+            PostPayoutRefund = true,
         };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(refundRepository);
@@ -781,7 +1112,12 @@ public class BookingInternalSubscriberStripePayoutShould
             .Returns(refund);
 
         await sut.HandleStateChangedAsync(
-            new Payout { Id = "po_1", Status = "failed", FailureMessage = "bank rejected" },
+            new Payout
+            {
+                Id = "po_1",
+                Status = "failed",
+                FailureMessage = "bank rejected",
+            },
             "payout.failed", cancellationToken);
 
         refund.Status.ShouldBe(MarketplaceRefundStatusConstants.ReconciliationRequired);

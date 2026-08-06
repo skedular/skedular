@@ -9,7 +9,7 @@ public class EncryptDecryptShould
     private static EncryptionKeyConfiguration ValidKey => new()
     {
         Key = "12345678901234567890123456789012", // 32 bytes
-        Iv = "1234567890123456" // 16 bytes
+        Iv = "1234567890123456", // 16 bytes
     };
 
     [Theory]
@@ -61,7 +61,11 @@ public class EncryptDecryptShould
     [AutoFakeItEasyData]
     public void Encrypt_throws_when_key_is_wrong_length(StringEncryptionAlgorithm sut, string plainText)
     {
-        var badKey = new EncryptionKeyConfiguration { Key = "tooshort", Iv = "1234567890123456" };
+        var badKey = new EncryptionKeyConfiguration
+        {
+            Key = "tooshort",
+            Iv = "1234567890123456",
+        };
         Should.Throw<ArgumentException>(() => sut.Encrypt(plainText, badKey));
     }
 
@@ -69,7 +73,11 @@ public class EncryptDecryptShould
     [AutoFakeItEasyData]
     public void Encrypt_throws_when_iv_is_wrong_length(StringEncryptionAlgorithm sut, string plainText)
     {
-        var badKey = new EncryptionKeyConfiguration { Key = "12345678901234567890123456789012", Iv = "tooshort" };
+        var badKey = new EncryptionKeyConfiguration
+        {
+            Key = "12345678901234567890123456789012",
+            Iv = "tooshort",
+        };
         Should.Throw<ArgumentException>(() => sut.Encrypt(plainText, badKey));
     }
 }

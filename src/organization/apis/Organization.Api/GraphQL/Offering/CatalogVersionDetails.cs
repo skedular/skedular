@@ -8,6 +8,9 @@ namespace Organization.Api.GraphQL.Offering;
 [Shareable]
 public class CatalogVersionDetails
 {
-    [GraphQLName("type")] public CatalogVersion Type { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("type")]
+    public CatalogVersion Type { get; set; }
+
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
 }

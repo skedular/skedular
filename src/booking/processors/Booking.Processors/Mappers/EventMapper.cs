@@ -133,20 +133,49 @@ public class EventMapper : IEventMapper
                 CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
                 CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException(nameof(customer.Type), customer.Type,
-                    $"Unexpected value for {nameof(customer.Type)}: {customer.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(customer.Type)}: {customer.Type}. Update enum mapping or caller input."),
             },
             Identities = customer.Identities.Select(item =>
-                new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified }).ToList(),
+                new Shared.Models.Identity
+                {
+                    Id = item.Id,
+                    Email = item.Email.ToSafeString(),
+                    EmailVerified = item.EmailVerified,
+                }).ToList(),
             DefaultOrganization = string.IsNullOrWhiteSpace(customer.PreferredOrganizationId)
                 ? null
-                : new Organization { Id = customer.PreferredOrganizationId },
+                : new Organization
+                {
+                    Id = customer.PreferredOrganizationId,
+                },
             PreferredLocations =
                 customer.PreferredLocations
-                    .Select(item => new Location { Id = item.Id, Organization = new Organization { Id = item.OrganizationId } }).ToList(),
+                    .Select(item => new Location
+                    {
+                        Id = item.Id,
+                        Organization = new Organization
+                        {
+                            Id = item.OrganizationId,
+                        },
+                    }).ToList(),
             PreferredResources = customer.PreferredResources.Select(item =>
-                new Shared.Models.Resource { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
+                new Shared.Models.Resource
+                {
+                    Id = item.Id,
+                    Location = new Location
+                    {
+                        Id = item.LocationId,
+                    },
+                }).ToList(),
             PreferredOrganizationTags = customer.PreferredOrganizationTags.Select(item =>
-                new Shared.Models.OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.OrganizationId } }).ToList()
+                new Shared.Models.OrganizationTag
+                {
+                    Id = item.Id,
+                    Organization = new Organization
+                    {
+                        Id = item.OrganizationId,
+                    },
+                }).ToList(),
         };
     }
 
@@ -195,7 +224,7 @@ public class EventMapper : IEventMapper
                 SpacesTrialEndsAt = organizationAfterState.Offering.SpacesTrialEndsAt?.ToDateTimeOffset(),
                 SpacesProductEnabled = organizationAfterState.Offering.SpacesProductEnabled,
                 SpacesNextBillingAt = organizationAfterState.Offering.SpacesNextBillingAt?.ToDateTimeOffset(),
-                HostCommissionPercentage = Convert.ToDecimal(organizationAfterState.Offering.HostCommissionPercentage)
+                HostCommissionPercentage = Convert.ToDecimal(organizationAfterState.Offering.HostCommissionPercentage),
             },
             Type = organizationAfterState.Type switch
             {
@@ -203,7 +232,7 @@ public class EventMapper : IEventMapper
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
                 OrganizationType.Host => Api.Shared.Services.Models.OrganizationType.Host,
                 _ => throw new ArgumentOutOfRangeException(nameof(organizationAfterState.Type), organizationAfterState.Type,
-                    $"Unexpected value for {nameof(organizationAfterState.Type)}: {organizationAfterState.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(organizationAfterState.Type)}: {organizationAfterState.Type}. Update enum mapping or caller input."),
             },
             BillingCycle = organizationAfterState.BillingCycle switch
             {
@@ -211,8 +240,8 @@ public class EventMapper : IEventMapper
                 OrganizationBillingCycle.Fortnightly => Api.Shared.Services.Models.OrganizationBillingCycle.Fortnightly,
                 OrganizationBillingCycle.Monthly => Api.Shared.Services.Models.OrganizationBillingCycle.Monthly,
                 _ => throw new ArgumentOutOfRangeException(nameof(organizationAfterState.BillingCycle), organizationAfterState.BillingCycle,
-                    $"Unexpected value for {nameof(organizationAfterState.BillingCycle)}: {organizationAfterState.BillingCycle}. Update enum mapping or caller input.")
-            }
+                    $"Unexpected value for {nameof(organizationAfterState.BillingCycle)}: {organizationAfterState.BillingCycle}. Update enum mapping or caller input."),
+            },
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
@@ -224,17 +253,20 @@ public class EventMapper : IEventMapper
                 OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
-                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
             },
             Status = item.Status switch
             {
                 OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
-                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
             },
-            Customer = new Shared.Models.Customer { Id = item.CustomerId },
-            Organization = organization
+            Customer = new Shared.Models.Customer
+            {
+                Id = item.CustomerId,
+            },
+            Organization = organization,
         }).ToList();
 
         organization.Tags = organizationAfterState.Tags.Select(item => new Shared.Models.OrganizationTag
@@ -245,7 +277,7 @@ public class EventMapper : IEventMapper
             Name = item.Name.ToSafeString(),
             Type = item.Type.ToNullableOrganizationTagType(),
             Color = item.Color.ToSafeString(),
-            Organization = organization
+            Organization = organization,
         }).ToList();
 
         organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
@@ -258,7 +290,7 @@ public class EventMapper : IEventMapper
                 LoginUrl = organizationAfterState.SsoSettings.LoginUrl,
                 AppFederationMetadataUrl = organizationAfterState.SsoSettings.AppFederationMetadataUrl,
                 IsActive = organizationAfterState.SsoSettings.IsActive,
-                Organization = organization
+                Organization = organization,
             };
 
         return organization;
@@ -282,19 +314,30 @@ public class EventMapper : IEventMapper
                 LocationType.Private => Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(nameof(locationAfterState.Type), locationAfterState.Type,
-                    $"Unexpected value for {nameof(locationAfterState.Type)}: {locationAfterState.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(locationAfterState.Type)}: {locationAfterState.Type}. Update enum mapping or caller input."),
             },
             OpeningHours = MapTo(locationAfterState.OpeningHours),
-            Organization = new Organization { Id = locationAfterState.OrganizationId }
+            Organization = new Organization
+            {
+                Id = locationAfterState.OrganizationId,
+            },
         };
 
         location.OrganizationTags = locationAfterState.TagIds
-            .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization })
+            .Select(item => new Shared.Models.OrganizationTag
+            {
+                Id = item,
+                Organization = location.Organization,
+            })
             .ToList();
 
         var resourceOrganizationTags = locationAfterState.Resources
             .SelectMany(item => item.TagIds)
-            .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization });
+            .Select(item => new Shared.Models.OrganizationTag
+            {
+                Id = item,
+                Organization = location.Organization,
+            });
 
         location.Resources = locationAfterState.Resources.Select(item => new Shared.Models.Resource
         {
@@ -309,7 +352,7 @@ public class EventMapper : IEventMapper
             IsAvailableHoursOverridden = item.IsAvailableHoursOverridden,
             AvailableHours = item.AvailableHours is null ? null : MapTo(item.AvailableHours),
             OrganizationTags = resourceOrganizationTags.Where(tag => item.TagIds.Contains(tag.Id)).ToList(),
-            Location = location
+            Location = location,
         }).ToList();
 
         return location;
@@ -326,7 +369,10 @@ public class EventMapper : IEventMapper
             Id = teamAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Organization = new Organization { Id = teamAfterState.OrganizationId }
+            Organization = new Organization
+            {
+                Id = teamAfterState.OrganizationId,
+            },
         };
 
         team.TeamMembers = teamAfterState.Members.Select(item => new Shared.Models.TeamMember
@@ -340,17 +386,20 @@ public class EventMapper : IEventMapper
                 Role.Administrator => TeamMemberRole.Administrator,
                 Role.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
-                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
             },
             Status = item.Status switch
             {
                 Status.Active => TeamMemberStatus.Active,
                 Status.Inactive => TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
-                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
             },
-            Customer = new Shared.Models.Customer { Id = item.CustomerId },
-            Team = team
+            Customer = new Shared.Models.Customer
+            {
+                Id = item.CustomerId,
+            },
+            Team = team,
         }).ToList();
 
         return team;
@@ -384,10 +433,16 @@ public class EventMapper : IEventMapper
             Id = productAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Organization = new Organization { Id = productAfterState.OrganizationId }
+            Organization = new Organization
+            {
+                Id = productAfterState.OrganizationId,
+            },
         };
 
-        product.ProductVersions = new List<ProductVersion> { MapTo(productAfterState.LatestProductVersion, product) };
+        product.ProductVersions = new List<ProductVersion>
+        {
+            MapTo(productAfterState.LatestProductVersion, product),
+        };
 
         return product;
     }
@@ -625,9 +680,12 @@ public class EventMapper : IEventMapper
             Type = MapTo(src.Type),
             Currency = MapTo(src.Currency),
             ListingMetadata = MapTo(src.ListingMetadata),
-            OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag
+            {
+                Id = item,
+            }).ToList(),
             Product = product,
-            PricingOptions = MapTo(src.PricingOptions).ToList()
+            PricingOptions = MapTo(src.PricingOptions).ToList(),
         };
 
     private static IEnumerable<Api.Shared.Services.Models.ProductPricing> MapTo(IEnumerable<ProductPricing> src) =>
@@ -668,7 +726,7 @@ public class EventMapper : IEventMapper
             Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationPolicyType.TieredRefund =>
                 ProductPricingCancellationPolicyType.TieredRefund,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 
     private static IEnumerable<ProductPricingCancellationRefundRule> MapTo(
@@ -699,7 +757,7 @@ public class EventMapper : IEventMapper
             ProductPricingCadence.SixMonths => Api.Shared.Services.Models.ProductPricingCadence.SixMonths,
             ProductPricingCadence.Yearly => Api.Shared.Services.Models.ProductPricingCadence.Yearly,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 
     private static Api.Shared.Services.Models.ProductPricingBillingMode MapTo(ProductPricingBillingMode src) =>
@@ -709,7 +767,7 @@ public class EventMapper : IEventMapper
             ProductPricingBillingMode.Upfront => Api.Shared.Services.Models.ProductPricingBillingMode.Upfront,
             ProductPricingBillingMode.InArrears => Api.Shared.Services.Models.ProductPricingBillingMode.InArrears,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 
     private static IEnumerable<Api.Shared.Services.Models.PaymentMethod> MapTo(IEnumerable<PaymentMethod> src) =>
@@ -721,7 +779,7 @@ public class EventMapper : IEventMapper
             PaymentMethod.Card => Api.Shared.Services.Models.PaymentMethod.Card,
             PaymentMethod.BankTransfer => Api.Shared.Services.Models.PaymentMethod.BankTransfer,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 
     private static Api.Shared.Services.Models.Currency MapTo(Currency src) =>
@@ -730,7 +788,7 @@ public class EventMapper : IEventMapper
             Currency.Nzd => Api.Shared.Services.Models.Currency.Nzd,
             Currency.Usd => Api.Shared.Services.Models.Currency.Usd,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 
     private static ListingMetadata MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.ListingMetadata src) =>
@@ -742,6 +800,6 @@ public class EventMapper : IEventMapper
             ProductType.Resource => Api.Shared.Services.Models.ProductType.Resource,
             ProductType.Event => Api.Shared.Services.Models.ProductType.Event,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 }

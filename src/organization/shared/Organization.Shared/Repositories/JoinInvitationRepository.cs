@@ -159,7 +159,7 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
                 KeysetPaginationField<JoinInvitation>.Create(
                     $"{nameof(JoinInvitation.CreatedBy)}{nameof(Customer.Id)}",
                     query => query.CreatedBy.Id,
-                    OrderDirection.Ascending)
+                    OrderDirection.Ascending),
             ];
         }
 
@@ -174,7 +174,7 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
                     query => query.Status,
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             })
             .ToList();
     }

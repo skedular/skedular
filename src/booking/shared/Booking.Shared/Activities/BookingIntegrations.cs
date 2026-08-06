@@ -67,7 +67,10 @@ public class BookingIntegrations(
         }
 
         var organization = await organizationServiceClient.Admin_GetAsync(
-            new Admin_GetInput { Id = marketplaceBooking.ProductVersion.Product.Organization.Id },
+            new Admin_GetInput
+            {
+                Id = marketplaceBooking.ProductVersion.Product.Organization.Id,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(organization);
@@ -88,7 +91,7 @@ public class BookingIntegrations(
             ProductPricingCadence.PerHour =>
                 marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 60m),
             _ => throw new ArgumentOutOfRangeException(null,
-                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                "Unexpected value encountered. Update enum mapping or caller input to include this case."),
         };
 
         marketplaceBooking.Currency = marketplaceBooking.ProductVersion.Currency;
@@ -129,6 +132,8 @@ public class BookingIntegrations(
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
         bookingOutboxPublisher.PublishBookings([entityMapper.MapTo(booking)], repositoryFactory.UnitOfWork);
 
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -154,7 +159,10 @@ public class BookingIntegrations(
         }
 
         var organization = await organizationServiceClient.Admin_GetAsync(
-            new Admin_GetInput { Id = marketplaceBooking.ProductVersion.Product.Organization.Id },
+            new Admin_GetInput
+            {
+                Id = marketplaceBooking.ProductVersion.Product.Organization.Id,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(organization);
@@ -211,6 +219,8 @@ public class BookingIntegrations(
         ApplyHostCommission(marketplaceBooking, commissionRate);
 
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -287,6 +297,8 @@ public class BookingIntegrations(
                 new ProcessMarketplaceRefundInput(refundToProcess.Id, null), repositoryFactory.UnitOfWork);
         }
 
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingAsync(
+            booking, refundToProcess, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 

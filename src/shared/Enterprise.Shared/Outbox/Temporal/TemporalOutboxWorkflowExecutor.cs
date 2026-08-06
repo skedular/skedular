@@ -55,7 +55,7 @@ public class TemporalOutboxWorkflowExecutor(
                 WorkflowType = typeof(TWorkflow).ToWorkflowType(),
                 ExecutionArgs = executionArgs,
                 WorkflowOptions = workflowOptions,
-                Timestamp = timeProvider.GetUtcNow()
+                Timestamp = timeProvider.GetUtcNow(),
             });
 
             logger.LogInformation("Temporal workflow queued in outbox successfully. WorkflowType={WorkflowType}", typeof(TWorkflow).FullName);

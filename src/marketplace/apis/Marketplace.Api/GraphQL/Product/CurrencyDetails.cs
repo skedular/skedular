@@ -8,6 +8,9 @@ namespace Marketplace.Api.GraphQL.Product;
 [Shareable]
 public class CurrencyDetails
 {
-    [GraphQLName("type")] public Currency Type { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("type")]
+    public Currency Type { get; set; }
+
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
 }

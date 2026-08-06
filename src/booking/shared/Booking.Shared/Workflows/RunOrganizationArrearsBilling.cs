@@ -36,7 +36,11 @@ public class RunOrganizationArrearsBilling
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
             var delay = runAt - Workflow.UtcNow;
             if (delay > TimeSpan.Zero)
@@ -53,7 +57,10 @@ public class RunOrganizationArrearsBilling
             {
                 // A billing-cycle update should reschedule from the new configuration before another
                 // invoice batch is attempted.
-                _state = _state with { ConfigurationChanged = false };
+                _state = _state with
+                {
+                    ConfigurationChanged = false,
+                };
 
                 continue;
             }
@@ -65,7 +72,11 @@ public class RunOrganizationArrearsBilling
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
 
             await Workflow.ExecuteActivityAsync(
@@ -78,10 +89,17 @@ public class RunOrganizationArrearsBilling
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(2),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
 
-            _state = _state with { RunNowRequested = false };
+            _state = _state with
+            {
+                RunNowRequested = false,
+            };
         }
     }
 
@@ -90,7 +108,10 @@ public class RunOrganizationArrearsBilling
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { RunNowRequested = true };
+        _state = _state with
+        {
+            RunNowRequested = true,
+        };
         return Task.CompletedTask;
     }
 
@@ -99,7 +120,11 @@ public class RunOrganizationArrearsBilling
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { Configuration = configuration, ConfigurationChanged = true };
+        _state = _state with
+        {
+            Configuration = configuration,
+            ConfigurationChanged = true,
+        };
         return Task.CompletedTask;
     }
 
@@ -108,7 +133,10 @@ public class RunOrganizationArrearsBilling
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { Stopped = true };
+        _state = _state with
+        {
+            Stopped = true,
+        };
         return Task.CompletedTask;
     }
 }

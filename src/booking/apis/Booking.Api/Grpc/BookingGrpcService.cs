@@ -37,7 +37,13 @@ public class BookingGrpcService(
     {
         var version = versionService.GetVersion();
 
-        return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
+        return Task.FromResult(new Version
+        {
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
+        });
     }
 
     public override async Task<BookingConnection> Admin_GetPaginatedBookings(Admin_GetPaginatedBookingsInput request, ServerCallContext context)
@@ -81,7 +87,7 @@ public class BookingGrpcService(
                     global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Category => BookingOrderField.Category,
                     global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Channel => BookingOrderField.Channel,
                     _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
                 };
 
                 return new BookingOrder(direction, field);
@@ -96,9 +102,9 @@ public class BookingGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
@@ -146,7 +152,7 @@ public class BookingGrpcService(
                     global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Category => BookingOrderField.Category,
                     global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Channel => BookingOrderField.Channel,
                     _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
                 };
 
                 return new BookingOrder(direction, field);
@@ -161,9 +167,9 @@ public class BookingGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
@@ -180,7 +186,7 @@ public class BookingGrpcService(
             CanViewBookings = permissions.CanViewBookings,
             CanAddBooking = permissions.CanAddBooking,
             CanUpdateBooking = permissions.CanUpdateBooking,
-            CanDeleteBooking = permissions.CanDeleteBooking
+            CanDeleteBooking = permissions.CanDeleteBooking,
         };
     }
 
@@ -194,7 +200,7 @@ public class BookingGrpcService(
             CanViewBookings = permissions.CanViewBookings,
             CanAddBooking = permissions.CanAddBooking,
             CanUpdateBooking = permissions.CanUpdateBooking,
-            CanDeleteBooking = permissions.CanDeleteBooking
+            CanDeleteBooking = permissions.CanDeleteBooking,
         };
     }
 
@@ -238,7 +244,7 @@ public class BookingGrpcService(
                         PrivateBookingPatchField.Resources =>
                             Models.PrivateBookingPatchField.Resources,
                         _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
-                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.")
+                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input."),
                     }).ToHashSet()),
                 context.CancellationToken));
     }

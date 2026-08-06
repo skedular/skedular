@@ -10,7 +10,9 @@ public class ReplicatedEntityBaseShould
     {
         var entity = new ReplicatedSpecEntity
         {
-            Id = "1", CreatedAt = TimeProvider.System.GetUtcNow(), EventRaisedAt = TimeProvider.System.GetUtcNow()
+            Id = "1",
+            CreatedAt = TimeProvider.System.GetUtcNow(),
+            EventRaisedAt = TimeProvider.System.GetUtcNow(),
         };
 
         entity.EventRaisedAt.ShouldNotBeNull();
@@ -19,7 +21,11 @@ public class ReplicatedEntityBaseShould
     [Fact]
     public void Allow_null_event_raised_at()
     {
-        var entity = new ReplicatedSpecEntity { Id = "1", CreatedAt = TimeProvider.System.GetUtcNow() };
+        var entity = new ReplicatedSpecEntity
+        {
+            Id = "1",
+            CreatedAt = TimeProvider.System.GetUtcNow(),
+        };
 
         entity.EventRaisedAt.ShouldBeNull();
     }

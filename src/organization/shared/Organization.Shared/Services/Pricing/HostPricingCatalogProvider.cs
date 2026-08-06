@@ -23,7 +23,7 @@ public class HostPricingCatalogProvider
                     [
                         new PlanFeature("booking", "Full-place booking", 1),
                         new PlanFeature("commission", "5% commission per booking", 2),
-                        new PlanFeature("map-visibility", "Public map listing", 3)
+                        new PlanFeature("map-visibility", "Public map listing", 3),
                     ],
                     [
                         new PlanLimit(
@@ -35,13 +35,13 @@ public class HostPricingCatalogProvider
                             "resources",
                             "Resources",
                             hostStandardOffering.MaxResourceCount,
-                            !hostStandardOffering.MaxResourceCount.HasValue)
+                            !hostStandardOffering.MaxResourceCount.HasValue),
                     ],
                     [],
                     [],
                     PricingCatalogPlanAvailability.SelfService,
                     true,
-                    1)
+                    1),
             ]);
     }
 }

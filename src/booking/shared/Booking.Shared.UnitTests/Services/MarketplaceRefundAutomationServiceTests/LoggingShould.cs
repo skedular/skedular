@@ -13,22 +13,33 @@ public class LoggingShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Information_When_Stripe_Refund_Completes_Successfully(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundService stripeHostRefundService,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<MarketplaceRefundAutomationService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundService stripeHostRefundService,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<MarketplaceRefundAutomationService> logger,
         MarketplaceRefundAutomationService sut,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
         {
-            Id = "refund-1", Status = MarketplaceRefundStatusConstants.Requested, RefundAmount = 50m, RefundKind = "Cancellation"
+            Id = "refund-1",
+            Status = MarketplaceRefundStatusConstants.Requested,
+            RefundAmount = 50m,
+            RefundKind = "Cancellation",
         };
         var completedRefund = new MarketplaceRefund
         {
-            Id = refund.Id, Status = MarketplaceRefundStatusConstants.Completed, ExternalPaymentRefundId = "re_stripe1"
+            Id = refund.Id,
+            Status = MarketplaceRefundStatusConstants.Completed,
+            ExternalPaymentRefundId = "re_stripe1",
         };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -50,17 +61,25 @@ public class LoggingShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Warning_When_Stripe_Checkout_Session_Is_Missing_For_Host_Refund(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundService stripeHostRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<MarketplaceRefundAutomationService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundService stripeHostRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<MarketplaceRefundAutomationService> logger,
         MarketplaceRefundAutomationService sut,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
         {
-            Id = "refund-1", Status = MarketplaceRefundStatusConstants.Requested, RefundAmount = 50m, RefundKind = "Cancellation"
+            Id = "refund-1",
+            Status = MarketplaceRefundStatusConstants.Requested,
+            RefundAmount = 50m,
+            RefundKind = "Cancellation",
         };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -79,18 +98,27 @@ public class LoggingShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Warning_When_Xero_Processing_Is_Blocked(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundService stripeHostRefundService,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<MarketplaceRefundAutomationService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundService stripeHostRefundService,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<MarketplaceRefundAutomationService> logger,
         MarketplaceRefundAutomationService sut,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
         {
-            Id = "refund-1", Status = MarketplaceRefundStatusConstants.Requested, RefundAmount = 50m, RefundKind = "Cancellation"
+            Id = "refund-1",
+            Status = MarketplaceRefundStatusConstants.Requested,
+            RefundAmount = 50m,
+            RefundKind = "Cancellation",
         };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);

@@ -39,5 +39,5 @@ public enum BookingOrderField
     To,
     Notes,
     Category,
-    Channel
+    Channel,
 }

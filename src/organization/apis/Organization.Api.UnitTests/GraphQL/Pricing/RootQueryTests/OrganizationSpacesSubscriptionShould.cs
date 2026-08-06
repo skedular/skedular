@@ -11,7 +11,8 @@ public class OrganizationSpacesSubscriptionShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Authoritative_Trial_State(
-        [Frozen] IOrganizationSpacesSubscriptionService subscriptionService,
+        [Frozen]
+        IOrganizationSpacesSubscriptionService subscriptionService,
         RootQuery sut,
         string organizationId,
         DateTimeOffset trialStartedAt,
@@ -22,7 +23,10 @@ public class OrganizationSpacesSubscriptionShould
             .Returns(new OrganizationSpacesSubscription
             {
                 Id = "subscription-1",
-                Organization = new Shared.Models.Organization { Id = organizationId },
+                Organization = new Shared.Models.Organization
+                {
+                    Id = organizationId,
+                },
                 PlanCode = PricingCatalogSubscriptionPlanCode.Free,
                 SubscriptionStatus = SpacesSubscriptionStatus.TrialExpiring,
                 AccessReason = SpacesAccessReasonCode.AllowedReadOrRecovery,
@@ -31,7 +35,7 @@ public class OrganizationSpacesSubscriptionShould
                 RemainingTrialDays = 3,
                 CanUseProduct = true,
                 CanAcceptBookings = true,
-                CanProtectExistingCommitments = true
+                CanProtectExistingCommitments = true,
             });
 
         var result = await sut.OrganizationSpacesSubscriptionAsync(

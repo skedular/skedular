@@ -82,7 +82,7 @@ public class ShouldTraceActivityShould
         {
             ShouldListenTo = _ => true,
             Sample = (ref _) => ActivitySamplingResult.AllDataAndRecorded,
-            SampleUsingParentId = (ref _) => ActivitySamplingResult.AllDataAndRecorded
+            SampleUsingParentId = (ref _) => ActivitySamplingResult.AllDataAndRecorded,
         };
 
         ActivitySource.AddActivityListener(listener);

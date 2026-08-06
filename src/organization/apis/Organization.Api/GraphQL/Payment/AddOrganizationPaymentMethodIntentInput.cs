@@ -7,8 +7,11 @@ namespace Organization.Api.GraphQL.Payment;
 [GraphQLName("AddOrganizationPaymentMethodIntentInput")]
 public class AddOrganizationPaymentMethodIntentInput
 {
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("clientMutationId")]
+    public string? ClientMutationId { get; set; }
+
+    [GraphQLName("organizationId")]
+    public string? OrganizationId { get; set; }
 
     [GraphQLName("organizationCustomDomain")]
     public string? OrganizationCustomDomain { get; set; }

@@ -25,18 +25,32 @@ public class RecurringBookingPaymentServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task ConfirmPaymentAsync_Updates_Recurring_Booking_And_Raises_Subscription_And_Booking_Events(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplacePurchaseHistoryRepository marketplacePurchaseHistoryRepository,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         RecurringBookingPaymentService sut,
         CancellationToken cancellationToken) =>
         await AssertUpdatePaymentStatusAsync(
@@ -45,6 +59,7 @@ public class RecurringBookingPaymentServiceShould
             cachedCustomerService,
             organizationAuthorizationService,
             marketplaceBookingRepository,
+            marketplacePurchaseHistoryRepository,
             recurringBookingRepository,
             bookingRepository,
             temporalOutboxService,
@@ -61,18 +76,32 @@ public class RecurringBookingPaymentServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task RejectPaymentAsync_Updates_Recurring_Booking_And_Raises_Subscription_And_Booking_Events(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplacePurchaseHistoryRepository marketplacePurchaseHistoryRepository,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         RecurringBookingPaymentService sut,
         CancellationToken cancellationToken) =>
         await AssertUpdatePaymentStatusAsync(
@@ -81,6 +110,7 @@ public class RecurringBookingPaymentServiceShould
             cachedCustomerService,
             organizationAuthorizationService,
             marketplaceBookingRepository,
+            marketplacePurchaseHistoryRepository,
             recurringBookingRepository,
             bookingRepository,
             temporalOutboxService,
@@ -97,18 +127,32 @@ public class RecurringBookingPaymentServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task MakePaymentNotRequiredAsync_Updates_Recurring_Booking_And_Raises_Subscription_And_Booking_Events(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplacePurchaseHistoryRepository marketplacePurchaseHistoryRepository,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         RecurringBookingPaymentService sut,
         CancellationToken cancellationToken) =>
         await AssertUpdatePaymentStatusAsync(
@@ -117,6 +161,7 @@ public class RecurringBookingPaymentServiceShould
             cachedCustomerService,
             organizationAuthorizationService,
             marketplaceBookingRepository,
+            marketplacePurchaseHistoryRepository,
             recurringBookingRepository,
             bookingRepository,
             temporalOutboxService,
@@ -136,6 +181,7 @@ public class RecurringBookingPaymentServiceShould
         ICachedCustomerService cachedCustomerService,
         IOrganizationAuthorizationService organizationAuthorizationService,
         IMarketplaceBookingRepository marketplaceBookingRepository,
+        IMarketplacePurchaseHistoryRepository marketplacePurchaseHistoryRepository,
         IRecurringBookingRepository recurringBookingRepository,
         IBookingRepository bookingRepository,
         ITemporalOutboxService temporalOutboxService,
@@ -149,9 +195,18 @@ public class RecurringBookingPaymentServiceShould
         PaymentStatus expectedPaymentStatus,
         Func<RecurringBookingPaymentService, string, CancellationToken, Task<RecurringBooking>> act)
     {
-        var customer = new Customer { Id = "customer-1" };
-        var subscription = new MarketplaceBookingSubscription { Id = "subscription-1" };
-        var organization = new Organization { Id = "organization-1" };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var subscription = new MarketplaceBookingSubscription
+        {
+            Id = "subscription-1",
+        };
+        var organization = new Organization
+        {
+            Id = "organization-1",
+        };
         var recurringBooking = new Shared.Database.Entities.RecurringBooking
         {
             Id = "recurring-1",
@@ -162,17 +217,31 @@ public class RecurringBookingPaymentServiceShould
             {
                 Id = "marketplace-booking-1",
                 PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
-                PaymentMethod = paymentMethod.ToPaymentMethod()
+                PaymentMethod = paymentMethod.ToPaymentMethod(),
             },
-            InvolvedOrganizations = [organization]
+            InvolvedOrganizations = [organization],
         };
-        IReadOnlyList<BookingEntity> relatedBookings = new List<BookingEntity> { new() { Id = "booking-1" }, new() { Id = "booking-2" } };
-        var mappedRecurringBooking = new RecurringBooking { Id = recurringBooking.Id };
+        IReadOnlyList<BookingEntity> relatedBookings = new List<BookingEntity>
+        {
+            new()
+            {
+                Id = "booking-1",
+            },
+            new()
+            {
+                Id = "booking-2",
+            },
+        };
+        var mappedRecurringBooking = new RecurringBooking
+        {
+            Id = recurringBooking.Id,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customer.Id);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingRepository).Returns(marketplaceBookingRepository);
+        A.CallTo(() => repositoryFactory.MarketplacePurchaseHistoryRepository).Returns(marketplacePurchaseHistoryRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBooking.Id, cancellationToken)).Returns(recurringBooking);
         A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodAsync(organization.Id, customer.Id, cancellationToken)).Returns(true);
@@ -187,6 +256,9 @@ public class RecurringBookingPaymentServiceShould
         result.ShouldBe(mappedRecurringBooking);
         recurringBooking.MarketplaceBooking.PaymentStatus.ShouldBe(expectedPaymentStatus.ToPaymentStatus());
         A.CallTo(() => marketplaceBookingRepository.Update(recurringBooking.MarketplaceBooking)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => marketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+                recurringBooking.MarketplaceBooking.Id, cancellationToken))
+            .MustHaveHappenedOnceExactly();
         if (paymentMethod == PaymentMethod.Card)
         {
             A.CallTo(() => temporalOutboxService.SignalWorkflowPayRecurringBookingViaCardSetPaymentStatus(

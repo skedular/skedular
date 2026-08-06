@@ -35,7 +35,10 @@ public class OrganizationBookingDerivedState(
         }
 
         var allBookings = await GetBookingsAsync(
-            new BookingWhereInput { OrganizationId = organizationId },
+            new BookingWhereInput
+            {
+                OrganizationId = organizationId,
+            },
             cancellationToken);
 
         await ReplaceDailyBookingCountsAsync(organization, allBookings, cancellationToken);
@@ -61,7 +64,10 @@ public class OrganizationBookingDerivedState(
             .GroupBy(item => item.From.StartOfDay())
             .Select(groupedBooking => new DailyBookingCountRecording
             {
-                Id = randomHelper.Generate(), Date = groupedBooking.Key, Count = groupedBooking.Count(), Organization = organization
+                Id = randomHelper.Generate(),
+                Date = groupedBooking.Key,
+                Count = groupedBooking.Count(),
+                Organization = organization,
             })
             .ToList();
 
@@ -98,7 +104,7 @@ public class OrganizationBookingDerivedState(
                 {
                     OrganizationId = organization.Id,
                     FromGte = Timestamp.FromDateTimeOffset(organizationOffering.Start),
-                    ToLte = Timestamp.FromDateTimeOffset(organizationOffering.End)
+                    ToLte = Timestamp.FromDateTimeOffset(organizationOffering.End),
                 },
                 cancellationToken))
             .SelectMany(item => item.CustomerIds)
@@ -113,7 +119,9 @@ public class OrganizationBookingDerivedState(
         var nextActiveMembers = nextOrganizationMembers
             .Select(organizationMember => new OrganizationOfferingActiveMember
             {
-                Id = randomHelper.Generate(), OrganizationMember = organizationMember, OrganizationOffering = organizationOffering
+                Id = randomHelper.Generate(),
+                OrganizationMember = organizationMember,
+                OrganizationOffering = organizationOffering,
             })
             .ToList();
 
@@ -146,7 +154,14 @@ public class OrganizationBookingDerivedState(
                     Before = string.Empty,
                     Last = ((int?)null).ToNullInt(),
                     Where = where,
-                    OrderBy = { new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From } }
+                    OrderBy =
+                    {
+                        new BookingOrderInput
+                        {
+                            Direction = OrderDirection.Ascending,
+                            Field = BookingOrderField.From,
+                        },
+                    },
                 },
                 bookingConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);

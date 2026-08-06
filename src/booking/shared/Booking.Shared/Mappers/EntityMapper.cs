@@ -113,8 +113,8 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             {
                 { "productId", productVersion.Product.Id },
                 { "productVersionId", productVersion.Id },
-                { "organizationId", productVersion.Product.Organization.Id }
-            }
+                { "organizationId", productVersion.Product.Organization.Id },
+            },
         };
 
     public PriceCreateOptions MapTo(ProductPricing pricing, StripeProduct stripeProduct) =>
@@ -129,8 +129,8 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             {
                 { "productId", stripeProduct.ProductVersion.Product.Id },
                 { "productVersionId", stripeProduct.ProductVersion.Id },
-                { "organizationId", stripeProduct.ProductVersion.Product.Organization.Id }
-            }
+                { "organizationId", stripeProduct.ProductVersion.Product.Organization.Id },
+            },
         };
 
     public CustomerCreateOptions MapToCustomerCreateOption(Organization src) =>
@@ -139,7 +139,11 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Name = src.Name,
             Email = string.IsNullOrWhiteSpace(src.ContactEmail) ? null : src.ContactEmail,
             Phone = string.IsNullOrWhiteSpace(src.ContactPhone) ? null : src.ContactPhone,
-            Metadata = new Dictionary<string, string> { { "type", "organization" }, { "organizationId", src.Id } }
+            Metadata = new Dictionary<string, string>
+            {
+                { "type", "organization" },
+                { "organizationId", src.Id },
+            },
         };
 
     public CustomerCreateOptions MapToCustomerCreateOption(Customer src) =>
@@ -149,7 +153,11 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Email = src.Identities.ToSingleEmail(),
             Phone = src.PhoneNumber.ToSafeString(),
             PreferredLocales = string.IsNullOrWhiteSpace(src.Locale) ? [] : [src.Locale],
-            Metadata = new Dictionary<string, string> { { "type", "customer" }, { "customerId", src.Id } }
+            Metadata = new Dictionary<string, string>
+            {
+                { "type", "customer" },
+                { "customerId", src.Id },
+            },
         };
 
     public Models.Booking MapTo(Database.Entities.Booking src) =>
@@ -178,7 +186,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             MarketplaceBooking = MapTo(ResolveBookingMarketplaceBooking(src)),
             HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides,
             CancellationPolicyOverridden = src.CancellationPolicyOverridden,
-            CancellationOverrideReason = src.CancellationOverrideReason
+            CancellationOverrideReason = src.CancellationOverrideReason,
         };
 
     public OrganizationArrearsInvoice MapTo(Database.Entities.OrganizationArrearsInvoice src) =>
@@ -194,7 +202,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             BillingPeriodStartInclusive = src.BillingPeriodStartInclusive,
             BillingPeriodEndExclusive = src.BillingPeriodEndExclusive,
             Currency = src.Currency.ToCurrency(),
-            TotalAmount = src.TotalAmount
+            TotalAmount = src.TotalAmount,
         };
 
     public RecurringBooking MapTo(Database.Entities.RecurringBooking src) =>
@@ -228,7 +236,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             MarketplaceBooking = MapTo(src.MarketplaceBooking),
             MarketplaceBookingSubscription = src.MarketplaceBookingSubscription is null
                 ? null
-                : MapToSubscriptionShallow(src.MarketplaceBookingSubscription)
+                : MapToSubscriptionShallow(src.MarketplaceBookingSubscription),
         };
 
     public MarketplaceBookingSubscription MapTo(Database.Entities.MarketplaceBookingSubscription src)
@@ -257,7 +265,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            RecurringBookings = src.RecurringBookings.Select(MapToRecurringBookingWithoutSubscription).ToList()
+            RecurringBookings = src.RecurringBookings.Select(MapToRecurringBookingWithoutSubscription).ToList(),
         };
 
         var currentBillingWindowProjection = subscription.ResolveCurrentBillingWindowPaymentProjection(timeProvider.GetUtcNow());
@@ -290,10 +298,13 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
             Resources = src.RequestedResources
                 .Select(item => new ResourceCustomersPair(
-                    new Models.Resource { Id = item.Id },
+                    new Models.Resource
+                    {
+                        Id = item.Id,
+                    },
                     MapTo(src.InvolvedCustomers).ToList()))
                 .ToList(),
-            CreatedByCustomer = MapTo(src.CreatedByCustomer)
+            CreatedByCustomer = MapTo(src.CreatedByCustomer),
         };
     }
 
@@ -322,11 +333,14 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Resources = src.RequestedResources.Count != 0
                 ? src.RequestedResources
                     .Select(item => new ResourceCustomersPair(
-                        new Models.Resource { Id = item.Id },
+                        new Models.Resource
+                        {
+                            Id = item.Id,
+                        },
                         MapTo(src.InvolvedCustomers).ToList()))
                     .ToList()
                 : booking.Resources,
-            MarketplaceBooking = MapTo(marketplaceBooking)
+            MarketplaceBooking = MapTo(marketplaceBooking),
         };
     }
 
@@ -345,7 +359,10 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
     {
         var booking = MergeTo(
             src,
-            new Database.Entities.Booking { Channel = src.Channel.ToBookingChannel() },
+            new Database.Entities.Booking
+            {
+                Channel = src.Channel.ToBookingChannel(),
+            },
             involvedCustomers,
             involvedOrganizations,
             involvedLocations,
@@ -550,7 +567,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
                 BillingMode = src.BillingMode.ToProductPricingBillingMode(),
                 StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
-                PaymentExpiry = src.PaymentExpiry
+                PaymentExpiry = src.PaymentExpiry,
             };
 
     private static (DateTimeOffset From, DateTimeOffset Until) ResolveRecurringBookingWindow(
@@ -573,7 +590,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             PricingOptions = src.PricingOptions.ToSafeCollection(),
             Product = MapTo(src.Product)!,
-            OrganizationTags = MapTo(src.OrganizationTags).ToList()
+            OrganizationTags = MapTo(src.OrganizationTags).ToList(),
         };
 
     private static Product? MapTo(Database.Entities.Product? src) =>
@@ -586,7 +603,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Organization = MapTo(src.Organization) ?? new Models.Organization()
+                Organization = MapTo(src.Organization) ?? new Models.Organization(),
             };
 
     private MarketplaceBookingSubscription MapToSubscriptionShallow(Database.Entities.MarketplaceBookingSubscription src) =>
@@ -604,7 +621,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
             WeeklySelectedDays = src.WeeklySelectedDays.Select(item => item.ToDayOfWeek()).ToList(),
             MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
-            RequestedResources = MapTo(src.RequestedResources).ToList()
+            RequestedResources = MapTo(src.RequestedResources).ToList(),
         };
 
     private RecurringBooking MapToRecurringBookingWithoutSubscription(Database.Entities.RecurringBooking src) =>
@@ -636,7 +653,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             MarketplaceBooking = MapTo(src.MarketplaceBooking),
-            MarketplaceBookingSubscription = null
+            MarketplaceBookingSubscription = null,
         };
 
     private static Models.MarketplaceBooking MapTo(
@@ -746,7 +763,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 DeletedAt = src.DeletedAt,
-                CheckoutUrl = src.CheckoutUrl.ToSafeString()
+                CheckoutUrl = src.CheckoutUrl.ToSafeString(),
             };
 
     private static IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
@@ -760,7 +777,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Available = src.Available,
             Start = src.Start,
             Customers = MapTo(src.Customers).ToList(),
-            Resource = MapTo(src.Resource)
+            Resource = MapTo(src.Resource),
         };
 
     private static IEnumerable<Models.Customer> MapTo(IEnumerable<Customer> src) => src.Select(MapTo)!;
@@ -792,18 +809,29 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
                 Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList()
+                Identities = MapTo(src.Identities).ToList(),
             };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Database.Entities.Identity src) =>
-        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email,
+            EmailVerified = src.EmailVerified,
+        };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTag MapTo(Database.Entities.OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Type = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Type = src.Type.ToNullableOrganizationTagType(),
+            Color = src.Color,
+        };
 
     private static IEnumerable<Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
 
@@ -826,7 +854,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 LogoUrl = src.LogoUrl,
                 Offering = src.Offering,
                 Type = src.Type.ToOrganizationType(),
-                BillingCycle = src.BillingCycle.ToOrganizationBillingCycle()
+                BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
             };
 
     private static IEnumerable<Models.Location> MapTo(IEnumerable<Location> src) => src.Select(MapTo)!;
@@ -844,7 +872,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 Name = src.Name.ToSafeString(),
                 Timezone = src.Timezone,
                 Type = src.Type.ToLocationType(),
-                OrganizationTags = MapTo(src.OrganizationTags).ToList()
+                OrganizationTags = MapTo(src.OrganizationTags).ToList(),
             };
 
     private static IEnumerable<Models.Team> MapTo(IEnumerable<Team> src) => src.Select(MapTo)!;
@@ -858,7 +886,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt
+                EventRaisedAt = src.EventRaisedAt,
             };
 
     private static IEnumerable<Models.Resource> MapTo(IEnumerable<Resource> src) => src.Select(MapTo);
@@ -876,7 +904,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Color = src.Color,
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationTags = MapTo(src.OrganizationTags).ToList()
+            OrganizationTags = MapTo(src.OrganizationTags).ToList(),
         };
 
     private static MarketplaceBooking? ResolveBookingMarketplaceBooking(Database.Entities.Booking booking) =>

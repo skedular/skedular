@@ -27,7 +27,10 @@ public class OrganizationOutboxPublisher(
         foreach (var organization in organizations)
         {
             publisher.Publish(
-                new Key { OrganizationId = organization.Id },
+                new Key
+                {
+                    OrganizationId = organization.Id,
+                },
                 new Event
                 {
                     Metadata = Event.NewMetadata(
@@ -35,7 +38,10 @@ public class OrganizationOutboxPublisher(
                         applicationConfiguration.AppSource,
                         organization.IsDeleted() ? Type.OrganizationDeleted : Type.OrganizationUpserted,
                         context.GetCorrelationId()),
-                    Data = new Data { Organization = eventMapper.MapTo(organization) }
+                    Data = new Data
+                    {
+                        Organization = eventMapper.MapTo(organization),
+                    },
                 },
                 unitOfWork);
         }

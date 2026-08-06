@@ -11,7 +11,8 @@ public class UpdateOrganizationSpacesSubscriptionShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Call_Service_UpdateAsync_For_Growth(
-        [Frozen] IOrganizationSpacesSubscriptionService subscriptionService,
+        [Frozen]
+        IOrganizationSpacesSubscriptionService subscriptionService,
         RootMutation sut,
         CancellationToken cancellationToken)
     {
@@ -20,7 +21,7 @@ public class UpdateOrganizationSpacesSubscriptionShould
             OrganizationId = "org-1",
             PlanCode = PricingCatalogSubscriptionPlanCodeAlias.Growth,
             CustomCapacity = null,
-            ClientMutationId = "test-1"
+            ClientMutationId = "test-1",
         };
 
         A.CallTo(() => subscriptionService.UpdateAsync(
@@ -38,7 +39,8 @@ public class UpdateOrganizationSpacesSubscriptionShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Call_Service_UpdateAsync_For_Business(
-        [Frozen] IOrganizationSpacesSubscriptionService subscriptionService,
+        [Frozen]
+        IOrganizationSpacesSubscriptionService subscriptionService,
         RootMutation sut,
         CancellationToken cancellationToken)
     {
@@ -47,7 +49,7 @@ public class UpdateOrganizationSpacesSubscriptionShould
             OrganizationId = "org-2",
             PlanCode = PricingCatalogSubscriptionPlanCodeAlias.Business,
             CustomCapacity = null,
-            ClientMutationId = "test-2"
+            ClientMutationId = "test-2",
         };
 
         A.CallTo(() => subscriptionService.UpdateAsync(

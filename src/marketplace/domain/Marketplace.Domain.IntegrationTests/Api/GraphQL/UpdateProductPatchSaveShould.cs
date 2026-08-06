@@ -45,7 +45,10 @@ public class UpdateProductPatchSaveShould(
             var titleResult = await updateProductPatchSaveMutation.ExecuteAsync(
                 productId,
                 [ProductPatchField.ListingMetadata],
-                new ListingMetadataInput { Title = updatedTitle },
+                new ListingMetadataInput
+                {
+                    Title = updatedTitle,
+                },
                 cancellationToken);
 
             titleResult.Errors.Select(error => error.Message).ShouldBeEmpty();
@@ -57,7 +60,11 @@ public class UpdateProductPatchSaveShould(
             var groupedResult = await updateProductPatchSaveMutation.ExecuteAsync(
                 productId,
                 [ProductPatchField.ListingMetadata],
-                new ListingMetadataInput { Title = updatedTitle, SubTitle = updatedSubTitle },
+                new ListingMetadataInput
+                {
+                    Title = updatedTitle,
+                    SubTitle = updatedSubTitle,
+                },
                 cancellationToken);
 
             groupedResult.Errors.Select(error => error.Message).ShouldBeEmpty();
@@ -97,19 +104,27 @@ public class UpdateProductPatchSaveShould(
             Code = OfferingCode.SpacesFreeTierV1,
             SpacesProductEnabled = true,
             SpacesTrialStartedAt = trialStartedAt,
-            SpacesTrialEndsAt = trialStartedAt.AddDays(14)
+            SpacesTrialEndsAt = trialStartedAt.AddDays(14),
         };
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, cancellationToken);
-        var product = repositoryFactory.ProductRepository.Add(new Product { Id = productId, Organization = organization });
+        var product = repositoryFactory.ProductRepository.Add(new Product
+        {
+            Id = productId,
+            Organization = organization,
+        });
 
-        repositoryFactory.IdentityRepository.Add(new Identity { Id = identityId, Customer = customer });
+        repositoryFactory.IdentityRepository.Add(new Identity
+        {
+            Id = identityId,
+            Customer = customer,
+        });
         repositoryFactory.OrganizationMemberRepository.Add(new OrganizationMember
         {
             Id = memberId,
             Organization = organization,
             Customer = customer,
             Role = OrganizationMemberRoleConstants.Owner,
-            Status = OrganizationMemberStatusConstants.Active
+            Status = OrganizationMemberStatusConstants.Active,
         });
         repositoryFactory.ProductVersionRepository.Add(new ProductVersion
         {
@@ -137,8 +152,8 @@ public class UpdateProductPatchSaveShould(
                     30,
                     1,
                     ProductPricingCancellationPolicyType.NoCancellation,
-                    [])
-            ]
+                    []),
+            ],
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

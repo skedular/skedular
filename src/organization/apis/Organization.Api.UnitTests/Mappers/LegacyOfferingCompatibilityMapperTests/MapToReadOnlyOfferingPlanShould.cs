@@ -23,8 +23,11 @@ public class MapToReadOnlyOfferingPlanShould
             AutoRenew = true,
             CreatedAt = createdAt,
             UnitPrice = null,
-            Organization = new Shared.Database.Entities.Organization { Id = "organization-1" },
-            Currency = CurrencyConstants.Usd
+            Organization = new Shared.Database.Entities.Organization
+            {
+                Id = "organization-1",
+            },
+            Currency = CurrencyConstants.Usd,
         };
 
         var result = sut.MapToReadOnlyOfferingPlan(organizationOffering);
@@ -53,8 +56,11 @@ public class MapToReadOnlyOfferingPlanShould
             AutoRenew = true,
             CreatedAt = createdAt,
             UnitPrice = null,
-            Organization = new Shared.Database.Entities.Organization { Id = "organization-1" },
-            Currency = CurrencyConstants.Usd
+            Organization = new Shared.Database.Entities.Organization
+            {
+                Id = "organization-1",
+            },
+            Currency = CurrencyConstants.Usd,
         };
 
         var result = sut.MapToReadOnlyOfferingPlan(organizationOffering);

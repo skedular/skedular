@@ -17,13 +17,13 @@ public class OrganizationXeroBillingModesShould
         [
             OrganizationXeroBillingMode.Disabled,
             OrganizationXeroBillingMode.Enabled,
-            OrganizationXeroBillingMode.RepeatingInvoices
+            OrganizationXeroBillingMode.RepeatingInvoices,
         ]);
         result.Select(item => item.Name).ShouldBe(
         [
             "Disabled",
             "Enabled",
-            "Repeating Invoices"
+            "Repeating Invoices",
         ]);
     }
 }

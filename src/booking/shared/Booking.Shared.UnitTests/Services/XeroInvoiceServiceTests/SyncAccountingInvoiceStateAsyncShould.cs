@@ -31,29 +31,52 @@ public class SyncAccountingInvoiceStateAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Sync_Repeating_Invoice_Using_Concrete_Invoice_Hint_Without_Replacing_Template_Id(
-        [Frozen] OrganizationConfiguration organizationConfiguration,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
-        [Frozen] IAccountingPaymentEventRepository accountingPaymentEventRepository,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
-        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
-        [Frozen] IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
-        [Frozen] IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
-        [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
-        [Frozen] AccountingApi accountingApi,
-        [Frozen] ILogger<XeroInvoiceService> logger,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen]
+        IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
+        [Frozen]
+        IAccountingPaymentEventRepository accountingPaymentEventRepository,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IBookingOutboxPublisher bookingOutboxPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
+        [Frozen]
+        IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
+        [Frozen]
+        IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
+        [Frozen]
+        IInvoicePaymentTermsService invoicePaymentTermsService,
+        [Frozen]
+        AccountingApi accountingApi,
+        [Frozen]
+        ILogger<XeroInvoiceService> logger,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
@@ -64,7 +87,9 @@ public class SyncAccountingInvoiceStateAsyncShould
         const string tenantId = "d2576a27-6a2b-4575-8720-0c11eee06fe5";
         var invoice = new Invoice
         {
-            InvoiceID = Guid.Parse(generatedInvoiceId), InvoiceNumber = "SKD-000202", Status = Invoice.StatusEnum.AUTHORISED
+            InvoiceID = Guid.Parse(generatedInvoiceId),
+            InvoiceNumber = "SKD-000202",
+            Status = Invoice.StatusEnum.AUTHORISED,
         };
         var sut = new TestableXeroInvoiceService(
             organizationConfiguration,
@@ -85,7 +110,13 @@ public class SyncAccountingInvoiceStateAsyncShould
             xeroRecurringInvoiceTransitionService,
             invoicePaymentTermsService,
             TimeProvider.System,
-            logger) { InvoiceResponse = new Invoices { _Invoices = [invoice] } };
+            logger)
+        {
+            InvoiceResponse = new Invoices
+            {
+                _Invoices = [invoice],
+            },
+        };
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
             Id = "link-1",
@@ -94,7 +125,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
             LocalEntityId = recurringBookingId,
             ExternalInvoiceId = repeatingTemplateId,
-            ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice
+            ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
         };
         var xeroConnection = new XeroConnection
         {
@@ -102,7 +133,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             TenantId = tenantId,
             IsActive = true,
             AccessTokenEncrypted = "encrypted-access",
-            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30))
+            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30)),
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
@@ -167,32 +198,58 @@ public class SyncAccountingInvoiceStateAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Confirm_Recurring_Booking_When_Concrete_Repeating_Invoice_Is_Paid(
-        [Frozen] OrganizationConfiguration organizationConfiguration,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
-        [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
-        [Frozen] IAccountingPaymentEventRepository accountingPaymentEventRepository,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
-        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
-        [Frozen] ITemporalService temporalService,
-        [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
-        [Frozen] IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
-        [Frozen] IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
-        [Frozen] IInvoicePaymentTermsService invoicePaymentTermsService,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] AccountingApi accountingApi,
-        [Frozen] ILogger<XeroInvoiceService> logger,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen]
+        IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
+        [Frozen]
+        IAccountingPaymentEventRepository accountingPaymentEventRepository,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        ITemporalService temporalService,
+        [Frozen]
+        IBookingOutboxPublisher bookingOutboxPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
+        [Frozen]
+        IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
+        [Frozen]
+        IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
+        [Frozen]
+        IInvoicePaymentTermsService invoicePaymentTermsService,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        AccountingApi accountingApi,
+        [Frozen]
+        ILogger<XeroInvoiceService> logger,
         CancellationToken cancellationToken)
     {
         organizationConfiguration.ApiKey = "api-key";
@@ -201,8 +258,16 @@ public class SyncAccountingInvoiceStateAsyncShould
         const string repeatingTemplateId = "b6c885cc-4e18-46e9-aa53-2d901c77e5ff";
         const string generatedInvoiceId = "f6a7c629-af16-4f01-a172-35ce3735f343";
         const string tenantId = "d2576a27-6a2b-4575-8720-0c11eee06fe5";
-        var invoice = new Invoice { InvoiceID = Guid.Parse(generatedInvoiceId), InvoiceNumber = "SKD-000202", Status = Invoice.StatusEnum.PAID };
-        var marketplaceBookingSubscription = new MarketplaceBookingSubscription { Id = "subscription-1" };
+        var invoice = new Invoice
+        {
+            InvoiceID = Guid.Parse(generatedInvoiceId),
+            InvoiceNumber = "SKD-000202",
+            Status = Invoice.StatusEnum.PAID,
+        };
+        var marketplaceBookingSubscription = new MarketplaceBookingSubscription
+        {
+            Id = "subscription-1",
+        };
         var recurringBooking = new RecurringBooking
         {
             Id = recurringBookingId,
@@ -213,8 +278,11 @@ public class SyncAccountingInvoiceStateAsyncShould
                 Id = "marketplace-booking-1",
                 PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
                 PaymentMethod = PaymentMethod.BankTransfer.ToPaymentMethod(),
-                ProductVersion = new ProductVersion { Id = "pv-1" }
-            }
+                ProductVersion = new ProductVersion
+                {
+                    Id = "pv-1",
+                },
+            },
         };
         var sut = new TestableXeroInvoiceService(
             organizationConfiguration,
@@ -235,7 +303,13 @@ public class SyncAccountingInvoiceStateAsyncShould
             xeroRecurringInvoiceTransitionService,
             invoicePaymentTermsService,
             TimeProvider.System,
-            logger) { InvoiceResponse = new Invoices { _Invoices = [invoice] } };
+            logger)
+        {
+            InvoiceResponse = new Invoices
+            {
+                _Invoices = [invoice],
+            },
+        };
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
             Id = "link-1",
@@ -244,7 +318,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
             LocalEntityId = recurringBookingId,
             ExternalInvoiceId = repeatingTemplateId,
-            ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice
+            ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
         };
         var xeroConnection = new XeroConnection
         {
@@ -252,7 +326,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             TenantId = tenantId,
             IsActive = true,
             AccessTokenEncrypted = "encrypted-access",
-            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30))
+            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30)),
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);

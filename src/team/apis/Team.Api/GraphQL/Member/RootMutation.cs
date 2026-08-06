@@ -13,7 +13,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
     [UseResolverScope]
     public async Task<TeamPayload> UpdateTeamMembersAsync(
         UpdateTeamMembersInput input,
-        [Service] ITeamMemberService teamMemberService,
+        [Service]
+        ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting {OperationName} for Team {TeamId}", nameof(UpdateTeamMembersAsync), input.Id);
@@ -23,7 +24,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
             var team = await teamMemberService.UpdateMembersAsync(input.Id, graphQlMapper.MapToTeamMembers(input), input.FieldsToUpdate,
                 cancellationToken);
             logger.LogInformation("Completed {OperationName} for Team {TeamId}", nameof(UpdateTeamMembersAsync), input.Id);
-            return new TeamPayload { ClientMutationId = input.ClientMutationId, Team = graphQlMapper.MapTo(team)! };
+            return new TeamPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                Team = graphQlMapper.MapTo(team)!,
+            };
         }
         catch (Exception ex)
         {
@@ -35,7 +40,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
     [UseResolverScope]
     public async Task<TeamMemberPayload> AddTeamMemberAsync(
         AddTeamMemberInput input,
-        [Service] ITeamMemberService teamMemberService,
+        [Service]
+        ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting {OperationName} for Team {TeamId}", nameof(AddTeamMemberAsync), input.Id);
@@ -44,7 +50,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
         {
             var teamMember = await teamMemberService.AddAsync(input.Id, graphQlMapper.MapTo(input), cancellationToken);
             logger.LogInformation("Completed {OperationName} for Team {TeamId}", nameof(AddTeamMemberAsync), input.Id);
-            return new TeamMemberPayload { ClientMutationId = input.ClientMutationId, TeamMember = graphQlMapper.MapTo(teamMember) };
+            return new TeamMemberPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                TeamMember = graphQlMapper.MapTo(teamMember),
+            };
         }
         catch (Exception ex)
         {
@@ -56,7 +66,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
     [UseResolverScope]
     public async Task<TeamMemberPayload> RemoveTeamMemberAsync(
         RemoveTeamMemberInput input,
-        [Service] ITeamMemberService teamMemberService,
+        [Service]
+        ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting {OperationName} for TeamMember {TeamMemberId}", nameof(RemoveTeamMemberAsync), input.Id);
@@ -65,7 +76,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
         {
             var teamMember = await teamMemberService.RemoveAsync(input.Id, cancellationToken);
             logger.LogInformation("Completed {OperationName} for TeamMember {TeamMemberId}", nameof(RemoveTeamMemberAsync), input.Id);
-            return new TeamMemberPayload { ClientMutationId = input.ClientMutationId, TeamMember = graphQlMapper.MapTo(teamMember) };
+            return new TeamMemberPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                TeamMember = graphQlMapper.MapTo(teamMember),
+            };
         }
         catch (Exception ex)
         {
@@ -77,7 +92,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
     [UseResolverScope]
     public async Task<TeamMemberDetailsPayload> ChangeTeamMemberRoleAsync(
         ChangeTeamMemberRoleInput input,
-        [Service] ITeamMemberService teamMemberService,
+        [Service]
+        ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting {OperationName} for TeamMember {TeamMemberId}", nameof(ChangeTeamMemberRoleAsync), input.Id);
@@ -86,7 +102,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
         {
             var member = await teamMemberService.ChangeRoleAsync(input.Id, input.Role, cancellationToken);
             logger.LogInformation("Completed {OperationName} for TeamMember {TeamMemberId}", nameof(ChangeTeamMemberRoleAsync), input.Id);
-            return new TeamMemberDetailsPayload { ClientMutationId = input.ClientMutationId, Member = graphQlMapper.MapTo(member) };
+            return new TeamMemberDetailsPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                Member = graphQlMapper.MapTo(member),
+            };
         }
         catch (Exception ex)
         {
@@ -98,7 +118,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
     [UseResolverScope]
     public async Task<TeamMembersDetailsPayload> ChangeTeamMembersStatusAsync(
         ChangeTeamMembersStatusInput input,
-        [Service] ITeamMemberService organizationMemberService,
+        [Service]
+        ITeamMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting {OperationName}", nameof(ChangeTeamMembersStatusAsync));
@@ -110,7 +131,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
             logger.LogInformation("Completed {OperationName}", nameof(ChangeTeamMembersStatusAsync));
             return new TeamMembersDetailsPayload
             {
-                ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray()
+                ClientMutationId = input.ClientMutationId,
+                Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray(),
             };
         }
         catch (Exception ex)
@@ -123,7 +145,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
     [UseResolverScope]
     public async Task<TeamMembersDetailsPayload> RemoveTeamMembersAsync(
         RemoveTeamMembersInput input,
-        [Service] ITeamMemberService teamMemberService,
+        [Service]
+        ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting {OperationName}", nameof(RemoveTeamMembersAsync));
@@ -134,7 +157,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
             logger.LogInformation("Completed {OperationName}", nameof(RemoveTeamMembersAsync));
             return new TeamMembersDetailsPayload
             {
-                ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray()
+                ClientMutationId = input.ClientMutationId,
+                Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray(),
             };
         }
         catch (Exception ex)

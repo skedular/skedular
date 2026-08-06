@@ -13,7 +13,10 @@ public class MapToMarketplaceBookingSubscriptionShould
     public void Persist_Weekly_Selected_Days_Using_The_Stored_Day_Contract()
     {
         var sut = new EntityMapper(TimeProvider.System);
-        var subscription = new MarketplaceBookingSubscription { WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Thursday] };
+        var subscription = new MarketplaceBookingSubscription
+        {
+            WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Thursday],
+        };
 
         var result = sut.MapTo(
             subscription,

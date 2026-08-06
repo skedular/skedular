@@ -21,19 +21,29 @@ public class SnapshotGroupingShould
         var options = new DbContextOptionsBuilder<LocationDbContext>()
             .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
             .Options;
-        return new TestLocationDbContext(options, new CustomDbContextOptions<LocationDbContext> { IsPooled = false });
+        return new TestLocationDbContext(options, new CustomDbContextOptions<LocationDbContext>
+        {
+            IsPooled = false,
+        });
     }
 
     [Theory]
     [AutoFakeItEasyData]
     public async Task Groups_Snapshots_By_Date_With_Correct_Counts(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyDeskCountRecordingRepository deskCountRepository,
-        [Frozen] IDailyRoomCountRecordingRepository roomCountRepository,
-        [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyDeskCountRecordingRepository deskCountRepository,
+        [Frozen]
+        IDailyRoomCountRecordingRepository roomCountRepository,
+        [Frozen]
+        IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         LocationAnalyticsService sut,
         CancellationToken cancellationToken)
     {
@@ -44,13 +54,22 @@ public class SnapshotGroupingShould
 
         await using var dbContext = CreateInMemoryContext();
 
-        var location = new LocationEntity { Id = LocationId, Name = "Snap Office", OrganizationId = OrganizationId };
+        var location = new LocationEntity
+        {
+            Id = LocationId,
+            Name = "Snap Office",
+            OrganizationId = OrganizationId,
+        };
         var from = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
         var until = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero);
         var day1 = from;
         var day2 = from.AddDays(1);
 
-        var deskTag = new OrganizationTag { Id = "tag-desk", Type = OrganizationTagTypeConstants.ResourceDesk };
+        var deskTag = new OrganizationTag
+        {
+            Id = "tag-desk",
+            Type = OrganizationTagTypeConstants.ResourceDesk,
+        };
 
         // Two snapshots on day1, one on day2
         var snapshots = new[]
@@ -61,9 +80,14 @@ public class SnapshotGroupingShould
                 Location = location,
                 LocationId = LocationId,
                 ResourceId = "res-a",
-                Resource = new Resource { Id = "res-a", Name = "Desk A", OrganizationTags = [deskTag] },
+                Resource = new Resource
+                {
+                    Id = "res-a",
+                    Name = "Desk A",
+                    OrganizationTags = [deskTag],
+                },
                 Date = day1,
-                Classification = ResourceAvailabilityClassificationConstants.Available
+                Classification = ResourceAvailabilityClassificationConstants.Available,
             },
             new DailyResourceAvailabilitySnapshot
             {
@@ -71,9 +95,14 @@ public class SnapshotGroupingShould
                 Location = location,
                 LocationId = LocationId,
                 ResourceId = "res-b",
-                Resource = new Resource { Id = "res-b", Name = "Desk B", OrganizationTags = [deskTag] },
+                Resource = new Resource
+                {
+                    Id = "res-b",
+                    Name = "Desk B",
+                    OrganizationTags = [deskTag],
+                },
                 Date = day1,
-                Classification = ResourceAvailabilityClassificationConstants.Booked
+                Classification = ResourceAvailabilityClassificationConstants.Booked,
             },
             new DailyResourceAvailabilitySnapshot
             {
@@ -81,10 +110,15 @@ public class SnapshotGroupingShould
                 Location = location,
                 LocationId = LocationId,
                 ResourceId = "res-c",
-                Resource = new Resource { Id = "res-c", Name = "Desk C", OrganizationTags = [deskTag] },
+                Resource = new Resource
+                {
+                    Id = "res-c",
+                    Name = "Desk C",
+                    OrganizationTags = [deskTag],
+                },
                 Date = day2,
-                Classification = ResourceAvailabilityClassificationConstants.Unavailable
-            }
+                Classification = ResourceAvailabilityClassificationConstants.Unavailable,
+            },
         };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
@@ -133,13 +167,20 @@ public class SnapshotGroupingShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Day_With_No_Snapshot_Is_Not_In_Result(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IDailyDeskCountRecordingRepository deskCountRepository,
-        [Frozen] IDailyRoomCountRecordingRepository roomCountRepository,
-        [Frozen] IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IDailyDeskCountRecordingRepository deskCountRepository,
+        [Frozen]
+        IDailyRoomCountRecordingRepository roomCountRepository,
+        [Frozen]
+        IDailyResourceAvailabilitySnapshotRepository snapshotRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         LocationAnalyticsService sut,
         CancellationToken cancellationToken)
     {
@@ -149,7 +190,12 @@ public class SnapshotGroupingShould
         const string CustomerId = "cust-no-snap";
 
         await using var dbContext = CreateInMemoryContext();
-        var location = new LocationEntity { Id = LocationId, Name = "No Snap Office", OrganizationId = OrganizationId };
+        var location = new LocationEntity
+        {
+            Id = LocationId,
+            Name = "No Snap Office",
+            OrganizationId = OrganizationId,
+        };
         var from = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
         var until = new DateTimeOffset(2026, 4, 7, 0, 0, 0, TimeSpan.Zero);
 

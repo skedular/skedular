@@ -8,5 +8,5 @@ public record OrganizationBankAccountOrder(OrderDirection Direction, Organizatio
 
 public enum OrganizationBankAccountOrderField
 {
-    Name
+    Name,
 }

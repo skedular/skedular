@@ -23,7 +23,10 @@ public class InjectShould
     public void Overwrite_Previous_Keys(HeaderPropagatorFunctions functions)
     {
         // we need to overwrite keys where the message has been previously sent, such as retries
-        var destination = new Headers { { "my key", "my first value"u8.ToArray() } };
+        var destination = new Headers
+        {
+            { "my key", "my first value"u8.ToArray() },
+        };
         functions.Inject(destination, "my key", "my second value");
 
         destination[0].Key.ShouldBe("my key");

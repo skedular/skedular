@@ -56,7 +56,7 @@ public class TeamAuthorizationService(
             CanViewBookings = await CanViewBookingsAsync(team, customerId, cancellationToken),
             CanAddBooking = await CanAddBookingAsync(team, customerId, cancellationToken),
             CanUpdateBooking = await CanUpdateBookingAsync(team, customerId, cancellationToken),
-            CanDeleteBooking = await CanDeleteBookingAsync(team, customerId, cancellationToken)
+            CanDeleteBooking = await CanDeleteBookingAsync(team, customerId, cancellationToken),
         };
     }
 

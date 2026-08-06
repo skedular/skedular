@@ -18,7 +18,10 @@ public class GetCancellationTokenShould
     public void Return_request_aborted_token_from_http_context()
     {
         using var cts = new CancellationTokenSource();
-        var httpContext = new DefaultHttpContext { RequestAborted = cts.Token };
+        var httpContext = new DefaultHttpContext
+        {
+            RequestAborted = cts.Token,
+        };
 
         var result = httpContext.GetCancellationToken();
 
@@ -41,7 +44,10 @@ public class GetCancellationTokenShould
     public void Return_token_from_accessor_http_context([Frozen] IHttpContextAccessor accessor)
     {
         using var cts = new CancellationTokenSource();
-        var httpContext = new DefaultHttpContext { RequestAborted = cts.Token };
+        var httpContext = new DefaultHttpContext
+        {
+            RequestAborted = cts.Token,
+        };
         A.CallTo(() => accessor.HttpContext).Returns(httpContext);
 
         var result = accessor.GetCancellationToken();

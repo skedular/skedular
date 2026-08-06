@@ -47,7 +47,10 @@ public class LocationOpeningHoursService(
 
         existingLocation.OpeningHours = existingLocation.OpeningHours is null
             ? new OpeningHours(openingHours, [], [])
-            : existingLocation.OpeningHours with { WeekOpeningHours = openingHours };
+            : existingLocation.OpeningHours with
+            {
+                WeekOpeningHours = openingHours,
+            };
 
         var location = entityMapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 

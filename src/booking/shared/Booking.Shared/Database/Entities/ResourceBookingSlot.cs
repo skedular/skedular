@@ -31,6 +31,10 @@ public class ResourceBookingSlotConfiguration : IEntityTypeConfiguration<Resourc
 
         builder.HasIndex(item => item.Start);
         builder.HasIndex(item => item.Available);
-        builder.HasIndex(item => new { item.Start, item.ResourceId }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.Start,
+            item.ResourceId,
+        }).IsUnique();
     }
 }

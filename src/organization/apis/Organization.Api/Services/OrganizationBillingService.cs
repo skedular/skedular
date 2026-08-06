@@ -277,7 +277,7 @@ public class OrganizationBillingService(
             Province = request.Province,
             Zipcode = request.Zipcode!,
             Country = request.Country!,
-            CountryCode = request.CountryCode
+            CountryCode = request.CountryCode,
         };
 
     private static bool ApplyPatch(
@@ -294,7 +294,7 @@ public class OrganizationBillingService(
                 OrganizationBillingDetailsPatchField.Email =>
                     ApplyValue(request.Email!, billingDetails.Email, value => billingDetails.Email = value) || changed,
                 OrganizationBillingDetailsPatchField.BillingAddress => ApplyBillingAddressPatch(request, billingDetails) || changed,
-                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation billing details patch field is not supported.")
+                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation billing details patch field is not supported."),
             };
         }
 

@@ -18,7 +18,13 @@ public class MarketplaceGrpcService(
     {
         var version = versionService.GetVersion();
 
-        return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
+        return Task.FromResult(new Version
+        {
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
+        });
     }
 
     public override async Task<HostLocationProduct> EnsureHostLocationDraftProduct(
@@ -32,7 +38,11 @@ public class MarketplaceGrpcService(
             request.ProductTagId,
             request.LocationName,
             context.CancellationToken);
-        return new HostLocationProduct { Id = product.Id, Inactive = product.Inactive };
+        return new HostLocationProduct
+        {
+            Id = product.Id,
+            Inactive = product.Inactive,
+        };
     }
 
     public override async Task<HostLocationProduct> RemoveHostLocationDraftProduct(
@@ -41,6 +51,10 @@ public class MarketplaceGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(marketplaceConfiguration.ApiKey);
         await productService.RemoveHostLocationDraftAsync(request.Id, request.OrganizationId, context.CancellationToken);
-        return new HostLocationProduct { Id = request.Id, Inactive = true };
+        return new HostLocationProduct
+        {
+            Id = request.Id,
+            Inactive = true,
+        };
     }
 }

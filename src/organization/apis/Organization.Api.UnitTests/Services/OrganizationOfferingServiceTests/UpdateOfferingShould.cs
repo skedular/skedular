@@ -16,15 +16,24 @@ public class UpdateOfferingShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Use_The_Organization_Id_Lookup_When_An_Organization_Id_Is_Provided(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationOfferingRepository organizationOfferingRepository,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationOfferingRepository organizationOfferingRepository,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationOfferingService sut,
         CancellationToken cancellationToken)
     {
@@ -35,7 +44,7 @@ public class UpdateOfferingShould
             Name = "Org 1",
             CustomDomain = "org-1",
             Type = OrganizationTypeConstants.Private,
-            OrganizationOfferings = []
+            OrganizationOfferings = [],
         };
         var matchingOffering = new OrganizationOffering
         {
@@ -45,9 +54,13 @@ public class UpdateOfferingShould
             Start = now.AddDays(-1),
             End = now.AddDays(1),
             AutoRenew = true,
-            UnitPrice = null
+            UnitPrice = null,
         };
-        var mappedOrganization = new Shared.Models.Organization { Id = organization.Id, Name = organization.Name };
+        var mappedOrganization = new Shared.Models.Organization
+        {
+            Id = organization.Id,
+            Name = organization.Name,
+        };
         var stripeUrl = new Uri("https://example.test/authorize");
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -86,9 +99,12 @@ public class UpdateOfferingShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Chargeable_Offering_When_Organization_Has_No_Payment_Method_Even_When_Authorization_Is_Ignored(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
         OrganizationOfferingService sut,
         CancellationToken cancellationToken)
     {
@@ -98,7 +114,7 @@ public class UpdateOfferingShould
             Name = "Org 1",
             CustomDomain = "org-1",
             Type = OrganizationTypeConstants.Private,
-            OrganizationOfferings = []
+            OrganizationOfferings = [],
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -117,15 +133,24 @@ public class UpdateOfferingShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Resolve_Marketplace_Free_Tier_To_Spaces_Free_Tier(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationOfferingRepository organizationOfferingRepository,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationOfferingRepository organizationOfferingRepository,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationOfferingService sut,
         CancellationToken cancellationToken)
     {
@@ -137,7 +162,7 @@ public class UpdateOfferingShould
             Currency = Currency.Usd.ToCurrency(),
             Start = now.AddDays(-1),
             End = now.AddDays(1),
-            AutoRenew = true
+            AutoRenew = true,
         };
         var organization = new Shared.Database.Entities.Organization
         {
@@ -145,10 +170,14 @@ public class UpdateOfferingShould
             Name = "Co Work",
             CustomDomain = "co-work",
             Type = OrganizationTypeConstants.Marketplace,
-            OrganizationOfferings = [activeOffering]
+            OrganizationOfferings = [activeOffering],
         };
         activeOffering.Organization = organization;
-        var mappedOrganization = new Shared.Models.Organization { Id = organization.Id, Name = organization.Name };
+        var mappedOrganization = new Shared.Models.Organization
+        {
+            Id = organization.Id,
+            Name = organization.Name,
+        };
         var stripeUrl = new Uri("https://example.test/authorize");
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);

@@ -15,13 +15,20 @@ public class RetryAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Move_A_Failed_Refund_To_Processing_And_Preserve_Idempotency(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IMarketplaceRefundTransitionService refundTransitionService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IMarketplaceRefundTransitionService refundTransitionService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
@@ -33,7 +40,7 @@ public class RetryAsyncShould
             LocalEntityId = "booking-1",
             Status = MarketplaceRefundStatusConstants.Failed,
             RetryCount = 2,
-            IdempotencyKey = "cancellation:MarketplaceBooking:booking-1"
+            IdempotencyKey = "cancellation:MarketplaceBooking:booking-1",
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -60,12 +67,18 @@ public class RetryAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Allow_Manual_Retry_When_Automatic_Retry_Count_Is_Reached(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IMarketplaceRefundTransitionService refundTransitionService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IMarketplaceRefundTransitionService refundTransitionService,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
@@ -76,7 +89,7 @@ public class RetryAsyncShould
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "booking-1",
             Status = MarketplaceRefundStatusConstants.Failed,
-            RetryCount = 3
+            RetryCount = 3,
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);

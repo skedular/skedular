@@ -126,7 +126,10 @@ public class OrganizationStripeConnectAccountService(
 
         var stripeConnectAccount = await accountCreateService.CreateAsync(
             graphQlMapper.MapToStripeAccountRequest(organization),
-            new RequestOptions { IdempotencyKey = id },
+            new RequestOptions
+            {
+                IdempotencyKey = id,
+            },
             cancellationToken);
         var accountEntity = graphQlMapper.MapTo(stripeConnectAccount, id, nickname, organization.OrganizationStripeConnectAccounts.Count == 0,
             organization);
@@ -373,7 +376,10 @@ public class OrganizationStripeConnectAccountService(
         var oauthToken = await oauthTokenCreateService.CreateAsync(
             new OAuthTokenCreateOptions
             {
-                GrantType = "authorization_code", Code = code, Scope = scope, ClientSecret = stripeConfiguration.SecretKey
+                GrantType = "authorization_code",
+                Code = code,
+                Scope = scope,
+                ClientSecret = stripeConfiguration.SecretKey,
             },
             new RequestOptions(),
             cancellationToken);
@@ -384,7 +390,10 @@ public class OrganizationStripeConnectAccountService(
         var stripeConnectAccount = await accountGetOption.GetAsync(
             stripeAccountId,
             new AccountGetOptions(),
-            new RequestOptions { StripeAccount = stripeAccountId },
+            new RequestOptions
+            {
+                StripeAccount = stripeAccountId,
+            },
             cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -399,7 +408,7 @@ public class OrganizationStripeConnectAccountService(
                     IsDefault = organization.OrganizationStripeConnectAccounts.All(item => !item.IsDefault),
                     Name = "no name set yet!!!",
                     Organization = organization,
-                    OnboardingUrl = string.Empty
+                    OnboardingUrl = string.Empty,
                 });
             _ = repositoryFactory.OrganizationStripeConnectAccountRepository.Add(accountEntity);
         }
@@ -439,7 +448,7 @@ public class OrganizationStripeConnectAccountService(
         {
             OrganizationTypeConstants.Marketplace => applicationConfiguration.SpacesWebAppBaseDomain,
             OrganizationTypeConstants.Host => applicationConfiguration.HostWebAppBaseDomain,
-            _ => applicationConfiguration.WebAppBaseDomain
+            _ => applicationConfiguration.WebAppBaseDomain,
         };
 
     private async Task<OrganizationStripeConnectAccount> UpdateInternalAsync(
@@ -518,7 +527,10 @@ public class OrganizationStripeConnectAccountService(
             var stripeConnectAccount = await accountGetOption.GetAsync(
                 account.StripeAccountId,
                 new AccountGetOptions(),
-                new RequestOptions { StripeAccount = account.StripeAccountId },
+                new RequestOptions
+                {
+                    StripeAccount = account.StripeAccountId,
+                },
                 cancellationToken);
 
             account = graphQlMapper.MergeTo(stripeConnectAccount, account);
@@ -529,7 +541,9 @@ public class OrganizationStripeConnectAccountService(
                     repositoryFactory.OrganizationStripeConnectAccountAuthorizationRepository.Add(
                         new OrganizationStripeConnectAccountAuthorization
                         {
-                            Id = randomHelper.Generate(), IsAuthorized = true, OrganizationStripeConnectAccount = account
+                            Id = randomHelper.Generate(),
+                            IsAuthorized = true,
+                            OrganizationStripeConnectAccount = account,
                         });
             }
             else
@@ -551,7 +565,9 @@ public class OrganizationStripeConnectAccountService(
                     repositoryFactory.OrganizationStripeConnectAccountAuthorizationRepository.Add(
                         new OrganizationStripeConnectAccountAuthorization
                         {
-                            Id = randomHelper.Generate(), IsAuthorized = false, OrganizationStripeConnectAccount = account
+                            Id = randomHelper.Generate(),
+                            IsAuthorized = false,
+                            OrganizationStripeConnectAccount = account,
                         });
             }
             else

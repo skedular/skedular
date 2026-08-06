@@ -17,7 +17,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         DateTimeOffset until,
         LocationWhereInput? where,
         IEnumerable<LocationOrderInput>? orderBy,
-        [Service] ILocationAnalyticsService locationAnalyticsService,
+        [Service]
+        ILocationAnalyticsService locationAnalyticsService,
         CancellationToken cancellationToken)
     {
         var locationsAnalytics = await locationAnalyticsService.GetAnalyticsAsync(

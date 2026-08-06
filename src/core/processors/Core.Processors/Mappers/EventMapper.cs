@@ -58,11 +58,16 @@ public class EventMapper : IEventMapper
                 CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
                 CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException(nameof(customer.Type), customer.Type,
-                    $"Unexpected value for {nameof(customer.Type)}: {customer.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(customer.Type)}: {customer.Type}. Update enum mapping or caller input."),
             },
             Identities = customer.Identities
-                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified })
-                .ToList()
+                .Select(item => new Shared.Models.Identity
+                {
+                    Id = item.Id,
+                    Email = item.Email,
+                    EmailVerified = item.EmailVerified,
+                })
+                .ToList(),
         };
     }
 
@@ -111,9 +116,9 @@ public class EventMapper : IEventMapper
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
                 OrganizationType.Host => Api.Shared.Services.Models.OrganizationType.Host,
                 _ => throw new ArgumentOutOfRangeException(nameof(organizationAfterState.Type), organizationAfterState.Type,
-                    $"Unexpected value for {nameof(organizationAfterState.Type)}: {organizationAfterState.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(organizationAfterState.Type)}: {organizationAfterState.Type}. Update enum mapping or caller input."),
             },
-            IsOwnershipVerified = organizationAfterState.IsOwnershipVerified
+            IsOwnershipVerified = organizationAfterState.IsOwnershipVerified,
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
@@ -125,17 +130,20 @@ public class EventMapper : IEventMapper
                 OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
-                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
             },
             Status = item.Status switch
             {
                 OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
-                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
             },
-            Customer = new Customer { Id = item.CustomerId },
-            Organization = organization
+            Customer = new Customer
+            {
+                Id = item.CustomerId,
+            },
+            Organization = organization,
         }).ToList();
 
         organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
@@ -148,7 +156,7 @@ public class EventMapper : IEventMapper
                 LoginUrl = organizationAfterState.SsoSettings.LoginUrl,
                 AppFederationMetadataUrl = organizationAfterState.SsoSettings.AppFederationMetadataUrl,
                 IsActive = organizationAfterState.SsoSettings.IsActive,
-                Organization = organization
+                Organization = organization,
             };
 
         return organization;

@@ -12,12 +12,18 @@ public class RetryUnmatchedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reprocess_Open_Payouts_And_Mark_A_Matched_Payout_Resolved(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeCheckoutSessionRepository stripeCheckoutSessionRepository,
-        [Frozen] IStripeHostRefundClient stripeHostRefundClient,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository stripeCheckoutSessionRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeHostRefundClient,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -27,12 +33,23 @@ public class RetryUnmatchedAsyncShould
             Provider = "STRIPE_PAYOUT",
             ExternalRefundId = "po_1",
             StripeAccountId = "acct_1",
-            Status = "Open"
+            Status = "Open",
         };
         var now = new DateTimeOffset(2026, 7, 28, 10, 0, 0, TimeSpan.Zero);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
-        var checkout = new StripeCheckoutSession { PaymentIntentId = "pi_1" };
-        var payout = new Payout { Id = "po_1", Status = "paid", Metadata = new Dictionary<string, string> { ["payment_intent_id"] = "pi_1" } };
+        var checkout = new StripeCheckoutSession
+        {
+            PaymentIntentId = "pi_1",
+        };
+        var payout = new Payout
+        {
+            Id = "po_1",
+            Status = "paid",
+            Metadata = new Dictionary<string, string>
+            {
+                ["payment_intent_id"] = "pi_1",
+            },
+        };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(stripeCheckoutSessionRepository);
@@ -64,11 +81,16 @@ public class RetryUnmatchedAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Stop_After_Third_Failed_Retry_And_Require_Manual_Review(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundClient stripeHostRefundClient,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeHostRefundClient,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -80,7 +102,7 @@ public class RetryUnmatchedAsyncShould
             ExternalRefundId = "po_1",
             StripeAccountId = "acct_1",
             Status = "Open",
-            RetryCount = 2
+            RetryCount = 2,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
@@ -112,12 +134,18 @@ public class RetryUnmatchedAsyncShould
     [InlineAutoFakeItEasyData(new Type[] { }, "canceled")]
     public async Task Process_NonPaid_Retrieved_Payouts_Through_State_Handling(
         string payoutStatus,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeCheckoutSessionRepository stripeCheckoutSessionRepository,
-        [Frozen] IStripeHostRefundClient stripeHostRefundClient,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeCheckoutSessionRepository stripeCheckoutSessionRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeHostRefundClient,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         StripePayoutReconciliationService sut,
         CancellationToken cancellationToken)
     {
@@ -128,10 +156,19 @@ public class RetryUnmatchedAsyncShould
             Provider = "STRIPE_PAYOUT",
             ExternalRefundId = "po_1",
             StripeAccountId = "acct_1",
-            Status = "Open"
+            Status = "Open",
         };
-        var checkout = new StripeCheckoutSession { PayoutId = "po_1", PayoutStatus = "paid", PayoutDisbursedAt = now };
-        var payout = new Payout { Id = "po_1", Status = payoutStatus };
+        var checkout = new StripeCheckoutSession
+        {
+            PayoutId = "po_1",
+            PayoutStatus = "paid",
+            PayoutDisbursedAt = now,
+        };
+        var payout = new Payout
+        {
+            Id = "po_1",
+            Status = payoutStatus,
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);

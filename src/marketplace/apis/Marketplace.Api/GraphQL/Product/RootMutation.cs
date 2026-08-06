@@ -13,7 +13,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<ProductPayload> AddProductAsync(
         AddProductInput input,
-        [Service] IProductService productService,
+        [Service]
+        IProductService productService,
         CancellationToken cancellationToken) =>
         new()
         {
@@ -24,13 +25,14 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
                     input.OrganizationId,
                     input.OrganizationCustomDomain,
                     graphQlMapper.MapTo(input),
-                    cancellationToken))!
+                    cancellationToken))!,
         };
 
     [UseResolverScope]
     public async Task<ProductPayload> UpdateProductAsync(
         UpdateProductInput input,
-        [Service] IProductService productService,
+        [Service]
+        IProductService productService,
         CancellationToken cancellationToken) =>
         new()
         {
@@ -38,36 +40,51 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             Product = graphQlMapper.MapTo(
                 await productService.UpdateAsync(
                     new ProductPatchRequest(input.Id, input.FieldsToUpdate, graphQlMapper.MapTo(input)),
-                    cancellationToken))!
+                    cancellationToken))!,
         };
 
     [UseResolverScope]
     public async Task<ProductsPayload> DeleteProductsAsync(
         DeleteProductsInput input,
-        [Service] IProductService productService,
+        [Service]
+        IProductService productService,
         CancellationToken cancellationToken)
     {
         var products = await productService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(graphQlMapper.MapTo)! };
+        return new ProductsPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Products = products.Select(graphQlMapper.MapTo)!,
+        };
     }
 
     [UseResolverScope]
     public async Task<ProductsPayload> ActivateProductsAsync(
         ActivateProductsInput input,
-        [Service] IProductService productService,
+        [Service]
+        IProductService productService,
         CancellationToken cancellationToken)
     {
         var products = await productService.ActivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(graphQlMapper.MapTo)! };
+        return new ProductsPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Products = products.Select(graphQlMapper.MapTo)!,
+        };
     }
 
     [UseResolverScope]
     public async Task<ProductsPayload> DeactivateProductsAsync(
         DeactivateProductsInput input,
-        [Service] IProductService productService,
+        [Service]
+        IProductService productService,
         CancellationToken cancellationToken)
     {
         var products = await productService.DeactivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
-        return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(graphQlMapper.MapTo)! };
+        return new ProductsPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Products = products.Select(graphQlMapper.MapTo)!,
+        };
     }
 }

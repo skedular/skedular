@@ -28,7 +28,8 @@ public class AddDefaultServicesShould
     {
         var builder = WebApplication.CreateBuilder(new WebApplicationOptions
         {
-            ApplicationName = typeof(AddDefaultServicesShould).Assembly.GetName().Name, EnvironmentName = Environments.Development
+            ApplicationName = typeof(AddDefaultServicesShould).Assembly.GetName().Name,
+            EnvironmentName = Environments.Development,
         });
 
         builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
@@ -42,7 +43,7 @@ public class AddDefaultServicesShould
             ["OpenTelemetry:MetricsIngestEnabled"] = "true",
             ["OpenTelemetry:EntityFrameworkEnabled"] = "false",
             ["OpenTelemetry:MeterProviderName"] = "Skedular",
-            ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://localhost:18889"
+            ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://localhost:18889",
         });
 
         return builder;

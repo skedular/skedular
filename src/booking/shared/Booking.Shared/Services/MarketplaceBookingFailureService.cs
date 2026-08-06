@@ -65,7 +65,7 @@ public class MarketplaceBookingFailureService(
             ResolutionDeadlineAt = finalization.Scope is MarketplaceBookingFailureScopeConstants.InitialSeries
                 or MarketplaceBookingFailureScopeConstants.RecurringCycle
                 ? finalization.FinalizedAt.AddHours(24)
-                : null
+                : null,
         });
 
         repositoryFactory.MarketplaceBookingFailureEventRepository.Add(new MarketplaceBookingFailureEvent
@@ -75,7 +75,7 @@ public class MarketplaceBookingFailureService(
             EventType = MarketplaceBookingFailureEventTypeConstants.Finalized,
             OccurredAt = finalization.FinalizedAt,
             Reason = finalization.Reason,
-            ActorCustomerId = finalization.ActorCustomerId
+            ActorCustomerId = finalization.ActorCustomerId,
         });
 
         var recipients = finalization.Recipients.Count == 0
@@ -95,7 +95,7 @@ public class MarketplaceBookingFailureService(
                 RecipientEmail = recipient.RecipientEmail,
                 Audience = recipient.Audience,
                 Channel = recipient.Channel,
-                Status = MarketplaceBookingFailureDeliveryStatusConstants.Pending
+                Status = MarketplaceBookingFailureDeliveryStatusConstants.Pending,
             });
         }
 
@@ -104,7 +104,7 @@ public class MarketplaceBookingFailureService(
             Id = randomHelper.Generate(),
             MarketplaceBookingFailureId = failure.Id,
             EventType = MarketplaceBookingFailureEventTypeConstants.DispatchQueued,
-            OccurredAt = finalization.FinalizedAt
+            OccurredAt = finalization.FinalizedAt,
         });
 
         temporalOutboxService.StartWorkflowNotifyMarketplaceBookingFailure(

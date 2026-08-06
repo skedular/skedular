@@ -18,28 +18,51 @@ public class AddShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Information_When_Add_Completes(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] ITeamOutboxPublisher teamOutboxPublisher,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ITeamMemberService teamMemberService,
-        [Frozen] ICachedTeamService cachedTeamService,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ITeamRepository teamRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<TeamService> logger,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        ITeamOutboxPublisher teamOutboxPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ITeamMemberService teamMemberService,
+        [Frozen]
+        ICachedTeamService cachedTeamService,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ITeamRepository teamRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<TeamService> logger,
         TeamService sut,
         CancellationToken cancellationToken)
     {
-        var organizationEntity = new Organization { Id = "org-1" };
+        var organizationEntity = new Organization
+        {
+            Id = "org-1",
+        };
         var teamToAdd = new Shared.Models.Team
         {
-            Name = "Operations", Organization = new Shared.Models.Organization { Id = "org-1" }, TeamMembers = []
+            Name = "Operations",
+            Organization = new Shared.Models.Organization
+            {
+                Id = "org-1",
+            },
+            TeamMembers = [],
         };
         var teamEntity = new Shared.Database.Entities.Team
         {
@@ -47,9 +70,17 @@ public class AddShould
             Name = "Operations",
             OrganizationId = "org-1",
             Organization = organizationEntity,
-            TeamMembers = []
+            TeamMembers = [],
         };
-        var teamModel = new Shared.Models.Team { Id = "team-1", Name = "Operations", Organization = new Shared.Models.Organization { Id = "org-1" } };
+        var teamModel = new Shared.Models.Team
+        {
+            Id = "team-1",
+            Name = "Operations",
+            Organization = new Shared.Models.Organization
+            {
+                Id = "org-1",
+            },
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);

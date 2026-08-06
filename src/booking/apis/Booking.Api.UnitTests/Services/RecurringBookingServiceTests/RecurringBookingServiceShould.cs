@@ -19,19 +19,38 @@ public class RecurringBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetByIdAsync_Returns_RecurringBooking_For_Involved_Customer(
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ICachedRecurringBookingService cachedRecurringBookingService,
-        [Frozen] IEntityMapper sharedEntityMapper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedRecurringBookingService cachedRecurringBookingService,
+        [Frozen]
+        IEntityMapper sharedEntityMapper,
         RecurringBookingService sut,
         CancellationToken cancellationToken)
     {
         var booking = new RecurringBooking
         {
             Id = "recurring-1",
-            InvolvedCustomers = [new Customer { Id = "customer-1" }],
-            InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                    Type = OrganizationTypeConstants.Marketplace,
+                },
+            ],
         };
-        var mappedBooking = new Shared.Models.RecurringBooking { Id = booking.Id };
+        var mappedBooking = new Shared.Models.RecurringBooking
+        {
+            Id = booking.Id,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedRecurringBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
@@ -45,24 +64,46 @@ public class RecurringBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetByIdAsync_Allows_Marketplace_Admin_To_View_Other_Customers_RecurringBooking(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ICachedRecurringBookingService cachedRecurringBookingService,
-        [Frozen] IEntityMapper sharedEntityMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedRecurringBookingService cachedRecurringBookingService,
+        [Frozen]
+        IEntityMapper sharedEntityMapper,
         RecurringBookingService sut,
         CancellationToken cancellationToken)
     {
         var booking = new RecurringBooking
         {
             Id = "recurring-1",
-            InvolvedCustomers = [new Customer { Id = "customer-2" }],
-            InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-2",
+                },
+            ],
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = "org-1",
+                    Type = OrganizationTypeConstants.Marketplace,
+                },
+            ],
         };
         var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1",
             OrganizationMemberRoleConstants.Administrator);
-        var mappedBooking = new Shared.Models.RecurringBooking { Id = booking.Id };
+        var mappedBooking = new Shared.Models.RecurringBooking
+        {
+            Id = booking.Id,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedRecurringBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
@@ -86,16 +127,25 @@ public class RecurringBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetPaginatedRecurringBookingsAsync_Allows_Requesting_Own_Marketplace_Bookings_By_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         RecurringBookingService sut,
         CancellationToken cancellationToken)
     {
         var searchCriteria = CreateSearchCriteria(["customer-1"], "org-1");
-        var organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Marketplace,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -129,10 +179,14 @@ public class RecurringBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task GetPaginatedRecurringBookingsAsync_Throws_When_Marketplace_Member_Requests_Other_Customers_Bookings(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         RecurringBookingService sut,
         CancellationToken cancellationToken)
     {
@@ -180,11 +234,14 @@ public class RecurringBookingServiceShould
                 {
                     Id = "membership-1",
                     CustomerId = customerId,
-                    Customer = new Customer { Id = customerId },
+                    Customer = new Customer
+                    {
+                        Id = customerId,
+                    },
                     OrganizationId = id,
                     Status = OrganizationMemberStatusConstants.Active,
-                    Role = role
-                }
-            ]
+                    Role = role,
+                },
+            ],
         };
 }

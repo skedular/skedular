@@ -10,7 +10,11 @@ public class EvaluateLocationCreationShould
     [AutoFakeItEasyData]
     public void Block_Free_Second_Location(PricingEntitlementEvaluator sut)
     {
-        var offering = new SharedOffering { Code = OfferingCode.FreeTierV1, PurchasedLocationCapacity = 1 };
+        var offering = new SharedOffering
+        {
+            Code = OfferingCode.FreeTierV1,
+            PurchasedLocationCapacity = 1,
+        };
 
         var result = sut.EvaluateLocationCreation(offering, 1);
 
@@ -22,7 +26,11 @@ public class EvaluateLocationCreationShould
     [AutoFakeItEasyData]
     public void Allow_Enterprise_Location_Creation(PricingEntitlementEvaluator sut)
     {
-        var offering = new SharedOffering { Code = OfferingCode.EnterpriseCustomV1, PurchasedLocationCapacity = null };
+        var offering = new SharedOffering
+        {
+            Code = OfferingCode.EnterpriseCustomV1,
+            PurchasedLocationCapacity = null,
+        };
 
         var result = sut.EvaluateLocationCreation(offering, 25);
 
@@ -34,7 +42,11 @@ public class EvaluateLocationCreationShould
     [AutoFakeItEasyData]
     public void Allow_Early_Bird_Location_Creation_Despite_Persisted_Capacity(PricingEntitlementEvaluator sut)
     {
-        var offering = new SharedOffering { Code = OfferingCode.EarlyBirdV1, PurchasedLocationCapacity = 1 };
+        var offering = new SharedOffering
+        {
+            Code = OfferingCode.EarlyBirdV1,
+            PurchasedLocationCapacity = 1,
+        };
 
         var result = sut.EvaluateLocationCreation(offering, 100);
 

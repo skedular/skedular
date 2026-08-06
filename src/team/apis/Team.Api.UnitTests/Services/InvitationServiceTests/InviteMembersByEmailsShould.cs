@@ -9,7 +9,8 @@ public class InviteMembersByEmailsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Information_When_Email_List_Is_Empty(
-        [Frozen] ILogger<InvitationService> logger,
+        [Frozen]
+        ILogger<InvitationService> logger,
         InvitationService sut,
         CancellationToken cancellationToken)
     {

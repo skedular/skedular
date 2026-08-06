@@ -79,9 +79,13 @@ public class UpdateMyCustomerPatchSaveShould(
             Name = originalName,
             PhoneNumber = phoneNumber,
             Type = CustomerTypeConstants.Registered,
-            PersonalInformationVisibility = PersonalInformationVisibilityConstants.Visible
+            PersonalInformationVisibility = PersonalInformationVisibilityConstants.Visible,
         });
-        repositoryFactory.IdentityRepository.Add(new Identity { Id = identityId, Customer = customer });
+        repositoryFactory.IdentityRepository.Add(new Identity
+        {
+            Id = identityId,
+            Customer = customer,
+        });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

@@ -38,7 +38,11 @@ public class AddOrganizationStripePaymentMethod
             {
                 StartToCloseTimeout = TimeSpan.FromSeconds(30),
                 TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                RetryPolicy = new RetryPolicy
+                {
+                    MaximumAttempts = 3,
+                    MaximumInterval = TimeSpan.FromSeconds(5),
+                },
             });
 
         return redirectUrl;
@@ -49,7 +53,10 @@ public class AddOrganizationStripePaymentMethod
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { StripePaymentMethodEventState = state };
+        _state = _state with
+        {
+            StripePaymentMethodEventState = state,
+        };
 
         return Task.CompletedTask;
     }

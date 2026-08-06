@@ -13,7 +13,10 @@ public class IsXeroManagedForStandardInvoicingShould
     {
         var xeroConnection = new XeroConnection
         {
-            IsActive = true, HasRefreshToken = true, TenantId = "tenant-1", BillingMode = XeroBillingModeConstants.RepeatingInvoices
+            IsActive = true,
+            HasRefreshToken = true,
+            TenantId = "tenant-1",
+            BillingMode = XeroBillingModeConstants.RepeatingInvoices,
         };
 
         Invoke(xeroConnection).ShouldBeTrue();

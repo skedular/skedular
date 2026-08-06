@@ -21,15 +21,24 @@ public class ReleaseRecurringBookingResourcesAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Cancel_Recurring_Invoice_Before_Releasing_Future_Bookings(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IMarketplaceBookingService marketplaceBookingService,
-        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
-        [Frozen] IMarketplaceBookingFailureService marketplaceBookingFailureService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplaceBookingService marketplaceBookingService,
+        [Frozen]
+        IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen]
+        IMarketplaceBookingFailureService marketplaceBookingFailureService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceBookingSubscriptionIntegrations sut,
         string recurringBookingId,
         string bookingId)
@@ -43,10 +52,19 @@ public class ReleaseRecurringBookingResourcesAsyncShould
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
             MarketplaceBooking = new MarketplaceBooking
             {
-                Id = "marketplace-booking-1", IsPaymentRequired = true, PaymentMethod = PaymentMethod.Card.ToPaymentMethod()
-            }
+                Id = "marketplace-booking-1",
+                IsPaymentRequired = true,
+                PaymentMethod = PaymentMethod.Card.ToPaymentMethod(),
+            },
         };
-        var existingBooking = new BookingEntity { Id = bookingId, MarketplaceBooking = new MarketplaceBooking { Id = "marketplace-booking-2" } };
+        var existingBooking = new BookingEntity
+        {
+            Id = bookingId,
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                Id = "marketplace-booking-2",
+            },
+        };
 
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
@@ -63,7 +81,10 @@ public class ReleaseRecurringBookingResourcesAsyncShould
                 A<DateTimeOffset>._,
                 null,
                 environment.CancellationTokenSource.Token))
-            .Returns(new List<BookingEntity> { existingBooking });
+            .Returns(new List<BookingEntity>
+            {
+                existingBooking,
+            });
 
         await environment.RunAsync(() =>
             sut.ReleaseRecurringBookingResourcesAsync(new ReleaseRecurringBookingResourcesInput(
@@ -95,13 +116,20 @@ public class ReleaseRecurringBookingResourcesAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Persist_Terminal_State_When_No_Future_Bookings_Exist(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRecurringBookingRepository recurringBookingRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRecurringBookingRepository recurringBookingRepository,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceBookingSubscriptionIntegrations sut,
         string recurringBookingId)
     {
@@ -117,8 +145,8 @@ public class ReleaseRecurringBookingResourcesAsyncShould
                 Id = "marketplace-booking-1",
                 IsPaymentRequired = true,
                 PaymentMethod = PaymentMethod.BankTransfer.ToPaymentMethod(),
-                InvoiceUrl = "https://example.com/invoice"
-            }
+                InvoiceUrl = "https://example.com/invoice",
+            },
         };
 
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);

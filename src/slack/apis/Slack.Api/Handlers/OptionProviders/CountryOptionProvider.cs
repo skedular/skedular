@@ -14,6 +14,10 @@ public class CountryOptionProvider : IBlockOptionProvider
                 .Where(item => item.Name.Contains(request.Value, StringComparison.InvariantCultureIgnoreCase))
                 .OrderBy(item => item.Name)
                 .Take(100)
-                .Select(item => new Option { Text = item.Name.ToOptionText(), Value = item.Name }).ToList()
+                .Select(item => new Option
+                {
+                    Text = item.Name.ToOptionText(),
+                    Value = item.Name,
+                }).ToList(),
         });
 }

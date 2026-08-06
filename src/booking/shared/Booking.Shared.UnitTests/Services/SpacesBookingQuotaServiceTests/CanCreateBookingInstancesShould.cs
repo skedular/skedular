@@ -25,7 +25,7 @@ public class CanCreateBookingInstancesShould
             5 => OfferingCode.SpacesGrowthV1,
             6 => OfferingCode.SpacesBusinessV1,
             7 => OfferingCode.SpacesContactUsV1,
-            _ => (OfferingCode)999
+            _ => (OfferingCode)999,
         };
         return new Organization
         {
@@ -42,16 +42,18 @@ public class CanCreateBookingInstancesShould
                 SpacesPeriodEnd = periodEnd ?? new DateTimeOffset(now.Year, now.Month, 1, 0, 0, 0, TimeSpan.Zero).AddMonths(1),
                 SpacesProductEnabled = true,
                 SpacesTrialStartedAt = planCode == 1 ? now.AddDays(-1) : null,
-                SpacesTrialEndsAt = planCode == 1 ? now.AddDays(13) : null
-            }
+                SpacesTrialEndsAt = planCode == 1 ? now.AddDays(13) : null,
+            },
         };
     }
 
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Allow_Active_Trial_Within_Existing_Quota(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ISpacesBookingInstanceCounter counter,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ISpacesBookingInstanceCounter counter,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -79,8 +81,10 @@ public class CanCreateBookingInstancesShould
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Block_Active_Trial_When_Existing_Quota_Is_Exceeded(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ISpacesBookingInstanceCounter counter,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ISpacesBookingInstanceCounter counter,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -108,8 +112,10 @@ public class CanCreateBookingInstancesShould
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Allow_Growth_Plan_Within_Quota(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ISpacesBookingInstanceCounter counter,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ISpacesBookingInstanceCounter counter,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -134,8 +140,10 @@ public class CanCreateBookingInstancesShould
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Allow_Legacy_Early_Bird_Plan_As_Unlimited(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ISpacesBookingInstanceCounter counter,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ISpacesBookingInstanceCounter counter,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -162,8 +170,10 @@ public class CanCreateBookingInstancesShould
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Block_Growth_Plan_When_Quota_Exceeded(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ISpacesBookingInstanceCounter counter,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ISpacesBookingInstanceCounter counter,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -188,7 +198,8 @@ public class CanCreateBookingInstancesShould
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Reject_When_Missing_Offering_State(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -205,8 +216,10 @@ public class CanCreateBookingInstancesShould
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Return_Status_Without_Counting_Phantom_Attempt(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ISpacesBookingInstanceCounter counter,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ISpacesBookingInstanceCounter counter,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -236,8 +249,10 @@ public class CanCreateBookingInstancesShould
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Enforce_Configured_Free_Quota_During_Active_Trial(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ISpacesBookingInstanceCounter counter,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ISpacesBookingInstanceCounter counter,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -264,7 +279,8 @@ public class CanCreateBookingInstancesShould
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Reject_Unknown_Plan_Code(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -285,7 +301,8 @@ public class CanCreateBookingInstancesShould
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Reject_Invalid_Period(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)
@@ -307,7 +324,8 @@ public class CanCreateBookingInstancesShould
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Reject_At_Exact_Trial_Expiry_Without_Querying_Usage(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         SpacesBookingQuotaService sut,
         string organizationId,
         CancellationToken cancellationToken)

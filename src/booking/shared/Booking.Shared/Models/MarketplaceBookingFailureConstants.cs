@@ -69,7 +69,7 @@ public static class MarketplaceBookingFailureExtensions
         MarketplaceBookingFailureCategoryConstants.AvailabilityConflict => "Availability conflict",
         MarketplaceBookingFailureCategoryConstants.PaymentFailed => "Payment failed",
         MarketplaceBookingFailureCategoryConstants.PaymentExpired => "Payment expired",
-        _ => value
+        _ => value,
     };
 
     public static string ToMarketplaceBookingFailureScopeName(this string value) => value switch
@@ -78,7 +78,7 @@ public static class MarketplaceBookingFailureExtensions
         MarketplaceBookingFailureScopeConstants.InitialSeries => "Initial series",
         MarketplaceBookingFailureScopeConstants.RecurringOccurrence => "Recurring occurrence",
         MarketplaceBookingFailureScopeConstants.RecurringCycle => "Recurring cycle",
-        _ => value
+        _ => value,
     };
 
     public static string ToMarketplaceBookingFailureCustomerActionName(this string value) => value switch
@@ -86,7 +86,7 @@ public static class MarketplaceBookingFailureExtensions
         MarketplaceBookingFailureCustomerActionConstants.Rebook => "Book again",
         MarketplaceBookingFailureCustomerActionConstants.ReviewSubscription => "Review subscription",
         MarketplaceBookingFailureCustomerActionConstants.None => "No action needed",
-        _ => value
+        _ => value,
     };
 
     public static string ToMarketplaceBookingFailureDeliveryAudienceName(this string value) => value switch
@@ -94,14 +94,14 @@ public static class MarketplaceBookingFailureExtensions
         MarketplaceBookingFailureDeliveryAudienceConstants.Customer => "Customer",
         MarketplaceBookingFailureDeliveryAudienceConstants.SpacesStakeholder => "Spaces stakeholder",
         MarketplaceBookingFailureDeliveryAudienceConstants.HostStakeholder => "Host stakeholder",
-        _ => value
+        _ => value,
     };
 
     public static string ToMarketplaceBookingFailureDeliveryChannelName(this string value) => value switch
     {
         MarketplaceBookingFailureDeliveryChannelConstants.InApplication => "In application",
         MarketplaceBookingFailureDeliveryChannelConstants.Email => "Email",
-        _ => value
+        _ => value,
     };
 
     public static string ToMarketplaceBookingFailureDeliveryStatusName(this string value) => value switch
@@ -110,6 +110,6 @@ public static class MarketplaceBookingFailureExtensions
         MarketplaceBookingFailureDeliveryStatusConstants.Sent => "Sent",
         MarketplaceBookingFailureDeliveryStatusConstants.Skipped => "Skipped",
         MarketplaceBookingFailureDeliveryStatusConstants.Failed => "Failed",
-        _ => value
+        _ => value,
     };
 }

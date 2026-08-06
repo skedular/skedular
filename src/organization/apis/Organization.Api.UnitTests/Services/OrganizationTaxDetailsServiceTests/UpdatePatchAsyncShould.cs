@@ -21,36 +21,68 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_Tax_Details_When_Organization_Has_None(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationTaxDetailsService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Shared.Database.Entities.Organization { Id = "org-1", CustomDomain = "acme", Name = "Acme" };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
-        var entity = new TaxDetailsEntity { Id = "tax-details-1", TaxId = "NZ123", TaxRatePercentage = 15 };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Acme",
+        };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
+        var entity = new TaxDetailsEntity
+        {
+            Id = "tax-details-1",
+            TaxId = "NZ123",
+            TaxRatePercentage = 15,
+        };
         var updatedOrganization = new Shared.Models.Organization
         {
-            Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name
+            Id = organization.Id,
+            CustomDomain = organization.CustomDomain,
+            Name = organization.Name,
         };
         var request = new OrganizationTaxDetailsPatchRequest(
             organization.Id,
             organization.CustomDomain,
             new HashSet<OrganizationTaxDetailsPatchField>
             {
-                OrganizationTaxDetailsPatchField.TaxId, OrganizationTaxDetailsPatchField.TaxRatePercentage
+                OrganizationTaxDetailsPatchField.TaxId,
+                OrganizationTaxDetailsPatchField.TaxRatePercentage,
             },
             true,
             entity.TaxId,
@@ -96,36 +128,67 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_Only_Selected_Tax_Details_Field(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationTaxDetailsService sut,
         CancellationToken cancellationToken)
     {
-        var taxDetails = new TaxDetailsEntity { Id = "tax-details-1", TaxId = "OLD", TaxRatePercentage = 10 };
+        var taxDetails = new TaxDetailsEntity
+        {
+            Id = "tax-details-1",
+            TaxId = "OLD",
+            TaxRatePercentage = 10,
+        };
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1", CustomDomain = "acme", Name = "Acme", OrganizationTaxDetails = taxDetails
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Acme",
+            OrganizationTaxDetails = taxDetails,
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var updatedOrganization = new Shared.Models.Organization
         {
-            Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name
+            Id = organization.Id,
+            CustomDomain = organization.CustomDomain,
+            Name = organization.Name,
         };
         var request = new OrganizationTaxDetailsPatchRequest(
             organization.Id,
             organization.CustomDomain,
-            new HashSet<OrganizationTaxDetailsPatchField> { OrganizationTaxDetailsPatchField.TaxId },
+            new HashSet<OrganizationTaxDetailsPatchField>
+            {
+                OrganizationTaxDetailsPatchField.TaxId,
+            },
             null,
             "NEW",
             20);
@@ -162,36 +225,68 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_Tax_Details_Registration_State_Without_Changing_Values(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationTaxDetailsService sut,
         CancellationToken cancellationToken)
     {
-        var taxDetails = new TaxDetailsEntity { Id = "tax-details-1", IsRegistered = true, TaxId = "NZ123", TaxRatePercentage = 15 };
+        var taxDetails = new TaxDetailsEntity
+        {
+            Id = "tax-details-1",
+            IsRegistered = true,
+            TaxId = "NZ123",
+            TaxRatePercentage = 15,
+        };
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1", CustomDomain = "acme", Name = "Acme", OrganizationTaxDetails = taxDetails
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Acme",
+            OrganizationTaxDetails = taxDetails,
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var updatedOrganization = new Shared.Models.Organization
         {
-            Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name
+            Id = organization.Id,
+            CustomDomain = organization.CustomDomain,
+            Name = organization.Name,
         };
         var request = new OrganizationTaxDetailsPatchRequest(
             organization.Id,
             organization.CustomDomain,
-            new HashSet<OrganizationTaxDetailsPatchField> { OrganizationTaxDetailsPatchField.IsRegistered },
+            new HashSet<OrganizationTaxDetailsPatchField>
+            {
+                OrganizationTaxDetailsPatchField.IsRegistered,
+            },
             false,
             taxDetails.TaxId,
             taxDetails.TaxRatePercentage);
@@ -229,34 +324,69 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_Unregistered_Tax_Details_Without_Tax_Id_Or_Rate_When_Organization_Has_None(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationTaxDetailsService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Shared.Database.Entities.Organization { Id = "org-1", CustomDomain = "acme", Name = "Acme" };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
-        var entity = new TaxDetailsEntity { Id = "tax-details-1", IsRegistered = false, TaxId = string.Empty, TaxRatePercentage = 0 };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Acme",
+        };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
+        var entity = new TaxDetailsEntity
+        {
+            Id = "tax-details-1",
+            IsRegistered = false,
+            TaxId = string.Empty,
+            TaxRatePercentage = 0,
+        };
         var updatedOrganization = new Shared.Models.Organization
         {
-            Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name
+            Id = organization.Id,
+            CustomDomain = organization.CustomDomain,
+            Name = organization.Name,
         };
         var request = new OrganizationTaxDetailsPatchRequest(
             organization.Id,
             organization.CustomDomain,
-            new HashSet<OrganizationTaxDetailsPatchField> { OrganizationTaxDetailsPatchField.IsRegistered },
+            new HashSet<OrganizationTaxDetailsPatchField>
+            {
+                OrganizationTaxDetailsPatchField.IsRegistered,
+            },
             false,
             null,
             null);
@@ -301,38 +431,68 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Clear_Tax_Id_And_Rate_When_Tax_Details_Are_Not_Registered(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationTaxDetailsService sut,
         CancellationToken cancellationToken)
     {
-        var taxDetails = new TaxDetailsEntity { Id = "tax-details-1", IsRegistered = false, TaxId = "NZ123", TaxRatePercentage = 15 };
+        var taxDetails = new TaxDetailsEntity
+        {
+            Id = "tax-details-1",
+            IsRegistered = false,
+            TaxId = "NZ123",
+            TaxRatePercentage = 15,
+        };
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1", CustomDomain = "acme", Name = "Acme", OrganizationTaxDetails = taxDetails
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Acme",
+            OrganizationTaxDetails = taxDetails,
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var updatedOrganization = new Shared.Models.Organization
         {
-            Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name
+            Id = organization.Id,
+            CustomDomain = organization.CustomDomain,
+            Name = organization.Name,
         };
         var request = new OrganizationTaxDetailsPatchRequest(
             organization.Id,
             organization.CustomDomain,
             new HashSet<OrganizationTaxDetailsPatchField>
             {
-                OrganizationTaxDetailsPatchField.TaxId, OrganizationTaxDetailsPatchField.TaxRatePercentage
+                OrganizationTaxDetailsPatchField.TaxId,
+                OrganizationTaxDetailsPatchField.TaxRatePercentage,
             },
             false,
             null,
@@ -370,30 +530,54 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Registered_Tax_Details_When_Effective_Tax_Id_Or_Rate_Is_Missing(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationTaxDetailsRepository organizationTaxDetailsRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationTaxDetailsService sut,
         CancellationToken cancellationToken)
     {
-        var taxDetails = new TaxDetailsEntity { Id = "tax-details-1", IsRegistered = true, TaxId = "NZ123", TaxRatePercentage = 15 };
+        var taxDetails = new TaxDetailsEntity
+        {
+            Id = "tax-details-1",
+            IsRegistered = true,
+            TaxId = "NZ123",
+            TaxRatePercentage = 15,
+        };
         var organization = new Shared.Database.Entities.Organization
         {
-            Id = "org-1", CustomDomain = "acme", Name = "Acme", OrganizationTaxDetails = taxDetails
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Acme",
+            OrganizationTaxDetails = taxDetails,
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var request = new OrganizationTaxDetailsPatchRequest(
             organization.Id,
             organization.CustomDomain,
             new HashSet<OrganizationTaxDetailsPatchField>
             {
-                OrganizationTaxDetailsPatchField.TaxId, OrganizationTaxDetailsPatchField.TaxRatePercentage
+                OrganizationTaxDetailsPatchField.TaxId,
+                OrganizationTaxDetailsPatchField.TaxRatePercentage,
             },
             true,
             string.Empty,

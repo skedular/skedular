@@ -24,7 +24,7 @@ public class XeroSdkClientFactory(XeroConfiguration xeroConfiguration, ILogger<X
             ClientId = xeroConfiguration.ClientId,
             ClientSecret = xeroConfiguration.ClientSecret,
             Scope = xeroConfiguration.Scopes,
-            CallbackUri = callbackUri
+            CallbackUri = callbackUri,
         });
     }
 

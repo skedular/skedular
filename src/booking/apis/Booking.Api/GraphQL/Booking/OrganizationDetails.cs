@@ -11,15 +11,18 @@ namespace Booking.Api.GraphQL.Booking;
 [Shareable]
 public class OrganizationDetails(string id, string customDomain) : Node(id)
 {
-    [GraphQLName("customDomain")] public string? CustomDomain { get; set; } = customDomain;
+    [GraphQLName("customDomain")]
+    public string? CustomDomain { get; set; } = customDomain;
 }
 
 [ObjectType<OrganizationDetails>]
 public static partial class OrganizationDetailsType
 {
     public static async Task<SpacesPublicBookingAvailabilityDetails> GetSpacesPublicBookingAvailabilityAsync(
-        [Parent] OrganizationDetails organization,
-        [Service] ISpacesBookingQuotaService spacesBookingQuotaService,
+        [Parent]
+        OrganizationDetails organization,
+        [Service]
+        ISpacesBookingQuotaService spacesBookingQuotaService,
         CancellationToken cancellationToken)
     {
         var decision = await spacesBookingQuotaService.GetQuotaStatusAsync(organization.Id, cancellationToken);
@@ -28,7 +31,7 @@ public static partial class OrganizationDetailsType
             Available = decision.CanCreate,
             Message = decision.CanCreate
                 ? "Bookings are available."
-                : "Bookings are currently unavailable for this workspace."
+                : "Bookings are currently unavailable for this workspace.",
         };
     }
 }
@@ -36,6 +39,9 @@ public static partial class OrganizationDetailsType
 [GraphQLName("SpacesPublicBookingAvailabilityDetails")]
 public sealed class SpacesPublicBookingAvailabilityDetails
 {
-    [GraphQLName("available")] public bool Available { get; set; }
-    [GraphQLName("message")] public string Message { get; set; } = string.Empty;
+    [GraphQLName("available")]
+    public bool Available { get; set; }
+
+    [GraphQLName("message")]
+    public string Message { get; set; } = string.Empty;
 }

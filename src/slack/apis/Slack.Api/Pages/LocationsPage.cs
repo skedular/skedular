@@ -438,7 +438,7 @@ public class LocationsPage(
             GetTitle(),
             asyncBlocks[0],
             GetLocationsSearchCriteriaAndPaginationBlocks(connection, commonPageContext.PageContext),
-            asyncBlocks[1]
+            asyncBlocks[1],
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -448,7 +448,7 @@ public class LocationsPage(
             {
                 CallbackId = LocationsCallback,
                 Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
             cancellationToken);
@@ -466,7 +466,10 @@ public class LocationsPage(
 
     private static IReadOnlyList<Block> GetTitle() =>
     [
-        new SectionBlock { Text = "*Locations*".ToMarkdown() }
+        new SectionBlock
+        {
+            Text = "*Locations*".ToMarkdown(),
+        },
     ];
 
     private async Task<IReadOnlyList<Block>> GetToolbarAsync(
@@ -487,8 +490,8 @@ public class LocationsPage(
                     .Concat(homeAndBackButtons)
                     .Concat(addLocationButton)
                     .Concat(feedbackButton)
-                    .ToList()
-            }
+                    .ToList(),
+            },
         ];
     }
 
@@ -496,11 +499,20 @@ public class LocationsPage(
     {
         if (!locationConnection.Edges.Any())
         {
-            return [new SectionBlock { Text = "No location found".ToMarkdown() }];
+            return
+            [
+                new SectionBlock
+                {
+                    Text = "No location found".ToMarkdown(),
+                },
+            ];
         }
 
         var totalLocationsCount =
-            new SectionBlock { Text = $"Total locations: {locationConnection.TotalCount}".ToMarkdown() };
+            new SectionBlock
+            {
+                Text = $"Total locations: {locationConnection.TotalCount}".ToMarkdown(),
+            };
         if (locationConnection.TotalCount <= LocationsPageSize)
         {
             return [totalLocationsCount];
@@ -519,7 +531,9 @@ public class LocationsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageLocations, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageLocations,
+                Text = Icons.FirstPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.LocationsPage.Pagination.First = null;
@@ -529,7 +543,9 @@ public class LocationsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageLocations, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageLocations,
+                Text = Icons.PreviousPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
@@ -542,7 +558,9 @@ public class LocationsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageLocations, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageLocations,
+                Text = Icons.NextPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.LocationsPage.Pagination.First = null;
@@ -552,11 +570,16 @@ public class LocationsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageLocations, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageLocations,
+                Text = Icons.LastPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
-        var paginationActionBlock = new ActionsBlock { Elements = paginationButtons };
+        var paginationActionBlock = new ActionsBlock
+        {
+            Elements = paginationButtons,
+        };
 
         return [totalLocationsCount, paginationActionBlock];
     }
@@ -573,8 +596,12 @@ public class LocationsPage(
         {
             BlockId = LocationActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = LocationActionTypes.Name, InitialValue = location.Name.ToSafeString() },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = LocationActionTypes.Name,
+                InitialValue = location.Name.ToSafeString(),
+            },
+            Optional = false,
         };
 
         var about = new InputBlock
@@ -583,9 +610,11 @@ public class LocationsPage(
             Label = "About".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = LocationActionTypes.About, InitialValue = location.ListingMetadata.About.ToSafeString(), Multiline = true
+                ActionId = LocationActionTypes.About,
+                InitialValue = location.ListingMetadata.About.ToSafeString(),
+                Multiline = true,
             },
-            Optional = true
+            Optional = true,
         };
 
         var timezone = new InputBlock
@@ -597,10 +626,14 @@ public class LocationsPage(
                 ActionId = OptionLoaderKeys.TimezoneKey,
                 InitialOption = string.IsNullOrWhiteSpace(location.Timezone)
                     ? null
-                    : new Option { Text = location.Timezone.ToOptionText(), Value = location.Timezone },
-                MinQueryLength = 3
+                    : new Option
+                    {
+                        Text = location.Timezone.ToOptionText(),
+                        Value = location.Timezone,
+                    },
+                MinQueryLength = 3,
             },
-            Optional = false
+            Optional = false,
         };
 
         var locationEntity = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
@@ -611,9 +644,10 @@ public class LocationsPage(
             Label = "Slack update channel".ToPlainText(),
             Element = new ChannelSelectMenu
             {
-                ActionId = LocationActionTypes.SlackUpdateChannel, InitialChannel = locationEntity?.DailyUpdateChannel?.Id
+                ActionId = LocationActionTypes.SlackUpdateChannel,
+                InitialChannel = locationEntity?.DailyUpdateChannel?.Id,
             },
-            Optional = true
+            Optional = true,
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -626,7 +660,7 @@ public class LocationsPage(
                 Close = "Cancel",
                 Submit = "Save",
                 Blocks = [name, about, timezone, updateChannel],
-                PrivateMetadata = context.Serialize()
+                PrivateMetadata = context.Serialize(),
             },
             cancellationToken);
     }
@@ -639,7 +673,10 @@ public class LocationsPage(
         CancellationToken cancellationToken)
     {
         var location = await locationService.GetAsync(workspaceMember.Id, context.LocationId, cancellationToken);
-        var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the location {location.Name.ToSafeString()}?" };
+        var confirmationMessage = new SectionBlock
+        {
+            Text = $"Are you sure you want to remove the location {location.Name.ToSafeString()}?",
+        };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(
@@ -651,7 +688,7 @@ public class LocationsPage(
                 Close = "No",
                 Submit = "Yes",
                 Blocks = [confirmationMessage],
-                PrivateMetadata = context.Serialize()
+                PrivateMetadata = context.Serialize(),
             },
             cancellationToken);
     }

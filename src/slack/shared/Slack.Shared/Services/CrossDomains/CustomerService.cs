@@ -53,7 +53,10 @@ public class CustomerService(
     IOrganizationService organizationService)
     : ICustomerService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<Customer> AdminGetAsync(string customerId, CancellationToken cancellationToken)
     {
@@ -61,7 +64,10 @@ public class CustomerService(
             CreateKeyById(customerId),
             async _ => grpcMapper.MapTo(
                 await customerAdminServiceClient.Admin_GetAsync(
-                    new Admin_GetInput { CustomerId = customerId },
+                    new Admin_GetInput
+                    {
+                        CustomerId = customerId,
+                    },
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken))!,
             _cacheEntryOptions);
@@ -142,7 +148,10 @@ public class CustomerService(
     public async Task<(bool, Customer?)> AdminAnyCustomerExistByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
     {
         var result = await customerAdminServiceClient.Admin_AnyCustomerExistByVerifiableTokenAsync(
-            new Admin_AnyCustomerExistByVerifiableTokenInput { VerifiableToken = verifiableToken },
+            new Admin_AnyCustomerExistByVerifiableTokenInput
+            {
+                VerifiableToken = verifiableToken,
+            },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -158,7 +167,10 @@ public class CustomerService(
     public async Task<(bool, Customer?)> AdminAnyCustomerExistByEmailAsync(string email, CancellationToken cancellationToken)
     {
         var result = await customerAdminServiceClient.Admin_AnyCustomerExistByEmailAsync(
-            new Admin_AnyCustomerExistByEmailInput { Email = email },
+            new Admin_AnyCustomerExistByEmailInput
+            {
+                Email = email,
+            },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -175,7 +187,11 @@ public class CustomerService(
     {
         var customer = grpcMapper.MapTo(
             await customerAdminServiceClient.Admin_SetDefaultOrganizationAsync(
-                new Admin_SetDefaultOrganizationInput { CustomerId = customerId, OrganizationId = organizationId },
+                new Admin_SetDefaultOrganizationInput
+                {
+                    CustomerId = customerId,
+                    OrganizationId = organizationId,
+                },
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
@@ -188,7 +204,11 @@ public class CustomerService(
     {
         var customer = grpcMapper.MapTo(
             await customerAdminServiceClient.Admin_AddPreferredLocationAsync(
-                new Admin_AddPreferredLocationInput { CustomerId = customerId, LocationId = locationId },
+                new Admin_AddPreferredLocationInput
+                {
+                    CustomerId = customerId,
+                    LocationId = locationId,
+                },
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
@@ -199,7 +219,12 @@ public class CustomerService(
 
     public async Task SubmitFeedbackAsync(string workspaceMemberId, string feedback, CancellationToken cancellationToken) =>
         await customerServiceClient.SubmitFeedbackAsync(
-            new SubmitFeedbackInput { Id = randomHelper.Generate(), Channel = FeedbackChannel.Slack, Feedback = feedback },
+            new SubmitFeedbackInput
+            {
+                Id = randomHelper.Generate(),
+                Channel = FeedbackChannel.Slack,
+                Feedback = feedback,
+            },
             customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
 
@@ -218,7 +243,10 @@ public class CustomerService(
             CreateKeyById(customerId),
             async _ => grpcMapper.MapTo(
                 await customerServiceClient.GetByIdAsync(
-                    new GetByIdInput { CustomerId = customerId },
+                    new GetByIdInput
+                    {
+                        CustomerId = customerId,
+                    },
                     customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -227,7 +255,10 @@ public class CustomerService(
     {
         var customer = grpcMapper.MapTo(
             await customerServiceClient.AddPreferredLocationAsync(
-                new AddPreferredLocationInput { LocationId = locationId },
+                new AddPreferredLocationInput
+                {
+                    LocationId = locationId,
+                },
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
@@ -240,7 +271,10 @@ public class CustomerService(
     {
         var customer = grpcMapper.MapTo(
             await customerServiceClient.RemovePreferredLocationAsync(
-                new RemovePreferredLocationInput { LocationId = locationId },
+                new RemovePreferredLocationInput
+                {
+                    LocationId = locationId,
+                },
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
@@ -255,7 +289,10 @@ public class CustomerService(
         CancellationToken cancellationToken) =>
         grpcMapper.MapTo(
             await customerServiceClient.AddPreferredOrganizationTagAsync(
-                new AddPreferredOrganizationTagInput { OrganizationTagId = organizationTagId },
+                new AddPreferredOrganizationTagInput
+                {
+                    OrganizationTagId = organizationTagId,
+                },
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
@@ -266,7 +303,10 @@ public class CustomerService(
     {
         var customer = grpcMapper.MapTo(
             await customerServiceClient.RemovePreferredOrganizationTagAsync(
-                new RemovePreferredOrganizationTagInput { OrganizationTagId = organizationTagId },
+                new RemovePreferredOrganizationTagInput
+                {
+                    OrganizationTagId = organizationTagId,
+                },
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
@@ -282,7 +322,10 @@ public class CustomerService(
     {
         var customer = grpcMapper.MapTo(
             await customerServiceClient.AddPreferredResourceAsync(
-                new AddPreferredResourceInput { ResourceId = resourceId },
+                new AddPreferredResourceInput
+                {
+                    ResourceId = resourceId,
+                },
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
@@ -298,7 +341,10 @@ public class CustomerService(
     {
         var customer = grpcMapper.MapTo(
             await customerServiceClient.RemovePreferredResourceAsync(
-                new RemovePreferredResourceInput { ResourceId = resourceId },
+                new RemovePreferredResourceInput
+                {
+                    ResourceId = resourceId,
+                },
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 

@@ -32,9 +32,17 @@ public class MarketplaceBookingFailureShould
         var from = new DateTimeOffset(2026, 7, 22, 9, 0, 0, TimeSpan.Zero);
         var organization = new Organization
         {
-            Id = "org-1", Type = OrganizationTypeConstants.Marketplace, Offering = new Offering { Code = OfferingCode.SpacesFreeTierV1 }
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Marketplace,
+            Offering = new Offering
+            {
+                Code = OfferingCode.SpacesFreeTierV1,
+            },
         };
-        var customer = new Customer { Id = "customer-1" };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
         var pricing = ProductPricing.Empty("pricing-1") with
         {
             PurchaseCadence = ProductPricingCadence.OneTime,
@@ -42,27 +50,47 @@ public class MarketplaceBookingFailureShould
             AcceptedPaymentMethods = [PaymentMethod.Card],
             BillingMode = ProductPricingBillingMode.Upfront,
             MaxAllowedResourcesLockTimePaidViaCard = 15,
-            NumberOfResourcesToBook = 1
+            NumberOfResourcesToBook = 1,
         };
         var productVersion = new Database.Entities.ProductVersion
         {
             Id = "product-version-1",
             Type = ProductTypeConstants.Event,
             PricingOptions = [pricing],
-            OrganizationTags = [new OrganizationTag { Type = OrganizationTagTypeConstants.Product }],
-            Product = new Product { Organization = organization },
-            Currency = CurrencyConstants.Nzd
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Type = OrganizationTagTypeConstants.Product,
+                },
+            ],
+            Product = new Product
+            {
+                Organization = organization,
+            },
+            Currency = CurrencyConstants.Nzd,
         };
         var booking = new Shared.Models.Booking
         {
             From = from,
             Until = from.AddHours(1),
-            InvolvedCustomers = [new Shared.Models.Customer { Id = customer.Id }],
+            InvolvedCustomers =
+            [
+                new Shared.Models.Customer
+                {
+                    Id = customer.Id,
+                },
+            ],
             Resources = [],
             MarketplaceBooking = new MarketplaceBooking
             {
-                ProductVersion = new ProductVersion { Id = productVersion.Id }, ProductPricing = pricing, PaymentMethod = PaymentMethod.Card
-            }
+                ProductVersion = new ProductVersion
+                {
+                    Id = productVersion.Id,
+                },
+                ProductPricing = pricing,
+                PaymentMethod = PaymentMethod.Card,
+            },
         };
         return (booking, customer, productVersion, pricing);
     }
@@ -70,16 +98,26 @@ public class MarketplaceBookingFailureShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Finalize_An_Availability_Failure_And_Set_FailureId_When_Atomic_Claim_Returns_Conflict(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IMarketplaceEventResourceService marketplaceEventResourceService,
-        [Frozen] IProductVersionHelperService productVersionHelperService,
-        [Frozen] IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
-        [Frozen] IMarketplaceBookingFailureService marketplaceBookingFailureService,
-        [Frozen] ILogger<MarketplaceBookingService> logger,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IMarketplaceEventResourceService marketplaceEventResourceService,
+        [Frozen]
+        IProductVersionHelperService productVersionHelperService,
+        [Frozen]
+        IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
+        [Frozen]
+        IMarketplaceBookingFailureService marketplaceBookingFailureService,
+        [Frozen]
+        ILogger<MarketplaceBookingService> logger,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingService sut,
         ICustomerRepository customerRepository,
         IProductVersionRepository productVersionRepository,
@@ -90,10 +128,22 @@ public class MarketplaceBookingFailureShould
     {
         var (booking, customer, productVersion, pricing) = BuildEventBookingScenario();
         var from = booking.From;
-        var resource = new Resource { Id = "resource-1" };
-        var marketplaceBookingEntity = new Database.Entities.MarketplaceBooking { Id = "marketplace-booking-1" };
-        var bookingEntity = new Database.Entities.Booking { Id = "booking-1" };
-        var failure = new MarketplaceBookingFailure { Id = "failure-1" };
+        var resource = new Resource
+        {
+            Id = "resource-1",
+        };
+        var marketplaceBookingEntity = new Database.Entities.MarketplaceBooking
+        {
+            Id = "marketplace-booking-1",
+        };
+        var bookingEntity = new Database.Entities.Booking
+        {
+            Id = "booking-1",
+        };
+        var failure = new MarketplaceBookingFailure
+        {
+            Id = "failure-1",
+        };
 
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -152,14 +202,22 @@ public class MarketplaceBookingFailureShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Finalize_An_Availability_Failure_And_Set_FailureId_When_No_Resources_Are_Auto_Assigned(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IMarketplaceEventResourceService marketplaceEventResourceService,
-        [Frozen] IProductVersionHelperService productVersionHelperService,
-        [Frozen] IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
-        [Frozen] IMarketplaceBookingFailureService marketplaceBookingFailureService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IMarketplaceEventResourceService marketplaceEventResourceService,
+        [Frozen]
+        IProductVersionHelperService productVersionHelperService,
+        [Frozen]
+        IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
+        [Frozen]
+        IMarketplaceBookingFailureService marketplaceBookingFailureService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingService sut,
         ICustomerRepository customerRepository,
         IProductVersionRepository productVersionRepository,
@@ -167,7 +225,10 @@ public class MarketplaceBookingFailureShould
     {
         var (booking, customer, productVersion, pricing) = BuildEventBookingScenario();
         var from = booking.From;
-        var failure = new MarketplaceBookingFailure { Id = "failure-2" };
+        var failure = new MarketplaceBookingFailure
+        {
+            Id = "failure-2",
+        };
 
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);

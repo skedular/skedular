@@ -10,7 +10,8 @@ public class GetDefaultTagsShould
     [Theory]
     [AutoFakeItEasyData]
     public void Include_Entire_Location_Resource_Type(
-        [Frozen] IRandomHelper randomHelper,
+        [Frozen]
+        IRandomHelper randomHelper,
         OrganizationDefaultValuesProvider sut,
         Database.Entities.Organization organization,
         string generatedId)

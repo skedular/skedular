@@ -14,7 +14,10 @@ public class ValidateShould
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
-            new HashSet<OrganizationPatchField> { (OrganizationPatchField)999 },
+            new HashSet<OrganizationPatchField>
+            {
+                (OrganizationPatchField)999,
+            },
             "Name");
 
         Should.Throw<ArgumentOutOfRangeException>(() => sut.Validate(request));
@@ -27,7 +30,10 @@ public class ValidateShould
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.Name },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.Name,
+            },
             " ");
 
         Should.Throw<ArgumentException>(() => sut.Validate(request));
@@ -41,7 +47,10 @@ public class ValidateShould
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.InvoiceDueInDays },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.InvoiceDueInDays,
+            },
             "Name",
             InvoiceDueInDays: invoiceDueInDays);
 
@@ -55,7 +64,10 @@ public class ValidateShould
         var request = new OrganizationPatchRequest(
             "org-1",
             null,
-            new HashSet<OrganizationPatchField> { OrganizationPatchField.PhysicalAddress },
+            new HashSet<OrganizationPatchField>
+            {
+                OrganizationPatchField.PhysicalAddress,
+            },
             "Name");
 
         Should.Throw<ArgumentException>(() => sut.Validate(request));

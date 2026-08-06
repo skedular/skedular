@@ -142,7 +142,7 @@ public static class LocationExtensions
                         searchCriteria.SearchBoundaries.SouthWest.Latitude), // SouthEast (bottom-right)
                     new Coordinate(
                         searchCriteria.SearchBoundaries.SouthWest.Longitude,
-                        searchCriteria.SearchBoundaries.SouthWest.Latitude) // Close polygon back to SouthWest
+                        searchCriteria.SearchBoundaries.SouthWest.Latitude), // Close polygon back to SouthWest
                 ]);
 
                 originalQuery = originalQuery.Where(item =>
@@ -284,7 +284,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
                 KeysetPaginationField<Database.Entities.Location>.Create(
                     nameof(Database.Entities.Location.Name),
                     query => query.Name,
-                    OrderDirection.Ascending)
+                    OrderDirection.Ascending),
             ];
         }
 
@@ -303,7 +303,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
                     query => query.Type,
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             })
             .ToList();
     }

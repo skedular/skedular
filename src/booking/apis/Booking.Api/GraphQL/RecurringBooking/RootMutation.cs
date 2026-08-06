@@ -14,7 +14,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<RecurringBookingPayload> AddPrivateRecurringBookingAsync(
         AddPrivateRecurringBookingInput input,
-        [Service] IPrivateRecurringBookingService privateRecurringBookingService,
+        [Service]
+        IPrivateRecurringBookingService privateRecurringBookingService,
         CancellationToken cancellationToken)
     {
         try
@@ -22,7 +23,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             var recurringBooking = await privateRecurringBookingService.AddAsync(graphQlMapper.MapTo(input), cancellationToken);
             return new RecurringBookingPayload
             {
-                ClientMutationId = input.ClientMutationId, RecurringBooking = graphQlMapper.MapTo(recurringBooking)!
+                ClientMutationId = input.ClientMutationId,
+                RecurringBooking = graphQlMapper.MapTo(recurringBooking)!,
             };
         }
         catch (SpacesAccessDenied exception)
@@ -34,7 +36,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<RecurringBookingPayload> UpdatePrivateRecurringBookingAsync(
         UpdatePrivateRecurringBookingInput input,
-        [Service] IPrivateRecurringBookingService privateRecurringBookingService,
+        [Service]
+        IPrivateRecurringBookingService privateRecurringBookingService,
         CancellationToken cancellationToken)
     {
         try
@@ -44,7 +47,8 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
                 cancellationToken);
             return new RecurringBookingPayload
             {
-                ClientMutationId = input.ClientMutationId, RecurringBooking = graphQlMapper.MapTo(recurringBooking)!
+                ClientMutationId = input.ClientMutationId,
+                RecurringBooking = graphQlMapper.MapTo(recurringBooking)!,
             };
         }
         catch (SpacesAccessDenied exception)
@@ -56,11 +60,16 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<RecurringBookingPayload> DeletePrivateRecurringBookingAsync(
         DeletePrivateRecurringBookingInput input,
-        [Service] IPrivateRecurringBookingService privateRecurringBookingService,
+        [Service]
+        IPrivateRecurringBookingService privateRecurringBookingService,
         CancellationToken cancellationToken)
     {
         var recurringBooking = await privateRecurringBookingService.DeleteAsync(input.Id, cancellationToken);
-        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = graphQlMapper.MapTo(recurringBooking)! };
+        return new RecurringBookingPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            RecurringBooking = graphQlMapper.MapTo(recurringBooking)!,
+        };
     }
 
     private static RecurringBookingPayload ToAccessErrorPayload(string? clientMutationId, SpacesAccessDenied exception) =>
@@ -73,7 +82,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
                 Status = exception.Status,
                 ReasonCode = exception.ReasonCode,
                 UpgradeRequired = exception.UpgradeRequired,
-                Message = exception.Message
-            }
+                Message = exception.Message,
+            },
         };
 }

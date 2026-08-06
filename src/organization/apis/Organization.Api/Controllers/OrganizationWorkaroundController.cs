@@ -69,7 +69,7 @@ public class OrganizationWorkaroundController(
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(body.OfferingCode),
                     body.OfferingCode,
-                    $"Unexpected value for {nameof(body.OfferingCode)}: {body.OfferingCode}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(body.OfferingCode)}: {body.OfferingCode}. Update enum mapping or caller input."),
             },
             body.FixedPrice,
             body.Currency switch
@@ -77,7 +77,7 @@ public class OrganizationWorkaroundController(
                 Currency.Nzd => global::Api.Shared.Services.Models.Currency.Nzd,
                 Currency.Usd => global::Api.Shared.Services.Models.Currency.Usd,
                 _ => throw new ArgumentOutOfRangeException(nameof(body.Currency), body.Currency,
-                    $"Unexpected value for {nameof(body.Currency)}: {body.Currency}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(body.Currency)}: {body.Currency}. Update enum mapping or caller input."),
             },
             body.PurchasedUserCapacity,
             body.PurchasedLocationCapacity,

@@ -13,5 +13,5 @@ public record ProductOrder(OrderDirection Direction, ProductOrderField Field);
 
 public enum ProductOrderField
 {
-    Name
+    Name,
 }

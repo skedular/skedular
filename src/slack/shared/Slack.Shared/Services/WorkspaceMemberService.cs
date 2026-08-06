@@ -121,11 +121,20 @@ public class WorkspaceMemberService(
             First = ((int?)null).ToNullInt(),
             Before = string.Empty,
             Last = ((int?)null).ToNullInt(),
-            Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp(), IncludeMineOnly = true }
+            Where = new BookingWhereInput
+            {
+                FromGte = from.ToTimestamp(),
+                FromLte = until.ToTimestamp(),
+                IncludeMineOnly = true,
+            },
         };
         getPaginatedBookingsInput.Where.OrganizationId = workspace.Organization.Id;
         getPaginatedBookingsInput.OrderBy.AddRange([
-            new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
+            new BookingOrderInput
+            {
+                Direction = OrderDirection.Ascending,
+                Field = BookingOrderField.From,
+            },
         ]);
 
         var bookingSearchCriteria = new BookingSearchCriteria(
@@ -283,10 +292,16 @@ public class WorkspaceMemberService(
                 return new OrganizationMember
                 {
                     Id = randomHelper.Generate(),
-                    Customer = new Customer { Id = customerId },
+                    Customer = new Customer
+                    {
+                        Id = customerId,
+                    },
                     Role = role,
                     IsOrganizationOnboardingDone = true,
-                    Organization = new Organization { Id = workspace.Organization.Id }
+                    Organization = new Organization
+                    {
+                        Id = workspace.Organization.Id,
+                    },
                 };
             }
 
@@ -296,11 +311,17 @@ public class WorkspaceMemberService(
             return new OrganizationMember
             {
                 Id = organizationMember.Id,
-                Customer = new Customer { Id = customerId },
+                Customer = new Customer
+                {
+                    Id = customerId,
+                },
                 Role = organizationMember.Role.ToOrganizationMemberRole(),
                 Status = organizationMember.Status.ToOrganizationMemberStatus(),
                 IsOrganizationOnboardingDone = true,
-                Organization = new Organization { Id = workspace.Organization.Id }
+                Organization = new Organization
+                {
+                    Id = workspace.Organization.Id,
+                },
             };
         }).ForEachAsync(async (member, ct) => await organizationMemberService.AdminAddAsync(member, ct), cancellationToken);
     }

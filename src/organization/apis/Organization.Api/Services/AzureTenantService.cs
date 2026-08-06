@@ -38,14 +38,14 @@ public class AzureTenantService(
 
     private static readonly string[] s_teamPermissions =
     [
-        "Team.ReadBasic.All" // List teams
+        "Team.ReadBasic.All", // List teams
     ];
 
     private static readonly string[] s_channelPermissions =
     [
         "Group.ReadWrite.All", // Maintain Channel
         "ChannelSettings.ReadWrite.All", // Archive Channel
-        "Teamwork.Migrate.All" // Send chatMessage in Channel
+        "Teamwork.Migrate.All", // Send chatMessage in Channel
     ];
 
     private static readonly string[] s_allPermissions = s_userProfilePermissions.Concat(s_teamPermissions).Concat(s_channelPermissions).ToArray();
@@ -99,7 +99,11 @@ public class AzureTenantService(
             : applicationConfiguration.ApiBaseDomain.AbsoluteUri;
 
         var installStateUserIdLookup = repositoryFactory.AzureInstallStateUserIdLookupRepository.Add(
-            new AzureInstallStateUserIdLookup { Id = randomHelper.Generate(), InstalledByUserId = verifiableToken });
+            new AzureInstallStateUserIdLookup
+            {
+                Id = randomHelper.Generate(),
+                InstalledByUserId = verifiableToken,
+            });
 
         var clientId = Uri.EscapeDataString(azureEntraConfiguration.ClientId);
         var redirectUri = Uri.EscapeDataString(new Uri(new Uri(currentUri), "v1/organization/onboard-azure-tenant").OriginalString);

@@ -102,7 +102,10 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                                    item.Start < claimBooking.Until)
                     .Select(item => new
                     {
-                        item.Id, item.ResourceId, item.Available, IsBooked = item.Bookings.Any(existing => existing.DeletedByCustomer == null)
+                        item.Id,
+                        item.ResourceId,
+                        item.Available,
+                        IsBooked = item.Bookings.Any(existing => existing.DeletedByCustomer == null),
                     })
                     .ToListAsync(cancellationToken);
 
@@ -371,10 +374,10 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                         CustomerName = b.CreatedByCustomer != null ? b.CreatedByCustomer.Name : null,
                         CustomerGivenName = b.CreatedByCustomer != null ? b.CreatedByCustomer.GivenName : null,
                         CustomerFamilyName = b.CreatedByCustomer != null ? b.CreatedByCustomer.FamilyName : null,
-                        Notes = b.Notes
+                        Notes = b.Notes,
                     })
                     .OrderBy(b => b.From)
-                    .ToList()
+                    .ToList(),
             })
             .ToListAsync(cancellationToken);
     }
@@ -454,7 +457,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                     .Select(organizationTag => organizationTag.Name)
                     .FirstOrDefault(),
             _ => throw new ArgumentOutOfRangeException(nameof(field), field,
-                $"Unexpected value for {nameof(field)}: {field}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(field)}: {field}. Update enum mapping or caller input."),
         };
 
     private static IQueryable<Resource> ApplyAvailabilityStatusPrefilter(
@@ -540,7 +543,11 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
 
         return slots
             .GroupBy(slot => slot.Resource.Id)
-            .Select(group => new { group.First().Resource, Slots = group.ToList() })
+            .Select(group => new
+            {
+                group.First().Resource,
+                Slots = group.ToList(),
+            })
             .Where(grouped => grouped.Slots.All(slot => slot is { Available: true, Bookings.Count: 0 }))
             .GroupBy(slot => slot.Resource.Id)
             .Select(item => item.Key)
@@ -569,7 +576,10 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .Where(item => resourceIds.Contains(item.ResourceId) && item.Start >= booking.From && item.Start < booking.Until)
             .Select(item => new
             {
-                item.Id, item.ResourceId, item.Available, IsBooked = item.Bookings.Any(existing => existing.DeletedByCustomer == null)
+                item.Id,
+                item.ResourceId,
+                item.Available,
+                IsBooked = item.Bookings.Any(existing => existing.DeletedByCustomer == null),
             })
             .ToListAsync(cancellationToken);
         var unavailableResourceIds = resourceIds

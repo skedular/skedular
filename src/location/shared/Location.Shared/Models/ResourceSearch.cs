@@ -8,5 +8,5 @@ public record ResourceOrder(OrderDirection Direction, ResourceOrderField Field);
 
 public enum ResourceOrderField
 {
-    Name
+    Name,
 }

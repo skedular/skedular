@@ -10,7 +10,9 @@ public class ReplicatedModelBaseShould
     {
         var model = new ReplicatedModelBase
         {
-            Id = "1", CreatedAt = TimeProvider.System.GetUtcNow(), EventRaisedAt = TimeProvider.System.GetUtcNow()
+            Id = "1",
+            CreatedAt = TimeProvider.System.GetUtcNow(),
+            EventRaisedAt = TimeProvider.System.GetUtcNow(),
         };
 
         model.EventRaisedAt.ShouldNotBeNull();
@@ -19,7 +21,11 @@ public class ReplicatedModelBaseShould
     [Fact]
     public void Allow_event_raised_at_to_be_null()
     {
-        var model = new ReplicatedModelBase { Id = "1", CreatedAt = TimeProvider.System.GetUtcNow() };
+        var model = new ReplicatedModelBase
+        {
+            Id = "1",
+            CreatedAt = TimeProvider.System.GetUtcNow(),
+        };
 
         model.EventRaisedAt.ShouldBeNull();
     }
@@ -29,7 +35,9 @@ public class ReplicatedModelBaseShould
     {
         var model = new ReplicatedModelBaseWithDeleted
         {
-            Id = "1", CreatedAt = TimeProvider.System.GetUtcNow(), DeletedAt = TimeProvider.System.GetUtcNow()
+            Id = "1",
+            CreatedAt = TimeProvider.System.GetUtcNow(),
+            DeletedAt = TimeProvider.System.GetUtcNow(),
         };
 
         model.DeletedAt.ShouldNotBeNull();

@@ -14,7 +14,8 @@ public class GetBookingCancellationPreviewAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Refundable_Preview_For_One_Time_Booking(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -44,7 +45,8 @@ public class GetBookingCancellationPreviewAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Non_Refundable_Preview_When_Payment_Is_Not_Confirmed(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -81,8 +83,17 @@ public class GetBookingCancellationPreviewAsyncShould
                 Currency = "NZD",
                 PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(),
                 ProductPricing = CreatePricing(cancellationPolicyType, cancellationRefundRules),
-                ProductVersion = new ProductVersionEntity { Product = new ProductEntity { Organization = new OrganizationEntity { Id = "org-1" } } }
-            }
+                ProductVersion = new ProductVersionEntity
+                {
+                    Product = new ProductEntity
+                    {
+                        Organization = new OrganizationEntity
+                        {
+                            Id = "org-1",
+                        },
+                    },
+                },
+            },
         };
 
     private static ProductPricing CreatePricing(

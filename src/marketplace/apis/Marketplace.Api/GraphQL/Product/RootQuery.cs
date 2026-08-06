@@ -22,15 +22,18 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<ProductDetails?> ProductByIdAsync(
-        [ID] string id,
-        [Service] IProductService productService,
+        [ID]
+        string id,
+        [Service]
+        IProductService productService,
         CancellationToken cancellationToken) =>
         await ProductAsync(id, productService, cancellationToken);
 
     [UseResolverScope]
     public async Task<ProductVersionDetails?> ProductVersionAsync(
         string id,
-        [Service] IProductVersionService productVersionService,
+        [Service]
+        IProductVersionService productVersionService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await productVersionService.GetByIdAsync(id, cancellationToken));
 
@@ -38,8 +41,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<ProductVersionDetails?> ProductVersionByIdAsync(
-        [ID] string id,
-        [Service] IProductVersionService productVersionService,
+        [ID]
+        string id,
+        [Service]
+        IProductVersionService productVersionService,
         CancellationToken cancellationToken) =>
         await ProductVersionAsync(id, productVersionService, cancellationToken);
 
@@ -51,7 +56,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         ProductWhereInput where,
         IEnumerable<ProductOrderInput>? orderBy,
-        [Service] IProductService productService,
+        [Service]
+        IProductService productService,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await productService.GetPaginatedProductsAsync(
@@ -71,10 +77,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 }

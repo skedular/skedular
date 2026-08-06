@@ -44,7 +44,10 @@ public class LocationResourceService(
     IOrganizationProductTagService organizationProductTagService,
     IOrganizationTagService organizationTagService) : ILocationResourceService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<Resource> AdminGetAsync(string resourceId, CancellationToken cancellationToken) =>
         await AdminEnrichAsync(
@@ -52,7 +55,10 @@ public class LocationResourceService(
                 CreateKeyById(resourceId),
                 async _ => grpcMapper.MapTo(
                     await locationResourcesServiceClient.Admin_GetResourceAsync(
-                        new Admin_GetResourceInput { Id = resourceId },
+                        new Admin_GetResourceInput
+                        {
+                            Id = resourceId,
+                        },
                         locationConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: cancellationToken)),
                 _cacheEntryOptions))!,
@@ -68,7 +74,7 @@ public class LocationResourceService(
             Color = resource.Color.ToSafeString(),
             Inactive = resource.Inactive,
             RequireBookingApproval = resource.RequireBookingApproval,
-            LocationId = resource.Location!.Id
+            LocationId = resource.Location!.Id,
         };
 
         addResourceInput.TagIds.AddRange(resource.CustomTags.Select(item => item.Id));
@@ -96,7 +102,7 @@ public class LocationResourceService(
             Capacity = resource.Capacity,
             Color = resource.Color.ToSafeString(),
             Inactive = resource.Inactive,
-            RequireBookingApproval = resource.RequireBookingApproval
+            RequireBookingApproval = resource.RequireBookingApproval,
         };
 
         updateZoneInput.TagIds.AddRange(resource.CustomTags.Select(item => item.Id));
@@ -110,7 +116,7 @@ public class LocationResourceService(
             ResourcePatchField.RequireBookingApproval,
             ResourcePatchField.Tags,
             ResourcePatchField.Color,
-            ResourcePatchField.Capacity
+            ResourcePatchField.Capacity,
         ]);
 
         var mappedResource = grpcMapper.MapTo(
@@ -127,7 +133,10 @@ public class LocationResourceService(
     public async Task RemoveAsync(string workspaceMemberId, string resourceId, CancellationToken cancellationToken)
     {
         await locationResourcesServiceClient.RemoveResourceAsync(
-            new RemoveResourceInput { Id = resourceId },
+            new RemoveResourceInput
+            {
+                Id = resourceId,
+            },
             locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
 
@@ -143,7 +152,10 @@ public class LocationResourceService(
                 CreateKeyById(resourceId),
                 async _ => grpcMapper.MapTo(
                     await locationResourcesServiceClient.GetResourceAsync(
-                        new GetResourceInput { Id = resourceId },
+                        new GetResourceInput
+                        {
+                            Id = resourceId,
+                        },
                         locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                         cancellationToken: cancellationToken)),
                 _cacheEntryOptions))!,
@@ -165,12 +177,17 @@ public class LocationResourceService(
             After = after.ToSafeString(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new ResourceWhereInput { LocationId = locationId, NameContains = nameContains.ToSafeString() }
+            Where = new ResourceWhereInput
+            {
+                LocationId = locationId,
+                NameContains = nameContains.ToSafeString(),
+            },
         };
 
         getPaginatedResourcesInput.OrderBy.Add(new ResourceOrderInput
         {
-            Direction = OrderDirection.Ascending, Field = ResourceOrderField.ResourceName
+            Direction = OrderDirection.Ascending,
+            Field = ResourceOrderField.ResourceName,
         });
 
         var connection = await locationResourcesServiceClient.GetPaginatedResourcesAsync(
@@ -194,10 +211,10 @@ public class LocationResourceService(
                 StartCursor = connection.PageInfo.StartCursor,
                 EndCursor = connection.PageInfo.EndCursor,
                 HasNextPage = connection.PageInfo.HasNextPage,
-                HasPreviousPage = connection.PageInfo.HasPreviousPage
+                HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = enrichedEdges
+            Edges = enrichedEdges,
         };
     }
 
@@ -239,7 +256,7 @@ public class LocationResourceService(
             Name = resourceType.Name.ToSafeString(),
             Description = resourceType.Description.ToSafeString(),
             Color = resourceType.Color.ToSafeString(),
-            Type = resourceType.Type
+            Type = resourceType.Type,
         };
 
         resource.CustomTags = resource.CustomTags
@@ -284,7 +301,7 @@ public class LocationResourceService(
             Name = resourceType.Name.ToSafeString(),
             Description = resourceType.Description.ToSafeString(),
             Color = resourceType.Color.ToSafeString(),
-            Type = resourceType.Type
+            Type = resourceType.Type,
         };
 
         resource.CustomTags = resource.CustomTags

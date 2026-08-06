@@ -28,7 +28,7 @@ public static class Extensions
                 temporalClientConnectOptions.Tls = new TlsOptions
                 {
                     ClientCert = File.ReadAllBytes(temporalConfiguration.Connection.Mtls.CertChainFile),
-                    ClientPrivateKey = File.ReadAllBytes(temporalConfiguration.Connection.Mtls.KeyFile)
+                    ClientPrivateKey = File.ReadAllBytes(temporalConfiguration.Connection.Mtls.KeyFile),
                 };
             }
 
@@ -94,7 +94,7 @@ public static class Extensions
             var workerDeploymentOptions =
                 new WorkerDeploymentOptions(new WorkerDeploymentVersion(deploymentName.Replace(".", "-").Replace(":", "-"), buildId), false)
                 {
-                    DefaultVersioningBehavior = VersioningBehavior.Unspecified
+                    DefaultVersioningBehavior = VersioningBehavior.Unspecified,
                 };
 
             return services

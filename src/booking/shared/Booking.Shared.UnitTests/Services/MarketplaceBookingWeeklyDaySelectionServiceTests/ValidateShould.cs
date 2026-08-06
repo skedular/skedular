@@ -15,7 +15,7 @@ public class ValidateShould
         {
             PurchaseCadence = ProductPricingCadence.Weekly,
             AvailableDays = [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday],
-            RequiredDaysPerWeek = 2
+            RequiredDaysPerWeek = 2,
         };
 
         var result = sut.Validate(pricing, [DayOfWeek.Monday, DayOfWeek.Wednesday]);
@@ -27,7 +27,11 @@ public class ValidateShould
     [AutoFakeItEasyData]
     public void Reject_A_Duplicate_Selection(MarketplaceBookingWeeklyDaySelectionService sut)
     {
-        var pricing = ProductPricing.Empty("weekly") with { PurchaseCadence = ProductPricingCadence.Weekly, RequiredDaysPerWeek = 1 };
+        var pricing = ProductPricing.Empty("weekly") with
+        {
+            PurchaseCadence = ProductPricingCadence.Weekly,
+            RequiredDaysPerWeek = 1,
+        };
 
         Should.Throw<MarketplaceBookingWeeklyDaySelectionInvalid>(() =>
             sut.Validate(pricing, [DayOfWeek.Tuesday, DayOfWeek.Tuesday]));
@@ -39,7 +43,9 @@ public class ValidateShould
     {
         var pricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly, AvailableDays = [DayOfWeek.Tuesday], RequiredDaysPerWeek = 1
+            PurchaseCadence = ProductPricingCadence.Weekly,
+            AvailableDays = [DayOfWeek.Tuesday],
+            RequiredDaysPerWeek = 1,
         };
 
         Should.Throw<MarketplaceBookingWeeklyDaySelectionInvalid>(() =>
@@ -52,7 +58,9 @@ public class ValidateShould
     {
         var pricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly, AvailableDays = [], RequiredDaysPerWeek = 1
+            PurchaseCadence = ProductPricingCadence.Weekly,
+            AvailableDays = [],
+            RequiredDaysPerWeek = 1,
         };
 
         var result = sut.Validate(pricing, [DayOfWeek.Sunday]);
@@ -64,7 +72,11 @@ public class ValidateShould
     [AutoFakeItEasyData]
     public void Reject_A_Selection_That_Does_Not_Match_The_Required_Count(MarketplaceBookingWeeklyDaySelectionService sut)
     {
-        var pricing = ProductPricing.Empty("weekly") with { PurchaseCadence = ProductPricingCadence.Weekly, RequiredDaysPerWeek = 2 };
+        var pricing = ProductPricing.Empty("weekly") with
+        {
+            PurchaseCadence = ProductPricingCadence.Weekly,
+            RequiredDaysPerWeek = 2,
+        };
 
         Should.Throw<MarketplaceBookingWeeklyDaySelectionInvalid>(() => sut.Validate(pricing, [DayOfWeek.Tuesday]));
     }
@@ -73,7 +85,11 @@ public class ValidateShould
     [AutoFakeItEasyData]
     public void Reject_A_Selection_For_A_NonWeekly_Price(MarketplaceBookingWeeklyDaySelectionService sut)
     {
-        var pricing = ProductPricing.Empty("daily") with { PurchaseCadence = ProductPricingCadence.Daily, RequiredDaysPerWeek = 1 };
+        var pricing = ProductPricing.Empty("daily") with
+        {
+            PurchaseCadence = ProductPricingCadence.Daily,
+            RequiredDaysPerWeek = 1,
+        };
 
         Should.Throw<MarketplaceBookingWeeklyDaySelectionInvalid>(() => sut.Validate(pricing, [DayOfWeek.Tuesday]));
     }
@@ -82,7 +98,10 @@ public class ValidateShould
     [AutoFakeItEasyData]
     public void Ignore_Selection_When_The_Weekly_Rule_Is_Not_Configured(MarketplaceBookingWeeklyDaySelectionService sut)
     {
-        var pricing = ProductPricing.Empty("weekly") with { PurchaseCadence = ProductPricingCadence.Weekly };
+        var pricing = ProductPricing.Empty("weekly") with
+        {
+            PurchaseCadence = ProductPricingCadence.Weekly,
+        };
 
         var result = sut.Validate(pricing, [DayOfWeek.Monday]);
 

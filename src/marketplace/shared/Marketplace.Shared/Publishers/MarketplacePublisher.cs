@@ -24,7 +24,10 @@ public class MarketplacePublisher(
 {
     public async Task PublishProductsAsync(IReadOnlyList<Product> products, CancellationToken cancellationToken) =>
         await Task.WhenAll(products.Select(product => publisher.PublishAsync(
-            new Key { ProductId = product.Id },
+            new Key
+            {
+                ProductId = product.Id,
+            },
             new Event
             {
                 Metadata = Event.NewMetadata(
@@ -32,7 +35,10 @@ public class MarketplacePublisher(
                     applicationConfiguration.AppSource,
                     product.IsDeleted() ? Type.ProductDeleted : Type.ProductUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Product = eventMapper.MapTo(product) }
+                Data = new Data
+                {
+                    Product = eventMapper.MapTo(product),
+                },
             },
             cancellationToken)));
 }

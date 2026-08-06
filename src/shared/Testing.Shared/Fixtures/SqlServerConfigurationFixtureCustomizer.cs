@@ -13,7 +13,7 @@ public class SqlServerConfigurationFixtureCustomizer : IFixtureCustomizer
             {
                 ["ConnectionStrings:main"] = "Server=localhost;Database=local.test;User Id=sa;Password=Password123!;TrustServerCertificate=True",
                 [$"{ApplicationConfiguration.Key}:{nameof(ApplicationConfiguration.QuerySplittingBehavior)}"] =
-                    nameof(QuerySplittingBehavior.SplitQuery)
+                    nameof(QuerySplittingBehavior.SplitQuery),
             })
             .Build());
 }

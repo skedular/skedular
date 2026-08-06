@@ -150,7 +150,11 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
                     preferredResourceIds)
                 .ToList();
             var resourceWindows = orderedResources
-                .Select(resource => new { Resource = resource, Window = ResolveBookingWindow(resource, bookingDay, pricing) })
+                .Select(resource => new
+                {
+                    Resource = resource,
+                    Window = ResolveBookingWindow(resource, bookingDay, pricing),
+                })
                 .Where(item => item.Window is not null)
                 .ToList();
             if (resourceWindows.Count == 0)
@@ -161,7 +165,11 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
             }
 
             foreach (var resourceWindowGroup in resourceWindows
-                         .GroupBy(item => new { item.Window!.Value.From, item.Window.Value.Until })
+                         .GroupBy(item => new
+                         {
+                             item.Window!.Value.From,
+                             item.Window.Value.Until,
+                         })
                          .OrderBy(group => group.Min(item => orderedResources.IndexOf(item.Resource))))
             {
                 // A marketplace booking has one From/Until window for all selected resources.
@@ -395,7 +403,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
                 DayOfWeek.Saturday => openingHours.WeekOpeningHours.Saturday,
                 DayOfWeek.Sunday => openingHours.WeekOpeningHours.Sunday,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
 
     /// <summary>
@@ -483,6 +491,6 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
             ProductPricingCadence.Per30Minutes => from.AddMinutes(30),
             ProductPricingCadence.PerHour => from.AddHours(1),
             ProductPricingCadence.HalfDay => from.AddHours(4),
-            _ => from.AddDays(1)
+            _ => from.AddDays(1),
         };
 }

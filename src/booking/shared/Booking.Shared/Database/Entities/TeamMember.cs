@@ -37,6 +37,10 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
 
         builder.HasIndex(item => item.Role);
         builder.HasIndex(item => item.Status);
-        builder.HasIndex(item => new { item.CustomerId, item.TeamId }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.CustomerId,
+            item.TeamId,
+        }).IsUnique();
     }
 }

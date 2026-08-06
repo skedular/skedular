@@ -159,7 +159,13 @@ public class WorkspaceMemberService(
         await organizationMemberService.AdminAddAsync(
             new OrganizationMember
             {
-                Id = randomHelper.Generate(), Customer = new Customer { Id = customerId }, Role = role, Status = OrganizationMemberStatus.Active
+                Id = randomHelper.Generate(),
+                Customer = new Customer
+                {
+                    Id = customerId,
+                },
+                Role = role,
+                Status = OrganizationMemberStatus.Active,
             }, cancellationToken);
     }
 }

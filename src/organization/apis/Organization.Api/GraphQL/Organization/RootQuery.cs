@@ -19,38 +19,72 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     public IEnumerable<OrganizationTypeDetails> OrganizationTypes() =>
     [
-        new() { Type = OrganizationType.Private, Name = OrganizationTypeConstants.Private.ToOrganizationTypeName() },
-        new() { Type = OrganizationType.Marketplace, Name = OrganizationTypeConstants.Marketplace.ToOrganizationTypeName() },
-        new() { Type = OrganizationType.Host, Name = OrganizationTypeConstants.Host.ToOrganizationTypeName() }
+        new()
+        {
+            Type = OrganizationType.Private,
+            Name = OrganizationTypeConstants.Private.ToOrganizationTypeName(),
+        },
+        new()
+        {
+            Type = OrganizationType.Marketplace,
+            Name = OrganizationTypeConstants.Marketplace.ToOrganizationTypeName(),
+        },
+        new()
+        {
+            Type = OrganizationType.Host,
+            Name = OrganizationTypeConstants.Host.ToOrganizationTypeName(),
+        },
     ];
 
     public IEnumerable<OrganizationBillingCycleDetails> OrganizationBillingCycles() =>
     [
-        new() { Type = OrganizationBillingCycle.Weekly, Name = OrganizationBillingCycle.Weekly.ToOrganizationBillingCycleName() },
-        new() { Type = OrganizationBillingCycle.Fortnightly, Name = OrganizationBillingCycle.Fortnightly.ToOrganizationBillingCycleName() },
-        new() { Type = OrganizationBillingCycle.Monthly, Name = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycleName() }
+        new()
+        {
+            Type = OrganizationBillingCycle.Weekly,
+            Name = OrganizationBillingCycle.Weekly.ToOrganizationBillingCycleName(),
+        },
+        new()
+        {
+            Type = OrganizationBillingCycle.Fortnightly,
+            Name = OrganizationBillingCycle.Fortnightly.ToOrganizationBillingCycleName(),
+        },
+        new()
+        {
+            Type = OrganizationBillingCycle.Monthly,
+            Name = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycleName(),
+        },
     ];
 
     public IEnumerable<OrganizationXeroBillingModeDetails> OrganizationXeroBillingModes() =>
     [
-        new() { Type = OrganizationXeroBillingMode.Disabled, Name = OrganizationXeroBillingMode.Disabled.ToOrganizationXeroBillingModeName() },
-        new() { Type = OrganizationXeroBillingMode.Enabled, Name = OrganizationXeroBillingMode.Enabled.ToOrganizationXeroBillingModeName() },
+        new()
+        {
+            Type = OrganizationXeroBillingMode.Disabled,
+            Name = OrganizationXeroBillingMode.Disabled.ToOrganizationXeroBillingModeName(),
+        },
+        new()
+        {
+            Type = OrganizationXeroBillingMode.Enabled,
+            Name = OrganizationXeroBillingMode.Enabled.ToOrganizationXeroBillingModeName(),
+        },
         new()
         {
             Type = OrganizationXeroBillingMode.RepeatingInvoices,
-            Name = OrganizationXeroBillingMode.RepeatingInvoices.ToOrganizationXeroBillingModeName()
-        }
+            Name = OrganizationXeroBillingMode.RepeatingInvoices.ToOrganizationXeroBillingModeName(),
+        },
     ];
 
     [UseResolverScope]
     public async Task<OrganizationTermsOfUse> ActiveOrganizationTermsOfUseAsync(
-        [Service] IOrganizationTermsOfUseService organizationTermsOfUseService,
+        [Service]
+        IOrganizationTermsOfUseService organizationTermsOfUseService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await organizationTermsOfUseService.GetActiveTermsOfUseAsync(cancellationToken))!;
 
     [UseResolverScope]
     public async Task<IEnumerable<OrganizationIndustryMainCategoryReferenceDetails>> OrganizationIndustryMainCategoriesReferencesAsync(
-        [Service] IIndustryMainCategoryService industryMainCategoryService,
+        [Service]
+        IIndustryMainCategoryService industryMainCategoryService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await industryMainCategoryService.GetAllAsync(cancellationToken));
 
@@ -58,7 +92,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     public async Task<OrganizationDetails?> OrganizationAsync(
         string? id,
         string? customDomain,
-        [Service] IOrganizationService organizationService,
+        [Service]
+        IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await organizationService.GetByIdOrCustomDomainAsync(id, customDomain, false, cancellationToken));
 
@@ -66,7 +101,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     public async Task<OrganizationPublicDetails?> OrganizationPublicAsync(
         string? id,
         string? customDomain,
-        [Service] IOrganizationService organizationService,
+        [Service]
+        IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapToPublic(await organizationService.GetByIdOrCustomDomainPublicAsync(id, customDomain, cancellationToken));
 
@@ -74,8 +110,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<OrganizationDetails?> OrganizationByIdAsync(
-        [ID] string id,
-        [Service] IOrganizationService organizationService,
+        [ID]
+        string id,
+        [Service]
+        IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await organizationService.GetByIdOrCustomDomainAsync(id, null, true, cancellationToken));
 
@@ -87,7 +125,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         OrganizationWhereInput where,
         IEnumerable<OrganizationOrderInput>? orderBy,
-        [Service] IOrganizationService organizationService,
+        [Service]
+        IOrganizationService organizationService,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await organizationService.GetPaginatedOrganizationsAsync(
@@ -103,18 +142,20 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
     [UseResolverScope]
     public async Task<IEnumerable<MyOrganizationDetails>> MyOrganizationsAsync(
         IEnumerable<OrganizationType>? types,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IOrganizationService organizationService,
+        [Service]
+        ICachedCustomerService cachedCustomerService,
+        [Service]
+        IOrganizationService organizationService,
         CancellationToken cancellationToken)
     {
         if (!await cachedCustomerService.DoesCustomerExistAsync(cancellationToken))

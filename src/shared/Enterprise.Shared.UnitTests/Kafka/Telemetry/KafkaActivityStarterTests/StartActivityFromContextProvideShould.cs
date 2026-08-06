@@ -10,7 +10,8 @@ public class StartActivityFromContextProvideShould
     [Theory]
     [AutoFakeItEasyData]
     public void Use_producer_source_for_provide_type(
-        [Frozen] IActivityAccessor activityAccessor,
+        [Frozen]
+        IActivityAccessor activityAccessor,
         IActivitySource activitySource,
         KafkaActivityStarter starter)
     {
@@ -26,7 +27,8 @@ public class StartActivityFromContextProvideShould
     [Theory]
     [AutoFakeItEasyData]
     public void Pass_partition_tag_when_provided(
-        [Frozen] IActivityAccessor activityAccessor,
+        [Frozen]
+        IActivityAccessor activityAccessor,
         IActivitySource activitySource,
         KafkaActivityStarter starter)
     {

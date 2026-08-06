@@ -70,7 +70,7 @@ public class TemporalSignalOutboxWorkflowExecutor(
                 SignalType = signalType,
                 ExecutionArgs = executionArgs,
                 WorkflowSignalOptions = workflowSignalOptions,
-                Timestamp = timeProvider.GetUtcNow()
+                Timestamp = timeProvider.GetUtcNow(),
             });
 
             logger.LogInformation("Temporal workflow signal queued in outbox successfully. SignalType={SignalType}", signalType);

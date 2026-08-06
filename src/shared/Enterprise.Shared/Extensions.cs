@@ -97,7 +97,7 @@ public static class Extensions
             new HealthCheckOptions
             {
                 Predicate = registration =>
-                    registration.Tags.Contains(HealthCheck.Constants.LivenessTag) || registration.Name.Contains("self")
+                    registration.Tags.Contains(HealthCheck.Constants.LivenessTag) || registration.Name.Contains("self"),
             });
 
         app.UseHealthChecks(
@@ -105,7 +105,7 @@ public static class Extensions
             new HealthCheckOptions
             {
                 Predicate = registration =>
-                    registration.Tags.Contains(HealthCheck.Constants.ReadinessTag) || registration.Name.Contains("services")
+                    registration.Tags.Contains(HealthCheck.Constants.ReadinessTag) || registration.Name.Contains("services"),
             });
 
         app.UseWebSockets();
@@ -197,7 +197,8 @@ public static class Extensions
                     // (notably HotChocolate Fusion subgraph fan-out post v16).
                     httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
                     {
-                        PooledConnectionLifetime = TimeSpan.FromSeconds(90), PooledConnectionIdleTimeout = TimeSpan.FromSeconds(55)
+                        PooledConnectionLifetime = TimeSpan.FromSeconds(90),
+                        PooledConnectionIdleTimeout = TimeSpan.FromSeconds(55),
                     });
 
                     if (enableHttpResilience)
@@ -261,7 +262,10 @@ public static class Extensions
                 if (identityProvidersConfiguration.WorkOS is not null)
                 {
                     services
-                        .AddSingleton(new WorkOSClient(new WorkOSOptions { ApiKey = identityProvidersConfiguration.WorkOS.ApiKey }))
+                        .AddSingleton(new WorkOSClient(new WorkOSOptions
+                        {
+                            ApiKey = identityProvidersConfiguration.WorkOS.ApiKey,
+                        }))
                         .AddSingleton<IWorkOSTokenService, WorkOSTokenService>();
                 }
 
@@ -356,7 +360,14 @@ public static class Extensions
             services
                 .AddKeyedSingleton<JsonSerializerOptions>(
                     typeof(IHybridCacheSerializer<>),
-                    new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.IgnoreCycles, Converters = { new GeoJsonConverterFactory() } });
+                    new JsonSerializerOptions
+                    {
+                        ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                        Converters =
+                        {
+                            new GeoJsonConverterFactory(),
+                        },
+                    });
 
             return builder;
         }
@@ -428,7 +439,13 @@ public static class Extensions
                         {
                             problemDetails.Status = StatusCodes.Status400BadRequest;
                             problemDetails.Title = "One or more errors on input occurred.";
-                            return new BadRequestObjectResult(problemDetails) { ContentTypes = { "application/problem+json" } };
+                            return new BadRequestObjectResult(problemDetails)
+                            {
+                                ContentTypes =
+                                {
+                                    "application/problem+json",
+                                },
+                            };
                         }
 
                         // only semantic validation errors should return 422
@@ -438,14 +455,26 @@ public static class Extensions
                             problemDetails.Status = StatusCodes.Status422UnprocessableEntity;
                             problemDetails.Title = "One or more validation errors occurred.";
 
-                            return new UnprocessableEntityObjectResult(problemDetails) { ContentTypes = { "application/problem+json" } };
+                            return new UnprocessableEntityObjectResult(problemDetails)
+                            {
+                                ContentTypes =
+                                {
+                                    "application/problem+json",
+                                },
+                            };
                         }
 
                         // if one of the keys wasn't correctly found / couldn't be parsed
                         // we're dealing with null/unparsable input
                         problemDetails.Status = StatusCodes.Status400BadRequest;
                         problemDetails.Title = "One or more errors on input occurred.";
-                        return new BadRequestObjectResult(problemDetails) { ContentTypes = { "application/problem+json" } };
+                        return new BadRequestObjectResult(problemDetails)
+                        {
+                            ContentTypes =
+                            {
+                                "application/problem+json",
+                            },
+                        };
                     };
                 });
 

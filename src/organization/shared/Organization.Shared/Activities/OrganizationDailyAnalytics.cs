@@ -29,7 +29,7 @@ public class OrganizationDailyAnalytics(
             Id = randomHelper.Generate(),
             Count = organization.OrganizationMembers.Count(item => item.IsNotDeleted()),
             Date = startOfToday,
-            Organization = organization
+            Organization = organization,
         });
 
         _ = repositoryFactory.OrganizationRepository.Update(organization);

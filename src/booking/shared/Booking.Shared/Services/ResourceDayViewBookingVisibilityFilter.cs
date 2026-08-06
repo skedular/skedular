@@ -37,7 +37,10 @@ public class ResourceDayViewBookingVisibilityFilter : IResourceDayViewBookingVis
             return views;
         }
 
-        return views.Select(view => view with { BookingWindows = view.BookingWindows.Select(Redact).ToList() }).ToList();
+        return views.Select(view => view with
+        {
+            BookingWindows = view.BookingWindows.Select(Redact).ToList(),
+        }).ToList();
     }
 
     private static bool IsFullyVisible(string organizationType, IReadOnlyList<string> userRoles)
@@ -53,5 +56,10 @@ public class ResourceDayViewBookingVisibilityFilter : IResourceDayViewBookingVis
     }
 
     private static BookingWindow Redact(BookingWindow window) =>
-        window with { BookedByName = null, BookedByUserId = null, Notes = null };
+        window with
+        {
+            BookedByName = null,
+            BookedByUserId = null,
+            Notes = null,
+        };
 }

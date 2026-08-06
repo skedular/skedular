@@ -15,7 +15,10 @@ public class FilterByPaymentStatusesShould
             .Select(status => new MarketplaceBookingSubscription
             {
                 Status = MarketplaceBookingSubscriptionStatusConstants.Active,
-                MarketplaceBooking = new MarketplaceBooking { PaymentStatus = status }
+                MarketplaceBooking = new MarketplaceBooking
+                {
+                    PaymentStatus = status,
+                },
             })
             .AsQueryable();
 
@@ -50,7 +53,7 @@ public class FilterByPaymentStatusesShould
         var queryable = BuildQueryable([
             PaymentStatusConstants.Pending,
             PaymentStatusConstants.Confirmed,
-            PaymentStatusConstants.Rejected
+            PaymentStatusConstants.Rejected,
         ]);
 
         var result = queryable.AddSearchCriteria(CriteriaWith([]), null).ToList();
@@ -64,7 +67,7 @@ public class FilterByPaymentStatusesShould
         var queryable = BuildQueryable([
             PaymentStatusConstants.Pending,
             PaymentStatusConstants.Confirmed,
-            PaymentStatusConstants.Pending
+            PaymentStatusConstants.Pending,
         ]);
 
         var result = queryable
@@ -82,7 +85,7 @@ public class FilterByPaymentStatusesShould
             PaymentStatusConstants.Pending,
             PaymentStatusConstants.Confirmed,
             PaymentStatusConstants.Rejected,
-            PaymentStatusConstants.Expired
+            PaymentStatusConstants.Expired,
         ]);
 
         var result = queryable

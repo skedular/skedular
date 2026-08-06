@@ -20,6 +20,10 @@ public class ResolvePartialMarketplaceBooking
         await Workflow.ExecuteActivityAsync(
             (MarketplaceBookingFailureResolutionIntegrations activity) =>
                 activity.ResolveExpiredAsync(new ResolveExpiredMarketplaceBookingFailureInput(input.FailureId)),
-            new ActivityOptions { StartToCloseTimeout = TimeSpan.FromMinutes(10), TaskQueue = Workflow.Info.TaskQueue });
+            new ActivityOptions
+            {
+                StartToCloseTimeout = TimeSpan.FromMinutes(10),
+                TaskQueue = Workflow.Info.TaskQueue,
+            });
     }
 }

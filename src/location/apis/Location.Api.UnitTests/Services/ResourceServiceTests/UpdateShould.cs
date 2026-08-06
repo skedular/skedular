@@ -16,27 +16,52 @@ public class UpdateShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Exclude_The_Current_Resource_When_Checking_For_A_Duplicate_Name(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
         ResourceService sut,
         CancellationToken cancellationToken)
     {
         var existingLocation = new Shared.Database.Entities.Location
         {
-            Id = "location-1", OrganizationId = "org-1", Organization = new Organization { Id = "org-1" }
+            Id = "location-1",
+            OrganizationId = "org-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
         };
-        var existingResource = new Resource { Id = "resource-1", Location = existingLocation };
+        var existingResource = new Resource
+        {
+            Id = "resource-1",
+            Location = existingLocation,
+        };
         var resourceToUpdate = new Shared.Models.Resource
         {
             Id = "resource-1",
             Name = "Desk A",
-            Location = new Shared.Models.Location { Id = "location-1" },
-            Tags = [new OrganizationTag { Id = "tag-1" }]
+            Location = new Shared.Models.Location
+            {
+                Id = "location-1",
+            },
+            Tags =
+            [
+                new OrganizationTag
+                {
+                    Id = "tag-1",
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
@@ -44,7 +69,14 @@ public class UpdateShould
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => resourceRepository.GetByIdAsync("resource-1", cancellationToken)).Returns(existingResource);
         A.CallTo(() => entityMapper.MapTo(existingResource))
-            .Returns(new Shared.Models.Resource { Id = "resource-1", Location = new Shared.Models.Location { Id = "location-1" } });
+            .Returns(new Shared.Models.Resource
+            {
+                Id = "resource-1",
+                Location = new Shared.Models.Location
+                {
+                    Id = "location-1",
+                },
+            });
         A.CallTo(() => locationRepository.GetByIdAsync("location-1", cancellationToken)).Returns(existingLocation);
         A.CallTo(() => organizationOfferingService.IsMoreInteractionAllowedAsync("org-1", "customer-1", cancellationToken))
             .Returns(new ValueTask<bool>(true));
@@ -54,7 +86,10 @@ public class UpdateShould
             .Returns(true);
 
         await Should.ThrowAsync<ResourceWithSameNameExist>(() => sut.UpdateAsync(
-            new ResourcePatchRequest(resourceToUpdate, new HashSet<ResourcePatchField> { ResourcePatchField.Name }),
+            new ResourcePatchRequest(resourceToUpdate, new HashSet<ResourcePatchField>
+            {
+                ResourcePatchField.Name,
+            }),
             cancellationToken));
 
         A.CallTo(() => resourceRepository.ExistsActiveWithNameAsync("location-1", "Desk A", "resource-1", cancellationToken))

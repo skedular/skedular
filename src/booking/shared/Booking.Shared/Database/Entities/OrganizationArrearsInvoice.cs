@@ -44,7 +44,11 @@ public class OrganizationArrearsInvoiceConfiguration : IEntityTypeConfiguration<
 
         builder.HasIndex(item => item.OrganizationId);
         builder.HasIndex(item => item.CustomerId);
-        builder.HasIndex(item => new { item.OrganizationId, item.InvoiceNumber }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.OrganizationId,
+            item.InvoiceNumber,
+        }).IsUnique();
         builder.HasIndex(item => item.BillingPeriodStartInclusive);
         builder.HasIndex(item => item.BillingPeriodEndExclusive);
         builder.HasIndex(item => item.Currency);

@@ -17,7 +17,7 @@ public class UpfrontArrearsTriggerScenarioFixtureCustomizer : IFixtureCustomizer
             CustomDomain = $"acme-{Guid.CreateVersion7():N}",
             Type = OrganizationType.Private.ToOrganizationType(),
             BillingCycle = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycle(),
-            ContactEmail = "billing@acme.test"
+            ContactEmail = "billing@acme.test",
         };
 
         var customer = new Customer
@@ -27,10 +27,15 @@ public class UpfrontArrearsTriggerScenarioFixtureCustomizer : IFixtureCustomizer
             Name = "Taylor Example",
             GivenName = "Taylor",
             FamilyName = "Example",
-            Locale = "en-NZ"
+            Locale = "en-NZ",
         };
 
-        var product = new Product { Id = NewId(), Organization = organization, OrganizationId = organization.Id };
+        var product = new Product
+        {
+            Id = NewId(),
+            Organization = organization,
+            OrganizationId = organization.Id,
+        };
 
         var productVersion = new ProductVersion
         {
@@ -59,8 +64,8 @@ public class UpfrontArrearsTriggerScenarioFixtureCustomizer : IFixtureCustomizer
                     30,
                     1,
                     ProductPricingCancellationPolicyType.NotSet,
-                    [])
-            ]
+                    []),
+            ],
         };
 
         var booking = new Shared.Database.Entities.Booking
@@ -73,7 +78,7 @@ public class UpfrontArrearsTriggerScenarioFixtureCustomizer : IFixtureCustomizer
             Schedules = [],
             InvolvedCustomers = [customer],
             InvolvedOrganizations = [organization],
-            CreatedByCustomer = customer
+            CreatedByCustomer = customer,
         };
 
         var marketplaceBooking = new MarketplaceBooking
@@ -93,7 +98,7 @@ public class UpfrontArrearsTriggerScenarioFixtureCustomizer : IFixtureCustomizer
             TotalAmount = 125m,
             Currency = Currency.Nzd.ToCurrency(),
             InvoiceEmailList = [],
-            BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode()
+            BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
         };
 
         booking.MarketplaceBooking = marketplaceBooking;

@@ -12,5 +12,5 @@ public record OrganizationStripeConnectAccountOrder(OrderDirection Direction, Or
 
 public enum OrganizationStripeConnectAccountOrderField
 {
-    Name
+    Name,
 }

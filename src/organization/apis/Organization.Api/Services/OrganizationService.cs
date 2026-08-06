@@ -144,7 +144,7 @@ public class OrganizationService(
                 Role = OrganizationMemberRoleConstants.Owner,
                 Status = OrganizationMemberStatusConstants.Active,
                 Customer = customerEntity,
-                Organization = organizationEntity
+                Organization = organizationEntity,
             });
         }
 
@@ -158,7 +158,7 @@ public class OrganizationService(
             Start = now,
             End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
             AutoRenew = true,
-            Currency = finalOfferingCode.GetOffering().Currency.ToCurrency()
+            Currency = finalOfferingCode.GetOffering().Currency.ToCurrency(),
         };
         organizationOffering.ApplyOfferingTemplate(finalOfferingCode);
 
@@ -438,7 +438,10 @@ public class OrganizationService(
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         // Ensure we do not return another customer organization by forcing CustomerId as search criteria
-        searchCriteria = searchCriteria with { CustomerId = customerId };
+        searchCriteria = searchCriteria with
+        {
+            CustomerId = customerId,
+        };
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.OrganizationRepository.GetPaginatedOrganizationsUntrackedAsync(
             paginationInputParam,
@@ -462,7 +465,7 @@ public class OrganizationService(
             OrganizationType.Private => OfferingCode.FreeTierV1,
             OrganizationType.Marketplace => OfferingCode.SpacesFreeTierV1,
             OrganizationType.Host => OfferingCode.HostStandardV1,
-            _ => OfferingCode.FreeTierV1
+            _ => OfferingCode.FreeTierV1,
         };
 
     private async Task<Shared.Models.Organization> UpdateInternalAsync(

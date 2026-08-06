@@ -38,7 +38,7 @@ public class CustomProtobufSerializer<T> : ISerializer<T> where T : class, IMess
                 NormalizeSchemas = true,
                 UseLatestVersion = kafkaConfiguration.SchemaRegistry?.UseLatestVersion ?? false,
                 SubjectNameStrategy = SubjectNameStrategy.Topic,
-                SkipKnownTypes = true
+                SkipKnownTypes = true,
             });
     }
 

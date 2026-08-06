@@ -6,11 +6,15 @@ namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 [GraphQLName("MarketplaceBookingSubscriptionPayload")]
 public class MarketplaceBookingSubscriptionPayload
 {
-    [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
+    [GraphQLName("clientMutationId")]
+    public string? ClientMutationId { get; set; }
 
     [GraphQLName("marketplaceBookingSubscription")]
     public MarketplaceBookingSubscriptionDetails? MarketplaceBookingSubscription { get; set; }
 
-    [GraphQLName("accessError")] public SpacesAccessErrorDetails? AccessError { get; set; }
-    [GraphQLName("cancellationError")] public CancellationErrorDetails? CancellationError { get; set; }
+    [GraphQLName("accessError")]
+    public SpacesAccessErrorDetails? AccessError { get; set; }
+
+    [GraphQLName("cancellationError")]
+    public CancellationErrorDetails? CancellationError { get; set; }
 }

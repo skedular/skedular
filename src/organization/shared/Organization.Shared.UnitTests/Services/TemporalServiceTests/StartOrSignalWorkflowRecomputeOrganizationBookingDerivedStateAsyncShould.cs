@@ -13,9 +13,12 @@ public class StartOrSignalWorkflowRecomputeOrganizationBookingDerivedStateAsyncS
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Workflow_With_Signal_With_Start_And_Correct_Options(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
+        [Frozen]
+        TemporalConfiguration temporalConfiguration,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
         WorkflowHandle<RecomputeOrganizationBookingDerivedState> workflowHandle,
         TemporalService sut,
         RecomputeOrganizationBookingDerivedStateInput args,

@@ -13,14 +13,15 @@ public class BuildSeekPredicateShould
         var fields = new List<KeysetPaginationField<TestEntity>>
         {
             KeysetPaginationField<TestEntity>.Create(nameof(TestEntity.UploadedAt), item => item.UploadedAt, OrderDirection.Descending),
-            KeysetPaginationField<TestEntity>.Create(nameof(EntityBase.Id), item => item.Id, OrderDirection.Ascending)
+            KeysetPaginationField<TestEntity>.Create(nameof(EntityBase.Id), item => item.Id, OrderDirection.Ascending),
         };
 
         var payload = new KeysetCursorPayload(
             "img-1",
             new Dictionary<string, string?>
             {
-                [nameof(TestEntity.UploadedAt)] = "\"2026-04-20T05:01:54.5616531+00:00\"", [nameof(EntityBase.Id)] = null
+                [nameof(TestEntity.UploadedAt)] = "\"2026-04-20T05:01:54.5616531+00:00\"",
+                [nameof(EntityBase.Id)] = null,
             });
 
         var method = typeof(PaginationExtensions)

@@ -38,7 +38,12 @@ public class AccountingPaymentEventConfiguration : IEntityTypeConfiguration<Acco
         builder.HasOne(item => item.Organization).WithMany().HasForeignKey(item => item.OrganizationId);
 
         builder.HasIndex(item => item.OrganizationId);
-        builder.HasIndex(item => new { item.OrganizationId, item.Provider, item.ExternalPaymentId }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.OrganizationId,
+            item.Provider,
+            item.ExternalPaymentId,
+        }).IsUnique();
         builder.HasIndex(item => item.ExternalInvoiceId);
         builder.HasIndex(item => item.ProcessedAt);
     }

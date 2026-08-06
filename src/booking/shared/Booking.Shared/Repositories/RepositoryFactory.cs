@@ -13,6 +13,7 @@ public interface IRepositoryFactory
     IRecurringBookingRepository RecurringBookingRepository { get; }
     IBookingRepository BookingRepository { get; }
     IMarketplaceBookingRepository MarketplaceBookingRepository { get; }
+    IMarketplacePurchaseHistoryRepository MarketplacePurchaseHistoryRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
     IOrganizationRepository OrganizationRepository { get; }
@@ -55,6 +56,7 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         RecurringBookingRepository = new RecurringBookingRepository(_dbContext, timeProvider);
         BookingRepository = new BookingRepository(_dbContext, timeProvider);
         MarketplaceBookingRepository = new MarketplaceBookingRepository(_dbContext, timeProvider);
+        MarketplacePurchaseHistoryRepository = new MarketplacePurchaseHistoryRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
@@ -92,6 +94,7 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
     public IRecurringBookingRepository RecurringBookingRepository { get; }
     public IBookingRepository BookingRepository { get; }
     public IMarketplaceBookingRepository MarketplaceBookingRepository { get; }
+    public IMarketplacePurchaseHistoryRepository MarketplacePurchaseHistoryRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }

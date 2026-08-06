@@ -18,28 +18,56 @@ public class RemovePaymentMethodAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Publish_Organization_When_Payment_Method_Is_Removed(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationStripePaymentMethodRepository organizationStripePaymentMethodRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] IRetrievable<PaymentMethod, PaymentMethodGetOptions> paymentMethodRetrievableService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationStripePaymentMethodRepository organizationStripePaymentMethodRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        IRetrievable<PaymentMethod, PaymentMethodGetOptions> paymentMethodRetrievableService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         PaymentService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Shared.Database.Entities.Organization { Id = "org-1", CustomDomain = "acme", Name = "Acme" };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Acme",
+        };
         var paymentMethod = new PaymentMethodEntity
         {
-            Id = "payment-method-1", PaymentMethodId = "stripe-payment-method-1", Organization = organization
+            Id = "payment-method-1",
+            PaymentMethodId = "stripe-payment-method-1",
+            Organization = organization,
         };
-        var customer = new CustomerModel { Id = "customer-1" };
-        var customerEntity = new Customer { Id = customer.Id };
-        var mappedOrganization = new Shared.Models.Organization { Id = organization.Id, Name = organization.Name };
+        var customer = new CustomerModel
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Customer
+        {
+            Id = customer.Id,
+        };
+        var mappedOrganization = new Shared.Models.Organization
+        {
+            Id = organization.Id,
+            Name = organization.Name,
+        };
 
         organization.OrganizationStripePaymentMethods.Add(paymentMethod);
 

@@ -6,7 +6,7 @@ public enum MarketplaceBookingSubscriptionStatus
     Cancelled,
     Expired,
     RenewalFailed,
-    Paused
+    Paused,
 }
 
 public static class MarketplaceBookingSubscriptionStatusConstants
@@ -31,7 +31,7 @@ public static class MarketplaceBookingSubscriptionStatusExtensions
                 MarketplaceBookingSubscriptionStatusConstants.RenewalFailed => MarketplaceBookingSubscriptionStatus.RenewalFailed,
                 MarketplaceBookingSubscriptionStatusConstants.Paused => MarketplaceBookingSubscriptionStatus.Paused,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 
@@ -46,7 +46,7 @@ public static class MarketplaceBookingSubscriptionStatusExtensions
                 MarketplaceBookingSubscriptionStatus.RenewalFailed => MarketplaceBookingSubscriptionStatusConstants.RenewalFailed,
                 MarketplaceBookingSubscriptionStatus.Paused => MarketplaceBookingSubscriptionStatusConstants.Paused,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
 
         public string ToMarketplaceBookingSubscriptionStatusName() =>
@@ -58,7 +58,7 @@ public static class MarketplaceBookingSubscriptionStatusExtensions
                 MarketplaceBookingSubscriptionStatus.RenewalFailed => "Renewal failed",
                 MarketplaceBookingSubscriptionStatus.Paused => "Paused",
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 }

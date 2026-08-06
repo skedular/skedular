@@ -32,13 +32,21 @@ public class ScheduleRenewOrganizationOffering
         {
             StartToCloseTimeout = TimeSpan.FromSeconds(30),
             TaskQueue = Workflow.Info.TaskQueue,
-            RetryPolicy = new RetryPolicy { MaximumAttempts = 6, MaximumInterval = TimeSpan.FromHours(4) }
+            RetryPolicy = new RetryPolicy
+            {
+                MaximumAttempts = 6,
+                MaximumInterval = TimeSpan.FromHours(4),
+            },
         };
         var renewalActivityOptions = new ActivityOptions
         {
             StartToCloseTimeout = TimeSpan.FromSeconds(30),
             TaskQueue = Workflow.Info.TaskQueue,
-            RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+            RetryPolicy = new RetryPolicy
+            {
+                MaximumAttempts = 3,
+                MaximumInterval = TimeSpan.FromSeconds(5),
+            },
         };
 
         if (args.RenewBeforePayment)

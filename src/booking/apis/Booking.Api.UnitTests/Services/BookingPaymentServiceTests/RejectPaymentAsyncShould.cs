@@ -25,21 +25,36 @@ public class RejectPaymentAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Release_Resources_And_Signal_The_Card_Workflow_When_Payment_Is_Rejected(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
-        [Frozen] IGraphQlTopicEventSender graphQlTopicEventSender,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IProductVersionRepository productVersionRepository,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IBookingOutboxPublisher bookingOutboxPublisher,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
+        [Frozen]
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IProductVersionRepository productVersionRepository,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
         BookingPaymentService sut,
         string bookingId,
         string customerId,
@@ -48,21 +63,38 @@ public class RejectPaymentAsyncShould
     {
         var marketplaceBooking = new MarketplaceBookingEntity
         {
-            ProductVersion = new ProductVersionEntity { Id = "product-version-1" },
+            ProductVersion = new ProductVersionEntity
+            {
+                Id = "product-version-1",
+            },
             PaymentMethod = PaymentMethod.Card.ToPaymentMethod(),
-            PaymentStatus = PaymentStatus.Pending.ToPaymentStatus()
+            PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
         };
         var existingBooking = new BookingEntity
         {
-            Id = bookingId, Channel = BookingChannel.Marketplace.ToBookingChannel(), MarketplaceBooking = marketplaceBooking
+            Id = bookingId,
+            Channel = BookingChannel.Marketplace.ToBookingChannel(),
+            MarketplaceBooking = marketplaceBooking,
         };
         var productVersion = new ProductVersionEntity
         {
             Id = marketplaceBooking.ProductVersion.Id,
-            Product = new ProductEntity { Organization = new OrganizationEntity { Id = organizationId } }
+            Product = new ProductEntity
+            {
+                Organization = new OrganizationEntity
+                {
+                    Id = organizationId,
+                },
+            },
         };
-        var organization = new OrganizationEntity { Id = organizationId };
-        var mappedBooking = new Shared.Models.Booking { Id = bookingId };
+        var organization = new OrganizationEntity
+        {
+            Id = organizationId,
+        };
+        var mappedBooking = new Shared.Models.Booking
+        {
+            Id = bookingId,
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customerId);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);

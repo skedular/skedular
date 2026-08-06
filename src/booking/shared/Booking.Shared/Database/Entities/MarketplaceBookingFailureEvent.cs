@@ -34,6 +34,11 @@ public class MarketplaceBookingFailureEventConfiguration : IEntityTypeConfigurat
 
         builder.HasOne(item => item.MarketplaceBookingFailure).WithMany(item => item.Events).HasForeignKey(item => item.MarketplaceBookingFailureId);
 
-        builder.HasIndex(item => new { item.MarketplaceBookingFailureId, item.OccurredAt, item.CreatedAt });
+        builder.HasIndex(item => new
+        {
+            item.MarketplaceBookingFailureId,
+            item.OccurredAt,
+            item.CreatedAt,
+        });
     }
 }

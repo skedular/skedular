@@ -10,7 +10,13 @@ public class GetBillingAmountForEarlyBirdShould
     [Fact]
     public void Return_Zero_Despite_Persisted_Price()
     {
-        var offering = new OrganizationOffering { Code = OfferingCode.EarlyBirdV1, FixedPrice = 10_000, UnitPrice = 500, DiscountPercentage = 0 };
+        var offering = new OrganizationOffering
+        {
+            Code = OfferingCode.EarlyBirdV1,
+            FixedPrice = 10_000,
+            UnitPrice = 500,
+            DiscountPercentage = 0,
+        };
 
         offering.GetBillingAmount().ShouldBe(0);
     }

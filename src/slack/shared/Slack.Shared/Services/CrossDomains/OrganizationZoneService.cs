@@ -39,14 +39,20 @@ public class OrganizationZoneService(
     IGrpcMapper grpcMapper,
     IMemoryCache memoryCache) : IOrganizationZoneService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<OrganizationZone> AdminGetAsync(string zoneId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(zoneId),
             async _ => grpcMapper.MapTo(
                 await organizationZonesServiceClient.Admin_GetZoneAsync(
-                    new Admin_GetZoneInput { Id = zoneId },
+                    new Admin_GetZoneInput
+                    {
+                        Id = zoneId,
+                    },
                     organizationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -61,7 +67,7 @@ public class OrganizationZoneService(
                     Name = organizationZone.Name,
                     Description = organizationZone.Description,
                     Color = organizationZone.Color,
-                    OrganizationId = organizationZone.Organization.Id
+                    OrganizationId = organizationZone.Organization.Id,
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -81,7 +87,12 @@ public class OrganizationZoneService(
                     Name = organizationZone.Name,
                     Description = organizationZone.Description,
                     Color = organizationZone.Color,
-                    FieldsToUpdate = { ZonePatchField.Name, ZonePatchField.Description, ZonePatchField.Color }
+                    FieldsToUpdate =
+                    {
+                        ZonePatchField.Name,
+                        ZonePatchField.Description,
+                        ZonePatchField.Color,
+                    },
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -94,7 +105,10 @@ public class OrganizationZoneService(
     public async Task RemoveAsync(string workspaceMemberId, string zoneId, CancellationToken cancellationToken)
     {
         await organizationZonesServiceClient.RemoveZoneAsync(
-            new RemoveZoneInput { Id = zoneId },
+            new RemoveZoneInput
+            {
+                Id = zoneId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
 
@@ -108,7 +122,10 @@ public class OrganizationZoneService(
             CreateKeyById(zoneId),
             async _ => grpcMapper.MapTo(
                 await organizationZonesServiceClient.GetZoneAsync(
-                    new GetZoneInput { Id = zoneId },
+                    new GetZoneInput
+                    {
+                        Id = zoneId,
+                    },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -127,10 +144,17 @@ public class OrganizationZoneService(
                     After = string.Empty,
                     Before = string.Empty,
                     Last = ((int?)null).ToNullInt(),
-                    Where = new ZoneWhereInput { OrganizationId = organizationId }
+                    Where = new ZoneWhereInput
+                    {
+                        OrganizationId = organizationId,
+                    },
                 };
 
-                getPaginatedZonesInput.OrderBy.Add(new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.Name });
+                getPaginatedZonesInput.OrderBy.Add(new ZoneOrderInput
+                {
+                    Direction = OrderDirection.Ascending,
+                    Field = ZoneOrderField.Name,
+                });
 
                 var connection = await organizationZonesServiceClient.GetPaginatedZonesAsync(
                     getPaginatedZonesInput,
@@ -144,10 +168,10 @@ public class OrganizationZoneService(
                         StartCursor = connection.PageInfo.StartCursor,
                         EndCursor = connection.PageInfo.EndCursor,
                         HasNextPage = connection.PageInfo.HasNextPage,
-                        HasPreviousPage = connection.PageInfo.HasPreviousPage
+                        HasPreviousPage = connection.PageInfo.HasPreviousPage,
                     },
                     TotalCount = connection.TotalCount,
-                    Edges = connection.Edges.Select(item => new OrganizationZoneEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
+                    Edges = connection.Edges.Select(item => new OrganizationZoneEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList(),
                 };
 
                 Cache(result.Edges.Select(item => item.Node).ToList());
@@ -173,10 +197,18 @@ public class OrganizationZoneService(
             After = after.ToSafeString(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new ZoneWhereInput { OrganizationId = organizationId, NameContains = nameContains.ToSafeString() }
+            Where = new ZoneWhereInput
+            {
+                OrganizationId = organizationId,
+                NameContains = nameContains.ToSafeString(),
+            },
         };
 
-        getPaginatedZonesInput.OrderBy.Add(new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.Name });
+        getPaginatedZonesInput.OrderBy.Add(new ZoneOrderInput
+        {
+            Direction = OrderDirection.Ascending,
+            Field = ZoneOrderField.Name,
+        });
 
         var connection = await organizationZonesServiceClient.GetPaginatedZonesAsync(
             getPaginatedZonesInput,
@@ -190,10 +222,10 @@ public class OrganizationZoneService(
                 StartCursor = connection.PageInfo.StartCursor,
                 EndCursor = connection.PageInfo.EndCursor,
                 HasNextPage = connection.PageInfo.HasNextPage,
-                HasPreviousPage = connection.PageInfo.HasPreviousPage
+                HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges.Select(item => new OrganizationZoneEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
+            Edges = connection.Edges.Select(item => new OrganizationZoneEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList(),
         };
 
         Cache(result.Edges.Select(item => item.Node).ToList());

@@ -20,7 +20,7 @@ public enum OrganizationPatchField
     IndustrySubCategories,
     FeatureImages,
     MarketplaceListingMetadata,
-    PhysicalAddress
+    PhysicalAddress,
 }
 
 public record OrganizationPatchRequest(

@@ -37,7 +37,11 @@ public class ImportShould
         CancellationToken cancellationToken)
     {
         // Two rows with quantities that sum to 101
-        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 51, [], [], []), new("type-tag-2", "Room", 50, [], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("type-tag-1", "Desk", 51, [], [], []),
+            new("type-tag-2", "Room", 50, [], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         await Should.ThrowAsync<ArgumentException>(() => sut.ImportAsync(input, cancellationToken));
@@ -48,7 +52,10 @@ public class ImportShould
     public async Task Return_Failure_For_Row_With_Quantity_Less_Than_1(BulkAddResourcesService sut, CancellationToken cancellationToken)
     {
         // All rows have invalid quantity → service returns before location fetch; no mocks needed
-        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 0, [], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("type-tag-1", "Desk", 0, [], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         var results = await sut.ImportAsync(input, cancellationToken);
@@ -61,17 +68,28 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Failure_For_Row_With_Invalid_Resource_Type_Tag(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
-        var existingLocation = new LocationEntity { Id = "location-1", OrganizationId = "org-1" };
+        var existingLocation = new LocationEntity
+        {
+            Id = "location-1",
+            OrganizationId = "org-1",
+        };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
@@ -82,7 +100,10 @@ public class ImportShould
             A<IReadOnlyList<string>>._, "org-1", null, cancellationToken)).Returns([]);
         SetupAuth(cachedCustomerService, organizationAuthorizationService, organizationOfferingService, cancellationToken);
 
-        var rows = new List<BulkAddResourceRow> { new("invalid-type-tag", "Desk", 1, [], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("invalid-type-tag", "Desk", 1, [], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         var results = await sut.ImportAsync(input, cancellationToken);
@@ -94,18 +115,34 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Failure_When_A_Custom_Tag_Is_Invalid(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
         BulkAddResourcesService sut,
         CancellationToken cancellationToken)
     {
-        var existingLocation = new LocationEntity { Id = "location-1", OrganizationId = "org-1" };
-        var validTypeTag = new OrganizationTagEntity { Id = "type-tag-1", Type = "RESOURCE_DESK", Name = "Desk" };
+        var existingLocation = new LocationEntity
+        {
+            Id = "location-1",
+            OrganizationId = "org-1",
+        };
+        var validTypeTag = new OrganizationTagEntity
+        {
+            Id = "type-tag-1",
+            Type = "RESOURCE_DESK",
+            Name = "Desk",
+        };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
@@ -121,7 +158,10 @@ public class ImportShould
         A.CallTo(() => resourceRepository.GetActiveNamesByLocationIdAsync("location-1", cancellationToken)).Returns([]);
         SetupAuth(cachedCustomerService, organizationAuthorizationService, organizationOfferingService, cancellationToken);
 
-        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 1, ["bad-custom-tag"], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("type-tag-1", "Desk", 1, ["bad-custom-tag"], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         var results = await sut.ImportAsync(input, cancellationToken);
@@ -135,17 +175,28 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Generate_Name_With_BaseName_And_Incrementing_Suffix(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
@@ -157,7 +208,10 @@ public class ImportShould
             dbContextTransaction,
             cancellationToken);
 
-        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 3, [], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("type-tag-1", "Desk", 3, [], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         var results = await sut.ImportAsync(input, cancellationToken);
@@ -170,17 +224,28 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Use_Resource_Type_Name_As_BaseName_When_BaseName_Is_Empty(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
@@ -194,7 +259,7 @@ public class ImportShould
 
         var rows = new List<BulkAddResourceRow>
         {
-            new("type-tag-1", null, 2, [], [], []) // no base name
+            new("type-tag-1", null, 2, [], [], []), // no base name
         };
         var input = new BulkAddResources("location-1", rows);
 
@@ -208,17 +273,28 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Append_After_Highest_Existing_Suffix_Rather_Than_Filling_Gaps(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
@@ -231,7 +307,10 @@ public class ImportShould
             dbContextTransaction,
             cancellationToken);
 
-        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 3, [], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("type-tag-1", "Desk", 3, [], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         var results = await sut.ImportAsync(input, cancellationToken);
@@ -244,17 +323,28 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Avoid_Within_Batch_Name_Collisions_Across_Rows(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
@@ -267,7 +357,11 @@ public class ImportShould
             dbContextTransaction,
             cancellationToken);
 
-        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 2, [], [], []), new("type-tag-1", "Desk", 1, [], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("type-tag-1", "Desk", 2, [], [], []),
+            new("type-tag-1", "Desk", 1, [], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         var results = await sut.ImportAsync(input, cancellationToken);
@@ -282,17 +376,28 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Avoid_Cross_Row_Name_Collision_When_Existing_Names_Are_Present(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
@@ -306,7 +411,11 @@ public class ImportShould
             dbContextTransaction,
             cancellationToken);
 
-        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 2, [], [], []), new("type-tag-1", "Desk", 2, [], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("type-tag-1", "Desk", 2, [], [], []),
+            new("type-tag-1", "Desk", 2, [], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         var results = await sut.ImportAsync(input, cancellationToken);
@@ -326,26 +435,59 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_Valid_Rows_And_Return_Failure_For_Invalid_Rows(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
-        var existingLocation = new LocationEntity { Id = "location-1", OrganizationId = "org-1" };
-        var validTypeTag = new OrganizationTagEntity { Id = "type-tag-1", Type = "RESOURCE_DESK", Name = "Desk" };
-        var locationModel = new Shared.Models.Location { Id = "location-1" };
-        var resourceEntity = new ResourceEntity { Id = "res-1", Name = "Desk-1", Location = existingLocation };
-        var resourceModel = new Resource { Id = "res-1", Name = "Desk-1", Location = locationModel };
+        var existingLocation = new LocationEntity
+        {
+            Id = "location-1",
+            OrganizationId = "org-1",
+        };
+        var validTypeTag = new OrganizationTagEntity
+        {
+            Id = "type-tag-1",
+            Type = "RESOURCE_DESK",
+            Name = "Desk",
+        };
+        var locationModel = new Shared.Models.Location
+        {
+            Id = "location-1",
+        };
+        var resourceEntity = new ResourceEntity
+        {
+            Id = "res-1",
+            Name = "Desk-1",
+            Location = existingLocation,
+        };
+        var resourceModel = new Resource
+        {
+            Id = "res-1",
+            Name = "Desk-1",
+            Location = locationModel,
+        };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
@@ -372,7 +514,7 @@ public class ImportShould
         var rows = new List<BulkAddResourceRow>
         {
             new("type-tag-1", "Desk", 0, [], [], []), // invalid
-            new("type-tag-1", "Desk", 1, [], [], []) // valid
+            new("type-tag-1", "Desk", 1, [], [], []), // valid
         };
         var input = new BulkAddResources("location-1", rows);
 
@@ -394,18 +536,30 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Invalidate_Location_Cache_After_Successful_Import(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedLocationService cachedLocationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedLocationService cachedLocationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
@@ -417,7 +571,10 @@ public class ImportShould
             dbContextTransaction,
             cancellationToken);
 
-        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 1, [], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("type-tag-1", "Desk", 1, [], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         await sut.ImportAsync(input, cancellationToken);
@@ -429,18 +586,30 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Not_Invalidate_Location_Cache_When_All_Rows_Are_Invalid(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedLocationService cachedLocationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedLocationService cachedLocationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
@@ -453,7 +622,10 @@ public class ImportShould
             cancellationToken);
 
         // All rows have quantity < 1 — nothing will be written
-        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 0, [], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("type-tag-1", "Desk", 0, [], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         await sut.ImportAsync(input, cancellationToken);
@@ -467,18 +639,30 @@ public class ImportShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Batch_Received_And_Completion_Summary(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ILogger<BulkAddResourcesService> logger,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ILogger<BulkAddResourcesService> logger,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         BulkAddResourcesService sut,
         IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
@@ -490,7 +674,10 @@ public class ImportShould
             dbContextTransaction,
             cancellationToken);
 
-        var rows = new List<BulkAddResourceRow> { new("type-tag-1", "Desk", 1, [], [], []) };
+        var rows = new List<BulkAddResourceRow>
+        {
+            new("type-tag-1", "Desk", 1, [], [], []),
+        };
         var input = new BulkAddResources("location-1", rows);
 
         await sut.ImportAsync(input, cancellationToken);
@@ -529,10 +716,22 @@ public class ImportShould
         IDbContextTransaction dbContextTransaction,
         CancellationToken cancellationToken)
     {
-        var existingLocation = new LocationEntity { Id = "location-1", OrganizationId = "org-1" };
-        var validTypeTag = new OrganizationTagEntity { Id = "type-tag-1", Type = "RESOURCE_DESK", Name = typeTagName };
+        var existingLocation = new LocationEntity
+        {
+            Id = "location-1",
+            OrganizationId = "org-1",
+        };
+        var validTypeTag = new OrganizationTagEntity
+        {
+            Id = "type-tag-1",
+            Type = "RESOURCE_DESK",
+            Name = typeTagName,
+        };
         var fakeTransaction = dbContextTransaction;
-        var locationModel = new Shared.Models.Location { Id = "location-1" };
+        var locationModel = new Shared.Models.Location
+        {
+            Id = "location-1",
+        };
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
@@ -555,7 +754,12 @@ public class ImportShould
             .ReturnsLazily(call =>
             {
                 var r = call.GetArgument<Resource>(0)!;
-                return new ResourceEntity { Id = r.Id, Name = r.Name, Location = existingLocation };
+                return new ResourceEntity
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Location = existingLocation,
+                };
             });
 
         A.CallTo(() => resourceRepository.Add(A<ResourceEntity>._))
@@ -565,7 +769,12 @@ public class ImportShould
             .ReturnsLazily(call =>
             {
                 var entity = call.GetArgument<ResourceEntity>(0)!;
-                return new Resource { Id = entity.Id, Name = entity.Name, Location = locationModel };
+                return new Resource
+                {
+                    Id = entity.Id,
+                    Name = entity.Name,
+                    Location = locationModel,
+                };
             });
 
         SetupAuth(cachedCustomerService, organizationAuthorizationService, organizationOfferingService, cancellationToken);

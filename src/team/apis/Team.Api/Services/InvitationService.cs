@@ -105,7 +105,7 @@ public class InvitationService(
                     Status = InvitationStatusConstants.Pending,
                     Role = TeamMemberRoleConstants.Member,
                     CreatedBy = customer,
-                    Invitee = matchingCustomerByEmail
+                    Invitee = matchingCustomerByEmail,
                 })
                 : repositoryFactory.JoinInvitationRepository.Update(existingJoinInvitation);
 
@@ -145,7 +145,7 @@ public class InvitationService(
                 Role = joinInvitation.Role,
                 Status = TeamMemberStatusConstants.Active,
                 Team = team,
-                Customer = customer
+                Customer = customer,
             });
 
             teamOutboxPublisher.PublishTeams([entityMapper.MapTo(team)], repositoryFactory.UnitOfWork);
@@ -241,7 +241,10 @@ public class InvitationService(
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         // Ensure we do not return another customer join invitation by forcing CustomerId as search criteria
-        searchCriteria = searchCriteria with { InviteeId = customerId };
+        searchCriteria = searchCriteria with
+        {
+            InviteeId = customerId,
+        };
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.JoinInvitationRepository.GetPaginatedJoinInvitationsUntrackedAsync(
             paginationInputParam,

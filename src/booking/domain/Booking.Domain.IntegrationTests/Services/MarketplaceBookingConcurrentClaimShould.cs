@@ -23,7 +23,11 @@ public class MarketplaceBookingConcurrentClaimShould(
         CancellationToken cancellationToken)
     {
         var from = new DateTimeOffset(2026, 7, 26, 9, 0, 0, TimeSpan.Zero);
-        var resource = repositoryFactory.ResourceRepository.Add(new ResourceEntity { Id = resourceId, Capacity = 1 });
+        var resource = repositoryFactory.ResourceRepository.Add(new ResourceEntity
+        {
+            Id = resourceId,
+            Capacity = 1,
+        });
         repositoryFactory.ResourceBookingSlotRepository.AddRange([
             new ResourceBookingSlotEntity
             {
@@ -31,8 +35,8 @@ public class MarketplaceBookingConcurrentClaimShould(
                 Resource = resource,
                 ResourceId = resourceId,
                 Start = from,
-                Available = true
-            }
+                Available = true,
+            },
         ]);
         AddBooking(firstBookingId, from);
         AddBooking(secondBookingId, from);
@@ -54,7 +58,7 @@ public class MarketplaceBookingConcurrentClaimShould(
         Until = from.AddHours(1),
         Category = BookingCategory.WorkingFromCoworkingSpace.ToBookingCategory(),
         Channel = BookingChannel.Marketplace.ToBookingChannel(),
-        Schedules = []
+        Schedules = [],
     });
 
     private async Task<ResourceSlotClaimResult> TryClaimAsync(

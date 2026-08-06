@@ -19,15 +19,24 @@ public class DispatchShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Persist_A_Failed_Email_Then_Fail_The_Activity_For_Temporal_Retry(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingFailureRepository failureRepository,
-        [Frozen] IMarketplaceBookingFailureDeliveryRepository deliveryRepository,
-        [Frozen] IMarketplaceBookingFailureEventRepository eventRepository,
-        [Frozen] IMarketplaceBookingFailureNotificationService notificationService,
-        [Frozen] IEmailService emailService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingFailureRepository failureRepository,
+        [Frozen]
+        IMarketplaceBookingFailureDeliveryRepository deliveryRepository,
+        [Frozen]
+        IMarketplaceBookingFailureEventRepository eventRepository,
+        [Frozen]
+        IMarketplaceBookingFailureNotificationService notificationService,
+        [Frozen]
+        IEmailService emailService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingFailureNotificationIntegrations sut)
     {
         var environment = new ActivityEnvironment();
@@ -37,14 +46,14 @@ public class DispatchShould
             Audience = MarketplaceBookingFailureDeliveryAudienceConstants.Customer,
             Channel = MarketplaceBookingFailureDeliveryChannelConstants.Email,
             RecipientEmail = "customer@example.test",
-            Status = MarketplaceBookingFailureDeliveryStatusConstants.Pending
+            Status = MarketplaceBookingFailureDeliveryStatusConstants.Pending,
         };
         var failure = new MarketplaceBookingFailure
         {
             Id = "failure-1",
             Category = MarketplaceBookingFailureCategoryConstants.AvailabilityConflict,
             Scope = MarketplaceBookingFailureScopeConstants.OneTimeBooking,
-            Deliveries = [delivery]
+            Deliveries = [delivery],
         };
 
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);
@@ -76,14 +85,22 @@ public class DispatchShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Mark_Existing_InApplication_Delivery_Sent_Without_Creating_A_Duplicate(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingFailureRepository failureRepository,
-        [Frozen] IMarketplaceBookingFailureDeliveryRepository deliveryRepository,
-        [Frozen] IMarketplaceBookingFailureEventRepository eventRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<MarketplaceBookingFailureNotificationIntegrations> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingFailureRepository failureRepository,
+        [Frozen]
+        IMarketplaceBookingFailureDeliveryRepository deliveryRepository,
+        [Frozen]
+        IMarketplaceBookingFailureEventRepository eventRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<MarketplaceBookingFailureNotificationIntegrations> logger,
         MarketplaceBookingFailureNotificationIntegrations sut)
     {
         var environment = new ActivityEnvironment();
@@ -92,14 +109,14 @@ public class DispatchShould
             Id = "delivery-1",
             Audience = MarketplaceBookingFailureDeliveryAudienceConstants.Customer,
             Channel = MarketplaceBookingFailureDeliveryChannelConstants.InApplication,
-            Status = MarketplaceBookingFailureDeliveryStatusConstants.Pending
+            Status = MarketplaceBookingFailureDeliveryStatusConstants.Pending,
         };
         var failure = new MarketplaceBookingFailure
         {
             Id = "failure-1",
             Category = MarketplaceBookingFailureCategoryConstants.AvailabilityConflict,
             Scope = MarketplaceBookingFailureScopeConstants.RecurringOccurrence,
-            Deliveries = [delivery]
+            Deliveries = [delivery],
         };
 
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);

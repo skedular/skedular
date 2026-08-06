@@ -8,7 +8,7 @@ public enum PaymentStatus
     Confirmed,
     Expired,
     RecordNeverCreated,
-    NoPaymentRequired
+    NoPaymentRequired,
 }
 
 public static class PaymentStatusConstants
@@ -37,7 +37,7 @@ public static class PaymentStatusExtensions
                 PaymentStatusConstants.RecordNeverCreated => PaymentStatus.RecordNeverCreated,
                 PaymentStatusConstants.NoPaymentRequired => PaymentStatus.NoPaymentRequired,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToPaymentStatusName() =>
@@ -51,7 +51,7 @@ public static class PaymentStatusExtensions
                 PaymentStatusConstants.RecordNeverCreated => "Required Payment Record Never Created",
                 PaymentStatusConstants.NoPaymentRequired => "No Payment Required",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -68,7 +68,7 @@ public static class PaymentStatusExtensions
                 PaymentStatus.RecordNeverCreated => PaymentStatusConstants.RecordNeverCreated,
                 PaymentStatus.NoPaymentRequired => PaymentStatusConstants.NoPaymentRequired,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToPaymentStatusName() =>
@@ -82,7 +82,7 @@ public static class PaymentStatusExtensions
                 PaymentStatus.RecordNeverCreated => "Required Payment Record Never Created",
                 PaymentStatus.NoPaymentRequired => "No Payment Required",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToMarketplaceBookingPaymentStatusName() =>
@@ -96,7 +96,7 @@ public static class PaymentStatusExtensions
                 PaymentStatus.RecordNeverCreated => "Record never created",
                 PaymentStatus.NoPaymentRequired => "No payment required",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

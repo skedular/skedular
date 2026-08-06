@@ -6,6 +6,9 @@ namespace Booking.Api.GraphQL.RecurringBooking;
 [GraphQLName("BookingFrequencyDetails")]
 public class BookingFrequencyDetails
 {
-    [GraphQLName("frequency")] public BookingFrequency Frequency { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("frequency")]
+    public BookingFrequency Frequency { get; set; }
+
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
 }

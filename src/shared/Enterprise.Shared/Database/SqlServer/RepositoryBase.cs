@@ -52,7 +52,7 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
             sql,
             [
                 new SqlParameter("@Id", id),
-                new SqlParameter("@CreatedAt", TimeProvider.GetUtcNow())
+                new SqlParameter("@CreatedAt", TimeProvider.GetUtcNow()),
             ],
             cancellationToken);
     }
@@ -93,7 +93,7 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
             [
                 new SqlParameter("@Id", id),
                 new SqlParameter("@CreatedAt", TimeProvider.GetUtcNow()),
-                new SqlParameter("@ForeignKeyId", foreignEntity.Id)
+                new SqlParameter("@ForeignKeyId", foreignEntity.Id),
             ],
             cancellationToken);
     }
@@ -166,7 +166,7 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
                 new SqlParameter("@Id", id),
                 new SqlParameter("@CreatedAt", TimeProvider.GetUtcNow()),
                 new SqlParameter("@ForeignKeyId1", foreignEntity1!.Id),
-                new SqlParameter("@ForeignKeyId2", foreignEntity2!.Id)
+                new SqlParameter("@ForeignKeyId2", foreignEntity2!.Id),
             ],
             cancellationToken);
     }

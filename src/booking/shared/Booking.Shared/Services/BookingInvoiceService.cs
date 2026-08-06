@@ -152,13 +152,19 @@ public class BookingInvoiceService(
                 First = ((int?)null).ToNullInt(),
                 Before = string.Empty,
                 Last = ((int?)null).ToNullInt(),
-                Where = new BankAccountWhereInput { OrganizationId = organizationId }
+                Where = new BankAccountWhereInput
+                {
+                    OrganizationId = organizationId,
+                },
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
         var bankAccount = bankAccountConnection.Edges.Select(item => item.Node).First(item => item.IsDefault);
         var organization = await organizationServiceClient.Admin_GetAsync(
-            new Admin_GetInput { Id = organizationId },
+            new Admin_GetInput
+            {
+                Id = organizationId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(organization);
@@ -195,7 +201,7 @@ public class BookingInvoiceService(
             ProductPricingCadence.FiveMonths => periodStart.AddMonths(5),
             ProductPricingCadence.SixMonths => periodStart.AddMonths(6),
             ProductPricingCadence.Yearly => periodStart.AddYears(1),
-            _ => periodStart.AddDays(1)
+            _ => periodStart.AddDays(1),
         };
         var periodEndInclusive = periodEndExclusive.AddDays(-1);
 
@@ -382,7 +388,7 @@ public class BookingInvoiceService(
                 ProductPricingCadence.PerHour => marketplaceBooking.Quantity * (totalMinutes / 60m),
                 _ => throw new ArgumentOutOfRangeException(nameof(marketplaceBooking.ProductPricing),
                     marketplaceBooking.ProductPricing,
-                    $"Unexpected value for {nameof(marketplaceBooking.ProductPricing)}: {marketplaceBooking.ProductPricing}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(marketplaceBooking.ProductPricing)}: {marketplaceBooking.ProductPricing}. Update enum mapping or caller input."),
             };
         }
 
@@ -485,7 +491,7 @@ public class BookingInvoiceService(
                     OrganizationBillingCycle.Weekly => "weekly",
                     OrganizationBillingCycle.Fortnightly => "fortnightly",
                     OrganizationBillingCycle.Monthly => "monthly",
-                    _ => marketplaceBooking.ProductPricing.PurchaseCadence.ToInvoicePriceUnitName()
+                    _ => marketplaceBooking.ProductPricing.PurchaseCadence.ToInvoicePriceUnitName(),
                 };
 
                 return $"{unitPrice.ToRoundedPrice()} {billingCycleLabel}";

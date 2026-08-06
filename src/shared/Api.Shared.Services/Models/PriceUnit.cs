@@ -4,7 +4,7 @@ public enum PriceUnit
 {
     PerMinute,
     PerHour,
-    PerUse
+    PerUse,
 }
 
 public static class PriceUnitConstants

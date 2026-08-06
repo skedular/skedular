@@ -15,7 +15,10 @@ public class HealthCheckExtensionsTests
     public void AddKafkaBrokerHealthCheck_Should_Register_HealthCheck_with_services_tag(ServiceCollection serviceCollection)
     {
         const string BootstrapServers = "fakebootstrapservers";
-        var kafkaConfiguration = new KafkaConfiguration { BootstrapServers = BootstrapServers };
+        var kafkaConfiguration = new KafkaConfiguration
+        {
+            BootstrapServers = BootstrapServers,
+        };
 
         serviceCollection.AddKafkaBrokerHealthCheck(kafkaConfiguration);
 

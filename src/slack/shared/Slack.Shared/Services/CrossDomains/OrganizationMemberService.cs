@@ -51,16 +51,16 @@ public class OrganizationMemberService(
                             .Administrator,
                         OrganizationMemberRole.Member => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberRole.Member,
                         _ => throw new ArgumentOutOfRangeException(nameof(organizationMember.Role), organizationMember.Role,
-                            $"Unexpected value for {nameof(organizationMember.Role)}: {organizationMember.Role}. Update enum mapping or caller input.")
+                            $"Unexpected value for {nameof(organizationMember.Role)}: {organizationMember.Role}. Update enum mapping or caller input."),
                     },
                     Status = organizationMember.Status switch
                     {
                         OrganizationMemberStatus.Active => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Active,
                         OrganizationMemberStatus.Inactive => Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberStatus.Inactive,
                         _ => throw new ArgumentOutOfRangeException(nameof(organizationMember.Status), organizationMember.Status,
-                            $"Unexpected value for {nameof(organizationMember.Status)}: {organizationMember.Status}. Update enum mapping or caller input.")
-                    }
-                }
+                            $"Unexpected value for {nameof(organizationMember.Status)}: {organizationMember.Status}. Update enum mapping or caller input."),
+                    },
+                },
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -81,10 +81,18 @@ public class OrganizationMemberService(
             After = after.ToSafeString(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new MemberWhereInput { OrganizationId = organizationId, NameContains = nameContains.ToSafeString() }
+            Where = new MemberWhereInput
+            {
+                OrganizationId = organizationId,
+                NameContains = nameContains.ToSafeString(),
+            },
         };
 
-        getPaginatedMembersInput.OrderBy.Add(new MemberOrderInput { Direction = OrderDirection.Ascending, Field = MemberOrderField.Name });
+        getPaginatedMembersInput.OrderBy.Add(new MemberOrderInput
+        {
+            Direction = OrderDirection.Ascending,
+            Field = MemberOrderField.Name,
+        });
 
         var connection = await organizationServiceClient.GetPaginatedMembersAsync(
             getPaginatedMembersInput,
@@ -101,7 +109,7 @@ public class OrganizationMemberService(
                 StartCursor = connection.PageInfo.StartCursor,
                 EndCursor = connection.PageInfo.EndCursor,
                 HasNextPage = connection.PageInfo.HasNextPage,
-                HasPreviousPage = connection.PageInfo.HasPreviousPage
+                HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
             Edges = connection.Edges
@@ -115,7 +123,7 @@ public class OrganizationMemberService(
                     }
 
                     return new OrganizationMemberEdge(member, item.Cursor);
-                }).ToList()
+                }).ToList(),
         };
     }
 }

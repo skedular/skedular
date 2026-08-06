@@ -20,7 +20,10 @@ public class GetReconciliationPlanShould
             RecurringBookingEndTypeConstants.Never,
             normalizedFrom,
             1);
-        var existingBookings = new List<Database.Entities.Booking> { CreateBooking("b1", normalizedFrom, normalizedFrom.AddHours(1)) };
+        var existingBookings = new List<Database.Entities.Booking>
+        {
+            CreateBooking("b1", normalizedFrom, normalizedFrom.AddHours(1)),
+        };
 
         var result = sut.GetReconciliationPlan(recurringBooking, normalizedFrom, until, existingBookings);
 
@@ -47,7 +50,7 @@ public class GetReconciliationPlanShould
             CreateBooking("keep-day0", normalizedFrom, normalizedFrom.AddHours(1)),
             CreateBooking("keep-day1", normalizedFrom.AddDays(1), normalizedFrom.AddDays(1).AddHours(1)),
             CreateBooking("dup-day1", normalizedFrom.AddDays(1).AddMinutes(30), normalizedFrom.AddDays(1).AddHours(2)),
-            CreateBooking("obsolete-day3", normalizedFrom.AddDays(3), normalizedFrom.AddDays(3).AddHours(1))
+            CreateBooking("obsolete-day3", normalizedFrom.AddDays(3), normalizedFrom.AddDays(3).AddHours(1)),
         };
 
         var result = sut.GetReconciliationPlan(recurringBooking, normalizedFrom, until, existingBookings);
@@ -68,7 +71,10 @@ public class GetReconciliationPlanShould
             normalizedFrom,
             1);
         var existingBookings =
-            new List<Database.Entities.Booking> { CreateBooking("update-me", normalizedFrom.AddHours(2), normalizedFrom.AddHours(3)) };
+            new List<Database.Entities.Booking>
+            {
+                CreateBooking("update-me", normalizedFrom.AddHours(2), normalizedFrom.AddHours(3)),
+            };
 
         var result = sut.GetReconciliationPlan(recurringBooking, normalizedFrom, until, existingBookings);
 
@@ -95,7 +101,7 @@ public class GetReconciliationPlanShould
                 "customized-instance",
                 normalizedFrom.AddDays(1).AddHours(4),
                 normalizedFrom.AddDays(1).AddHours(5),
-                true)
+                true),
         };
 
         var result = sut.GetReconciliationPlan(recurringBooking, normalizedFrom, until, existingBookings);
@@ -129,7 +135,7 @@ public class GetReconciliationPlanShould
             ByWeekDays = byWeekDays.ToSafeCollection().ToList(),
             EndDate = endDate,
             OccurrenceCount = occurrenceCount,
-            SkippedDates = []
+            SkippedDates = [],
         };
 
     private static Database.Entities.Booking CreateBooking(
@@ -145,6 +151,6 @@ public class GetReconciliationPlanShould
             Category = BookingCategoryConstants.WorkingFromOffice,
             Channel = BookingChannelConstants.Private,
             Schedules = [],
-            HasRecurringInstanceOverrides = hasRecurringInstanceOverrides
+            HasRecurringInstanceOverrides = hasRecurringInstanceOverrides,
         };
 }

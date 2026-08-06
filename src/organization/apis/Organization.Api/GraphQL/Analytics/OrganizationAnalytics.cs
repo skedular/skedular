@@ -10,5 +10,6 @@ public class OrganizationAnalytics
     [GraphQLName("memberAttendancePercentage")]
     public IEnumerable<OrganizationMemberAttendancePercentage> MemberAttendancePercentage { get; set; } = [];
 
-    [GraphQLName("dailyBookingsTotals")] public IEnumerable<OrganizationDailyBookingsTotal> DailyBookingsTotals { get; set; } = [];
+    [GraphQLName("dailyBookingsTotals")]
+    public IEnumerable<OrganizationDailyBookingsTotal> DailyBookingsTotals { get; set; } = [];
 }

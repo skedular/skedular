@@ -22,18 +22,30 @@ public class ReleaseBookingResourcesAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Cancel_Booking_Invoice_And_Expire_Payment_When_Releasing_Booking_Resources(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
-        [Frozen] IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
-        [Frozen] IBookingOutboxPublisher bookingOutboxPublisher,
-        [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] IMarketplaceBookingFailureService marketplaceBookingFailureService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen]
+        IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
+        [Frozen]
+        IBookingOutboxPublisher bookingOutboxPublisher,
+        [Frozen]
+        ICachedBookingService cachedBookingService,
+        [Frozen]
+        IMarketplaceBookingFailureService marketplaceBookingFailureService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
         BookingIntegrations sut,
         string bookingId)
     {
@@ -43,8 +55,10 @@ public class ReleaseBookingResourcesAsyncShould
             Id = bookingId,
             MarketplaceBooking = new MarketplaceBooking
             {
-                Id = "marketplace-booking-1", StripeCheckoutSession = null, PaymentStatus = PaymentStatusConstants.Confirmed
-            }
+                Id = "marketplace-booking-1",
+                StripeCheckoutSession = null,
+                PaymentStatus = PaymentStatusConstants.Confirmed,
+            },
         };
 
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
@@ -57,7 +71,11 @@ public class ReleaseBookingResourcesAsyncShould
             .Returns(new MarketplaceBookingFailure());
         A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(
                 booking, null, environment.CancellationTokenSource.Token, true))
-            .Returns(new MarketplaceRefund { Id = "refund-1", Status = "Requested" });
+            .Returns(new MarketplaceRefund
+            {
+                Id = "refund-1",
+                Status = "Requested",
+            });
 
         await environment.RunAsync(() =>
             sut.ReleaseBookingResourcesAsync(new ReleaseBookingResourcesInput(

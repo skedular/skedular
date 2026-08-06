@@ -42,16 +42,23 @@ public class AddZoneButtonHandler(
         {
             BlockId = ZoneActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = ZoneActionTypes.Name },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = ZoneActionTypes.Name,
+            },
+            Optional = false,
         };
 
         var description = new InputBlock
         {
             BlockId = ZoneActionTypes.Description,
             Label = "Description".ToPlainText(),
-            Element = new PlainTextInput { ActionId = ZoneActionTypes.Description, Multiline = true },
-            Optional = true
+            Element = new PlainTextInput
+            {
+                ActionId = ZoneActionTypes.Description,
+                Multiline = true,
+            },
+            Optional = true,
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -64,7 +71,7 @@ public class AddZoneButtonHandler(
                 Close = "Cancel",
                 Submit = "Add",
                 Blocks = [name, description],
-                PrivateMetadata = action.Value
+                PrivateMetadata = action.Value,
             },
             cancellationToken);
     }
@@ -97,7 +104,11 @@ public class AddZoneButtonHandler(
         var values = viewSubmission.View.State.Values;
         var organizationZone = new OrganizationZone
         {
-            Id = randomHelper.Generate(), Organization = new Organization { Id = workspace.Organization.Id }
+            Id = randomHelper.Generate(),
+            Organization = new Organization
+            {
+                Id = workspace.Organization.Id,
+            },
         };
 
         if (values.TryGetValue(ZoneActionTypes.Name, out var nameBlock))

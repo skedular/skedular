@@ -50,7 +50,11 @@ public class LocationsCrawlerServiceService(
             page.Dialog += async (_, dialog) => await dialog.DismissAsync();
 #pragma warning restore VSTHRD101
 
-            await page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.Load, Timeout = 60000 });
+            await page.GotoAsync(url, new PageGotoOptions
+            {
+                WaitUntil = WaitUntilState.Load,
+                Timeout = 60000,
+            });
 
             do
             {
@@ -84,7 +88,10 @@ public class LocationsCrawlerServiceService(
                     if (await nextLink.CountAsync() > 0)
                     {
                         await nextLink.First.ClickAsync();
-                        await page.WaitForLoadStateAsync(LoadState.Load, new PageWaitForLoadStateOptions { Timeout = 60000 });
+                        await page.WaitForLoadStateAsync(LoadState.Load, new PageWaitForLoadStateOptions
+                        {
+                            Timeout = 60000,
+                        });
                     }
                     else
                     {

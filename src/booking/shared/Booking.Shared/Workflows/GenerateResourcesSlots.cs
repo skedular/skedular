@@ -20,7 +20,11 @@ public class GenerateResourcesSlots
                 {
                     StartToCloseTimeout = TimeSpan.FromSeconds(30),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
         }
     }

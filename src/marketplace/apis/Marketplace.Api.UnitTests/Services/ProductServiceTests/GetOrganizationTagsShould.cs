@@ -21,36 +21,61 @@ public class GetOrganizationTagsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Manual_Host_Product_Creation(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         ProductService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Host };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Host,
+        };
         var productVersion = new ProductVersion
         {
             Type = ProductType.Event,
             Currency = Currency.Nzd,
-            OrganizationTags = [new Shared.Models.OrganizationTag { Id = "host-location-other-org", Type = OrganizationTagType.Product }],
+            OrganizationTags =
+            [
+                new Shared.Models.OrganizationTag
+                {
+                    Id = "host-location-other-org",
+                    Type = OrganizationTagType.Product,
+                },
+            ],
             PricingOptions =
             [
                 new ProductPricing(
                     "pricing-1", 0, ListingMetadata.Empty, ProductPricingCadence.Daily, ProductPricingCadence.Daily,
                     100m, true, false, [PaymentMethod.Card], ProductPricingBillingMode.Upfront, null, null, 30, 0, 1,
-                    ProductPricingCancellationPolicyType.NoCancellation, [])
-            ]
+                    ProductPricingCancellationPolicyType.NoCancellation, []),
+            ],
         };
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationTagRepository).Returns(organizationTagRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
-            .Returns((new Customer { Id = "customer-1" }, new Shared.Database.Entities.Customer { Id = "customer-1" }));
+            .Returns((new Customer
+            {
+                Id = "customer-1",
+            }, new Shared.Database.Entities.Customer
+            {
+                Id = "customer-1",
+            }));
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, cancellationToken)).Returns(organization);
         A.CallTo(() => organizationAuthorizationService.CanModifyProductAsync("org-1", "customer-1", cancellationToken)).Returns(true);
         A.CallTo(() => organizationTagRepository.GetActiveByIdsForOrganizationAsync(A<IReadOnlyList<string>>._, "org-1", null, cancellationToken))
@@ -66,32 +91,66 @@ public class GetOrganizationTagsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Load_Organization_Tags_Through_The_Repository_Method_When_Adding_A_Product(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceOutboxPublisher marketplaceOutboxPublisher,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ICachedProductService cachedProductService,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] IProductRepository productRepository,
-        [Frozen] IProductVersionRepository productVersionRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceOutboxPublisher marketplaceOutboxPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ICachedProductService cachedProductService,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        IProductRepository productRepository,
+        [Frozen]
+        IProductVersionRepository productVersionRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         ProductService sut,
         CancellationToken cancellationToken)
     {
-        var customer = new Customer { Id = "customer-1" };
-        var existingCustomer = new Shared.Database.Entities.Customer { Id = "customer-1" };
-        var organization = new Organization { Id = "org-1" };
-        var organizationTag = new OrganizationTag { Id = "tag-1", Organization = organization };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var existingCustomer = new Shared.Database.Entities.Customer
+        {
+            Id = "customer-1",
+        };
+        var organization = new Organization
+        {
+            Id = "org-1",
+        };
+        var organizationTag = new OrganizationTag
+        {
+            Id = "tag-1",
+            Organization = organization,
+        };
         var productVersion = new ProductVersion
         {
             Type = ProductType.Resource,
             Currency = Currency.Nzd,
-            OrganizationTags = [new Shared.Models.OrganizationTag { Id = "tag-1", Type = OrganizationTagType.Product }],
+            OrganizationTags =
+            [
+                new Shared.Models.OrganizationTag
+                {
+                    Id = "tag-1",
+                    Type = OrganizationTagType.Product,
+                },
+            ],
             PricingOptions =
             [
                 new ProductPricing(
@@ -111,12 +170,23 @@ public class GetOrganizationTagsShould
                     30,
                     1,
                     ProductPricingCancellationPolicyType.NoCancellation,
-                    [])
-            ]
+                    []),
+            ],
         };
-        var productEntity = new Product { Id = "product-1", Organization = organization };
-        var productVersionEntity = new Shared.Database.Entities.ProductVersion { Id = "version-1", Product = productEntity };
-        var mappedProduct = new Shared.Models.Product { Id = "product-1" };
+        var productEntity = new Product
+        {
+            Id = "product-1",
+            Organization = organization,
+        };
+        var productVersionEntity = new Shared.Database.Entities.ProductVersion
+        {
+            Id = "version-1",
+            Product = productEntity,
+        };
+        var mappedProduct = new Shared.Models.Product
+        {
+            Id = "product-1",
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationTagRepository).Returns(organizationTagRepository);

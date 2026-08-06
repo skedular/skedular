@@ -187,7 +187,7 @@ public class OrganizationSpacesSubscriptionService(
                 CreatedAt = now,
                 Start = now,
                 End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
-                AutoRenew = true
+                AutoRenew = true,
             },
             planCode,
             customCapacity,
@@ -256,7 +256,7 @@ public class OrganizationSpacesSubscriptionService(
             PricingCatalogSubscriptionPlanCode.Growth or PricingCatalogSubscriptionPlanCode.Business => PricingCatalogCommercialModel.UsageBased,
             PricingCatalogSubscriptionPlanCode.ContactUs => PricingCatalogCommercialModel.CapacityBased,
             _ => throw new ArgumentOutOfRangeException(nameof(planCode), planCode,
-                $"Unexpected value for {nameof(planCode)}: {planCode}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(planCode)}: {planCode}. Update enum mapping or caller input."),
         };
 
     private static int? GetDefaultLimit(PricingCatalogSubscriptionPlanCode planCode) =>
@@ -267,7 +267,7 @@ public class OrganizationSpacesSubscriptionService(
         {
             OfferingCode.EarlyBirdV1 => null,
             OfferingCode.SpacesContactUsV1 => subscription.PurchasedTeamCapacity,
-            _ => subscription.PurchasedTeamCapacity ?? subscription.Code.GetOffering().MaxBookingInstanceCount
+            _ => subscription.PurchasedTeamCapacity ?? subscription.Code.GetOffering().MaxBookingInstanceCount,
         };
 
     private static OrganizationOfferingEntity? GetSpacesSubscription(Shared.Database.Entities.Organization organization) =>
@@ -301,7 +301,7 @@ public class OrganizationSpacesSubscriptionService(
                 SpacesProductEnabled = true,
                 SpacesTrialStartedAt = trialStartedAt,
                 SpacesTrialEndsAt = trialStartedAt?.Add(SpacesAccessEvaluator.TrialDuration),
-                SpacesNextBillingAt = subscription.SpacesBillingStartsAt
+                SpacesNextBillingAt = subscription.SpacesBillingStartsAt,
             },
             SpacesAccessAction.Read);
 
@@ -353,7 +353,7 @@ public class OrganizationSpacesSubscriptionService(
             CanProtectExistingCommitments = accessDecision.CanProtectExistingCommitments,
             UpgradeRequired = accessDecision.UpgradeRequired,
             IsComplimentaryBridge = accessDecision.IsComplimentaryBridge,
-            NextBillingAt = accessDecision.NextBillingAt
+            NextBillingAt = accessDecision.NextBillingAt,
         };
     }
 }
@@ -371,7 +371,7 @@ public static class OrganizationSpacesSubscriptionServiceExtensions
                 PricingCatalogSubscriptionPlanCode.ContactUs => OfferingCode.SpacesContactUsV1,
                 PricingCatalogSubscriptionPlanCode.LegacyEarlyBird => OfferingCode.EarlyBirdV1,
                 _ => throw new ArgumentOutOfRangeException(nameof(planCode), planCode,
-                    $"Unexpected value for {nameof(planCode)}: {planCode}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(planCode)}: {planCode}. Update enum mapping or caller input."),
             };
     }
 }

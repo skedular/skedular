@@ -34,7 +34,13 @@ public class TemporalHelperService(
             logger.LogDebug("Checking whether Temporal workflow is running. WorkflowType={WorkflowType}", typeof(TWorkflow).FullName);
             var description = await temporalClient
                 .GetWorkflowHandle<TWorkflow>(workflowId)
-                .DescribeAsync(new WorkflowDescribeOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+                .DescribeAsync(new WorkflowDescribeOptions
+                {
+                    Rpc = new RpcOptions
+                    {
+                        CancellationToken = cancellationToken,
+                    },
+                });
 
             logger.LogInformation("Temporal workflow status retrieved. WorkflowType={WorkflowType}, IsRunning={IsRunning}",
                 typeof(TWorkflow).FullName,
@@ -64,7 +70,13 @@ public class TemporalHelperService(
             logger.LogDebug("Checking whether Temporal workflow exists. WorkflowType={WorkflowType}", typeof(TWorkflow).FullName);
             _ = await temporalClient
                 .GetWorkflowHandle<TWorkflow>(workflowId)
-                .DescribeAsync(new WorkflowDescribeOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+                .DescribeAsync(new WorkflowDescribeOptions
+                {
+                    Rpc = new RpcOptions
+                    {
+                        CancellationToken = cancellationToken,
+                    },
+                });
 
             logger.LogInformation("Temporal workflow exists. WorkflowType={WorkflowType}", typeof(TWorkflow).FullName);
             return true;

@@ -14,7 +14,7 @@ public class ShouldPreserveStandardInvoiceTransitionStateShould
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice,
-            ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.TransitionRequired
+            ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
         };
 
         Invoke(accountingInvoiceLink).ShouldBeTrue();
@@ -26,7 +26,7 @@ public class ShouldPreserveStandardInvoiceTransitionStateShould
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice,
-            ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.Active
+            ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.Active,
         };
 
         Invoke(accountingInvoiceLink).ShouldBeFalse();
@@ -38,7 +38,7 @@ public class ShouldPreserveStandardInvoiceTransitionStateShould
         var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
-            ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.TransitionRequired
+            ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
         };
 
         Invoke(accountingInvoiceLink).ShouldBeFalse();

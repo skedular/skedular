@@ -22,12 +22,16 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
             IsEnterprise = matchedOffering.IsEnterpriseOffering(),
             Name = offering.Name,
             UnitPrice = offering.UnitPrice,
-            Currency = new CurrencyDetails { Type = offering.Currency, Name = offering.Currency.ToCurrencyName() },
+            Currency = new CurrencyDetails
+            {
+                Type = offering.Currency,
+                Name = offering.Currency.ToCurrencyName(),
+            },
             FixedPrice = offering.FixedPrice,
             FeatureSet = graphQlMapper.MapTo(offering).ToArray(),
             UnderPriceLines = offering.UnderPriceLines.ToArray(),
             Free = matchedOffering.IsFreeOffering(),
-            EarlyBird = matchedOffering.IsEarlyBirdOffering()
+            EarlyBird = matchedOffering.IsEarlyBirdOffering(),
         };
     }
 }

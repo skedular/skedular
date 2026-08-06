@@ -23,7 +23,11 @@ public class CachedLocationService(ApplicationConfiguration applicationConfigura
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.LocationRepository.GetByIdUntrackedAsync(id, ct) ?? throw new LocationNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (TeamNotFound)
@@ -39,7 +43,11 @@ public class CachedLocationService(ApplicationConfiguration applicationConfigura
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.LocationRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new LocationNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromMinutes(30),
+                LocalCacheExpiration = TimeSpan.FromSeconds(30),
+            },
             cancellationToken: cancellationToken);
     }
 
@@ -52,7 +60,11 @@ public class CachedLocationService(ApplicationConfiguration applicationConfigura
             await hybridCache.SetAsync(
                 CreateKeyById(item.Id),
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
     }

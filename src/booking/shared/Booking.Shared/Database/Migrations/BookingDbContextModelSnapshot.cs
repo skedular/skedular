@@ -1265,6 +1265,143 @@ namespace Booking.Shared.Database.Migrations
                     b.ToTable("MarketplaceExternalRefundReconciliation");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplacePurchaseHistory", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("ActivityAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("AutoRenew")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("BookingFrom")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("BookingUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("CancelAtPeriodEnd")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("CancellationReason")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("CustomerId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("DeletedByCustomerId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LatestRefundId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("LatestRefundStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("MarketplaceBookingId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("MarketplaceBookingSubscriptionId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("PaymentStatus")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("ProductTitle")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<string>("ProductVersionId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset>("PurchasedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SourceId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("SourceType")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("SubscriptionStatus")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("DeletedByCustomerId");
+
+                    b.HasIndex("LatestRefundId")
+                        .IsUnique()
+                        .HasFilter("\"LatestRefundId\" IS NOT NULL");
+
+                    b.HasIndex("MarketplaceBookingId")
+                        .IsUnique()
+                        .HasFilter("\"MarketplaceBookingId\" IS NOT NULL");
+
+                    b.HasIndex("MarketplaceBookingSubscriptionId")
+                        .IsUnique()
+                        .HasFilter("\"MarketplaceBookingSubscriptionId\" IS NOT NULL");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("ProductVersionId");
+
+                    b.HasIndex("SourceType", "SourceId")
+                        .IsUnique();
+
+                    b.HasIndex("OrganizationId", "ActivityAt", "SourceType", "SourceId");
+
+                    b.ToTable("MarketplacePurchaseHistory");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefund", b =>
                 {
                     b.Property<string>("Id")
@@ -3520,6 +3657,59 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("DeletedByCustomer");
 
                     b.Navigation("LastModifiedByCustomer");
+
+                    b.Navigation("ProductVersion");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplacePurchaseHistory", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "DeletedByCustomer")
+                        .WithMany()
+                        .HasForeignKey("DeletedByCustomerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Booking.Shared.Database.Entities.MarketplaceRefund", "LatestRefund")
+                        .WithMany()
+                        .HasForeignKey("LatestRefundId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Booking.Shared.Database.Entities.MarketplaceBooking", "MarketplaceBooking")
+                        .WithMany()
+                        .HasForeignKey("MarketplaceBookingId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Booking.Shared.Database.Entities.MarketplaceBookingSubscription", "MarketplaceBookingSubscription")
+                        .WithMany()
+                        .HasForeignKey("MarketplaceBookingSubscriptionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.ProductVersion", "ProductVersion")
+                        .WithMany()
+                        .HasForeignKey("ProductVersionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("DeletedByCustomer");
+
+                    b.Navigation("LatestRefund");
+
+                    b.Navigation("MarketplaceBooking");
+
+                    b.Navigation("MarketplaceBookingSubscription");
+
+                    b.Navigation("Organization");
 
                     b.Navigation("ProductVersion");
                 });

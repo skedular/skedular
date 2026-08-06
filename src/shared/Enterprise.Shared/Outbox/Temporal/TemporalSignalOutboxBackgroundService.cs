@@ -144,7 +144,10 @@ public class TemporalSignalOutboxBackgroundService<TDbContext>(
                 await using var scope = serviceProvider.CreateAsyncScope();
                 var temporalSignalOutboxExecutor = scope.ServiceProvider.GetRequiredService<ITemporalSignalOutboxExecutor>();
 
-                outboxEvent.WorkflowSignalOptions.Rpc = new RpcOptions { CancellationToken = cancellationToken };
+                outboxEvent.WorkflowSignalOptions.Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                };
                 await temporalSignalOutboxExecutor.SignalAsync(
                     outboxEvent.WorkflowId,
                     outboxEvent.SignalType,
@@ -155,7 +158,10 @@ public class TemporalSignalOutboxBackgroundService<TDbContext>(
                 activityAccessor.AddEvent(
                     "Publish Temporal Signal Outbox Message",
                     "publish_temporal_signal_outbox_message",
-                    new Dictionary<string, string> { [nameof(outboxEvent.SignalType)] = outboxEvent.SignalType });
+                    new Dictionary<string, string>
+                    {
+                        [nameof(outboxEvent.SignalType)] = outboxEvent.SignalType,
+                    });
 
                 logger.LogTrace("Signal {SignalType} execution started. Removing from outbox", outboxEvent.SignalType);
                 // Success means the row has been durably handed off to Temporal, so
@@ -175,7 +181,7 @@ public class TemporalSignalOutboxBackgroundService<TDbContext>(
                     new Dictionary<string, string>
                     {
                         [nameof(TemporalSignalOutbox.LastRetry)] = timeProvider.GetUtcNow().ToString("O"),
-                        [nameof(LogLevel)] = level.ToString("G")
+                        [nameof(LogLevel)] = level.ToString("G"),
                     });
 
                 logger.Log(

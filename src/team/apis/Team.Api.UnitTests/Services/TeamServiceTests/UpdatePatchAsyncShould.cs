@@ -16,23 +16,51 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Authorization_Rejection_And_Rethrow(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ITeamRepository teamRepository,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationOfferingService organizationOfferingService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ILogger<TeamService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ITeamRepository teamRepository,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationOfferingService organizationOfferingService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ILogger<TeamService> logger,
         TeamService sut,
         CancellationToken cancellationToken)
     {
-        var orgEntity = new Organization { Id = "org-1" };
-        var teamEntity = new Shared.Database.Entities.Team { Id = "team-1", Organization = orgEntity, TeamMembers = [] };
-        var teamModel = new Shared.Models.Team { Id = "team-1", TeamMembers = [] };
+        var orgEntity = new Organization
+        {
+            Id = "org-1",
+        };
+        var teamEntity = new Shared.Database.Entities.Team
+        {
+            Id = "team-1",
+            Organization = orgEntity,
+            TeamMembers = [],
+        };
+        var teamModel = new Shared.Models.Team
+        {
+            Id = "team-1",
+            TeamMembers = [],
+        };
         var request = new TeamPatchRequest(
-            new Shared.Models.Team { Id = "team-1", Name = "Updated Team", TeamMembers = [] },
-            new HashSet<TeamPatchField> { TeamPatchField.Name });
+            new Shared.Models.Team
+            {
+                Id = "team-1",
+                Name = "Updated Team",
+                TeamMembers = [],
+            },
+            new HashSet<TeamPatchField>
+            {
+                TeamPatchField.Name,
+            });
 
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -57,15 +85,26 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Error_And_Rethrow_On_General_Failure(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ITeamRepository teamRepository,
-        [Frozen] ILogger<TeamService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ITeamRepository teamRepository,
+        [Frozen]
+        ILogger<TeamService> logger,
         TeamService sut,
         CancellationToken cancellationToken)
     {
         var request = new TeamPatchRequest(
-            new Shared.Models.Team { Id = "team-1", Name = "Updated Team", TeamMembers = [] },
-            new HashSet<TeamPatchField> { TeamPatchField.Name });
+            new Shared.Models.Team
+            {
+                Id = "team-1",
+                Name = "Updated Team",
+                TeamMembers = [],
+            },
+            new HashSet<TeamPatchField>
+            {
+                TeamPatchField.Name,
+            });
 
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => teamRepository.GetByIdAsync("team-1", cancellationToken))
@@ -82,15 +121,26 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Autosave_Started(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ITeamRepository teamRepository,
-        [Frozen] ILogger<TeamService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ITeamRepository teamRepository,
+        [Frozen]
+        ILogger<TeamService> logger,
         TeamService sut,
         CancellationToken cancellationToken)
     {
         var request = new TeamPatchRequest(
-            new Shared.Models.Team { Id = "team-1", Name = "Updated Team", TeamMembers = [] },
-            new HashSet<TeamPatchField> { TeamPatchField.Name });
+            new Shared.Models.Team
+            {
+                Id = "team-1",
+                Name = "Updated Team",
+                TeamMembers = [],
+            },
+            new HashSet<TeamPatchField>
+            {
+                TeamPatchField.Name,
+            });
 
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => teamRepository.GetByIdAsync("team-1", cancellationToken))

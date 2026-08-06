@@ -210,7 +210,7 @@ public sealed class SpacesAccessEvaluator : ISpacesAccessEvaluator
         {
             SpacesAccessAction.Read or SpacesAccessAction.AccountOrUpgrade => SpacesAccessReasonCode.AllowedReadOrRecovery,
             SpacesAccessAction.ProtectExistingCommitment => SpacesAccessReasonCode.AllowedProtectiveAction,
-            _ => defaultReason
+            _ => defaultReason,
         };
 
     private static int RemainingTrialDays(DateTimeOffset nowUtc, DateTimeOffset? trialEndsAt) =>

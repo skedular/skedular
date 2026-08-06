@@ -19,43 +19,85 @@ public class AddShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Load_Organization_Tags_Through_The_Repository_Method(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ILocationOutboxPublisher locationOutboxPublisher,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ICachedLocationService cachedLocationService,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationTagRepository organizationTagRepository,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ILocationOutboxPublisher locationOutboxPublisher,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ICachedLocationService cachedLocationService,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationTagRepository organizationTagRepository,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
         LocationService sut,
         CancellationToken cancellationToken)
     {
         var locationToAdd = new Shared.Models.Location
         {
-            Name = "Head Office", Organization = new Organization { Id = "org-1" }, OrganizationTags = [new OrganizationTag { Id = "tag-1" }]
+            Name = "Head Office",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Id = "tag-1",
+                },
+            ],
         };
-        var organizationEntity = new Shared.Database.Entities.Organization { Id = "org-1", Type = OrganizationTypeConstants.Private };
-        var organizationTagEntity = new Shared.Database.Entities.OrganizationTag { Id = "tag-1", Organization = organizationEntity };
+        var organizationEntity = new Shared.Database.Entities.Organization
+        {
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Private,
+        };
+        var organizationTagEntity = new Shared.Database.Entities.OrganizationTag
+        {
+            Id = "tag-1",
+            Organization = organizationEntity,
+        };
         var locationEntity = new Shared.Database.Entities.Location
         {
             Id = "location-1",
             Name = "Head Office",
             OrganizationId = "org-1",
             Organization = organizationEntity,
-            OrganizationTags = [organizationTagEntity]
+            OrganizationTags = [organizationTagEntity],
         };
         var mappedLocation = new Shared.Models.Location
         {
             Id = "location-1",
             Name = "Head Office",
-            Organization = new Organization { Id = "org-1" },
-            OrganizationTags = [new OrganizationTag { Id = "tag-1" }]
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Id = "tag-1",
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);

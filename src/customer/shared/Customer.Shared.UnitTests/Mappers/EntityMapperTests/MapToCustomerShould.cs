@@ -12,8 +12,16 @@ public class MapToCustomerShould
     [Fact]
     public void Map_Resource_Location_As_Shallow_Reference()
     {
-        var location = new LocationEntity { Id = "location-id", Type = LocationTypeConstants.Private };
-        var resource = new ResourceEntity { Id = "resource-id", Location = location };
+        var location = new LocationEntity
+        {
+            Id = "location-id",
+            Type = LocationTypeConstants.Private,
+        };
+        var resource = new ResourceEntity
+        {
+            Id = "resource-id",
+            Location = location,
+        };
         location.Resources.Add(resource);
 
         var customer = new CustomerEntity
@@ -22,7 +30,7 @@ public class MapToCustomerShould
             PersonalInformationVisibility = PersonalInformationVisibilityConstants.Visible,
             Type = CustomerTypeConstants.Registered,
             PreferredLocations = [location],
-            PreferredResources = [resource]
+            PreferredResources = [resource],
         };
 
         var sut = new EntityMapper();

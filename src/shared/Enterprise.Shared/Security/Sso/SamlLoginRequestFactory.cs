@@ -46,7 +46,12 @@ public class SamlLoginRequestFactory(TimeProvider timeProvider, ILogger<SamlLogi
         using var stringWriter = new StringWriter(CultureInfo.InvariantCulture);
         using (var xmlWriter = XmlWriter.Create(
                    stringWriter,
-                   new XmlWriterSettings { Encoding = Encoding.UTF8, OmitXmlDeclaration = true, NewLineHandling = NewLineHandling.None }))
+                   new XmlWriterSettings
+                   {
+                       Encoding = Encoding.UTF8,
+                       OmitXmlDeclaration = true,
+                       NewLineHandling = NewLineHandling.None,
+                   }))
         {
             xmlWriter.WriteStartElement("samlp", "AuthnRequest", "urn:oasis:names:tc:SAML:2.0:protocol");
             xmlWriter.WriteAttributeString("xmlns", string.Empty, null, "urn:oasis:names:tc:SAML:2.0:metadata");

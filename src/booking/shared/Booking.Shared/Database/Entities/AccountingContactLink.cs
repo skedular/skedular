@@ -39,7 +39,18 @@ public class AccountingContactLinkConfiguration : IEntityTypeConfiguration<Accou
         builder.HasOne(item => item.Organization).WithMany().HasForeignKey(item => item.OrganizationId);
 
         builder.HasIndex(item => item.OrganizationId);
-        builder.HasIndex(item => new { item.OrganizationId, item.Provider, item.LocalEntityType, item.LocalEntityId }).IsUnique();
-        builder.HasIndex(item => new { item.OrganizationId, item.Provider, item.ExternalContactId }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.OrganizationId,
+            item.Provider,
+            item.LocalEntityType,
+            item.LocalEntityId,
+        }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.OrganizationId,
+            item.Provider,
+            item.ExternalContactId,
+        }).IsUnique();
     }
 }

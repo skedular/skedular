@@ -7,7 +7,7 @@ public enum OrganizationBillingDetailsPatchField
 {
     CompanyName,
     Email,
-    BillingAddress
+    BillingAddress,
 }
 
 public record OrganizationBillingDetailsPatchRequest(

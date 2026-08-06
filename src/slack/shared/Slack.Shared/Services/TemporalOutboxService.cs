@@ -33,7 +33,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.NewSlackWorkspaceJoined(args.WorkspaceId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 
@@ -45,7 +45,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.ReSyncSlackWorkspace(args.WorkspaceId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 

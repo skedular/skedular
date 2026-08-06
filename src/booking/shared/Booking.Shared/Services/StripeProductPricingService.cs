@@ -34,7 +34,11 @@ public class StripeProductPricingService(
                 var productId = randomHelper.Generate();
                 var stripeProduct = await productCreateService.CreateAsync(
                     entityMapper.MapTo(pricing, productVersion),
-                    new RequestOptions { IdempotencyKey = $"{productVersion.Id}-{productId}", StripeAccount = stripeAccountId },
+                    new RequestOptions
+                    {
+                        IdempotencyKey = $"{productVersion.Id}-{productId}",
+                        StripeAccount = stripeAccountId,
+                    },
                     cancellationToken);
 
                 stripeProductEntity = repositoryFactory.StripeProductRepository.Add(new StripeProduct
@@ -46,7 +50,7 @@ public class StripeProductPricingService(
                     NumberOfResourcesToBook = pricing.NumberOfResourcesToBook,
                     StripeProductId = stripeProduct.Id,
                     StripeAccountId = stripeAccountId,
-                    ProductVersion = productVersion
+                    ProductVersion = productVersion,
                 });
 
                 await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -60,12 +64,18 @@ public class StripeProductPricingService(
             var priceId = randomHelper.Generate();
             var stripePrice = await priceCreateService.CreateAsync(
                 entityMapper.MapTo(pricing, stripeProductEntity),
-                new RequestOptions { IdempotencyKey = $"{productVersion.Id}-{priceId}-price", StripeAccount = stripeAccountId },
+                new RequestOptions
+                {
+                    IdempotencyKey = $"{productVersion.Id}-{priceId}-price",
+                    StripeAccount = stripeAccountId,
+                },
                 cancellationToken);
 
             _ = repositoryFactory.StripePriceRepository.Add(new StripePrice
             {
-                Id = priceId, StripePriceId = stripePrice.Id, StripeProduct = stripeProductEntity
+                Id = priceId,
+                StripePriceId = stripePrice.Id,
+                StripeProduct = stripeProductEntity,
             });
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

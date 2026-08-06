@@ -71,7 +71,10 @@ public class BookingService(
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.IncludeMineOnly == true)
         {
-            searchCriteria = searchCriteria with { CustomerIds = [customerId] };
+            searchCriteria = searchCriteria with
+            {
+                CustomerIds = [customerId],
+            };
         }
 
         BookingAccessScope? accessScope = null;
@@ -107,7 +110,8 @@ public class BookingService(
 
             searchCriteria = searchCriteria with
             {
-                OrganizationId = scopedOrganization.Id, OrganizationCustomDomain = scopedOrganization.CustomDomain
+                OrganizationId = scopedOrganization.Id,
+                OrganizationCustomDomain = scopedOrganization.CustomDomain,
             };
         }
 

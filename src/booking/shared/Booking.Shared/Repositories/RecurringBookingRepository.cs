@@ -235,7 +235,7 @@ public class RecurringBookingRepository(BookingDbContext dbContext, TimeProvider
                 KeysetPaginationField<RecurringBooking>.Create(
                     nameof(RecurringBooking.From),
                     query => query.From,
-                    OrderDirection.Ascending)
+                    OrderDirection.Ascending),
             ];
         }
 
@@ -258,7 +258,7 @@ public class RecurringBookingRepository(BookingDbContext dbContext, TimeProvider
                     query => query.Channel,
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             })
             .ToList();
     }

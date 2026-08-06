@@ -25,7 +25,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.ResourceDesk.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.ResourceDesk,
             Color = "#87CEEB",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
         new()
         {
@@ -33,7 +33,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.ResourceRoom.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.ResourceRoom,
             Color = "#98FB98",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
         new()
         {
@@ -41,7 +41,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.ResourceParking.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.ResourceParking,
             Color = "#20B2AA",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
         new()
         {
@@ -49,7 +49,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.ResourceOthers.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.ResourceOthers,
             Color = "#8A2BE2",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
         new()
         {
@@ -57,8 +57,8 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.ResourceEntireLocation.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.ResourceEntireLocation,
             Color = "#4169E1",
-            Organization = organizationEntity
-        }
+            Organization = organizationEntity,
+        },
     ];
 
     private IEnumerable<Tag> GetLocationSpaceTypeTags(Database.Entities.Organization organizationEntity) =>
@@ -69,7 +69,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.LocationSpaceTypeCarParkSpace.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.LocationSpaceTypeCarParkSpace,
             Color = "#87CEEB",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
 
 
@@ -79,7 +79,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.LocationSpaceTypeEventSpace.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.LocationSpaceTypeEventSpace,
             Color = "#FFD700",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
 
 
@@ -89,7 +89,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.LocationSpaceTypeMeetingSpace.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.LocationSpaceTypeMeetingSpace,
             Color = "#FF6347",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
 
 
@@ -99,7 +99,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.LocationSpaceTypeOfficeSpace.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.LocationSpaceTypeOfficeSpace,
             Color = "#32CD32",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
 
 
@@ -109,7 +109,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.LocationSpaceTypeRetailSpace.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.LocationSpaceTypeRetailSpace,
             Color = "#98FB98",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
 
 
@@ -119,7 +119,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.LocationSpaceTypeStorageSpace.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.LocationSpaceTypeStorageSpace,
             Color = "#B0E0E6",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
 
 
@@ -129,7 +129,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.LocationSpaceTypeStudioSpace.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.LocationSpaceTypeStudioSpace,
             Color = "#F5DEB3",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
 
 
@@ -139,7 +139,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.LocationSpaceTypeCommercialKitchen.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.LocationSpaceTypeCommercialKitchen,
             Color = "#20B2AA",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
 
 
@@ -149,7 +149,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.LocationSpaceTypeShootLocation.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.LocationSpaceTypeShootLocation,
             Color = "#4682B4",
-            Organization = organizationEntity
+            Organization = organizationEntity,
         },
 
 
@@ -159,8 +159,8 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
             Name = OrganizationTagType.LocationSpaceTypeOthers.ToOrganizationTagTypeName(),
             Type = OrganizationTagTypeConstants.LocationSpaceTypeOthers,
             Color = "#DAA520",
-            Organization = organizationEntity
-        }
+            Organization = organizationEntity,
+        },
     ];
 
     private IEnumerable<Tag> GetAmenitiesTags(Database.Entities.Organization organizationEntity) =>
@@ -171,7 +171,7 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
                 Name = amenity.ToOrganizationTagTypeName(),
                 Type = amenity.ToOrganizationTagType(),
                 Color = GetAmenityColor(amenity),
-                Organization = organizationEntity
+                Organization = organizationEntity,
             });
 
     private static string GetAmenityColor(OrganizationTagType amenity) =>
@@ -361,6 +361,6 @@ public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOr
                 OrganizationTagType.AmenitySafetyComplianceKit
                 => "#9370DB", // event/studio/specialized
 
-            _ => "#778899"
+            _ => "#778899",
         };
 }

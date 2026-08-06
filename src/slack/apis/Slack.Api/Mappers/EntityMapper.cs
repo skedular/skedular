@@ -59,7 +59,7 @@ public class EntityMapper : IEntityMapper
             IsGroup = src.IsGroup,
             IsShared = src.IsShared,
             IsMember = src.IsMember,
-            Workspace = workspace
+            Workspace = workspace,
         };
 
     public Shared.Models.WorkspaceChannel? MapTo(WorkspaceChannel? src) =>
@@ -75,7 +75,7 @@ public class EntityMapper : IEntityMapper
                 IsGeneral = src.IsGeneral,
                 IsGroup = src.IsGroup,
                 IsShared = src.IsShared,
-                IsMember = src.IsMember
+                IsMember = src.IsMember,
             };
 
     public Shared.Models.Workspace MapTo(Workspace src)
@@ -99,7 +99,7 @@ public class EntityMapper : IEntityMapper
             AuthedUserScope = src.AuthedUserScope,
             AuthedUserAccessToken = src.AuthedUserAccessToken,
             AuthedRefreshToken = src.AuthedRefreshToken,
-            Organization = MapTo(src.Organization)
+            Organization = MapTo(src.Organization),
         };
 
         workspace.WorkspaceMembers = MapTo(src.WorkspaceMembers, workspace).ToList();
@@ -133,7 +133,7 @@ public class EntityMapper : IEntityMapper
             PhotoUrl512 = src.PhotoUrl512,
             LastProfileStatusUpdatedAt = src.LastProfileStatusUpdatedAt,
             AutomaticallyUpdateProfileStatus = src.AutomaticallyUpdateProfileStatus,
-            Workspace = workspace
+            Workspace = workspace,
         };
 
     private Customer? MapTo(Shared.Database.Entities.Customer? src)
@@ -151,7 +151,7 @@ public class EntityMapper : IEntityMapper
             DeletedAt = src.DeletedAt,
             EventRaisedAt = src.EventRaisedAt,
             Timezone = src.Timezone,
-            Type = src.Type.ToNullableCustomerType()
+            Type = src.Type.ToNullableCustomerType(),
         };
 
         customer.Identities = MapTo(src.Identities, customer).ToList();
@@ -198,7 +198,7 @@ public class EntityMapper : IEntityMapper
             CustomDomain = src.CustomDomain,
             Type = src.Type.ToOrganizationType(),
             IsOwnershipVerified = src.IsOwnershipVerified,
-            SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt
+            SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt,
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
@@ -219,12 +219,18 @@ public class EntityMapper : IEntityMapper
             DeletedAt = src.DeletedAt,
             EventRaisedAt = src.EventRaisedAt,
             Organization = organization,
-            Customer = MapTo(src.Customer)!
+            Customer = MapTo(src.Customer)!,
         };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src, Customer customer) =>
         src.Select(item => MapTo(item, customer));
 
     private static Identity MapTo(Shared.Database.Entities.Identity src, Customer customer) =>
-        new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Customer = customer };
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            Customer = customer,
+        };
 }

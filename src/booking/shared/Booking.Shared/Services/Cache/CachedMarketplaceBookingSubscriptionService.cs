@@ -27,7 +27,11 @@ public class CachedMarketplaceBookingSubscriptionService(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdUntrackedAsync(id, ct) ??
                             throw new MarketplaceBookingSubscriptionNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (MarketplaceBookingSubscriptionNotFound)
@@ -44,7 +48,11 @@ public class CachedMarketplaceBookingSubscriptionService(
             CreateKeyById(id),
             await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdUntrackedAsync(id, cancellationToken) ??
             throw new MarketplaceBookingSubscriptionNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromMinutes(30),
+                LocalCacheExpiration = TimeSpan.FromSeconds(30),
+            },
             cancellationToken: cancellationToken);
     }
 

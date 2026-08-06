@@ -33,6 +33,10 @@ public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, Cust
     {
         public CustomerDbContext CreateDbContext(string[] args) =>
             new(args.ToDbContextOption<CustomerDbContext>(true),
-                new CustomDbContextOptions<CustomerDbContext> { IsPooled = false, IsPostgisEnabled = true });
+                new CustomDbContextOptions<CustomerDbContext>
+                {
+                    IsPooled = false,
+                    IsPostgisEnabled = true,
+                });
     }
 }

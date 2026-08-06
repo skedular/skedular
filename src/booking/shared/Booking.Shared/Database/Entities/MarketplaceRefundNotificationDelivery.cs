@@ -38,7 +38,12 @@ public class MarketplaceRefundNotificationDeliveryConfiguration
             .HasForeignKey(item => item.MarketplaceRefundId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(item => new { item.MarketplaceRefundId, item.EventType, item.RecipientId }).IsUnique();
+        builder.HasIndex(item => new
+        {
+            item.MarketplaceRefundId,
+            item.EventType,
+            item.RecipientId,
+        }).IsUnique();
         builder.HasIndex(item => item.Status);
     }
 }

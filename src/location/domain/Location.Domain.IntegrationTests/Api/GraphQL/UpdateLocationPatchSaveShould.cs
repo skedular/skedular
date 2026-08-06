@@ -97,18 +97,25 @@ public class UpdateLocationPatchSaveShould(
         var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken);
         organization.Offering = new Offering
         {
-            Id = organizationId, Code = OfferingCode.EnterpriseCustomV1, Start = now.AddDays(-1), End = now.AddDays(1)
+            Id = organizationId,
+            Code = OfferingCode.EnterpriseCustomV1,
+            Start = now.AddDays(-1),
+            End = now.AddDays(1),
         };
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, cancellationToken);
 
-        repositoryFactory.IdentityRepository.Add(new Identity { Id = identityId, Customer = customer });
+        repositoryFactory.IdentityRepository.Add(new Identity
+        {
+            Id = identityId,
+            Customer = customer,
+        });
         repositoryFactory.OrganizationMemberRepository.Add(new OrganizationMember
         {
             Id = memberId,
             Organization = organization,
             Customer = customer,
             Role = OrganizationMemberRoleConstants.Owner,
-            Status = OrganizationMemberStatusConstants.Active
+            Status = OrganizationMemberStatusConstants.Active,
         });
         repositoryFactory.LocationRepository.Add(new LocationEntity
         {
@@ -117,7 +124,7 @@ public class UpdateLocationPatchSaveShould(
             Name = originalName,
             Timezone = originalTimezone,
             Type = LocationTypeConstants.Private,
-            ListingMetadata = new ListingMetadata(null, listingTitle, null, [])
+            ListingMetadata = new ListingMetadata(null, listingTitle, null, []),
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -192,7 +192,7 @@ public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvide
                     KeysetPaginationField<MarketplaceExternalRefundReconciliation>.Create(
                         nameof(MarketplaceExternalRefundReconciliation.FirstSeenAt),
                         item => item.FirstSeenAt,
-                        OrderDirection.Ascending)
+                        OrderDirection.Ascending),
                 ],
                 cancellationToken);
 
@@ -212,7 +212,7 @@ public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvide
                     KeysetPaginationField<MarketplaceExternalRefundReconciliation>.Create(
                         nameof(MarketplaceExternalRefundReconciliation.FirstSeenAt),
                         item => item.FirstSeenAt,
-                        OrderDirection.Ascending)
+                        OrderDirection.Ascending),
                 ],
                 cancellationToken);
 
@@ -294,7 +294,12 @@ public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvide
         DateTimeOffset overdueThreshold, CancellationToken cancellationToken)
     {
         var refundCounts = await DbContext.MarketplaceRefund
-            .GroupBy(item => new { Provider = item.PaymentProvider ?? "unknown", item.Status, item.OrganizationId })
+            .GroupBy(item => new
+            {
+                Provider = item.PaymentProvider ?? "unknown",
+                item.Status,
+                item.OrganizationId,
+            })
             .Select(group => new MarketplaceRefundOperationsMetric(
                 group.Key.Provider,
                 group.Key.Status,
@@ -305,7 +310,12 @@ public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvide
             .Where(item =>
                 item.Status == MarketplaceRefundStatusConstants.Approved &&
                 item.BankTransferSentAt == null && item.RequestedAt < overdueThreshold)
-            .GroupBy(item => new { Provider = item.PaymentProvider ?? "unknown", item.Status, item.OrganizationId })
+            .GroupBy(item => new
+            {
+                Provider = item.PaymentProvider ?? "unknown",
+                item.Status,
+                item.OrganizationId,
+            })
             .Select(group => new MarketplaceRefundOperationsMetric(
                 group.Key.Provider,
                 group.Key.Status,
@@ -388,7 +398,7 @@ public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvide
             SourceCapturedAmount = source.SourceCapturedAmount,
             AllocatedRefundAmount = amount,
             IsSourcePayment = false,
-            Currency = source.Currency
+            Currency = source.Currency,
         });
         return result;
     }
@@ -471,7 +481,7 @@ public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvide
                     KeysetPaginationField<MarketplaceRefund>.Create(
                         nameof(MarketplaceRefund.RequestedAt), item => item.RequestedAt, OrderDirection.Descending),
                     KeysetPaginationField<MarketplaceRefund>.Create(
-                        nameof(MarketplaceRefund.Id), item => item.Id, OrderDirection.Descending)
+                        nameof(MarketplaceRefund.Id), item => item.Id, OrderDirection.Descending),
                 ],
                 cancellationToken);
     }

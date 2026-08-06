@@ -21,15 +21,22 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Existing_Refund_Unchanged_When_Subscription_Refund_Already_Exists(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
         var requestedAt = new DateTimeOffset(2026, 4, 7, 9, 0, 0, TimeSpan.Zero);
-        var requestedByCustomer = new CustomerEntity { Id = "customer-1" };
+        var requestedByCustomer = new CustomerEntity
+        {
+            Id = "customer-1",
+        };
         var subscription = CreateSubscription(
             requestedAt.AddDays(-5),
             requestedAt.AddDays(2),
@@ -42,7 +49,7 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
             LocalEntityId = subscription.Id,
-            Status = "OldStatus"
+            Status = "OldStatus",
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -62,10 +69,14 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Null_When_Current_Billing_Window_Payment_Is_Not_Confirmed(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -83,9 +94,10 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
                 StartDate = requestedAt.AddDays(-5),
                 MarketplaceBooking = new MarketplaceBookingEntity
                 {
-                    PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(), ProductPricing = subscription.MarketplaceBooking.ProductPricing
-                }
-            }
+                    PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
+                    ProductPricing = subscription.MarketplaceBooking.ProductPricing,
+                },
+            },
         ];
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -107,11 +119,16 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Allocate_A_Subscription_Refund_Against_The_Confirmed_Current_Bank_Transfer_Payment(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventService marketplaceRefundEventService,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundEventService marketplaceRefundEventService,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -127,7 +144,10 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
         currentCycleMarketplaceBooking.TotalAmount = 102.20m;
         currentCycleMarketplaceBooking.TotalAmountExcludeTax = 100m;
         currentCycleMarketplaceBooking.TaxAmount = 2.20m;
-        currentCycleMarketplaceBooking.ProductPricing = currentCycleMarketplaceBooking.ProductPricing with { Price = 100m };
+        currentCycleMarketplaceBooking.ProductPricing = currentCycleMarketplaceBooking.ProductPricing with
+        {
+            Price = 100m,
+        };
         currentCycleMarketplaceBooking.PaymentMethod = PaymentMethod.BankTransfer.ToPaymentMethod();
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -160,7 +180,8 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Refund_Only_Undelivered_Recurring_Occurrences(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -173,11 +194,31 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
         var recurringBooking = subscription.RecurringBookings.Single();
         recurringBooking.Bookings =
         [
-            new BookingEntity { From = requestedAt.AddDays(-5), Until = requestedAt.AddDays(-5).AddHours(1) },
-            new BookingEntity { From = requestedAt.AddDays(-4), Until = requestedAt.AddDays(-4).AddHours(1) },
-            new BookingEntity { From = requestedAt.AddDays(1), Until = requestedAt.AddDays(1).AddHours(1) },
-            new BookingEntity { From = requestedAt.AddDays(2), Until = requestedAt.AddDays(2).AddHours(1) },
-            new BookingEntity { From = requestedAt.AddDays(3), Until = requestedAt.AddDays(3).AddHours(1) }
+            new BookingEntity
+            {
+                From = requestedAt.AddDays(-5),
+                Until = requestedAt.AddDays(-5).AddHours(1),
+            },
+            new BookingEntity
+            {
+                From = requestedAt.AddDays(-4),
+                Until = requestedAt.AddDays(-4).AddHours(1),
+            },
+            new BookingEntity
+            {
+                From = requestedAt.AddDays(1),
+                Until = requestedAt.AddDays(1).AddHours(1),
+            },
+            new BookingEntity
+            {
+                From = requestedAt.AddDays(2),
+                Until = requestedAt.AddDays(2).AddHours(1),
+            },
+            new BookingEntity
+            {
+                From = requestedAt.AddDays(3),
+                Until = requestedAt.AddDays(3).AddHours(1),
+            },
         ];
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -210,9 +251,13 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
                 {
                     Product = new ProductEntity
                     {
-                        Organization = new OrganizationEntity { Id = "org-1", BillingCycle = OrganizationBillingCycleConstants.Monthly }
-                    }
-                }
+                        Organization = new OrganizationEntity
+                        {
+                            Id = "org-1",
+                            BillingCycle = OrganizationBillingCycleConstants.Monthly,
+                        },
+                    },
+                },
             },
             RecurringBookings =
             [
@@ -223,10 +268,10 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
                     MarketplaceBooking = new MarketplaceBookingEntity
                     {
                         PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(),
-                        ProductPricing = CreatePricing(cancellationPolicyType, cancellationRefundRules)
-                    }
-                }
-            ]
+                        ProductPricing = CreatePricing(cancellationPolicyType, cancellationRefundRules),
+                    },
+                },
+            ],
         };
 
     private static ProductPricing CreatePricing(

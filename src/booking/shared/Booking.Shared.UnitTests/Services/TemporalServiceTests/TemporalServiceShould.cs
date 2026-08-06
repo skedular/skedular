@@ -16,9 +16,12 @@ public class TemporalServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Workflow_Rollover_Spaces_Booking_Usage_With_Correct_Options(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
+        [Frozen]
+        TemporalConfiguration temporalConfiguration,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
         WorkflowHandle<RolloverSpacesBookingUsage> workflowHandle,
         TemporalService sut,
         string expectedId,
@@ -43,16 +46,22 @@ public class TemporalServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Workflow_Generate_Location_Resources_Slots_With_Correct_Options(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
+        [Frozen]
+        TemporalConfiguration temporalConfiguration,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
         WorkflowHandle<GenerateLocationResourcesSlots> workflowHandle,
         TemporalService sut,
         GenerateLocationResourcesSlotsInput args,
         string expectedId,
         CancellationToken cancellationToken)
     {
-        args = args with { LocationId = "loc-1" };
+        args = args with
+        {
+            LocationId = "loc-1",
+        };
 
         A.CallTo(() => workflowIdService.GenerateLocationResourcesSlots("loc-1")).Returns(expectedId);
         A.CallTo(() => temporalClient.StartWorkflowAsync(
@@ -74,9 +83,12 @@ public class TemporalServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Workflow_Generate_Resources_Slots_With_Correct_Options(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
+        [Frozen]
+        TemporalConfiguration temporalConfiguration,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
         WorkflowHandle<GenerateResourcesSlots> workflowHandle,
         TemporalService sut,
         GenerateResourcesSlotsInput args,
@@ -102,8 +114,10 @@ public class TemporalServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Signal_Pay_Booking_Via_Card_Workflow_With_Correct_Handle(
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
         TemporalService sut,
         SetPaymentStatusArgs args,
         string bookingId,
@@ -124,9 +138,12 @@ public class TemporalServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Workflow_Run_Organization_Arrears_Billing_With_Correct_Options(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
+        [Frozen]
+        TemporalConfiguration temporalConfiguration,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
         WorkflowHandle<RunOrganizationArrearsBilling> workflowHandle,
         TemporalService sut,
         CancellationToken cancellationToken)
@@ -157,9 +174,12 @@ public class TemporalServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Signal_Run_Organization_Arrears_Billing_Workflow_Run_Now_With_Correct_Handle(
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalHelperService temporalHelperService,
         TemporalService sut,
         string expectedWorkflowId,
         CancellationToken cancellationToken)
@@ -180,9 +200,12 @@ public class TemporalServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Signal_Maintain_Accounting_Invoice_State_Workflow_When_Running(
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalHelperService temporalHelperService,
         TemporalService sut,
         MaintainAccountingInvoiceStateInput args,
         string expectedWorkflowId,
@@ -204,10 +227,14 @@ public class TemporalServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Maintain_Accounting_Invoice_State_Workflow_When_Not_Running(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen]
+        TemporalConfiguration temporalConfiguration,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalHelperService temporalHelperService,
         WorkflowHandle<MaintainAccountingInvoiceState> workflowHandle,
         TemporalService sut,
         MaintainAccountingInvoiceStateInput args,
@@ -236,9 +263,12 @@ public class TemporalServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Signal_Maintain_Organization_Arrears_Invoice_Accounting_State_Workflow_When_Running(
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalHelperService temporalHelperService,
         TemporalService sut,
         MaintainOrganizationArrearsInvoiceAccountingStateInput args,
         string expectedWorkflowId,
@@ -263,10 +293,14 @@ public class TemporalServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Maintain_Organization_Arrears_Invoice_Accounting_State_Workflow_When_Not_Running(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen]
+        TemporalConfiguration temporalConfiguration,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalHelperService temporalHelperService,
         WorkflowHandle<MaintainOrganizationArrearsInvoiceAccountingState> workflowHandle,
         TemporalService sut,
         MaintainOrganizationArrearsInvoiceAccountingStateInput args,

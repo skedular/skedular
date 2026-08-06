@@ -46,7 +46,10 @@ public class EditBookingButtonHandler(
         var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditBookingContext.Deserialize(action.Value);
         var booking = await bookingService.GetAsync(workspaceMember.Id, context.BookingId, cancellationToken);
-        var bookingDate = new SectionBlock { Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar) };
+        var bookingDate = new SectionBlock
+        {
+            Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar),
+        };
         if (booking.InvolvedCustomers.Count != 1)
         {
             // TODO: 20250427 - Morteza: We currently do not support handling multiple customers involved in a single booking in Slack 
@@ -68,10 +71,14 @@ public class EditBookingButtonHandler(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationMemberKey,
-                InitialOption = new Option { Text = customer.DisplayableName.ToOptionText(), Value = customer.Id },
-                MinQueryLength = 0
+                InitialOption = new Option
+                {
+                    Text = customer.DisplayableName.ToOptionText(),
+                    Value = customer.Id,
+                },
+                MinQueryLength = 0,
             },
-            Optional = false
+            Optional = false,
         };
 
         var teamBlock = new InputBlock
@@ -81,10 +88,16 @@ public class EditBookingButtonHandler(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationTeamKey,
-                InitialOption = team is null ? null : new Option { Text = team.Name.ToOptionText(), Value = team.Id },
-                MinQueryLength = 0
+                InitialOption = team is null
+                    ? null
+                    : new Option
+                    {
+                        Text = team.Name.ToOptionText(),
+                        Value = team.Id,
+                    },
+                MinQueryLength = 0,
             },
-            Optional = true
+            Optional = true,
         };
 
         var notes = new InputBlock
@@ -93,12 +106,19 @@ public class EditBookingButtonHandler(
             Label = "Notes".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = NotesKey, Placeholder = "e.g., I will be there from 9am", Multiline = true, InitialValue = booking.Notes
+                ActionId = NotesKey,
+                Placeholder = "e.g., I will be there from 9am",
+                Multiline = true,
+                InitialValue = booking.Notes,
             },
-            Optional = true
+            Optional = true,
         };
 
-        var blocks = new List<Block> { bookingDate, organizationMemberBlock };
+        var blocks = new List<Block>
+        {
+            bookingDate,
+            organizationMemberBlock,
+        };
         var locationResources = await GetResourceOptionsAsync(request, workspace, booking, cancellationToken);
         if (locationResources is not null)
         {
@@ -118,7 +138,7 @@ public class EditBookingButtonHandler(
                 Close = "Cancel",
                 Submit = "Save",
                 Blocks = blocks,
-                PrivateMetadata = action.Value
+                PrivateMetadata = action.Value,
             },
             cancellationToken);
     }
@@ -157,7 +177,13 @@ public class EditBookingButtonHandler(
                 if (block is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
-                    booking.InvolvedCustomers = [new Customer { Id = value.SelectedOption.Value }];
+                    booking.InvolvedCustomers =
+                    [
+                        new Customer
+                        {
+                            Id = value.SelectedOption.Value,
+                        },
+                    ];
                 }
                 else
                 {
@@ -180,7 +206,10 @@ public class EditBookingButtonHandler(
             {
                 if (block is StaticMultiSelectValue value)
                 {
-                    booking.Resources = value.SelectedOptions.Select(item => new Shared.Models.Resource { Id = item.Value }).ToList();
+                    booking.Resources = value.SelectedOptions.Select(item => new Shared.Models.Resource
+                    {
+                        Id = item.Value,
+                    }).ToList();
                 }
                 else
                 {
@@ -201,7 +230,13 @@ public class EditBookingButtonHandler(
                 {
                     booking.InvolvedTeams = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
                         ? []
-                        : [new Shared.Models.Team { Id = value.SelectedOption.Value }];
+                        :
+                        [
+                            new Shared.Models.Team
+                            {
+                                Id = value.SelectedOption.Value,
+                            },
+                        ];
                 }
                 else
                 {
@@ -272,7 +307,11 @@ public class EditBookingButtonHandler(
                 : $"{item.Name.ToTextWithIcon(Icons.Resource)} {string.Join(",", zones.Select(zone => zone.Name)).ToTextWithIcon(Icons.Zones)}"
                     .ToOptionText();
 
-            return new Option { Text = optionText, Value = item.Id };
+            return new Option
+            {
+                Text = optionText,
+                Value = item.Id,
+            };
         }).ToList();
 
         if (resourcesOptions.Count == 0)
@@ -285,9 +324,15 @@ public class EditBookingButtonHandler(
         {
             ActionId = ResourcesKey,
             Options = resourcesOptions,
-            InitialOptions = resourcesOptions.Where(item => resourceIds.Contains(item.Value)).ToList()
+            InitialOptions = resourcesOptions.Where(item => resourceIds.Contains(item.Value)).ToList(),
         };
 
-        return new InputBlock { BlockId = ResourcesKey, Label = "Resources".ToPlainText(), Element = menu, Optional = true };
+        return new InputBlock
+        {
+            BlockId = ResourcesKey,
+            Label = "Resources".ToPlainText(),
+            Element = menu,
+            Optional = true,
+        };
     }
 }

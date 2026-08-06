@@ -20,7 +20,7 @@ public class AddXeroServicesShould
                 [$"{XeroConfiguration.Key}:ClientId"] = "clientId",
                 [$"{XeroConfiguration.Key}:ClientSecret"] = "secret",
                 [$"{XeroConfiguration.Key}:EncryptionKey:Key"] = "12345678901234567890123456789012",
-                [$"{XeroConfiguration.Key}:EncryptionKey:Iv"] = "1234567890123456"
+                [$"{XeroConfiguration.Key}:EncryptionKey:Iv"] = "1234567890123456",
             })
             .Build();
 

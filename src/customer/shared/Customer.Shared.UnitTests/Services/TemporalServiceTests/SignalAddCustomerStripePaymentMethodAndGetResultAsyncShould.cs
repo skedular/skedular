@@ -10,8 +10,10 @@ public class SignalAddCustomerStripePaymentMethodAndGetResultAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Get_Workflow_Handle_With_Correct_Id(
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
         TemporalService sut,
         StripePaymentMethodEventState args,
         string clientSecret,

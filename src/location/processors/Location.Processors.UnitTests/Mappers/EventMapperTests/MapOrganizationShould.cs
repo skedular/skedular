@@ -32,7 +32,10 @@ public class MapOrganizationShould
         DateTimeOffset nextBillingAt) =>
         new()
         {
-            Metadata = new Metadata { Time = Timestamp.FromDateTimeOffset(trialStartedAt) },
+            Metadata = new Metadata
+            {
+                Time = Timestamp.FromDateTimeOffset(trialStartedAt),
+            },
             Data = new Data
             {
                 Organization = new Organization
@@ -48,9 +51,9 @@ public class MapOrganizationShould
                         SpacesProductEnabled = true,
                         SpacesTrialStartedAt = Timestamp.FromDateTimeOffset(trialStartedAt),
                         SpacesTrialEndsAt = Timestamp.FromDateTimeOffset(trialEndsAt),
-                        SpacesNextBillingAt = Timestamp.FromDateTimeOffset(nextBillingAt)
-                    }
-                }
-            }
+                        SpacesNextBillingAt = Timestamp.FromDateTimeOffset(nextBillingAt),
+                    },
+                },
+            },
         };
 }

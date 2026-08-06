@@ -107,7 +107,7 @@ public class EntityMapper : IEntityMapper
                 .OrderBy(item => item.SortOrder)
                 .ThenBy(item => item.Title)
                 .Select(MapTo)
-                .ToList()
+                .ToList(),
         };
 
         location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
@@ -139,7 +139,7 @@ public class EntityMapper : IEntityMapper
             ContactedViaEmail = src.ContactedViaEmail,
             ContactedViaSms = src.ContactedViaSms,
             ContactedViaCall = src.ContactedViaCall,
-            ContactedViaWhatsapp = src.ContactedViaWhatsapp
+            ContactedViaWhatsapp = src.ContactedViaWhatsapp,
         };
 
     public Database.Entities.Location MergeTo(
@@ -179,7 +179,7 @@ public class EntityMapper : IEntityMapper
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
             Tags = MapTo(src.OrganizationTags).ToList(),
-            ResourcePosition = MapTo(src.ResourcePosition)
+            ResourcePosition = MapTo(src.ResourcePosition),
         };
 
     public Resource MapTo(
@@ -222,7 +222,7 @@ public class EntityMapper : IEntityMapper
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
             Location = location,
-            Tags = MapTo(src.OrganizationTags, location.Organization).ToList()
+            Tags = MapTo(src.OrganizationTags, location.Organization).ToList(),
         };
 
     public IEnumerable<Edge<Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Models.Location location) =>
@@ -262,7 +262,7 @@ public class EntityMapper : IEntityMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
-            Image = src.Image
+            Image = src.Image,
         };
 
         floorPlan.ResourcePositions = MapTo(src.ResourcePositions, floorPlan).ToList();
@@ -324,7 +324,7 @@ public class EntityMapper : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Type = src.Type.ToNullableOrganizationTagType(),
-            Color = src.Color
+            Color = src.Color,
         };
 
     private static IEnumerable<Models.OrganizationTag> MapTo(
@@ -351,7 +351,7 @@ public class EntityMapper : IEntityMapper
             Offering = src.Offering,
             Type = src.Type.ToOrganizationType(),
             IsOwnershipVerified = src.IsOwnershipVerified,
-            Tags = MapTo(src.Tags).ToList()
+            Tags = MapTo(src.Tags).ToList(),
         };
 
     private static IEnumerable<DailyDeskCountRecording> MapTo(
@@ -368,7 +368,7 @@ public class EntityMapper : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             Location = location,
             Date = src.Date,
-            Count = src.Count
+            Count = src.Count,
         };
 
     private static IEnumerable<DailyRoomCountRecording> MapTo(
@@ -385,7 +385,7 @@ public class EntityMapper : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             Location = location,
             Date = src.Date,
-            Count = src.Count
+            Count = src.Count,
         };
 
     private static Models.OrganizationTag MapTo(OrganizationTag src, Models.Organization? organization)
@@ -398,7 +398,7 @@ public class EntityMapper : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Type = src.Type.ToNullableOrganizationTagType(),
-            Color = src.Color
+            Color = src.Color,
         };
 
         if (organization is not null)
@@ -431,7 +431,7 @@ public class EntityMapper : IEntityMapper
                 ModifiedAt = src.ModifiedAt,
                 X = src.X,
                 Y = src.Y,
-                FloorPlan = MapTo(src.FloorPlan)
+                FloorPlan = MapTo(src.FloorPlan),
             };
 
     private static Models.ResourcePosition? MapTo(ResourcePosition? src, FloorPlan floorPlan) =>
@@ -457,8 +457,8 @@ public class EntityMapper : IEntityMapper
                     Color = src.Resource.Color,
                     Capacity = src.Resource.Capacity,
                     IsAvailableHoursOverridden = src.Resource.IsAvailableHoursOverridden ?? false,
-                    AvailableHours = src.Resource.AvailableHours
-                }
+                    AvailableHours = src.Resource.AvailableHours,
+                },
             };
 
     private static Models.LocationPhysicalAddress? MapTo(LocationPhysicalAddress? src, Models.Location location) =>
@@ -480,7 +480,7 @@ public class EntityMapper : IEntityMapper
                 Zipcode = src.Zipcode,
                 Country = src.Country,
                 CountryCode = src.CountryCode,
-                Location = location
+                Location = location,
             };
 
     private static IEnumerable<PrecomputedLocationProduct> MapTo(
@@ -488,10 +488,22 @@ public class EntityMapper : IEntityMapper
         src.Select(MapTo);
 
     private static PrecomputedLocationProduct MapTo(Database.Entities.PrecomputedLocationProduct src) =>
-        new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Product = MapTo(src.Product) };
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            Product = MapTo(src.Product),
+        };
 
     private static Product MapTo(Database.Entities.Product src) =>
-        new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, DeletedAt = src.DeletedAt };
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+        };
 
     private static LocationRestrictedInformation MapTo(Database.Entities.LocationRestrictedInformation src) =>
         new()
@@ -503,6 +515,6 @@ public class EntityMapper : IEntityMapper
             Category = src.Category.ToLocationRestrictedInformationCategory(),
             Content = src.Content,
             Active = src.Active,
-            SortOrder = src.SortOrder
+            SortOrder = src.SortOrder,
         };
 }

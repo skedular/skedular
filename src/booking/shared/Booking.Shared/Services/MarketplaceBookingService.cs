@@ -186,7 +186,7 @@ public class MarketplaceBookingService(
             (productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions!.ToList(), marketplaceBooking.ProductPricing) ??
              throw new ProductPricingNotFound()) with
             {
-                BookingCadence = marketplaceBooking.ProductPricing.BookingCadence
+                BookingCadence = marketplaceBooking.ProductPricing.BookingCadence,
             };
         // Stripe checkout is created asynchronously in Temporal, so we persist the exact
         // storefront page that should receive the user again after success or cancellation.
@@ -398,6 +398,12 @@ public class MarketplaceBookingService(
         booking = entityMapper.MapTo(bookingEntity);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
+
+        if (recurringBooking is null)
+        {
+            await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingAsync(
+                bookingEntity, null, cancellationToken);
+        }
 
         if (recurringBooking is null)
         {
@@ -679,6 +685,9 @@ public class MarketplaceBookingService(
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingAsync(
+            bookingEntity, null, cancellationToken);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -778,6 +787,8 @@ public class MarketplaceBookingService(
             : null;
 
         await accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingAsync(
+            existingBooking, refund, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -1074,7 +1085,7 @@ public class MarketplaceBookingService(
             PaymentMethod.Card => pricing.MaxAllowedResourcesLockTimePaidViaCard,
             PaymentMethod.BankTransfer => pricing.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             _ => throw new ArgumentOutOfRangeException(nameof(paymentMethod), paymentMethod,
-                $"Unexpected value for {nameof(paymentMethod)}: {paymentMethod}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(paymentMethod)}: {paymentMethod}. Update enum mapping or caller input."),
         };
 
     /// <summary>

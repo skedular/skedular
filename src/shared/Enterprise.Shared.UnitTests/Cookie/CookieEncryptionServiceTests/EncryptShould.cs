@@ -10,8 +10,10 @@ public class EncryptShould
     [Theory]
     [AutoFakeItEasyData]
     public void Encrypt_delegates_to_algorithm(
-        [Frozen] IStringEncryptionAlgorithm algorithm,
-        [Frozen] CookieConfiguration cookieConfiguration,
+        [Frozen]
+        IStringEncryptionAlgorithm algorithm,
+        [Frozen]
+        CookieConfiguration cookieConfiguration,
         CookieEncryptionService sut,
         string plainText,
         string expectedCipherText)

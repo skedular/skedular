@@ -6,9 +6,14 @@ namespace Booking.Api.GraphQL.Booking;
 [GraphQLName("BookingResourceDetails")]
 public class BookingResourceDetails
 {
-    [GraphQLName("resource")] public ResourceDetails Resource { get; set; } = new();
-    [GraphQLName("location")] public LocationDetails? Location { get; set; }
-    [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];
+    [GraphQLName("resource")]
+    public ResourceDetails Resource { get; set; } = new();
+
+    [GraphQLName("location")]
+    public LocationDetails? Location { get; set; }
+
+    [GraphQLName("customerIds")]
+    public IEnumerable<string> CustomerIds { get; set; } = [];
 }
 
 [ObjectType<BookingResourceDetails>]

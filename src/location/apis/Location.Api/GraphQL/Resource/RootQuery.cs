@@ -18,8 +18,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<ResourceDetails?> ResourceByIdAsync(
-        [ID] string id,
-        [Service] IResourceService resourceService,
+        [ID]
+        string id,
+        [Service]
+        IResourceService resourceService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await resourceService.GetByIdAsync(id, true, cancellationToken));
 }

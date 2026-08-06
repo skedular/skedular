@@ -18,21 +18,39 @@ public class HandleAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_And_Skip_When_Upsert_Event_Is_Stale(
-        [Frozen] IEventMapper eventMapper,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ILogger<CustomerSubscriber> logger,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IEventMapper eventMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ILogger<CustomerSubscriber> logger,
+        [Frozen]
+        EventContext eventContext,
         CustomerSubscriber sut,
         CancellationToken cancellationToken)
     {
-        var model = new Customer { Id = "customer-1", EventRaisedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), Identities = [] };
+        var model = new Customer
+        {
+            Id = "customer-1",
+            EventRaisedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            Identities = [],
+        };
         var existing = new Shared.Database.Entities.Customer
         {
-            Id = "customer-1", EventRaisedAt = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero)
+            Id = "customer-1",
+            EventRaisedAt = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero),
         };
-        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.CustomerUpserted } };
+        var @event = new Event
+        {
+            Metadata = new ValueMetadata
+            {
+                Type = ValueType.CustomerUpserted,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => eventMapper.MapTo(@event)).Returns(model);
@@ -51,22 +69,41 @@ public class HandleAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_When_Delete_Event_Is_Processed(
-        [Frozen] IEventMapper eventMapper,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ILogger<CustomerSubscriber> logger,
-        [Frozen] EventContext eventContext,
+        [Frozen]
+        IEventMapper eventMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ILogger<CustomerSubscriber> logger,
+        [Frozen]
+        EventContext eventContext,
         CustomerSubscriber sut,
         CancellationToken cancellationToken)
     {
-        var model = new Customer { Id = "customer-1", EventRaisedAt = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero), Identities = [] };
+        var model = new Customer
+        {
+            Id = "customer-1",
+            EventRaisedAt = new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero),
+            Identities = [],
+        };
         var existing = new Shared.Database.Entities.Customer
         {
-            Id = "customer-1", EventRaisedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero)
+            Id = "customer-1",
+            EventRaisedAt = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
         };
-        var @event = new Event { Metadata = new ValueMetadata { Type = ValueType.CustomerDeleted } };
+        var @event = new Event
+        {
+            Metadata = new ValueMetadata
+            {
+                Type = ValueType.CustomerDeleted,
+            },
+        };
 
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);

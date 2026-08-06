@@ -55,7 +55,13 @@ public class LocationResourceBookingSlotsHelperService(IRandomHelper randomHelpe
         return Enumerable
             .Range(0, (int)count)
             .Select(idx => startPeriod.AddMinutes(idx * OpeningHoursDetails.BookingSlotSizeInMinutes))
-            .Select(start => new ResourceBookingSlot { Id = randomHelper.Generate(), Start = start, Available = true, Resource = resource })
+            .Select(start => new ResourceBookingSlot
+            {
+                Id = randomHelper.Generate(),
+                Start = start,
+                Available = true,
+                Resource = resource,
+            })
             .ToList();
     }
 }

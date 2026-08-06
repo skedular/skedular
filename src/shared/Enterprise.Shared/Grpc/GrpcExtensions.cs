@@ -9,7 +9,10 @@ public static class GrpcExtensions
         public Metadata CreateMetadata()
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(apiKey);
-            return new Metadata { { Constants.ApiKey, apiKey } };
+            return new Metadata
+            {
+                { Constants.ApiKey, apiKey },
+            };
         }
 
         public Metadata CreateMetadata(string verifiableToken)

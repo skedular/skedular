@@ -60,11 +60,23 @@ public interface IGrpcMapper
 public class GrpcMapper : IGrpcMapper
 {
     public Admin_AddIdentityInput MapToAddIdentityInput(WorkspaceMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = true,
+            CustomerId = customerId,
+        };
 
     public Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId)
     {
-        var input = new Admin_UpdateIdentityInput { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+        var input = new Admin_UpdateIdentityInput
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = true,
+            CustomerId = customerId,
+        };
         input.FieldsToUpdate.AddRange([IdentityPatchField.Email, IdentityPatchField.EmailVerified]);
         return input;
     }
@@ -89,15 +101,24 @@ public class GrpcMapper : IGrpcMapper
             IsOnboardingDone = true,
             DefaultOrganizationId = defaultOrganizationId.ToSafeString(),
             PersonalInformationVisibility = PersonalInformationVisibility.Visible,
-            Type = Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered
+            Type = Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered,
         };
 
-        input.Identities.Add(new Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
+        input.Identities.Add(new Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity
+        {
+            Id = src.Id,
+            Email = src.Email,
+            EmailVerified = true,
+        });
 
         input.PreferredLocations.AddRange(preferredLocationIds.Select(item =>
             new Api.Shared.Grpc.Skedular.Customer.Core.V1.Location
             {
-                Id = item, Organization = new Api.Shared.Grpc.Skedular.Customer.Core.V1.Organization { Id = defaultOrganizationId }
+                Id = item,
+                Organization = new Api.Shared.Grpc.Skedular.Customer.Core.V1.Organization
+                {
+                    Id = defaultOrganizationId,
+                },
             }));
 
         return input;
@@ -130,17 +151,29 @@ public class GrpcMapper : IGrpcMapper
                 DefaultOrganization =
                     string.IsNullOrWhiteSpace(src.DefaultOrganizationId)
                         ? null
-                        : new Organization { Id = src.DefaultOrganizationId.ToSafeString() },
-                PreferredLocations = src.PreferredLocationIds.Select(item => new Location { Id = item }).ToList(),
-                PreferredResources = src.PreferredResourceIds.Select(item => new Resource { Id = item }).ToList(),
-                PreferredOrganizationTags = src.PreferredOrganizationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+                        : new Organization
+                        {
+                            Id = src.DefaultOrganizationId.ToSafeString(),
+                        },
+                PreferredLocations = src.PreferredLocationIds.Select(item => new Location
+                {
+                    Id = item,
+                }).ToList(),
+                PreferredResources = src.PreferredResourceIds.Select(item => new Resource
+                {
+                    Id = item,
+                }).ToList(),
+                PreferredOrganizationTags = src.PreferredOrganizationTagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }).ToList(),
                 Type = src.Type switch
                 {
                     Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Guest => CustomerType.Guest,
                     Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Registered => CustomerType.Registered,
                     _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
-                        $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
-                }
+                        $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input."),
+                },
             };
 
     public Organization MapTo(Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization src) =>
@@ -159,7 +192,7 @@ public class GrpcMapper : IGrpcMapper
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
                 OrganizationType.Host => Api.Shared.Services.Models.OrganizationType.Host,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
-                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input."),
             },
             BillingCycle = src.BillingCycle switch
             {
@@ -167,13 +200,13 @@ public class GrpcMapper : IGrpcMapper
                 OrganizationBillingCycle.Fortnightly => Api.Shared.Services.Models.OrganizationBillingCycle.Fortnightly,
                 OrganizationBillingCycle.Monthly => Api.Shared.Services.Models.OrganizationBillingCycle.Monthly,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.BillingCycle), src.BillingCycle,
-                    $"Unexpected value for {nameof(src.BillingCycle)}: {src.BillingCycle}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.BillingCycle)}: {src.BillingCycle}. Update enum mapping or caller input."),
             },
             IsOwnershipVerified = src.IsOwnershipVerified,
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             HasFutureBooking = src.HasFutureBooking,
             Tags = MapToOrganizationCustomTag(src.Tags).ToList(),
-            ResourceTypes = MapTo(src.ResourceTypes).ToList()
+            ResourceTypes = MapTo(src.ResourceTypes).ToList(),
         };
 
     public Location MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.Location src) =>
@@ -183,15 +216,20 @@ public class GrpcMapper : IGrpcMapper
             Name = src.Name.ToSafeString(),
             ListingMetadata = MapTo(src.ListingMetadata),
             Timezone = src.Timezone.ToSafeString(),
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Organization { Id = src.OrganizationId },
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
+                ? null
+                : new Organization
+                {
+                    Id = src.OrganizationId,
+                },
             Type = src.Type switch
             {
                 LocationType.Private => Api.Shared.Services.Models.LocationType.Private,
                 LocationType.Marketplace => Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
-                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input."),
             },
-            Resources = MapTo(src.Resources).ToList()
+            Resources = MapTo(src.Resources).ToList(),
         };
 
     public Team MapTo(Api.Shared.Grpc.Skedular.Team.Core.V1.Team src)
@@ -202,16 +240,26 @@ public class GrpcMapper : IGrpcMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
-            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Organization { Id = src.OrganizationId },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Location { Id = src.PrimaryLocationId },
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId)
+                ? null
+                : new Organization
+                {
+                    Id = src.OrganizationId,
+                },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
+                ? null
+                : new Location
+                {
+                    Id = src.PrimaryLocationId,
+                },
             Permissions = new TeamPermissions
             {
                 CanView = src.Permissions.CanView,
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
-                CanCancelPeopleExistingInvitations = src.Permissions.CanCancelPeopleExistingInvitations
-            }
+                CanCancelPeopleExistingInvitations = src.Permissions.CanCancelPeopleExistingInvitations,
+            },
         };
 
         team.TeamMembers = MapTo(src.Members, team).ToList();
@@ -239,20 +287,35 @@ public class GrpcMapper : IGrpcMapper
                 BookingCategory.TravelingForWork => Api.Shared.Services.Models.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => Api.Shared.Services.Models.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Category), src.Category,
-                    $"Unexpected value for {nameof(src.Category)}: {src.Category}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Category)}: {src.Category}. Update enum mapping or caller input."),
             },
             Channel = src.Channel switch
             {
                 BookingChannel.Private => Api.Shared.Services.Models.BookingChannel.Private,
                 BookingChannel.Marketplace => Api.Shared.Services.Models.BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Channel), src.Channel,
-                    $"Unexpected value for {nameof(src.Channel)}: {src.Channel}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Channel)}: {src.Channel}. Update enum mapping or caller input."),
             },
-            Resources = src.Resources.Select(item => new Resource { Id = item.Id }).ToList(),
-            InvolvedCustomers = src.InvolvedCustomerIds.Select(item => new Customer { Id = item }).ToList(),
-            InvolvedOrganizations = src.InvolvedOrganizationIds.Select(item => new Organization { Id = item }).ToList(),
-            InvolvedLocations = src.InvolvedLocationIds.Select(item => new Location { Id = item }).ToList(),
-            InvolvedTeams = src.InvolvedTeamIds.Select(item => new Team { Id = item }).ToList()
+            Resources = src.Resources.Select(item => new Resource
+            {
+                Id = item.Id,
+            }).ToList(),
+            InvolvedCustomers = src.InvolvedCustomerIds.Select(item => new Customer
+            {
+                Id = item,
+            }).ToList(),
+            InvolvedOrganizations = src.InvolvedOrganizationIds.Select(item => new Organization
+            {
+                Id = item,
+            }).ToList(),
+            InvolvedLocations = src.InvolvedLocationIds.Select(item => new Location
+            {
+                Id = item,
+            }).ToList(),
+            InvolvedTeams = src.InvolvedTeamIds.Select(item => new Team
+            {
+                Id = item,
+            }).ToList(),
         };
 
     public OrganizationPermissions MapTo(Permissions src) =>
@@ -263,11 +326,17 @@ public class GrpcMapper : IGrpcMapper
             CanDelete = src.CanDelete,
             CanInvitePeople = src.CanInvitePeople,
             CanCancelPeopleExistingInvitations = src.CanCancelPeopleExistingInvitations,
-            CanViewAnalytics = src.CanViewAnalytics
+            CanViewAnalytics = src.CanViewAnalytics,
         };
 
     public LocationPermissions MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.Permissions src) =>
-        new() { CanView = src.CanView, CanModify = src.CanModify, CanDelete = src.CanDelete, CanViewAnalytics = src.CanViewAnalytics };
+        new()
+        {
+            CanView = src.CanView,
+            CanModify = src.CanModify,
+            CanDelete = src.CanDelete,
+            CanViewAnalytics = src.CanViewAnalytics,
+        };
 
     public TeamPermissions MapTo(Api.Shared.Grpc.Skedular.Team.Core.V1.Permissions src) =>
         new()
@@ -276,7 +345,7 @@ public class GrpcMapper : IGrpcMapper
             CanModify = src.CanModify,
             CanDelete = src.CanDelete,
             CanInvitePeople = src.CanInvitePeople,
-            CanCancelPeopleExistingInvitations = src.CanCancelPeopleExistingInvitations
+            CanCancelPeopleExistingInvitations = src.CanCancelPeopleExistingInvitations,
         };
 
     public OrganizationMember MapTo(Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMember src) =>
@@ -289,26 +358,47 @@ public class GrpcMapper : IGrpcMapper
                 OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
                 OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Role), src.Role,
-                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input."),
             },
             Status = src.Status switch
             {
                 OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
                 OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Status), src.Status,
-                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input."),
             },
-            Customer = new Customer { Id = src.CustomerId.ToSafeString() }
+            Customer = new Customer
+            {
+                Id = src.CustomerId.ToSafeString(),
+            },
         };
 
     public OrganizationZone MapTo(Zone src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+        };
 
     public Models_OrganizationCustomTag MapTo(CustomTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+        };
 
     public OrganizationProductTag MapTo(ProductTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+        };
 
     public OrganizationTag MapTo(Tag src) =>
         new()
@@ -317,7 +407,7 @@ public class GrpcMapper : IGrpcMapper
             Name = src.Name.ToSafeString(),
             Description = src.Description.ToSafeString(),
             Color = src.Color.ToSafeString(),
-            Type = src.TagType.ToSafeString().ToOrganizationTagType()
+            Type = src.TagType.ToSafeString().ToOrganizationTagType(),
         };
 
     public TeamBookingPermissions MapTo(Api.Shared.Grpc.Skedular.Booking.Core.V1.TeamPermissions src) =>
@@ -326,7 +416,7 @@ public class GrpcMapper : IGrpcMapper
             CanViewBookings = src.CanViewBookings,
             CanAddBooking = src.CanAddBooking,
             CanUpdateBooking = src.CanUpdateBooking,
-            CanDeleteBooking = src.CanDeleteBooking
+            CanDeleteBooking = src.CanDeleteBooking,
         };
 
     public OrganizationBookingPermissions MapTo(Api.Shared.Grpc.Skedular.Booking.Core.V1.OrganizationPermissions src) =>
@@ -335,7 +425,7 @@ public class GrpcMapper : IGrpcMapper
             CanViewBookings = src.CanViewBookings,
             CanAddBooking = src.CanAddBooking,
             CanUpdateBooking = src.CanUpdateBooking,
-            CanDeleteBooking = src.CanDeleteBooking
+            CanDeleteBooking = src.CanDeleteBooking,
         };
 
     public OrganizationBillingDetails MapTo(BillingDetails src) =>
@@ -356,7 +446,7 @@ public class GrpcMapper : IGrpcMapper
             Zipcode = src.Zipcode,
             Country = src.Country,
             CountryCode = src.CountryCode,
-            FormattedAddress = src.FormattedAddress
+            FormattedAddress = src.FormattedAddress,
         };
 
     public Resource MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.Resource src) =>
@@ -368,29 +458,58 @@ public class GrpcMapper : IGrpcMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
             Capacity = src.Capacity,
-            ResourceType = new ResourceType { Id = src.ResourceTypeId },
-            CustomTags = src.CustomTagIds.Select(item => new Models_OrganizationCustomTag { Id = item }).ToList(),
-            Zones = src.ZoneIds.Select(item => new OrganizationZone { Id = item }).ToList(),
-            ProductTags = src.ProductTagIds.Select(item => new OrganizationProductTag { Id = item }).ToList()
+            ResourceType = new ResourceType
+            {
+                Id = src.ResourceTypeId,
+            },
+            CustomTags = src.CustomTagIds.Select(item => new Models_OrganizationCustomTag
+            {
+                Id = item,
+            }).ToList(),
+            Zones = src.ZoneIds.Select(item => new OrganizationZone
+            {
+                Id = item,
+            }).ToList(),
+            ProductTags = src.ProductTagIds.Select(item => new OrganizationProductTag
+            {
+                Id = item,
+            }).ToList(),
         };
 
     private static IEnumerable<Models_OrganizationCustomTag> MapToOrganizationCustomTag(IEnumerable<Tag> src) =>
         src.Select(MapToOrganizationCustomTag);
 
     private static Models_OrganizationCustomTag MapToOrganizationCustomTag(Tag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+        };
 
     private static IEnumerable<OrganizationResourceType> MapTo(IEnumerable<Api.Shared.Grpc.Skedular.Organization.Core.V1.ResourceType> src) =>
         src.Select(MapToResourceType);
 
     private static OrganizationResourceType MapToResourceType(Api.Shared.Grpc.Skedular.Organization.Core.V1.ResourceType src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+        };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity> src) =>
         src.Select(MapTo);
 
     private static Identity MapTo(Api.Shared.Grpc.Skedular.Customer.Core.V1.Identity src) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = src.EmailVerified,
+        };
 
     private IEnumerable<Resource> MapTo(IEnumerable<Api.Shared.Grpc.Skedular.Location.Core.V1.Resource> src) =>
         src.Select(MapTo);
@@ -408,20 +527,30 @@ public class GrpcMapper : IGrpcMapper
                 Role.Administrator => TeamMemberRole.Administrator,
                 Role.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Role), src.Role,
-                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input."),
             },
             Status = src.Status switch
             {
                 TeamMemberStatus.Active => Api.Shared.Services.Models.TeamMemberStatus.Active,
                 TeamMemberStatus.Inactive => Api.Shared.Services.Models.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Status), src.Status,
-                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input."),
             },
-            Customer = new Customer { Id = src.CustomerId },
+            Customer = new Customer
+            {
+                Id = src.CustomerId,
+            },
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
                 ? null
-                : new OrganizationMember { Id = src.OrganizationMember.Id, Customer = new Customer { Id = src.OrganizationMember.CustomerId } },
-            Team = team
+                : new OrganizationMember
+                {
+                    Id = src.OrganizationMember.Id,
+                    Customer = new Customer
+                    {
+                        Id = src.OrganizationMember.CustomerId,
+                    },
+                },
+            Team = team,
         };
 
     private static ListingMetadata MapTo(Api.Shared.Grpc.Skedular.Organization.Core.V1.ListingMetadata src) =>

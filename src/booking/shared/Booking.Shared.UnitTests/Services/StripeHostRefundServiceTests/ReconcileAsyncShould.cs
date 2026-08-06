@@ -13,14 +13,26 @@ public class ReconcileAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Require_Reconciliation_When_A_Succeeded_Refund_Has_No_Persisted_Path(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundTransitionService refundTransitionService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundTransitionService refundTransitionService,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
-        var refund = new MarketplaceRefund { Id = "refund-1", Status = MarketplaceRefundStatusConstants.Processing };
-        var stripeRefund = new Refund { Id = "re_1", Status = "succeeded", Metadata = [] };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            Status = MarketplaceRefundStatusConstants.Processing,
+        };
+        var stripeRefund = new Refund
+        {
+            Id = "re_1",
+            Status = "succeeded",
+            Metadata = [],
+        };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => marketplaceRefundRepository.GetByExternalPaymentRefundIdAsync(stripeRefund.Id, cancellationToken))
             .Returns(refund);
@@ -54,14 +66,24 @@ public class ReconcileAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Scope_An_Unmatched_Stripe_Refund_To_Its_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeCustomerRepository stripeCustomerRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeCustomerRepository stripeCustomerRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
-        var stripeRefund = new Refund { Id = "re_1", Amount = 1250, Currency = "nzd", Metadata = [] };
+        var stripeRefund = new Refund
+        {
+            Id = "re_1",
+            Amount = 1250,
+            Currency = "nzd",
+            Metadata = [],
+        };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.StripeCustomerRepository).Returns(stripeCustomerRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -88,19 +110,29 @@ public class ReconcileAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Correlate_By_Metadata_And_Persist_A_Status_Change(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundTransitionService refundTransitionService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundTransitionService refundTransitionService,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefund
         {
-            Id = "refund-1", Status = MarketplaceRefundStatusConstants.Processing, StripeRefundPath = "TransferReversal"
+            Id = "refund-1",
+            Status = MarketplaceRefundStatusConstants.Processing,
+            StripeRefundPath = "TransferReversal",
         };
         var stripeRefund = new Refund
         {
-            Id = "re_1", Status = "succeeded", Metadata = new Dictionary<string, string> { ["marketplace_refund_id"] = refund.Id }
+            Id = "re_1",
+            Status = "succeeded",
+            Metadata = new Dictionary<string, string>
+            {
+                ["marketplace_refund_id"] = refund.Id,
+            },
         };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => marketplaceRefundRepository.GetByExternalPaymentRefundIdAsync(stripeRefund.Id, cancellationToken))
@@ -131,10 +163,14 @@ public class ReconcileAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Ignore_A_Duplicate_Status_Event(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventService marketplaceRefundEventService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundEventService marketplaceRefundEventService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -143,9 +179,14 @@ public class ReconcileAsyncShould
             Id = "refund-1",
             Status = MarketplaceRefundStatusConstants.Failed,
             PaymentRefundStatus = MarketplaceRefundStatusConstants.Completed,
-            StripeRefundPath = "TransferReversal"
+            StripeRefundPath = "TransferReversal",
         };
-        var stripeRefund = new Refund { Id = "re_1", Status = "succeeded", Metadata = [] };
+        var stripeRefund = new Refund
+        {
+            Id = "re_1",
+            Status = "succeeded",
+            Metadata = [],
+        };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => marketplaceRefundRepository.GetByExternalPaymentRefundIdAsync(stripeRefund.Id, cancellationToken)).Returns(refund);
@@ -161,9 +202,12 @@ public class ReconcileAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Keep_An_Unknown_Path_In_Reconciliation_When_Status_Is_Unchanged(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -171,9 +215,14 @@ public class ReconcileAsyncShould
         {
             Id = "refund-1",
             Status = MarketplaceRefundStatusConstants.ReconciliationRequired,
-            PaymentRefundStatus = MarketplaceRefundStatusConstants.ReconciliationRequired
+            PaymentRefundStatus = MarketplaceRefundStatusConstants.ReconciliationRequired,
         };
-        var stripeRefund = new Refund { Id = "re_1", Status = "succeeded", Metadata = [] };
+        var stripeRefund = new Refund
+        {
+            Id = "re_1",
+            Status = "succeeded",
+            Metadata = [],
+        };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => marketplaceRefundRepository.GetByExternalPaymentRefundIdAsync(stripeRefund.Id, cancellationToken))

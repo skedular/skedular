@@ -29,7 +29,13 @@ public class Admin_UpdateIdentityShould(
         var result = await customerAdminServiceClient.Admin_UpdateIdentityAsync(
             new Admin_UpdateIdentityInput
             {
-                CustomerId = customerId, Id = identityId, Email = updatedEmail, FieldsToUpdate = { IdentityPatchField.Email }
+                CustomerId = customerId,
+                Id = identityId,
+                Email = updatedEmail,
+                FieldsToUpdate =
+                {
+                    IdentityPatchField.Email,
+                },
             },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -54,9 +60,15 @@ public class Admin_UpdateIdentityShould(
         {
             Id = customerId,
             Type = CustomerTypeConstants.Registered,
-            PersonalInformationVisibility = PersonalInformationVisibilityConstants.Visible
+            PersonalInformationVisibility = PersonalInformationVisibilityConstants.Visible,
         });
-        repositoryFactory.IdentityRepository.Add(new Identity { Id = identityId, Customer = customer, Email = email, EmailVerified = emailVerified });
+        repositoryFactory.IdentityRepository.Add(new Identity
+        {
+            Id = identityId,
+            Customer = customer,
+            Email = email,
+            EmailVerified = emailVerified,
+        });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }

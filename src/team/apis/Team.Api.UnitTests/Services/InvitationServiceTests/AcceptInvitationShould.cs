@@ -19,35 +19,71 @@ public class AcceptInvitationShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Information_When_Invitation_Is_Accepted(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] ITeamOutboxPublisher teamOutboxPublisher,
-        [Frozen] IJoinInvitationRepository joinInvitationRepository,
-        [Frozen] ITeamRepository teamRepository,
-        [Frozen] ITeamMemberRepository teamMemberRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<InvitationService> logger,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        ITeamOutboxPublisher teamOutboxPublisher,
+        [Frozen]
+        IJoinInvitationRepository joinInvitationRepository,
+        [Frozen]
+        ITeamRepository teamRepository,
+        [Frozen]
+        ITeamMemberRepository teamMemberRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<InvitationService> logger,
         InvitationService sut,
         CancellationToken cancellationToken)
     {
-        var customer = new Customer { Id = "customer-1", Identities = [] };
-        var team = new Shared.Database.Entities.Team { Id = "team-1", OrganizationId = "org-1", TeamMembers = [] };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+            Identities = [],
+        };
+        var team = new Shared.Database.Entities.Team
+        {
+            Id = "team-1",
+            OrganizationId = "org-1",
+            TeamMembers = [],
+        };
         var invitation = new JoinInvitation
         {
             Id = "inv-1",
             Status = InvitationStatusConstants.Pending,
             Role = TeamMemberRoleConstants.Member,
             Team = team,
-            CreatedBy = new Customer { Id = "creator-1" },
-            Invitee = customer
+            CreatedBy = new Customer
+            {
+                Id = "creator-1",
+            },
+            Invitee = customer,
         };
-        var mappedTeam = new Shared.Models.Team { Id = "team-1", Organization = new Organization { Id = "org-1" } };
-        var mappedInvitation = new Shared.Models.JoinInvitation { Id = "inv-1", Team = mappedTeam };
+        var mappedTeam = new Shared.Models.Team
+        {
+            Id = "team-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
+        };
+        var mappedInvitation = new Shared.Models.JoinInvitation
+        {
+            Id = "inv-1",
+            Team = mappedTeam,
+        };
 
         A.CallTo(() => repositoryFactory.JoinInvitationRepository).Returns(joinInvitationRepository);
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);

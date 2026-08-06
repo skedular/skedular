@@ -1,5 +1,7 @@
 import { render, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
+import type { marketplaceLocations_query$key } from '@/queries/__generated__/marketplaceLocations_query.graphql';
 
 vi.mock('@/libs/logging', () => ({ default: { info: vi.fn(), warn: vi.fn(), error: vi.fn() } }));
 vi.mock('@/libs/logging/aggregate-marketplace-telemetry', () => ({ logAggregateMarketplaceDiscoveryCompleted: vi.fn() }));
@@ -131,7 +133,13 @@ describe('MarketplaceLocations — geolocation via API route', () => {
   it('calls fetch("/api/geolocation") when navigator.geolocation is unavailable', async () => {
     const { default: MarketplaceLocations } = await import('./marketplace-locations');
 
-    render(<MarketplaceLocations rootDataRelay={{}} rootDataLocationsRelay={{ marketplaceLocations: { edges: [], totalCount: 0 } }} onReloadRequired={vi.fn()} />);
+    render(
+      <MarketplaceLocations
+        rootDataRelay={{} as marketplaceLocations_query$key}
+        rootDataLocationsRelay={{} as marketplaceLocations_locations_query$key}
+        onReloadRequired={vi.fn()}
+      />,
+    );
 
     await waitFor(
       () => {

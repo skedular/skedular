@@ -32,7 +32,7 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
             RecurringBookingId = recurringBookingId,
             Category = MarketplaceBookingFailureCategoryConstants.AvailabilityConflict,
             Scope = MarketplaceBookingFailureScopeConstants.RecurringOccurrence,
-            FinalizedAt = firstFinalizedAt
+            FinalizedAt = firstFinalizedAt,
         });
         repositoryFactory.MarketplaceBookingFailureRepository.Add(new MarketplaceBookingFailure
         {
@@ -42,7 +42,7 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
             RecurringBookingId = recurringBookingId,
             Category = MarketplaceBookingFailureCategoryConstants.PaymentFailed,
             Scope = MarketplaceBookingFailureScopeConstants.RecurringOccurrence,
-            FinalizedAt = latestFinalizedAt
+            FinalizedAt = latestFinalizedAt,
         });
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -87,7 +87,7 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
             FailureKey = $"failure-key-{failureId}",
             Category = MarketplaceBookingFailureCategoryConstants.AvailabilityConflict,
             Scope = MarketplaceBookingFailureScopeConstants.OneTimeBooking,
-            FinalizedAt = TimeProvider.System.GetUtcNow()
+            FinalizedAt = TimeProvider.System.GetUtcNow(),
         });
         repositoryFactory.MarketplaceBookingFailureDeliveryRepository.Add(CreateDelivery(failure.Id, recipientKey));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -133,7 +133,11 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
     {
         var from = new DateTimeOffset(2026, 7, 24, 9, 0, 0, TimeSpan.Zero);
         // Seed the resource but mark the slot unavailable
-        var resource = repositoryFactory.ResourceRepository.Add(new Resource { Id = resourceId, Capacity = 1 });
+        var resource = repositoryFactory.ResourceRepository.Add(new Resource
+        {
+            Id = resourceId,
+            Capacity = 1,
+        });
         repositoryFactory.ResourceBookingSlotRepository.AddRange(
         [
             new ResourceBookingSlot
@@ -142,8 +146,8 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
                 Resource = resource,
                 ResourceId = resourceId,
                 Start = from,
-                Available = false // slot marked unavailable
-            }
+                Available = false, // slot marked unavailable
+            },
         ]);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         var booking = await AddBookingAsync(bookingId, from, cancellationToken);
@@ -176,7 +180,11 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
 
     private async Task SeedResourceSlotAsync(string resourceId, DateTimeOffset from, CancellationToken cancellationToken)
     {
-        var resource = repositoryFactory.ResourceRepository.Add(new Resource { Id = resourceId, Capacity = 1 });
+        var resource = repositoryFactory.ResourceRepository.Add(new Resource
+        {
+            Id = resourceId,
+            Capacity = 1,
+        });
         repositoryFactory.ResourceBookingSlotRepository.AddRange(
         [
             new ResourceBookingSlot
@@ -185,8 +193,8 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
                 Resource = resource,
                 ResourceId = resourceId,
                 Start = from,
-                Available = true
-            }
+                Available = true,
+            },
         ]);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -203,7 +211,7 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
             Until = from.AddHours(1),
             Category = BookingCategory.WorkingFromCoworkingSpace.ToBookingCategory(),
             Channel = BookingChannel.Marketplace.ToBookingChannel(),
-            Schedules = []
+            Schedules = [],
         });
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         return booking;
@@ -216,6 +224,6 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
         RecipientKey = recipientKey,
         Audience = MarketplaceBookingFailureDeliveryAudienceConstants.Customer,
         Channel = MarketplaceBookingFailureDeliveryChannelConstants.Email,
-        Status = MarketplaceBookingFailureDeliveryStatusConstants.Pending
+        Status = MarketplaceBookingFailureDeliveryStatusConstants.Pending,
     };
 }

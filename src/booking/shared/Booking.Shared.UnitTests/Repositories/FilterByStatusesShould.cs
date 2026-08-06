@@ -12,7 +12,11 @@ public class FilterByStatusesShould
     private static IQueryable<MarketplaceBookingSubscription> BuildQueryable(
         IEnumerable<string> statuses) =>
         statuses
-            .Select(status => new MarketplaceBookingSubscription { Status = status, MarketplaceBooking = new MarketplaceBooking() })
+            .Select(status => new MarketplaceBookingSubscription
+            {
+                Status = status,
+                MarketplaceBooking = new MarketplaceBooking(),
+            })
             .AsQueryable();
 
     private static MarketplaceBookingSubscriptionSearchCriteria CriteriaWith(
@@ -46,7 +50,7 @@ public class FilterByStatusesShould
         var queryable = BuildQueryable([
             MarketplaceBookingSubscriptionStatusConstants.Active,
             MarketplaceBookingSubscriptionStatusConstants.Cancelled,
-            MarketplaceBookingSubscriptionStatusConstants.Paused
+            MarketplaceBookingSubscriptionStatusConstants.Paused,
         ]);
 
         var result = queryable.AddSearchCriteria(CriteriaWith([]), null).ToList();
@@ -60,7 +64,7 @@ public class FilterByStatusesShould
         var queryable = BuildQueryable([
             MarketplaceBookingSubscriptionStatusConstants.Active,
             MarketplaceBookingSubscriptionStatusConstants.Cancelled,
-            MarketplaceBookingSubscriptionStatusConstants.Active
+            MarketplaceBookingSubscriptionStatusConstants.Active,
         ]);
 
         var result = queryable
@@ -78,13 +82,13 @@ public class FilterByStatusesShould
             MarketplaceBookingSubscriptionStatusConstants.Active,
             MarketplaceBookingSubscriptionStatusConstants.Cancelled,
             MarketplaceBookingSubscriptionStatusConstants.Paused,
-            MarketplaceBookingSubscriptionStatusConstants.Expired
+            MarketplaceBookingSubscriptionStatusConstants.Expired,
         ]);
 
         var result = queryable
             .AddSearchCriteria(CriteriaWith([
                 MarketplaceBookingSubscriptionStatus.Active,
-                MarketplaceBookingSubscriptionStatus.Paused
+                MarketplaceBookingSubscriptionStatus.Paused,
             ]), null)
             .ToList();
 
@@ -100,9 +104,14 @@ public class FilterByStatusesShould
             {
                 new MarketplaceBookingSubscription
                 {
-                    Status = MarketplaceBookingSubscriptionStatusConstants.Active, MarketplaceBooking = new MarketplaceBooking()
+                    Status = MarketplaceBookingSubscriptionStatusConstants.Active,
+                    MarketplaceBooking = new MarketplaceBooking(),
                 },
-                new MarketplaceBookingSubscription { Status = MarketplaceBookingSubscriptionStatusConstants.Active, MarketplaceBooking = null! }
+                new MarketplaceBookingSubscription
+                {
+                    Status = MarketplaceBookingSubscriptionStatusConstants.Active,
+                    MarketplaceBooking = null!,
+                },
             }
             .AsQueryable();
 

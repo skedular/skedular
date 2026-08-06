@@ -2,7 +2,7 @@ namespace Booking.Shared.Models;
 
 public enum MarketplaceRefundStatus
 {
-    Requested, UnderReview, Approved, Rejected, Processing, ProviderPending, Completed, Failed, Cancelled, ReconciliationRequired
+    Requested, UnderReview, Approved, Rejected, Processing, ProviderPending, Completed, Failed, Cancelled, ReconciliationRequired,
 }
 
 public static class MarketplaceRefundStatusConstants
@@ -34,7 +34,7 @@ public static class MarketplaceRefundStatusExtensions
             MarketplaceRefundStatusConstants.Failed => MarketplaceRefundStatus.Failed,
             MarketplaceRefundStatusConstants.Cancelled => MarketplaceRefundStatus.Cancelled,
             MarketplaceRefundStatusConstants.ReconciliationRequired => MarketplaceRefundStatus.ReconciliationRequired,
-            _ => MarketplaceRefundStatus.Requested
+            _ => MarketplaceRefundStatus.Requested,
         };
 
     public static string ToMarketplaceRefundStatusName(this MarketplaceRefundStatus status) =>
@@ -53,6 +53,6 @@ public static class MarketplaceRefundStatusExtensions
             _ => throw new ArgumentOutOfRangeException(
                 nameof(status),
                 status,
-                $"Unexpected value for {nameof(status)}: {status}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(status)}: {status}. Update enum mapping or caller input."),
         };
 }

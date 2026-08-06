@@ -37,7 +37,10 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     public async Task StartWorkflowGenerateLocationResourceAvailabilitySnapshotAsync(
@@ -54,7 +57,10 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 
     public async Task StartOrSignalWorkflowRecomputeLocationBookingDerivedStateAsync(
@@ -67,7 +73,10 @@ public class TemporalService(
             TaskQueue = temporalConfiguration.Worker.TaskQueue,
             RetryPolicy = null,
             IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-            Rpc = new RpcOptions { CancellationToken = cancellationToken }
+            Rpc = new RpcOptions
+            {
+                CancellationToken = cancellationToken,
+            },
         };
 
         workflowOptions.SignalWithStart((RecomputeLocationBookingDerivedState workflow) => workflow.BookingChangedAsync());
@@ -88,6 +97,9 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
-                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
             });
 }

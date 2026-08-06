@@ -37,7 +37,10 @@ public class EmailIntegrations(
         }
 
         var inviterCustomer = await customerAdminServiceClient.Admin_GetAsync(
-            new Admin_GetInput { CustomerId = inviterCustomerId },
+            new Admin_GetInput
+            {
+                CustomerId = inviterCustomerId,
+            },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -95,12 +98,18 @@ public class EmailIntegrations(
         }
 
         var inviterCustomer = await customerAdminServiceClient.Admin_GetAsync(
-            new Admin_GetInput { CustomerId = inviterCustomerId },
+            new Admin_GetInput
+            {
+                CustomerId = inviterCustomerId,
+            },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
         var inviteeCustomer = await customerAdminServiceClient.Admin_GetAsync(
-            new Admin_GetInput { CustomerId = inviteeCustomerId },
+            new Admin_GetInput
+            {
+                CustomerId = inviteeCustomerId,
+            },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 

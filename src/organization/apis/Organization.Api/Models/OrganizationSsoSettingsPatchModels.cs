@@ -6,7 +6,7 @@ namespace Organization.Api.Models;
 [GraphQLName("OrganizationSsoSettingsPatchField")]
 public enum OrganizationSsoSettingsPatchField
 {
-    SsoSettings
+    SsoSettings,
 }
 
 public record OrganizationSsoSettingsPatchRequest(

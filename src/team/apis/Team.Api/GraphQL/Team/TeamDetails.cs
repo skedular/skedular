@@ -16,19 +16,35 @@ namespace Team.Api.GraphQL.Team;
 [EntityKey("id")]
 public class TeamDetails : Node
 {
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("about")] public string? About { get; set; }
-    [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [GraphQLName("about")]
+    public string? About { get; set; }
+
+    [GraphQLName("organizationId")]
+    public string OrganizationId { get; set; } = string.Empty;
 
     [GraphQLName("organizationCustomDomain")]
     public string OrganizationCustomDomain { get; set; } = string.Empty;
 
-    [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
-    [GraphQLName("timezone")] public string? Timezone { get; set; }
-    [GraphQLName("canModify")] public bool CanModify { get; set; }
-    [GraphQLName("canDelete")] public bool CanDelete { get; set; }
-    [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
-    [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
+    [GraphQLName("primaryLocationId")]
+    public string? PrimaryLocationId { get; set; }
+
+    [GraphQLName("timezone")]
+    public string? Timezone { get; set; }
+
+    [GraphQLName("canModify")]
+    public bool CanModify { get; set; }
+
+    [GraphQLName("canDelete")]
+    public bool CanDelete { get; set; }
+
+    [GraphQLName("canInvitePeople")]
+    public bool CanInvitePeople { get; set; }
+
+    [GraphQLName("featureImages")]
+    public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
 
     [UseResolverScope]
     public async Task<Connection<TeamMemberEdge>> MembersAsync(
@@ -38,9 +54,12 @@ public class TeamDetails : Node
         int? last,
         TeamMemberWhereInput? where,
         IEnumerable<TeamMemberOrderInput>? orderBy,
-        [Parent] TeamDetails team,
-        [Service] ITeamMemberService teamMemberService,
-        [Service] IGraphQlMapper graphQlMapper,
+        [Parent]
+        TeamDetails team,
+        [Service]
+        ITeamMemberService teamMemberService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await teamMemberService.GetPaginatedMembersAsync(
@@ -56,10 +75,10 @@ public class TeamDetails : Node
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 }

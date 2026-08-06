@@ -47,7 +47,7 @@ public class TemporalOutboxService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
             },
             unitOfWork);
 
@@ -63,7 +63,7 @@ public class TemporalOutboxService(
                     TaskQueue = temporalConfiguration.Worker.TaskQueue,
                     RetryPolicy = null,
                     IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                    IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                    IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                 },
                 unitOfWork);
 
@@ -75,7 +75,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.NewLocationJoined(args.LocationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 
@@ -87,7 +87,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.ProvisionHostLocation(args.LocationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 
@@ -99,7 +99,7 @@ public class TemporalOutboxService(
                 Id = workflowIdService.DeprovisionHostLocation(args.LocationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
             },
             unitOfWork);
 

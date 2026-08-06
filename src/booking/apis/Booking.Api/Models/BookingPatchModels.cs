@@ -10,7 +10,7 @@ public enum PrivateBookingPatchField
     Schedule,
     Notes,
     Category,
-    Resources
+    Resources,
 }
 
 [GraphQLName("MarketplaceBookingPatchField")]
@@ -18,7 +18,7 @@ public enum MarketplaceBookingPatchField
 {
     Participants,
     Notes,
-    Category
+    Category,
 }
 
 [GraphQLName("PrivateRecurringBookingPatchField")]
@@ -29,7 +29,7 @@ public enum PrivateRecurringBookingPatchField
     Schedule,
     Recurrence,
     SkippedDates,
-    Category
+    Category,
 }
 
 public record PrivateBookingPatchRequest(

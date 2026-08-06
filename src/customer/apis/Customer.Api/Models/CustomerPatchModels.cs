@@ -15,7 +15,7 @@ public enum CustomerDetailsPatchField
     MiddleName,
     FamilyName,
     PhoneNumber,
-    PersonalInformationVisibility
+    PersonalInformationVisibility,
 }
 
 [GraphQLName("CustomerBillingDetailsPatchField")]
@@ -23,7 +23,7 @@ public enum CustomerBillingDetailsPatchField
 {
     CompanyName,
     Email,
-    BillingAddress
+    BillingAddress,
 }
 
 public record CustomerDetailsPatchRequest(
@@ -45,7 +45,7 @@ public record CustomerBillingDetailsPatchRequest(
 public enum CustomerIdentityPatchField
 {
     Email,
-    EmailVerified
+    EmailVerified,
 }
 
 public record CustomerIdentityPatchRequest(

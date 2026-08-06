@@ -53,12 +53,12 @@ export const getOrganizationBookingAddLink = (
     resourceIds: options?.resourceIds,
     redirectUrl: options?.redirectUrl,
   });
-export const getOrganizationSubscriptionsBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/subscriptions`;
+export const getOrganizationSubscriptionsBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/purchases`;
 export const getOrganizationRefundsBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/refunds`;
 export const getOrganizationRefundBaseLink = (integratedPlatform: string | undefined, id: string, refundId: string) =>
   `${getOrganizationRefundsBaseLink(integratedPlatform, id)}/${refundId}`;
 export const getOrganizationSubscriptionBaseLink = (integratedPlatform: string | undefined, id: string, subscriptionId: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/subscriptions/${subscriptionId}`;
+  `${getOrganizationBaseLink(integratedPlatform, id)}/purchases/${subscriptionId}`;
 export const getOrganizationUsersBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/users`;
 export const getOrganizationPaymentsBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/payments`;
 export const getOrganizationUserProfileBaseLink = (integratedPlatform: string | undefined, id: string, customerId: string) =>

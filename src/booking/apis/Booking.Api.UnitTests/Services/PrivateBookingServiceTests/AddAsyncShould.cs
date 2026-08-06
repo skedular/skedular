@@ -29,21 +29,43 @@ public class AddAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Generate_An_Id_And_Call_The_Shared_Service_For_A_New_Booking(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IContext context,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] IPrivateBookingService sharedPrivateBookingService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        IPrivateBookingService sharedPrivateBookingService,
         PrivateBookingService sut,
         string verifiableToken,
         string generatedBookingId,
         CancellationToken cancellationToken)
     {
-        var booking = new Shared.Models.Booking { InvolvedCustomers = [new Customer { Id = "customer-1" }] };
-        var customer = new CustomerEntity { Id = "customer-1" };
-        var expected = new Shared.Models.Booking { Id = generatedBookingId };
+        var booking = new Shared.Models.Booking
+        {
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+        };
+        var customer = new CustomerEntity
+        {
+            Id = "customer-1",
+        };
+        var expected = new Shared.Models.Booking
+        {
+            Id = generatedBookingId,
+        };
         IReadOnlyList<string> emptyIds = [];
         IReadOnlyList<Organization> emptyOrganizations = [];
         IReadOnlyList<Team> emptyTeams = [];
@@ -74,15 +96,24 @@ public class AddAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Resolve_Full_Opening_Hours_Date_Before_Creating_Booking(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IContext context,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] IMarketplaceBookingOpeningHoursService openingHoursService,
-        [Frozen] IPrivateBookingService sharedPrivateBookingService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        IMarketplaceBookingOpeningHoursService openingHoursService,
+        [Frozen]
+        IPrivateBookingService sharedPrivateBookingService,
         PrivateBookingService sut,
         string verifiableToken,
         string generatedBookingId,
@@ -93,17 +124,47 @@ public class AddAsyncShould
         var placeholderUntil = placeholderFrom.AddDays(1);
         var resolvedFrom = new DateTimeOffset(2026, 4, 13, 8, 30, 0, TimeSpan.Zero);
         var resolvedUntil = new DateTimeOffset(2026, 4, 13, 17, 0, 0, TimeSpan.Zero);
-        var customer = new CustomerEntity { Id = "customer-1" };
-        var resource = new ResourceEntity { Id = "resource-1", Location = new LocationEntity { Id = "location-1" } };
+        var customer = new CustomerEntity
+        {
+            Id = "customer-1",
+        };
+        var resource = new ResourceEntity
+        {
+            Id = "resource-1",
+            Location = new LocationEntity
+            {
+                Id = "location-1",
+            },
+        };
         var booking = new Shared.Models.Booking
         {
             From = placeholderFrom,
             Until = placeholderUntil,
             Schedules = [new BookingSchedule(placeholderFrom, placeholderUntil)],
-            InvolvedCustomers = [new Customer { Id = customer.Id }],
-            Resources = [new ResourceCustomersPair(new Resource { Id = resource.Id }, [new Customer { Id = customer.Id }])]
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = customer.Id,
+                },
+            ],
+            Resources =
+            [
+                new ResourceCustomersPair(new Resource
+                {
+                    Id = resource.Id,
+                }, [
+                    new Customer
+                    {
+                        Id = customer.Id,
+                    },
+                ]),
+            ],
         };
-        var expected = new Shared.Models.Booking { Id = generatedBookingId };
+        var expected = new Shared.Models.Booking
+        {
+            Id = generatedBookingId,
+        };
         IReadOnlyList<string> emptyIds = [];
         IReadOnlyList<Organization> emptyOrganizations = [];
         IReadOnlyList<Team> emptyTeams = [];

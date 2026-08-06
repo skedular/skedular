@@ -7,14 +7,14 @@ public enum CancellationErrorCode
     PolicyRestriction,
     OverrideReasonRequired,
     InsufficientManagementPermission,
-    InvalidTerminalState
+    InvalidTerminalState,
 }
 
 public enum CancellationActorCategory
 {
     Customer,
     Owner,
-    Administrator
+    Administrator,
 }
 
 public sealed record CancellationActor(

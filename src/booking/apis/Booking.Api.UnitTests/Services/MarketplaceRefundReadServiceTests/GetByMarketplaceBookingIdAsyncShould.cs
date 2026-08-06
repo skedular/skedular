@@ -16,13 +16,20 @@ public class GetByMarketplaceBookingIdAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Mapped_Refund_When_Marketplace_Booking_Refund_Exists(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         MarketplaceRefundReadService sut,
         CancellationToken cancellationToken)
     {
@@ -31,9 +38,12 @@ public class GetByMarketplaceBookingIdAsyncShould
             Id = "refund-1",
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
-            LocalEntityId = "marketplace-booking-1"
+            LocalEntityId = "marketplace-booking-1",
         };
-        var mappedRefund = new MarketplaceRefundDetails { Id = "refund-1" };
+        var mappedRefund = new MarketplaceRefundDetails
+        {
+            Id = "refund-1",
+        };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundEventRepository).Returns(marketplaceRefundEventRepository);
@@ -58,12 +68,18 @@ public class GetByMarketplaceBookingIdAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Redacted_Refund_When_Customer_Cannot_Modify_Payment_Method(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         MarketplaceRefundReadService sut,
         CancellationToken cancellationToken)
     {
@@ -72,16 +88,22 @@ public class GetByMarketplaceBookingIdAsyncShould
             Id = "refund-1",
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
-            LocalEntityId = "marketplace-booking-1"
+            LocalEntityId = "marketplace-booking-1",
         };
         var mappedRefund = new MarketplaceRefundDetails
         {
             Id = "refund-1",
             LastError = "provider error",
             RequestedByCustomerName = "Alice",
-            Events = [new MarketplaceRefundEventDetails { Id = "event-1" }],
+            Events =
+            [
+                new MarketplaceRefundEventDetails
+                {
+                    Id = "event-1",
+                },
+            ],
             CanProcessInXero = true,
-            XeroProcessingBlockedReason = "blocked"
+            XeroProcessingBlockedReason = "blocked",
         };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -108,11 +130,16 @@ public class GetByMarketplaceBookingIdAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Null_When_Marketplace_Booking_Refund_Does_Not_Exist(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IXeroRefundService xeroRefundService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
         MarketplaceRefundReadService sut,
         CancellationToken cancellationToken)
     {

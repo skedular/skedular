@@ -29,7 +29,13 @@ public class Admin_UpdateShould(
         var result = await locationServiceClient.Admin_UpdateAsync(
             new Admin_UpdateInput
             {
-                Id = locationId, OrganizationId = organizationId, Name = updatedName, FieldsToUpdate = { LocationPatchField.Name }
+                Id = locationId,
+                OrganizationId = organizationId,
+                Name = updatedName,
+                FieldsToUpdate =
+                {
+                    LocationPatchField.Name,
+                },
             },
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -59,7 +65,7 @@ public class Admin_UpdateShould(
             Organization = organization,
             Name = name,
             Timezone = timezone,
-            Type = LocationTypeConstants.Private
+            Type = LocationTypeConstants.Private,
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

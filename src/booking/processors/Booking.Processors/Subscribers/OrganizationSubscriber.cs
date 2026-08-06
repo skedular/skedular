@@ -149,7 +149,7 @@ public class OrganizationSubscriber(
             OfferingCode.SpacesGrowthV1 => GrowthPlanCode,
             OfferingCode.SpacesBusinessV1 => BusinessPlanCode,
             OfferingCode.SpacesContactUsV1 => ContactUsPlanCode,
-            _ => FreePlanCode
+            _ => FreePlanCode,
         };
 
     private static int? GetQuotaLimit(Offering offering) =>
@@ -157,7 +157,7 @@ public class OrganizationSubscriber(
         {
             OfferingCode.EarlyBirdV1 => null,
             OfferingCode.SpacesContactUsV1 => offering.PurchasedTeamCapacity,
-            _ => offering.PurchasedTeamCapacity ?? offering.Code.GetOffering().MaxBookingInstanceCount
+            _ => offering.PurchasedTeamCapacity ?? offering.Code.GetOffering().MaxBookingInstanceCount,
         };
 
     private async Task QueueArrearsBillingWorkflowAsync(

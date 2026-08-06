@@ -35,9 +35,9 @@ public class ApplyShould
                 IsCheckedIn = false,
                 BookedByName = "Alice Smith",
                 BookedByUserId = "u-1",
-                Notes = "Team meeting"
-            }
-        ]
+                Notes = "Team meeting",
+            },
+        ],
     };
 
     [Theory]

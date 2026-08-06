@@ -46,7 +46,11 @@ public class OrganizationAnalyticsService(
         {
             if (item.Count == 0)
             {
-                return new OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = 0 };
+                return new OrganizationMemberAttendancePercentage
+                {
+                    Date = item.Date,
+                    Percentage = 0,
+                };
             }
 
             var matchedBookingsCount = dailyBookingCounts
@@ -54,16 +58,25 @@ public class OrganizationAnalyticsService(
                 .Select(recording => recording.Count)
                 .SingleOrDefault();
 
-            return new OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
+            return new OrganizationMemberAttendancePercentage
+            {
+                Date = item.Date,
+                Percentage = matchedBookingsCount / (float)item.Count * 100,
+            };
         }).ToList();
 
         var organizationDailyBookingsTotals = dailyBookingCounts
-            .Select(item => new OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Count })
+            .Select(item => new OrganizationDailyBookingsTotal
+            {
+                Date = item.Date,
+                Total = item.Count,
+            })
             .ToList();
 
         return new OrganizationAnalytics
         {
-            MemberAttendancePercentage = organizationMemberAttendancePercentages, DailyBookingsTotals = organizationDailyBookingsTotals
+            MemberAttendancePercentage = organizationMemberAttendancePercentages,
+            DailyBookingsTotals = organizationDailyBookingsTotals,
         };
     }
 }

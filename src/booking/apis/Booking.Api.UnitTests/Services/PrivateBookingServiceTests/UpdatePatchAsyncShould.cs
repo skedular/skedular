@@ -20,19 +20,32 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Apply_Only_Selected_Notes_And_Preserve_Other_Fields(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IContext context,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] SharedPrivateBookingService sharedPrivateBookingService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        SharedPrivateBookingService sharedPrivateBookingService,
         PrivateBookingService sut,
         string verifiableToken,
         CancellationToken cancellationToken)
     {
-        var existingEntity = new Shared.Database.Entities.Booking { Id = "booking-1", InvolvedOrganizations = [], InvolvedTeams = [] };
+        var existingEntity = new Shared.Database.Entities.Booking
+        {
+            Id = "booking-1",
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
+        };
         var mappedBooking = new Shared.Models.Booking
         {
             Id = "booking-1",
@@ -41,12 +54,22 @@ public class UpdatePatchAsyncShould
             InvolvedCustomers = [],
             InvolvedOrganizations = [],
             InvolvedTeams = [],
-            Resources = []
+            Resources = [],
         };
         var request = new PrivateBookingPatchRequest(
-            new Shared.Models.Booking { Id = "booking-1", Notes = "new-notes" },
-            new HashSet<PrivateBookingPatchField> { PrivateBookingPatchField.Notes });
-        var updatedBooking = new Shared.Models.Booking { Id = "booking-1" };
+            new Shared.Models.Booking
+            {
+                Id = "booking-1",
+                Notes = "new-notes",
+            },
+            new HashSet<PrivateBookingPatchField>
+            {
+                PrivateBookingPatchField.Notes,
+            });
+        var updatedBooking = new Shared.Models.Booking
+        {
+            Id = "booking-1",
+        };
         IReadOnlyList<string> emptyIds = [];
         IReadOnlyList<Organization> emptyOrganizations = [];
         IReadOnlyList<Team> emptyTeams = [];
@@ -57,7 +80,10 @@ public class UpdatePatchAsyncShould
         A.CallTo(() => entityMapper.MapTo(existingEntity)).Returns(mappedBooking);
         A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
         A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken))
-            .Returns(new CustomerEntity { Id = "customer-1" });
+            .Returns(new CustomerEntity
+            {
+                Id = "customer-1",
+            });
         A.CallTo(() => organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
                 emptyIds, emptyIds, "customer-1", true, cancellationToken))
             .Returns(emptyOrganizations);
@@ -79,19 +105,32 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_Existing_Booking_Without_Quota_Reservation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IContext context,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] SharedPrivateBookingService sharedPrivateBookingService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        SharedPrivateBookingService sharedPrivateBookingService,
         PrivateBookingService sut,
         string verifiableToken,
         CancellationToken cancellationToken)
     {
-        var existingEntity = new Shared.Database.Entities.Booking { Id = "booking-1", InvolvedOrganizations = [], InvolvedTeams = [] };
+        var existingEntity = new Shared.Database.Entities.Booking
+        {
+            Id = "booking-1",
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
+        };
         var mappedBooking = new Shared.Models.Booking
         {
             Id = "booking-1",
@@ -99,12 +138,23 @@ public class UpdatePatchAsyncShould
             InvolvedCustomers = [],
             InvolvedOrganizations = [],
             InvolvedTeams = [],
-            Resources = []
+            Resources = [],
         };
         var request = new PrivateBookingPatchRequest(
-            new Shared.Models.Booking { Id = "booking-1", Notes = "changed" },
-            new HashSet<PrivateBookingPatchField> { PrivateBookingPatchField.Notes });
-        var updatedBooking = new Shared.Models.Booking { Id = "booking-1", Notes = "changed" };
+            new Shared.Models.Booking
+            {
+                Id = "booking-1",
+                Notes = "changed",
+            },
+            new HashSet<PrivateBookingPatchField>
+            {
+                PrivateBookingPatchField.Notes,
+            });
+        var updatedBooking = new Shared.Models.Booking
+        {
+            Id = "booking-1",
+            Notes = "changed",
+        };
         IReadOnlyList<string> emptyIds = [];
         IReadOnlyList<Organization> emptyOrganizations = [];
         IReadOnlyList<Team> emptyTeams = [];
@@ -115,7 +165,10 @@ public class UpdatePatchAsyncShould
         A.CallTo(() => entityMapper.MapTo(existingEntity)).Returns(mappedBooking);
         A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
         A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken))
-            .Returns(new CustomerEntity { Id = "customer-1" });
+            .Returns(new CustomerEntity
+            {
+                Id = "customer-1",
+            });
         A.CallTo(() => organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
                 emptyIds, emptyIds, "customer-1", true, cancellationToken))
             .Returns(emptyOrganizations);
@@ -137,20 +190,34 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Autosave_Started_And_Completed(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IContext context,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] SharedPrivateBookingService sharedPrivateBookingService,
-        [Frozen] ILogger<PrivateBookingService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        SharedPrivateBookingService sharedPrivateBookingService,
+        [Frozen]
+        ILogger<PrivateBookingService> logger,
         PrivateBookingService sut,
         string verifiableToken,
         CancellationToken cancellationToken)
     {
-        var existingEntity = new Shared.Database.Entities.Booking { Id = "booking-1", InvolvedOrganizations = [], InvolvedTeams = [] };
+        var existingEntity = new Shared.Database.Entities.Booking
+        {
+            Id = "booking-1",
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
+        };
         var mappedBooking = new Shared.Models.Booking
         {
             Id = "booking-1",
@@ -158,12 +225,22 @@ public class UpdatePatchAsyncShould
             InvolvedCustomers = [],
             InvolvedOrganizations = [],
             InvolvedTeams = [],
-            Resources = []
+            Resources = [],
         };
         var request = new PrivateBookingPatchRequest(
-            new Shared.Models.Booking { Id = "booking-1", Notes = "new-notes" },
-            new HashSet<PrivateBookingPatchField> { PrivateBookingPatchField.Notes });
-        var updatedBooking = new Shared.Models.Booking { Id = "booking-1" };
+            new Shared.Models.Booking
+            {
+                Id = "booking-1",
+                Notes = "new-notes",
+            },
+            new HashSet<PrivateBookingPatchField>
+            {
+                PrivateBookingPatchField.Notes,
+            });
+        var updatedBooking = new Shared.Models.Booking
+        {
+            Id = "booking-1",
+        };
         IReadOnlyList<string> emptyIds = [];
         IReadOnlyList<Organization> emptyOrganizations = [];
         IReadOnlyList<Team> emptyTeams = [];
@@ -174,7 +251,10 @@ public class UpdatePatchAsyncShould
         A.CallTo(() => entityMapper.MapTo(existingEntity)).Returns(mappedBooking);
         A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
         A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken))
-            .Returns(new CustomerEntity { Id = "customer-1" });
+            .Returns(new CustomerEntity
+            {
+                Id = "customer-1",
+            });
         A.CallTo(() => organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
                 emptyIds, emptyIds, "customer-1", true, cancellationToken))
             .Returns(emptyOrganizations);
@@ -196,29 +276,48 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Authorization_Rejection_And_Rethrow(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IContext context,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ILogger<PrivateBookingService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ILogger<PrivateBookingService> logger,
         PrivateBookingService sut,
         string verifiableToken,
         CancellationToken cancellationToken)
     {
-        var existingEntity = new Shared.Database.Entities.Booking { Id = "booking-1", InvolvedOrganizations = [], InvolvedTeams = [] };
+        var existingEntity = new Shared.Database.Entities.Booking
+        {
+            Id = "booking-1",
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
+        };
         var mappedBooking = new Shared.Models.Booking
         {
             Id = "booking-1",
             InvolvedCustomers = [],
             InvolvedOrganizations = [],
             InvolvedTeams = [],
-            Resources = []
+            Resources = [],
         };
         var request = new PrivateBookingPatchRequest(
-            new Shared.Models.Booking { Id = "booking-1", Notes = "new-notes" },
-            new HashSet<PrivateBookingPatchField> { PrivateBookingPatchField.Notes });
+            new Shared.Models.Booking
+            {
+                Id = "booking-1",
+                Notes = "new-notes",
+            },
+            new HashSet<PrivateBookingPatchField>
+            {
+                PrivateBookingPatchField.Notes,
+            });
 
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -226,7 +325,10 @@ public class UpdatePatchAsyncShould
         A.CallTo(() => entityMapper.MapTo(existingEntity)).Returns(mappedBooking);
         A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
         A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken))
-            .Returns(new CustomerEntity { Id = "customer-1" });
+            .Returns(new CustomerEntity
+            {
+                Id = "customer-1",
+            });
         A.CallTo(() => organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
                 A<IReadOnlyList<string>>._, A<IReadOnlyList<string>>._, A<string>._, A<bool>._, cancellationToken))
             .Throws<UnauthorizedAccessException>();
@@ -242,31 +344,52 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Error_And_Rethrow_On_General_Failure(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IContext context,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] SharedPrivateBookingService sharedPrivateBookingService,
-        [Frozen] ILogger<PrivateBookingService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        ICustomerRepository customerRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IContext context,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        SharedPrivateBookingService sharedPrivateBookingService,
+        [Frozen]
+        ILogger<PrivateBookingService> logger,
         PrivateBookingService sut,
         string verifiableToken,
         CancellationToken cancellationToken)
     {
-        var existingEntity = new Shared.Database.Entities.Booking { Id = "booking-1", InvolvedOrganizations = [], InvolvedTeams = [] };
+        var existingEntity = new Shared.Database.Entities.Booking
+        {
+            Id = "booking-1",
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
+        };
         var mappedBooking = new Shared.Models.Booking
         {
             Id = "booking-1",
             InvolvedCustomers = [],
             InvolvedOrganizations = [],
             InvolvedTeams = [],
-            Resources = []
+            Resources = [],
         };
         var request = new PrivateBookingPatchRequest(
-            new Shared.Models.Booking { Id = "booking-1", Notes = "new-notes" },
-            new HashSet<PrivateBookingPatchField> { PrivateBookingPatchField.Notes });
+            new Shared.Models.Booking
+            {
+                Id = "booking-1",
+                Notes = "new-notes",
+            },
+            new HashSet<PrivateBookingPatchField>
+            {
+                PrivateBookingPatchField.Notes,
+            });
         IReadOnlyList<string> emptyIds = [];
         IReadOnlyList<Organization> emptyOrganizations = [];
         IReadOnlyList<Team> emptyTeams = [];
@@ -277,7 +400,10 @@ public class UpdatePatchAsyncShould
         A.CallTo(() => entityMapper.MapTo(existingEntity)).Returns(mappedBooking);
         A.CallTo(() => context.GetVerifiableToken()).Returns(verifiableToken);
         A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken))
-            .Returns(new CustomerEntity { Id = "customer-1" });
+            .Returns(new CustomerEntity
+            {
+                Id = "customer-1",
+            });
         A.CallTo(() => organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
                 emptyIds, emptyIds, "customer-1", true, cancellationToken))
             .Returns(emptyOrganizations);

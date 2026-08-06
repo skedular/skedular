@@ -75,7 +75,11 @@ public class StripeIntegrations(
                 First = ((int?)null).ToNullInt(),
                 Before = string.Empty,
                 Last = ((int?)null).ToNullInt(),
-                Where = new StripeConnectAccountWhereInput { OrganizationId = productVersion.Product.Organization.Id, OnboardingCompleted = true }
+                Where = new StripeConnectAccountWhereInput
+                {
+                    OrganizationId = productVersion.Product.Organization.Id,
+                    OnboardingCompleted = true,
+                },
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -108,7 +112,11 @@ public class StripeIntegrations(
                 First = ((int?)null).ToNullInt(),
                 Before = string.Empty,
                 Last = ((int?)null).ToNullInt(),
-                Where = new StripeConnectAccountWhereInput { OrganizationId = productVersion.Product.Organization.Id, OnboardingCompleted = true }
+                Where = new StripeConnectAccountWhereInput
+                {
+                    OrganizationId = productVersion.Product.Organization.Id,
+                    OnboardingCompleted = true,
+                },
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -238,8 +246,8 @@ public class StripeIntegrations(
                 ProductPricingCadence.PerHour =>
                     Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 60 * marketplaceBooking.Quantity,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
-            }
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
+            },
         }).ToList();
 
         if (marketplaceBooking.StripeCheckoutSession is not null)
@@ -262,8 +270,15 @@ public class StripeIntegrations(
             ClientReferenceId = booking.Id,
             SuccessUrl = checkoutReturnUrl,
             CancelUrl = checkoutReturnUrl,
-            AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
-            CustomerUpdate = new SessionCustomerUpdateOptions { Address = "auto", Shipping = "auto" }
+            AutomaticTax = new SessionAutomaticTaxOptions
+            {
+                Enabled = true,
+            },
+            CustomerUpdate = new SessionCustomerUpdateOptions
+            {
+                Address = "auto",
+                Shipping = "auto",
+            },
         };
         var hostPaymentIntentData = hostStripeApplicationFeeService.CreateDestinationCharge(
             marketplaceBooking.ProductVersion.Product.Organization.Type,
@@ -281,7 +296,11 @@ public class StripeIntegrations(
 
         var session = await sessionCreateService.CreateAsync(
             sessionOptions,
-            new RequestOptions { IdempotencyKey = booking.Id, StripeAccount = hostPaymentIntentData is null ? args.StripeConnectAccountId : null },
+            new RequestOptions
+            {
+                IdempotencyKey = booking.Id,
+                StripeAccount = hostPaymentIntentData is null ? args.StripeConnectAccountId : null,
+            },
             cancellationToken);
 
         var stripeCustomer =
@@ -296,7 +315,7 @@ public class StripeIntegrations(
             ChargeType = hostPaymentIntentData is null ? "Direct" : "Destination",
             StripeAccountId = hostPaymentIntentData is null ? args.StripeConnectAccountId : null,
             DestinationAccountId = hostPaymentIntentData?.TransferData?.Destination,
-            StripeCustomer = stripeCustomer
+            StripeCustomer = stripeCustomer,
         };
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);
@@ -307,10 +326,12 @@ public class StripeIntegrations(
             "unpaid" => PaymentStatusConstants.Pending,
             "paid" => PaymentStatusConstants.Confirmed,
             _ => throw new ArgumentOutOfRangeException(null,
-                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                "Unexpected value encountered. Update enum mapping or caller input to include this case."),
         };
 
         _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
@@ -376,17 +397,21 @@ public class StripeIntegrations(
                             TaxCode = "txcd_10103001",
                             Name = draft.Lines.FirstOrDefault()?.Description ??
                                    productVersion.ListingMetadata?.Title ??
-                                   "Subscription invoice"
-                        }
-                    }
-                }
+                                   "Subscription invoice",
+                        },
+                    },
+                },
             ];
         }
         else
         {
             lineItems =
             [
-                new SessionLineItemOptions { Price = stripeProduct.StripePrice.StripePriceId, Quantity = marketplaceBooking.Quantity }
+                new SessionLineItemOptions
+                {
+                    Price = stripeProduct.StripePrice.StripePriceId,
+                    Quantity = marketplaceBooking.Quantity,
+                },
             ];
         }
 
@@ -400,8 +425,15 @@ public class StripeIntegrations(
             ClientReferenceId = recurringBooking.Id,
             SuccessUrl = checkoutReturnUrl,
             CancelUrl = checkoutReturnUrl,
-            AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
-            CustomerUpdate = new SessionCustomerUpdateOptions { Address = "auto", Shipping = "auto" }
+            AutomaticTax = new SessionAutomaticTaxOptions
+            {
+                Enabled = true,
+            },
+            CustomerUpdate = new SessionCustomerUpdateOptions
+            {
+                Address = "auto",
+                Shipping = "auto",
+            },
         };
         var hostPaymentIntentData = hostStripeApplicationFeeService.CreateDestinationCharge(
             marketplaceBooking.ProductVersion.Product.Organization.Type,
@@ -419,7 +451,8 @@ public class StripeIntegrations(
             sessionOptions,
             new RequestOptions
             {
-                IdempotencyKey = recurringBooking.Id, StripeAccount = hostPaymentIntentData is null ? args.StripeConnectAccountId : null
+                IdempotencyKey = recurringBooking.Id,
+                StripeAccount = hostPaymentIntentData is null ? args.StripeConnectAccountId : null,
             },
             cancellationToken);
 
@@ -435,7 +468,7 @@ public class StripeIntegrations(
             ChargeType = hostPaymentIntentData is null ? "Direct" : "Destination",
             StripeAccountId = hostPaymentIntentData is null ? args.StripeConnectAccountId : null,
             DestinationAccountId = hostPaymentIntentData?.TransferData?.Destination,
-            StripeCustomer = stripeCustomer
+            StripeCustomer = stripeCustomer,
         };
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);
@@ -446,10 +479,12 @@ public class StripeIntegrations(
             "unpaid" => PaymentStatusConstants.Pending,
             "paid" => PaymentStatusConstants.Confirmed,
             _ => throw new ArgumentOutOfRangeException(null,
-                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                "Unexpected value encountered. Update enum mapping or caller input to include this case."),
         };
 
         _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         if (recurringBooking.MarketplaceBookingSubscription is not null)
@@ -482,8 +517,8 @@ public class StripeIntegrations(
                     TaxCode = "txcd_10103001",
                     Name = marketplaceBooking.ProductPricing.ListingMetadata.Title ??
                            productVersion.ListingMetadata?.Title ??
-                           "Host booking"
-                }
+                           "Host booking",
+                },
             };
         }
     }

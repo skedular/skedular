@@ -47,7 +47,10 @@ public class TeamService(
     ILocationService locationService)
     : ITeamService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<Team> AdminGetAsync(string teamId, CancellationToken cancellationToken)
     {
@@ -55,7 +58,10 @@ public class TeamService(
             CreateKeyById(teamId),
             async _ => grpcMapper.MapTo(
                 await teamServiceClient.Admin_GetAsync(
-                    new Admin_GetInput { Id = teamId },
+                    new Admin_GetInput
+                    {
+                        Id = teamId,
+                    },
                     teamConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions);
@@ -86,7 +92,10 @@ public class TeamService(
             CreateKeyById(teamId),
             async _ => grpcMapper.MapTo(
                 await teamServiceClient.GetAsync(
-                    new GetInput { Id = teamId },
+                    new GetInput
+                    {
+                        Id = teamId,
+                    },
                     teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions);
@@ -122,7 +131,7 @@ public class TeamService(
             About = team.About,
             Timezone = team.Timezone,
             OrganizationId = team.Organization!.Id,
-            PrimaryLocationId = team.PrimaryLocation is null ? string.Empty : team.PrimaryLocation.Id.ToSafeString()
+            PrimaryLocationId = team.PrimaryLocation is null ? string.Empty : team.PrimaryLocation.Id.ToSafeString(),
         };
 
         addInput.Members.AddRange(team.TeamMembers.Select(item => new TeamMember
@@ -135,14 +144,14 @@ public class TeamService(
                 TeamMemberRole.Administrator => Role.Administrator,
                 TeamMemberRole.Member => Role.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
-                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
             },
             Status = item.Status switch
             {
                 TeamMemberStatus.Active => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active,
                 TeamMemberStatus.Inactive => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
-                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
             },
             OrganizationMember = new OrganizationMember
             {
@@ -154,9 +163,9 @@ public class TeamService(
                     OrganizationMemberRole.Administrator => Role.Administrator,
                     OrganizationMemberRole.Member => Role.Member,
                     _ => throw new ArgumentOutOfRangeException(nameof(item.OrganizationMember.Role), item.OrganizationMember.Role,
-                        $"Unexpected value for {nameof(item.OrganizationMember.Role)}: {item.OrganizationMember.Role}. Update enum mapping or caller input.")
-                }
-            }
+                        $"Unexpected value for {nameof(item.OrganizationMember.Role)}: {item.OrganizationMember.Role}. Update enum mapping or caller input."),
+                },
+            },
         }));
 
         var mappedTeam = grpcMapper.MapTo(
@@ -198,7 +207,7 @@ public class TeamService(
             About = team.About,
             Timezone = team.Timezone,
             OrganizationId = team.Organization!.Id,
-            PrimaryLocationId = team.PrimaryLocation is null ? string.Empty : team.PrimaryLocation.Id.ToSafeString()
+            PrimaryLocationId = team.PrimaryLocation is null ? string.Empty : team.PrimaryLocation.Id.ToSafeString(),
         };
 
         updateInput.Members.AddRange(team.TeamMembers.Select(item => new TeamMember
@@ -211,14 +220,14 @@ public class TeamService(
                 TeamMemberRole.Administrator => Role.Administrator,
                 TeamMemberRole.Member => Role.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
-                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
             },
             Status = item.Status switch
             {
                 TeamMemberStatus.Active => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active,
                 TeamMemberStatus.Inactive => Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
-                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
             },
             OrganizationMember = new OrganizationMember
             {
@@ -230,9 +239,9 @@ public class TeamService(
                     OrganizationMemberRole.Administrator => Role.Administrator,
                     OrganizationMemberRole.Member => Role.Member,
                     _ => throw new ArgumentOutOfRangeException(nameof(item.OrganizationMember.Role), item.OrganizationMember.Role,
-                        $"Unexpected value for {nameof(item.OrganizationMember.Role)}: {item.OrganizationMember.Role}. Update enum mapping or caller input.")
-                }
-            }
+                        $"Unexpected value for {nameof(item.OrganizationMember.Role)}: {item.OrganizationMember.Role}. Update enum mapping or caller input."),
+                },
+            },
         }));
         updateInput.FieldsToUpdate.AddRange(
         [
@@ -242,7 +251,7 @@ public class TeamService(
             TeamPatchField.Timezone,
             TeamPatchField.Members,
             TeamPatchField.PrimaryLocation,
-            TeamPatchField.FeatureImages
+            TeamPatchField.FeatureImages,
         ]);
 
         var mappedTeam = grpcMapper.MapTo(
@@ -276,7 +285,10 @@ public class TeamService(
     public async Task RemoveAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken)
     {
         await teamServiceClient.RemoveAsync(
-            new RemoveInput { Id = teamId },
+            new RemoveInput
+            {
+                Id = teamId,
+            },
             teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
 
@@ -301,10 +313,18 @@ public class TeamService(
             After = after.ToSafeString(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new TeamWhereInput { OrganizationId = organizationId, NameContains = nameContains.ToSafeString() }
+            Where = new TeamWhereInput
+            {
+                OrganizationId = organizationId,
+                NameContains = nameContains.ToSafeString(),
+            },
         };
 
-        getPaginatedTeamsInput.OrderBy.Add(new TeamOrderInput { Direction = OrderDirection.Ascending, Field = TeamOrderField.Name });
+        getPaginatedTeamsInput.OrderBy.Add(new TeamOrderInput
+        {
+            Direction = OrderDirection.Ascending,
+            Field = TeamOrderField.Name,
+        });
 
         var connection = await teamServiceClient.GetPaginatedTeamsAsync(
             getPaginatedTeamsInput,
@@ -328,7 +348,7 @@ public class TeamService(
                 StartCursor = connection.PageInfo.StartCursor,
                 EndCursor = connection.PageInfo.EndCursor,
                 HasNextPage = connection.PageInfo.HasNextPage,
-                HasPreviousPage = connection.PageInfo.HasPreviousPage
+                HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
             Edges = connection.Edges.Select(item =>
@@ -353,7 +373,7 @@ public class TeamService(
                 }
 
                 return new TeamEdge(team, item.Cursor);
-            }).ToList()
+            }).ToList(),
         };
 
         Cache(result.Edges.Select(item => item.Node).ToList());

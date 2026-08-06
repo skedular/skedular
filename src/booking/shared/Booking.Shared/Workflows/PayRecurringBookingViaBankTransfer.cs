@@ -30,7 +30,11 @@ public class PayRecurringBookingViaBankTransfer
                 {
                     StartToCloseTimeout = TimeSpan.FromSeconds(30),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
 
             await Workflow.ExecuteActivityAsync(
@@ -41,7 +45,11 @@ public class PayRecurringBookingViaBankTransfer
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(2),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
 
             if (!await Workflow.WaitConditionAsync(() => _state.PaymentStatus is not null || _state.RecurringBookingDeleted, GetDelayDuration(args)))
@@ -50,7 +58,11 @@ public class PayRecurringBookingViaBankTransfer
                     (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
                         new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId,
                             MarketplaceBookingFailureCategoryConstants.PaymentExpired)),
-                    new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                    });
 
                 return;
             }
@@ -66,7 +78,11 @@ public class PayRecurringBookingViaBankTransfer
                 await Workflow.ExecuteActivityAsync(
                     (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
                         new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
-                    new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                    });
 
                 return;
             }
@@ -76,7 +92,11 @@ public class PayRecurringBookingViaBankTransfer
             await Workflow.ExecuteActivityAsync(
                 (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
                     new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
-                new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                });
 
             return;
         }
@@ -91,7 +111,10 @@ public class PayRecurringBookingViaBankTransfer
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { PaymentStatus = args.PaymentStatus };
+        _state = _state with
+        {
+            PaymentStatus = args.PaymentStatus,
+        };
 
         return Task.CompletedTask;
     }
@@ -101,7 +124,10 @@ public class PayRecurringBookingViaBankTransfer
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { RecurringBookingDeleted = true };
+        _state = _state with
+        {
+            RecurringBookingDeleted = true,
+        };
 
         return Task.CompletedTask;
     }

@@ -12,9 +12,12 @@ public class AuthorizeShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Information_When_Authorization_Is_Granted(
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
-        [Frozen] ILogger<OrganizationAuthorizationService> logger,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
+        [Frozen]
+        ILogger<OrganizationAuthorizationService> logger,
         OrganizationAuthorizationService sut,
         CancellationToken cancellationToken)
     {
@@ -27,9 +30,12 @@ public class AuthorizeShould
                 {
                     Role = OrganizationMemberRoleConstants.Owner,
                     Status = OrganizationMemberStatusConstants.Active,
-                    Customer = new Customer { Id = "customer-1" }
-                }
-            ]
+                    Customer = new Customer
+                    {
+                        Id = "customer-1",
+                    },
+                },
+            ],
         };
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync("org-1", null, cancellationToken))
@@ -50,9 +56,12 @@ public class AuthorizeShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Warning_When_Authorization_Is_Denied(
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
-        [Frozen] ILogger<OrganizationAuthorizationService> logger,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
+        [Frozen]
+        ILogger<OrganizationAuthorizationService> logger,
         OrganizationAuthorizationService sut,
         CancellationToken cancellationToken)
     {
@@ -65,9 +74,12 @@ public class AuthorizeShould
                 {
                     Role = OrganizationMemberRoleConstants.Member,
                     Status = OrganizationMemberStatusConstants.Active,
-                    Customer = new Customer { Id = "customer-1" }
-                }
-            ]
+                    Customer = new Customer
+                    {
+                        Id = "customer-1",
+                    },
+                },
+            ],
         };
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync("org-1", null, cancellationToken))

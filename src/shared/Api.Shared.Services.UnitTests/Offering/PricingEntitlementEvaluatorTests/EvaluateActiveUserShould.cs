@@ -12,7 +12,8 @@ public class EvaluateActiveUserShould
     {
         var offering = new SharedOffering
         {
-            Code = OfferingCode.PayAsYouGoV1, ActiveCustomerIds = Enumerable.Range(0, 50).Select(index => $"customer-{index}").ToArray()
+            Code = OfferingCode.PayAsYouGoV1,
+            ActiveCustomerIds = Enumerable.Range(0, 50).Select(index => $"customer-{index}").ToArray(),
         };
 
         var result = sut.EvaluateActiveUser(offering, customerId);
@@ -29,7 +30,7 @@ public class EvaluateActiveUserShould
         {
             Code = OfferingCode.FreeTierV1,
             PurchasedUserCapacity = 10,
-            ActiveCustomerIds = Enumerable.Range(0, 10).Select(index => $"customer-{index}").ToArray()
+            ActiveCustomerIds = Enumerable.Range(0, 10).Select(index => $"customer-{index}").ToArray(),
         };
 
         var result = sut.EvaluateActiveUser(offering, customerId);
@@ -44,7 +45,9 @@ public class EvaluateActiveUserShould
     {
         var offering = new SharedOffering
         {
-            Code = OfferingCode.EnterpriseCustomV1, PurchasedUserCapacity = 2, ActiveCustomerIds = ["customer-1", "customer-2"]
+            Code = OfferingCode.EnterpriseCustomV1,
+            PurchasedUserCapacity = 2,
+            ActiveCustomerIds = ["customer-1", "customer-2"],
         };
 
         var result = sut.EvaluateActiveUser(offering, "customer-2");
@@ -59,7 +62,9 @@ public class EvaluateActiveUserShould
     {
         var offering = new SharedOffering
         {
-            Code = OfferingCode.EnterpriseCustomV1, PurchasedUserCapacity = 2, ActiveCustomerIds = ["customer-1", "customer-2"]
+            Code = OfferingCode.EnterpriseCustomV1,
+            PurchasedUserCapacity = 2,
+            ActiveCustomerIds = ["customer-1", "customer-2"],
         };
 
         var result = sut.EvaluateActiveUser(offering, "customer-3");

@@ -10,8 +10,10 @@ public class GetVersionShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_information_for_get_version(
-        [Frozen] IVersionService versionService,
-        [Frozen] ILogger<TeamCoreController> logger,
+        [Frozen]
+        IVersionService versionService,
+        [Frozen]
+        ILogger<TeamCoreController> logger,
         CancellationToken cancellationToken)
     {
         A.CallTo(() => versionService.GetVersion()).Returns(new Version(1, 2, 3, 4));

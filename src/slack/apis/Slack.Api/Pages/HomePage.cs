@@ -455,7 +455,10 @@ public class HomePage(
         await RenderWithContextAsync(
             workspace,
             workspaceMember,
-            new CommonPageContext(new PageContext { HomePage = homePageContextService.GetDefaultHomePageContext() }),
+            new CommonPageContext(new PageContext
+            {
+                HomePage = homePageContextService.GetDefaultHomePageContext(),
+            }),
             hash,
             cancellationToken);
 
@@ -605,7 +608,7 @@ public class HomePage(
             GetToolbar(commonPageContext.PageContext),
             asyncBlocks[0],
             GetBookingsSearchCriteriaAndPaginationBlocks(bookingConnection, commonPageContext.PageContext),
-            asyncBlocks[1]
+            asyncBlocks[1],
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -615,7 +618,7 @@ public class HomePage(
             {
                 CallbackId = HomeCallback,
                 Blocks = asyncBlocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
             cancellationToken);
@@ -694,7 +697,10 @@ public class HomePage(
 
     private static IReadOnlyList<Block> GetTitle() =>
     [
-        new SectionBlock { Text = "*Welcome to Skedular*".ToMarkdown() }
+        new SectionBlock
+        {
+            Text = "*Welcome to Skedular*".ToMarkdown(),
+        },
     ];
 
     private IReadOnlyList<Block> GetToolbar(PageContext pageContext)
@@ -708,16 +714,46 @@ public class HomePage(
             Placeholder = "Go to...".ToPlainTextWithIcon(Icons.Goto),
             Options =
             [
-                new Option { Value = BookingActionTypes.Bookings, Text = "Bookings".ToPlainTextWithIcon(Icons.Bookings) },
-                new Option { Value = LocationActionTypes.Locations, Text = "Locations".ToPlainTextWithIcon(Icons.Locations) },
-                new Option { Value = TeamActionTypes.Teams, Text = "Teams".ToPlainTextWithIcon(Icons.Teams) },
-                new Option { Value = CustomTagActionTypes.CustomTags, Text = "Tags".ToPlainTextWithIcon(Icons.CustomTags) },
-                new Option { Value = ZoneActionTypes.Zones, Text = "Zones".ToPlainTextWithIcon(Icons.Zones) },
-                new Option { Value = SettingsActionTypes.Settings, Text = "Settings".ToPlainTextWithIcon(Icons.Settings) }
-            ]
+                new Option
+                {
+                    Value = BookingActionTypes.Bookings,
+                    Text = "Bookings".ToPlainTextWithIcon(Icons.Bookings),
+                },
+                new Option
+                {
+                    Value = LocationActionTypes.Locations,
+                    Text = "Locations".ToPlainTextWithIcon(Icons.Locations),
+                },
+                new Option
+                {
+                    Value = TeamActionTypes.Teams,
+                    Text = "Teams".ToPlainTextWithIcon(Icons.Teams),
+                },
+                new Option
+                {
+                    Value = CustomTagActionTypes.CustomTags,
+                    Text = "Tags".ToPlainTextWithIcon(Icons.CustomTags),
+                },
+                new Option
+                {
+                    Value = ZoneActionTypes.Zones,
+                    Text = "Zones".ToPlainTextWithIcon(Icons.Zones),
+                },
+                new Option
+                {
+                    Value = SettingsActionTypes.Settings,
+                    Text = "Settings".ToPlainTextWithIcon(Icons.Settings),
+                },
+            ],
         };
 
-        return [new ActionsBlock { Elements = backButton.Concat(addBookingButton).Concat(feedbackButton).Append(actionMenus).ToList() }];
+        return
+        [
+            new ActionsBlock
+            {
+                Elements = backButton.Concat(addBookingButton).Concat(feedbackButton).Append(actionMenus).ToList(),
+            },
+        ];
     }
 
     private async Task<IReadOnlyList<Block>> GetBookingCalendarSettingBlocksAsync(
@@ -730,10 +766,20 @@ public class HomePage(
         pageContext = pageContext.Clone();
         ArgumentNullException.ThrowIfNull(pageContext.HomePage);
 
-        var header = new SectionBlock { Text = "*Select a day to see the bookings for the week*".ToMarkdown() };
+        var header = new SectionBlock
+        {
+            Text = "*Select a day to see the bookings for the week*".ToMarkdown(),
+        };
         var datePicker = new ActionsBlock
         {
-            Elements = [new DatePicker { ActionId = BookingDatePicker, InitialDate = pageContext.HomePage.SelectedDate.ToDateTime() }]
+            Elements =
+            [
+                new DatePicker
+                {
+                    ActionId = BookingDatePicker,
+                    InitialDate = pageContext.HomePage.SelectedDate.ToDateTime(),
+                },
+            ],
         };
 
         const int DayCount = 7;
@@ -766,8 +812,13 @@ public class HomePage(
                     value = new CancelBookingContext(pageContext, matchingBookings.First().Id).Serialize();
                 }
 
-                return new Button { ActionId = actionId, Text = buttonText, Value = value };
-            }).ToList()
+                return new Button
+                {
+                    ActionId = actionId,
+                    Text = buttonText,
+                    Value = value,
+                };
+            }).ToList(),
         };
 
         return
@@ -775,7 +826,7 @@ public class HomePage(
             header,
             datePicker,
             bookingComponents.GetOnlyShowMyBookingCheckbox(IncludeMyBookingsOnly, pageContext.HomePage.IncludeMyBookingsOnly),
-            bookingButtons
+            bookingButtons,
         ];
     }
 
@@ -783,10 +834,19 @@ public class HomePage(
     {
         if (!bookingConnection.Edges.Any())
         {
-            return [new SectionBlock { Text = "No booking found".ToMarkdown() }];
+            return
+            [
+                new SectionBlock
+                {
+                    Text = "No booking found".ToMarkdown(),
+                },
+            ];
         }
 
-        var totalBookingsCount = new SectionBlock { Text = $"Total bookings: {bookingConnection.TotalCount}".ToMarkdown() };
+        var totalBookingsCount = new SectionBlock
+        {
+            Text = $"Total bookings: {bookingConnection.TotalCount}".ToMarkdown(),
+        };
         if (bookingConnection.TotalCount <= BookingsPageSize)
         {
             return [totalBookingsCount];
@@ -806,7 +866,9 @@ public class HomePage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageBookings, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageBookings,
+                Text = Icons.FirstPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.HomePage.Pagination.First = null;
@@ -816,7 +878,9 @@ public class HomePage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageBookings, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageBookings,
+                Text = Icons.PreviousPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
@@ -829,7 +893,9 @@ public class HomePage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageBookings, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageBookings,
+                Text = Icons.NextPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.HomePage.Pagination.First = null;
@@ -839,16 +905,21 @@ public class HomePage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageBookings, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageBookings,
+                Text = Icons.LastPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
-        var paginationActionBlock = new ActionsBlock { Elements = paginationButtons };
+        var paginationActionBlock = new ActionsBlock
+        {
+            Elements = paginationButtons,
+        };
 
         return
         [
             totalBookingsCount,
-            paginationActionBlock
+            paginationActionBlock,
         ];
     }
 

@@ -11,7 +11,10 @@ public class EntityBaseWithDeletedExtensionsShould
     public void Report_deleted_state_for_entity_base_with_deleted(DateTimeOffset deleteAt)
     {
         var activeEntity = new SpecEntity();
-        var deletedEntity = new SpecEntity { DeletedAt = deleteAt };
+        var deletedEntity = new SpecEntity
+        {
+            DeletedAt = deleteAt,
+        };
 
         activeEntity.IsDeleted().ShouldBeFalse();
         activeEntity.IsNotDeleted().ShouldBeTrue();
@@ -24,7 +27,10 @@ public class EntityBaseWithDeletedExtensionsShould
     public void Report_deleted_state_for_replicated_entity_base_with_deleted(DateTimeOffset deleteAt)
     {
         var activeEntity = new ReplicatedDeletedEntity();
-        var deletedEntity = new ReplicatedDeletedEntity { DeletedAt = deleteAt };
+        var deletedEntity = new ReplicatedDeletedEntity
+        {
+            DeletedAt = deleteAt,
+        };
 
         activeEntity.IsReplicatedDeleted().ShouldBeFalse();
         activeEntity.IsReplicatedNotDeleted().ShouldBeTrue();

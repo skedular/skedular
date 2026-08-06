@@ -19,17 +19,26 @@ public class CreateBookingCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_A_New_Refund_Record_When_Booking_Is_Refundable(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventService marketplaceRefundEventService,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundEventService marketplaceRefundEventService,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
         var requestedAt = new DateTimeOffset(2026, 4, 7, 9, 0, 0, TimeSpan.Zero);
-        var requestedByCustomer = new CustomerEntity { Id = "customer-1" };
+        var requestedByCustomer = new CustomerEntity
+        {
+            Id = "customer-1",
+        };
         var booking = CreateBooking(
             "marketplace-booking-1",
             requestedAt.AddHours(6),
@@ -84,9 +93,12 @@ public class CreateBookingCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Null_When_Booking_Is_Cancellable_But_Not_Refundable(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -116,9 +128,12 @@ public class CreateBookingCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Null_When_Payment_Is_Not_Confirmed(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -148,11 +163,16 @@ public class CreateBookingCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Fall_Back_To_Product_Version_Currency_When_Marketplace_Booking_Currency_Is_Missing(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventService marketplaceRefundEventService,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundEventService marketplaceRefundEventService,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -189,9 +209,12 @@ public class CreateBookingCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Terminal_Refund_Without_Resetting_It(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -209,7 +232,7 @@ public class CreateBookingCancellationRefundAsyncShould
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "marketplace-booking-1",
             Status = MarketplaceRefundStatusConstants.Completed,
-            RefundAmount = 120m
+            RefundAmount = 120m,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -231,9 +254,12 @@ public class CreateBookingCancellationRefundAsyncShould
     [InlineAutoFakeItEasyData(new Type[] { }, MarketplaceRefundStatusConstants.Completed)]
     public async Task Return_Terminal_Refund_Without_Resetting_It_For_All_Terminal_Statuses(
         string terminalStatus,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -248,7 +274,7 @@ public class CreateBookingCancellationRefundAsyncShould
             Status = terminalStatus,
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "marketplace-booking-1",
-            RefundAmount = 120m
+            RefundAmount = 120m,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(requestedAt);
@@ -267,10 +293,14 @@ public class CreateBookingCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Persist_Idempotency_Key_On_New_Refund(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -295,10 +325,14 @@ public class CreateBookingCancellationRefundAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Force_Full_Refund_Regardless_Of_Policy_When_Operator_Cancels(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -340,8 +374,17 @@ public class CreateBookingCancellationRefundAsyncShould
                 Currency = "NZD",
                 PaymentStatus = PaymentStatus.Confirmed.ToPaymentStatus(),
                 ProductPricing = CreatePricing(cancellationPolicyType, cancellationRefundRules),
-                ProductVersion = new ProductVersionEntity { Product = new ProductEntity { Organization = new OrganizationEntity { Id = "org-1" } } }
-            }
+                ProductVersion = new ProductVersionEntity
+                {
+                    Product = new ProductEntity
+                    {
+                        Organization = new OrganizationEntity
+                        {
+                            Id = "org-1",
+                        },
+                    },
+                },
+            },
         };
 
     private static ProductPricing CreatePricing(

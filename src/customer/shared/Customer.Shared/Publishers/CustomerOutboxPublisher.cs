@@ -26,7 +26,10 @@ public class CustomerOutboxPublisher(
         foreach (var customer in customers)
         {
             publisher.Publish(
-                new Key { CustomerId = customer.Id },
+                new Key
+                {
+                    CustomerId = customer.Id,
+                },
                 new Event
                 {
                     Metadata = Event.NewMetadata(
@@ -34,7 +37,10 @@ public class CustomerOutboxPublisher(
                         applicationConfiguration.AppSource,
                         customer.IsDeleted() ? Type.CustomerDeleted : Type.CustomerUpserted,
                         context.GetCorrelationId()),
-                    Data = new Data { Customer = eventMapper.MapTo(customer) }
+                    Data = new Data
+                    {
+                        Customer = eventMapper.MapTo(customer),
+                    },
                 },
                 unitOfWork);
         }

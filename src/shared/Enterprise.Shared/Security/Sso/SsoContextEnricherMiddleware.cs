@@ -9,8 +9,11 @@ namespace Enterprise.Shared.Security.Sso;
 
 public class OrganizationSsoCookie
 {
-    [JsonPropertyName("name")] public required string Name { get; set; }
-    [JsonPropertyName("value")] public required string Value { get; set; }
+    [JsonPropertyName("name")]
+    public required string Name { get; set; }
+
+    [JsonPropertyName("value")]
+    public required string Value { get; set; }
 }
 
 public class SsoContextEnricherMiddleware(

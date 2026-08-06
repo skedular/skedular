@@ -16,13 +16,20 @@ public class GetByMarketplaceBookingSubscriptionIdAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Mapped_Refund_When_Subscription_Refund_Exists(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         MarketplaceRefundReadService sut,
         CancellationToken cancellationToken)
     {
@@ -31,9 +38,12 @@ public class GetByMarketplaceBookingSubscriptionIdAsyncShould
             Id = "refund-1",
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
-            LocalEntityId = "subscription-1"
+            LocalEntityId = "subscription-1",
         };
-        var mappedRefund = new MarketplaceRefundDetails { Id = "refund-1" };
+        var mappedRefund = new MarketplaceRefundDetails
+        {
+            Id = "refund-1",
+        };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundEventRepository).Returns(marketplaceRefundEventRepository);

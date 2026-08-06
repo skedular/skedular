@@ -18,13 +18,20 @@ public class AddAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Use_Host_Standard_Offering_For_New_Host_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationService sut,
         string organizationId,
         string customDomain,
@@ -40,13 +47,22 @@ public class AddAsyncShould
             Name = organizationName,
             Type = OrganizationType.Host,
             AgreedToTermsOfUse = true,
-            TermsOfUse = new TermsOfUse { Id = termsOfUseId },
-            IndustrySubCategories = []
+            TermsOfUse = new TermsOfUse
+            {
+                Id = termsOfUseId,
+            },
+            IndustrySubCategories = [],
         };
-        var termsOfUse = new Shared.Database.Entities.TermsOfUse { Id = termsOfUseId };
+        var termsOfUse = new Shared.Database.Entities.TermsOfUse
+        {
+            Id = termsOfUseId,
+        };
         var organizationEntity = new Shared.Database.Entities.Organization
         {
-            Id = organizationId, CustomDomain = customDomain, Name = organizationName, Type = OrganizationTypeConstants.Host
+            Id = organizationId,
+            CustomDomain = customDomain,
+            Name = organizationName,
+            Type = OrganizationTypeConstants.Host,
         };
         Shared.Database.Entities.Organization? addedOrganization = null;
 
@@ -76,13 +92,20 @@ public class AddAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Use_Spaces_Free_Offering_For_New_Marketplace_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationService sut,
         DateTimeOffset now,
         CancellationToken cancellationToken)
@@ -95,13 +118,22 @@ public class AddAsyncShould
             Name = "Marketplace Org",
             Type = OrganizationType.Marketplace,
             AgreedToTermsOfUse = true,
-            TermsOfUse = new TermsOfUse { Id = termsOfUseId },
-            IndustrySubCategories = []
+            TermsOfUse = new TermsOfUse
+            {
+                Id = termsOfUseId,
+            },
+            IndustrySubCategories = [],
         };
-        var termsOfUse = new Shared.Database.Entities.TermsOfUse { Id = termsOfUseId };
+        var termsOfUse = new Shared.Database.Entities.TermsOfUse
+        {
+            Id = termsOfUseId,
+        };
         var organizationEntity = new Shared.Database.Entities.Organization
         {
-            Id = organization.Id, CustomDomain = organization.CustomDomain, Name = organization.Name, Type = OrganizationTypeConstants.Marketplace
+            Id = organization.Id,
+            CustomDomain = organization.CustomDomain,
+            Name = organization.Name,
+            Type = OrganizationTypeConstants.Marketplace,
         };
         Shared.Database.Entities.Organization? addedOrganization = null;
 

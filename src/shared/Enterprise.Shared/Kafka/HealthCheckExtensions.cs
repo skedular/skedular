@@ -23,7 +23,7 @@ public static class HealthCheckExtensions
                 SecurityProtocol = kafkaConfiguration.SecurityProtocol,
                 SaslMechanism = kafkaConfiguration.SaslMechanism,
                 SaslUsername = kafkaConfiguration.SaslUsername,
-                SaslPassword = kafkaConfiguration.SaslPassword
+                SaslPassword = kafkaConfiguration.SaslPassword,
             };
 
             return services

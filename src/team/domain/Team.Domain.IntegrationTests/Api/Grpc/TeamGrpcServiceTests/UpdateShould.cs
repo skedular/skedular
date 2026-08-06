@@ -36,7 +36,16 @@ public class UpdateShould(
             teamId, organizationId, customerId, identityId, memberId, originalName, originalAbout, originalTimezone, cancellationToken);
 
         var result = await teamServiceClient.UpdateAsync(
-            new UpdateInput { Id = teamId, OrganizationId = organizationId, Name = updatedName, FieldsToUpdate = { TeamPatchField.Name } },
+            new UpdateInput
+            {
+                Id = teamId,
+                OrganizationId = organizationId,
+                Name = updatedName,
+                FieldsToUpdate =
+                {
+                    TeamPatchField.Name,
+                },
+            },
             teamConfiguration.ApiKey.CreateMetadata(identityId),
             cancellationToken: cancellationToken);
 
@@ -65,19 +74,26 @@ public class UpdateShould(
         var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken);
         organization.Offering = new Offering
         {
-            Id = organizationId, Code = OfferingCode.EnterpriseCustomV1, Start = now.AddDays(-1), End = now.AddDays(1)
+            Id = organizationId,
+            Code = OfferingCode.EnterpriseCustomV1,
+            Start = now.AddDays(-1),
+            End = now.AddDays(1),
         };
 
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, cancellationToken);
 
-        repositoryFactory.IdentityRepository.Add(new Identity { Id = identityId, Customer = customer });
+        repositoryFactory.IdentityRepository.Add(new Identity
+        {
+            Id = identityId,
+            Customer = customer,
+        });
         repositoryFactory.OrganizationMemberRepository.Add(new OrganizationMemberEntity
         {
             Id = memberId,
             Organization = organization,
             Customer = customer,
             Role = OrganizationMemberRoleConstants.Owner,
-            Status = OrganizationMemberStatusConstants.Active
+            Status = OrganizationMemberStatusConstants.Active,
         });
         repositoryFactory.TeamRepository.Add(new Shared.Database.Entities.Team
         {
@@ -85,7 +101,7 @@ public class UpdateShould(
             Organization = organization,
             Name = name,
             About = about,
-            Timezone = timezone
+            Timezone = timezone,
         });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -72,6 +72,6 @@ public class MarketplaceRefundPreviewService(
         AppliedRuleMinutesBefore = preview.AppliedRuleMinutesBefore,
         BaseAmount = preview.BaseAmount,
         RefundAmount = preview.RefundAmount,
-        Currency = preview.Currency.ToNullableCurrency()
+        Currency = preview.Currency.ToNullableCurrency(),
     };
 }

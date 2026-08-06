@@ -55,7 +55,11 @@ public class OrganizationOfferingConfiguration : IEntityTypeConfiguration<Organi
         builder.HasIndex(item => item.Code);
         builder.HasIndex(item => item.Start);
         builder.HasIndex(item => item.End);
-        builder.HasIndex(item => new { item.Start, item.End });
+        builder.HasIndex(item => new
+        {
+            item.Start,
+            item.End,
+        });
         builder.HasIndex(item => item.AutoRenew);
         builder.HasIndex(item => item.UnitPrice);
         builder.HasIndex(item => item.FixedPrice);

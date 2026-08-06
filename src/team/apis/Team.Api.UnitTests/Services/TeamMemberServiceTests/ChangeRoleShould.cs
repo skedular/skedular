@@ -19,17 +19,28 @@ public class ChangeRoleShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Information_When_Role_Changes(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ICachedTeamService cachedTeamService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] ITeamOutboxPublisher teamOutboxPublisher,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ITeamMemberRepository teamMemberRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<TeamMemberService> logger,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedTeamService cachedTeamService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        ITeamOutboxPublisher teamOutboxPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ITeamMemberRepository teamMemberRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<TeamMemberService> logger,
         TeamMemberService sut,
         CancellationToken cancellationToken)
     {
@@ -39,15 +50,40 @@ public class ChangeRoleShould
             OrganizationId = "org-1",
             TeamMembers =
             [
-                new TeamMember { Id = "owner-member", Role = TeamMemberRoleConstants.Owner, Customer = new Customer { Id = "customer-1" } }
-            ]
+                new TeamMember
+                {
+                    Id = "owner-member",
+                    Role = TeamMemberRoleConstants.Owner,
+                    Customer = new Customer
+                    {
+                        Id = "customer-1",
+                    },
+                },
+            ],
         };
         var memberToUpdate = new TeamMember
         {
-            Id = "member-1", Role = TeamMemberRoleConstants.Member, Team = team, Customer = new Customer { Id = "customer-2" }
+            Id = "member-1",
+            Role = TeamMemberRoleConstants.Member,
+            Team = team,
+            Customer = new Customer
+            {
+                Id = "customer-2",
+            },
         };
-        var mappedTeam = new Shared.Models.Team { Id = "team-1", Organization = new Organization { Id = "org-1" } };
-        var mappedMember = new Shared.Models.TeamMember { Id = "member-1", Team = mappedTeam };
+        var mappedTeam = new Shared.Models.Team
+        {
+            Id = "team-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
+        };
+        var mappedMember = new Shared.Models.TeamMember
+        {
+            Id = "member-1",
+            Team = mappedTeam,
+        };
 
         A.CallTo(() => repositoryFactory.TeamMemberRepository).Returns(teamMemberRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);

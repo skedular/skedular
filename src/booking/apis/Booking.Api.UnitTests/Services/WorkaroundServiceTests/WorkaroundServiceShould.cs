@@ -14,13 +14,20 @@ public class WorkaroundServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Signal_Existing_Organization_Arrears_Billing_Workflow_Run_Now(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ITemporalService temporalService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ITemporalService temporalService,
         WorkaroundService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Organization { Id = "org-1", BillingCycle = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycle() };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            BillingCycle = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycle(),
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, false, false, cancellationToken)).Returns(organization);
@@ -42,13 +49,20 @@ public class WorkaroundServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Signal_Organization_Arrears_Billing_Workflow_Run_Now_With_Current_Configuration(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ITemporalService temporalService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ITemporalService temporalService,
         WorkaroundService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Organization { Id = "org-1", BillingCycle = OrganizationBillingCycle.Weekly.ToOrganizationBillingCycle() };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            BillingCycle = OrganizationBillingCycle.Weekly.ToOrganizationBillingCycle(),
+        };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, false, false, cancellationToken)).Returns(organization);

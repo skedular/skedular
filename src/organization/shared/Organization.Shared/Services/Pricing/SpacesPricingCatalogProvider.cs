@@ -26,7 +26,7 @@ public class SpacesPricingCatalogProvider
                     [
                         new PlanFeature("booking", "Workspace booking", 1),
                         new PlanFeature("trial-period", "14-day free trial", 2),
-                        new PlanFeature("monthly-quota", GetBookingInstanceFeatureName(freeTierOffering), 3)
+                        new PlanFeature("monthly-quota", GetBookingInstanceFeatureName(freeTierOffering), 3),
                     ],
                     [
                         new PlanLimit(
@@ -43,7 +43,7 @@ public class SpacesPricingCatalogProvider
                             "resources",
                             "Resources",
                             freeTierOffering.MaxResourceCount,
-                            !freeTierOffering.MaxResourceCount.HasValue)
+                            !freeTierOffering.MaxResourceCount.HasValue),
                     ],
                     // ReSharper disable once PossibleLossOfFraction
                     [new PlanPrice(freeTierOffering.Currency, (freeTierOffering.FixedPrice ?? 0) / 100, "month", false)],
@@ -59,7 +59,7 @@ public class SpacesPricingCatalogProvider
                     [
                         new PlanFeature("booking", "Workspace booking", 1),
                         new PlanFeature("monthly-quota", GetBookingInstanceFeatureName(spaceGrowOffering), 2),
-                        new PlanFeature("upgrade-path", "Server-driven upgrade prompts", 3)
+                        new PlanFeature("upgrade-path", "Server-driven upgrade prompts", 3),
                     ],
                     [
                         new PlanLimit(
@@ -76,7 +76,7 @@ public class SpacesPricingCatalogProvider
                             "resources",
                             "Resources",
                             spaceGrowOffering.MaxResourceCount,
-                            !spaceGrowOffering.MaxResourceCount.HasValue)
+                            !spaceGrowOffering.MaxResourceCount.HasValue),
                     ],
                     // ReSharper disable once PossibleLossOfFraction
                     [new PlanPrice(spaceGrowOffering.Currency, (spaceGrowOffering.FixedPrice ?? 0) / 100, "month", false)],
@@ -92,7 +92,7 @@ public class SpacesPricingCatalogProvider
                     [
                         new PlanFeature("booking", "Workspace booking", 1),
                         new PlanFeature("monthly-quota", GetBookingInstanceFeatureName(spaceBusinessOffering), 2),
-                        new PlanFeature("support", "Priority support", 3)
+                        new PlanFeature("support", "Priority support", 3),
                     ],
                     [
                         new PlanLimit(
@@ -109,7 +109,7 @@ public class SpacesPricingCatalogProvider
                             "resources",
                             "Resources",
                             spaceBusinessOffering.MaxResourceCount,
-                            !spaceBusinessOffering.MaxResourceCount.HasValue)
+                            !spaceBusinessOffering.MaxResourceCount.HasValue),
                     ],
                     // ReSharper disable once PossibleLossOfFraction
                     [new PlanPrice(spaceBusinessOffering.Currency, (spaceBusinessOffering.FixedPrice ?? 0) / 100, "month", false)],
@@ -125,7 +125,7 @@ public class SpacesPricingCatalogProvider
                     [
                         new PlanFeature("capacity", "Purchased booking-instance capacity", 1),
                         new PlanFeature("procurement", "Procurement-ready billing", 2),
-                        new PlanFeature("support", "Priority support", 3)
+                        new PlanFeature("support", "Priority support", 3),
                     ],
                     [
                         new PlanLimit(
@@ -142,13 +142,13 @@ public class SpacesPricingCatalogProvider
                             "resources",
                             "Resources",
                             spacesContactUsOffering.MaxResourceCount,
-                            !spacesContactUsOffering.MaxResourceCount.HasValue)
+                            !spacesContactUsOffering.MaxResourceCount.HasValue),
                     ],
                     [],
                     [new CapacityOption("spaces-custom", null, "Contact Us", null, PricingCatalogPlanAvailability.ContactUs, 1)],
                     PricingCatalogPlanAvailability.ContactUs,
                     false,
-                    4)
+                    4),
             ]);
     }
 

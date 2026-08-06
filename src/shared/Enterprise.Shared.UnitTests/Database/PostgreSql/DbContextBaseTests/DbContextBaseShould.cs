@@ -13,7 +13,11 @@ public class DbContextBaseShould
         var options = new DbContextOptionsBuilder<PostgresTestDbContext>()
             .UseNpgsql("Host=localhost;Database=local.test;Username=test;Password=test")
             .Options;
-        var customOptions = new CustomDbContextOptions<PostgresTestDbContext> { IsPostgisEnabled = isPostgis, IsPooled = isPooled };
+        var customOptions = new CustomDbContextOptions<PostgresTestDbContext>
+        {
+            IsPostgisEnabled = isPostgis,
+            IsPooled = isPooled,
+        };
         return new PostgresTestDbContext(options, customOptions);
     }
 

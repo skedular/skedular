@@ -226,7 +226,11 @@ public static class Extensions
             where TDbContext : DbContext
         {
             services
-                .AddSingleton(new CustomDbContextOptions<TDbContext> { IsPooled = isPooled, IsPostgisEnabled = false })
+                .AddSingleton(new CustomDbContextOptions<TDbContext>
+                {
+                    IsPooled = isPooled,
+                    IsPostgisEnabled = false,
+                })
                 .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
                 .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
 

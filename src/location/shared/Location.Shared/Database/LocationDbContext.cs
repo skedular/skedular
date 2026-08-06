@@ -42,6 +42,10 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     {
         public LocationDbContext CreateDbContext(string[] args) =>
             new(args.ToDbContextOption<LocationDbContext>(true),
-                new CustomDbContextOptions<LocationDbContext> { IsPooled = false, IsPostgisEnabled = true });
+                new CustomDbContextOptions<LocationDbContext>
+                {
+                    IsPooled = false,
+                    IsPostgisEnabled = true,
+                });
     }
 }

@@ -5,7 +5,7 @@ namespace Api.Shared.UnitTests.Events.EventMetadataFactoryTests;
 
 public enum SampleEventType
 {
-    Created = 1
+    Created = 1,
 }
 
 public class SampleMetadata : IEventMetadata<SampleEventType>

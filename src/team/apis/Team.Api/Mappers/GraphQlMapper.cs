@@ -47,17 +47,25 @@ public class GraphQlMapper : IGraphQlMapper
                 CanInvitePeople = src.Permissions.CanInvitePeople,
                 OrganizationId = src.Organization.Id,
                 OrganizationCustomDomain = src.Organization.CustomDomain.ToSafeString(),
-                PrimaryLocationId = src.PrimaryLocation?.Id
+                PrimaryLocationId = src.PrimaryLocation?.Id,
             };
 
     public TeamMemberDetails MapTo(TeamMember src) =>
         new()
         {
             Id = src.Id,
-            Role = new TeamMemberRoleDetails { Type = src.Role, Name = src.Role.ToTeamMemberRoleName() },
-            Status = new TeamMemberStatusDetails { Type = src.Status, Name = src.Status.ToTeamMemberStatusName() },
+            Role = new TeamMemberRoleDetails
+            {
+                Type = src.Role,
+                Name = src.Role.ToTeamMemberRoleName(),
+            },
+            Status = new TeamMemberStatusDetails
+            {
+                Type = src.Status,
+                Name = src.Status.ToTeamMemberStatusName(),
+            },
             CustomerId = src.Customer.Id,
-            OrganizationMember = MapTo(src.OrganizationMember)
+            OrganizationMember = MapTo(src.OrganizationMember),
         };
 
     public IEnumerable<TeamDetails> MapTo(IEnumerable<Shared.Models.Team> src) =>
@@ -72,12 +80,33 @@ public class GraphQlMapper : IGraphQlMapper
             Timezone = src.Timezone,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization =
-                new Organization { Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString() },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Location { Id = src.PrimaryLocationId },
+                new Organization
+                {
+                    Id = src.OrganizationId.ToSafeString(),
+                    CustomDomain = src.OrganizationCustomDomain.ToSafeString(),
+                },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
+                ? null
+                : new Location
+                {
+                    Id = src.PrimaryLocationId,
+                },
             TeamMembers = src.CustomerIds
-                .Select(item => new TeamMember { Customer = new Customer { Id = item } })
-                .Concat(src.OrganizationMemberIds.Select(item => new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
-                .ToList()
+                .Select(item => new TeamMember
+                {
+                    Customer = new Customer
+                    {
+                        Id = item,
+                    },
+                })
+                .Concat(src.OrganizationMemberIds.Select(item => new TeamMember
+                {
+                    OrganizationMember = new OrganizationMember
+                    {
+                        Id = item,
+                    },
+                }))
+                .ToList(),
         };
 
     public Shared.Models.Team MapTo(UpdateTeamInput src) =>
@@ -88,7 +117,12 @@ public class GraphQlMapper : IGraphQlMapper
             About = src.About,
             Timezone = src.Timezone,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Location { Id = src.PrimaryLocationId }
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
+                ? null
+                : new Location
+                {
+                    Id = src.PrimaryLocationId,
+                },
         };
 
     public Shared.Models.Team MapTo(UpdateTeamAndTeamMembersInput src) =>
@@ -100,12 +134,33 @@ public class GraphQlMapper : IGraphQlMapper
             Timezone = src.Timezone,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization =
-                new Organization { Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString() },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Location { Id = src.PrimaryLocationId },
+                new Organization
+                {
+                    Id = src.OrganizationId.ToSafeString(),
+                    CustomDomain = src.OrganizationCustomDomain.ToSafeString(),
+                },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
+                ? null
+                : new Location
+                {
+                    Id = src.PrimaryLocationId,
+                },
             TeamMembers = src.CustomerIds
-                .Select(item => new TeamMember { Customer = new Customer { Id = item } })
-                .Concat(src.OrganizationMemberIds.Select(item => new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
-                .ToList()
+                .Select(item => new TeamMember
+                {
+                    Customer = new Customer
+                    {
+                        Id = item,
+                    },
+                })
+                .Concat(src.OrganizationMemberIds.Select(item => new TeamMember
+                {
+                    OrganizationMember = new OrganizationMember
+                    {
+                        Id = item,
+                    },
+                }))
+                .ToList(),
         };
 
     public TeamMember MapTo(AddTeamMemberInput src)
@@ -114,12 +169,18 @@ public class GraphQlMapper : IGraphQlMapper
         {
             OrganizationMember = string.IsNullOrWhiteSpace(src.OrganizationMemberId)
                 ? null
-                : new OrganizationMember { Id = src.OrganizationMemberId }
+                : new OrganizationMember
+                {
+                    Id = src.OrganizationMemberId,
+                },
         };
 
         if (!string.IsNullOrWhiteSpace(src.CustomerId))
         {
-            teamMember.Customer = new Customer { Id = src.CustomerId };
+            teamMember.Customer = new Customer
+            {
+                Id = src.CustomerId,
+            };
         }
 
         return teamMember;
@@ -127,8 +188,20 @@ public class GraphQlMapper : IGraphQlMapper
 
     public IReadOnlyList<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src) =>
         src.CustomerIds
-            .Select(item => new TeamMember { Customer = new Customer { Id = item } })
-            .Concat(src.OrganizationMemberIds.Select(item => new TeamMember { OrganizationMember = new OrganizationMember { Id = item } }))
+            .Select(item => new TeamMember
+            {
+                Customer = new Customer
+                {
+                    Id = item,
+                },
+            })
+            .Concat(src.OrganizationMemberIds.Select(item => new TeamMember
+            {
+                OrganizationMember = new OrganizationMember
+                {
+                    Id = item,
+                },
+            }))
             .ToList();
 
     public TeamEdge MapTo(Edge<Shared.Models.Team> src) => new(MapTo(src.Node)!, src.Cursor);
@@ -141,11 +214,15 @@ public class GraphQlMapper : IGraphQlMapper
         {
             Id = src.Id,
             Email = src.Email,
-            Status = new TeamInvitationStatusDetails { Type = src.Status, Name = src.Status.ToInvitationStatusName() },
+            Status = new TeamInvitationStatusDetails
+            {
+                Type = src.Status,
+                Name = src.Status.ToInvitationStatusName(),
+            },
             Role = src.Role,
             Team = MapTo(src.Team)!,
             CreatedById = src.CreatedBy.Id,
-            InviteeId = src.Invitee?.Id
+            InviteeId = src.Invitee?.Id,
         };
 
     public TeamMemberEdge MapTo(Edge<TeamMember> src) => new(MapTo(src.Node), src.Cursor);
@@ -153,5 +230,11 @@ public class GraphQlMapper : IGraphQlMapper
     public TeamJoinInvitationEdge MapTo(Edge<JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
 
     private static TeamOrganizationMemberDetails? MapTo(OrganizationMember? src) =>
-        src is null ? null : new TeamOrganizationMemberDetails { UniqueId = src.Id, CustomerId = src.Customer.Id };
+        src is null
+            ? null
+            : new TeamOrganizationMemberDetails
+            {
+                UniqueId = src.Id,
+                CustomerId = src.Customer.Id,
+            };
 }

@@ -51,6 +51,7 @@ public sealed class MarketplaceRefundTransitionService(
             processedAt,
             previousStatus,
             correlationId);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForRefundAsync(refund, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await notificationService.NotifyStatusChangedAsync(refund, cancellationToken);
         await RaiseOwnerGraphQlChangeAsync(refund, cancellationToken);
@@ -66,7 +67,7 @@ public sealed class MarketplaceRefundTransitionService(
             MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription =>
                 graphQlTopicEventSender.RaiseGraphqlChangeAsync(
                     Constants.MarketplaceBookingSubscriptionTopicName, refund.LocalEntityId, cancellationToken),
-            _ => Task.CompletedTask
+            _ => Task.CompletedTask,
         };
 
     private static string MapStatusToEventType(string status) =>
@@ -82,6 +83,6 @@ public sealed class MarketplaceRefundTransitionService(
             MarketplaceRefundStatusConstants.Failed => MarketplaceRefundEventTypeConstants.Failed,
             MarketplaceRefundStatusConstants.ReconciliationRequired => MarketplaceRefundEventTypeConstants.ReconciliationRequired,
             MarketplaceRefundStatusConstants.Requested => MarketplaceRefundEventTypeConstants.Requested,
-            _ => throw new ArgumentOutOfRangeException(nameof(status), status, "Unknown marketplace refund status.")
+            _ => throw new ArgumentOutOfRangeException(nameof(status), status, "Unknown marketplace refund status."),
         };
 }

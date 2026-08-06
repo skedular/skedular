@@ -5,8 +5,11 @@ namespace Booking.Api.GraphQL.Booking;
 [GraphQLName("OrganizationArrearsInvoiceDetails")]
 public class OrganizationArrearsInvoiceDetails
 {
-    [GraphQLName("invoiceNumber")] public string InvoiceNumber { get; set; } = string.Empty;
-    [GraphQLName("invoiceUrl")] public string InvoiceUrl { get; set; } = string.Empty;
+    [GraphQLName("invoiceNumber")]
+    public string InvoiceNumber { get; set; } = string.Empty;
+
+    [GraphQLName("invoiceUrl")]
+    public string InvoiceUrl { get; set; } = string.Empty;
 
     [GraphQLName("billingPeriodStartInclusive")]
     public DateTimeOffset BillingPeriodStartInclusive { get; set; }
@@ -14,8 +17,15 @@ public class OrganizationArrearsInvoiceDetails
     [GraphQLName("billingPeriodEndExclusive")]
     public DateTimeOffset BillingPeriodEndExclusive { get; set; }
 
-    [GraphQLName("currency")] public CurrencyDetails Currency { get; set; } = new();
-    [GraphQLName("totalAmount")] public decimal TotalAmount { get; set; }
-    [GraphQLName("totalAmountToDisplay")] public string TotalAmountToDisplay { get; set; } = string.Empty;
-    [GraphQLName("createdAt")] public DateTimeOffset CreatedAt { get; set; }
+    [GraphQLName("currency")]
+    public CurrencyDetails Currency { get; set; } = new();
+
+    [GraphQLName("totalAmount")]
+    public decimal TotalAmount { get; set; }
+
+    [GraphQLName("totalAmountToDisplay")]
+    public string TotalAmountToDisplay { get; set; } = string.Empty;
+
+    [GraphQLName("createdAt")]
+    public DateTimeOffset CreatedAt { get; set; }
 }

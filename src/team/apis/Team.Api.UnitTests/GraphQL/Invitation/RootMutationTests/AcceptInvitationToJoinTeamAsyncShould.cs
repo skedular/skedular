@@ -12,9 +12,12 @@ public class AcceptInvitationToJoinTeamAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_information_for_accept_invitation_mutation(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IInvitationService invitationService,
-        [Frozen] ILogger<RootMutation> logger,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IInvitationService invitationService,
+        [Frozen]
+        ILogger<RootMutation> logger,
         RootMutation sut,
         AcceptInvitationToJoinTeamInput input,
         JoinInvitation invitation,

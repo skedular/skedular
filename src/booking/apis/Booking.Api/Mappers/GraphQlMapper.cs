@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
+using Booking.Api.GraphQL.MarketplacePurchaseHistory;
 using Booking.Api.GraphQL.Payment;
 using Booking.Api.GraphQL.RecurringBooking;
 using Booking.Shared.Database.Entities;
@@ -42,6 +43,7 @@ public interface IGraphQlMapper
     OrganizationArrearsInvoiceDetails MapTo(OrganizationArrearsInvoice src);
     RecurringBookingDetails? MapTo(RecurringBooking? src);
     MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src);
+    MarketplacePurchaseHistoryDetails MapTo(MarketplacePurchaseHistoryEntry src);
     Shared.Models.Booking MapTo(AddPrivateBookingInput src);
     RecurringBooking MapTo(AddPrivateRecurringBookingInput src);
     RecurringBooking MapTo(UpdatePrivateRecurringBookingInput src);
@@ -61,6 +63,33 @@ public interface IGraphQlMapper
 
 public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 {
+    public MarketplacePurchaseHistoryDetails MapTo(MarketplacePurchaseHistoryEntry src) => new()
+    {
+        Id = $"marketplace-purchase-history:{src.SourceType}:{src.Id}",
+        SourceId = src.Id,
+        SourceType = src.SourceType,
+        SourceTypeName = src.SourceTypeName,
+        LifecycleState = src.LifecycleState,
+        LifecycleStateName = src.LifecycleStateName,
+        RenewalState = src.RenewalState,
+        RenewalStateName = src.RenewalStateName,
+        PurchasedAt = src.PurchasedAt,
+        ActivityAt = src.ActivityAt,
+        BookingFrom = src.BookingFrom,
+        BookingUntil = src.BookingUntil,
+        PaymentStatus = src.PaymentStatus,
+        ProductVersionId = src.ProductVersionId,
+        ProductTitle = src.ProductTitle,
+        TotalAmount = src.TotalAmount,
+        Currency = src.Currency,
+        CustomerId = src.CustomerId,
+        DeletedByCustomerId = src.DeletedByCustomerId,
+        CancellationReason = src.CancellationReason,
+        RefundId = src.RefundId,
+        BookingId = src.BookingId,
+        IsDeleted = src.IsDeleted,
+    };
+
     public MarketplaceRefundPreviewDetails MapTo(MarketplaceRefundPreviewModel src) => new()
     {
         LocalEntityType = src.LocalEntityType.ToMarketplaceRefundEntityTypeValue(),
@@ -73,8 +102,14 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         BaseAmount = src.BaseAmount,
         RefundAmount = src.RefundAmount,
         Currency =
-            src.Currency is { } currency ? new CurrencyDetails { Type = currency, Name = currency.ToCurrencyName() } : null,
-        CurrencyToDisplay = src.Currency is { } displayCurrency ? displayCurrency.ToCurrencyName() : "N/A"
+            src.Currency is { } currency
+                ? new CurrencyDetails
+                {
+                    Type = currency,
+                    Name = currency.ToCurrencyName(),
+                }
+                : null,
+        CurrencyToDisplay = src.Currency is { } displayCurrency ? displayCurrency.ToCurrencyName() : "N/A",
     };
 
     public MarketplaceRefundDetails MapTo(MarketplaceRefundReadModel src) => new()
@@ -82,7 +117,11 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         Id = src.Id,
         LocalEntityType = src.LocalEntityType.ToMarketplaceRefundEntityTypeValue(),
         LocalEntityId = src.LocalEntityId,
-        Status = new MarketplaceRefundStatusDetails { Type = src.Status, Name = src.Status.ToMarketplaceRefundStatusName() },
+        Status = new MarketplaceRefundStatusDetails
+        {
+            Type = src.Status,
+            Name = src.Status.ToMarketplaceRefundStatusName(),
+        },
         RequestedAt = src.RequestedAt,
         ReferenceTime = src.ReferenceTime,
         RefundPercentage = src.RefundPercentage,
@@ -90,7 +129,13 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         BaseAmount = src.BaseAmount,
         RefundAmount = src.RefundAmount,
         Currency =
-            src.Currency is { } currency ? new CurrencyDetails { Type = currency, Name = currency.ToCurrencyName() } : null,
+            src.Currency is { } currency
+                ? new CurrencyDetails
+                {
+                    Type = currency,
+                    Name = currency.ToCurrencyName(),
+                }
+                : null,
         CurrencyToDisplay = src.Currency is { } displayCurrency ? displayCurrency.ToCurrencyName() : "N/A",
         Reason = src.Reason,
         AccountingProvider = src.AccountingProvider,
@@ -131,14 +176,18 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             SourcePaymentReference = item.SourcePaymentReference,
             SourcePaymentAmount = item.SourcePaymentAmount,
             AllocatedRefundAmount = item.AllocatedRefundAmount,
-            Currency = item.Currency.ToCurrency()
-        }).ToList()
+            Currency = item.Currency.ToCurrency(),
+        }).ToList(),
     };
 
     public MarketplaceRefundEventDetails MapTo(MarketplaceRefundEventModel src) => new()
     {
         Id = src.Id,
-        EventType = new MarketplaceRefundEventTypeDetails { Type = src.EventType, Name = src.EventType.ToMarketplaceRefundEventTypeName() },
+        EventType = new MarketplaceRefundEventTypeDetails
+        {
+            Type = src.EventType,
+            Name = src.EventType.ToMarketplaceRefundEventTypeName(),
+        },
         OccurredAt = src.OccurredAt,
         RefundAmount = src.RefundAmount,
         CurrencyToDisplay = src.Currency is { } currency ? currency.ToCurrencyName() : "N/A",
@@ -151,7 +200,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         ActorName = src.ActorName,
         PreviousStatus = src.PreviousStatus?.ToString(),
         NewStatus = src.NewStatus?.ToString(),
-        CorrelationId = src.CorrelationId
+        CorrelationId = src.CorrelationId,
     };
 
     public MarketplaceBookingFailureDetails MapTo(MarketplaceBookingFailureEntity src) =>
@@ -159,8 +208,16 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         {
             Id = src.Id,
             Category =
-                new MarketplaceBookingFailureChoiceDetails { Type = src.Category, Name = src.Category.ToMarketplaceBookingFailureCategoryName() },
-            Scope = new MarketplaceBookingFailureChoiceDetails { Type = src.Scope, Name = src.Scope.ToMarketplaceBookingFailureScopeName() },
+                new MarketplaceBookingFailureChoiceDetails
+                {
+                    Type = src.Category,
+                    Name = src.Category.ToMarketplaceBookingFailureCategoryName(),
+                },
+            Scope = new MarketplaceBookingFailureChoiceDetails
+            {
+                Type = src.Scope,
+                Name = src.Scope.ToMarketplaceBookingFailureScopeName(),
+            },
             FinalizedAt = src.FinalizedAt,
             RequestedFrom = src.RequestedFrom,
             RequestedUntil = src.RequestedUntil,
@@ -168,12 +225,12 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 new MarketplaceBookingFailureChoiceDetails
                 {
                     Type = src.CustomerAction.ToSafeString(),
-                    Name = src.CustomerAction.ToSafeString().ToMarketplaceBookingFailureCustomerActionName()
+                    Name = src.CustomerAction.ToSafeString().ToMarketplaceBookingFailureCustomerActionName(),
                 },
             ResolutionDeadlineAt = src.ResolutionDeadlineAt,
             ResolutionDecidedAt = src.ResolutionDecidedAt,
             ResolutionDecision = src.ResolutionDecision,
-            AllocatedRefundAmount = src.AllocatedRefundAmount
+            AllocatedRefundAmount = src.AllocatedRefundAmount,
         };
 
     public MarketplaceBookingFailureDetails MapTo(MarketplaceBookingFailureSummary src) =>
@@ -181,15 +238,24 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         {
             Id = src.Id,
             Category =
-                new MarketplaceBookingFailureChoiceDetails { Type = src.Category, Name = src.Category.ToMarketplaceBookingFailureCategoryName() },
-            Scope = new MarketplaceBookingFailureChoiceDetails { Type = src.Scope, Name = src.Scope.ToMarketplaceBookingFailureScopeName() },
+                new MarketplaceBookingFailureChoiceDetails
+                {
+                    Type = src.Category,
+                    Name = src.Category.ToMarketplaceBookingFailureCategoryName(),
+                },
+            Scope = new MarketplaceBookingFailureChoiceDetails
+            {
+                Type = src.Scope,
+                Name = src.Scope.ToMarketplaceBookingFailureScopeName(),
+            },
             FinalizedAt = src.FinalizedAt,
             RequestedFrom = src.RequestedFrom,
             RequestedUntil = src.RequestedUntil,
             CustomerAction = new MarketplaceBookingFailureChoiceDetails
             {
-                Type = src.CustomerAction, Name = src.CustomerAction.ToMarketplaceBookingFailureCustomerActionName()
-            }
+                Type = src.CustomerAction,
+                Name = src.CustomerAction.ToMarketplaceBookingFailureCustomerActionName(),
+            },
         };
 
     public BookingDetails MapTo(Shared.Models.Booking src) =>
@@ -199,8 +265,16 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
-            Category = new BookingCategoryDetails { Category = src.Category, Name = src.Category.ToBookingCategoryName() },
-            Channel = new BookingChannelDetails { Channel = src.Channel, Name = src.Channel.ToBookingChannelName() },
+            Category = new BookingCategoryDetails
+            {
+                Category = src.Category,
+                Name = src.Category.ToBookingCategoryName(),
+            },
+            Channel = new BookingChannelDetails
+            {
+                Channel = src.Channel,
+                Name = src.Channel.ToBookingChannelName(),
+            },
             BookingResources = MapTo(src.Resources, src.InvolvedResources),
             InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
             InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => (item.Id, item.CustomDomain.ToSafeString())),
@@ -213,7 +287,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             MarketplaceBooking = MapTo(src.MarketplaceBooking),
             CancellationPolicyOverridden = src.CancellationPolicyOverridden,
             CancellationOverrideReason = src.CancellationOverrideReason,
-            HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides
+            HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides,
         };
 
     public OrganizationArrearsInvoiceDetails MapTo(OrganizationArrearsInvoice src) =>
@@ -223,10 +297,14 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             InvoiceUrl = src.InvoiceUrl,
             BillingPeriodStartInclusive = src.BillingPeriodStartInclusive,
             BillingPeriodEndExclusive = src.BillingPeriodEndExclusive,
-            Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
+            Currency = new CurrencyDetails
+            {
+                Type = src.Currency,
+                Name = src.Currency.ToCurrencyName(),
+            },
             TotalAmount = src.TotalAmount,
             TotalAmountToDisplay = src.TotalAmount.ToRoundedPrice().ToPriceToDisplay(src.Currency),
-            CreatedAt = src.CreatedAt
+            CreatedAt = src.CreatedAt,
         };
 
     public MarketplaceRefundDetails MapTo(MarketplaceRefund src)
@@ -241,7 +319,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             Status =
                 new MarketplaceRefundStatusDetails
                 {
-                    Type = src.Status.ToMarketplaceRefundStatus(), Name = src.Status.ToMarketplaceRefundStatus().ToMarketplaceRefundStatusName()
+                    Type = src.Status.ToMarketplaceRefundStatus(),
+                    Name = src.Status.ToMarketplaceRefundStatus().ToMarketplaceRefundStatusName(),
                 },
             RequestedAt = src.RequestedAt,
             ReferenceTime = src.ReferenceTime,
@@ -249,7 +328,13 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             AppliedRuleMinutesBefore = src.AppliedRuleMinutesBefore,
             BaseAmount = src.BaseAmount,
             RefundAmount = src.RefundAmount,
-            Currency = currency is null ? null : new CurrencyDetails { Type = currency.Value, Name = currency.Value.ToCurrencyName() },
+            Currency = currency is null
+                ? null
+                : new CurrencyDetails
+                {
+                    Type = currency.Value,
+                    Name = currency.Value.ToCurrencyName(),
+                },
             CurrencyToDisplay = currency is null ? "N/A" : currency.Value.ToCurrencyName(),
             Reason = src.Reason,
             AccountingProvider = src.AccountingProvider,
@@ -286,8 +371,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 SourcePaymentReference = item.SourcePaymentReference,
                 SourcePaymentAmount = item.SourceCapturedAmount,
                 AllocatedRefundAmount = item.AllocatedRefundAmount,
-                Currency = item.Currency
-            }).ToList()
+                Currency = item.Currency,
+            }).ToList(),
         };
     }
 
@@ -302,7 +387,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 new MarketplaceRefundEventTypeDetails
                 {
                     Type = src.EventType.ToMarketplaceRefundEventType(),
-                    Name = src.EventType.ToMarketplaceRefundEventType().ToMarketplaceRefundEventTypeName()
+                    Name = src.EventType.ToMarketplaceRefundEventType().ToMarketplaceRefundEventTypeName(),
                 },
             OccurredAt = src.OccurredAt,
             RefundAmount = src.RefundAmount,
@@ -315,7 +400,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             ActorCustomerId = src.ActorCustomerId,
             PreviousStatus = src.PreviousStatus,
             NewStatus = src.NewStatus,
-            CorrelationId = src.CorrelationId
+            CorrelationId = src.CorrelationId,
         };
     }
 
@@ -327,14 +412,34 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 Id = src.Id,
                 From = src.From,
                 Until = src.Until,
-                Category = new BookingCategoryDetails { Category = src.Category, Name = src.Category.ToBookingCategoryName() },
-                Channel = new BookingChannelDetails { Channel = src.Channel, Name = src.Channel.ToBookingChannelName() },
-                Frequency = new BookingFrequencyDetails { Frequency = src.Frequency, Name = src.Frequency.ToBookingFrequencyName() },
+                Category = new BookingCategoryDetails
+                {
+                    Category = src.Category,
+                    Name = src.Category.ToBookingCategoryName(),
+                },
+                Channel = new BookingChannelDetails
+                {
+                    Channel = src.Channel,
+                    Name = src.Channel.ToBookingChannelName(),
+                },
+                Frequency = new BookingFrequencyDetails
+                {
+                    Frequency = src.Frequency,
+                    Name = src.Frequency.ToBookingFrequencyName(),
+                },
                 Interval = src.Interval,
                 ByMonthDay = src.ByMonthDay,
                 BySetPosition = src.BySetPosition,
-                ByWeekDays = src.ByWeekDays.Select(item => new DayOfWeekDetails { DayOfWeek = item, Name = item.ToDayOfWeekName() }),
-                EndType = new BookingRecurrenceEndTypeDetails { EndType = src.EndType, Name = src.EndType.ToRecurringBookingEndTypeName() },
+                ByWeekDays = src.ByWeekDays.Select(item => new DayOfWeekDetails
+                {
+                    DayOfWeek = item,
+                    Name = item.ToDayOfWeekName(),
+                }),
+                EndType = new BookingRecurrenceEndTypeDetails
+                {
+                    EndType = src.EndType,
+                    Name = src.EndType.ToRecurringBookingEndTypeName(),
+                },
                 StartDate = src.StartDate,
                 EndDate = src.EndDate,
                 OccurrenceCount = src.OccurrenceCount,
@@ -346,7 +451,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 CreatedByCustomerId = src.CreatedByCustomer?.Id,
                 LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
                 DeletedByCustomerId = src.DeletedByCustomer?.Id,
-                MarketplaceBooking = src.MarketplaceBooking is null ? null : MapTo(src.MarketplaceBooking)
+                MarketplaceBookingSubscriptionId = src.MarketplaceBookingSubscription?.Id,
+                MarketplaceBooking = src.MarketplaceBooking is null ? null : MapTo(src.MarketplaceBooking),
             };
 
     public MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src) =>
@@ -357,9 +463,10 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             CancelledAt = src.CancelledAt,
             NextRenewalAt = src.NextRenewalAt,
             Status = new MarketplaceBookingSubscriptionStatusDetails
-                {
-                    Type = src.Status, Name = src.Status.ToMarketplaceBookingSubscriptionStatus()
-                },
+            {
+                Type = src.Status,
+                Name = src.Status.ToMarketplaceBookingSubscriptionStatus(),
+            },
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
             CancellationPolicyOverridden = src.CancellationPolicyOverridden,
@@ -372,12 +479,15 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             CreatedByCustomerId = src.CreatedByCustomer?.Id,
             LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
             DeletedByCustomerId = src.DeletedByCustomer?.Id,
-            RecurringBookings = MapTo(src.RecurringBookings).ToList()
+            RecurringBookings = MapTo(src.RecurringBookings).ToList(),
         };
 
     public Shared.Models.Booking MapTo(AddPrivateBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer
+        {
+            Id = item,
+        }).ToList();
 
         return new Shared.Models.Booking
         {
@@ -386,21 +496,39 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             Until = src.Until,
             Notes = src.Notes,
             Category = src.Category ?? BookingCategory.WorkingFromOffice,
-            Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
+            Schedules = new List<BookingSchedule>
+            {
+                new(src.From, src.Until),
+            },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
-            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization
+                {
+                    Id = item,
+                })
                 .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
-                    new Organization { CustomDomain = item }))
+                    new Organization
+                    {
+                        CustomDomain = item,
+                    }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
-            Resources = src.ResourceIds.ToSafeCollection().Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team
+            {
+                Id = item,
+            }).ToList(),
+            Resources = src.ResourceIds.ToSafeCollection().Select(item => new ResourceCustomersPair(new Resource
+            {
+                Id = item,
+            }, customers)).ToList(),
         };
     }
 
     public RecurringBooking MapTo(AddPrivateRecurringBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer
+        {
+            Id = item,
+        }).ToList();
 
         return new RecurringBooking
         {
@@ -419,18 +547,33 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             OccurrenceCount = src.OccurrenceCount,
             SkippedDates = src.SkippedDates.ToSafeCollection(),
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization
+                {
+                    Id = item,
+                })
                 .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
-                    new Organization { CustomDomain = item }))
+                    new Organization
+                    {
+                        CustomDomain = item,
+                    }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
-            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Resource { Id = item }).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team
+            {
+                Id = item,
+            }).ToList(),
+            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Resource
+            {
+                Id = item,
+            }).ToList(),
         };
     }
 
     public RecurringBooking MapTo(UpdatePrivateRecurringBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer
+        {
+            Id = item,
+        }).ToList();
 
         return new RecurringBooking
         {
@@ -449,18 +592,33 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             OccurrenceCount = src.OccurrenceCount,
             SkippedDates = src.SkippedDates.ToSafeCollection(),
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization
+                {
+                    Id = item,
+                })
                 .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
-                    new Organization { CustomDomain = item }))
+                    new Organization
+                    {
+                        CustomDomain = item,
+                    }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
-            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Resource { Id = item }).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team
+            {
+                Id = item,
+            }).ToList(),
+            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Resource
+            {
+                Id = item,
+            }).ToList(),
         };
     }
 
     public MarketplaceBookingSubscription MapTo(AddMarketplaceBookingSubscriptionInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer
+        {
+            Id = item,
+        }).ToList();
 
         return new MarketplaceBookingSubscription
         {
@@ -471,27 +629,45 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
             WeeklySelectedDays = src.WeeklySelectedDays.ToSafeCollection().ToList(),
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization
+                {
+                    Id = item,
+                })
                 .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
-                    new Organization { CustomDomain = item }))
+                    new Organization
+                    {
+                        CustomDomain = item,
+                    }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
-            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Resource { Id = item }).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team
+            {
+                Id = item,
+            }).ToList(),
+            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Resource
+            {
+                Id = item,
+            }).ToList(),
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = src.Quantity,
-                ProductVersion = new ProductVersion { Id = src.ProductVersionId },
+                ProductVersion = new ProductVersion
+                {
+                    Id = src.ProductVersionId,
+                },
                 PaymentMethod = src.PaymentMethod,
                 InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
                 ProductPricing = ProductPricing.Empty(src.PricingId),
-                CheckoutReturnUrl = src.CheckoutReturnUrl
-            }
+                CheckoutReturnUrl = src.CheckoutReturnUrl,
+            },
         };
     }
 
     public Shared.Models.Booking MapTo(UpdatePrivateBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer
+        {
+            Id = item,
+        }).ToList();
 
         return new Shared.Models.Booking
         {
@@ -500,22 +676,40 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             Until = src.Until,
             Notes = src.Notes,
             Category = src.Category ?? BookingCategory.WorkingFromOffice,
-            Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
+            Schedules = new List<BookingSchedule>
+            {
+                new(src.From, src.Until),
+            },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations =
-                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization
+                    {
+                        Id = item,
+                    })
                     .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
-                        new Organization { CustomDomain = item }))
+                        new Organization
+                        {
+                            CustomDomain = item,
+                        }))
                     .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
-            Resources = src.ResourceIds.RemoveInvalidIds().Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team
+            {
+                Id = item,
+            }).ToList(),
+            Resources = src.ResourceIds.RemoveInvalidIds().Select(item => new ResourceCustomersPair(new Resource
+            {
+                Id = item,
+            }, customers)).ToList(),
         };
     }
 
     public Shared.Models.Booking MapTo(AddMarketplaceBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer
+        {
+            Id = item,
+        }).ToList();
 
         return new Shared.Models.Booking
         {
@@ -524,31 +718,52 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             Until = src.Until,
             Notes = src.Notes,
             Category = src.Category ?? BookingCategory.WorkingFromCoworkingSpace,
-            Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
+            Schedules = new List<BookingSchedule>
+            {
+                new(src.From, src.Until),
+            },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations = src.OrganizationIds
-                .ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+                .ToSafeCollection().RemoveInvalidIds().Select(item => new Organization
+                {
+                    Id = item,
+                })
                 .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
-                    new Organization { CustomDomain = item }))
+                    new Organization
+                    {
+                        CustomDomain = item,
+                    }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
-            Resources = src.ResourceIds.ToSafeCollection().Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team
+            {
+                Id = item,
+            }).ToList(),
+            Resources = src.ResourceIds.ToSafeCollection().Select(item => new ResourceCustomersPair(new Resource
+            {
+                Id = item,
+            }, customers)).ToList(),
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = src.Quantity,
-                ProductVersion = new ProductVersion { Id = src.ProductVersionId },
+                ProductVersion = new ProductVersion
+                {
+                    Id = src.ProductVersionId,
+                },
                 PaymentMethod = src.PaymentMethod,
                 InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
                 ProductPricing = ProductPricing.Empty(src.PricingId),
-                CheckoutReturnUrl = src.CheckoutReturnUrl
-            }
+                CheckoutReturnUrl = src.CheckoutReturnUrl,
+            },
         };
     }
 
     public Shared.Models.Booking MapTo(UpdateMarketplaceBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer
+        {
+            Id = item,
+        }).ToList();
 
         return new Shared.Models.Booking
         {
@@ -558,11 +773,20 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations =
-                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization
+                    {
+                        Id = item,
+                    })
                     .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
-                        new Organization { CustomDomain = item }))
+                        new Organization
+                        {
+                            CustomDomain = item,
+                        }))
                     .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team
+            {
+                Id = item,
+            }).ToList(),
         };
     }
 
@@ -576,7 +800,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                OrganizationTags = MapTo(src.OrganizationTags).ToList()
+                OrganizationTags = MapTo(src.OrganizationTags).ToList(),
             };
 
     public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src) => new(sharedEntityMapper.MapTo(src.Node), src.Cursor);
@@ -594,16 +818,37 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Type = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Type = src.Type.ToNullableOrganizationTagType(),
+            Color = src.Color,
+        };
 
     private static BookingResourceDetails MapTo(Resource src, IEnumerable<Customer> customers) =>
-        new() { Resource = MapToResourceDetails(src), Location = MapTo(src.Location), CustomerIds = customers.Select(item => item.Id) };
+        new()
+        {
+            Resource = MapToResourceDetails(src),
+            Location = MapTo(src.Location),
+            CustomerIds = customers.Select(item => item.Id),
+        };
 
-    private static BookingResourceDetails MapTo(Resource src) => new() { Resource = MapToResourceDetails(src), Location = MapTo(src.Location) };
+    private static BookingResourceDetails MapTo(Resource src) => new()
+    {
+        Resource = MapToResourceDetails(src),
+        Location = MapTo(src.Location),
+    };
 
     private static IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo)!;
 
-    private static LocationDetails? MapTo(Shared.Models.Location? src) => src is null ? null : new LocationDetails { Id = src.Id, Name = src.Name };
+    private static LocationDetails? MapTo(Shared.Models.Location? src) => src is null
+        ? null
+        : new LocationDetails
+        {
+            Id = src.Id,
+            Name = src.Name,
+        };
 
     private static ResourceDetails MapToResourceDetails(Resource src)
     {
@@ -618,7 +863,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
             CustomTags = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Custom).Select(MapTo).ToList(),
             Zones = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Zone).Select(MapTo).ToList(),
-            ProductTags = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).Select(MapTo).ToList()
+            ProductTags = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).Select(MapTo).ToList(),
         };
 
         var organizationTag =
@@ -631,7 +876,13 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         return result;
     }
 
-    private static OrganizationTagDetails MapTo(OrganizationTag src) => new() { Id = src.Id, Name = src.Name, Type = src.Type, Color = src.Color };
+    private static OrganizationTagDetails MapTo(OrganizationTag src) => new()
+    {
+        Id = src.Id,
+        Name = src.Name,
+        Type = src.Type,
+        Color = src.Color,
+    };
 
     private static IEnumerable<BookingResourceDetails> MapTo(IReadOnlyList<ResourceCustomersPair> src, IReadOnlyList<Resource> involvedResources) =>
         src.Count == 0 ? involvedResources.Select(MapTo) : src.Select(item => MapTo(item.Resource, item.Customers));
@@ -639,7 +890,11 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
     private static BookingCheckoutSessionDetails? MapTo(StripeCheckoutSession? src) =>
         src is null
             ? null
-            : new BookingCheckoutSessionDetails { UniqueId = src.Id, CheckoutUrl = src.CheckoutUrl };
+            : new BookingCheckoutSessionDetails
+            {
+                UniqueId = src.Id,
+                CheckoutUrl = src.CheckoutUrl,
+            };
 
     private static MarketplaceBookingDetails? MapTo(MarketplaceBooking? src) =>
         src is null
@@ -656,8 +911,16 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 ProductPricing = src.ProductPricing,
                 BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
                 PaymentExpiry = src.PaymentExpiry,
-                PaymentStatus = new PaymentStatusDetails { Type = src.PaymentStatus, Name = src.PaymentStatus.ToPaymentStatusName() },
-                PaymentMethod = new PaymentMethodTypeDetails { Type = src.PaymentMethod, Name = src.PaymentMethod.ToPaymentMethodName() },
+                PaymentStatus = new PaymentStatusDetails
+                {
+                    Type = src.PaymentStatus,
+                    Name = src.PaymentStatus.ToPaymentStatusName(),
+                },
+                PaymentMethod = new PaymentMethodTypeDetails
+                {
+                    Type = src.PaymentMethod,
+                    Name = src.PaymentMethod.ToPaymentMethodName(),
+                },
                 InvoiceUrl = src.InvoiceUrl,
                 InvoiceNumber = src.InvoiceNumber,
                 InvoiceEmailList = src.InvoiceEmailList,
@@ -681,8 +944,14 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                     ? "N/A"
                     : src.TotalAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.Value),
                 Currency =
-                    src.Currency is null ? null : new CurrencyDetails { Type = src.Currency.Value, Name = src.Currency.Value.ToCurrencyName() },
-                CurrencyToDisplay = src.Currency is null ? "N/A" : src.Currency.Value.ToCurrencyName()
+                    src.Currency is null
+                        ? null
+                        : new CurrencyDetails
+                        {
+                            Type = src.Currency.Value,
+                            Name = src.Currency.Value.ToCurrencyName(),
+                        },
+                CurrencyToDisplay = src.Currency is null ? "N/A" : src.Currency.Value.ToCurrencyName(),
             };
 
     private IEnumerable<RecurringBookingDetails> MapTo(IEnumerable<RecurringBooking> src) => src.Select(MapTo)!;

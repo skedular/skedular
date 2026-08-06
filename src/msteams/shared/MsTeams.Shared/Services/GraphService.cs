@@ -34,7 +34,7 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, 
                             "displayName",
                             "description",
                             "photo",
-                            "webUrl"
+                            "webUrl",
                         ];
                         _ = requestConfiguration.QueryParameters.Select.Skip(skipCount);
                     },
@@ -73,7 +73,7 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, 
                         "description",
                         "email",
                         "webUrl",
-                        "isArchived"
+                        "isArchived",
                     ];
                 },
                 cancellationToken);

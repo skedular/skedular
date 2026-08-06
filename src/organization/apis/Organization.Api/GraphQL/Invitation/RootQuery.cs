@@ -16,17 +16,39 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     public IEnumerable<OrganizationInvitationStatusDetails> OrganizationInvitationStatuses() =>
     [
-        new() { Type = InvitationStatus.Pending, Name = InvitationStatus.Pending.ToInvitationStatusName() },
-        new() { Type = InvitationStatus.Accepted, Name = InvitationStatus.Accepted.ToInvitationStatusName() },
-        new() { Type = InvitationStatus.Rejected, Name = InvitationStatus.Rejected.ToInvitationStatusName() },
-        new() { Type = InvitationStatus.Cancelled, Name = InvitationStatus.Cancelled.ToInvitationStatusName() },
-        new() { Type = InvitationStatus.Expired, Name = InvitationStatus.Expired.ToInvitationStatusName() }
+        new()
+        {
+            Type = InvitationStatus.Pending,
+            Name = InvitationStatus.Pending.ToInvitationStatusName(),
+        },
+        new()
+        {
+            Type = InvitationStatus.Accepted,
+            Name = InvitationStatus.Accepted.ToInvitationStatusName(),
+        },
+        new()
+        {
+            Type = InvitationStatus.Rejected,
+            Name = InvitationStatus.Rejected.ToInvitationStatusName(),
+        },
+        new()
+        {
+            Type = InvitationStatus.Cancelled,
+            Name = InvitationStatus.Cancelled.ToInvitationStatusName(),
+        },
+        new()
+        {
+            Type = InvitationStatus.Expired,
+            Name = InvitationStatus.Expired.ToInvitationStatusName(),
+        },
     ];
 
     [UseResolverScope]
     public async Task<int> PendingOrganizationInvitationsCountAsync(
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] IInvitationService teamInvitationService,
+        [Service]
+        ICachedCustomerService cachedCustomerService,
+        [Service]
+        IInvitationService teamInvitationService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
             ? await teamInvitationService.PendingInvitationsCountAsync(cancellationToken)
@@ -40,7 +62,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         MyInvitationsToJoinOrganizationsWhereInput where,
         IEnumerable<JoinOrganizationInvitationOrder>? orderBy,
-        [Service] IInvitationService teamInvitationService,
+        [Service]
+        IInvitationService teamInvitationService,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await teamInvitationService.GetMyPaginatedJoinInvitationsAsync(
@@ -56,10 +79,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 }

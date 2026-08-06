@@ -146,6 +146,8 @@ public class BookingInternalSubscriber(
         checkout.MarketplaceBooking.PaymentStatus = PaymentStatusConstants.Rejected;
         repositoryFactory.StripeCheckoutSessionRepository.Update(checkout);
         repositoryFactory.MarketplaceBookingRepository.Update(checkout.MarketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            checkout.MarketplaceBooking.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await SignalPaymentStatusAsync(checkout.MarketplaceBooking, cancellationToken);
     }
@@ -163,6 +165,8 @@ public class BookingInternalSubscriber(
         checkout.MarketplaceBooking.PaymentStatus = PaymentStatusConstants.Confirmed;
         repositoryFactory.StripeCheckoutSessionRepository.Update(checkout);
         repositoryFactory.MarketplaceBookingRepository.Update(checkout.MarketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            checkout.MarketplaceBooking.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await SignalPaymentStatusAsync(checkout.MarketplaceBooking, cancellationToken);
     }
@@ -179,6 +183,8 @@ public class BookingInternalSubscriber(
         checkout.MarketplaceBooking.PaymentStatus = PaymentStatusConstants.Rejected;
         repositoryFactory.StripeCheckoutSessionRepository.Update(checkout);
         repositoryFactory.MarketplaceBookingRepository.Update(checkout.MarketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            checkout.MarketplaceBooking.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await SignalPaymentStatusAsync(checkout.MarketplaceBooking, cancellationToken);
     }
@@ -225,7 +231,7 @@ public class BookingInternalSubscriber(
             "paid" => PaymentStatusConstants.Confirmed,
             "unpaid" => PaymentStatusConstants.Rejected,
             _ => throw new ArgumentOutOfRangeException(nameof(session.PaymentStatus), session.PaymentStatus,
-                $"Unexpected value for {nameof(session.PaymentStatus)}: {session.PaymentStatus}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(session.PaymentStatus)}: {session.PaymentStatus}. Update enum mapping or caller input."),
         };
 
         if (marketplaceBooking.RecurringBooking?.MarketplaceBookingSubscription is null)
@@ -242,6 +248,8 @@ public class BookingInternalSubscriber(
 
         marketplaceBooking.Currency = session.Currency;
         _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -296,6 +304,8 @@ public class BookingInternalSubscriber(
 
         marketplaceBooking.Currency = session.Currency;
         _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 

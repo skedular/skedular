@@ -16,5 +16,5 @@ public enum CustomerOrderField
     FamilyName,
     Timezone,
     Locale,
-    PhoneNumber
+    PhoneNumber,
 }

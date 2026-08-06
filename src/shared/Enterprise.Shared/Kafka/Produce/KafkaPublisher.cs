@@ -34,9 +34,17 @@ public class KafkaPublisher<TKey, TValue>(
 
         try
         {
-            var message = new Message<TKey, TValue> { Value = outgoingEvent, Key = key, Headers = [] };
+            var message = new Message<TKey, TValue>
+            {
+                Value = outgoingEvent,
+                Key = key,
+                Headers = [],
+            };
 
-            activityAccessor.AddEvent("PublishAsync", "publish", new Dictionary<string, string> { ["Topic"] = topic });
+            activityAccessor.AddEvent("PublishAsync", "publish", new Dictionary<string, string>
+            {
+                ["Topic"] = topic,
+            });
             activityPropagator.PropagateActivity(message.Headers);
 
             await producer.ProduceAsync(topic, message, cancellationToken);

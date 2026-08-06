@@ -32,7 +32,13 @@ public class OrganizationGrpcService(
     {
         var version = versionService.GetVersion();
 
-        return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
+        return Task.FromResult(new Version
+        {
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
+        });
     }
 
     public override async Task<TermsOfUse> GetActiveOrganizationTermsOfUse(GetActiveOrganizationTermsOfUseInput request, ServerCallContext context)
@@ -120,7 +126,7 @@ public class OrganizationGrpcService(
                     MemberOrderField.FamilyName => OrganizationMemberOrderField.FamilyName,
                     MemberOrderField.PhoneNumber => OrganizationMemberOrderField.PhoneNumber,
                     _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
                 };
 
                 return new OrganizationMemberOrder(direction, field);
@@ -134,9 +140,9 @@ public class OrganizationGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
@@ -155,7 +161,7 @@ public class OrganizationGrpcService(
             CanDelete = permissions.CanDelete,
             CanInvitePeople = permissions.CanInvitePeople,
             CanCancelPeopleExistingInvitations = permissions.CanCancelPeopleExistingInvitations,
-            CanViewAnalytics = permissions.CanViewAnalytics
+            CanViewAnalytics = permissions.CanViewAnalytics,
         };
     }
 }

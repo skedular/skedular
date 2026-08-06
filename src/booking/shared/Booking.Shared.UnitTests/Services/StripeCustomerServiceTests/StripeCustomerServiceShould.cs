@@ -14,13 +14,17 @@ public class StripeCustomerServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Existing_Stripe_Customer_For_Organization_When_Already_Exists(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         StripeCustomerService sut,
         IStripeCustomerRepository stripeCustomerRepository,
         string stripeAccountId,
         CancellationToken cancellationToken)
     {
-        var existingCustomer = new StripeCustomer { Id = "stripe-cust-1" };
+        var existingCustomer = new StripeCustomer
+        {
+            Id = "stripe-cust-1",
+        };
         var organization = new Organization();
 
         A.CallTo(() => repositoryFactory.StripeCustomerRepository).Returns(stripeCustomerRepository);
@@ -35,17 +39,24 @@ public class StripeCustomerServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_New_Stripe_Customer_For_Organization_When_Not_Exists(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService,
         StripeCustomerService sut,
         IStripeCustomerRepository stripeCustomerRepository,
         string stripeAccountId,
         string generatedId,
         CancellationToken cancellationToken)
     {
-        var stripeCustomer = new Stripe.Customer { Id = "cus_123" };
+        var stripeCustomer = new Stripe.Customer
+        {
+            Id = "cus_123",
+        };
         var customerCreateOptions = new CustomerCreateOptions();
         var organization = new Organization();
         StripeCustomer? addedStripeCustomer = null;
@@ -79,13 +90,17 @@ public class StripeCustomerServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Existing_Stripe_Customer_For_Customer_When_Already_Exists(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         StripeCustomerService sut,
         IStripeCustomerRepository stripeCustomerRepository,
         string stripeAccountId,
         CancellationToken cancellationToken)
     {
-        var existingCustomer = new StripeCustomer { Id = "stripe-cust-1" };
+        var existingCustomer = new StripeCustomer
+        {
+            Id = "stripe-cust-1",
+        };
         var customer = new Customer();
 
         A.CallTo(() => repositoryFactory.StripeCustomerRepository).Returns(stripeCustomerRepository);
@@ -100,17 +115,24 @@ public class StripeCustomerServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_New_Stripe_Customer_For_Customer_When_Not_Exists(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService,
         StripeCustomerService sut,
         IStripeCustomerRepository stripeCustomerRepository,
         string stripeAccountId,
         string generatedId,
         CancellationToken cancellationToken)
     {
-        var stripeCustomer = new Stripe.Customer { Id = "cus_123" };
+        var stripeCustomer = new Stripe.Customer
+        {
+            Id = "cus_123",
+        };
         var customerCreateOptions = new CustomerCreateOptions();
         var customer = new Customer();
         StripeCustomer? addedStripeCustomer = null;

@@ -29,8 +29,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<OrganizationTagDetails?> CustomTagByIdAsync(
-        [ID] string id,
-        [Service] ITagService tagService,
+        [ID]
+        string id,
+        [Service]
+        ITagService tagService,
         CancellationToken cancellationToken) =>
         await CustomTagAsync(id, tagService, cancellationToken);
 
@@ -42,8 +44,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<OrganizationTagDetails?> ZoneByIdAsync(
-        [ID] string id,
-        [Service] ITagService tagService,
+        [ID]
+        string id,
+        [Service]
+        ITagService tagService,
         CancellationToken cancellationToken) =>
         await ZoneAsync(id, tagService, cancellationToken);
 
@@ -55,8 +59,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<OrganizationTagDetails?> ProductTagByIdAsync(
-        [ID] string id,
-        [Service] ITagService tagService,
+        [ID]
+        string id,
+        [Service]
+        ITagService tagService,
         CancellationToken cancellationToken) =>
         await ProductTagAsync(id, tagService, cancellationToken);
 }

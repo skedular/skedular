@@ -19,22 +19,39 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_Only_Selected_Xero_Fields(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationXeroConnectionRepository organizationXeroConnectionRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationXeroConnectionRepository organizationXeroConnectionRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationXeroConnectionService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Shared.Database.Entities.Organization { Id = "org-1", Name = "Acme", CustomDomain = "acme" };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Id = "org-1",
+            Name = "Acme",
+            CustomDomain = "acme",
+        };
         var xeroConnection = new XeroConnectionEntity
         {
             Id = "xero-1",
@@ -44,20 +61,32 @@ public class UpdatePatchAsyncShould
             DefaultSalesAccountCode = "200",
             IsActive = false,
             SendInvoicesViaXero = true,
-            AutoReconcilePayments = true
+            AutoReconcilePayments = true,
         };
         organization.OrganizationXeroConnection = xeroConnection;
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var mappedOrganization =
-            new Shared.Models.Organization { Id = organization.Id, Name = organization.Name, CustomDomain = organization.CustomDomain };
+            new Shared.Models.Organization
+            {
+                Id = organization.Id,
+                Name = organization.Name,
+                CustomDomain = organization.CustomDomain,
+            };
         var stripeAuthorizeUrl = new Uri($"https://example.test/{organization.Id}");
         var request = new OrganizationXeroConnectionPatchRequest(
             organization.Id,
             organization.CustomDomain,
             new HashSet<OrganizationXeroConnectionPatchField>
             {
-                OrganizationXeroConnectionPatchField.BillingMode, OrganizationXeroConnectionPatchField.DefaultReferencePrefix
+                OrganizationXeroConnectionPatchField.BillingMode,
+                OrganizationXeroConnectionPatchField.DefaultReferencePrefix,
             },
             null,
             null,

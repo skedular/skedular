@@ -12,7 +12,8 @@ public class RepublishAllCustomersAsyncTests
     [Theory]
     [AutoFakeItEasyData]
     public async Task Call_GetAllUntrackedAsync(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         CancellationToken cancellationToken)
@@ -28,8 +29,10 @@ public class RepublishAllCustomersAsyncTests
     [Theory]
     [AutoFakeItEasyData]
     public async Task Map_Customer_Entities_To_Models(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IEntityMapper entityMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IEntityMapper entityMapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         IReadOnlyList<Shared.Database.Entities.Customer> customerEntities,
@@ -47,9 +50,12 @@ public class RepublishAllCustomersAsyncTests
     [Theory]
     [AutoFakeItEasyData]
     public async Task Publish_Customers(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerPublisher customerPublisher,
-        [Frozen] IEntityMapper entityMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICustomerPublisher customerPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
         WorkaroundService sut,
         ICustomerRepository customerRepository,
         IReadOnlyList<Shared.Database.Entities.Customer> customerEntities,

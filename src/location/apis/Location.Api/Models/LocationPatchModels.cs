@@ -15,13 +15,13 @@ public enum LocationPatchField
     ExtraMetadata,
     ListingMetadata,
     PhysicalAddress,
-    UniqueClaimCode
+    UniqueClaimCode,
 }
 
 [GraphQLName("LocationOpeningHoursPatchField")]
 public enum LocationOpeningHoursPatchField
 {
-    WeekOpeningHours
+    WeekOpeningHours,
 }
 
 [GraphQLName("LocationRestrictedInformationPatchField")]
@@ -31,13 +31,13 @@ public enum LocationRestrictedInformationPatchField
     Category,
     Content,
     Active,
-    SortOrder
+    SortOrder,
 }
 
 [GraphQLName("LocationPhysicalAddressPatchField")]
 public enum LocationPhysicalAddressPatchField
 {
-    Address
+    Address,
 }
 
 [GraphQLName("FloorPlanPatchField")]
@@ -45,13 +45,13 @@ public enum FloorPlanPatchField
 {
     Name,
     Image,
-    ResourcePositions
+    ResourcePositions,
 }
 
 [GraphQLName("ResourcePositionsPatchField")]
 public enum ResourcePositionsPatchField
 {
-    ResourcePositions
+    ResourcePositions,
 }
 
 [GraphQLName("ResourcePatchField")]
@@ -63,13 +63,13 @@ public enum ResourcePatchField
     Color,
     Capacity,
     Tags,
-    ResourceType
+    ResourceType,
 }
 
 [GraphQLName("LocationResourceAvailableHoursPatchField")]
 public enum LocationResourceAvailableHoursPatchField
 {
-    AvailableHours
+    AvailableHours,
 }
 
 public record LocationPatchRequest(

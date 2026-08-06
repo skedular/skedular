@@ -11,11 +11,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
+using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.Repositories;
 
 public interface IMarketplaceBookingSubscriptionRepository : IRepository<MarketplaceBookingSubscription>
 {
+    Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBookingEntity>>, int)> GetPaginatedBookingInstancesUntrackedAsync(
+        string subscriptionId,
+        PaginationInputParam paginationInputParam,
+        DateTimeOffset? from,
+        DateTimeOffset? until,
+        CancellationToken cancellationToken);
+
     Task<MarketplaceBookingSubscription?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<MarketplaceBookingSubscription?> GetByIdForUpdateAsync(string id, CancellationToken cancellationToken);
     Task<MarketplaceBookingSubscription?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
@@ -26,7 +34,7 @@ public interface IMarketplaceBookingSubscriptionRepository : IRepository<Marketp
     Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
-        IEnumerable<MarketplaceBookingSubscriptionOrder> orderByFields,
+        IReadOnlyList<MarketplaceBookingSubscriptionOrder> orderByFields,
         MarketplaceBookingSubscriptionAccessScope? accessScope,
         CancellationToken cancellationToken);
 }
@@ -242,6 +250,37 @@ public static class MarketplaceBookingSubscriptionExtensions
 public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, MarketplaceBookingSubscription>(dbContext, timeProvider), IMarketplaceBookingSubscriptionRepository
 {
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBookingEntity>>, int)> GetPaginatedBookingInstancesUntrackedAsync(
+        string subscriptionId,
+        PaginationInputParam paginationInputParam,
+        DateTimeOffset? from,
+        DateTimeOffset? until,
+        CancellationToken cancellationToken)
+    {
+        var query = DbContext.RecurringBooking
+            .Where(item => item.MarketplaceBookingSubscription != null &&
+                           item.MarketplaceBookingSubscription.Id == subscriptionId);
+        if (from.HasValue)
+        {
+            query = query.Where(item => item.Until >= from.Value);
+        }
+
+        if (until.HasValue)
+        {
+            query = query.Where(item => item.From <= until.Value);
+        }
+
+        return await query
+            .AddDependentObjects(false)
+            .ToPaginatedAsync<RecurringBookingEntity>(
+                paginationInputParam,
+                [
+                    KeysetPaginationField<RecurringBookingEntity>.Create(nameof(RecurringBookingEntity.From), item => item.From,
+                        OrderDirection.Ascending),
+                ],
+                cancellationToken);
+    }
+
     public async Task<MarketplaceBookingSubscription?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.MarketplaceBookingSubscription
             .AddDependentObjects(true, TimeProvider)
@@ -295,7 +334,7 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
         GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
             PaginationInputParam paginationInputParam,
             MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
-            IEnumerable<MarketplaceBookingSubscriptionOrder> orderByFields,
+            IReadOnlyList<MarketplaceBookingSubscriptionOrder> orderByFields,
             MarketplaceBookingSubscriptionAccessScope? accessScope,
             CancellationToken cancellationToken) =>
         await DbContext.MarketplaceBookingSubscription
@@ -304,7 +343,7 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
     private static List<KeysetPaginationField<MarketplaceBookingSubscription>> GetPaginationFields(
-        IEnumerable<MarketplaceBookingSubscriptionOrder> orderByFields)
+        IReadOnlyList<MarketplaceBookingSubscriptionOrder> orderByFields)
     {
         if (!orderByFields.Any())
         {
@@ -313,7 +352,7 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
                 KeysetPaginationField<MarketplaceBookingSubscription>.Create(
                     nameof(MarketplaceBookingSubscription.StartedAt),
                     query => query.StartedAt,
-                    OrderDirection.Ascending)
+                    OrderDirection.Ascending),
             ];
         }
 
@@ -336,7 +375,7 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
                     query => query.Status,
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             })
             .ToList();
     }

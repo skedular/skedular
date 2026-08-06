@@ -11,9 +11,12 @@ public class AddTeamAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_information_for_add_team_mutation(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] ITeamService teamService,
-        [Frozen] ILogger<RootMutation> logger,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        ITeamService teamService,
+        [Frozen]
+        ILogger<RootMutation> logger,
         RootMutation sut,
         AddTeamInput input,
         Shared.Models.Team team,

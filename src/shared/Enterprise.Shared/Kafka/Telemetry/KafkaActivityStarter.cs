@@ -81,7 +81,7 @@ public class KafkaActivityStarter(IActivityAccessor activityAccessor, ILogger<Ka
         KafkaOperationType.Provide => "send",
         KafkaOperationType.Consume => "receive",
         _ => throw new ArgumentOutOfRangeException(nameof(kafkaOperationType), kafkaOperationType,
-            $"Unexpected value for {nameof(kafkaOperationType)}: {kafkaOperationType}. Update enum mapping or caller input.")
+            $"Unexpected value for {nameof(kafkaOperationType)}: {kafkaOperationType}. Update enum mapping or caller input."),
     };
 
     private static IDictionary<string, object?> BuildKafkaTags(string topic, int? partition)
@@ -90,7 +90,7 @@ public class KafkaActivityStarter(IActivityAccessor activityAccessor, ILogger<Ka
         {
             [SemanticConventions.MessagingSystem] = MessagingSystem,
             [SemanticConventions.MessagingDestination] = topic,
-            [SemanticConventions.MessagingDestinationKind] = DestinationKind
+            [SemanticConventions.MessagingDestinationKind] = DestinationKind,
         };
 
         if (partition.HasValue)
@@ -105,6 +105,6 @@ public class KafkaActivityStarter(IActivityAccessor activityAccessor, ILogger<Ka
         activityKind switch
         {
             KafkaOperationType.Provide => ActivityKind.Producer,
-            _ => ActivityKind.Consumer
+            _ => ActivityKind.Consumer,
         };
 }

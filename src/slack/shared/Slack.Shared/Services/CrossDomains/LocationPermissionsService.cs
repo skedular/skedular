@@ -21,14 +21,20 @@ public class LocationPermissionsService(
     IMemoryCache memoryCache)
     : ILocationPermissionsService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<LocationPermissions> GetPermissionsAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(workspaceMemberId, locationId),
             async _ => grpcMapper.MapTo(
                 await locationServiceClient.GetPermissionsAsync(
-                    new GetPermissionsInput { Id = locationId },
+                    new GetPermissionsInput
+                    {
+                        Id = locationId,
+                    },
                     locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;

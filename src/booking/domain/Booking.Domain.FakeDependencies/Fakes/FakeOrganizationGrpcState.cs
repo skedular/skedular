@@ -53,7 +53,7 @@ public class FakeOrganizationGrpcState
             RefreshTokenEncrypted = refreshTokenEncrypted ?? string.Empty,
             AccessTokenExpiresAt = accessTokenExpiresAt ?? XeroConnectionResponse.AccessTokenExpiresAt,
             RefreshTokenExpiresAt = refreshTokenExpiresAt ?? XeroConnectionResponse.RefreshTokenExpiresAt,
-            LastSuccessfulSyncAt = XeroConnectionResponse.LastSuccessfulSyncAt
+            LastSuccessfulSyncAt = XeroConnectionResponse.LastSuccessfulSyncAt,
         };
     }
 

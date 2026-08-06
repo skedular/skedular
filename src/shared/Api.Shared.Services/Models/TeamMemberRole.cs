@@ -4,7 +4,7 @@ public enum TeamMemberRole
 {
     Owner,
     Administrator,
-    Member
+    Member,
 }
 
 public static class TeamMemberRoleConstants
@@ -25,7 +25,7 @@ public static class TeamMemberRoleExtensions
                 TeamMemberRoleConstants.Administrator => TeamMemberRole.Administrator,
                 TeamMemberRoleConstants.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -38,7 +38,7 @@ public static class TeamMemberRoleExtensions
                 TeamMemberRole.Administrator => TeamMemberRoleConstants.Administrator,
                 TeamMemberRole.Member => TeamMemberRoleConstants.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToTeamMemberRoleName() =>
@@ -48,7 +48,7 @@ public static class TeamMemberRoleExtensions
                 TeamMemberRole.Administrator => "Administrator",
                 TeamMemberRole.Member => "Member",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -63,7 +63,7 @@ public static class TeamMemberRoleExtensions
                     TeamMemberRole.Administrator => TeamMemberRoleConstants.Administrator,
                     TeamMemberRole.Member => TeamMemberRoleConstants.Member,
                     _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
                 };
     }
 }

@@ -3,7 +3,7 @@ namespace Api.Shared.Services.Models;
 public enum BookingChannel
 {
     Private,
-    Marketplace
+    Marketplace,
 }
 
 public static class BookingChannelConstants
@@ -22,7 +22,7 @@ public static class BookingChannelExtensions
                 BookingChannelConstants.Private => BookingChannel.Private,
                 BookingChannelConstants.Marketplace => BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -36,7 +36,7 @@ public static class BookingChannelExtensions
                     BookingChannelConstants.Private => BookingChannel.Private,
                     BookingChannelConstants.Marketplace => BookingChannel.Marketplace,
                     _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                        $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
                 };
     }
 
@@ -48,7 +48,7 @@ public static class BookingChannelExtensions
                 BookingChannel.Private => BookingChannelConstants.Private,
                 BookingChannel.Marketplace => BookingChannelConstants.Marketplace,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToBookingChannelName() =>
@@ -57,7 +57,7 @@ public static class BookingChannelExtensions
                 BookingChannel.Private => "Private",
                 BookingChannel.Marketplace => "Marketplace",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

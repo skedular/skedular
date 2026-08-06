@@ -4,7 +4,7 @@ public enum RecurringBookingEndType
 {
     Never,
     UntilDate,
-    AfterOccurrences
+    AfterOccurrences,
 }
 
 public static class RecurringBookingEndTypeConstants
@@ -25,7 +25,7 @@ public static class RecurringBookingEndTypeExtensions
                 RecurringBookingEndTypeConstants.UntilDate => RecurringBookingEndType.UntilDate,
                 RecurringBookingEndTypeConstants.AfterOccurrences => RecurringBookingEndType.AfterOccurrences,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 
@@ -38,7 +38,7 @@ public static class RecurringBookingEndTypeExtensions
                 RecurringBookingEndType.UntilDate => RecurringBookingEndTypeConstants.UntilDate,
                 RecurringBookingEndType.AfterOccurrences => RecurringBookingEndTypeConstants.AfterOccurrences,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
 
         public string ToRecurringBookingEndTypeName() =>
@@ -48,7 +48,7 @@ public static class RecurringBookingEndTypeExtensions
                 RecurringBookingEndType.UntilDate => "Until Date",
                 RecurringBookingEndType.AfterOccurrences => "After Occurrences",
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 }

@@ -13,7 +13,10 @@ public class StartActivityShould
     public void Start_Activity_Via_ActivitySource(string name, string activityName)
     {
         // set up listeners so the source will return activities
-        var listener = new ActivityListener { ShouldListenTo = _ => true };
+        var listener = new ActivityListener
+        {
+            ShouldListenTo = _ => true,
+        };
 
         listener.Sample = (ref _) => ActivitySamplingResult.AllDataAndRecorded;
 
@@ -35,7 +38,10 @@ public class StartActivityShould
         string tagValue)
     {
         // set up listeners so the source will return activities
-        var listener = new ActivityListener { ShouldListenTo = _ => true };
+        var listener = new ActivityListener
+        {
+            ShouldListenTo = _ => true,
+        };
 
         listener.Sample = (ref _) => ActivitySamplingResult.AllDataAndRecorded;
 
@@ -43,7 +49,10 @@ public class StartActivityShould
 
         var facade = new ActivitySourceFacade(name);
         var activityContext = ActivityContext.Parse(TraceParent, "");
-        var tags = new Dictionary<string, object?> { [tagKey] = tagValue };
+        var tags = new Dictionary<string, object?>
+        {
+            [tagKey] = tagValue,
+        };
         var activity = facade.StartActivity(activityName, ActivityKind.Producer, activityContext, tags);
 
         activity.ShouldNotBeNull();

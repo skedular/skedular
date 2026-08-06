@@ -42,6 +42,12 @@ Operators find Bookings in the organization **Bookings** area. The list is shown
 
 Open a Booking to edit its supported details. Depending on the Booking type and permissions, operators can edit a private Booking, update its customer or Resources, remove a Booking, remove a recurring series, or manage marketplace payment actions such as **Confirm Booking Payment**, **Reject Booking Payment**, and **Make Booking Payment Not Required**.
 
+## Marketplace purchase history
+
+The organization's **Marketplace purchases** page is the unified history for marketplace activity. It lists standalone Bookings alongside Subscriptions and shows the customer, Product, booking window, amount, payment state, and lifecycle state where available. Canceled and deleted purchases remain visible when they have historical activity, allowing operators to review what happened without treating a removed purchase as erased history.
+
+Use the purchase history for the commercial overview and the Booking details for individual Resource reservations and scheduling changes. Access is limited to authorized organization operators.
+
 ## Customers and Bookings
 
 For customer-facing Bookings, the person who purchased or created the Booking is a registered Skedular user acting as the Organization's Customer. That Customer does not need to belong to the Organization. Operators can see the customer identity exposed by the Booking workflow, such as the person's name and available contact details. See [Customers](/docs/shared/marketplace/customers) for the full distinction between Customers and Organization members.

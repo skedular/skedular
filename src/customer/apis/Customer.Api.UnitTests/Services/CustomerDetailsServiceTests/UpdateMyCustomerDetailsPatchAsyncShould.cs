@@ -14,13 +14,22 @@ public class UpdateMyCustomerDetailsPatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Apply_Only_Selected_Timezone_And_Preserve_Other_Fields(
-        [Frozen] ICustomerHelperService customerHelperService,
+        [Frozen]
+        ICustomerHelperService customerHelperService,
         CustomerDetailsService sut,
         CancellationToken cancellationToken)
     {
-        var entity = new CustomerEntity { Id = "cust-1", Timezone = "Europe/London", Designation = "Engineer" };
+        var entity = new CustomerEntity
+        {
+            Id = "cust-1",
+            Timezone = "Europe/London",
+            Designation = "Engineer",
+        };
         var request = new CustomerDetailsPatchRequest(
-            new HashSet<CustomerDetailsPatchField> { CustomerDetailsPatchField.Timezone },
+            new HashSet<CustomerDetailsPatchField>
+            {
+                CustomerDetailsPatchField.Timezone,
+            },
             "America/New_York",
             "Manager",
             null,
@@ -30,7 +39,10 @@ public class UpdateMyCustomerDetailsPatchAsyncShould
             null,
             null,
             PersonalInformationVisibility.Redacted);
-        var updatedModel = new CustomerModel { Id = "cust-1" };
+        var updatedModel = new CustomerModel
+        {
+            Id = "cust-1",
+        };
 
         A.CallTo(() => customerHelperService.GetCustomerAsync(cancellationToken)).Returns(entity);
         A.CallTo(() => customerHelperService.UpdateAndPublishEventAsync(entity, cancellationToken))
@@ -46,14 +58,22 @@ public class UpdateMyCustomerDetailsPatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Autosave_Started_And_Completed(
-        [Frozen] ICustomerHelperService customerHelperService,
-        [Frozen] ILogger<CustomerDetailsService> logger,
+        [Frozen]
+        ICustomerHelperService customerHelperService,
+        [Frozen]
+        ILogger<CustomerDetailsService> logger,
         CustomerDetailsService sut,
         CancellationToken cancellationToken)
     {
-        var entity = new CustomerEntity { Id = "cust-1" };
+        var entity = new CustomerEntity
+        {
+            Id = "cust-1",
+        };
         var request = new CustomerDetailsPatchRequest(
-            new HashSet<CustomerDetailsPatchField> { CustomerDetailsPatchField.Timezone },
+            new HashSet<CustomerDetailsPatchField>
+            {
+                CustomerDetailsPatchField.Timezone,
+            },
             "America/New_York",
             null,
             null,
@@ -63,7 +83,10 @@ public class UpdateMyCustomerDetailsPatchAsyncShould
             null,
             null,
             PersonalInformationVisibility.Redacted);
-        var updatedModel = new CustomerModel { Id = "cust-1" };
+        var updatedModel = new CustomerModel
+        {
+            Id = "cust-1",
+        };
 
         A.CallTo(() => customerHelperService.GetCustomerAsync(cancellationToken)).Returns(entity);
         A.CallTo(() => customerHelperService.UpdateAndPublishEventAsync(entity, cancellationToken))
@@ -80,14 +103,22 @@ public class UpdateMyCustomerDetailsPatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Error_And_Rethrow_On_General_Failure(
-        [Frozen] ICustomerHelperService customerHelperService,
-        [Frozen] ILogger<CustomerDetailsService> logger,
+        [Frozen]
+        ICustomerHelperService customerHelperService,
+        [Frozen]
+        ILogger<CustomerDetailsService> logger,
         CustomerDetailsService sut,
         CancellationToken cancellationToken)
     {
-        var entity = new CustomerEntity { Id = "cust-1" };
+        var entity = new CustomerEntity
+        {
+            Id = "cust-1",
+        };
         var request = new CustomerDetailsPatchRequest(
-            new HashSet<CustomerDetailsPatchField> { CustomerDetailsPatchField.Timezone },
+            new HashSet<CustomerDetailsPatchField>
+            {
+                CustomerDetailsPatchField.Timezone,
+            },
             "America/New_York",
             null,
             null,

@@ -12,7 +12,8 @@ public class OrganizationArrearsBillingIntegrationsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Next_Monthly_Boundary_On_First_Of_Next_Month(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationArrearsBillingIntegrations sut)
     {
         var now = new DateTimeOffset(2026, 3, 22, 10, 30, 0, TimeSpan.Zero);
@@ -30,7 +31,8 @@ public class OrganizationArrearsBillingIntegrationsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Next_Weekly_Boundary_On_Monday(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationArrearsBillingIntegrations sut)
     {
         var now = new DateTimeOffset(2026, 3, 22, 10, 30, 0, TimeSpan.Zero); // Sunday
@@ -48,7 +50,8 @@ public class OrganizationArrearsBillingIntegrationsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Next_Fortnightly_Boundary_On_Alternating_Monday(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationArrearsBillingIntegrations sut)
     {
         var now = new DateTimeOffset(2026, 3, 24, 10, 30, 0, TimeSpan.Zero); // Tuesday in a fortnight starting Monday 2026-03-23
@@ -83,7 +86,8 @@ public class OrganizationArrearsBillingIntegrationsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Current_Week_Period_For_Manual_Weekly_Run(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationArrearsBillingIntegrations sut)
     {
         var now = new DateTimeOffset(2026, 3, 25, 10, 30, 0, TimeSpan.Zero); // Wednesday
@@ -104,7 +108,8 @@ public class OrganizationArrearsBillingIntegrationsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Current_Month_Period_For_Manual_Monthly_Run(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationArrearsBillingIntegrations sut)
     {
         var now = new DateTimeOffset(2026, 3, 25, 10, 30, 0, TimeSpan.Zero);
@@ -125,7 +130,8 @@ public class OrganizationArrearsBillingIntegrationsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Query_In_Arrears_Bookings_Using_The_Full_Billing_Window(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         OrganizationArrearsBillingIntegrations sut,
         IBookingRepository bookingRepository)
     {

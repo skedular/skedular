@@ -20,8 +20,11 @@ public class ResolveRecurringInvoiceDisplayPeriodShould
             EndDate = new DateTimeOffset(2026, 6, 30, 0, 0, 0, TimeSpan.Zero),
             MarketplaceBooking = new MarketplaceBookingEntity
             {
-                ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Quarterly }
-            }
+                ProductPricing = ProductPricing.Empty(pricingId) with
+                {
+                    PurchaseCadence = ProductPricingCadence.Quarterly,
+                },
+            },
         };
         var billingDefinition = new RecurringInvoiceBillingDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
@@ -45,8 +48,11 @@ public class ResolveRecurringInvoiceDisplayPeriodShould
             EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero),
             MarketplaceBooking = new MarketplaceBookingEntity
             {
-                ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.SixMonths }
-            }
+                ProductPricing = ProductPricing.Empty(pricingId) with
+                {
+                    PurchaseCadence = ProductPricingCadence.SixMonths,
+                },
+            },
         };
         var billingDefinition = new RecurringInvoiceBillingDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
@@ -70,8 +76,11 @@ public class ResolveRecurringInvoiceDisplayPeriodShould
             EndDate = new DateTimeOffset(2026, 4, 20, 0, 0, 0, TimeSpan.Zero),
             MarketplaceBooking = new MarketplaceBookingEntity
             {
-                ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Monthly }
-            }
+                ProductPricing = ProductPricing.Empty(pricingId) with
+                {
+                    PurchaseCadence = ProductPricingCadence.Monthly,
+                },
+            },
         };
         var billingDefinition = new RecurringInvoiceBillingDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,

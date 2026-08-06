@@ -12,11 +12,15 @@ public class DeleteMarketplaceBookingSubscriptionShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Policy_Restriction_Error(
-        [Frozen] IMarketplaceBookingSubscriptionService service,
+        [Frozen]
+        IMarketplaceBookingSubscriptionService service,
         SubscriptionRootMutation sut,
         CancellationToken cancellationToken)
     {
-        var input = new DeleteMarketplaceBookingSubscriptionInput { Id = "subscription-1" };
+        var input = new DeleteMarketplaceBookingSubscriptionInput
+        {
+            Id = "subscription-1",
+        };
         A.CallTo(() => service.DeleteAsync(input.Id, input.CancellationMode, input.CancellationOverrideReason, cancellationToken))
             .ThrowsAsync(new MarketplaceBookingSubscriptionCancellationNotAllowed());
 
@@ -29,11 +33,15 @@ public class DeleteMarketplaceBookingSubscriptionShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Override_Reason_Error(
-        [Frozen] IMarketplaceBookingSubscriptionService service,
+        [Frozen]
+        IMarketplaceBookingSubscriptionService service,
         SubscriptionRootMutation sut,
         CancellationToken cancellationToken)
     {
-        var input = new DeleteMarketplaceBookingSubscriptionInput { Id = "subscription-1" };
+        var input = new DeleteMarketplaceBookingSubscriptionInput
+        {
+            Id = "subscription-1",
+        };
         A.CallTo(() => service.DeleteAsync(input.Id, input.CancellationMode, input.CancellationOverrideReason, cancellationToken))
             .ThrowsAsync(new MarketplaceBookingSubscriptionCancellationOverrideReasonRequired());
 

@@ -41,7 +41,10 @@ public class HostStripeApplicationFeeService : IHostStripeApplicationFeeService
         return new SessionPaymentIntentDataOptions
         {
             ApplicationFeeAmount = applicationFeeAmount.Value,
-            TransferData = new SessionPaymentIntentDataTransferDataOptions { Destination = stripeConnectAccountId }
+            TransferData = new SessionPaymentIntentDataTransferDataOptions
+            {
+                Destination = stripeConnectAccountId,
+            },
         };
     }
 }

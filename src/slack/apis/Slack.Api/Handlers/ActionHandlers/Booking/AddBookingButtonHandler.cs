@@ -56,8 +56,12 @@ public class AddBookingButtonHandler(
         {
             BlockId = DateKey,
             Label = "Date".ToPlainText(),
-            Element = new DatePicker { ActionId = DateKey, InitialDate = (context.From ?? timeProvider.GetUtcNow().StartOfDay()).ToDateTime() },
-            Optional = false
+            Element = new DatePicker
+            {
+                ActionId = DateKey,
+                InitialDate = (context.From ?? timeProvider.GetUtcNow().StartOfDay()).ToDateTime(),
+            },
+            Optional = false,
         };
 
         var asyncBlocks = await Task.WhenAll(
@@ -68,8 +72,13 @@ public class AddBookingButtonHandler(
         {
             BlockId = NotesKey,
             Label = "Notes".ToPlainText(),
-            Element = new PlainTextInput { ActionId = NotesKey, Placeholder = "e.g., I will be there from 9am", Multiline = true },
-            Optional = true
+            Element = new PlainTextInput
+            {
+                ActionId = NotesKey,
+                Placeholder = "e.g., I will be there from 9am",
+                Multiline = true,
+            },
+            Optional = true,
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -81,8 +90,11 @@ public class AddBookingButtonHandler(
                 Title = "Make a booking",
                 Close = "Cancel",
                 Submit = "Add",
-                Blocks = new List<Block> { bookingDate }.Concat(asyncBlocks[0]).Concat(asyncBlocks[1]).Append(notes).ToList(),
-                PrivateMetadata = action.Value
+                Blocks = new List<Block>
+                {
+                    bookingDate,
+                }.Concat(asyncBlocks[0]).Concat(asyncBlocks[1]).Append(notes).ToList(),
+                PrivateMetadata = action.Value,
             },
             cancellationToken);
     }
@@ -117,7 +129,13 @@ public class AddBookingButtonHandler(
         {
             Id = randomHelper.Generate(),
             Category = BookingCategory.WorkingFromOffice,
-            InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }]
+            InvolvedOrganizations =
+            [
+                new Organization
+                {
+                    Id = workspace.Organization.Id,
+                },
+            ],
         };
 
         var values = viewSubmission.View.State.Values;
@@ -154,7 +172,13 @@ public class AddBookingButtonHandler(
                 if (block is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
-                    booking.InvolvedCustomers = [new Customer { Id = value.SelectedOption.Value }];
+                    booking.InvolvedCustomers =
+                    [
+                        new Customer
+                        {
+                            Id = value.SelectedOption.Value,
+                        },
+                    ];
                 }
                 else
                 {
@@ -168,7 +192,13 @@ public class AddBookingButtonHandler(
         }
         else
         {
-            booking.InvolvedCustomers = [new Customer { Id = customerId }];
+            booking.InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = customerId,
+                },
+            ];
         }
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationTeamKey, out var teamBlock))
@@ -179,7 +209,13 @@ public class AddBookingButtonHandler(
                 {
                     if (!string.IsNullOrWhiteSpace(value.SelectedOption?.Value))
                     {
-                        booking.InvolvedTeams = [new Shared.Models.Team { Id = value.SelectedOption.Value }];
+                        booking.InvolvedTeams =
+                        [
+                            new Shared.Models.Team
+                            {
+                                Id = value.SelectedOption.Value,
+                            },
+                        ];
                     }
                 }
                 else
@@ -249,11 +285,15 @@ public class AddBookingButtonHandler(
                     Element = new ExternalSelectMenu
                     {
                         ActionId = OptionLoaderKeys.OrganizationMemberKey,
-                        InitialOption = new Option { Text = customer.DisplayableName.ToOptionText(), Value = customer.Id },
-                        MinQueryLength = 0
+                        InitialOption = new Option
+                        {
+                            Text = customer.DisplayableName.ToOptionText(),
+                            Value = customer.Id,
+                        },
+                        MinQueryLength = 0,
                     },
-                    Optional = false
-                }
+                    Optional = false,
+                },
             ];
         }
 
@@ -270,11 +310,15 @@ public class AddBookingButtonHandler(
                 {
                     ActionId = OptionLoaderKeys.OrganizationMemberKey,
                     InitialOption =
-                        new Option { Text = customerToAddToBooking.DisplayableName.ToOptionText(), Value = customerToAddToBooking.Id },
-                    MinQueryLength = 0
+                        new Option
+                        {
+                            Text = customerToAddToBooking.DisplayableName.ToOptionText(),
+                            Value = customerToAddToBooking.Id,
+                        },
+                    MinQueryLength = 0,
                 },
-                Optional = false
-            }
+                Optional = false,
+            },
         ];
     }
 
@@ -293,10 +337,12 @@ public class AddBookingButtonHandler(
                     Label = "Team".ToPlainText(),
                     Element = new ExternalSelectMenu
                     {
-                        ActionId = OptionLoaderKeys.OrganizationTeamKey, InitialOption = null, MinQueryLength = 0
+                        ActionId = OptionLoaderKeys.OrganizationTeamKey,
+                        InitialOption = null,
+                        MinQueryLength = 0,
                     },
-                    Optional = true
-                }
+                    Optional = true,
+                },
             ];
         }
 
@@ -311,11 +357,15 @@ public class AddBookingButtonHandler(
                 Element = new ExternalSelectMenu
                 {
                     ActionId = OptionLoaderKeys.OrganizationTeamKey,
-                    InitialOption = new Option { Text = teamToAddToBooking.Name.ToOptionText(), Value = teamToAddToBooking.Id },
-                    MinQueryLength = 0
+                    InitialOption = new Option
+                    {
+                        Text = teamToAddToBooking.Name.ToOptionText(),
+                        Value = teamToAddToBooking.Id,
+                    },
+                    MinQueryLength = 0,
                 },
-                Optional = false
-            }
+                Optional = false,
+            },
         ];
     }
 }

@@ -29,6 +29,10 @@ public class MsTeamsDbContext(DbContextOptions<MsTeamsDbContext> options, Custom
     {
         public MsTeamsDbContext CreateDbContext(string[] args) =>
             new(args.ToDbContextOption<MsTeamsDbContext>(true),
-                new CustomDbContextOptions<MsTeamsDbContext> { IsPooled = false, IsPostgisEnabled = true });
+                new CustomDbContextOptions<MsTeamsDbContext>
+                {
+                    IsPooled = false,
+                    IsPostgisEnabled = true,
+                });
     }
 }

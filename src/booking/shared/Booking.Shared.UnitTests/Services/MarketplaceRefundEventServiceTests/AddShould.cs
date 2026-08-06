@@ -12,9 +12,12 @@ public class AddShould
     [Theory]
     [AutoFakeItEasyData]
     public void Add_A_Snapshotted_Refund_Event_Record(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
-        [Frozen] IRandomHelper randomHelper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundEventRepository marketplaceRefundEventRepository,
+        [Frozen]
+        IRandomHelper randomHelper,
         MarketplaceRefundEventService sut)
     {
         var refund = new MarketplaceRefund
@@ -26,7 +29,7 @@ public class AddShould
             AccountingProvider = "XERO",
             ExternalRefundId = "credit-note-1",
             ExternalRefundNumber = "CN-1001",
-            LastError = "needs review"
+            LastError = "needs review",
         };
         var occurredAt = new DateTimeOffset(2026, 4, 7, 12, 0, 0, TimeSpan.Zero);
 

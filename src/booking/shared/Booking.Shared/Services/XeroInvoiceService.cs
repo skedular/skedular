@@ -40,7 +40,7 @@ namespace Booking.Shared.Services;
 public enum RecurringInvoiceHandlingDisposition
 {
     ContinueToSkedular,
-    StopAndPublish
+    StopAndPublish,
 }
 
 public interface IXeroInvoiceService
@@ -287,7 +287,7 @@ public class XeroInvoiceService(
         {
             Schedule.UnitEnum.WEEKLY => ResolveRepeatingInvoiceStartDate(recurringBooking).AddDays(7 * scheduleDefinition.Period),
             Schedule.UnitEnum.MONTHLY => ResolveRepeatingInvoiceStartDate(recurringBooking).AddMonths(scheduleDefinition.Period),
-            _ => throw new ArgumentOutOfRangeException(nameof(scheduleDefinition))
+            _ => throw new ArgumentOutOfRangeException(nameof(scheduleDefinition)),
         };
 
     private static bool ShouldUseRepeatingInvoiceTemplate(
@@ -461,9 +461,9 @@ public class XeroInvoiceService(
                     Description = BuildInvoiceLineDescription(null, recurringBooking, marketplaceBooking, productVersion),
                     Quantity = marketplaceBooking.Quantity <= 0 ? 1 : marketplaceBooking.Quantity,
                     UnitAmount = CalculateUnitAmount(scheduleDefinition.InvoiceAmount, marketplaceBooking.Quantity),
-                    AccountCode = xeroConnection.DefaultSalesAccountCode
-                }
-            ]
+                    AccountCode = xeroConnection.DefaultSalesAccountCode,
+                },
+            ],
         };
 
         logger.LogInformation(
@@ -475,7 +475,10 @@ public class XeroInvoiceService(
         var invoiceResponse = await accountingApi.CreateInvoicesAsync(
             accessToken,
             xeroConnection.TenantId,
-            new Invoices { _Invoices = [invoiceRequest] },
+            new Invoices
+            {
+                _Invoices = [invoiceRequest],
+            },
             null,
             null,
             $"{accountingInvoiceLink.Id}:initial-standard",
@@ -533,7 +536,7 @@ public class XeroInvoiceService(
                     LocalEntityType = localEntityType,
                     LocalEntityId = localEntityId,
                     ExternalStatus = AccountingStatusConstants.PendingExport,
-                    OrganizationId = organizationId
+                    OrganizationId = organizationId,
                 });
         }
         else
@@ -550,7 +553,10 @@ public class XeroInvoiceService(
     private async Task<XeroConnection?> GetOrganizationXeroConnectionAsync(string organizationId, CancellationToken cancellationToken)
     {
         var response = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
-            new Admin_GetXeroConnectionInput { OrganizationId = organizationId },
+            new Admin_GetXeroConnectionInput
+            {
+                OrganizationId = organizationId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -559,7 +565,10 @@ public class XeroInvoiceService(
 
     private async Task<Organization> GetOrganizationAsync(string organizationId, CancellationToken cancellationToken) =>
         await organizationServiceClient.Admin_GetAsync(
-            new Admin_GetInput { Id = organizationId },
+            new Admin_GetInput
+            {
+                Id = organizationId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -591,7 +600,10 @@ public class XeroInvoiceService(
         }
 
         var refreshedToken = (XeroOAuth2Token)await xeroSdkClientFactory.CreateClient().RefreshAccessTokenAsync(
-            new XeroOAuth2Token { RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted) });
+            new XeroOAuth2Token
+            {
+                RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted),
+            });
         var now = timeProvider.GetUtcNow();
         var accessTokenEncrypted = xeroTokenEncryptionService.Encrypt(refreshedToken.AccessToken);
         var refreshTokenEncrypted = xeroTokenEncryptionService.Encrypt(
@@ -605,7 +617,7 @@ public class XeroInvoiceService(
                 AccessTokenEncrypted = accessTokenEncrypted,
                 RefreshTokenEncrypted = refreshTokenEncrypted,
                 AccessTokenExpiresAt = now.AddMinutes(30).ToTimestamp(),
-                RefreshTokenExpiresAt = now.AddDays(60).ToTimestamp()
+                RefreshTokenExpiresAt = now.AddDays(60).ToTimestamp(),
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -645,7 +657,7 @@ public class XeroInvoiceService(
             Name = displayName,
             EmailAddress = email,
             ContactNumber = customer.Id,
-            ContactID = Guid.TryParse(existingLink?.ExternalContactId, out var contactId) ? contactId : null
+            ContactID = Guid.TryParse(existingLink?.ExternalContactId, out var contactId) ? contactId : null,
         };
 
         if (contact.ContactID is null)
@@ -693,12 +705,18 @@ public class XeroInvoiceService(
         }
 
         var contactsResponse = contact.ContactID is null
-            ? await accountingApi.CreateContactsAsync(accessToken, xeroConnection.TenantId, new Contacts { _Contacts = [contact] }, null, null,
+            ? await accountingApi.CreateContactsAsync(accessToken, xeroConnection.TenantId, new Contacts
+                {
+                    _Contacts = [contact],
+                }, null, null,
                 cancellationToken)
             : await accountingApi.UpdateOrCreateContactsAsync(
                 accessToken,
                 xeroConnection.TenantId,
-                new Contacts { _Contacts = [contact] },
+                new Contacts
+                {
+                    _Contacts = [contact],
+                },
                 null,
                 null,
                 cancellationToken);
@@ -717,7 +735,7 @@ public class XeroInvoiceService(
                     ExternalContactId = exportedContact.ContactID?.ToString(),
                     ExternalContactName = exportedContact.Name,
                     OrganizationId = organizationId,
-                    LastSyncedAt = timeProvider.GetUtcNow()
+                    LastSyncedAt = timeProvider.GetUtcNow(),
                 });
         }
         else
@@ -791,15 +809,18 @@ public class XeroInvoiceService(
                     UnitAmount = CalculateUnitAmount(
                         recurringBillingDefinition?.InvoiceAmount ?? CalculateInvoiceTotalAmount(marketplaceBooking),
                         marketplaceBooking.Quantity),
-                    AccountCode = xeroConnection.DefaultSalesAccountCode
-                }
-            ]
+                    AccountCode = xeroConnection.DefaultSalesAccountCode,
+                },
+            ],
         };
 
         var invoiceResponse = await accountingApi.CreateInvoicesAsync(
             accessToken,
             xeroConnection.TenantId,
-            new Invoices { _Invoices = [invoiceRequest] },
+            new Invoices
+            {
+                _Invoices = [invoiceRequest],
+            },
             null,
             null,
             accountingInvoiceLink.Id,
@@ -865,7 +886,7 @@ public class XeroInvoiceService(
                 Period = scheduleDefinition.Period,
                 DueDateType = Schedule.DueDateTypeEnum.DAYSAFTERBILLDATE,
                 DueDate = invoiceDueInDays,
-                StartDate = ResolveRepeatingInvoiceStartDate(recurringBooking, scheduleDefinition)
+                StartDate = ResolveRepeatingInvoiceStartDate(recurringBooking, scheduleDefinition),
             },
             LineItems =
             [
@@ -874,15 +895,18 @@ public class XeroInvoiceService(
                     Description = BuildInvoiceLineDescription(null, recurringBooking, marketplaceBooking, productVersion),
                     Quantity = marketplaceBooking.Quantity <= 0 ? 1 : marketplaceBooking.Quantity,
                     UnitAmount = CalculateUnitAmount(scheduleDefinition.InvoiceAmount, marketplaceBooking.Quantity),
-                    AccountCode = xeroConnection.DefaultSalesAccountCode
-                }
-            ]
+                    AccountCode = xeroConnection.DefaultSalesAccountCode,
+                },
+            ],
         };
 
         var invoiceResponse = await accountingApi.CreateRepeatingInvoicesAsync(
             accessToken,
             xeroConnection.TenantId,
-            new RepeatingInvoices { _RepeatingInvoices = [repeatingInvoiceRequest] },
+            new RepeatingInvoices
+            {
+                _RepeatingInvoices = [repeatingInvoiceRequest],
+            },
             null,
             accountingInvoiceLink.Id,
             cancellationToken);
@@ -1055,7 +1079,7 @@ public class XeroInvoiceService(
                         ? timeProvider.GetUtcNow()
                         : null,
                     LastSyncedAt = timeProvider.GetUtcNow(),
-                    OrganizationId = accountingInvoiceLink.OrganizationId
+                    OrganizationId = accountingInvoiceLink.OrganizationId,
                 });
             return;
         }
@@ -1188,7 +1212,7 @@ public class XeroInvoiceService(
                     OccurredAt = payment.Date ?? timeProvider.GetUtcNow(),
                     PayloadJson = $"{{\"amount\":{payment.Amount?.ToString(CultureInfo.InvariantCulture) ?? "0"}}}",
                     ProcessedAt = null,
-                    OrganizationId = accountingInvoiceLink.OrganizationId
+                    OrganizationId = accountingInvoiceLink.OrganizationId,
                 });
         }
     }
@@ -1268,6 +1292,8 @@ public class XeroInvoiceService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
         marketplaceBooking.PaymentStatus = PaymentStatusConstants.Confirmed;
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
         temporalOutboxService.SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(
             marketplaceBooking.BookingId,
             new SetPaymentStatusArgs(PaymentStatusConstants.Confirmed),
@@ -1292,6 +1318,8 @@ public class XeroInvoiceService(
             await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
             recurringBooking.MarketplaceBooking.PaymentStatus = PaymentStatusConstants.Confirmed;
             repositoryFactory.MarketplaceBookingRepository.Update(recurringBooking.MarketplaceBooking);
+            await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+                recurringBooking.MarketplaceBooking.Id, cancellationToken);
             temporalOutboxService.SignalWorkflowPayRecurringBookingViaBankTransferSetPaymentStatus(
                 recurringBooking.Id,
                 new SetPaymentStatusArgs(PaymentStatusConstants.Confirmed),
@@ -1355,6 +1383,8 @@ public class XeroInvoiceService(
         }
 
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
@@ -1425,7 +1455,7 @@ public class XeroInvoiceService(
         {
             XeroInvoice.StatusEnum.AUTHORISED => AccountingStatusConstants.Sent,
             XeroInvoice.StatusEnum.SUBMITTED => AccountingStatusConstants.Sent,
-            _ => AccountingStatusConstants.Exported
+            _ => AccountingStatusConstants.Exported,
         };
     }
 
@@ -1434,7 +1464,7 @@ public class XeroInvoiceService(
         {
             RepeatingInvoice.StatusEnum.AUTHORISED => AccountingStatusConstants.Sent,
             RepeatingInvoice.StatusEnum.DELETED => AccountingStatusConstants.Cancelled,
-            _ => AccountingStatusConstants.Exported
+            _ => AccountingStatusConstants.Exported,
         };
 
     protected virtual Task<Invoices> GetInvoiceAsync(

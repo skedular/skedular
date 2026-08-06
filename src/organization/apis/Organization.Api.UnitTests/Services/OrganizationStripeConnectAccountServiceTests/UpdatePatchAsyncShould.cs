@@ -16,26 +16,58 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_Selected_Name(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationStripeConnectAccountRepository organizationStripeConnectAccountRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationStripeConnectAccountRepository organizationStripeConnectAccountRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         OrganizationStripeConnectAccountService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Shared.Database.Entities.Organization { Id = "org-1", Name = "Acme", CustomDomain = "acme" };
-        var account = new StripeAccountEntity { Id = "stripe-1", Name = "Old name", Organization = organization };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
-        var updatedAccount = new OrganizationStripeConnectAccount { Id = account.Id, Name = "New name" };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Id = "org-1",
+            Name = "Acme",
+            CustomDomain = "acme",
+        };
+        var account = new StripeAccountEntity
+        {
+            Id = "stripe-1",
+            Name = "Old name",
+            Organization = organization,
+        };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
+        var updatedAccount = new OrganizationStripeConnectAccount
+        {
+            Id = account.Id,
+            Name = "New name",
+        };
         var request = new OrganizationStripeConnectAccountPatchRequest(
             account.Id,
-            new HashSet<OrganizationStripeConnectAccountPatchField> { OrganizationStripeConnectAccountPatchField.Name },
+            new HashSet<OrganizationStripeConnectAccountPatchField>
+            {
+                OrganizationStripeConnectAccountPatchField.Name,
+            },
             updatedAccount.Name);
 
         A.CallTo(() => repositoryFactory.OrganizationStripeConnectAccountRepository).Returns(organizationStripeConnectAccountRepository);

@@ -30,14 +30,22 @@ public class RecomputeIdempotencyShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Second_Invocation_Produces_Identical_Daily_Recordings(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] ILocationBookingRecordingRepository locationBookingRecordingRepository,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedLocationService cachedLocationService)
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        ILocationBookingRecordingRepository locationBookingRecordingRepository,
+        [Frozen]
+        BookingConfiguration bookingConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedLocationService cachedLocationService)
     {
         var sut = new LocationBookingDerivedState(
             repositoryFactory,
@@ -50,7 +58,10 @@ public class RecomputeIdempotencyShould
         const string LocationId = "loc-idempotent";
         var location = new LocationEntity
         {
-            Id = LocationId, Name = "Idempotent Office", OrganizationId = "org-idempotent", Type = LocationTypeConstants.Private
+            Id = LocationId,
+            Name = "Idempotent Office",
+            OrganizationId = "org-idempotent",
+            Type = LocationTypeConstants.Private,
         };
 
         var counter = 0;
@@ -76,12 +87,28 @@ public class RecomputeIdempotencyShould
         var day = new DateTimeOffset(2026, 4, 15, 10, 0, 0, TimeSpan.Zero);
         var bookingResponse = new BookingConnection
         {
-            PageInfo = new PageInfo { HasNextPage = false, EndCursor = string.Empty },
+            PageInfo = new PageInfo
+            {
+                HasNextPage = false,
+                EndCursor = string.Empty,
+            },
             Edges =
             {
-                new BookingEdge { Node = new BookingProto { From = Timestamp.FromDateTimeOffset(day) } },
-                new BookingEdge { Node = new BookingProto { From = Timestamp.FromDateTimeOffset(day) } }
-            }
+                new BookingEdge
+                {
+                    Node = new BookingProto
+                    {
+                        From = Timestamp.FromDateTimeOffset(day),
+                    },
+                },
+                new BookingEdge
+                {
+                    Node = new BookingProto
+                    {
+                        From = Timestamp.FromDateTimeOffset(day),
+                    },
+                },
+            },
         };
 
         A.CallTo(() => callInvoker.AsyncUnaryCall(
@@ -118,14 +145,22 @@ public class RecomputeIdempotencyShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Desk_Booking_Count_Is_Not_Doubled_On_Second_Invocation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ILocationRepository locationRepository,
-        [Frozen] IResourceRepository resourceRepository,
-        [Frozen] ILocationBookingRecordingRepository locationBookingRecordingRepository,
-        [Frozen] BookingConfiguration bookingConfiguration,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] ICachedLocationService cachedLocationService)
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ILocationRepository locationRepository,
+        [Frozen]
+        IResourceRepository resourceRepository,
+        [Frozen]
+        ILocationBookingRecordingRepository locationBookingRecordingRepository,
+        [Frozen]
+        BookingConfiguration bookingConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        ICachedLocationService cachedLocationService)
     {
         var sut = new LocationBookingDerivedState(
             repositoryFactory,
@@ -139,13 +174,23 @@ public class RecomputeIdempotencyShould
         var deskResourceId = "res-desk";
         var location = new LocationEntity
         {
-            Id = LocationId, Name = "Desk Office", OrganizationId = "org-desk", Type = LocationTypeConstants.Private
+            Id = LocationId,
+            Name = "Desk Office",
+            OrganizationId = "org-desk",
+            Type = LocationTypeConstants.Private,
         };
         var deskResource = new LocationResource
         {
             Id = deskResourceId,
             Name = "Desk 1",
-            OrganizationTags = [new OrganizationTag { Id = "tag-desk", Type = OrganizationTagTypeConstants.ResourceDesk }]
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Id = "tag-desk",
+                    Type = OrganizationTagTypeConstants.ResourceDesk,
+                },
+            ],
         };
 
         var counter = 0;
@@ -171,17 +216,28 @@ public class RecomputeIdempotencyShould
         var day = new DateTimeOffset(2026, 4, 15, 10, 0, 0, TimeSpan.Zero);
         var bookingResponse = new BookingConnection
         {
-            PageInfo = new PageInfo { HasNextPage = false, EndCursor = string.Empty },
+            PageInfo = new PageInfo
+            {
+                HasNextPage = false,
+                EndCursor = string.Empty,
+            },
             Edges =
             {
                 new BookingEdge
                 {
                     Node = new BookingProto
                     {
-                        From = Timestamp.FromDateTimeOffset(day), Resources = { new Resource { Id = deskResourceId } }
-                    }
-                }
-            }
+                        From = Timestamp.FromDateTimeOffset(day),
+                        Resources =
+                        {
+                            new Resource
+                            {
+                                Id = deskResourceId,
+                            },
+                        },
+                    },
+                },
+            },
         };
 
         A.CallTo(() => callInvoker.AsyncUnaryCall(

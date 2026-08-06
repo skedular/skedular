@@ -40,8 +40,8 @@ public class GrpcMapper : IGrpcMapper
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
-                CanCancelPeopleExistingInvitations = src.Permissions.CanCancelPeopleExistingInvitations
-            }
+                CanCancelPeopleExistingInvitations = src.Permissions.CanCancelPeopleExistingInvitations,
+            },
         };
 
         team.Members.AddRange(MapToGrpcResponse(src.TeamMembers));
@@ -51,7 +51,11 @@ public class GrpcMapper : IGrpcMapper
     }
 
     public TeamEdge MapToGrpcResponse(Edge<Shared.Models.Team> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };
+        new()
+        {
+            Cursor = src.Cursor,
+            Node = MapToGrpcResponse(src.Node),
+        };
 
     public Shared.Models.Team MapTo(AddInput src) =>
         new()
@@ -61,9 +65,20 @@ public class GrpcMapper : IGrpcMapper
             About = src.About,
             Timezone = src.Timezone,
             FeatureImages = MapTo(src.FeatureImages).ToList(),
-            Organization = new Organization { Id = src.OrganizationId },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Location { Id = src.PrimaryLocationId },
-            TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
+            Organization = new Organization
+            {
+                Id = src.OrganizationId,
+            },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
+                ? null
+                : new Location
+                {
+                    Id = src.PrimaryLocationId,
+                },
+            TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team
+            {
+                Id = src.Id,
+            })).ToList(),
         };
 
     public Shared.Models.Team MapTo(UpdateInput src) =>
@@ -74,9 +89,20 @@ public class GrpcMapper : IGrpcMapper
             About = src.About,
             Timezone = src.Timezone,
             FeatureImages = MapTo(src.FeatureImages).ToList(),
-            Organization = new Organization { Id = src.OrganizationId },
-            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Location { Id = src.PrimaryLocationId },
-            TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
+            Organization = new Organization
+            {
+                Id = src.OrganizationId,
+            },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId)
+                ? null
+                : new Location
+                {
+                    Id = src.PrimaryLocationId,
+                },
+            TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team
+            {
+                Id = src.Id,
+            })).ToList(),
         };
 
     private static IEnumerable<global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMember> MapToGrpcResponse(IEnumerable<TeamMember> src) =>
@@ -92,14 +118,14 @@ public class GrpcMapper : IGrpcMapper
                 TeamMemberRole.Administrator => Role.Administrator,
                 TeamMemberRole.Member => Role.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Role), src.Role,
-                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input."),
             },
             Status = src.Status switch
             {
                 TeamMemberStatus.Active => global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active,
                 TeamMemberStatus.Inactive => global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Status), src.Status,
-                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input."),
             },
             CustomerId = src.Customer.Id.ToSafeString(),
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
@@ -113,10 +139,10 @@ public class GrpcMapper : IGrpcMapper
                         OrganizationMemberRole.Administrator => Role.Administrator,
                         OrganizationMemberRole.Member => Role.Member,
                         _ => throw new ArgumentOutOfRangeException(nameof(src.OrganizationMember.Role), src.OrganizationMember.Role,
-                            $"Unexpected value for {nameof(src.OrganizationMember.Role)}: {src.OrganizationMember.Role}. Update enum mapping or caller input.")
+                            $"Unexpected value for {nameof(src.OrganizationMember.Role)}: {src.OrganizationMember.Role}. Update enum mapping or caller input."),
                     },
-                    CustomerId = src.OrganizationMember.Customer.Id.ToSafeString()
-                }
+                    CustomerId = src.OrganizationMember.Customer.Id.ToSafeString(),
+                },
         };
 
     private static TeamMember MapTo(global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMember src, Shared.Models.Team team) =>
@@ -129,20 +155,30 @@ public class GrpcMapper : IGrpcMapper
                 Role.Administrator => TeamMemberRole.Administrator,
                 Role.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Role), src.Role,
-                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Role)}: {src.Role}. Update enum mapping or caller input."),
             },
             Status = src.Status switch
             {
                 global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Active => TeamMemberStatus.Active,
                 global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMemberStatus.Inactive => TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Status), src.Status,
-                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src.Status)}: {src.Status}. Update enum mapping or caller input."),
             },
-            Customer = new Customer { Id = src.CustomerId },
+            Customer = new Customer
+            {
+                Id = src.CustomerId,
+            },
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
                 ? null
-                : new OrganizationMember { Id = src.OrganizationMember.Id, Customer = new Customer { Id = src.OrganizationMember.CustomerId } },
-            Team = team
+                : new OrganizationMember
+                {
+                    Id = src.OrganizationMember.Id,
+                    Customer = new Customer
+                    {
+                        Id = src.OrganizationMember.CustomerId,
+                    },
+                },
+            Team = team,
         };
 
     private static IEnumerable<global::Api.Shared.Services.Models.CdnImageFile> MapTo(IEnumerable<CdnImageFile> src) =>
@@ -158,8 +194,19 @@ public class GrpcMapper : IGrpcMapper
         src.Select(MapTo);
 
     private static CdnImageFile MapTo(global::Api.Shared.Services.Models.CdnImageFile src) =>
-        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+        new()
+        {
+            Original = MapTo(src.Original),
+            Thumbnail = MapTo(src.Thumbnail),
+        };
 
     private static CdnFile? MapTo(global::Api.Shared.Services.Models.CdnFile? src) =>
-        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
+        src is null
+            ? null
+            : new CdnFile
+            {
+                Url = src.Url.ToSafeString(),
+                Height = src.Height.ToNullInt(),
+                Width = src.Width.ToNullInt(),
+            };
 }

@@ -15,10 +15,14 @@ public class ProcessAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Fall_Back_To_Platform_Funds_When_Transfer_Reversal_Is_Unavailable(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -31,14 +35,21 @@ public class ProcessAsyncShould
                 A<RefundCreateOptions>.That.Matches(options => options.ReverseTransfer == true), refund.Id, cancellationToken, A<string?>._))
             .ThrowsAsync(new StripeException("provider rejected transfer reversal")
             {
-                StripeError = new StripeError { Code = "transfer_reversal_not_allowed" }
+                StripeError = new StripeError
+                {
+                    Code = "transfer_reversal_not_allowed",
+                },
             });
         A.CallTo(() => stripeClient.CreateRefundAsync(
                 A<RefundCreateOptions>.That.Matches(options => options.ReverseTransfer == false),
                 $"{refund.Id}:stripe-refund:platform:fee",
                 cancellationToken,
                 A<string?>._))
-            .Returns(new Refund { Id = "re_platform", Status = "succeeded" });
+            .Returns(new Refund
+            {
+                Id = "re_platform",
+                Status = "succeeded",
+            });
         A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
 
         var result = await sut.ProcessAsync(refund, cancellationToken);
@@ -63,10 +74,14 @@ public class ProcessAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Keep_An_Ambiguous_Provider_Submission_Pending_For_Reconciliation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -89,10 +104,14 @@ public class ProcessAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Retry_Without_Application_Fee_Reversal_When_The_Charge_Has_No_Application_Fee(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -112,7 +131,11 @@ public class ProcessAsyncShould
                 $"{refund.Id}:stripe-refund:reverse:no-fee",
                 cancellationToken,
                 A<string?>._))
-            .Returns(new Refund { Id = "re_without_fee", Status = "succeeded" });
+            .Returns(new Refund
+            {
+                Id = "re_without_fee",
+                Status = "succeeded",
+            });
         A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
 
         var result = await sut.ProcessAsync(refund, cancellationToken);
@@ -136,10 +159,14 @@ public class ProcessAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Process_Using_Persisted_Stripe_Context_When_The_Checkout_Is_Unavailable(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -154,7 +181,7 @@ public class ProcessAsyncShould
             StripeAccountId = "acct_persisted",
             StripeChargeType = "Direct",
             StripeChargeId = "ch_persisted",
-            StripeTransferId = "tr_persisted"
+            StripeTransferId = "tr_persisted",
         };
         A.CallTo(() => repositoryFactory.MarketplaceBookingRepository).Returns(marketplaceBookingRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -164,7 +191,11 @@ public class ProcessAsyncShould
                 refund.Id,
                 cancellationToken,
                 "acct_persisted"))
-            .Returns(new Refund { Id = "re_persisted", Status = "succeeded" });
+            .Returns(new Refund
+            {
+                Id = "re_persisted",
+                Status = "succeeded",
+            });
         A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
 
         (await sut.IsHostRefundAsync(refund, cancellationToken)).ShouldBeTrue();
@@ -183,10 +214,14 @@ public class ProcessAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Route_An_Unknown_Stripe_Charge_Type_To_Reconciliation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -218,10 +253,14 @@ public class ProcessAsyncShould
     public async Task Reverse_The_Application_Fee_And_Map_Stripe_Status(
         string stripeStatus,
         string expectedStatus,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceBookingRepository marketplaceBookingRepository,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingRepository marketplaceBookingRepository,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -232,13 +271,17 @@ public class ProcessAsyncShould
             LocalEntityType = RefundEntityType.MarketplaceBooking,
             LocalEntityId = marketplaceBooking.Id,
             RefundAmount = 12.34m,
-            Currency = "nzd"
+            Currency = "nzd",
         };
         A.CallTo(() => repositoryFactory.MarketplaceBookingRepository).Returns(marketplaceBookingRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => marketplaceBookingRepository.GetByIdAsync(marketplaceBooking.Id, cancellationToken)).Returns(marketplaceBooking);
         A.CallTo(() => stripeClient.CreateRefundAsync(A<RefundCreateOptions>._, refund.Id, cancellationToken, A<string?>._))
-            .Returns(new Refund { Id = "re_1", Status = stripeStatus });
+            .Returns(new Refund
+            {
+                Id = "re_1",
+                Status = stripeStatus,
+            });
         A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
 
         var result = await sut.ProcessAsync(refund, cancellationToken);
@@ -262,10 +305,14 @@ public class ProcessAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Resolve_A_Subscription_Stripe_Refund_From_Its_Source_Payment_Allocation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IStripeCheckoutSessionRepository stripeCheckoutSessionRepository,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IStripeHostRefundClient stripeClient,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository stripeCheckoutSessionRepository,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IStripeHostRefundClient stripeClient,
         StripeHostRefundService sut,
         CancellationToken cancellationToken)
     {
@@ -281,9 +328,11 @@ public class ProcessAsyncShould
             [
                 new MarketplaceRefundPaymentAllocation
                 {
-                    IsSourcePayment = true, SourcePaymentProvider = "STRIPE", SourcePaymentReference = checkout.StripeCheckoutSessionId
-                }
-            ]
+                    IsSourcePayment = true,
+                    SourcePaymentProvider = "STRIPE",
+                    SourcePaymentReference = checkout.StripeCheckoutSessionId,
+                },
+            ],
         };
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(stripeCheckoutSessionRepository);
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -296,7 +345,11 @@ public class ProcessAsyncShould
                 refund.Id,
                 cancellationToken,
                 A<string?>._))
-            .Returns(new Refund { Id = "re_subscription", Status = "succeeded" });
+            .Returns(new Refund
+            {
+                Id = "re_subscription",
+                Status = "succeeded",
+            });
         A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
 
         (await sut.IsHostRefundAsync(refund, cancellationToken)).ShouldBeTrue();
@@ -314,10 +367,26 @@ public class ProcessAsyncShould
 
     private static MarketplaceBooking CreateHostBooking()
     {
-        var organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Host };
-        var product = new Product { Id = "product-1", Organization = organization };
-        var productVersion = new ProductVersion { Id = "version-1", Product = product };
-        var marketplaceBooking = new MarketplaceBooking { Id = "marketplace-booking-1", ProductVersion = productVersion };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Host,
+        };
+        var product = new Product
+        {
+            Id = "product-1",
+            Organization = organization,
+        };
+        var productVersion = new ProductVersion
+        {
+            Id = "version-1",
+            Product = product,
+        };
+        var marketplaceBooking = new MarketplaceBooking
+        {
+            Id = "marketplace-booking-1",
+            ProductVersion = productVersion,
+        };
         marketplaceBooking.StripeCheckoutSession = new StripeCheckoutSession
         {
             Id = "checkout-1",
@@ -330,7 +399,12 @@ public class ProcessAsyncShould
             PayoutDisbursedAt = TimeProvider.System.GetUtcNow(),
             DestinationAccountId = "acct_1",
             MarketplaceBooking = marketplaceBooking,
-            StripeCustomer = new StripeCustomer { Id = "customer-1", StripeCustomerId = "cus_1", StripeAccountId = "acct_1" }
+            StripeCustomer = new StripeCustomer
+            {
+                Id = "customer-1",
+                StripeCustomerId = "cus_1",
+                StripeAccountId = "acct_1",
+            },
         };
         return marketplaceBooking;
     }
@@ -341,6 +415,6 @@ public class ProcessAsyncShould
         LocalEntityType = RefundEntityType.MarketplaceBooking,
         LocalEntityId = marketplaceBooking.Id,
         RefundAmount = 12.34m,
-        Currency = "nzd"
+        Currency = "nzd",
     };
 }

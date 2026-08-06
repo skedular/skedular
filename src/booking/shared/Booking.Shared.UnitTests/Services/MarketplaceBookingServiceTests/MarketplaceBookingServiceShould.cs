@@ -21,7 +21,8 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task AddAsync_Throws_CustomerNotFound_When_Customers_Cannot_Be_Found(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         MarketplaceBookingService sut,
         ICustomerRepository customerRepository,
         CancellationToken cancellationToken)
@@ -30,8 +31,20 @@ public class MarketplaceBookingServiceShould
         var customer = new Customer();
         var booking = new Shared.Models.Booking
         {
-            InvolvedCustomers = [new Shared.Models.Customer { Id = "customer-1" }],
-            MarketplaceBooking = new MarketplaceBooking { ProductVersion = new ProductVersion { Id = "product-version-1" } }
+            InvolvedCustomers =
+            [
+                new Shared.Models.Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                ProductVersion = new ProductVersion
+                {
+                    Id = "product-version-1",
+                },
+            },
         };
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => customerRepository.GetByIdsAsync(A<IReadOnlyList<string>>.That.Contains("customer-1"), true, cancellationToken))
@@ -45,7 +58,8 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task AddAsync_Throws_ProductVersionNotFound_When_ProductVersion_Does_Not_Exist(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         MarketplaceBookingService sut,
         ICustomerRepository customerRepository,
         IProductVersionRepository productVersionRepository,
@@ -55,12 +69,29 @@ public class MarketplaceBookingServiceShould
         var customer = new Customer();
         var booking = new Shared.Models.Booking
         {
-            InvolvedCustomers = [new Shared.Models.Customer { Id = "customer-1" }],
-            MarketplaceBooking = new MarketplaceBooking { ProductVersion = new ProductVersion { Id = "product-version-1" } }
+            InvolvedCustomers =
+            [
+                new Shared.Models.Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                ProductVersion = new ProductVersion
+                {
+                    Id = "product-version-1",
+                },
+            },
         };
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => customerRepository.GetByIdsAsync(A<IReadOnlyList<string>>.That.Contains("customer-1"), true, cancellationToken))
-            .Returns([new Customer { Id = "customer-1" }]);
+            .Returns([
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ]);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
         A.CallTo(() => productVersionRepository.GetByIdAsync("product-version-1", cancellationToken))
             .Returns((Database.Entities.ProductVersion?)null);
@@ -73,15 +104,24 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task AddAsync_Throws_SpacesBookingQuotaExceeded_When_Quota_Blocked(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IMarketplaceEventResourceService marketplaceEventResourceService,
-        [Frozen] IProductVersionHelperService productVersionHelperService,
-        [Frozen] ISpacesBookingQuotaService spacesBookingQuotaService,
-        [Frozen] IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IMarketplaceEventResourceService marketplaceEventResourceService,
+        [Frozen]
+        IProductVersionHelperService productVersionHelperService,
+        [Frozen]
+        ISpacesBookingQuotaService spacesBookingQuotaService,
+        [Frozen]
+        IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingService sut,
         ICustomerRepository customerRepository,
         IProductVersionRepository productVersionRepository,
@@ -93,9 +133,17 @@ public class MarketplaceBookingServiceShould
         var from = new DateTimeOffset(2026, 6, 15, 9, 0, 0, TimeSpan.Zero);
         var organization = new Organization
         {
-            Id = "org-1", Type = OrganizationTypeConstants.Marketplace, Offering = new Offering { Code = OfferingCode.SpacesFreeTierV1 }
+            Id = "org-1",
+            Type = OrganizationTypeConstants.Marketplace,
+            Offering = new Offering
+            {
+                Code = OfferingCode.SpacesFreeTierV1,
+            },
         };
-        var customer = new Customer { Id = "customer-1" };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
         var pricing = ProductPricing.Empty("pricing-1") with
         {
             PurchaseCadence = ProductPricingCadence.OneTime,
@@ -103,30 +151,56 @@ public class MarketplaceBookingServiceShould
             AcceptedPaymentMethods = [PaymentMethod.Card],
             BillingMode = ProductPricingBillingMode.Upfront,
             MaxAllowedResourcesLockTimePaidViaCard = 15,
-            NumberOfResourcesToBook = 1
+            NumberOfResourcesToBook = 1,
         };
         var booking = new Shared.Models.Booking
         {
             From = from,
             Until = from.AddHours(1),
-            InvolvedCustomers = [new Shared.Models.Customer { Id = customer.Id }],
+            InvolvedCustomers =
+            [
+                new Shared.Models.Customer
+                {
+                    Id = customer.Id,
+                },
+            ],
             Resources = [],
             MarketplaceBooking = new MarketplaceBooking
             {
-                ProductVersion = new ProductVersion { Id = "product-version-1" }, ProductPricing = pricing, PaymentMethod = PaymentMethod.Card
-            }
+                ProductVersion = new ProductVersion
+                {
+                    Id = "product-version-1",
+                },
+                ProductPricing = pricing,
+                PaymentMethod = PaymentMethod.Card,
+            },
         };
         var productVersion = new Database.Entities.ProductVersion
         {
             Id = "product-version-1",
             Type = ProductTypeConstants.Event,
             PricingOptions = [pricing],
-            OrganizationTags = [new OrganizationTag { Type = OrganizationTagTypeConstants.Product }],
-            Product = new Product { Organization = organization },
-            Currency = CurrencyConstants.Nzd
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Type = OrganizationTagTypeConstants.Product,
+                },
+            ],
+            Product = new Product
+            {
+                Organization = organization,
+            },
+            Currency = CurrencyConstants.Nzd,
         };
-        var marketplaceBookingEntity = new Database.Entities.MarketplaceBooking { Id = "marketplace-booking-1" };
-        var bookingEntity = new Database.Entities.Booking { Id = "booking-1" };
+        var marketplaceBookingEntity = new Database.Entities.MarketplaceBooking
+        {
+            Id = "marketplace-booking-1",
+        };
+        var bookingEntity = new Database.Entities.Booking
+        {
+            Id = "booking-1",
+        };
 
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -190,12 +264,18 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task AdjustRequiredResourcesAsync_Only_Queries_Resources_Compatible_With_The_Product(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IMarketplaceBookingPreferenceService marketplaceBookingPreferenceService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IMarketplaceBookingPreferenceService marketplaceBookingPreferenceService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingService sut,
         ICustomerRepository customerRepository,
         IProductVersionRepository productVersionRepository,
@@ -203,13 +283,29 @@ public class MarketplaceBookingServiceShould
         IBookingRepository bookingRepository,
         CancellationToken cancellationToken)
     {
-        var customer = new Customer { Id = "customer-1" };
-        var productTag = new OrganizationTag { Id = "product-tag-1", Type = OrganizationTagTypeConstants.Product };
-        var requestedResource = new Resource { Id = "requested-resource-1" };
-        var pricing = ProductPricing.Empty("pricing-1") with { NumberOfResourcesToBook = 1 };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var productTag = new OrganizationTag
+        {
+            Id = "product-tag-1",
+            Type = OrganizationTagTypeConstants.Product,
+        };
+        var requestedResource = new Resource
+        {
+            Id = "requested-resource-1",
+        };
+        var pricing = ProductPricing.Empty("pricing-1") with
+        {
+            NumberOfResourcesToBook = 1,
+        };
         var productVersion = new Database.Entities.ProductVersion
         {
-            Id = "product-version-1", Type = ProductTypeConstants.Resource, PricingOptions = [pricing], OrganizationTags = [productTag]
+            Id = "product-version-1",
+            Type = ProductTypeConstants.Resource,
+            PricingOptions = [pricing],
+            OrganizationTags = [productTag],
         };
         var booking = new Database.Entities.Booking
         {
@@ -217,8 +313,15 @@ public class MarketplaceBookingServiceShould
             From = new DateTimeOffset(2026, 6, 15, 9, 0, 0, TimeSpan.Zero),
             Until = new DateTimeOffset(2026, 6, 15, 10, 0, 0, TimeSpan.Zero),
             InvolvedCustomers = [customer],
-            MarketplaceBooking = new Database.Entities.MarketplaceBooking { ProductVersion = productVersion, ProductPricing = pricing },
-            RecurringBooking = new RecurringBooking { RequestedResources = [requestedResource] }
+            MarketplaceBooking = new Database.Entities.MarketplaceBooking
+            {
+                ProductVersion = productVersion,
+                ProductPricing = pricing,
+            },
+            RecurringBooking = new RecurringBooking
+            {
+                RequestedResources = [requestedResource],
+            },
         };
 
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -247,7 +350,10 @@ public class MarketplaceBookingServiceShould
                 1,
                 cancellationToken))
             .Returns([]);
-        A.CallTo(() => entityMapper.MapTo(booking)).Returns(new Shared.Models.Booking { Id = booking.Id });
+        A.CallTo(() => entityMapper.MapTo(booking)).Returns(new Shared.Models.Booking
+        {
+            Id = booking.Id,
+        });
         A.CallTo(() => bookingRepository.Update(booking)).Returns(booking);
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
 
@@ -274,7 +380,10 @@ public class MarketplaceBookingServiceShould
         // Arrange
         var booking = new Shared.Models.Booking();
         var lastModifiedByCustomer = new Customer();
-        var existingBooking = new Database.Entities.Booking { Channel = BookingChannelConstants.Private };
+        var existingBooking = new Database.Entities.Booking
+        {
+            Channel = BookingChannelConstants.Private,
+        };
 
         // Act & Assert
         await Should.ThrowAsync<BookingIsNotMarketplace>(() =>
@@ -289,7 +398,10 @@ public class MarketplaceBookingServiceShould
     {
         // Arrange
         var deletedByCustomer = new Customer();
-        var existingBooking = new Database.Entities.Booking { Channel = BookingChannelConstants.Private };
+        var existingBooking = new Database.Entities.Booking
+        {
+            Channel = BookingChannelConstants.Private,
+        };
 
         // Act & Assert
         await Should.ThrowAsync<BookingIsNotMarketplace>(() =>
@@ -299,7 +411,8 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Throws_MarketplaceBookingCancellationNotAllowed_When_User_Delete_Has_No_Cancellation_Policy(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceBookingService sut,
         CancellationToken cancellationToken)
     {
@@ -321,7 +434,8 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Throws_MarketplaceBookingCancellationNotAllowed_When_User_Delete_Is_For_A_Past_Booking(
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        TimeProvider timeProvider,
         MarketplaceBookingService sut,
         CancellationToken cancellationToken)
     {
@@ -343,15 +457,24 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Allows_User_Delete_For_Todays_Booking_After_Refund_Cutoff(
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingService sut,
         CancellationToken cancellationToken)
     {
@@ -362,7 +485,10 @@ public class MarketplaceBookingServiceShould
             false,
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(45, 100)]);
-        var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
+        var deletedBooking = new Shared.Models.Booking
+        {
+            Id = existingBooking.Id,
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -385,15 +511,24 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Allows_User_Delete_When_Inside_Cancellation_Window(
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingService sut,
         CancellationToken cancellationToken)
     {
@@ -405,7 +540,10 @@ public class MarketplaceBookingServiceShould
             false,
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(180, 100)]);
-        var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
+        var deletedBooking = new Shared.Models.Booking
+        {
+            Id = existingBooking.Id,
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -431,15 +569,24 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Allows_OrganizationOperator_Delete_After_Cancellation_Deadline(
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingService sut,
         CancellationToken cancellationToken)
     {
@@ -450,7 +597,10 @@ public class MarketplaceBookingServiceShould
             false,
             ProductPricingCancellationPolicyType.NoCancellation,
             []);
-        var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
+        var deletedBooking = new Shared.Models.Booking
+        {
+            Id = existingBooking.Id,
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -476,15 +626,24 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Does_Not_Create_Refund_When_Recurring_Cleanup_Disables_Refund_Creation(
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IBookingRepository bookingRepository,
-        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IBookingRepository bookingRepository,
+        [Frozen]
+        IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingService sut,
         CancellationToken cancellationToken)
     {
@@ -495,8 +654,14 @@ public class MarketplaceBookingServiceShould
             false,
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(180, 100)]);
-        existingBooking.RecurringBooking = new RecurringBooking { Id = "recurring-1" };
-        var deletedBooking = new Shared.Models.Booking { Id = existingBooking.Id };
+        existingBooking.RecurringBooking = new RecurringBooking
+        {
+            Id = "recurring-1",
+        };
+        var deletedBooking = new Shared.Models.Booking
+        {
+            Id = existingBooking.Id,
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -519,12 +684,18 @@ public class MarketplaceBookingServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task UpdateAsync_Does_Not_Recompute_Event_Resources_When_Booking_Window_Has_Not_Changed(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IMarketplaceEventResourceService marketplaceEventResourceService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IMarketplaceEventResourceService marketplaceEventResourceService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         MarketplaceBookingService sut,
         ICustomerRepository customerRepository,
         IProductVersionRepository productVersionRepository,
@@ -533,49 +704,92 @@ public class MarketplaceBookingServiceShould
     {
         var from = new DateTimeOffset(2026, 3, 21, 9, 0, 0, TimeSpan.Zero);
         var until = from.AddHours(2);
-        var existingResource = new Resource { Id = "resource-1", ResourceBookingSlots = [] };
+        var existingResource = new Resource
+        {
+            Id = "resource-1",
+            ResourceBookingSlots = [],
+        };
         var existingBooking = new Database.Entities.Booking
         {
             Id = "booking-1",
             Channel = BookingChannelConstants.Marketplace,
             From = from,
             Until = until,
-            InvolvedCustomers = [new Customer { Id = "customer-1" }],
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
             InvolvedResources = [existingResource],
             InvolvedOrganizations = [],
             InvolvedLocations = [],
             InvolvedTeams = [],
             MarketplaceBooking = new Database.Entities.MarketplaceBooking
             {
-                ProductVersion = new Database.Entities.ProductVersion { Id = "product-version-1" },
-                ProductPricing = ProductPricing.Empty("pricing-1") with { BookingCadence = ProductPricingCadence.OneTime },
-                PaymentMethod = PaymentMethodConstants.Card
-            }
+                ProductVersion = new Database.Entities.ProductVersion
+                {
+                    Id = "product-version-1",
+                },
+                ProductPricing = ProductPricing.Empty("pricing-1") with
+                {
+                    BookingCadence = ProductPricingCadence.OneTime,
+                },
+                PaymentMethod = PaymentMethodConstants.Card,
+            },
         };
         var booking = new Shared.Models.Booking
         {
             Id = existingBooking.Id,
             From = from,
             Until = until,
-            InvolvedCustomers = [new Shared.Models.Customer { Id = "customer-1" }],
+            InvolvedCustomers =
+            [
+                new Shared.Models.Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
             Resources = [],
             InvolvedOrganizations = [],
             InvolvedLocations = [],
             InvolvedTeams = [],
             MarketplaceBooking = new MarketplaceBooking
             {
-                ProductVersion = new ProductVersion { Id = "product-version-1" },
-                ProductPricing = ProductPricing.Empty("pricing-1") with { BookingCadence = ProductPricingCadence.OneTime },
-                PaymentMethod = PaymentMethod.Card
-            }
+                ProductVersion = new ProductVersion
+                {
+                    Id = "product-version-1",
+                },
+                ProductPricing = ProductPricing.Empty("pricing-1") with
+                {
+                    BookingCadence = ProductPricingCadence.OneTime,
+                },
+                PaymentMethod = PaymentMethod.Card,
+            },
         };
-        var lastModifiedByCustomer = new Customer { Id = "customer-1" };
+        var lastModifiedByCustomer = new Customer
+        {
+            Id = "customer-1",
+        };
         var productVersion = new Database.Entities.ProductVersion
         {
             Id = "product-version-1",
             Type = ProductTypeConstants.Event,
-            OrganizationTags = [new OrganizationTag { Type = OrganizationTagTypeConstants.Product }],
-            Product = new Product { Organization = new Organization { Id = "org-1" } }
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Type = OrganizationTagTypeConstants.Product,
+                },
+            ],
+            Product = new Product
+            {
+                Organization = new Organization
+                {
+                    Id = "org-1",
+                },
+            },
         };
 
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -628,8 +842,9 @@ public class MarketplaceBookingServiceShould
                 PaymentMethod = PaymentMethodConstants.Card,
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    CancellationPolicyType = cancellationPolicyType, CancellationRefundRules = cancellationRefundRules
-                }
-            }
+                    CancellationPolicyType = cancellationPolicyType,
+                    CancellationRefundRules = cancellationRefundRules,
+                },
+            },
         };
 }

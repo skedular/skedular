@@ -23,7 +23,7 @@ public enum OrganizationXeroBillingMode
     ///     in-arrears bookings, the repeating schedule follows the organization's billing cycle. For other recurring
     ///     bookings, the repeating schedule follows the recurring purchase cadence.
     /// </summary>
-    RepeatingInvoices
+    RepeatingInvoices,
 }
 
 public static class XeroBillingModeConstants
@@ -44,7 +44,7 @@ public static class OrganizationXeroBillingModeExtensions
                 OrganizationXeroBillingMode.Enabled => XeroBillingModeConstants.Enabled,
                 OrganizationXeroBillingMode.RepeatingInvoices => XeroBillingModeConstants.RepeatingInvoices,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
 
         public string ToOrganizationXeroBillingModeName() =>
@@ -54,7 +54,7 @@ public static class OrganizationXeroBillingModeExtensions
                 OrganizationXeroBillingMode.Enabled => "Enabled",
                 OrganizationXeroBillingMode.RepeatingInvoices => "Repeating Invoices",
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 
@@ -67,7 +67,7 @@ public static class OrganizationXeroBillingModeExtensions
                 XeroBillingModeConstants.Enabled => OrganizationXeroBillingMode.Enabled,
                 XeroBillingModeConstants.RepeatingInvoices => OrganizationXeroBillingMode.RepeatingInvoices,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 }

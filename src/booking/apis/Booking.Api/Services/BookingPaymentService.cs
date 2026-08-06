@@ -99,6 +99,8 @@ public class BookingPaymentService(
         }
 
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+            marketplaceBooking.Id, cancellationToken);
 
         var booking = entityMapper.MapTo(existingBooking);
 

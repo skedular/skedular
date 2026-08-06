@@ -84,7 +84,7 @@ public class OrganizationArrearsBillingIntegrations(
             OrganizationBillingCycle.Weekly => GetNextWeeklyBoundary(now),
             OrganizationBillingCycle.Fortnightly => GetNextFortnightlyBoundary(now),
             OrganizationBillingCycle.Monthly => GetNextMonthlyBoundary(now),
-            _ => throw new ArgumentOutOfRangeException(nameof(args.Configuration.BillingCycle))
+            _ => throw new ArgumentOutOfRangeException(nameof(args.Configuration.BillingCycle)),
         });
     }
 
@@ -100,7 +100,7 @@ public class OrganizationArrearsBillingIntegrations(
                 OrganizationBillingCycle.Weekly => new BillingPeriod(GetCurrentWeekStart(effectiveRunAt), effectiveRunAt),
                 OrganizationBillingCycle.Fortnightly => new BillingPeriod(GetCurrentFortnightStart(effectiveRunAt), effectiveRunAt),
                 OrganizationBillingCycle.Monthly => new BillingPeriod(GetCurrentMonthStart(effectiveRunAt), effectiveRunAt),
-                _ => throw new ArgumentOutOfRangeException(nameof(args.Configuration.BillingCycle))
+                _ => throw new ArgumentOutOfRangeException(nameof(args.Configuration.BillingCycle)),
             });
         }
 
@@ -109,7 +109,7 @@ public class OrganizationArrearsBillingIntegrations(
             OrganizationBillingCycle.Weekly => new BillingPeriod(effectiveRunAt.AddDays(-7), effectiveRunAt),
             OrganizationBillingCycle.Fortnightly => new BillingPeriod(effectiveRunAt.AddDays(-14), effectiveRunAt),
             OrganizationBillingCycle.Monthly => new BillingPeriod(effectiveRunAt.AddMonths(-1), effectiveRunAt),
-            _ => throw new ArgumentOutOfRangeException(nameof(args.Configuration.BillingCycle))
+            _ => throw new ArgumentOutOfRangeException(nameof(args.Configuration.BillingCycle)),
         });
     }
 
@@ -353,8 +353,8 @@ public class OrganizationArrearsBillingIntegrations(
                     ServicePeriodEndExclusive = line.ServicePeriod.EndExclusive,
                     EarnedAt = line.EarnedAt,
                     Amount = line.Amount,
-                    Description = line.Description
-                }).ToList()
+                    Description = line.Description,
+                }).ToList(),
             });
 
         if (bookingIds.Count == 0)
@@ -380,6 +380,8 @@ public class OrganizationArrearsBillingIntegrations(
             }
 
             repositoryFactory.MarketplaceBookingRepository.Update(booking.MarketplaceBooking);
+            await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+                booking.MarketplaceBooking.Id, cancellationToken);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -390,7 +392,10 @@ public class OrganizationArrearsBillingIntegrations(
     private async Task<XeroConnection?> GetOrganizationXeroConnectionAsync(string organizationId, CancellationToken cancellationToken)
     {
         var response = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
-            new Admin_GetXeroConnectionInput { OrganizationId = organizationId },
+            new Admin_GetXeroConnectionInput
+            {
+                OrganizationId = organizationId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -401,7 +406,10 @@ public class OrganizationArrearsBillingIntegrations(
         string organizationId,
         CancellationToken cancellationToken) =>
         await organizationServiceClient.Admin_GetAsync(
-            new Admin_GetInput { Id = organizationId },
+            new Admin_GetInput
+            {
+                Id = organizationId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -455,7 +463,10 @@ public class OrganizationArrearsBillingIntegrations(
         var invoiceResponse = await accountingApi.CreateInvoicesAsync(
             accessToken,
             refreshedConnection.TenantId,
-            new Invoices { _Invoices = [invoiceRequest] },
+            new Invoices
+            {
+                _Invoices = [invoiceRequest],
+            },
             null,
             null,
             accountingInvoiceLink.Id,
@@ -512,7 +523,7 @@ public class OrganizationArrearsBillingIntegrations(
                     ExternalInvoiceNumber = null,
                     ExternalInvoiceUrl = null,
                     ExternalStatus = AccountingStatusConstants.PendingExport,
-                    OrganizationId = organizationId
+                    OrganizationId = organizationId,
                 });
         }
         else
@@ -544,7 +555,10 @@ public class OrganizationArrearsBillingIntegrations(
 
         var client = xeroSdkClientFactory.CreateClient();
         var refreshedToken = (XeroOAuth2Token)await client.RefreshAccessTokenAsync(
-            new XeroOAuth2Token { RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted) });
+            new XeroOAuth2Token
+            {
+                RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted),
+            });
         var now = timeProvider.GetUtcNow();
         var accessTokenEncrypted = xeroTokenEncryptionService.Encrypt(refreshedToken.AccessToken);
         var refreshTokenEncrypted = xeroTokenEncryptionService.Encrypt(
@@ -561,7 +575,7 @@ public class OrganizationArrearsBillingIntegrations(
                 AccessTokenEncrypted = accessTokenEncrypted,
                 RefreshTokenEncrypted = refreshTokenEncrypted,
                 AccessTokenExpiresAt = accessTokenExpiresAt.ToTimestamp(),
-                RefreshTokenExpiresAt = refreshTokenExpiresAt.ToTimestamp()
+                RefreshTokenExpiresAt = refreshTokenExpiresAt.ToTimestamp(),
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
@@ -603,7 +617,7 @@ public class OrganizationArrearsBillingIntegrations(
             Name = xeroContactName,
             EmailAddress = email,
             ContactNumber = customer.Id,
-            ContactID = Guid.TryParse(existingLink?.ExternalContactId, out var contactId) ? contactId : null
+            ContactID = Guid.TryParse(existingLink?.ExternalContactId, out var contactId) ? contactId : null,
         };
 
         if (contact.ContactID is null)
@@ -652,9 +666,15 @@ public class OrganizationArrearsBillingIntegrations(
         }
 
         var contactsResponse = contact.ContactID is null
-            ? await accountingApi.CreateContactsAsync(accessToken, xeroConnection.TenantId, new Contacts { _Contacts = [contact] }, null, null,
+            ? await accountingApi.CreateContactsAsync(accessToken, xeroConnection.TenantId, new Contacts
+                {
+                    _Contacts = [contact],
+                }, null, null,
                 cancellationToken)
-            : await accountingApi.UpdateOrCreateContactsAsync(accessToken, xeroConnection.TenantId, new Contacts { _Contacts = [contact] }, null,
+            : await accountingApi.UpdateOrCreateContactsAsync(accessToken, xeroConnection.TenantId, new Contacts
+                {
+                    _Contacts = [contact],
+                }, null,
                 null, cancellationToken);
         var exportedContact = contactsResponse?._Contacts?.FirstOrDefault() ??
                               throw new XeroContactExportFailedException();
@@ -672,7 +692,7 @@ public class OrganizationArrearsBillingIntegrations(
                     ExternalContactName = exportedContact.Name,
                     LastSyncedAt = timeProvider.GetUtcNow(),
                     LastError = null,
-                    OrganizationId = organizationId
+                    OrganizationId = organizationId,
                 });
         }
         else
@@ -713,8 +733,11 @@ public class OrganizationArrearsBillingIntegrations(
             DueDate = dueDate,
             LineItems = draft.Lines.Select(line => new LineItem
             {
-                Description = line.Description, Quantity = 1, UnitAmount = line.Amount, AccountCode = xeroConnection.DefaultSalesAccountCode
-            }).ToList()
+                Description = line.Description,
+                Quantity = 1,
+                UnitAmount = line.Amount,
+                AccountCode = xeroConnection.DefaultSalesAccountCode,
+            }).ToList(),
         };
     }
 
@@ -730,7 +753,7 @@ public class OrganizationArrearsBillingIntegrations(
         {
             0 => false,
             1 => taxInclusiveValues[0],
-            _ => throw new MixedXeroInvoiceTaxInclusivityException()
+            _ => throw new MixedXeroInvoiceTaxInclusivityException(),
         };
     }
 
@@ -877,7 +900,7 @@ public class OrganizationArrearsBillingIntegrations(
                     OccurredAt = payment.Date ?? timeProvider.GetUtcNow(),
                     PayloadJson = $"{{\"amount\":{payment.Amount?.ToString(CultureInfo.InvariantCulture) ?? "0"}}}",
                     ProcessedAt = null,
-                    OrganizationId = accountingInvoiceLink.OrganizationId
+                    OrganizationId = accountingInvoiceLink.OrganizationId,
                 });
         }
     }
@@ -906,6 +929,8 @@ public class OrganizationArrearsBillingIntegrations(
                 booking.MarketplaceBooking!.InvoiceNumber = organizationArrearsInvoice.InvoiceNumber;
                 booking.MarketplaceBooking.InvoiceUrl = organizationArrearsInvoice.InvoiceUrl;
                 repositoryFactory.MarketplaceBookingRepository.Update(booking.MarketplaceBooking);
+                await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
+                    booking.MarketplaceBooking.Id, cancellationToken);
             }
         }
 
@@ -923,7 +948,7 @@ public class OrganizationArrearsBillingIntegrations(
         {
             XeroInvoice.StatusEnum.AUTHORISED => AccountingStatusConstants.Sent,
             XeroInvoice.StatusEnum.SUBMITTED => AccountingStatusConstants.Sent,
-            _ => AccountingStatusConstants.Exported
+            _ => AccountingStatusConstants.Exported,
         };
     }
 
@@ -946,7 +971,12 @@ public class OrganizationArrearsBillingIntegrations(
         while ((bytesRead = await pdfStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)) > 0)
         {
             await call.RequestStream.WriteAsync(
-                new UploadFileRequest { Extension = ".pdf", ContentType = "application/pdf", Chunk = ByteString.CopyFrom(buffer, 0, bytesRead) },
+                new UploadFileRequest
+                {
+                    Extension = ".pdf",
+                    ContentType = "application/pdf",
+                    Chunk = ByteString.CopyFrom(buffer, 0, bytesRead),
+                },
                 cancellationToken);
         }
 
@@ -990,7 +1020,10 @@ public class OrganizationArrearsBillingIntegrations(
             .Replace("{{BILLING_PERIOD_START}}", draft.BillingPeriod.StartInclusive.ToString("yyyy-MM-dd"))
             .Replace("{{BILLING_PERIOD_END}}", draft.BillingPeriod.EndExclusive.ToString("yyyy-MM-dd"));
 
-        var attachments = new List<EmailAttachment> { new(pdfStream, $"{invoiceNumber}.pdf", "application/pdf") };
+        var attachments = new List<EmailAttachment>
+        {
+            new(pdfStream, $"{invoiceNumber}.pdf", "application/pdf"),
+        };
 
         await emailService.SendRawEmailAsync(
             $"Invoice #{invoiceNumber} from {organizationName}",

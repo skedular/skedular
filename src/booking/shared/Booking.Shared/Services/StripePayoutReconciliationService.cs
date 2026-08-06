@@ -214,7 +214,7 @@ public sealed class StripePayoutReconciliationService(
     {
         1 => TimeSpan.FromHours(1),
         2 => TimeSpan.FromHours(6),
-        _ => TimeSpan.FromHours(24)
+        _ => TimeSpan.FromHours(24),
     };
 
     private static string GetPayoutStateEventType(string? payoutStatus)
@@ -253,7 +253,7 @@ public sealed class StripePayoutReconciliationService(
                 ExternalRefundId = payout.Id,
                 Currency = payout.Currency,
                 Status = MarketplaceExternalRefundReconciliationStatusConstants.Open,
-                ResolutionReason = reason
+                ResolutionReason = reason,
             });
         }
         else

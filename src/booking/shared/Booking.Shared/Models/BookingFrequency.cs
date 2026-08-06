@@ -4,7 +4,7 @@ public enum BookingFrequency
 {
     Daily,
     Weekly,
-    Monthly
+    Monthly,
 }
 
 public static class BookingFrequencyConstants
@@ -25,7 +25,7 @@ public static class BookingFrequencyExtensions
                 BookingFrequencyConstants.Weekly => BookingFrequency.Weekly,
                 BookingFrequencyConstants.Monthly => BookingFrequency.Monthly,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 
@@ -38,7 +38,7 @@ public static class BookingFrequencyExtensions
                 BookingFrequency.Weekly => BookingFrequencyConstants.Weekly,
                 BookingFrequency.Monthly => BookingFrequencyConstants.Monthly,
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
 
         public string ToBookingFrequencyName() =>
@@ -48,7 +48,7 @@ public static class BookingFrequencyExtensions
                 BookingFrequency.Weekly => "Weekly",
                 BookingFrequency.Monthly => "Monthly",
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 }

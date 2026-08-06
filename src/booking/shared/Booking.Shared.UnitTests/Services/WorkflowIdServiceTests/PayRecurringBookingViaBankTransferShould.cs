@@ -10,7 +10,8 @@ public class PayRecurringBookingViaBankTransferShould
     [Theory]
     [AutoFakeItEasyData]
     public void Return_The_Deterministic_Workflow_Id(
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen]
+        ITemporalHelperService temporalHelperService,
         WorkflowIdService sut,
         string recurringBookingId,
         string expectedWorkflowId)

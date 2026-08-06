@@ -34,7 +34,11 @@ public class BookPrivateRecurringResources
                     {
                         StartToCloseTimeout = TimeSpan.FromMinutes(30),
                         TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 5, MaximumInterval = TimeSpan.FromSeconds(1) }
+                        RetryPolicy = new RetryPolicy
+                        {
+                            MaximumAttempts = 5,
+                            MaximumInterval = TimeSpan.FromSeconds(1),
+                        },
                     });
 
                 break;
@@ -48,7 +52,11 @@ public class BookPrivateRecurringResources
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(30),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 5, MaximumInterval = TimeSpan.FromSeconds(1) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 5,
+                        MaximumInterval = TimeSpan.FromSeconds(1),
+                    },
                 });
 
             if (response.Deleted)
@@ -61,7 +69,11 @@ public class BookPrivateRecurringResources
                     {
                         StartToCloseTimeout = TimeSpan.FromMinutes(30),
                         TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 5, MaximumInterval = TimeSpan.FromSeconds(1) }
+                        RetryPolicy = new RetryPolicy
+                        {
+                            MaximumAttempts = 5,
+                            MaximumInterval = TimeSpan.FromSeconds(1),
+                        },
                     });
             }
 
@@ -70,7 +82,10 @@ public class BookPrivateRecurringResources
                 break;
             }
 
-            _state = _state with { UpdateQueue = _state.UpdateQueue.Skip(1).ToList() };
+            _state = _state with
+            {
+                UpdateQueue = _state.UpdateQueue.Skip(1).ToList(),
+            };
 
             await Workflow.WaitConditionAsync(() => _state.UpdateQueue.Any() || _state.RecurringBookingDeleted, TimeSpan.FromDays(1));
         } while (true);
@@ -81,7 +96,10 @@ public class BookPrivateRecurringResources
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { UpdateQueue = _state.UpdateQueue.Append(true).ToList() };
+        _state = _state with
+        {
+            UpdateQueue = _state.UpdateQueue.Append(true).ToList(),
+        };
 
         return Task.CompletedTask;
     }
@@ -91,7 +109,10 @@ public class BookPrivateRecurringResources
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { RecurringBookingDeleted = true };
+        _state = _state with
+        {
+            RecurringBookingDeleted = true,
+        };
 
         return Task.CompletedTask;
     }

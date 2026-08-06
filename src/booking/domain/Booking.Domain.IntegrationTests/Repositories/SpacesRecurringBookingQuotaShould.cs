@@ -34,7 +34,7 @@ public class SpacesRecurringBookingQuotaShould(
             SpacesPeriodEnd = periodEnd,
             SpacesProductEnabled = true,
             SpacesTrialStartedAt = now.AddDays(-1),
-            SpacesTrialEndsAt = now.AddDays(13)
+            SpacesTrialEndsAt = now.AddDays(13),
         };
         for (var index = 0; index < 99; index++)
         {
@@ -77,7 +77,7 @@ public class SpacesRecurringBookingQuotaShould(
             SpacesPeriodEnd = periodEnd,
             SpacesProductEnabled = true,
             SpacesTrialStartedAt = now.AddDays(-14),
-            SpacesTrialEndsAt = now
+            SpacesTrialEndsAt = now,
         };
         repositoryFactory.BookingRepository.Add(CreateBooking(existingBookingId, now.AddHours(-1), organization));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -109,7 +109,10 @@ public class SpacesRecurringBookingQuotaShould(
         organization.Type = OrganizationTypeConstants.Marketplace;
         organization.Offering = new OfferingModel
         {
-            SpacesPlanCode = 1, SpacesQuotaLimit = 100, SpacesPeriodStart = periodStart, SpacesPeriodEnd = periodEnd
+            SpacesPlanCode = 1,
+            SpacesQuotaLimit = 100,
+            SpacesPeriodStart = periodStart,
+            SpacesPeriodEnd = periodEnd,
         };
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -135,6 +138,6 @@ public class SpacesRecurringBookingQuotaShould(
             Category = BookingCategory.WorkingFromCoworkingSpace.ToBookingCategory(),
             Channel = BookingChannel.Marketplace.ToBookingChannel(),
             Schedules = [],
-            InvolvedOrganizations = [organization]
+            InvolvedOrganizations = [organization],
         };
 }

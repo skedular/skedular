@@ -13,10 +13,14 @@ public class ResolveMarketplaceExternalRefundReconciliationShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Resolve_An_Actionable_External_Reconciliation(
-        [Frozen] IMarketplaceRefundOperationsService operationsService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IContext context,
+        [Frozen]
+        IMarketplaceRefundOperationsService operationsService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IContext context,
         ResolveMarketplaceExternalRefundReconciliationInput input,
         MarketplaceRefundRootMutation sut,
         CancellationToken cancellationToken)
@@ -37,7 +41,7 @@ public class ResolveMarketplaceExternalRefundReconciliationShould
             Status = MarketplaceExternalRefundReconciliationStatus.Resolved,
             ResolutionReason = input.Reason,
             ResolutionActorCustomerId = "customer-1",
-            ResolutionCorrelationId = "correlation-1"
+            ResolutionCorrelationId = "correlation-1",
         };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");

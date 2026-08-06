@@ -21,14 +21,20 @@ public class TeamPermissionsService(
     IMemoryCache memoryCache)
     : ITeamPermissionsService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<TeamPermissions> GetPermissionsAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync(
             CreateKeyById(workspaceMemberId, teamId),
             async ct => grpcMapper.MapTo(
                 await teamServiceClient.GetPermissionsAsync(
-                    new GetPermissionsInput { Id = teamId },
+                    new GetPermissionsInput
+                    {
+                        Id = teamId,
+                    },
                     teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;

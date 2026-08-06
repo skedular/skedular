@@ -47,7 +47,11 @@ public class LocationCrawlerServiceService(IPlaywrightProvider playwrightProvide
 #pragma warning restore VSTHRD101
 
             await page.SetViewportSizeAsync(1920, 1080);
-            await page.GotoAsync(url, new PageGotoOptions { WaitUntil = WaitUntilState.Load, Timeout = 60000 });
+            await page.GotoAsync(url, new PageGotoOptions
+            {
+                WaitUntil = WaitUntilState.Load,
+                Timeout = 60000,
+            });
 
             var title = page.Locator("h1.uppercase.text-lg.font-bold.ml-2");
             var titleText = await title.CountAsync() > 0 ? await title.First.InnerTextAsync() : string.Empty;
@@ -89,7 +93,10 @@ public class LocationCrawlerServiceService(IPlaywrightProvider playwrightProvide
 
                 // Wait for the phone number link to appear
                 var phoneNumberLink = page.Locator("a#phone_number");
-                await phoneNumberLink.First.WaitForAsync(new LocatorWaitForOptions { Timeout = 10000 });
+                await phoneNumberLink.First.WaitForAsync(new LocatorWaitForOptions
+                {
+                    Timeout = 10000,
+                });
                 contactPhoneNumberText = (await phoneNumberLink.First.InnerTextAsync()).Trim();
             }
 

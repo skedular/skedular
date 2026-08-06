@@ -73,7 +73,11 @@ public class OrganizationInternalSubscriber(
         if (account.OrganizationStripeConnectAccountAuthorization is null)
         {
             account.OrganizationStripeConnectAccountAuthorization = repositoryFactory.OrganizationStripeConnectAccountAuthorizationRepository.Add(
-                new OrganizationStripeConnectAccountAuthorization { Id = randomHelper.Generate(), IsAuthorized = true });
+                new OrganizationStripeConnectAccountAuthorization
+                {
+                    Id = randomHelper.Generate(),
+                    IsAuthorized = true,
+                });
         }
         else
         {
@@ -105,7 +109,11 @@ public class OrganizationInternalSubscriber(
         if (account.OrganizationStripeConnectAccountAuthorization is null)
         {
             account.OrganizationStripeConnectAccountAuthorization = repositoryFactory.OrganizationStripeConnectAccountAuthorizationRepository.Add(
-                new OrganizationStripeConnectAccountAuthorization { Id = randomHelper.Generate(), IsAuthorized = false });
+                new OrganizationStripeConnectAccountAuthorization
+                {
+                    Id = randomHelper.Generate(),
+                    IsAuthorized = false,
+                });
         }
         else
         {

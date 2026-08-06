@@ -9,20 +9,20 @@ public enum TeamPatchField
     About,
     PrimaryLocation,
     Timezone,
-    FeatureImages
+    FeatureImages,
 }
 
 [GraphQLName("TeamMembersPatchField")]
 public enum TeamMembersPatchField
 {
-    Members
+    Members,
 }
 
 [GraphQLName("TeamAndMembersPatchField")]
 public enum TeamAndMembersPatchField
 {
     Team,
-    Members
+    Members,
 }
 
 public record TeamPatchRequest(

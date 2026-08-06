@@ -26,7 +26,10 @@ public class TeamPublisher(
     public async Task PublishTeamsAsync(IReadOnlyList<Models.Team> teams, CancellationToken cancellationToken)
     {
         await Task.WhenAll(teams.Select(team => publisher.PublishAsync(
-            new Key { TeamId = team.Id },
+            new Key
+            {
+                TeamId = team.Id,
+            },
             new Event
             {
                 Metadata = Event.NewMetadata(
@@ -34,7 +37,10 @@ public class TeamPublisher(
                     applicationConfiguration.AppSource,
                     team.IsDeleted() ? Type.TeamDeleted : Type.TeamUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Team = eventMapper.MapTo(team) }
+                Data = new Data
+                {
+                    Team = eventMapper.MapTo(team),
+                },
             },
             cancellationToken)));
 

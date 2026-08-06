@@ -15,7 +15,10 @@ public class CustomerReadinessPublisher(ApplicationConfiguration applicationConf
 {
     public Task PublishProvisionedAsync(string customerId, string? correlationId, CancellationToken cancellationToken) =>
         publisher.PublishAsync(
-            new Key { CustomerId = customerId },
+            new Key
+            {
+                CustomerId = customerId,
+            },
             new Event
             {
                 Metadata = Event.NewMetadata(
@@ -25,8 +28,12 @@ public class CustomerReadinessPublisher(ApplicationConfiguration applicationConf
                     correlationId),
                 Data = new Data
                 {
-                    CustomerIdentityProvisioned = new CustomerIdentityProvisioned { CustomerId = customerId, Domain = Domain.Location }
-                }
+                    CustomerIdentityProvisioned = new CustomerIdentityProvisioned
+                    {
+                        CustomerId = customerId,
+                        Domain = Domain.Location,
+                    },
+                },
             },
             cancellationToken);
 }

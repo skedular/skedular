@@ -24,7 +24,10 @@ public class OrganizationPublisher(
     public async Task PublishOrganizationsAsync(IReadOnlyList<Models.Organization> organizations,
         CancellationToken cancellationToken) =>
         await Task.WhenAll(organizations.Select(organization => publisher.PublishAsync(
-            new Key { OrganizationId = organization.Id },
+            new Key
+            {
+                OrganizationId = organization.Id,
+            },
             new Event
             {
                 Metadata = Event.NewMetadata(
@@ -32,7 +35,10 @@ public class OrganizationPublisher(
                     applicationConfiguration.AppSource,
                     organization.IsDeleted() ? Type.OrganizationDeleted : Type.OrganizationUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Organization = eventMapper.MapTo(organization) }
+                Data = new Data
+                {
+                    Organization = eventMapper.MapTo(organization),
+                },
             },
             cancellationToken)));
 }

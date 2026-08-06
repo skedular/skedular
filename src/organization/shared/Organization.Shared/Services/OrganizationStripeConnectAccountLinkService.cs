@@ -50,14 +50,17 @@ public class OrganizationStripeConnectAccountLinkService(
                 RefreshUrl =
                     Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), s_refreshLinkBaseUrl.Value).SetQueryParam("code", code),
                 ReturnUrl = redirectUrl,
-                Type = "account_onboarding"
+                Type = "account_onboarding",
             },
             new RequestOptions(),
             cancellationToken);
 
         var accountRefreshCodeEntity = new OrganizationStripeConnectAccountRefreshCode
         {
-            Id = randomHelper.Generate(), Code = code, RedirectUrl = redirectUrl, OrganizationStripeConnectAccount = accountEntity
+            Id = randomHelper.Generate(),
+            Code = code,
+            RedirectUrl = redirectUrl,
+            OrganizationStripeConnectAccount = accountEntity,
         };
 
         _ = repositoryFactory.OrganizationStripeConnectAccountRefreshCodeRepository.Add(accountRefreshCodeEntity);

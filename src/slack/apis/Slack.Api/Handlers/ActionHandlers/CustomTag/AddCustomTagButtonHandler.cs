@@ -42,16 +42,23 @@ public class AddCustomTagButtonHandler(
         {
             BlockId = CustomTagActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = CustomTagActionTypes.Name },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = CustomTagActionTypes.Name,
+            },
+            Optional = false,
         };
 
         var description = new InputBlock
         {
             BlockId = CustomTagActionTypes.Description,
             Label = "Description".ToPlainText(),
-            Element = new PlainTextInput { ActionId = CustomTagActionTypes.Description, Multiline = true },
-            Optional = true
+            Element = new PlainTextInput
+            {
+                ActionId = CustomTagActionTypes.Description,
+                Multiline = true,
+            },
+            Optional = true,
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -64,7 +71,7 @@ public class AddCustomTagButtonHandler(
                 Close = "Cancel",
                 Submit = "Add",
                 Blocks = [name, description],
-                PrivateMetadata = action.Value
+                PrivateMetadata = action.Value,
             },
             cancellationToken);
     }
@@ -97,7 +104,11 @@ public class AddCustomTagButtonHandler(
         var values = viewSubmission.View.State.Values;
         var organizationCustomTag = new OrganizationCustomTag
         {
-            Id = randomHelper.Generate(), Organization = new Organization { Id = workspace.Organization.Id }
+            Id = randomHelper.Generate(),
+            Organization = new Organization
+            {
+                Id = workspace.Organization.Id,
+            },
         };
 
         if (values.TryGetValue(CustomTagActionTypes.Name, out var nameBlock))

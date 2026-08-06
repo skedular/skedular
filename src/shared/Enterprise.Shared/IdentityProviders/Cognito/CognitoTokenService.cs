@@ -60,7 +60,7 @@ public class CognitoTokenService(
                     ValidAudiences = _audiences,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKeys = jws.Keys,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
                 });
 
             var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;

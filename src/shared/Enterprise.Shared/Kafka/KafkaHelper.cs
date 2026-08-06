@@ -36,7 +36,10 @@ public class KafkaHelper : IKafkaHelper
             ArgumentNullException.ThrowIfNull(schemaRegistryClient);
         }
 
-        _adminConfig = new AdminClientConfig { BootstrapServers = kafkaConfiguration.BootstrapServers };
+        _adminConfig = new AdminClientConfig
+        {
+            BootstrapServers = kafkaConfiguration.BootstrapServers,
+        };
         _schemaRegistryClient = schemaRegistryClient;
     }
 
@@ -71,7 +74,11 @@ public class KafkaHelper : IKafkaHelper
                             topicName == deadLetterTopic ? kafkaTopicInfo.DeadLetterTopicPartitionCount :
                             kafkaTopicInfo.RetryTopicPartitionCount;
 
-                        return new TopicSpecification { Name = topicName, NumPartitions = partitionCount };
+                        return new TopicSpecification
+                        {
+                            Name = topicName,
+                            NumPartitions = partitionCount,
+                        };
                     })
                     .ToList());
         }
@@ -96,7 +103,11 @@ public class KafkaHelper : IKafkaHelper
                         topicName == deadLetterTopic ? kafkaTopicInfo.DeadLetterTopicPartitionCount :
                         kafkaTopicInfo.RetryTopicPartitionCount;
 
-                    return new PartitionsSpecification { Topic = topicName, IncreaseTo = partitionCount };
+                    return new PartitionsSpecification
+                    {
+                        Topic = topicName,
+                        IncreaseTo = partitionCount,
+                    };
                 })
                 .ToList();
 
@@ -155,7 +166,10 @@ public class KafkaHelper : IKafkaHelper
             _schemaRegistryClient,
             new ProtobufSerializerConfig
             {
-                AutoRegisterSchemas = true, NormalizeSchemas = true, SubjectNameStrategy = SubjectNameStrategy.Topic, SkipKnownTypes = true
+                AutoRegisterSchemas = true,
+                NormalizeSchemas = true,
+                SubjectNameStrategy = SubjectNameStrategy.Topic,
+                SkipKnownTypes = true,
             });
 
         await serializer.SerializeAsync(new TEvent(), new SerializationContext(componentType, topic));
@@ -179,6 +193,6 @@ public class KafkaHelper : IKafkaHelper
             MessageComponentType.Key => $"{topic}-key",
             MessageComponentType.Value => $"{topic}-value",
             _ => throw new ArgumentOutOfRangeException(nameof(componentType), componentType,
-                $"Unexpected value for {nameof(componentType)}: {componentType}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(componentType)}: {componentType}. Update enum mapping or caller input."),
         };
 }

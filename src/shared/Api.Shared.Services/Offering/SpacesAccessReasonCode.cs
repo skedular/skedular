@@ -12,7 +12,7 @@ public enum SpacesAccessReasonCode
     PaidInactive = 7,
     MissingTrialState = 8,
     MissingOfferingState = 9,
-    ActionNotAllowed = 10
+    ActionNotAllowed = 10,
 }
 
 public static class SpacesAccessReasonCodeExtensions
@@ -34,7 +34,7 @@ public static class SpacesAccessReasonCodeExtensions
                 SpacesAccessReasonCode.MissingOfferingState => "Missing Offering State",
                 SpacesAccessReasonCode.ActionNotAllowed => "Action Not Allowed",
                 _ => throw new ArgumentOutOfRangeException(nameof(reasonCode), reasonCode,
-                    $"Unexpected value for {nameof(reasonCode)}: {reasonCode}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(reasonCode)}: {reasonCode}. Update enum mapping or caller input."),
             };
     }
 }

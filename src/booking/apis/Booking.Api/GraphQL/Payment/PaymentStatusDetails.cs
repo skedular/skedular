@@ -6,6 +6,9 @@ namespace Booking.Api.GraphQL.Payment;
 [GraphQLName("PaymentStatusDetails")]
 public class PaymentStatusDetails
 {
-    [GraphQLName("type")] public PaymentStatus Type { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("type")]
+    public PaymentStatus Type { get; set; }
+
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
 }

@@ -49,7 +49,10 @@ public class LocationAnalyticsService(
 
         return (await GetAnalyticsAsync(
             [locationId],
-            new Dictionary<string, string> { { location.Id, location.Name } },
+            new Dictionary<string, string>
+            {
+                { location.Id, location.Name },
+            },
             from,
             until,
             cancellationToken)).First();
@@ -149,12 +152,20 @@ public class LocationAnalyticsService(
                         .Select(recording => recording.Count)
                         .SingleOrDefault();
 
-                    return new LocationDesksOccupancyPercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
+                    return new LocationDesksOccupancyPercentage
+                    {
+                        Date = item.Date,
+                        Percentage = matchedBookingsCount / (float)item.Count * 100,
+                    };
                 }).ToList();
 
             var dailyBookingsTotal = dailyBookingCounts
                 .Where(item => item.Location.Id == locationId)
-                .Select(item => new LocationDailyBookingsTotal { Date = item.Date, Total = item.Count })
+                .Select(item => new LocationDailyBookingsTotal
+                {
+                    Date = item.Date,
+                    Total = item.Count,
+                })
                 .ToList();
 
             var roomsOccupancyPercentage = dailyRoomCounts
@@ -166,12 +177,20 @@ public class LocationAnalyticsService(
                         .Select(recording => recording.Count)
                         .SingleOrDefault();
 
-                    return new LocationRoomsOccupancyPercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
+                    return new LocationRoomsOccupancyPercentage
+                    {
+                        Date = item.Date,
+                        Percentage = matchedBookingsCount / (float)item.Count * 100,
+                    };
                 }).ToList();
 
             var resourceAvailabilitySnapshots = allResourceAvailabilitySnapshots
                 .Where(item => item.Location.Id == locationId)
-                .GroupBy(item => new { item.Date, ResourceType = DetermineResourceType(item.Resource) })
+                .GroupBy(item => new
+                {
+                    item.Date,
+                    ResourceType = DetermineResourceType(item.Resource),
+                })
                 .Where(item => item.Key.ResourceType != null)
                 .Select(item => ResourceAvailabilitySnapshotReport.FromSnapshots(item.Key.Date, item.Key.ResourceType!, item.ToList()))
                 .OrderBy(item => item.Date).ThenBy(r => r.ResourceType)

@@ -11,7 +11,8 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Fall_Back_To_The_Next_Organization_Location_When_The_First_Default_Location_Has_No_Available_Desk(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         PrivateBookingPreferenceService sut,
         IOrganizationRepository organizationRepository,
         IResourceRepository resourceRepository,
@@ -19,15 +20,34 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
     {
         var from = new DateTimeOffset(2026, 3, 28, 9, 0, 0, TimeSpan.Zero);
         var until = new DateTimeOffset(2026, 3, 28, 10, 0, 0, TimeSpan.Zero);
-        var firstLocation = new Location { Id = "loc-1", Name = "First" };
-        var secondLocation = new Location { Id = "loc-2", Name = "Second" };
-        var organization = new Organization { Id = "org-1", Locations = [firstLocation, secondLocation] };
+        var firstLocation = new Location
+        {
+            Id = "loc-1",
+            Name = "First",
+        };
+        var secondLocation = new Location
+        {
+            Id = "loc-2",
+            Name = "Second",
+        };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Locations = [firstLocation, secondLocation],
+        };
         var customer = new Customer();
         var resource = new Resource
         {
             Id = "res-2",
             Location = secondLocation,
-            OrganizationTags = [new OrganizationTag { Id = "desk-tag", Type = OrganizationTagTypeConstants.ResourceDesk }]
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Id = "desk-tag",
+                    Type = OrganizationTagTypeConstants.ResourceDesk,
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -69,7 +89,8 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Fall_Back_To_The_Next_Organization_Location_When_The_Preferred_Location_Has_No_Available_Desk(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         PrivateBookingPreferenceService sut,
         IOrganizationRepository organizationRepository,
         IResourceRepository resourceRepository,
@@ -77,17 +98,39 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
     {
         var from = new DateTimeOffset(2026, 3, 28, 9, 0, 0, TimeSpan.Zero);
         var until = new DateTimeOffset(2026, 3, 28, 10, 0, 0, TimeSpan.Zero);
-        var firstLocation = new Location { Id = "loc-1", Name = "First" };
-        var secondLocation = new Location { Id = "loc-2", Name = "Second" };
-        var organization = new Organization { Id = "org-1", Locations = [firstLocation, secondLocation] };
+        var firstLocation = new Location
+        {
+            Id = "loc-1",
+            Name = "First",
+        };
+        var secondLocation = new Location
+        {
+            Id = "loc-2",
+            Name = "Second",
+        };
+        var organization = new Organization
+        {
+            Id = "org-1",
+            Locations = [firstLocation, secondLocation],
+        };
         firstLocation.Organization = organization;
         secondLocation.Organization = organization;
-        var customer = new Customer { PreferredLocations = [firstLocation] };
+        var customer = new Customer
+        {
+            PreferredLocations = [firstLocation],
+        };
         var resource = new Resource
         {
             Id = "res-2",
             Location = secondLocation,
-            OrganizationTags = [new OrganizationTag { Id = "desk-tag", Type = OrganizationTagTypeConstants.ResourceDesk }]
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Id = "desk-tag",
+                    Type = OrganizationTagTypeConstants.ResourceDesk,
+                },
+            ],
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);

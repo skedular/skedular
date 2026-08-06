@@ -26,14 +26,22 @@ public class GetProcessingAvailabilityAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Blocked_Reason_When_Subscription_Invoice_Instance_Has_Not_Been_Correlated(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
-        [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] OrganizationConfiguration organizationConfiguration,
-        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
-        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
+        [Frozen]
+        IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
         ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
@@ -45,7 +53,7 @@ public class GetProcessingAvailabilityAsyncShould
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
             LocalEntityId = "subscription-1",
             RefundAmount = 25m,
-            RequestedAt = new DateTimeOffset(2026, 4, 20, 10, 0, 0, TimeSpan.Zero)
+            RequestedAt = new DateTimeOffset(2026, 4, 20, 10, 0, 0, TimeSpan.Zero),
         };
         var subscription = CreateSubscriptionForRefund("INV-APR-2", "https://xero.example/inv-apr-2");
         var invoiceLink = new AccountingInvoiceExportLink
@@ -57,7 +65,7 @@ public class GetProcessingAvailabilityAsyncShould
             LocalEntityId = "recurring-booking-2",
             ExternalInvoiceId = "7f868f37-4567-4de3-9cdc-1d80dafc4fe8",
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
-            ExternalInvoiceNumber = "TEMPLATE-001"
+            ExternalInvoiceNumber = "TEMPLATE-001",
         };
         var sut = new TestableXeroRefundService(organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
@@ -86,14 +94,22 @@ public class GetProcessingAvailabilityAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Available_When_Subscription_Refund_Has_A_Correlated_Invoice_Instance(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
-        [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] CallInvoker callInvoker,
-        [Frozen] OrganizationConfiguration organizationConfiguration,
-        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
-        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
+        [Frozen]
+        IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
         ILogger<XeroRefundService> logger,
         CancellationToken cancellationToken)
     {
@@ -105,7 +121,7 @@ public class GetProcessingAvailabilityAsyncShould
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
             LocalEntityId = "subscription-1",
             RefundAmount = 25m,
-            RequestedAt = new DateTimeOffset(2026, 4, 20, 10, 0, 0, TimeSpan.Zero)
+            RequestedAt = new DateTimeOffset(2026, 4, 20, 10, 0, 0, TimeSpan.Zero),
         };
         var subscription = CreateSubscriptionForRefund("INV-APR-2", "https://xero.example/inv-apr-2");
         var invoiceLink = new AccountingInvoiceExportLink
@@ -117,7 +133,7 @@ public class GetProcessingAvailabilityAsyncShould
             LocalEntityId = "recurring-booking-2",
             ExternalInvoiceId = "7f868f37-4567-4de3-9cdc-1d80dafc4fe8",
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
-            ExternalInvoiceNumber = "TEMPLATE-001"
+            ExternalInvoiceNumber = "TEMPLATE-001",
         };
         var invoiceInstance = new AccountingInvoiceInstance
         {
@@ -128,7 +144,7 @@ public class GetProcessingAvailabilityAsyncShould
             ExternalInvoiceNumber = "INV-APR-2",
             ExternalInvoiceUrl = "https://xero.example/inv-apr-2",
             ExternalStatus = AccountingStatusConstants.Exported,
-            OrganizationId = "org-1"
+            OrganizationId = "org-1",
         };
         var sut = new TestableXeroRefundService(organizationConfiguration,
             new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker), repositoryFactory, xeroSdkClientFactory,
@@ -164,12 +180,21 @@ public class GetProcessingAvailabilityAsyncShould
             MarketplaceBooking = new MarketplaceBooking
             {
                 Id = "subscription-marketplace-booking",
-                ProductPricing = ProductPricing.Empty("pricing-1") with { PurchaseCadence = ProductPricingCadence.Monthly },
+                ProductPricing = ProductPricing.Empty("pricing-1") with
+                {
+                    PurchaseCadence = ProductPricingCadence.Monthly,
+                },
                 ProductVersion = new ProductVersion
                 {
                     Id = "pv-subscription",
-                    Product = new Product { Organization = new Organization { BillingCycle = OrganizationBillingCycleConstants.Monthly } }
-                }
+                    Product = new Product
+                    {
+                        Organization = new Organization
+                        {
+                            BillingCycle = OrganizationBillingCycleConstants.Monthly,
+                        },
+                    },
+                },
             },
             RecurringBookings =
             [
@@ -184,12 +209,21 @@ public class GetProcessingAvailabilityAsyncShould
                         InvoiceNumber = "INV-APR-1",
                         InvoiceUrl = "https://xero.example/inv-apr-1",
                         ProductPricing =
-                            ProductPricing.Empty("pricing-recurring-1") with { PurchaseCadence = ProductPricingCadence.Daily },
+                            ProductPricing.Empty("pricing-recurring-1") with
+                            {
+                                PurchaseCadence = ProductPricingCadence.Daily,
+                            },
                         ProductVersion = new ProductVersion
                         {
-                            Product = new Product { Organization = new Organization { BillingCycle = OrganizationBillingCycleConstants.Monthly } }
-                        }
-                    }
+                            Product = new Product
+                            {
+                                Organization = new Organization
+                                {
+                                    BillingCycle = OrganizationBillingCycleConstants.Monthly,
+                                },
+                            },
+                        },
+                    },
                 },
                 new RecurringBookingEntity
                 {
@@ -202,14 +236,23 @@ public class GetProcessingAvailabilityAsyncShould
                         InvoiceNumber = recurringBookingInvoiceNumber,
                         InvoiceUrl = recurringBookingInvoiceUrl,
                         ProductPricing =
-                            ProductPricing.Empty("pricing-recurring-2") with { PurchaseCadence = ProductPricingCadence.Daily },
+                            ProductPricing.Empty("pricing-recurring-2") with
+                            {
+                                PurchaseCadence = ProductPricingCadence.Daily,
+                            },
                         ProductVersion = new ProductVersion
                         {
-                            Product = new Product { Organization = new Organization { BillingCycle = OrganizationBillingCycleConstants.Monthly } }
-                        }
-                    }
-                }
-            ]
+                            Product = new Product
+                            {
+                                Organization = new Organization
+                                {
+                                    BillingCycle = OrganizationBillingCycleConstants.Monthly,
+                                },
+                            },
+                        },
+                    },
+                },
+            ],
         };
 
     private sealed class TestableXeroRefundService(

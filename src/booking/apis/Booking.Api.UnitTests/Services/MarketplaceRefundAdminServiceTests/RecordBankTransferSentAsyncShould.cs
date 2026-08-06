@@ -16,14 +16,22 @@ public class RecordBankTransferSentAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_A_Duplicate_Transfer_Send(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IMarketplaceRefundTransitionService refundTransitionService,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] ILogger<MarketplaceRefundAdminService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IMarketplaceRefundTransitionService refundTransitionService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        ILogger<MarketplaceRefundAdminService> logger,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
@@ -43,9 +51,9 @@ public class RecordBankTransferSentAsyncShould
                     SourceCapturedAmount = 100,
                     AllocatedRefundAmount = 0,
                     IsSourcePayment = true,
-                    Currency = "USD"
-                }
-            ]
+                    Currency = "USD",
+                },
+            ],
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);

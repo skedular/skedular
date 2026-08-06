@@ -3,7 +3,7 @@ namespace Booking.Shared.Models;
 public enum MarketplaceRefundEntityType
 {
     MarketplaceBooking,
-    MarketplaceBookingSubscription
+    MarketplaceBookingSubscription,
 }
 
 public static class MarketplaceRefundEntityTypeConstants
@@ -19,7 +19,7 @@ public static class MarketplaceRefundEntityTypeExtensions
         {
             MarketplaceRefundEntityType.MarketplaceBooking => MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             MarketplaceRefundEntityType.MarketplaceBookingSubscription => MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown marketplace refund entity type.")
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown marketplace refund entity type."),
         };
 
     public static MarketplaceRefundEntityType ToMarketplaceRefundEntityType(this string? value) =>
@@ -27,6 +27,6 @@ public static class MarketplaceRefundEntityTypeExtensions
         {
             MarketplaceRefundEntityTypeConstants.MarketplaceBooking => MarketplaceRefundEntityType.MarketplaceBooking,
             MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription => MarketplaceRefundEntityType.MarketplaceBookingSubscription,
-            _ => MarketplaceRefundEntityType.MarketplaceBooking
+            _ => MarketplaceRefundEntityType.MarketplaceBooking,
         };
 }

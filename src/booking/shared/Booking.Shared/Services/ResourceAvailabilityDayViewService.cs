@@ -221,7 +221,7 @@ public class ResourceAvailabilityDayViewService(
             OpeningUntil = openingUntil,
             TotalOpeningMinutes = totalOpeningMinutes,
             BookedMinutes = bookedMinutes,
-            BookingWindows = bookingWindows.AsReadOnly()
+            BookingWindows = bookingWindows.AsReadOnly(),
         };
     }
 
@@ -282,7 +282,7 @@ public class ResourceAvailabilityDayViewService(
                 DayOfWeek.Saturday => openingHours.WeekOpeningHours.Saturday,
                 DayOfWeek.Sunday => openingHours.WeekOpeningHours.Sunday,
                 _ => throw new ArgumentOutOfRangeException(nameof(dayStart), dayStart,
-                    $"Unexpected value for {nameof(dayStart)}: {dayStart}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(dayStart)}: {dayStart}. Update enum mapping or caller input."),
             };
 
     private static BookingWindow ToBookingWindow(ResourceBookingWindowRow row)
@@ -299,7 +299,7 @@ public class ResourceAvailabilityDayViewService(
             IsCheckedIn = false,
             BookedByName = string.IsNullOrWhiteSpace(bookedByName) ? null : bookedByName,
             BookedByUserId = row.CustomerId,
-            Notes = row.Notes
+            Notes = row.Notes,
         };
     }
 }

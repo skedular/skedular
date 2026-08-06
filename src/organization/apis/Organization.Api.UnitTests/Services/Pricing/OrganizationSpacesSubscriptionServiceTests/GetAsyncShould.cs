@@ -15,16 +15,24 @@ public class GetAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Legacy_Early_Bird_For_Marketplace_Organization(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] TimeProvider timeProvider,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ISpacesAccessEvaluator spacesAccessEvaluator,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        TimeProvider timeProvider,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ISpacesAccessEvaluator spacesAccessEvaluator,
         OrganizationSpacesSubscriptionService sut,
         string organizationId,
         DateTimeOffset now,
         CancellationToken cancellationToken)
     {
-        var organization = new Shared.Database.Entities.Organization { Id = organizationId, Type = OrganizationTypeConstants.Marketplace };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Id = organizationId,
+            Type = OrganizationTypeConstants.Marketplace,
+        };
         var offering = new OrganizationOffering
         {
             Id = "legacy-early-bird",
@@ -32,7 +40,7 @@ public class GetAsyncShould
             Start = now.AddDays(-1),
             End = now.AddDays(1),
             CatalogVersion = PricingCatalogConstants.CurrentSpacesCatalogVersion,
-            Organization = organization
+            Organization = organization,
         };
         organization.OrganizationOfferings = [offering];
 
@@ -42,7 +50,10 @@ public class GetAsyncShould
                 cancellationToken))
             .Returns(organization);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
-        A.CallTo(() => entityMapper.MapTo(organization)).Returns(new Shared.Models.Organization { Id = organizationId });
+        A.CallTo(() => entityMapper.MapTo(organization)).Returns(new Shared.Models.Organization
+        {
+            Id = organizationId,
+        });
         A.CallTo(() => spacesAccessEvaluator.Evaluate(now, A<SharedOffering>._, SpacesAccessAction.Read))
             .Returns(new SpacesAccessEvaluator().Evaluate(now,
                 new SharedOffering
@@ -51,7 +62,7 @@ public class GetAsyncShould
                     Code = offering.Code,
                     Start = offering.Start,
                     End = offering.End,
-                    SpacesProductEnabled = true
+                    SpacesProductEnabled = true,
                 }, SpacesAccessAction.Read));
 
         var result = await sut.GetAsync(organizationId, cancellationToken);

@@ -56,14 +56,19 @@ public class UpdatePatchShould
             Email = email,
             AddressLine1 = "1 Example Street",
             Zipcode = "1010",
-            Country = "New Zealand"
+            Country = "New Zealand",
         });
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         var result = await organizationBillingServiceClient.UpdateBillingDetailsAsync(
             new UpdateBillingDetailsInput
             {
-                OrganizationId = organization.Id, CompanyName = newCompanyName, FieldsToUpdate = { BillingDetailsPatchField.CompanyName }
+                OrganizationId = organization.Id,
+                CompanyName = newCompanyName,
+                FieldsToUpdate =
+                {
+                    BillingDetailsPatchField.CompanyName,
+                },
             },
             organizationConfiguration.ApiKey.CreateMetadata(identityId),
             cancellationToken: cancellationToken);
@@ -115,7 +120,15 @@ public class UpdatePatchShould
             cancellationToken);
 
         var result = await organizationTagsServiceClient.UpdateTagAsync(
-            new UpdateTagInput { Id = tag.Id, Name = newName, FieldsToUpdate = { TagPatchField.Name } },
+            new UpdateTagInput
+            {
+                Id = tag.Id,
+                Name = newName,
+                FieldsToUpdate =
+                {
+                    TagPatchField.Name,
+                },
+            },
             organizationConfiguration.ApiKey.CreateMetadata(identityId),
             cancellationToken: cancellationToken);
 
@@ -164,7 +177,15 @@ public class UpdatePatchShould
             cancellationToken);
 
         var result = await organizationZonesServiceClient.UpdateZoneAsync(
-            new UpdateZoneInput { Id = zone.Id, Description = newDescription, FieldsToUpdate = { ZonePatchField.Description } },
+            new UpdateZoneInput
+            {
+                Id = zone.Id,
+                Description = newDescription,
+                FieldsToUpdate =
+                {
+                    ZonePatchField.Description,
+                },
+            },
             organizationConfiguration.ApiKey.CreateMetadata(identityId),
             cancellationToken: cancellationToken);
 
@@ -208,7 +229,7 @@ public class UpdatePatchShould
             Name = name,
             Description = description,
             Color = color,
-            Type = type
+            Type = type,
         });
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         return tag;
@@ -230,17 +251,21 @@ public class UpdatePatchShould
             Name = "Patch gRPC organization",
             Type = OrganizationTypeConstants.Private,
             BillingCycle = OrganizationBillingCycleConstants.Monthly,
-            InvoiceDueInDays = 7
+            InvoiceDueInDays = 7,
         });
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, cancellationToken);
-        repositoryFactory.IdentityRepository.Add(new IdentityEntity { Id = identityId, Customer = customer });
+        repositoryFactory.IdentityRepository.Add(new IdentityEntity
+        {
+            Id = identityId,
+            Customer = customer,
+        });
         repositoryFactory.OrganizationMemberRepository.Add(new OrganizationMemberEntity
         {
             Id = memberId,
             Organization = organization,
             Customer = customer,
             Role = OrganizationMemberRoleConstants.Owner,
-            Status = OrganizationMemberStatusConstants.Active
+            Status = OrganizationMemberStatusConstants.Active,
         });
         repositoryFactory.OrganizationOfferingRepository.Add(new OrganizationOfferingEntity
         {
@@ -250,7 +275,7 @@ public class UpdatePatchShould
             Start = timeProvider.GetUtcNow().AddDays(-1),
             End = timeProvider.GetUtcNow().AddDays(1),
             AutoRenew = true,
-            UnitPrice = OfferingCode.FreeTierV1.GetOffering().UnitPrice
+            UnitPrice = OfferingCode.FreeTierV1.GetOffering().UnitPrice,
         });
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         return organization;

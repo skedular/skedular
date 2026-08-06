@@ -10,7 +10,10 @@ public class MapMarketplaceBookingSubscriptionShould
     [AutoFakeItEasyData]
     public void Preserve_Weekly_Selected_Days(GraphQlMapper sut)
     {
-        var input = new AddMarketplaceBookingSubscriptionInput { WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Thursday] };
+        var input = new AddMarketplaceBookingSubscriptionInput
+        {
+            WeeklySelectedDays = [DayOfWeek.Tuesday, DayOfWeek.Thursday],
+        };
 
         var subscription = sut.MapTo(input);
 

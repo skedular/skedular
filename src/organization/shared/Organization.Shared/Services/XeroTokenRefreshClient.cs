@@ -33,7 +33,10 @@ public class XeroTokenRefreshClient(
         try
         {
             var client = xeroSdkClientFactory.CreateClient();
-            var xeroToken = new XeroOAuth2Token { RefreshToken = xeroTokenEncryptionService.Decrypt(refreshTokenEncrypted) };
+            var xeroToken = new XeroOAuth2Token
+            {
+                RefreshToken = xeroTokenEncryptionService.Decrypt(refreshTokenEncrypted),
+            };
             var response = (XeroOAuth2Token)await client.RefreshAccessTokenAsync(xeroToken);
 
             var now = timeProvider.GetUtcNow();

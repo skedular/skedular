@@ -12,8 +12,10 @@ public class SignalWorkflowPayBookingViaCardSetPaymentStatusShould
     [Theory]
     [AutoFakeItEasyData]
     public void Enqueue_Signal_With_Correct_Workflow_Id_And_Args(
-        [Frozen] IWorkflowIdService workflowIdService,
-        [Frozen] ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
+        [Frozen]
+        ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
         TemporalOutboxService sut,
         IUnitOfWork unitOfWork,
         SetPaymentStatusArgs executionArgs,

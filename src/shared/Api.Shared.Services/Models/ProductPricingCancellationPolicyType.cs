@@ -5,7 +5,7 @@ public enum ProductPricingCancellationPolicyType
     NotSet = 0,
     NoCancellation = 1,
     FullRefundBeforeCutoff = 2,
-    TieredRefund = 3
+    TieredRefund = 3,
 }
 
 public static class ProductPricingCancellationPolicyTypeConstants
@@ -28,7 +28,7 @@ public static class ProductPricingCancellationPolicyTypeExtensions
                 ProductPricingCancellationPolicyType.FullRefundBeforeCutoff => ProductPricingCancellationPolicyTypeConstants.FullRefundBeforeCutoff,
                 ProductPricingCancellationPolicyType.TieredRefund => ProductPricingCancellationPolicyTypeConstants.TieredRefund,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
 
         public string ToProductPricingCancellationPolicyTypeName() =>
@@ -39,7 +39,7 @@ public static class ProductPricingCancellationPolicyTypeExtensions
                 ProductPricingCancellationPolicyType.FullRefundBeforeCutoff => "Full Refund Before Cutoff",
                 ProductPricingCancellationPolicyType.TieredRefund => "Tiered Refund",
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 
@@ -53,7 +53,7 @@ public static class ProductPricingCancellationPolicyTypeExtensions
                 ProductPricingCancellationPolicyTypeConstants.FullRefundBeforeCutoff => ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
                 ProductPricingCancellationPolicyTypeConstants.TieredRefund => ProductPricingCancellationPolicyType.TieredRefund,
                 _ => throw new ArgumentOutOfRangeException(nameof(src), src,
-                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
             };
     }
 }

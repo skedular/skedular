@@ -12,7 +12,8 @@ public static class EventConsumerExtensions
                 .Select(index =>
                     new RetryTopicSetting
                     {
-                        Topic = @event.GetRetryTopicName(prefix, index), RetryDelaySeconds = Math.Pow(2, index) * delayBaseSeconds
+                        Topic = @event.GetRetryTopicName(prefix, index),
+                        RetryDelaySeconds = Math.Pow(2, index) * delayBaseSeconds,
                     });
     }
 }

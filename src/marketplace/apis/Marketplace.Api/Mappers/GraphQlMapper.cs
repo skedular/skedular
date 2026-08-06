@@ -26,8 +26,11 @@ public class GraphQlMapper : IGraphQlMapper
             Currency = src.Currency,
             Type = src.Type,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
-            PricingOptions = src.PricingOptions.ToList()
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
+            {
+                Id = item,
+            }).ToList(),
+            PricingOptions = src.PricingOptions.ToList(),
         };
 
     public ProductVersion MapTo(UpdateProductInput src) =>
@@ -37,8 +40,11 @@ public class GraphQlMapper : IGraphQlMapper
             Currency = src.Currency,
             Type = src.Type,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
-            PricingOptions = src.PricingOptions.ToList()
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
+            {
+                Id = item,
+            }).ToList(),
+            PricingOptions = src.PricingOptions.ToList(),
         };
 
     public ProductDetails? MapTo(Product? src)
@@ -55,14 +61,22 @@ public class GraphQlMapper : IGraphQlMapper
             Id = src.Id,
             Inactive = src.Inactive,
             ListingMetadata = productVersion.ListingMetadata,
-            Type = new ProductTypeDetails { Type = productVersion.Type, Name = productVersion.Type.ToProductTypeName() },
-            Currency = new CurrencyDetails { Type = productVersion.Currency, Name = productVersion.Currency.ToCurrencyName() },
+            Type = new ProductTypeDetails
+            {
+                Type = productVersion.Type,
+                Name = productVersion.Type.ToProductTypeName(),
+            },
+            Currency = new CurrencyDetails
+            {
+                Type = productVersion.Currency,
+                Name = productVersion.Currency.ToCurrencyName(),
+            },
             FeatureImages = productVersion.FeatureImages,
             ProductTags = MapTo(productVersion.ProductTags),
             Amenities = MapTo(productVersion.Amenities),
             Organization = MapTo(src.Organization),
             LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id,
-            PricingOptions = productVersion.PricingOptions
+            PricingOptions = productVersion.PricingOptions,
         };
     }
 
@@ -77,12 +91,20 @@ public class GraphQlMapper : IGraphQlMapper
         {
             Id = src.Id,
             ListingMetadata = src.ListingMetadata,
-            Type = new ProductTypeDetails { Type = src.Type, Name = src.Type.ToProductTypeName() },
-            Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
+            Type = new ProductTypeDetails
+            {
+                Type = src.Type,
+                Name = src.Type.ToProductTypeName(),
+            },
+            Currency = new CurrencyDetails
+            {
+                Type = src.Currency,
+                Name = src.Currency.ToCurrencyName(),
+            },
             FeatureImages = src.FeatureImages,
             ProductTags = MapTo(src.ProductTags),
             PricingOptions = src.PricingOptions,
-            Organization = MapTo(src.Product.Organization)
+            Organization = MapTo(src.Product.Organization),
         };
     }
 
@@ -95,13 +117,16 @@ public class GraphQlMapper : IGraphQlMapper
         Name = src.Name.ToSafeString(),
         Website = src.Website,
         LogoUrl = src.LogoUrl,
-        CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl
+        CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
     };
 
     private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTagDetails MapTo(OrganizationTag src) => new()
     {
-        Id = src.Id, Name = src.Name.ToSafeString(), Type = src.Type, Color = src.Color.ToSafeString()
+        Id = src.Id,
+        Name = src.Name.ToSafeString(),
+        Type = src.Type,
+        Color = src.Color.ToSafeString(),
     };
 }

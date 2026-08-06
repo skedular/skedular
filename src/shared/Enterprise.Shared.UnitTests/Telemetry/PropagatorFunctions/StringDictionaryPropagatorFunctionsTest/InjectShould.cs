@@ -19,7 +19,10 @@ public class InjectShould
     [AutoFakeItEasyData]
     public void Overwrite_Previous_Field_Of_Same_Name(StringDictionaryPropagatorFunctions functions)
     {
-        var destination = new Dictionary<string, string> { ["my field"] = "old value" };
+        var destination = new Dictionary<string, string>
+        {
+            ["my field"] = "old value",
+        };
         functions.Inject(destination, "my field", "my value");
         destination.Count.ShouldBe(1);
         destination["my field"].ShouldBe("my value");

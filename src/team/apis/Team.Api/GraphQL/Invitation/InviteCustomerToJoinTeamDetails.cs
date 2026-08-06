@@ -10,12 +10,23 @@ namespace Team.Api.GraphQL.Invitation;
 [GraphQLName("InviteCustomerToJoinTeamDetails")]
 public class InviteCustomerToJoinTeamDetails : Node
 {
-    [GraphQLName("email")] public string? Email { get; set; }
-    [GraphQLName("status")] public TeamInvitationStatusDetails Status { get; set; } = new();
-    [GraphQLName("role")] public TeamMemberRole Role { get; set; }
-    [GraphQLName("team")] public TeamDetails Team { get; set; } = new();
-    [GraphQLName("createdById")] public string CreatedById { get; set; } = string.Empty;
-    [GraphQLName("inviteeId")] public string? InviteeId { get; set; }
+    [GraphQLName("email")]
+    public string? Email { get; set; }
+
+    [GraphQLName("status")]
+    public TeamInvitationStatusDetails Status { get; set; } = new();
+
+    [GraphQLName("role")]
+    public TeamMemberRole Role { get; set; }
+
+    [GraphQLName("team")]
+    public TeamDetails Team { get; set; } = new();
+
+    [GraphQLName("createdById")]
+    public string CreatedById { get; set; } = string.Empty;
+
+    [GraphQLName("inviteeId")]
+    public string? InviteeId { get; set; }
 }
 
 [ObjectType<InviteCustomerToJoinTeamDetails>]

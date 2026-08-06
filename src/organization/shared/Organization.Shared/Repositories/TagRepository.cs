@@ -168,7 +168,7 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
                 KeysetPaginationField<Tag>.Create(
                     nameof(Tag.Name),
                     query => query.Name,
-                    OrderDirection.Ascending)
+                    OrderDirection.Ascending),
             ];
         }
 
@@ -187,7 +187,7 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
                     query => query.Type,
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             })
             .ToList();
     }

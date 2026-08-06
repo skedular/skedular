@@ -25,5 +25,8 @@ public class GraphqlErrorFilter(IOpenTelemetryInstrumentation meters, ILogger<Gr
         return error;
     }
 
-    private static TagList GetTags(string errorTypeName) => new() { { "error-type", errorTypeName } };
+    private static TagList GetTags(string errorTypeName) => new()
+    {
+        { "error-type", errorTypeName },
+    };
 }

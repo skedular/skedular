@@ -48,7 +48,10 @@ public static class GraphqlExtensions
                 .AddCustomGraphqlInstrumentation()
                 .AddSourceSchemaDefaults();
 
-            var subscriptionOptions = new SubscriptionOptions { TopicPrefix = $"{applicationConfiguration.Environment}:{schemaName}:" };
+            var subscriptionOptions = new SubscriptionOptions
+            {
+                TopicPrefix = $"{applicationConfiguration.Environment}:{schemaName}:",
+            };
 
             builder = useRedisSubscriptions
                 ? builder.AddRedisSubscriptions(subscriptionOptions)

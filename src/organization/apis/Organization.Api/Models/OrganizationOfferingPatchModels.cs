@@ -6,7 +6,7 @@ namespace Organization.Api.Models;
 [GraphQLName("OrganizationOfferingPatchField")]
 public enum OrganizationOfferingPatchField
 {
-    OfferingCode
+    OfferingCode,
 }
 
 public record OrganizationOfferingPatchRequest(

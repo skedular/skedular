@@ -86,13 +86,22 @@ public class TeamDailyUpdaterService(
         var bookings = bookingConnection.Edges.Select(item => item.Node).ToList();
         var blocks = new List<Block>
         {
-            new SectionBlock { Text = "*Who's in today?*".ToMarkdown() },
-            new SectionBlock { Text = team.Name.ToSafeString().ToMarkdownWithIcon(Icons.Team) }
+            new SectionBlock
+            {
+                Text = "*Who's in today?*".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = team.Name.ToSafeString().ToMarkdownWithIcon(Icons.Team),
+            },
         };
 
         if (bookings.Count == 0)
         {
-            blocks.Add(new SectionBlock { Text = "*No one has joined yet, be the first*".ToMarkdown() });
+            blocks.Add(new SectionBlock
+            {
+                Text = "*No one has joined yet, be the first*".ToMarkdown(),
+            });
         }
         else
         {
@@ -113,7 +122,7 @@ public class TeamDailyUpdaterService(
                         Text = workspaceMemberService.GetMentionedCustomerNameInSlackFormat(
                             workspace,
                             customer.Identities.Select(item => item.Id).ToList(),
-                            customer).ToMarkdownWithIcon(Icons.People)
+                            customer).ToMarkdownWithIcon(Icons.People),
                     });
                     blocks.AddRange(bookingComponents.GetResourcesLines(booking));
                 }
@@ -121,7 +130,10 @@ public class TeamDailyUpdaterService(
 
             if (bookingConnection.TotalCount > TeamBookingsPageSize)
             {
-                blocks.Add(new SectionBlock { Text = "*To see other bookings, check the Skedular application in Slack*".ToMarkdown() });
+                blocks.Add(new SectionBlock
+                {
+                    Text = "*To see other bookings, check the Skedular application in Slack*".ToMarkdown(),
+                });
             }
 
             blocks.Add(new DividerBlock());
@@ -143,12 +155,17 @@ public class TeamDailyUpdaterService(
                             null,
                             null,
                             teamId)
-                        .Serialize()
-                }
-            ]
+                        .Serialize(),
+                },
+            ],
         });
 
-        var message = new Message { Channel = teamEntity.DailyUpdateChannel.Id, Blocks = blocks, Text = "Who's in today?" };
+        var message = new Message
+        {
+            Channel = teamEntity.DailyUpdateChannel.Id,
+            Blocks = blocks,
+            Text = "Who's in today?",
+        };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.Chat.PostMessage(message, cancellationToken);

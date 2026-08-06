@@ -28,7 +28,11 @@ public class CachedTeamService(
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.TeamRepository.GetByIdUntrackedAsync(id, ct) ?? throw new TeamNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (TeamNotFound)
@@ -45,7 +49,11 @@ public class CachedTeamService(
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.TeamRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new TeamNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromMinutes(30),
+                LocalCacheExpiration = TimeSpan.FromSeconds(30),
+            },
             cancellationToken: cancellationToken);
 
         logger.LogDebug("Cache refresh for team {TeamId}", id);
@@ -60,7 +68,11 @@ public class CachedTeamService(
             await hybridCache.SetAsync(
                 CreateKeyById(item.Id),
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
 
             logger.LogDebug("Cache refresh for team {TeamId}", item.Id);

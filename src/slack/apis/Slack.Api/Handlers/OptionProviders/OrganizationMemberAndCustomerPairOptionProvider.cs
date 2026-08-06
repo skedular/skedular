@@ -34,9 +34,9 @@ public class OrganizationMemberAndCustomerPairOptionProvider(
                 .Select(item => new Option
                 {
                     Text = string.IsNullOrWhiteSpace(item.Customer.DisplayableName) ? "???" : item.Customer.DisplayableName.ToOptionText(),
-                    Value = $"{item.Id}{Global.OptionLoaderValueSeparator}{item.Customer.Id}"
+                    Value = $"{item.Id}{Global.OptionLoaderValueSeparator}{item.Customer.Id}",
                 })
-                .ToList()
+                .ToList(),
         };
     }
 }

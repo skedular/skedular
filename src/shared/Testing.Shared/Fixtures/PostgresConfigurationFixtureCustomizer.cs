@@ -13,7 +13,7 @@ public class PostgresConfigurationFixtureCustomizer : IFixtureCustomizer
             {
                 ["ConnectionStrings:main"] = "Host=localhost;Database=local.test;Username=test;Password=test",
                 [$"{ApplicationConfiguration.Key}:{nameof(ApplicationConfiguration.QuerySplittingBehavior)}"] =
-                    nameof(QuerySplittingBehavior.SplitQuery)
+                    nameof(QuerySplittingBehavior.SplitQuery),
             })
             .Build());
 }

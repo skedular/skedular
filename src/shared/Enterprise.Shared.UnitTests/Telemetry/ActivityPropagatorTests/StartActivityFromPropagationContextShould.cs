@@ -10,8 +10,10 @@ public class StartActivityFromPropagationContextShould
     [Theory]
     [AutoFakeItEasyData]
     public void Delegate_to_activity_source(
-        [Frozen] IPropagatorFunctionProvider<string> functionProvider,
-        [Frozen] TextMapPropagator propagator,
+        [Frozen]
+        IPropagatorFunctionProvider<string> functionProvider,
+        [Frozen]
+        TextMapPropagator propagator,
         IActivitySource activitySource,
         ActivityPropagator<string> sut,
         string location,

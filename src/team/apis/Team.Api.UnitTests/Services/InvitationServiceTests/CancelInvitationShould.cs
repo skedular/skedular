@@ -19,35 +19,64 @@ public class CancelInvitationShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Information_When_Invitation_Is_Cancelled(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ITemporalOutboxService temporalOutboxService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ICachedTeamService cachedTeamService,
-        [Frozen] IJoinInvitationRepository joinInvitationRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<InvitationService> logger,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ITemporalOutboxService temporalOutboxService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ICachedTeamService cachedTeamService,
+        [Frozen]
+        IJoinInvitationRepository joinInvitationRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<InvitationService> logger,
         InvitationService sut,
         CancellationToken cancellationToken)
     {
-        var team = new Shared.Database.Entities.Team { Id = "team-1", OrganizationId = "org-1" };
+        var team = new Shared.Database.Entities.Team
+        {
+            Id = "team-1",
+            OrganizationId = "org-1",
+        };
         var invitation = new JoinInvitation
         {
             Id = "inv-1",
             Status = InvitationStatusConstants.Pending,
             Role = TeamMemberRoleConstants.Member,
             Team = team,
-            CreatedBy = new Customer { Id = "creator-1" }
+            CreatedBy = new Customer
+            {
+                Id = "creator-1",
+            },
         };
-        var cachedTeam = new Shared.Database.Entities.Team { Id = "team-1", OrganizationId = "org-1" };
+        var cachedTeam = new Shared.Database.Entities.Team
+        {
+            Id = "team-1",
+            OrganizationId = "org-1",
+        };
         var mappedInvitation = new Shared.Models.JoinInvitation
         {
             Id = "inv-1",
             Status = InvitationStatus.Cancelled,
-            Team = new Shared.Models.Team { Id = "team-1", Organization = new Organization { Id = "org-1" } }
+            Team = new Shared.Models.Team
+            {
+                Id = "team-1",
+                Organization = new Organization
+                {
+                    Id = "org-1",
+                },
+            },
         };
 
         A.CallTo(() => repositoryFactory.JoinInvitationRepository).Returns(joinInvitationRepository);

@@ -13,9 +13,12 @@ public class MarketplaceBookingFailureQueryShould
     [Theory]
     [AutoFakeItEasyData([typeof(BookingFailureQueryFixtureCustomizer)])]
     public async Task Resolve_Marketplace_Booking_Failure_Through_The_Owning_Booking(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IMarketplaceBookingFailureReadService failureReadService,
-        [Frozen] IMarketplaceBookingService marketplaceBookingService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IMarketplaceBookingFailureReadService failureReadService,
+        [Frozen]
+        IMarketplaceBookingService marketplaceBookingService,
         MarketplaceBookingDetails marketplaceBookingDetails,
         BookingEntity booking,
         MarketplaceBookingFailure failure,
@@ -40,8 +43,10 @@ public class MarketplaceBookingFailureQueryShould
     [Theory]
     [AutoFakeItEasyData([typeof(BookingFailureQueryFixtureCustomizer)])]
     public async Task Return_Failure_When_Booking_Has_A_Finalized_Failure(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IMarketplaceBookingFailureReadService failureReadService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IMarketplaceBookingFailureReadService failureReadService,
         BookingDetails bookingDetails,
         MarketplaceBookingFailure failure,
         MarketplaceBookingFailureDetails failureDetails,
@@ -60,8 +65,10 @@ public class MarketplaceBookingFailureQueryShould
     [Theory]
     [AutoFakeItEasyData([typeof(BookingFailureQueryFixtureCustomizer)])]
     public async Task Return_Null_When_No_Failure_Exists_For_Booking(
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IMarketplaceBookingFailureReadService failureReadService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IMarketplaceBookingFailureReadService failureReadService,
         BookingDetails bookingDetails,
         CancellationToken cancellationToken)
     {

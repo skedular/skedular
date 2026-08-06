@@ -46,7 +46,7 @@ public class SpacesBookingQuotaService(
         LegacyEarlyBirdPlanCode,
         GrowthPlanCode,
         BusinessPlanCode,
-        ContactUsPlanCode
+        ContactUsPlanCode,
     ];
 
     public async Task<SpacesQuotaDecision> GetQuotaStatusAsync(
@@ -146,7 +146,7 @@ public class SpacesBookingQuotaService(
                     offering.SpacesPeriodEnd ?? DateTimeOffset.MinValue)
                 with
                 {
-                    AccessDecision = accessDecision
+                    AccessDecision = accessDecision,
                 };
         }
 
@@ -342,7 +342,7 @@ public class SpacesBookingQuotaService(
             GrowthPlanCode => OfferingCode.SpacesGrowthV1.GetOffering().MaxBookingInstanceCount ?? -1,
             BusinessPlanCode => OfferingCode.SpacesBusinessV1.GetOffering().MaxBookingInstanceCount ?? -1,
             ContactUsPlanCode => -1,
-            _ => throw new ArgumentOutOfRangeException(nameof(planCode), planCode, "Unsupported Spaces plan code.")
+            _ => throw new ArgumentOutOfRangeException(nameof(planCode), planCode, "Unsupported Spaces plan code."),
         };
     }
 
@@ -351,7 +351,7 @@ public class SpacesBookingQuotaService(
         {
             FreePlanCode => SpacesQuotaReasonCode.FreeTierLimitExceeded,
             ContactUsPlanCode => SpacesQuotaReasonCode.CustomCapacityExceeded,
-            _ => SpacesQuotaReasonCode.PaidTierLimitExceeded
+            _ => SpacesQuotaReasonCode.PaidTierLimitExceeded,
         };
 
     private static IReadOnlyList<SpacesQuotaUpgradePlan> GetUpgradePlans(int currentPlanCode) =>
@@ -360,17 +360,17 @@ public class SpacesBookingQuotaService(
             1 => // Free -> Growth, Business
             [
                 ToUpgradePlan(5, OfferingCode.SpacesGrowthV1, "SelfService"),
-                ToUpgradePlan(6, OfferingCode.SpacesBusinessV1, "SelfService")
+                ToUpgradePlan(6, OfferingCode.SpacesBusinessV1, "SelfService"),
             ],
             5 => // Growth -> Business
             [
-                ToUpgradePlan(6, OfferingCode.SpacesBusinessV1, "SelfService")
+                ToUpgradePlan(6, OfferingCode.SpacesBusinessV1, "SelfService"),
             ],
             6 => // Business -> Contact Us
             [
-                ToUpgradePlan(7, OfferingCode.SpacesContactUsV1, "ContactUs")
+                ToUpgradePlan(7, OfferingCode.SpacesContactUsV1, "ContactUs"),
             ],
-            _ => [] // Contact Us or unknown → no upgrade path
+            _ => [], // Contact Us or unknown → no upgrade path
         };
 
     private static SpacesQuotaUpgradePlan ToUpgradePlan(int planCode, OfferingCode offeringCode, string availability)

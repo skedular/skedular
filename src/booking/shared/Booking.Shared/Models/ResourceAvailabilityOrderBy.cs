@@ -10,7 +10,7 @@ public enum ResourceAvailabilityOrderByField
     ResourceName,
     ResourceType,
     LocationName,
-    ZoneName
+    ZoneName,
 }
 
 /// <summary>

@@ -38,7 +38,7 @@ public static class MarketplaceRefundStateMachine
             // it back to reconciliation instead of silently leaving an invalid
             // post-payout decision in place.
             MarketplaceRefundStatusConstants.Completed => next is MarketplaceRefundStatusConstants.ReconciliationRequired,
-            _ => false
+            _ => false,
         };
     }
 

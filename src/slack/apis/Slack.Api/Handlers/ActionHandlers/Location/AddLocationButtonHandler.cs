@@ -44,32 +44,46 @@ public class AddLocationButtonHandler(
         {
             BlockId = LocationActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = LocationActionTypes.Name },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = LocationActionTypes.Name,
+            },
+            Optional = false,
         };
 
         var about = new InputBlock
         {
             BlockId = LocationActionTypes.About,
             Label = "About".ToPlainText(),
-            Element = new PlainTextInput { ActionId = LocationActionTypes.About, Multiline = true },
-            Optional = true
+            Element = new PlainTextInput
+            {
+                ActionId = LocationActionTypes.About,
+                Multiline = true,
+            },
+            Optional = true,
         };
 
         var timezone = new InputBlock
         {
             BlockId = OptionLoaderKeys.TimezoneKey,
             Label = "Timezone".ToPlainText(),
-            Element = new ExternalSelectMenu { ActionId = OptionLoaderKeys.TimezoneKey, MinQueryLength = 3 },
-            Optional = false
+            Element = new ExternalSelectMenu
+            {
+                ActionId = OptionLoaderKeys.TimezoneKey,
+                MinQueryLength = 3,
+            },
+            Optional = false,
         };
 
         var updateChannel = new InputBlock
         {
             BlockId = LocationActionTypes.SlackUpdateChannel,
             Label = "Slack update channel".ToPlainText(),
-            Element = new ChannelSelectMenu { ActionId = LocationActionTypes.SlackUpdateChannel },
-            Optional = true
+            Element = new ChannelSelectMenu
+            {
+                ActionId = LocationActionTypes.SlackUpdateChannel,
+            },
+            Optional = true,
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -82,7 +96,7 @@ public class AddLocationButtonHandler(
                 Close = "Cancel",
                 Submit = "Add",
                 Blocks = [name, about, timezone, updateChannel],
-                PrivateMetadata = action.Value
+                PrivateMetadata = action.Value,
             },
             cancellationToken);
     }
@@ -114,7 +128,12 @@ public class AddLocationButtonHandler(
         var locationId = randomHelper.Generate();
         var location = new Shared.Models.Location
         {
-            Id = randomHelper.Generate(), Organization = new Organization { Id = workspace.Organization.Id }, Type = LocationType.Private
+            Id = randomHelper.Generate(),
+            Organization = new Organization
+            {
+                Id = workspace.Organization.Id,
+            },
+            Type = LocationType.Private,
         };
 
         if (values.TryGetValue(LocationActionTypes.Name, out var nameBlock))
@@ -147,7 +166,10 @@ public class AddLocationButtonHandler(
             {
                 if (block is PlainTextInputValue value)
                 {
-                    location.ListingMetadata = location.ListingMetadata with { About = value.Value.ToSafeString() };
+                    location.ListingMetadata = location.ListingMetadata with
+                    {
+                        About = value.Value.ToSafeString(),
+                    };
                 }
                 else
                 {

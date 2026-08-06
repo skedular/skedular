@@ -19,7 +19,7 @@ public enum MarketplaceRefundOwnershipScope
 {
     OneTimeBooking,
     RecurringBillingWindow,
-    SubscriptionBillingWindow
+    SubscriptionBillingWindow,
 }
 
 /// <summary>Identifies the single billed entity responsible for a cancellation or modification refund.</summary>

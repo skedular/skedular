@@ -20,7 +20,7 @@ public class AddShould
             OrganizationId = "organization-1",
             EntityId = "entity",
             LoginUrl = "https://login.example.com",
-            AppFederationMetadataUrl = "https://login.example.com/metadata"
+            AppFederationMetadataUrl = "https://login.example.com/metadata",
         };
 
         sut.Add(organizationSsoSettings);
@@ -35,7 +35,10 @@ public class AddShould
                 "Host=localhost;Database=local.test;Username=test;Password=test",
                 builder => builder.UseNetTopologySuite())
             .Options;
-        var customDbContextOptions = new CustomDbContextOptions<OrganizationDbContext> { IsPostgisEnabled = true };
+        var customDbContextOptions = new CustomDbContextOptions<OrganizationDbContext>
+        {
+            IsPostgisEnabled = true,
+        };
 
         return new OrganizationDbContext(options, customDbContextOptions);
     }

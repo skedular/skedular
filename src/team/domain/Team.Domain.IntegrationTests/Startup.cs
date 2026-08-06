@@ -27,7 +27,10 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        var environment = new HostingEnvironment { EnvironmentName = Environments.Production };
+        var environment = new HostingEnvironment
+        {
+            EnvironmentName = Environments.Production,
+        };
 
 #pragma warning disable VSTHRD104
 #pragma warning disable VSTHRD002
@@ -59,7 +62,10 @@ public class Startup
             .AddTestingSharedIntegrationTests()
             .AddSingleton(_ => new TeamService.TeamServiceClient(teamApiGrpcChannel));
 
-        var teamConfiguration = configuration.GetSection(TeamConfiguration.Key).Get<TeamConfiguration>() ?? new TeamConfiguration { ApiKey = "XXX" };
+        var teamConfiguration = configuration.GetSection(TeamConfiguration.Key).Get<TeamConfiguration>() ?? new TeamConfiguration
+        {
+            ApiKey = "XXX",
+        };
         services.AddSingleton(teamConfiguration);
 
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);

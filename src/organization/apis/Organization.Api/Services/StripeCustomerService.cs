@@ -37,11 +37,17 @@ public class StripeCustomerService(
 
         var stripeCustomer = await customerCreateService.CreateAsync(
             graphQlMapper.MapToStripeCustomerCreateOption(organization),
-            new RequestOptions { IdempotencyKey = organization.Id, StripeAccount = null },
+            new RequestOptions
+            {
+                IdempotencyKey = organization.Id,
+                StripeAccount = null,
+            },
             cancellationToken);
         organization.OrganizationStripeCustomer = repositoryFactory.OrganizationStripeCustomerRepository.Add(new OrganizationStripeCustomer
         {
-            Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id, Organization = organization
+            Id = randomHelper.Generate(),
+            StripeCustomerId = stripeCustomer.Id,
+            Organization = organization,
         });
         organizationOutboxPublisher.PublishOrganizations([entityMapper.MapTo(organization)], repositoryFactory.UnitOfWork);
 

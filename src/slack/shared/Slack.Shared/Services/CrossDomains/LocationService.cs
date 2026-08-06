@@ -42,7 +42,10 @@ public class LocationService(
     IMemoryCache memoryCache)
     : ILocationService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<IReadOnlyList<Location>> AdminGetAllLocationsAsync(string organizationId, CancellationToken cancellationToken)
     {
@@ -52,10 +55,17 @@ public class LocationService(
             After = string.Empty,
             Before = string.Empty,
             Last = ((int?)null).ToNullInt(),
-            Where = new LocationWhereInput { OrganizationId = organizationId }
+            Where = new LocationWhereInput
+            {
+                OrganizationId = organizationId,
+            },
         };
 
-        getPaginatedLocationsInput.OrderBy.Add(new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name });
+        getPaginatedLocationsInput.OrderBy.Add(new LocationOrderInput
+        {
+            Direction = OrderDirection.Ascending,
+            Field = LocationOrderField.Name,
+        });
 
         var connection = await locationServiceClient.Admin_GetPaginatedLocationsAsync(
             getPaginatedLocationsInput,
@@ -74,7 +84,10 @@ public class LocationService(
             CreateKeyById(locationId),
             async _ => grpcMapper.MapTo(
                 await locationServiceClient.Admin_GetAsync(
-                    new Admin_GetInput { Id = locationId },
+                    new Admin_GetInput
+                    {
+                        Id = locationId,
+                    },
                     locationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -93,8 +106,8 @@ public class LocationService(
                         LocationType.Private => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private,
                         LocationType.Marketplace => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace,
                         _ => throw new ArgumentOutOfRangeException(nameof(location.Type), location.Type,
-                            $"Unexpected value for {nameof(location.Type)}: {location.Type}. Update enum mapping or caller input.")
-                    }
+                            $"Unexpected value for {nameof(location.Type)}: {location.Type}. Update enum mapping or caller input."),
+                    },
                 },
                 locationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken));
@@ -109,7 +122,10 @@ public class LocationService(
             CreateKeyById(locationId),
             async _ => grpcMapper.MapTo(
                 await locationServiceClient.GetAsync(
-                    new GetInput { Id = locationId },
+                    new GetInput
+                    {
+                        Id = locationId,
+                    },
                     locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;
@@ -126,7 +142,7 @@ public class LocationService(
                     {
                         About = location.ListingMetadata.About,
                         Title = location.ListingMetadata.Title,
-                        SubTitle = location.ListingMetadata.SubTitle
+                        SubTitle = location.ListingMetadata.SubTitle,
                     },
                     OrganizationId = location.Organization!.Id,
                     Timezone = location.Timezone,
@@ -135,8 +151,8 @@ public class LocationService(
                         LocationType.Private => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Private,
                         LocationType.Marketplace => Api.Shared.Grpc.Skedular.Location.Core.V1.LocationType.Marketplace,
                         _ => throw new ArgumentOutOfRangeException(nameof(location.Type), location.Type,
-                            $"Unexpected value for {nameof(location.Type)}: {location.Type}. Update enum mapping or caller input.")
-                    }
+                            $"Unexpected value for {nameof(location.Type)}: {location.Type}. Update enum mapping or caller input."),
+                    },
                 },
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -159,14 +175,17 @@ public class LocationService(
                         {
                             About = location.ListingMetadata.About,
                             Title = location.ListingMetadata.Title,
-                            SubTitle = location.ListingMetadata.SubTitle
+                            SubTitle = location.ListingMetadata.SubTitle,
                         },
                     Timezone = location.Timezone,
                     OrganizationId = location.Organization!.Id,
                     FieldsToUpdate =
                     {
-                        LocationPatchField.Name, LocationPatchField.ListingMetadata, LocationPatchField.Organization, LocationPatchField.Timezone
-                    }
+                        LocationPatchField.Name,
+                        LocationPatchField.ListingMetadata,
+                        LocationPatchField.Organization,
+                        LocationPatchField.Timezone,
+                    },
                 },
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -179,7 +198,10 @@ public class LocationService(
     public async Task RemoveAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken)
     {
         await locationServiceClient.RemoveAsync(
-            new RemoveInput { Id = locationId },
+            new RemoveInput
+            {
+                Id = locationId,
+            },
             locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
 
@@ -204,10 +226,18 @@ public class LocationService(
             After = after.ToSafeString(),
             Before = before.ToSafeString(),
             Last = last.ToNullInt(),
-            Where = new LocationWhereInput { OrganizationId = organizationId, NameContains = nameContains.ToSafeString() }
+            Where = new LocationWhereInput
+            {
+                OrganizationId = organizationId,
+                NameContains = nameContains.ToSafeString(),
+            },
         };
 
-        getPaginatedLocationsInput.OrderBy.Add(new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name });
+        getPaginatedLocationsInput.OrderBy.Add(new LocationOrderInput
+        {
+            Direction = OrderDirection.Ascending,
+            Field = LocationOrderField.Name,
+        });
 
         var connection = await locationServiceClient.GetPaginatedLocationsAsync(
             getPaginatedLocationsInput,
@@ -221,10 +251,10 @@ public class LocationService(
                 StartCursor = connection.PageInfo.StartCursor,
                 EndCursor = connection.PageInfo.EndCursor,
                 HasNextPage = connection.PageInfo.HasNextPage,
-                HasPreviousPage = connection.PageInfo.HasPreviousPage
+                HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges.Select(item => new LocationEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList()
+            Edges = connection.Edges.Select(item => new LocationEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList(),
         };
 
         Cache(result.Edges.Select(item => item.Node).ToList());

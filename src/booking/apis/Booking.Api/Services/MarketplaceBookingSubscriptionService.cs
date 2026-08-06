@@ -19,6 +19,13 @@ namespace Booking.Api.Services;
 
 public interface IMarketplaceBookingSubscriptionService
 {
+    Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBooking>>, int)> GetPaginatedBookingInstancesAsync(
+        string subscriptionId,
+        PaginationInputParam paginationInputParam,
+        DateTimeOffset? from,
+        DateTimeOffset? until,
+        CancellationToken cancellationToken);
+
     Task<MarketplaceBookingSubscription> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string id, CancellationToken cancellationToken);
 
@@ -54,6 +61,24 @@ public class MarketplaceBookingSubscriptionService(
     ILogger<MarketplaceBookingSubscriptionService> logger)
     : IMarketplaceBookingSubscriptionService
 {
+    public async Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBooking>>, int)> GetPaginatedBookingInstancesAsync(
+        string subscriptionId,
+        PaginationInputParam paginationInputParam,
+        DateTimeOffset? from,
+        DateTimeOffset? until,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(subscriptionId);
+        var subscription = await cachedMarketplaceBookingSubscriptionService.GetByIdAsync(subscriptionId, cancellationToken) ??
+                           throw new MarketplaceBookingSubscriptionNotFound();
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        await EnsureCustomerCanViewMarketplaceBookingSubscriptionAsync(subscription, customerId, cancellationToken);
+
+        var result = await repositoryFactory.MarketplaceBookingSubscriptionRepository
+            .GetPaginatedBookingInstancesUntrackedAsync(subscriptionId, paginationInputParam, from, until, cancellationToken);
+        return (result.Item1, result.Item2.Select(graphQlMapper.MapTo).ToList(), result.Item3);
+    }
+
     public async Task<MarketplaceBookingSubscription> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
@@ -97,7 +122,10 @@ public class MarketplaceBookingSubscriptionService(
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.IncludeMineOnly == true)
         {
-            searchCriteria = searchCriteria with { CustomerIds = [customerId] };
+            searchCriteria = searchCriteria with
+            {
+                CustomerIds = [customerId],
+            };
         }
 
         MarketplaceBookingSubscriptionAccessScope? accessScope = null;
@@ -127,7 +155,11 @@ public class MarketplaceBookingSubscriptionService(
             accessScope = new MarketplaceBookingSubscriptionAccessScope(
                 [scopedOrganization.Id],
                 scopedOrganization.Teams.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id).ToList());
-            searchCriteria = searchCriteria with { OrganizationId = null, OrganizationCustomDomain = null };
+            searchCriteria = searchCriteria with
+            {
+                OrganizationId = null,
+                OrganizationCustomDomain = null,
+            };
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.TeamIds.Count != 0)
@@ -176,7 +208,7 @@ public class MarketplaceBookingSubscriptionService(
             await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
                 paginationInputParam,
                 searchCriteria,
-                orderByFields,
+                [.. orderByFields],
                 accessScope,
                 cancellationToken);
 

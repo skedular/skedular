@@ -142,7 +142,7 @@ public class BookingStripeWebhookController(
                 when stripeEvent.Data.Object is PaymentIntent paymentIntent => paymentIntent.Id,
             "payout.paid" or "payout.reconciliation_completed" or "payout.failed" or "payout.canceled" or "payout.updated"
                 when stripeEvent.Data.Object is Payout payout => payout.Id,
-            _ => null
+            _ => null,
         };
 
         if (!string.IsNullOrWhiteSpace(eventObjectId))
@@ -160,6 +160,6 @@ public class BookingStripeWebhookController(
         Charge charge => charge.Id,
         Payout payout => payout.Id,
         Session session => session.Id,
-        _ => null
+        _ => null,
     };
 }

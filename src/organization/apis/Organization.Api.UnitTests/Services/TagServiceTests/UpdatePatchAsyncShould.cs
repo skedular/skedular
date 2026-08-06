@@ -25,7 +25,10 @@ public class UpdatePatchAsyncShould
         var request = new OrganizationTagPatchRequest(
             HostLocationSystemIds.ProductTag("location-1"),
             OrganizationTagType.Product,
-            new HashSet<OrganizationTagPatchField> { OrganizationTagPatchField.Name },
+            new HashSet<OrganizationTagPatchField>
+            {
+                OrganizationTagPatchField.Name,
+            },
             "Changed",
             null,
             null);
@@ -36,22 +39,39 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Update_Only_Selected_Tag_Fields(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ITagRepository tagRepository,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] ICachedTagService cachedTagService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ITagRepository tagRepository,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        ICachedTagService cachedTagService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
         TagService sut,
         CancellationToken cancellationToken)
     {
-        var organization = new Shared.Database.Entities.Organization { Id = "org-1", CustomDomain = "acme", Name = "Acme" };
+        var organization = new Shared.Database.Entities.Organization
+        {
+            Id = "org-1",
+            CustomDomain = "acme",
+            Name = "Acme",
+        };
         var tag = new TagEntity
         {
             Id = "tag-1",
@@ -59,23 +79,37 @@ public class UpdatePatchAsyncShould
             Description = "Old description",
             Color = "#111111",
             Type = OrganizationTagType.Custom.ToOrganizationTagType(),
-            Organization = organization
+            Organization = organization,
         };
-        var customer = new Customer { Id = "customer-1" };
-        var customerEntity = new Shared.Database.Entities.Customer { Id = customer.Id };
+        var customer = new Customer
+        {
+            Id = "customer-1",
+        };
+        var customerEntity = new Shared.Database.Entities.Customer
+        {
+            Id = customer.Id,
+        };
         var updatedTag = new Tag
         {
             Id = tag.Id,
             Name = "New name",
             Description = tag.Description,
             Color = "#222222",
-            Type = OrganizationTagType.Custom
+            Type = OrganizationTagType.Custom,
         };
-        var mappedOrganization = new Shared.Models.Organization { Id = organization.Id, CustomDomain = organization.CustomDomain };
+        var mappedOrganization = new Shared.Models.Organization
+        {
+            Id = organization.Id,
+            CustomDomain = organization.CustomDomain,
+        };
         var request = new OrganizationTagPatchRequest(
             tag.Id,
             OrganizationTagType.Custom,
-            new HashSet<OrganizationTagPatchField> { OrganizationTagPatchField.Name, OrganizationTagPatchField.Color },
+            new HashSet<OrganizationTagPatchField>
+            {
+                OrganizationTagPatchField.Name,
+                OrganizationTagPatchField.Color,
+            },
             updatedTag.Name,
             "Ignored description",
             updatedTag.Color);

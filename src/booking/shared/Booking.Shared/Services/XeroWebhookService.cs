@@ -213,7 +213,10 @@ public class XeroWebhookService(
         }
 
         var organization = await organizationBillingServiceClient.Admin_GetByXeroTenantIdAsync(
-            new Admin_GetByXeroTenantIdInput { TenantId = tenantId },
+            new Admin_GetByXeroTenantIdInput
+            {
+                TenantId = tenantId,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
         if (string.IsNullOrWhiteSpace(organization.Id))
@@ -222,7 +225,10 @@ public class XeroWebhookService(
         }
 
         var xeroConnection = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
-            new Admin_GetXeroConnectionInput { OrganizationId = organization.Id },
+            new Admin_GetXeroConnectionInput
+            {
+                OrganizationId = organization.Id,
+            },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
         if (string.IsNullOrWhiteSpace(xeroConnection.Id) || string.IsNullOrWhiteSpace(xeroConnection.TenantId))
@@ -284,7 +290,10 @@ public class XeroWebhookService(
         if (!tenantCache.TryGetValue(organizationId, out var expectedTenantId))
         {
             var xeroConnection = await organizationBillingServiceClient.Admin_GetXeroConnectionAsync(
-                new Admin_GetXeroConnectionInput { OrganizationId = organizationId },
+                new Admin_GetXeroConnectionInput
+                {
+                    OrganizationId = organizationId,
+                },
                 organizationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
             expectedTenantId = string.IsNullOrWhiteSpace(xeroConnection.TenantId) ? null : xeroConnection.TenantId;
@@ -329,7 +338,10 @@ public class XeroWebhookService(
         }
 
         var refreshedToken = (XeroOAuth2Token)await xeroSdkClientFactory.CreateClient().RefreshAccessTokenAsync(
-            new XeroOAuth2Token { RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted) });
+            new XeroOAuth2Token
+            {
+                RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted),
+            });
         var now = timeProvider.GetUtcNow();
         var refreshedConnection = await organizationBillingServiceClient.Admin_RefreshXeroConnectionTokensAsync(
             new Admin_RefreshXeroConnectionTokensInput
@@ -341,7 +353,7 @@ public class XeroWebhookService(
                         ? xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted)
                         : refreshedToken.RefreshToken),
                 AccessTokenExpiresAt = now.AddMinutes(30).ToTimestamp(),
-                RefreshTokenExpiresAt = now.AddDays(60).ToTimestamp()
+                RefreshTokenExpiresAt = now.AddDays(60).ToTimestamp(),
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);

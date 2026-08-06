@@ -65,7 +65,7 @@ public static class OpenTelemetryExtensions
             MetricsOtlpSignalName => "v1/metrics",
             TracesOtlpSignalName => "v1/traces",
             _ => throw new ArgumentOutOfRangeException(nameof(signalName), signalName,
-                $"Unexpected value for {nameof(signalName)}: {signalName}. Update enum mapping or caller input.")
+                $"Unexpected value for {nameof(signalName)}: {signalName}. Update enum mapping or caller input."),
         };
 
         return new Uri($"{endpoint.ToString().TrimEnd('/')}/{signalPath}");
@@ -84,7 +84,7 @@ public static class OpenTelemetryExtensions
             "grpc" => OtlpExportProtocol.Grpc,
             "http/protobuf" or "http_protobuf" or "httpprotobuf" => OtlpExportProtocol.HttpProtobuf,
             _ when Enum.TryParse<OtlpExportProtocol>(protocol, true, out var parsedProtocol) => parsedProtocol,
-            _ => options.Protocol
+            _ => options.Protocol,
         };
     }
 

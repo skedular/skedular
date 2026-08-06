@@ -386,7 +386,7 @@ public class CustomTagsPage(
             GetTitle(),
             asyncBlocks[0],
             GetCustomTagsSearchCriteriaAndPaginationBlocks(customTagConnection, commonPageContext.PageContext),
-            asyncBlocks[1]
+            asyncBlocks[1],
         ];
 
         var slackApiClient = workspace.GetApiClient();
@@ -396,7 +396,7 @@ public class CustomTagsPage(
             {
                 CallbackId = CustomTagsCallback,
                 Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
-                PrivateMetadata = commonPageContext.Serialize()
+                PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
             cancellationToken);
@@ -414,7 +414,10 @@ public class CustomTagsPage(
 
     private static IReadOnlyList<Block> GetTitle() =>
     [
-        new SectionBlock { Text = "*Tags*".ToMarkdown() }
+        new SectionBlock
+        {
+            Text = "*Tags*".ToMarkdown(),
+        },
     ];
 
     private async Task<IReadOnlyList<Block>> GetToolbarAsync(
@@ -437,8 +440,8 @@ public class CustomTagsPage(
                     .Concat(homeAndBackButtons)
                     .Concat(addCustomTagButton)
                     .Concat(feedbackButton)
-                    .ToList()
-            }
+                    .ToList(),
+            },
         ];
     }
 
@@ -448,11 +451,20 @@ public class CustomTagsPage(
     {
         if (customTagConnection.Edges.Any())
         {
-            return [new SectionBlock { Text = "No tag found".ToMarkdown() }];
+            return
+            [
+                new SectionBlock
+                {
+                    Text = "No tag found".ToMarkdown(),
+                },
+            ];
         }
 
         var totalCustomTagsCount =
-            new SectionBlock { Text = $"Total tags: {customTagConnection.TotalCount}".ToMarkdown() };
+            new SectionBlock
+            {
+                Text = $"Total tags: {customTagConnection.TotalCount}".ToMarkdown(),
+            };
         if (customTagConnection.TotalCount <= CustomTagsPageSize)
         {
             return [totalCustomTagsCount];
@@ -471,7 +483,9 @@ public class CustomTagsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = FirstPageCustomTags, Text = Icons.FirstPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = FirstPageCustomTags,
+                Text = Icons.FirstPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.CustomTagsPage.Pagination.First = null;
@@ -481,7 +495,9 @@ public class CustomTagsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = PreviousPageCustomTags, Text = Icons.PreviousPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = PreviousPageCustomTags,
+                Text = Icons.PreviousPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
@@ -494,7 +510,9 @@ public class CustomTagsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = NextPageCustomTags, Text = Icons.NextPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = NextPageCustomTags,
+                Text = Icons.NextPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
 
             pageContext.CustomTagsPage.Pagination.First = null;
@@ -504,11 +522,16 @@ public class CustomTagsPage(
 
             paginationButtons.Add(new Button
             {
-                ActionId = LastPageCustomTags, Text = Icons.LastPage.ToPlainText(), Value = new CommonPageContext(pageContext).Serialize()
+                ActionId = LastPageCustomTags,
+                Text = Icons.LastPage.ToPlainText(),
+                Value = new CommonPageContext(pageContext).Serialize(),
             });
         }
 
-        var paginationActionBlock = new ActionsBlock { Elements = paginationButtons };
+        var paginationActionBlock = new ActionsBlock
+        {
+            Elements = paginationButtons,
+        };
 
         return [totalCustomTagsCount, paginationActionBlock];
     }
@@ -525,8 +548,12 @@ public class CustomTagsPage(
         {
             BlockId = CustomTagActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = CustomTagActionTypes.Name, InitialValue = customTag.Name.ToSafeString() },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = CustomTagActionTypes.Name,
+                InitialValue = customTag.Name.ToSafeString(),
+            },
+            Optional = false,
         };
 
         var description = new InputBlock
@@ -535,9 +562,11 @@ public class CustomTagsPage(
             Label = "Description".ToPlainText(),
             Element = new PlainTextInput
             {
-                ActionId = CustomTagActionTypes.Description, InitialValue = customTag.Description.ToSafeString(), Multiline = true
+                ActionId = CustomTagActionTypes.Description,
+                InitialValue = customTag.Description.ToSafeString(),
+                Multiline = true,
             },
-            Optional = true
+            Optional = true,
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -551,9 +580,9 @@ public class CustomTagsPage(
                 Submit = "Save",
                 Blocks =
                 [
-                    name, description
+                    name, description,
                 ],
-                PrivateMetadata = context.Serialize()
+                PrivateMetadata = context.Serialize(),
             },
             cancellationToken);
     }
@@ -566,7 +595,10 @@ public class CustomTagsPage(
         CancellationToken cancellationToken)
     {
         var customTag = await organizationCustomTagService.GetAsync(workspaceMember.Id, context.CustomTagId, cancellationToken);
-        var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the tag {customTag.Name.ToSafeString()}?" };
+        var confirmationMessage = new SectionBlock
+        {
+            Text = $"Are you sure you want to remove the tag {customTag.Name.ToSafeString()}?",
+        };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(
@@ -578,7 +610,7 @@ public class CustomTagsPage(
                 Close = "No",
                 Submit = "Yes",
                 Blocks = [confirmationMessage],
-                PrivateMetadata = context.Serialize()
+                PrivateMetadata = context.Serialize(),
             },
             cancellationToken);
     }

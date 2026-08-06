@@ -1,5 +1,6 @@
 import {
   AnalyticsIcon,
+  BillingIcon,
   CollpaseDrawerIcon,
   GridViewIcon,
   HomeIcon,
@@ -8,7 +9,6 @@ import {
   ProductIcon,
   RefundIcon,
   SettingsIcon,
-  SubscriptionsIcon,
   UpgradeIcon,
 } from '@/components/icons';
 import {
@@ -305,14 +305,14 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                 >
                   {collapsed && (
                     <BodyIconTypography
-                      startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}
+                      startElement={!hideIcons && <BillingIcon color="inherit" />}
                       invertDefaultColor={pathName.startsWith(organizationSubscriptionsBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                   {!collapsed && (
                     <BodyIconTypography
-                      label="Subscriptions"
-                      startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}
+                      label="Purchases"
+                      startElement={!hideIcons && <BillingIcon color="inherit" />}
                       spacing={3}
                       invertDefaultColor={pathName.startsWith(organizationSubscriptionsBaseLink) && paletteMode === 'dark'}
                     />

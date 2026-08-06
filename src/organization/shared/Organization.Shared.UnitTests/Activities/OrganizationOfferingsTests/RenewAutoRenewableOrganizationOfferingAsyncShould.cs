@@ -19,11 +19,16 @@ public class RenewAutoRenewableOrganizationOfferingAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Create_The_Next_Full_Month_And_Return_Its_Id(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRandomHelper randomHelper,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] TimeProvider timeProvider,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRandomHelper randomHelper,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        TimeProvider timeProvider,
         OrganizationOfferings sut,
         IOrganizationRepository organizationRepository,
         IOrganizationOfferingRepository offeringRepository,
@@ -35,7 +40,11 @@ public class RenewAutoRenewableOrganizationOfferingAsyncShould
     {
         var environment = new ActivityEnvironment();
         var renewalBoundary = billingBoundary.GetOfferingPeriodStart();
-        var organization = new Database.Entities.Organization { Id = organizationId, OrganizationOfferings = [] };
+        var organization = new Database.Entities.Organization
+        {
+            Id = organizationId,
+            OrganizationOfferings = [],
+        };
         var bridgeOffering = new OrganizationOffering
         {
             Id = bridgeOfferingId,
@@ -44,7 +53,7 @@ public class RenewAutoRenewableOrganizationOfferingAsyncShould
             End = renewalBoundary,
             AutoRenew = true,
             Currency = Currency.Usd.ToString(),
-            Organization = organization
+            Organization = organization,
         };
         organization.OrganizationOfferings = [bridgeOffering];
         OrganizationOffering? addedOffering = null;
@@ -68,9 +77,12 @@ public class RenewAutoRenewableOrganizationOfferingAsyncShould
             [
                 new OrganizationOfferingModel
                 {
-                    Id = renewedOfferingId, Code = OfferingCode.SpacesGrowthV1, Start = addedOffering!.Start, End = addedOffering.End
-                }
-            ]
+                    Id = renewedOfferingId,
+                    Code = OfferingCode.SpacesGrowthV1,
+                    Start = addedOffering!.Start,
+                    End = addedOffering.End,
+                },
+            ],
         });
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(
                 repositoryFactory.UnitOfWork, environment.CancellationTokenSource.Token))

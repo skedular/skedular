@@ -23,7 +23,10 @@ public class BookingPublisher(
 {
     public async Task PublishBookingsAsync(IReadOnlyList<Models.Booking> bookings, CancellationToken cancellationToken) =>
         await Task.WhenAll(bookings.Select(booking => publisher.PublishAsync(
-            new Key { BookingId = booking.Id },
+            new Key
+            {
+                BookingId = booking.Id,
+            },
             new Event
             {
                 Metadata = Event.NewMetadata(
@@ -31,7 +34,10 @@ public class BookingPublisher(
                     applicationConfiguration.AppSource,
                     booking.IsDeleted() ? Type.BookingDeleted : Type.BookingUpserted,
                     context.GetCorrelationId()),
-                Data = new Data { Booking = eventMapper.MapTo(booking) }
+                Data = new Data
+                {
+                    Booking = eventMapper.MapTo(booking),
+                },
             },
             cancellationToken)));
 }

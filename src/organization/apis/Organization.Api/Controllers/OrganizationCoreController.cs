@@ -38,7 +38,10 @@ public class OrganizationCoreController(
 
         return Task.FromResult<ActionResult<Version>>(new Version
         {
-            Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
         });
     }
 
@@ -71,7 +74,7 @@ public class OrganizationCoreController(
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(offeringCode),
                     offeringCode,
-                    $"Unexpected value for {nameof(offeringCode)}: {offeringCode}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(offeringCode)}: {offeringCode}. Update enum mapping or caller input."),
             },
             true,
             cancellationToken);
@@ -107,7 +110,7 @@ public class OrganizationCoreController(
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(offeringCode),
                     offeringCode,
-                    $"Unexpected value for {nameof(offeringCode)}: {offeringCode}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(offeringCode)}: {offeringCode}. Update enum mapping or caller input."),
             },
             true,
             cancellationToken);

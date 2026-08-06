@@ -39,7 +39,7 @@ public class LocationResourcesGrpcService(
                 {
                     ResourceOrderField.ResourceName => Shared.Models.ResourceOrderField.Name,
                     _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
                 };
 
                 return new ResourceOrder(direction, field);
@@ -53,9 +53,9 @@ public class LocationResourcesGrpcService(
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor.ToSafeString(),
-                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+                EndCursor = paginatedInfo.EndCursor.ToSafeString(),
             },
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
 
         connection.Edges.AddRange(edges.Select(grpcMapper.MapToGrpcResponse));
@@ -106,7 +106,7 @@ public class LocationResourcesGrpcService(
                         ResourcePatchField.Capacity =>
                             Models.ResourcePatchField.Capacity,
                         _ => throw new ArgumentOutOfRangeException(nameof(request.FieldsToUpdate), field,
-                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input.")
+                            $"Unexpected value for {nameof(request.FieldsToUpdate)}: {field}. Update enum mapping or caller input."),
                     }).ToHashSet()),
                 context.CancellationToken));
     }

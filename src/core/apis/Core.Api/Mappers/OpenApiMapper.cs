@@ -16,7 +16,13 @@ public class OpenApiMapper : IOpenApiMapper
         new()
         {
             Id = src.Id,
-            Original = new File { Url = src.CdnUrl.ToString(), ContentType = src.ContentType, Width = src.Width, Height = src.Height },
+            Original = new File
+            {
+                Url = src.CdnUrl.ToString(),
+                ContentType = src.ContentType,
+                Width = src.Width,
+                Height = src.Height,
+            },
             Thumbnail = src.ThumbnailCdnUrl is null
                 ? null
                 : new File
@@ -24,15 +30,21 @@ public class OpenApiMapper : IOpenApiMapper
                     Url = src.ThumbnailCdnUrl.ToString(),
                     ContentType = src.ThumbnailContentType,
                     Width = src.ThumbnailWidth,
-                    Height = src.ThumbnailHeight
-                }
+                    Height = src.ThumbnailHeight,
+                },
         };
 
     public FileUploadResponse MapTo(PrivateFile src) =>
         new()
         {
             Id = src.Id,
-            Original = new File { Url = src.StorageUrl.ToString(), ContentType = src.ContentType, Width = src.Width, Height = src.Height },
+            Original = new File
+            {
+                Url = src.StorageUrl.ToString(),
+                ContentType = src.ContentType,
+                Width = src.Width,
+                Height = src.Height,
+            },
             Thumbnail = src.ThumbnailStorageUrl is null
                 ? null
                 : new File
@@ -40,7 +52,7 @@ public class OpenApiMapper : IOpenApiMapper
                     Url = src.ThumbnailStorageUrl.ToString(),
                     ContentType = src.ThumbnailContentType,
                     Width = src.ThumbnailWidth,
-                    Height = src.ThumbnailHeight
-                }
+                    Height = src.ThumbnailHeight,
+                },
         };
 }

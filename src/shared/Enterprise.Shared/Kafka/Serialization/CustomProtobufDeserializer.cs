@@ -35,7 +35,8 @@ public class CustomProtobufDeserializer<T> : IDeserializer<T> where T : class, I
             schemaRegistryClient,
             new ProtobufDeserializerConfig
             {
-                UseLatestVersion = kafkaConfiguration.SchemaRegistry?.UseLatestVersion ?? false, SubjectNameStrategy = SubjectNameStrategy.Topic
+                UseLatestVersion = kafkaConfiguration.SchemaRegistry?.UseLatestVersion ?? false,
+                SubjectNameStrategy = SubjectNameStrategy.Topic,
             });
     }
 

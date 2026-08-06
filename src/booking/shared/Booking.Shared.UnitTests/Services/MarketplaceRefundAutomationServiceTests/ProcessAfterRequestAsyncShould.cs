@@ -12,22 +12,33 @@ public class ProcessAfterRequestAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Complete_The_Stripe_Refund_Without_Creating_A_Xero_Refund(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundTransitionService transitionService,
-        [Frozen] IStripeHostRefundService stripeHostRefundService,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundTransitionService transitionService,
+        [Frozen]
+        IStripeHostRefundService stripeHostRefundService,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         MarketplaceRefundAutomationService sut,
         CancellationToken cancellationToken)
     {
-        var refund = new MarketplaceRefund { Id = "refund-1", Status = MarketplaceRefundStatusConstants.Requested, RefundAmount = 50m };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            Status = MarketplaceRefundStatusConstants.Requested,
+            RefundAmount = 50m,
+        };
         var completedRefund = new MarketplaceRefund
         {
             Id = refund.Id,
             Status = MarketplaceRefundStatusConstants.Completed,
             PaymentProvider = "STRIPE",
-            PaymentRefundStatus = MarketplaceRefundStatusConstants.Completed
+            PaymentRefundStatus = MarketplaceRefundStatusConstants.Completed,
         };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -54,16 +65,26 @@ public class ProcessAfterRequestAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Require_Manual_Handling_When_A_Host_Card_Refund_Has_No_Stripe_Correlation(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundTransitionService transitionService,
-        [Frozen] IStripeHostRefundService stripeHostRefundService,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundTransitionService transitionService,
+        [Frozen]
+        IStripeHostRefundService stripeHostRefundService,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         MarketplaceRefundAutomationService sut,
         CancellationToken cancellationToken)
     {
-        var refund = new MarketplaceRefund { Id = "refund-1", Status = MarketplaceRefundStatusConstants.Requested };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            Status = MarketplaceRefundStatusConstants.Requested,
+        };
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => transitionService.TransitionAsync(A<MarketplaceRefund>._, A<string>._, A<string?>._, A<string?>._, A<string?>._,
@@ -87,21 +108,32 @@ public class ProcessAfterRequestAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Process_In_Xero_When_Availability_Is_Confirmed(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundTransitionService transitionService,
-        [Frozen] IStripeHostRefundService stripeHostRefundService,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundTransitionService transitionService,
+        [Frozen]
+        IStripeHostRefundService stripeHostRefundService,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         MarketplaceRefundAutomationService sut,
         CancellationToken cancellationToken)
     {
-        var refund = new MarketplaceRefund { Id = "refund-1", Status = MarketplaceRefundStatusConstants.Requested, RefundAmount = 50m };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            Status = MarketplaceRefundStatusConstants.Requested,
+            RefundAmount = 50m,
+        };
         var completedRefund = new MarketplaceRefund
         {
             Id = refund.Id,
             Status = MarketplaceRefundStatusConstants.Completed,
-            LastProcessedAt = new DateTimeOffset(2026, 4, 8, 9, 0, 0, TimeSpan.Zero)
+            LastProcessedAt = new DateTimeOffset(2026, 4, 8, 9, 0, 0, TimeSpan.Zero),
         };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -131,15 +163,25 @@ public class ProcessAfterRequestAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Fall_Back_To_Manual_Required_When_Xero_Is_Not_Available(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] IMarketplaceRefundTransitionService transitionService,
-        [Frozen] IXeroRefundService xeroRefundService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IMarketplaceRefundTransitionService transitionService,
+        [Frozen]
+        IXeroRefundService xeroRefundService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         MarketplaceRefundAutomationService sut,
         CancellationToken cancellationToken)
     {
-        var refund = new MarketplaceRefund { Id = "refund-1", Status = MarketplaceRefundStatusConstants.Requested, RefundAmount = 50m };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            Status = MarketplaceRefundStatusConstants.Requested,
+            RefundAmount = 50m,
+        };
 
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);

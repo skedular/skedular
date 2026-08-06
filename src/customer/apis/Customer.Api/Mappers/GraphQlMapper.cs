@@ -61,13 +61,19 @@ public class GraphQlMapper : IGraphQlMapper
             FavouriteLocationIds = src.FavouriteLocations.Select(item => item.Id),
             PersonalInformationVisibility = new PersonalInformationVisibilityDetails
             {
-                Type = src.PersonalInformationVisibility, Name = src.PersonalInformationVisibility.ToPersonalInformationVisibilityName()
+                Type = src.PersonalInformationVisibility,
+                Name = src.PersonalInformationVisibility.ToPersonalInformationVisibilityName(),
             },
-            Type = src.Type
+            Type = src.Type,
         };
 
     public CustomerFeedback MapTo(SubmitCustomerFeedbackInput src) =>
-        new() { Id = src.Id.ToSafeString(), Content = src.FeedbackContent, Channel = src.Channel };
+        new()
+        {
+            Id = src.Id.ToSafeString(),
+            Content = src.FeedbackContent,
+            Channel = src.Channel,
+        };
 
     public CustomerBillingDetails MapTo(AddMyBillingDetailsInput src) =>
         new()
@@ -87,7 +93,7 @@ public class GraphQlMapper : IGraphQlMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            CountryCode = src.CountryCode
+            CountryCode = src.CountryCode,
         };
 
     public CustomerBillingDetails MapTo(UpdateMyBillingDetailsInput src) =>
@@ -108,7 +114,7 @@ public class GraphQlMapper : IGraphQlMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            CountryCode = src.CountryCode
+            CountryCode = src.CountryCode,
         };
 
     public CustomerEdge MapTo(Edge<Shared.Models.Customer> src) => new(MapTo(src.Node), src.Cursor);
@@ -135,7 +141,7 @@ public class GraphQlMapper : IGraphQlMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode
+                CountryCode = src.CountryCode,
             };
 
     public IEnumerable<CustomerPaymentMethod> MapTo(IEnumerable<StripePaymentMethod> src) => src.Select(MapTo);
@@ -143,13 +149,21 @@ public class GraphQlMapper : IGraphQlMapper
     private static IEnumerable<CustomerIdentity> MapToIdentities(IEnumerable<Identity> src) => src.Select(MapToIdentity);
 
     private static CustomerIdentity MapToIdentity(Identity src) =>
-        new() { Id = src.Id, Email = src.Email, Verified = src.EmailVerified ?? false };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email,
+            Verified = src.EmailVerified ?? false,
+        };
 
     private static IEnumerable<OrganizationTagDetails> MapToTagDetails(IEnumerable<OrganizationTag> src) => src.Select(MapToTagDetails);
 
     private static OrganizationTagDetails MapToTagDetails(OrganizationTag src) => new()
     {
-        Id = src.Id, Name = src.Name.ToSafeString(), Type = src.Type, Color = src.Color.ToSafeString()
+        Id = src.Id,
+        Name = src.Name.ToSafeString(),
+        Type = src.Type,
+        Color = src.Color.ToSafeString(),
     };
 
     private static CustomerPaymentMethod MapTo(StripePaymentMethod src) =>
@@ -164,6 +178,6 @@ public class GraphQlMapper : IGraphQlMapper
             CardFingerprint = src.CardFingerprint,
             CardFunding = src.CardFunding,
             CardIssuer = src.CardIssuer,
-            CardLastFourDigit = src.CardLastFourDigit
+            CardLastFourDigit = src.CardLastFourDigit,
         };
 }

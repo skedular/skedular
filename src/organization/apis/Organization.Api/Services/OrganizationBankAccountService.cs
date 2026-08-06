@@ -332,7 +332,7 @@ public class OrganizationBankAccountService(
                 OrganizationBankAccountPatchField.AccountHolderName => request.AccountHolderName,
                 OrganizationBankAccountPatchField.AccountNumber => request.AccountNumber,
                 OrganizationBankAccountPatchField.Country => request.Country,
-                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation bank account patch field is not supported.")
+                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation bank account patch field is not supported."),
             };
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -359,7 +359,7 @@ public class OrganizationBankAccountService(
                     value => bankAccount.AccountNumber = value) || changed,
                 OrganizationBankAccountPatchField.Country =>
                     ApplyValue(request.Country!, bankAccount.Country, value => bankAccount.Country = value) || changed,
-                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation bank account patch field is not supported.")
+                _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation bank account patch field is not supported."),
             };
         }
 

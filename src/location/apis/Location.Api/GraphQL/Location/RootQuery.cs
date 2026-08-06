@@ -18,8 +18,16 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
 {
     public IEnumerable<LocationTypeDetails> LocationTypes() =>
     [
-        new() { Type = LocationType.Private, Name = LocationTypeConstants.Private.ToLocationTypeName() },
-        new() { Type = LocationType.Marketplace, Name = LocationTypeConstants.Marketplace.ToLocationTypeName() }
+        new()
+        {
+            Type = LocationType.Private,
+            Name = LocationTypeConstants.Private.ToLocationTypeName(),
+        },
+        new()
+        {
+            Type = LocationType.Marketplace,
+            Name = LocationTypeConstants.Marketplace.ToLocationTypeName(),
+        },
     ];
 
     public IEnumerable<LocationRestrictedInformationCategoryDetails> LocationRestrictedInformationCategories() =>
@@ -27,118 +35,118 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         new()
         {
             Category = LocationRestrictedInformationCategory.Wifi,
-            Name = LocationRestrictedInformationCategory.Wifi.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Wifi.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Access,
-            Name = LocationRestrictedInformationCategory.Access.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Access.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Parking,
-            Name = LocationRestrictedInformationCategory.Parking.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Parking.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.CheckIn,
-            Name = LocationRestrictedInformationCategory.CheckIn.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.CheckIn.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.CheckOut,
-            Name = LocationRestrictedInformationCategory.CheckOut.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.CheckOut.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.AfterHours,
-            Name = LocationRestrictedInformationCategory.AfterHours.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.AfterHours.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Deliveries,
-            Name = LocationRestrictedInformationCategory.Deliveries.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Deliveries.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Guests,
-            Name = LocationRestrictedInformationCategory.Guests.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Guests.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Equipment,
-            Name = LocationRestrictedInformationCategory.Equipment.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Equipment.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Kitchen,
-            Name = LocationRestrictedInformationCategory.Kitchen.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Kitchen.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.MeetingRooms,
-            Name = LocationRestrictedInformationCategory.MeetingRooms.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.MeetingRooms.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Noise,
-            Name = LocationRestrictedInformationCategory.Noise.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Noise.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Maintenance,
-            Name = LocationRestrictedInformationCategory.Maintenance.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Maintenance.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Accessibility,
-            Name = LocationRestrictedInformationCategory.Accessibility.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Accessibility.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Storage,
-            Name = LocationRestrictedInformationCategory.Storage.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Storage.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Cleaning,
-            Name = LocationRestrictedInformationCategory.Cleaning.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Cleaning.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Waste,
-            Name = LocationRestrictedInformationCategory.Waste.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Waste.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Security,
-            Name = LocationRestrictedInformationCategory.Security.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Security.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Evacuation,
-            Name = LocationRestrictedInformationCategory.Evacuation.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Evacuation.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Pets,
-            Name = LocationRestrictedInformationCategory.Pets.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Pets.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Smoking,
-            Name = LocationRestrictedInformationCategory.Smoking.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.Smoking.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.HouseRules,
-            Name = LocationRestrictedInformationCategory.HouseRules.ToLocationRestrictedInformationCategoryName()
+            Name = LocationRestrictedInformationCategory.HouseRules.ToLocationRestrictedInformationCategoryName(),
         },
         new()
         {
             Category = LocationRestrictedInformationCategory.Other,
-            Name = LocationRestrictedInformationCategory.Other.ToLocationRestrictedInformationCategoryName()
-        }
+            Name = LocationRestrictedInformationCategory.Other.ToLocationRestrictedInformationCategoryName(),
+        },
     ];
 
     public async Task<LocationDetails?> LocationAsync(string id, [Service] ILocationService locationService, CancellationToken cancellationToken) =>
@@ -148,8 +156,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<LocationDetails?> LocationByIdAsync(
-        [ID] string id,
-        [Service] ILocationService locationService,
+        [ID]
+        string id,
+        [Service]
+        ILocationService locationService,
         CancellationToken cancellationToken) =>
         graphQlMapper.MapTo(await locationService.GetByIdAsync(id, true, cancellationToken));
 
@@ -161,7 +171,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         LocationWhereInput where,
         IEnumerable<LocationOrderInput>? orderBy,
-        [Service] ILocationService locationService,
+        [Service]
+        ILocationService locationService,
         CancellationToken cancellationToken)
     {
         var (paginatedInfo, edges, totalCount) = await locationService.GetPaginatedLocationsAsync(
@@ -190,10 +201,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
@@ -205,7 +216,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         MarketplaceLocationWhereInput where,
         IEnumerable<LocationOrderInput>? orderBy,
-        [Service] ILocationService locationService,
+        [Service]
+        ILocationService locationService,
         CancellationToken cancellationToken)
     {
         if (where.SearchBoundaries is null &&
@@ -242,10 +254,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
@@ -253,8 +265,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     public async Task<IEnumerable<LocationDetails>?> MyLocationsAsync(
         string? organizationId,
         string? organizationCustomDomain,
-        [Service] ICachedCustomerService cachedCustomerService,
-        [Service] ILocationService locationService,
+        [Service]
+        ICachedCustomerService cachedCustomerService,
+        [Service]
+        ILocationService locationService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
             ? graphQlMapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, organizationCustomDomain, cancellationToken))

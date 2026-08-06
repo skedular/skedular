@@ -174,7 +174,7 @@ public enum OrganizationTagType
     AmenitySoundBooth,
     AmenityGreenScreen,
     AmenitySpecializedToolsEquipment,
-    AmenitySafetyComplianceKit
+    AmenitySafetyComplianceKit,
 }
 
 public static class OrganizationTagTypeConstants
@@ -363,7 +363,7 @@ public static class OrganizationTagTypeConstants
         ResourceRoom,
         ResourceParking,
         ResourceOthers,
-        ResourceEntireLocation
+        ResourceEntireLocation,
     ];
 
     public static readonly IReadOnlyList<OrganizationTagType> ResourceTypes =
@@ -372,7 +372,7 @@ public static class OrganizationTagTypeConstants
         OrganizationTagType.ResourceRoom,
         OrganizationTagType.ResourceParking,
         OrganizationTagType.ResourceOthers,
-        OrganizationTagType.ResourceEntireLocation
+        OrganizationTagType.ResourceEntireLocation,
     ];
 
     public static readonly IReadOnlyList<OrganizationTagType> LocationSpaceTypes =
@@ -386,7 +386,7 @@ public static class OrganizationTagTypeConstants
         OrganizationTagType.LocationSpaceTypeStudioSpace,
         OrganizationTagType.LocationSpaceTypeCommercialKitchen,
         OrganizationTagType.LocationSpaceTypeShootLocation,
-        OrganizationTagType.LocationSpaceTypeOthers
+        OrganizationTagType.LocationSpaceTypeOthers,
     ];
 
     public static readonly IReadOnlyList<OrganizationTagType> Amenities =
@@ -542,7 +542,7 @@ public static class OrganizationTagTypeConstants
         OrganizationTagType.AmenitySoundBooth,
         OrganizationTagType.AmenityGreenScreen,
         OrganizationTagType.AmenitySpecializedToolsEquipment,
-        OrganizationTagType.AmenitySafetyComplianceKit
+        OrganizationTagType.AmenitySafetyComplianceKit,
     ];
 }
 
@@ -728,7 +728,7 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagTypeConstants.AmenitySafetyComplianceKit => OrganizationTagType.AmenitySafetyComplianceKit,
 
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 
@@ -920,7 +920,7 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagType.AmenitySafetyComplianceKit => OrganizationTagTypeConstants.AmenitySafetyComplianceKit,
 
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
 
         public string ToOrganizationTagTypeName() =>
@@ -1101,7 +1101,7 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagType.AmenitySafetyComplianceKit => "Safety Compliance Kit",
 
                 _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             };
     }
 

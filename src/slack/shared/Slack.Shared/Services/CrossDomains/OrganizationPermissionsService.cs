@@ -21,7 +21,10 @@ public class OrganizationPermissionsService(
     IMemoryCache memoryCache)
     : IOrganizationPermissionsService
 {
-    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new()
+    {
+        SlidingExpiration = TimeSpan.FromSeconds(30),
+    };
 
     public async Task<OrganizationPermissions> GetPermissionsAsync(
         string workspaceMemberId,
@@ -31,7 +34,10 @@ public class OrganizationPermissionsService(
             CreateKeyById(workspaceMemberId, organizationId),
             async _ => grpcMapper.MapTo(
                 await organizationServiceClient.GetPermissionsAsync(
-                    new GetPermissionsInput { Id = organizationId },
+                    new GetPermissionsInput
+                    {
+                        Id = organizationId,
+                    },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: cancellationToken)),
             _cacheEntryOptions))!;

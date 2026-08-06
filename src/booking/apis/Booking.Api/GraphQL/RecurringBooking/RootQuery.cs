@@ -24,8 +24,10 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     [Lookup]
     [Internal]
     public async Task<RecurringBookingDetails?> RecurringBookingByIdAsync(
-        [ID] string id,
-        [Service] IRecurringBookingService recurringBookingService,
+        [ID]
+        string id,
+        [Service]
+        IRecurringBookingService recurringBookingService,
         CancellationToken cancellationToken) =>
         await RecurringBookingAsync(id, recurringBookingService, cancellationToken);
 
@@ -37,7 +39,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         int? last,
         RecurringBookingWhereInput where,
         IEnumerable<RecurringBookingOrderInput>? orderBy,
-        [Service] IRecurringBookingService recurringBookingService,
+        [Service]
+        IRecurringBookingService recurringBookingService,
         CancellationToken cancellationToken)
     {
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
@@ -74,17 +77,18 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 HasNextPage = paginatedInfo.HasNextPage,
                 HasPreviousPage = paginatedInfo.HasPreviousPage,
                 StartCursor = paginatedInfo.StartCursor,
-                EndCursor = paginatedInfo.EndCursor
+                EndCursor = paginatedInfo.EndCursor,
             },
             Edges = edges.Select(graphQlMapper.MapTo),
-            TotalCount = totalCount
+            TotalCount = totalCount,
         };
     }
 
     [UseResolverScope]
     public async Task<IEnumerable<RecurringBookingDetails>> AllRecurringBookingsAsync(
         RecurringBookingWhereInput where,
-        [Service] IRecurringBookingService recurringBookingService,
+        [Service]
+        IRecurringBookingService recurringBookingService,
         CancellationToken cancellationToken)
     {
         var result = await RecurringBookingsAsync(null, null, null, null, where, [], recurringBookingService, cancellationToken);

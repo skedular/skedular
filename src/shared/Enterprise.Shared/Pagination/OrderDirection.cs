@@ -3,5 +3,5 @@
 public enum OrderDirection
 {
     Ascending,
-    Descending
+    Descending,
 }

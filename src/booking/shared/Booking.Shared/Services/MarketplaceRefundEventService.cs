@@ -42,6 +42,6 @@ public class MarketplaceRefundEventService(
                 ExternalRefundId = refund.ExternalRefundId,
                 ExternalRefundNumber = refund.ExternalRefundNumber,
                 LastError = refund.LastError,
-                ActorCustomerId = actorCustomerId
+                ActorCustomerId = actorCustomerId,
             });
 }

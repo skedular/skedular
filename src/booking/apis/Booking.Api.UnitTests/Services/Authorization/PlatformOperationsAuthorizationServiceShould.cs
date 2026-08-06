@@ -11,14 +11,15 @@ public class PlatformOperationsAuthorizationServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public void Allow_The_Explicit_Platform_Operator_Role(
-        [Frozen] IHttpContextAccessor httpContextAccessor,
+        [Frozen]
+        IHttpContextAccessor httpContextAccessor,
         PlatformOperationsAuthorizationService sut)
     {
         var context = new DefaultHttpContext
         {
             User = new ClaimsPrincipal(new ClaimsIdentity(
                 [new Claim(ClaimTypes.Role, PlatformOperationsRoleConstants.Operator)],
-                "test"))
+                "test")),
         };
         A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 
@@ -28,14 +29,15 @@ public class PlatformOperationsAuthorizationServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public void Deny_Organization_Roles(
-        [Frozen] IHttpContextAccessor httpContextAccessor,
+        [Frozen]
+        IHttpContextAccessor httpContextAccessor,
         PlatformOperationsAuthorizationService sut)
     {
         var context = new DefaultHttpContext
         {
             User = new ClaimsPrincipal(new ClaimsIdentity(
                 [new Claim(ClaimTypes.Role, "Administrator")],
-                "test"))
+                "test")),
         };
         A.CallTo(() => httpContextAccessor.HttpContext).Returns(context);
 

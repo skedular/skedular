@@ -44,7 +44,7 @@ public class KafkaOutboxEventPublisher<TKey, TEvent>(
                 Key = keySerializer.Serialize(key, new SerializationContext(MessageComponentType.Key, topic)),
                 Topic = topic,
                 Payload = payloadSerializer.Serialize(@event, new SerializationContext(MessageComponentType.Value, topic)),
-                Timestamp = timeProvider.GetUtcNow()
+                Timestamp = timeProvider.GetUtcNow(),
             });
 
             logger.LogInformation("Kafka event queued in outbox successfully. EventType={EventType}, Topic={Topic}", typeof(TEvent).FullName, topic);

@@ -244,8 +244,12 @@ public class LocationRestrictedInformationService(
             {
                 Id = src.Location.Id,
                 Name = src.Location.Name,
-                Organization = new Organization { Id = src.Location.Organization.Id, CustomDomain = src.Location.Organization.CustomDomain }
-            }
+                Organization = new Organization
+                {
+                    Id = src.Location.Organization.Id,
+                    CustomDomain = src.Location.Organization.CustomDomain,
+                },
+            },
         };
 
     private static Shared.Database.Entities.LocationRestrictedInformation MapTo(
@@ -259,7 +263,7 @@ public class LocationRestrictedInformationService(
             Content = src.Content,
             Active = src.Active,
             SortOrder = src.SortOrder,
-            Location = location
+            Location = location,
         };
 
     private async Task<Shared.Models.Location> PublishLocationChangedAsync(string locationId, CancellationToken cancellationToken)

@@ -136,7 +136,7 @@ public class EvaluateShould
             End = s_trialEnd.AddMonths(1),
             SpacesProductEnabled = true,
             SpacesTrialStartedAt = s_trialStart,
-            SpacesTrialEndsAt = s_trialEnd
+            SpacesTrialEndsAt = s_trialEnd,
         };
 
         var result = sut.Evaluate(s_trialEnd, offering, SpacesAccessAction.CreateBookingInstance);
@@ -159,7 +159,7 @@ public class EvaluateShould
             SpacesProductEnabled = true,
             SpacesTrialStartedAt = s_trialStart,
             SpacesTrialEndsAt = s_trialEnd,
-            SpacesNextBillingAt = billingStartsAt
+            SpacesNextBillingAt = billingStartsAt,
         };
 
         var result = sut.Evaluate(s_trialEnd, offering, SpacesAccessAction.CreateOrModify);
@@ -173,7 +173,13 @@ public class EvaluateShould
     [AutoFakeItEasyData]
     public void Leave_Teams_Offering_Unrestricted(SpacesAccessEvaluator sut)
     {
-        var offering = new SharedOffering { Code = OfferingCode.PayAsYouGoV1, Start = s_trialStart, End = s_trialEnd, SpacesProductEnabled = false };
+        var offering = new SharedOffering
+        {
+            Code = OfferingCode.PayAsYouGoV1,
+            Start = s_trialStart,
+            End = s_trialEnd,
+            SpacesProductEnabled = false,
+        };
 
         var result = sut.Evaluate(s_trialEnd, offering, SpacesAccessAction.CreateOrModify);
 
@@ -189,6 +195,6 @@ public class EvaluateShould
             End = s_trialEnd,
             SpacesProductEnabled = true,
             SpacesTrialStartedAt = s_trialStart,
-            SpacesTrialEndsAt = s_trialEnd
+            SpacesTrialEndsAt = s_trialEnd,
         };
 }

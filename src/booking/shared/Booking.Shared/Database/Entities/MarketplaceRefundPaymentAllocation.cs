@@ -33,8 +33,18 @@ public class MarketplaceRefundPaymentAllocationConfiguration : IEntityTypeConfig
 
         builder.HasOne(x => x.MarketplaceRefund).WithMany(x => x.PaymentAllocations).HasForeignKey(x => x.MarketplaceRefundId);
 
-        builder.HasIndex(x => new { x.MarketplaceRefundId, x.SourcePaymentProvider, x.SourcePaymentReference, x.IsSourcePayment }).IsUnique();
-        builder.HasIndex(x => new { x.SourcePaymentProvider, x.SourcePaymentReference })
+        builder.HasIndex(x => new
+        {
+            x.MarketplaceRefundId,
+            x.SourcePaymentProvider,
+            x.SourcePaymentReference,
+            x.IsSourcePayment,
+        }).IsUnique();
+        builder.HasIndex(x => new
+            {
+                x.SourcePaymentProvider,
+                x.SourcePaymentReference,
+            })
             .IsUnique()
             .HasFilter("\"IsSourcePayment\" = TRUE");
     }

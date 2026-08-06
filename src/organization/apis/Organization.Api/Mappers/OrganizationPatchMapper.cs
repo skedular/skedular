@@ -150,7 +150,7 @@ public class OrganizationPatchMapper : IOrganizationPatchMapper
                 OrganizationPatchField.MarketplaceListingMetadata => ApplyMarketplaceListingMetadataPatch(request.MarketplaceListingMetadata,
                     organization) || changed,
                 OrganizationPatchField.PhysicalAddress => ApplyPhysicalAddressPatch(request.PhysicalAddress!, organization) || changed,
-                _ => throw new ArgumentOutOfRangeException(nameof(request), $"This organisation patch field is not supported: {field}.")
+                _ => throw new ArgumentOutOfRangeException(nameof(request), $"This organisation patch field is not supported: {field}."),
             };
         }
 

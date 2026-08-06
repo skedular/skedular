@@ -12,7 +12,8 @@ public class RootMutation
     [UseResolverScope]
     public async Task<UpdateOrganizationTeamsSubscriptionPayload> UpdateOrganizationTeamsSubscriptionAsync(
         UpdateOrganizationTeamsSubscriptionInput input,
-        [Service] IOrganizationTeamsSubscriptionService organizationTeamsSubscriptionService,
+        [Service]
+        IOrganizationTeamsSubscriptionService organizationTeamsSubscriptionService,
         CancellationToken cancellationToken) =>
         new()
         {
@@ -23,13 +24,14 @@ public class RootMutation
                 input.PurchasedUserCapacity,
                 input.PurchasedLocationCapacity,
                 input.PurchasedTeamCapacity,
-                cancellationToken))
+                cancellationToken)),
         };
 
     [UseResolverScope]
     public async Task<UpdateOrganizationSpacesSubscriptionPayload> UpdateOrganizationSpacesSubscriptionAsync(
         UpdateOrganizationSpacesSubscriptionInput input,
-        [Service] IOrganizationSpacesSubscriptionService organizationSpacesSubscriptionService,
+        [Service]
+        IOrganizationSpacesSubscriptionService organizationSpacesSubscriptionService,
         CancellationToken cancellationToken) =>
         new()
         {
@@ -38,7 +40,7 @@ public class RootMutation
                 input.OrganizationId,
                 input.PlanCode,
                 input.CustomCapacity,
-                cancellationToken))
+                cancellationToken)),
         };
 
     private static OrganizationTeamsSubscriptionDetails MapTo(OrganizationOfferingPlanDto subscription) =>
@@ -58,7 +60,7 @@ public class RootMutation
             Status = subscription.Status,
             EffectiveFrom = subscription.EffectiveFrom,
             EffectiveUntil = subscription.EffectiveUntil,
-            AutoRenew = subscription.AutoRenew
+            AutoRenew = subscription.AutoRenew,
         };
 
     private static OrganizationSpacesSubscriptionDetails MapTo(OrganizationSpacesSubscriptionDto subscription) =>
@@ -87,6 +89,6 @@ public class RootMutation
             IsComplimentaryBridge = subscription.IsComplimentaryBridge,
             NextBillingAt = subscription.NextBillingAt,
             CreatedAt = subscription.CreatedAt,
-            UpdatedAt = subscription.ModifiedAt ?? subscription.CreatedAt
+            UpdatedAt = subscription.ModifiedAt ?? subscription.CreatedAt,
         };
 }

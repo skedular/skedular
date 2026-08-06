@@ -38,6 +38,8 @@ Operators find Subscriptions in the organization **Subscriptions** area. The lis
 
 Open a Subscription to review its recurring Booking instances, customer, Product, payment context, renewal details, and cancellation or refund information. Operators can manage eligible payment actions, cancel a Subscription immediately or at the end of the current period where available, and review the associated recurring Bookings.
 
+The organization's **Marketplace purchases** page provides the unified history view for these Subscriptions and standalone marketplace Bookings. It retains canceled and deleted purchases with historical activity, so operators can review lifecycle, payment, and refund outcomes after the active access or Booking has ended.
+
 ## Subscription lifecycle and payment state
 
 Subscription status and payment status are separate. Operator filters include **Active**, **Cancelled**, **Expired**, **Renewal failed**, and **Paused** where those states are present. The interface can also show **Ends at period end** when cancellation is scheduled.
@@ -79,5 +81,7 @@ Product and Price edits that create a new version apply to new purchases and do 
 For an active Subscription, the interface supports **Cancel now** and **Cancel at period end** when those cancellation modes are available. Cancel now prevents new future Subscription billing activity, but does not automatically cancel generated invoices, remove outstanding balances, reverse completed payments, or create a refund. Cancel at period end keeps the current period active and then stops renewal. Disabling auto-renewal is a separate choice that lets the current period finish without starting another one. Cancellation stops future recurring Booking activity according to the selected mode, while past Booking instances remain historical records. Cancellation and refunds are separate decisions; see [Refunds](/docs/spaces/billing-and-payments/refunds) for financial outcomes.
 
 ## Next step
+
+The **Marketplace purchases** page is the retained history view for both one-time marketplace Bookings and Subscriptions. It is sorted by newest activity and supports list/grid views and page navigation. A deleted or canceled purchase remains visible so operators can review its lifecycle and payment/refund outcome.
 
 Continue to [Billing and payments](/docs/spaces/billing-and-payments) to configure and manage the payment, invoicing, and accounting workflows associated with commercial Bookings and Subscriptions.

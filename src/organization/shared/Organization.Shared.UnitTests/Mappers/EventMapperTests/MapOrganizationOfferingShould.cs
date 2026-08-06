@@ -32,9 +32,9 @@ public class MapOrganizationOfferingShould
                     Start = now,
                     End = now.AddMonths(1),
                     Currency = Currency.Usd,
-                    HostCommissionPercentage = commissionPercentage
-                }
-            ]
+                    HostCommissionPercentage = commissionPercentage,
+                },
+            ],
         };
 
         var result = sut.MapTo(organization);
@@ -67,9 +67,9 @@ public class MapOrganizationOfferingShould
                     Start = trialStartedAt,
                     End = billingStartsAt,
                     Currency = Currency.Usd,
-                    SpacesBillingStartsAt = billingStartsAt
-                }
-            ]
+                    SpacesBillingStartsAt = billingStartsAt,
+                },
+            ],
         };
 
         var result = sut.MapTo(organization).Offering;
@@ -102,9 +102,9 @@ public class MapOrganizationOfferingShould
                     Code = OfferingCode.PayAsYouGoV1,
                     Start = now,
                     End = now.AddMonths(1),
-                    Currency = Currency.Usd
-                }
-            ]
+                    Currency = Currency.Usd,
+                },
+            ],
         };
 
         var result = sut.MapTo(organization).Offering;
@@ -138,9 +138,9 @@ public class MapOrganizationOfferingShould
                     Code = OfferingCode.SpacesFreeTierV1,
                     Start = organizationCreatedAt,
                     End = organizationCreatedAt.AddMonths(1),
-                    Currency = Currency.Usd
-                }
-            ]
+                    Currency = Currency.Usd,
+                },
+            ],
         };
 
         var result = sut.MapTo(organization).Offering;

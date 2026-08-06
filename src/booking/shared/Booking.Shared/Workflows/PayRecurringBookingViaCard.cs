@@ -30,7 +30,11 @@ public class PayRecurringBookingViaCard
                 {
                     StartToCloseTimeout = TimeSpan.FromSeconds(30),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
 
             await Workflow.ExecuteActivityAsync(
@@ -41,7 +45,11 @@ public class PayRecurringBookingViaCard
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(2),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
 
             var upsertProductAndPricingResponse = await Workflow.ExecuteActivityAsync(
@@ -51,7 +59,11 @@ public class PayRecurringBookingViaCard
                 {
                     StartToCloseTimeout = TimeSpan.FromSeconds(30),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
             if (upsertProductAndPricingResponse is null)
             {
@@ -66,7 +78,11 @@ public class PayRecurringBookingViaCard
                 {
                     StartToCloseTimeout = TimeSpan.FromSeconds(30),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
             if (upsertBookingRelatedStripeCustomerResponse is null)
             {
@@ -83,7 +99,11 @@ public class PayRecurringBookingViaCard
                 {
                     StartToCloseTimeout = TimeSpan.FromSeconds(30),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 3,
+                        MaximumInterval = TimeSpan.FromSeconds(5),
+                    },
                 });
             if (createCheckoutSessionAsyncResponse is null ||
                 createCheckoutSessionAsyncResponse.PaymentStatus.ToPaymentStatus() is PaymentStatus.Confirmed
@@ -98,7 +118,11 @@ public class PayRecurringBookingViaCard
                     (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
                         new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId,
                             MarketplaceBookingFailureCategoryConstants.PaymentExpired)),
-                    new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                    });
 
                 return;
             }
@@ -114,7 +138,11 @@ public class PayRecurringBookingViaCard
                 await Workflow.ExecuteActivityAsync(
                     (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
                         new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
-                    new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+                    new ActivityOptions
+                    {
+                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                        TaskQueue = Workflow.Info.TaskQueue,
+                    });
 
                 return;
             }
@@ -124,7 +152,11 @@ public class PayRecurringBookingViaCard
             await Workflow.ExecuteActivityAsync(
                 (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
                     new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
-                new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                });
 
             return;
         }
@@ -139,7 +171,10 @@ public class PayRecurringBookingViaCard
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { PaymentStatus = args.PaymentStatus };
+        _state = _state with
+        {
+            PaymentStatus = args.PaymentStatus,
+        };
 
         return Task.CompletedTask;
     }
@@ -149,7 +184,10 @@ public class PayRecurringBookingViaCard
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { RecurringBookingDeleted = true };
+        _state = _state with
+        {
+            RecurringBookingDeleted = true,
+        };
 
         return Task.CompletedTask;
     }

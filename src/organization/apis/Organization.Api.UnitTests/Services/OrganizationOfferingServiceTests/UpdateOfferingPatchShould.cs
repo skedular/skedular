@@ -31,7 +31,10 @@ public class UpdateOfferingPatchShould
         var request = new OrganizationOfferingPatchRequest(
             "org-1",
             "acme",
-            new HashSet<OrganizationOfferingPatchField> { OrganizationOfferingPatchField.OfferingCode },
+            new HashSet<OrganizationOfferingPatchField>
+            {
+                OrganizationOfferingPatchField.OfferingCode,
+            },
             null);
 
         await Should.ThrowAsync<ArgumentException>(() => sut.UpdateOfferingPatchAsync(request, cancellationToken));

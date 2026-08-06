@@ -17,7 +17,7 @@ public class ProcessMarketplaceRefund
         BackoffCoefficient = 2,
         MaximumInterval = TimeSpan.FromMinutes(5),
         MaximumAttempts = 3,
-        NonRetryableErrorTypes = [nameof(ArgumentException), nameof(InvalidOperationException)]
+        NonRetryableErrorTypes = [nameof(ArgumentException), nameof(InvalidOperationException)],
     };
 
     [WorkflowRun]
@@ -29,7 +29,9 @@ public class ProcessMarketplaceRefund
                 (MarketplaceRefundIntegrations activity) => activity.ProcessAsync(input),
                 new ActivityOptions
                 {
-                    StartToCloseTimeout = TimeSpan.FromMinutes(10), TaskQueue = Workflow.Info.TaskQueue, RetryPolicy = s_refundProviderRetryPolicy
+                    StartToCloseTimeout = TimeSpan.FromMinutes(10),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = s_refundProviderRetryPolicy,
                 });
         }
         catch (Exception exception)
@@ -41,7 +43,10 @@ public class ProcessMarketplaceRefund
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(2),
                     TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 1 }
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 1,
+                    },
                 });
             throw;
         }

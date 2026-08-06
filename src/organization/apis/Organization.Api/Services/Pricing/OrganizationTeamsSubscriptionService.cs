@@ -129,7 +129,7 @@ public class OrganizationTeamsSubscriptionService(
             Organization = organization,
             Start = now,
             End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
-            AutoRenew = true
+            AutoRenew = true,
         };
         organizationOffering.ApplyOfferingTemplate(planCode.ToTeamsOfferingCode());
         organizationOffering.PurchasedUserCapacity = purchasedUserCapacity ?? organizationOffering.PurchasedUserCapacity;
@@ -226,7 +226,7 @@ public static class OrganizationTeamsSubscriptionServiceExtensions
                 PricingCatalogSubscriptionPlanCode.EnterpriseCapacity => OfferingCode.EnterpriseCustomV1,
                 PricingCatalogSubscriptionPlanCode.LegacyEarlyBird => OfferingCode.EarlyBirdV1,
                 _ => throw new ArgumentOutOfRangeException(nameof(planCode), planCode,
-                    $"Unexpected value for {nameof(planCode)}: {planCode}. Update enum mapping or caller input.")
+                    $"Unexpected value for {nameof(planCode)}: {planCode}. Update enum mapping or caller input."),
             };
     }
 }

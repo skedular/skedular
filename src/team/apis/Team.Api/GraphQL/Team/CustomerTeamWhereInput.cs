@@ -5,12 +5,18 @@ namespace Team.Api.GraphQL.Team;
 [GraphQLName("CustomerTeamWhereInput")]
 public class CustomerTeamWhereInput
 {
-    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+    [GraphQLName("organizationId")]
+    public string? OrganizationId { get; set; }
 
     [GraphQLName("organizationCustomDomain")]
     public string? OrganizationCustomDomain { get; set; }
 
-    [GraphQLName("customerId")] public string CustomerId { get; set; } = string.Empty;
-    [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("primaryLocationIds")] public IEnumerable<string>? PrimaryLocationIds { get; set; }
+    [GraphQLName("customerId")]
+    public string CustomerId { get; set; } = string.Empty;
+
+    [GraphQLName("nameContains")]
+    public string? NameContains { get; set; }
+
+    [GraphQLName("primaryLocationIds")]
+    public IEnumerable<string>? PrimaryLocationIds { get; set; }
 }

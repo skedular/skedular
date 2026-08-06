@@ -50,6 +50,10 @@ public class OrganizationDbContext(
     {
         public OrganizationDbContext CreateDbContext(string[] args) =>
             new(args.ToDbContextOption<OrganizationDbContext>(true),
-                new CustomDbContextOptions<OrganizationDbContext> { IsPooled = false, IsPostgisEnabled = true });
+                new CustomDbContextOptions<OrganizationDbContext>
+                {
+                    IsPooled = false,
+                    IsPostgisEnabled = true,
+                });
     }
 }

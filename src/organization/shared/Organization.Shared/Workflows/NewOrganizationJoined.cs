@@ -18,6 +18,10 @@ public class NewOrganizationJoined
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(1),
                 TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                RetryPolicy = new RetryPolicy
+                {
+                    MaximumAttempts = 3,
+                    MaximumInterval = TimeSpan.FromMinutes(1),
+                },
             });
 }

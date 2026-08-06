@@ -13,7 +13,10 @@ public class DbContextBaseShould
         var options = new DbContextOptionsBuilder<SqlServerTestDbContext>()
             .UseSqlServer("Server=localhost;Database=local.test;User Id=sa;Password=Password123!;TrustServerCertificate=True")
             .Options;
-        var customOptions = new CustomDbContextOptions<SqlServerTestDbContext> { IsPooled = isPooled };
+        var customOptions = new CustomDbContextOptions<SqlServerTestDbContext>
+        {
+            IsPooled = isPooled,
+        };
         return new SqlServerTestDbContext(options, customOptions);
     }
 
@@ -22,7 +25,10 @@ public class DbContextBaseShould
         var options = new DbContextOptionsBuilder<SqlServerTestDbContext>()
             .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
             .Options;
-        var customOptions = new CustomDbContextOptions<SqlServerTestDbContext> { IsPooled = isPooled };
+        var customOptions = new CustomDbContextOptions<SqlServerTestDbContext>
+        {
+            IsPooled = isPooled,
+        };
         return new SqlServerTestDbContext(options, customOptions);
     }
 
@@ -66,7 +72,12 @@ public class DbContextBaseShould
     {
         using var ctx = BuildInMemoryContext();
 
-        var entity = new ParentEntity { Id = Guid.CreateVersion7().ToString(), CreatedAt = TimeProvider.System.GetUtcNow(), Name = "before" };
+        var entity = new ParentEntity
+        {
+            Id = Guid.CreateVersion7().ToString(),
+            CreatedAt = TimeProvider.System.GetUtcNow(),
+            Name = "before",
+        };
 
         ctx.Parents.Add(entity);
         ctx.SaveChanges();

@@ -132,7 +132,7 @@ public class MarketplaceBookingFailureNotificationService(IRepositoryFactory rep
                 : "Your booking payment expired, so the reserved capacity was released.",
             _ => internalAudience
                 ? "A booking payment could not be completed and its capacity was released."
-                : "We could not complete your booking payment, so the reserved capacity was released."
+                : "We could not complete your booking payment, so the reserved capacity was released.",
         };
         var action = failure.CustomerAction == "Rebook" ? "start a new booking" : "review your subscription";
         return (

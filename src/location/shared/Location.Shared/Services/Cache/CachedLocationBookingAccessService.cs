@@ -31,7 +31,11 @@ public class CachedLocationBookingAccessService(
                     ct)
                     ? true
                     : throw new LocationBookingAccessNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromSeconds(30),
+                },
                 cancellationToken: cancellationToken);
         }
         catch (LocationBookingAccessNotFound)

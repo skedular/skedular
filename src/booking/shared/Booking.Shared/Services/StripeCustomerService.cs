@@ -62,12 +62,19 @@ public class StripeCustomerService(
 
         var stripeCustomer = await customerCreateService.CreateAsync(
             entityMapper.MapToCustomerCreateOption(organization),
-            new RequestOptions { IdempotencyKey = $"{organization.Id}-{stripeAccountId}", StripeAccount = stripeAccountId },
+            new RequestOptions
+            {
+                IdempotencyKey = $"{organization.Id}-{stripeAccountId}",
+                StripeAccount = stripeAccountId,
+            },
             cancellationToken);
 
         return repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
         {
-            Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id, StripeAccountId = stripeAccountId, Organization = organization
+            Id = randomHelper.Generate(),
+            StripeCustomerId = stripeCustomer.Id,
+            StripeAccountId = stripeAccountId,
+            Organization = organization,
         });
     }
 
@@ -91,12 +98,19 @@ public class StripeCustomerService(
 
         var stripeCustomer = await customerCreateService.CreateAsync(
             entityMapper.MapToCustomerCreateOption(customer),
-            new RequestOptions { IdempotencyKey = $"{customer.Id}-{stripeAccountId}", StripeAccount = stripeAccountId },
+            new RequestOptions
+            {
+                IdempotencyKey = $"{customer.Id}-{stripeAccountId}",
+                StripeAccount = stripeAccountId,
+            },
             cancellationToken);
 
         return repositoryFactory.StripeCustomerRepository.Add(new StripeCustomer
         {
-            Id = randomHelper.Generate(), StripeCustomerId = stripeCustomer.Id, StripeAccountId = stripeAccountId, Customer = customer
+            Id = randomHelper.Generate(),
+            StripeCustomerId = stripeCustomer.Id,
+            StripeAccountId = stripeAccountId,
+            Customer = customer,
         });
     }
 }

@@ -134,7 +134,10 @@ public class ConfigurationPocoShould
     [Fact]
     public void CloudflareConfiguration_defaults()
     {
-        var config = new CloudflareConfiguration { CdnBaseUrl = new Uri("https://cdn.example.com") };
+        var config = new CloudflareConfiguration
+        {
+            CdnBaseUrl = new Uri("https://cdn.example.com"),
+        };
         config.AccountId.ShouldBe(string.Empty);
         config.AccessKey.ShouldBe(string.Empty);
         config.SecretKey.ShouldBe(string.Empty);
@@ -157,12 +160,23 @@ public class ConfigurationPocoShould
     {
         var config = new IdentityProvidersConfiguration
         {
-            Cognito = new Cognito { JwksUri = new Uri("https://cognito.example.com"), Issuer = "iss", Audiences = "aud" },
-            Google = new IdentityProviders.Configurations.Google { ApplicationId = "appId", Issuer = "google" },
+            Cognito = new Cognito
+            {
+                JwksUri = new Uri("https://cognito.example.com"),
+                Issuer = "iss",
+                Audiences = "aud",
+            },
+            Google = new IdentityProviders.Configurations.Google
+            {
+                ApplicationId = "appId",
+                Issuer = "google",
+            },
             WorkOS = new IdentityProviders.Configurations.WorkOS
             {
-                JwksUri = new Uri("https://workos.example.com"), Issuer = "workos", ApiKey = "key"
-            }
+                JwksUri = new Uri("https://workos.example.com"),
+                Issuer = "workos",
+                ApiKey = "key",
+            },
         };
 
         config.Cognito.JwksUri.ShouldBe(new Uri("https://cognito.example.com"));
@@ -196,7 +210,13 @@ public class ConfigurationPocoShould
     [Fact]
     public void GraphQL_types_roundtrip()
     {
-        var pageInfo = new PageInfo { HasNextPage = true, HasPreviousPage = false, StartCursor = "a", EndCursor = "b" };
+        var pageInfo = new PageInfo
+        {
+            HasNextPage = true,
+            HasPreviousPage = false,
+            StartCursor = "a",
+            EndCursor = "b",
+        };
         pageInfo.HasNextPage.ShouldBeTrue();
         pageInfo.EndCursor.ShouldBe("b");
 
@@ -211,14 +231,25 @@ public class ConfigurationPocoShould
         var nodeEmpty = new Node();
         nodeEmpty.Id.ShouldBe(string.Empty);
 
-        var version = new GraphQL.Types.Version { Major = 1, Minor = 2, Build = 3, Revision = 4 };
+        var version = new GraphQL.Types.Version
+        {
+            Major = 1,
+            Minor = 2,
+            Build = 3,
+            Revision = 4,
+        };
         version.Major.ShouldBe(1);
     }
 
     [Fact]
     public void KafkaOutbox_defaults()
     {
-        var outbox = new KafkaOutbox { Id = "1", Topic = "t", Timestamp = TimeProvider.System.GetUtcNow() };
+        var outbox = new KafkaOutbox
+        {
+            Id = "1",
+            Topic = "t",
+            Timestamp = TimeProvider.System.GetUtcNow(),
+        };
         outbox.RetryCount.ShouldBe(0);
         outbox.Headers.ShouldBeEmpty();
         outbox.Key.ShouldBeEmpty();
@@ -229,7 +260,12 @@ public class ConfigurationPocoShould
     [Fact]
     public void TemporalOutbox_defaults()
     {
-        var outbox = new TemporalOutbox { Id = "1", WorkflowType = "wf", Timestamp = TimeProvider.System.GetUtcNow() };
+        var outbox = new TemporalOutbox
+        {
+            Id = "1",
+            WorkflowType = "wf",
+            Timestamp = TimeProvider.System.GetUtcNow(),
+        };
         outbox.RetryCount.ShouldBe(0);
         outbox.ProcessingErrors.ShouldBeNull();
     }

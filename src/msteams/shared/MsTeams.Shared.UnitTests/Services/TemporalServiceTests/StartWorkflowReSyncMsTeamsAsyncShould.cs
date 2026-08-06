@@ -13,9 +13,12 @@ public class StartWorkflowReSyncMsTeamsAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Start_Workflow_With_Correct_Options(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] IWorkflowIdService workflowIdService,
+        [Frozen]
+        TemporalConfiguration temporalConfiguration,
+        [Frozen]
+        ITemporalClient temporalClient,
+        [Frozen]
+        IWorkflowIdService workflowIdService,
         WorkflowHandle<ReSyncMsTeams> workflowHandle,
         TemporalService sut,
         ReSyncMsTeamsInput args,

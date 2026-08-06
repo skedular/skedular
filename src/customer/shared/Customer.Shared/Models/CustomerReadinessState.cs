@@ -12,7 +12,7 @@ public class CustomerReadinessState
             Domains.Location,
             Domains.Core,
             Domains.Slack,
-            Domains.MsTeams
+            Domains.MsTeams,
         };
 
     public required string CustomerId { get; init; }

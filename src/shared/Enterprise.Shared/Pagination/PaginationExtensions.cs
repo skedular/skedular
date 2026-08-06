@@ -23,7 +23,7 @@ public sealed record KeysetPaginationField<T>(
 
     public KeysetPaginationField<T> Reverse() => this with
     {
-        Direction = Direction == OrderDirection.Ascending ? OrderDirection.Descending : OrderDirection.Ascending
+        Direction = Direction == OrderDirection.Ascending ? OrderDirection.Descending : OrderDirection.Ascending,
     };
 }
 
@@ -52,7 +52,16 @@ public static class PaginationExtensions
         this IQueryable<T> query,
         PaginationInputParam paginationInputParam,
         IReadOnlyList<KeysetPaginationField<T>> fields,
-        CancellationToken cancellationToken) where T : EntityBase
+        CancellationToken cancellationToken) where T : EntityBase =>
+        await query.ToPaginatedAsync(paginationInputParam, fields, item => item.Id, cancellationToken);
+
+    /// <summary>Keyset-paginates a database projection with an explicit stable identifier.</summary>
+    public static async Task<(PaginatedInfo, IReadOnlyList<Edge<T>>, int)> ToPaginatedAsync<T>(
+        this IQueryable<T> query,
+        PaginationInputParam paginationInputParam,
+        IReadOnlyList<KeysetPaginationField<T>> fields,
+        Expression<Func<T, string>> idSelector,
+        CancellationToken cancellationToken)
     {
         var totalCount = await query.CountAsync(cancellationToken);
         if (totalCount == 0)
@@ -60,7 +69,7 @@ public static class PaginationExtensions
             return (new PaginatedInfo(false, false, null, null), [], 0);
         }
 
-        var normalizedFields = AddStableIdField(fields);
+        var normalizedFields = AddStableIdField(fields, idSelector);
         var isBackward = paginationInputParam.Last is not null || !string.IsNullOrWhiteSpace(paginationInputParam.Before);
         var effectiveFields = isBackward ? normalizedFields.Select(field => field.Reverse()).ToList() : normalizedFields.ToList();
         var cursor = !string.IsNullOrWhiteSpace(paginationInputParam.After)
@@ -90,7 +99,8 @@ public static class PaginationExtensions
             items.Reverse();
         }
 
-        var edges = items.Select(item => new Edge<T>(item, EncodeKeysetCursor(item, normalizedFields))).ToList();
+        var idAccessor = idSelector.Compile();
+        var edges = items.Select(item => new Edge<T>(item, EncodeKeysetCursor(item, normalizedFields, idAccessor))).ToList();
 
         var paginatedInfo = isBackward
             ? new PaginatedInfo(
@@ -282,10 +292,10 @@ public static class PaginationExtensions
         return rawValue is null ? null : JsonSerializer.Deserialize(rawValue, field.ValueType);
     }
 
-    private static string EncodeKeysetCursor<T>(T item, List<KeysetPaginationField<T>> fields) where T : EntityBase
+    private static string EncodeKeysetCursor<T>(T item, List<KeysetPaginationField<T>> fields, Func<T, string> idAccessor)
     {
         var payload = new KeysetCursorPayload(
-            item.Id,
+            idAccessor(item),
             fields.ToDictionary(
                 field => field.CursorKey,
                 field => field.CursorKey == nameof(EntityBase.Id)
@@ -308,7 +318,9 @@ public static class PaginationExtensions
     private static Expression ReplaceParameter(Expression expression, ParameterExpression source, ParameterExpression target) =>
         new ReplaceParameterVisitor(source, target).Visit(expression);
 
-    private static List<KeysetPaginationField<T>> AddStableIdField<T>(IReadOnlyList<KeysetPaginationField<T>> fields) where T : EntityBase
+    private static List<KeysetPaginationField<T>> AddStableIdField<T>(
+        IReadOnlyList<KeysetPaginationField<T>> fields,
+        Expression<Func<T, string>> idSelector)
     {
         if (fields.Any(field => field.CursorKey == nameof(EntityBase.Id)))
         {
@@ -316,7 +328,7 @@ public static class PaginationExtensions
         }
 
         var direction = fields.LastOrDefault()?.Direction ?? OrderDirection.Ascending;
-        return fields.Append(KeysetPaginationField<T>.Create(nameof(EntityBase.Id), query => query.Id, direction)).ToList();
+        return fields.Append(KeysetPaginationField<T>.Create(nameof(EntityBase.Id), idSelector, direction)).ToList();
     }
 
     private static Expression CreateTypedConstant(Expression member, object? value)

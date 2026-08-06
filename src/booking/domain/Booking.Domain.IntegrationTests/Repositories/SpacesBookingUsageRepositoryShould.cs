@@ -64,6 +64,6 @@ public class SpacesBookingUsageRepositoryShould(IRepositoryFactory repositoryFac
             Channel = BookingChannel.Marketplace.ToBookingChannel(),
             Schedules = [],
             InvolvedOrganizations = [organization],
-            DeletedAt = deletedAt
+            DeletedAt = deletedAt,
         };
 }

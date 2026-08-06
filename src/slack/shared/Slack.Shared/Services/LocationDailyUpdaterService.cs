@@ -86,13 +86,22 @@ public class LocationDailyUpdaterService(
         var bookings = bookingConnection.Edges.Select(item => item.Node).ToList();
         var blocks = new List<Block>
         {
-            new SectionBlock { Text = "*Who's in today?*".ToMarkdown() },
-            new SectionBlock { Text = location.Name.ToSafeString().ToMarkdownWithIcon(Icons.Location) }
+            new SectionBlock
+            {
+                Text = "*Who's in today?*".ToMarkdown(),
+            },
+            new SectionBlock
+            {
+                Text = location.Name.ToSafeString().ToMarkdownWithIcon(Icons.Location),
+            },
         };
 
         if (bookings.Count == 0)
         {
-            blocks.Add(new SectionBlock { Text = "*No one has joined yet, be the first*".ToMarkdown() });
+            blocks.Add(new SectionBlock
+            {
+                Text = "*No one has joined yet, be the first*".ToMarkdown(),
+            });
         }
         else
         {
@@ -113,7 +122,7 @@ public class LocationDailyUpdaterService(
                         Text = workspaceMemberService.GetMentionedCustomerNameInSlackFormat(
                             workspace,
                             customer.Identities.Select(item => item.Id).ToList(),
-                            customer).ToMarkdownWithIcon(Icons.People)
+                            customer).ToMarkdownWithIcon(Icons.People),
                     });
                     blocks.AddRange(bookingComponents.GetResourcesLines(booking));
                 }
@@ -121,7 +130,10 @@ public class LocationDailyUpdaterService(
 
             if (bookingConnection.TotalCount > LocationBookingsPageSize)
             {
-                blocks.Add(new SectionBlock { Text = "*To see other bookings, check the Skedular application in Slack*".ToMarkdown() });
+                blocks.Add(new SectionBlock
+                {
+                    Text = "*To see other bookings, check the Skedular application in Slack*".ToMarkdown(),
+                });
             }
 
             blocks.Add(new DividerBlock());
@@ -143,12 +155,17 @@ public class LocationDailyUpdaterService(
                             null,
                             locationId,
                             null)
-                        .Serialize()
-                }
-            ]
+                        .Serialize(),
+                },
+            ],
         });
 
-        var message = new Message { Channel = locationEntity.DailyUpdateChannel.Id, Blocks = blocks, Text = "Who's in today?" };
+        var message = new Message
+        {
+            Channel = locationEntity.DailyUpdateChannel.Id,
+            Blocks = blocks,
+            Text = "Who's in today?",
+        };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.Chat.PostMessage(message, cancellationToken);

@@ -6,6 +6,9 @@ namespace Organization.Api.GraphQL.Member;
 [GraphQLName("OrganizationMemberRoleDetails")]
 public class OrganizationMemberRoleDetails
 {
-    [GraphQLName("type")] public OrganizationMemberRole Type { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("type")]
+    public OrganizationMemberRole Type { get; set; }
+
+    [GraphQLName("name")]
+    public string Name { get; set; } = string.Empty;
 }

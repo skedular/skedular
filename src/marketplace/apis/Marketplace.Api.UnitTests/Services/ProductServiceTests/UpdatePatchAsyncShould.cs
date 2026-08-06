@@ -21,27 +21,62 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Authorization_Rejection_And_Rethrow(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IProductRepository productRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ILogger<ProductService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IProductRepository productRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ILogger<ProductService> logger,
         ProductService sut,
         CancellationToken cancellationToken)
     {
-        var customer = new CustomerModel { Id = "cust-1" };
-        var customerEntity = new CustomerEntity { Id = "cust-1" };
-        var orgEntity = new OrganizationEntity { Id = "org-1" };
-        var existingProduct = new ProductEntity { Id = "product-1", Organization = orgEntity };
+        var customer = new CustomerModel
+        {
+            Id = "cust-1",
+        };
+        var customerEntity = new CustomerEntity
+        {
+            Id = "cust-1",
+        };
+        var orgEntity = new OrganizationEntity
+        {
+            Id = "org-1",
+        };
+        var existingProduct = new ProductEntity
+        {
+            Id = "product-1",
+            Organization = orgEntity,
+        };
         var productVersion = new ProductVersion
         {
-            Product = new Product { Id = "product-1" }, CreatedAt = TimeProvider.System.GetUtcNow(), PricingOptions = []
+            Product = new Product
+            {
+                Id = "product-1",
+            },
+            CreatedAt = TimeProvider.System.GetUtcNow(),
+            PricingOptions = [],
         };
-        var productModel = new Product { Id = "product-1", Organization = new Organization { Id = "org-1" }, ProductVersions = [productVersion] };
+        var productModel = new Product
+        {
+            Id = "product-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
+            ProductVersions = [productVersion],
+        };
         var request = new ProductPatchRequest(
             "product-1",
-            new HashSet<ProductPatchField> { ProductPatchField.Tags },
+            new HashSet<ProductPatchField>
+            {
+                ProductPatchField.Tags,
+            },
             productVersion);
 
         A.CallTo(() => repositoryFactory.ProductRepository).Returns(productRepository);
@@ -62,15 +97,23 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Error_And_Rethrow_On_General_Failure(
-        [Frozen] ICustomerService customerService,
-        [Frozen] ILogger<ProductService> logger,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        ILogger<ProductService> logger,
         ProductService sut,
         CancellationToken cancellationToken)
     {
         var request = new ProductPatchRequest(
             "product-1",
-            new HashSet<ProductPatchField> { ProductPatchField.Tags },
-            new ProductVersion { PricingOptions = [] });
+            new HashSet<ProductPatchField>
+            {
+                ProductPatchField.Tags,
+            },
+            new ProductVersion
+            {
+                PricingOptions = [],
+            });
 
         A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
             .ThrowsAsync(new InvalidOperationException("service failure"));
@@ -86,15 +129,23 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Autosave_Started(
-        [Frozen] ICustomerService customerService,
-        [Frozen] ILogger<ProductService> logger,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        ILogger<ProductService> logger,
         ProductService sut,
         CancellationToken cancellationToken)
     {
         var request = new ProductPatchRequest(
             "product-1",
-            new HashSet<ProductPatchField> { ProductPatchField.Tags },
-            new ProductVersion { PricingOptions = [] });
+            new HashSet<ProductPatchField>
+            {
+                ProductPatchField.Tags,
+            },
+            new ProductVersion
+            {
+                PricingOptions = [],
+            });
 
         A.CallTo(() => customerService.GetCustomerAsync(cancellationToken))
             .ThrowsAsync(new InvalidOperationException("forced early failure"));
@@ -108,29 +159,72 @@ public class UpdatePatchAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Append_Product_Version_Without_Updating_Product_Row(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IProductRepository productRepository,
-        [Frozen] IProductVersionRepository productVersionRepository,
-        [Frozen] ICustomerService customerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IEntityMapper entityMapper,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IProductRepository productRepository,
+        [Frozen]
+        IProductVersionRepository productVersionRepository,
+        [Frozen]
+        ICustomerService customerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IEntityMapper entityMapper,
         ProductService sut,
         CancellationToken cancellationToken)
     {
-        var customer = new CustomerModel { Id = "cust-1" };
-        var customerEntity = new CustomerEntity { Id = "cust-1" };
-        var orgEntity = new OrganizationEntity { Id = "org-1" };
-        var existingProduct = new ProductEntity { Id = "product-1", Organization = orgEntity };
+        var customer = new CustomerModel
+        {
+            Id = "cust-1",
+        };
+        var customerEntity = new CustomerEntity
+        {
+            Id = "cust-1",
+        };
+        var orgEntity = new OrganizationEntity
+        {
+            Id = "org-1",
+        };
+        var existingProduct = new ProductEntity
+        {
+            Id = "product-1",
+            Organization = orgEntity,
+        };
         var currentVersion = new ProductVersion
         {
-            Product = new Product { Id = "product-1" }, CreatedAt = TimeProvider.System.GetUtcNow(), PricingOptions = []
+            Product = new Product
+            {
+                Id = "product-1",
+            },
+            CreatedAt = TimeProvider.System.GetUtcNow(),
+            PricingOptions = [],
         };
-        var productModel = new Product { Id = "product-1", Organization = new Organization { Id = "org-1" }, ProductVersions = [currentVersion] };
-        var productVersionEntity = new ProductVersionEntity { Id = "version-2", Product = existingProduct };
+        var productModel = new Product
+        {
+            Id = "product-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
+            ProductVersions = [currentVersion],
+        };
+        var productVersionEntity = new ProductVersionEntity
+        {
+            Id = "version-2",
+            Product = existingProduct,
+        };
         var request = new ProductPatchRequest(
             "product-1",
-            new HashSet<ProductPatchField> { ProductPatchField.ListingMetadata },
-            new ProductVersion { ListingMetadata = ListingMetadataModel.Empty, PricingOptions = [] });
+            new HashSet<ProductPatchField>
+            {
+                ProductPatchField.ListingMetadata,
+            },
+            new ProductVersion
+            {
+                ListingMetadata = ListingMetadataModel.Empty,
+                PricingOptions = [],
+            });
 
         A.CallTo(() => repositoryFactory.ProductRepository).Returns(productRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);

@@ -55,7 +55,7 @@ public class OrganizationTaxDetailsService(
                 Id = randomHelper.Generate(),
                 IsRegistered = request.IsRegistered ?? false,
                 TaxId = request.TaxId ?? string.Empty,
-                TaxRatePercentage = request.TaxRatePercentage ?? 0
+                TaxRatePercentage = request.TaxRatePercentage ?? 0,
             };
             organization.OrganizationTaxDetails =
                 repositoryFactory.OrganizationTaxDetailsRepository.Add(graphQlMapper.MapToEntity(taxDetails, organization));
@@ -180,7 +180,7 @@ public class OrganizationTaxDetailsService(
             OrganizationTaxDetailsPatchField.TaxId => ApplyTaxIdPatch(request.TaxId ?? string.Empty, taxDetails) || current,
             OrganizationTaxDetailsPatchField.TaxRatePercentage =>
                 ApplyTaxRatePercentagePatch(request.TaxRatePercentage ?? 0, taxDetails) || current,
-            _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation tax details patch field is not supported.")
+            _ => throw new ArgumentOutOfRangeException(nameof(request), field, "This organisation tax details patch field is not supported."),
         });
 
     private static bool ApplyIsRegisteredPatch(bool isRegistered, OrganizationTaxDetails taxDetails)

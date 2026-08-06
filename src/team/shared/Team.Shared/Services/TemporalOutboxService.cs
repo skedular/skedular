@@ -42,7 +42,7 @@ public class TemporalOutboxService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
             },
             unitOfWork);
 

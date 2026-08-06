@@ -25,7 +25,7 @@ redpanda.WithArgs(async context =>
                  "redpanda", "start", "--overprovisioned", "--smp", "1", "--memory", "1G", "--reserve-memory", "0M", "--node-id", "0",
                  "--check=false", "--kafka-addr", "internal://0.0.0.0:29092,external://0.0.0.0:19092", "--advertise-kafka-addr",
                  $"internal://redpanda:29092,external://localhost:{kafkaPort}", "--schema-registry-addr", "0.0.0.0:8081", "--rpc-addr",
-                 "redpanda:33145", "--advertise-rpc-addr", "redpanda:33145"
+                 "redpanda:33145", "--advertise-rpc-addr", "redpanda:33145",
              })
     {
         context.Args.Add(argument);

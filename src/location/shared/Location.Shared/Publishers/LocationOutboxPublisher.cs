@@ -26,7 +26,10 @@ public class LocationOutboxPublisher(
         foreach (var location in locations)
         {
             publisher.Publish(
-                new Key { LocationId = location.Id },
+                new Key
+                {
+                    LocationId = location.Id,
+                },
                 new Event
                 {
                     Metadata = Event.NewMetadata(
@@ -34,7 +37,10 @@ public class LocationOutboxPublisher(
                         applicationConfiguration.AppSource,
                         location.IsDeleted() ? Type.LocationDeleted : Type.LocationUpserted,
                         context.GetCorrelationId()),
-                    Data = new Data { Location = eventMapper.MapTo(location) }
+                    Data = new Data
+                    {
+                        Location = eventMapper.MapTo(location),
+                    },
                 },
                 unitOfWork);
         }

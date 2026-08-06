@@ -32,9 +32,9 @@ public class OrganizationMemberOptionProvider(IRepositoryFactory repositoryFacto
                 .Select(item => new Option
                 {
                     Text = string.IsNullOrWhiteSpace(item.Customer.DisplayableName) ? "???" : item.Customer.DisplayableName.ToOptionText(),
-                    Value = item.Customer.Id
+                    Value = item.Customer.Id,
                 })
-                .ToList()
+                .ToList(),
         };
     }
 }

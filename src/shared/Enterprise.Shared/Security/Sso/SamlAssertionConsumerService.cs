@@ -40,7 +40,10 @@ public class SamlAssertionConsumerService(
         logger.LogDebug("Validating SAML response signature");
 
         var certificate = await GetSigningCertificateFromMetadataAsync(appFederationMetadataUrl, cancellationToken);
-        var xmlDoc = new XmlDocument { PreserveWhitespace = true };
+        var xmlDoc = new XmlDocument
+        {
+            PreserveWhitespace = true,
+        };
         xmlDoc.LoadXml(samlResponse);
 
         var xmlNamespaceManager = new XmlNamespaceManager(xmlDoc.NameTable);
@@ -177,7 +180,7 @@ public class SamlAssertionConsumerService(
                 HttpOnly = true,
                 Secure = true,
                 MaxAge = samlResponse.SessionNotOnOrAfter - timeProvider.GetUtcNow(),
-                Expires = samlResponse.SessionNotOnOrAfter
+                Expires = samlResponse.SessionNotOnOrAfter,
             });
     }
 

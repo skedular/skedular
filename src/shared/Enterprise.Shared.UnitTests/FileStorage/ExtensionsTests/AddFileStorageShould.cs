@@ -22,12 +22,15 @@ public class AddFileStorageShould
                 [$"{FileStorageConfiguration.Key}:UseFileServer"] = "true",
                 [$"{FileStorageConfiguration.Key}:FileServerPublicFilePath"] = tempCdn,
                 [$"{FileStorageConfiguration.Key}:FileServerFilePath"] = tempPrivate,
-                [$"{FileStorageConfiguration.Key}:MaxFileSize"] = "1048576"
+                [$"{FileStorageConfiguration.Key}:MaxFileSize"] = "1048576",
             })
             .Build();
 
         services.AddLogging();
-        services.AddSingleton(new ApplicationConfiguration { ApiBaseDomain = new Uri("https://example.com") });
+        services.AddSingleton(new ApplicationConfiguration
+        {
+            ApiBaseDomain = new Uri("https://example.com"),
+        });
         services.AddFileStorage(configuration, "https://example.com/cdn", "https://example.com/files");
 
         var provider = services.BuildServiceProvider();
@@ -50,7 +53,10 @@ public class AddFileStorageShould
     public void Throw_when_public_cdn_endpoint_is_empty(ServiceCollection services)
     {
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { [$"{FileStorageConfiguration.Key}:UseFileServer"] = "true" })
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                [$"{FileStorageConfiguration.Key}:UseFileServer"] = "true",
+            })
             .Build();
 
         Should.Throw<ArgumentException>(() =>
@@ -62,7 +68,10 @@ public class AddFileStorageShould
     public void Throw_when_file_endpoint_is_empty(ServiceCollection services)
     {
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { [$"{FileStorageConfiguration.Key}:UseFileServer"] = "true" })
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                [$"{FileStorageConfiguration.Key}:UseFileServer"] = "true",
+            })
             .Build();
 
         Should.Throw<ArgumentException>(() =>

@@ -8,7 +8,7 @@ public static class OutboxTelemetryFilter
     private static readonly HashSet<string> s_excludedActivitySourceNames =
     [
         TelemetryKeys.KafkaActivitySourceName,
-        Outbox.Temporal.TelemetryKeys.TemporalActivitySourceName
+        Outbox.Temporal.TelemetryKeys.TemporalActivitySourceName,
     ];
 
     private static readonly HashSet<string> s_excludedActivityNames =
@@ -18,7 +18,7 @@ public static class OutboxTelemetryFilter
         TelemetryKeys.KafkaEventSend,
         Outbox.Temporal.TelemetryKeys.TemporalEventPoll,
         Outbox.Temporal.TelemetryKeys.TemporalEventSave,
-        Outbox.Temporal.TelemetryKeys.TemporalEventSend
+        Outbox.Temporal.TelemetryKeys.TemporalEventSend,
     ];
 
     public static bool ShouldTraceActivity(Activity activity)

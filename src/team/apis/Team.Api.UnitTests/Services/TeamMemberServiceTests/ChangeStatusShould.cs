@@ -19,31 +19,60 @@ public class ChangeStatusShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Log_Information_When_Statuses_Change(
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] ITeamAuthorizationService teamAuthorizationService,
-        [Frozen] ITeamOutboxPublisher teamOutboxPublisher,
-        [Frozen] IEntityMapper entityMapper,
-        [Frozen] ITeamMemberRepository teamMemberRepository,
-        [Frozen] ITeamRepository teamRepository,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<TeamMemberService> logger,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        ITeamAuthorizationService teamAuthorizationService,
+        [Frozen]
+        ITeamOutboxPublisher teamOutboxPublisher,
+        [Frozen]
+        IEntityMapper entityMapper,
+        [Frozen]
+        ITeamMemberRepository teamMemberRepository,
+        [Frozen]
+        ITeamRepository teamRepository,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<TeamMemberService> logger,
         TeamMemberService sut,
         CancellationToken cancellationToken)
     {
-        var team = new Shared.Database.Entities.Team { Id = "team-1", OrganizationId = "org-1" };
+        var team = new Shared.Database.Entities.Team
+        {
+            Id = "team-1",
+            OrganizationId = "org-1",
+        };
         var teamMember = new TeamMember
         {
             Id = "member-1",
             Team = team,
-            Customer = new Customer { Id = "customer-2" },
+            Customer = new Customer
+            {
+                Id = "customer-2",
+            },
             Role = TeamMemberRoleConstants.Member,
-            Status = TeamMemberStatusConstants.Active
+            Status = TeamMemberStatusConstants.Active,
         };
-        var mappedTeam = new Shared.Models.Team { Id = "team-1", Organization = new Organization { Id = "org-1" } };
-        var mappedMember = new Shared.Models.TeamMember { Id = "member-1", Team = mappedTeam };
+        var mappedTeam = new Shared.Models.Team
+        {
+            Id = "team-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
+        };
+        var mappedMember = new Shared.Models.TeamMember
+        {
+            Id = "member-1",
+            Team = mappedTeam,
+        };
 
         A.CallTo(() => repositoryFactory.TeamMemberRepository).Returns(teamMemberRepository);
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);

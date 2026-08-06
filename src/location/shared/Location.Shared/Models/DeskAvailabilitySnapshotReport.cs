@@ -38,6 +38,6 @@ public class ResourceAvailabilitySnapshotReport : ModelBaseWithDeleted
             BookedResourceNames = snapshots
                 .Where(s => s.Classification == ResourceAvailabilityClassificationConstants.Booked)
                 .Select(s => s.Resource.Name)
-                .ToList()
+                .ToList(),
         };
 }

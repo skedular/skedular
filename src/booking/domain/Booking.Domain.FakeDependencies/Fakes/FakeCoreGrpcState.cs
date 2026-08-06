@@ -24,8 +24,8 @@ public class FakeCoreGrpcState
                 Url = string.IsNullOrWhiteSpace(url) ? "https://fake-core.local/private/fake-upload.pdf" : url,
                 ContentType = string.IsNullOrWhiteSpace(contentType) ? "application/pdf" : contentType,
                 Width = width,
-                Height = height
-            }
+                Height = height,
+            },
         };
 
     public IReadOnlyCollection<RecordedUploadToPrivateStorageRequest> SnapshotRecordedRequests(bool clearAfterRead)
@@ -56,7 +56,11 @@ public class FakeCoreGrpcState
         new()
         {
             Id = "fake-upload",
-            Original = new GrpcFile { Url = "https://fake-core.local/private/fake-upload.pdf", ContentType = "application/pdf" }
+            Original = new GrpcFile
+            {
+                Url = "https://fake-core.local/private/fake-upload.pdf",
+                ContentType = "application/pdf",
+            },
         };
 }
 

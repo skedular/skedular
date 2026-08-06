@@ -49,7 +49,7 @@ public static class Icons
 public enum IconPosition
 {
     Start,
-    End
+    End,
 }
 
 public static class IconExtensions

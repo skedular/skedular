@@ -27,6 +27,10 @@ public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options
     {
         public MarketplaceDbContext CreateDbContext(string[] args) =>
             new(args.ToDbContextOption<MarketplaceDbContext>(true),
-                new CustomDbContextOptions<MarketplaceDbContext> { IsPooled = false, IsPostgisEnabled = true });
+                new CustomDbContextOptions<MarketplaceDbContext>
+                {
+                    IsPooled = false,
+                    IsPostgisEnabled = true,
+                });
     }
 }

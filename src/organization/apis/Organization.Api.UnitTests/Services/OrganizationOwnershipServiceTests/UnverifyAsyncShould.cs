@@ -18,16 +18,26 @@ public class UnverifyAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task PersistPublishAndClearCaches(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] IOrganizationOutboxPublisher organizationOutboxPublisher,
-        [Frozen] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-        [Frozen] IGraphQlMapper graphQlMapper,
-        [Frozen] ICachedOrganizationService cachedOrganizationService,
-        [Frozen] IDbTransactionBuilder transactionBuilder,
-        [Frozen] IUnitOfWork unitOfWork,
-        [Frozen] IDbContextTransaction transaction,
-        [Frozen] ILogger<OrganizationOwnershipService> logger,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IOrganizationOutboxPublisher organizationOutboxPublisher,
+        [Frozen]
+        IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+        [Frozen]
+        IGraphQlMapper graphQlMapper,
+        [Frozen]
+        ICachedOrganizationService cachedOrganizationService,
+        [Frozen]
+        IDbTransactionBuilder transactionBuilder,
+        [Frozen]
+        IUnitOfWork unitOfWork,
+        [Frozen]
+        IDbContextTransaction transaction,
+        [Frozen]
+        ILogger<OrganizationOwnershipService> logger,
         OrganizationOwnershipService sut,
         CancellationToken cancellationToken)
     {
@@ -38,7 +48,13 @@ public class UnverifyAsyncShould
             Name = "Garden Host",
             Type = OrganizationTypeConstants.Host,
             IsOwnershipVerified = true,
-            OrganizationMembers = [new OrganizationMember { CustomerId = "customer-1" }]
+            OrganizationMembers =
+            [
+                new OrganizationMember
+                {
+                    CustomerId = "customer-1",
+                },
+            ],
         };
         var mappedOrganization = new Shared.Models.Organization
         {
@@ -46,7 +62,7 @@ public class UnverifyAsyncShould
             CustomDomain = organization.CustomDomain,
             Name = organization.Name,
             Type = OrganizationType.Host,
-            IsOwnershipVerified = false
+            IsOwnershipVerified = false,
         };
         var stripeAuthorizeUrl = new Uri("https://example.test/authorize");
 

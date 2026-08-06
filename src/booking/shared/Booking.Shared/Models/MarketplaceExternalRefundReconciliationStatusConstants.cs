@@ -11,7 +11,7 @@ public enum MarketplaceExternalRefundReconciliationStatus
     Unsettled,
     AccountingProjectionRequired,
     UnknownStripeRefundPath,
-    RetryPending
+    RetryPending,
 }
 
 public static class MarketplaceExternalRefundReconciliationStatusConstants
@@ -45,7 +45,7 @@ public static class MarketplaceExternalRefundReconciliationStatusExtensions
             MarketplaceExternalRefundReconciliationStatusConstants.UnknownStripeRefundPath => MarketplaceExternalRefundReconciliationStatus
                 .UnknownStripeRefundPath,
             MarketplaceExternalRefundReconciliationStatusConstants.RetryPending => MarketplaceExternalRefundReconciliationStatus.RetryPending,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown external refund reconciliation status.")
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown external refund reconciliation status."),
         };
 }
 
@@ -58,7 +58,7 @@ public static class MarketplaceExternalRefundReconciliationProviderExtensions
         {
             MarketplaceExternalRefundReconciliationProvider.Stripe => "STRIPE",
             MarketplaceExternalRefundReconciliationProvider.StripePayout => MarketplaceExternalRefundReconciliationProviderConstants.StripePayout,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown external refund reconciliation provider.")
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown external refund reconciliation provider."),
         };
 
     public static MarketplaceExternalRefundReconciliationProvider ToMarketplaceExternalRefundReconciliationProvider(this string value) =>
@@ -66,6 +66,6 @@ public static class MarketplaceExternalRefundReconciliationProviderExtensions
         {
             "STRIPE" => MarketplaceExternalRefundReconciliationProvider.Stripe,
             MarketplaceExternalRefundReconciliationProviderConstants.StripePayout => MarketplaceExternalRefundReconciliationProvider.StripePayout,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown external refund reconciliation provider.")
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown external refund reconciliation provider."),
         };
 }

@@ -12,17 +12,23 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<CustomerPayload> CompleteOnboardingAsync(
         CompleteOrganizationOnboardingInput input,
-        [Service] ICustomerSettingsService customerSettingsService,
+        [Service]
+        ICustomerSettingsService customerSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerSettingsService.CompleteOnboardingAsync(cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> AddCustomerPreferredLocationAsync(
         AddCustomerPreferredLocationInput input,
-        [Service] ICustomerLocationSettingsService customerLocationSettingsService,
+        [Service]
+        ICustomerLocationSettingsService customerLocationSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerLocationSettingsService.AddCustomerPreferredLocationAsync(
@@ -30,26 +36,36 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             null,
             false,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> RemoveCustomerPreferredLocationAsync(
         RemoveCustomerPreferredLocationInput input,
-        [Service] ICustomerLocationSettingsService customerLocationSettingsService,
+        [Service]
+        ICustomerLocationSettingsService customerLocationSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerLocationSettingsService.RemoveCustomerPreferredLocationAsync(
             input.LocationId,
             null,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> SetCustomerDefaultOrganizationAsync(
         SetCustomerDefaultOrganizationInput input,
-        [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,
+        [Service]
+        ICustomerOrganizationSettingsService customerOrganizationSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerOrganizationSettingsService.SetCustomerDefaultOrganizationAsync(
@@ -58,82 +74,121 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             null,
             false,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> ClearCustomerDefaultOrganizationAsync(
         ClearCustomerDefaultOrganizationInput input,
-        [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,
+        [Service]
+        ICustomerOrganizationSettingsService customerOrganizationSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerOrganizationSettingsService.ClearCustomerDefaultOrganizationAsync(null, cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> AddCustomerPreferredOrganizationTagAsync(
         AddCustomerPreferredOrganizationTagInput input,
-        [Service] ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
+        [Service]
+        ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerOrganizationTagSettingsService.AddCustomerPreferredOrganizationTagAsync(
             input.OrganizationTagId,
             null,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> RemoveCustomerPreferredOrganizationTagAsync(
         RemoveCustomerPreferredOrganizationTagInput input,
-        [Service] ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
+        [Service]
+        ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerOrganizationTagSettingsService.RemoveCustomerPreferredOrganizationTagAsync(
             input.OrganizationTagId,
             null,
             cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> AddCustomerPreferredResourceAsync(
         AddCustomerPreferredResourceInput input,
-        [Service] ICustomerResourceSettingsService customerResourceSettingsService,
+        [Service]
+        ICustomerResourceSettingsService customerResourceSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerResourceSettingsService.AddCustomerPreferredResourceAsync(input.ResourceId, null, cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> RemoveCustomerPreferredResourceAsync(
         RemoveCustomerPreferredResourceInput input,
-        [Service] ICustomerResourceSettingsService customerResourceSettingsService,
+        [Service]
+        ICustomerResourceSettingsService customerResourceSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerResourceSettingsService.RemoveCustomerPreferredResourceAsync(input.ResourceId, null, cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> AddCustomerFavouriteLocationAsync(
         AddCustomerFavouriteLocationInput input,
-        [Service] ICustomerLocationSettingsService customerLocationSettingsService,
+        [Service]
+        ICustomerLocationSettingsService customerLocationSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerLocationSettingsService.AddCustomerFavouriteLocationAsync(input.LocationId, cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 
     [UseResolverScope]
     public async Task<CustomerPayload> RemoveCustomerFavouriteLocationAsync(
         RemoveCustomerFavouriteLocationInput input,
-        [Service] ICustomerLocationSettingsService customerLocationSettingsService,
+        [Service]
+        ICustomerLocationSettingsService customerLocationSettingsService,
         CancellationToken cancellationToken)
     {
         var customer = await customerLocationSettingsService.RemoveCustomerFavouriteLocationAsync(input.LocationId, cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = graphQlMapper.MapTo(customer) };
+        return new CustomerPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Customer = graphQlMapper.MapTo(customer),
+        };
     }
 }

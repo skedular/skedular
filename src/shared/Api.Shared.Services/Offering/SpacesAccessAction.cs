@@ -6,5 +6,5 @@ public enum SpacesAccessAction
     CreateOrModify = 1,
     CreateBookingInstance = 2,
     ProtectExistingCommitment = 3,
-    AccountOrUpgrade = 4
+    AccountOrUpgrade = 4,
 }

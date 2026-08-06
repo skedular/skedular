@@ -210,7 +210,7 @@ public sealed class MarketplaceRefundOperationsService(
         NextRetryAt = src.NextRetryAt,
         ResolutionReason = src.ResolutionReason,
         ResolutionActorCustomerId = src.ResolutionActorCustomerId,
-        ResolutionCorrelationId = src.ResolutionCorrelationId
+        ResolutionCorrelationId = src.ResolutionCorrelationId,
     };
 
     private static Measurement<long>[] CreateMeasurements(

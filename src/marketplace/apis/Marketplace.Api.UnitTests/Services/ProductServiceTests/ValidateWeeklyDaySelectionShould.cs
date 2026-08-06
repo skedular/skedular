@@ -16,7 +16,7 @@ public class ValidateWeeklyDaySelectionShould
         {
             PurchaseCadence = ProductPricingCadence.Weekly,
             AvailableDays = [DayOfWeek.Monday, DayOfWeek.Tuesday],
-            RequiredDaysPerWeek = requiredDaysPerWeek
+            RequiredDaysPerWeek = requiredDaysPerWeek,
         };
 
         Should.Throw<ProductPricingWeeklyDaySelectionRangeInvalid>(() => ProductService.Validate(ProductType.Resource, pricing, false));
@@ -25,7 +25,11 @@ public class ValidateWeeklyDaySelectionShould
     [Fact]
     public void Reject_Weekly_Bounds_For_A_NonWeekly_Price()
     {
-        var pricing = ProductPricing.Empty("monthly") with { PurchaseCadence = ProductPricingCadence.Monthly, RequiredDaysPerWeek = 1 };
+        var pricing = ProductPricing.Empty("monthly") with
+        {
+            PurchaseCadence = ProductPricingCadence.Monthly,
+            RequiredDaysPerWeek = 1,
+        };
 
         Should.Throw<ProductPricingWeeklyDaySelectionOnlySupportedForWeeklyPricing>(() =>
             ProductService.Validate(ProductType.Resource, pricing, false));

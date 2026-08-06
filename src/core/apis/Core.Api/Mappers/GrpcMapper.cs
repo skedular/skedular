@@ -21,7 +21,7 @@ public class GrpcMapper : IGrpcMapper
                 Url = src.StorageUrl.ToString().ToSafeString(),
                 ContentType = src.ContentType.ToSafeString(),
                 Width = src.Width.ToNullInt(),
-                Height = src.Height.ToNullInt()
+                Height = src.Height.ToNullInt(),
             },
             Thumbnail = src.ThumbnailStorageUrl is null
                 ? null
@@ -30,7 +30,7 @@ public class GrpcMapper : IGrpcMapper
                     Url = src.ThumbnailStorageUrl.ToString().ToSafeString(),
                     ContentType = src.ThumbnailContentType.ToSafeString(),
                     Width = src.ThumbnailWidth.ToNullInt(),
-                    Height = src.ThumbnailHeight.ToNullInt()
-                }
+                    Height = src.ThumbnailHeight.ToNullInt(),
+                },
         };
 }

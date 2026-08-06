@@ -21,7 +21,11 @@ public class RegenerateResourceAvailabilitySnapshotsShould(
         var locationId = await Nanoid.GenerateAsync();
         var now = timeProvider.GetUtcNow();
 
-        await repositoryFactory.DbContext.Organization.AddAsync(new Organization { Id = organizationId, CreatedAt = now }, cancellationToken);
+        await repositoryFactory.DbContext.Organization.AddAsync(new Organization
+        {
+            Id = organizationId,
+            CreatedAt = now,
+        }, cancellationToken);
         await repositoryFactory.DbContext.Location.AddAsync(
             new LocationEntity
             {
@@ -29,7 +33,7 @@ public class RegenerateResourceAvailabilitySnapshotsShould(
                 Name = "Backfill Test Location",
                 OrganizationId = organizationId,
                 Type = LocationTypeConstants.Private,
-                CreatedAt = now
+                CreatedAt = now,
             }, cancellationToken);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -45,14 +49,22 @@ public class RegenerateResourceAvailabilitySnapshotsShould(
 
         await locationAnalyticsClient.RegenerateResourceAvailabilitySnapshotsAsync(
             locationId,
-            new RegenerateResourceAvailabilitySnapshotsInput { From = now.AddDays(-6).StartOfDay(), Until = now.StartOfDay() },
+            new RegenerateResourceAvailabilitySnapshotsInput
+            {
+                From = now.AddDays(-6).StartOfDay(),
+                Until = now.StartOfDay(),
+            },
             cancellationToken);
 
         // The endpoint triggers async Temporal workflows for each day; the call should
         // succeed without exception. Idempotency is verified by calling twice.
         await locationAnalyticsClient.RegenerateResourceAvailabilitySnapshotsAsync(
             locationId,
-            new RegenerateResourceAvailabilitySnapshotsInput { From = now.AddDays(-6).StartOfDay(), Until = now.StartOfDay() },
+            new RegenerateResourceAvailabilitySnapshotsInput
+            {
+                From = now.AddDays(-6).StartOfDay(),
+                Until = now.StartOfDay(),
+            },
             cancellationToken);
     }
 
@@ -65,7 +77,11 @@ public class RegenerateResourceAvailabilitySnapshotsShould(
         // Should silently succeed (not error) when the location does not exist
         await locationAnalyticsClient.RegenerateResourceAvailabilitySnapshotsAsync(
             await Nanoid.GenerateAsync(),
-            new RegenerateResourceAvailabilitySnapshotsInput { From = now.AddDays(-1).StartOfDay(), Until = now.StartOfDay() },
+            new RegenerateResourceAvailabilitySnapshotsInput
+            {
+                From = now.AddDays(-1).StartOfDay(),
+                Until = now.StartOfDay(),
+            },
             cancellationToken);
     }
 }

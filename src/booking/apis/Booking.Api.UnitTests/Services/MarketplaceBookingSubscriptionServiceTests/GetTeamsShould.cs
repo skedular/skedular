@@ -15,18 +15,34 @@ public class GetTeamsShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Load_Teams_Through_The_Repository_Method(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IOrganizationRepository organizationRepository,
-        [Frozen] ITeamRepository teamRepository,
-        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        ITeamRepository teamRepository,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
         var searchCriteria = CreateSearchCriteria(["team-1"]);
-        var team = new Team { Id = "team-1", Organization = new Organization { Id = "org-1" } };
-        var organization = new Organization { Id = "org-1" };
+        var team = new Team
+        {
+            Id = "team-1",
+            Organization = new Organization
+            {
+                Id = "org-1",
+            },
+        };
+        var organization = new Organization
+        {
+            Id = "org-1",
+        };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);

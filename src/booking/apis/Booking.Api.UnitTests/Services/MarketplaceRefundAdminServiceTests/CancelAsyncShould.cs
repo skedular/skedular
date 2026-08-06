@@ -15,14 +15,23 @@ public class CancelAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Cancellation_For_An_Unauthorised_Organization_User(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
-        var refund = new MarketplaceRefund { Id = "refund-1", OrganizationId = "org-1", Status = MarketplaceRefundStatusConstants.UnderReview };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-1",
+            OrganizationId = "org-1",
+            Status = MarketplaceRefundStatusConstants.UnderReview,
+        };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("ordinary-user");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
         A.CallTo(() => marketplaceRefundRepository.GetByIdAsync(refund.Id, cancellationToken)).Returns(refund);
@@ -35,13 +44,20 @@ public class CancelAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Cancel_Authorised_Unsubmitted_Refund_And_Publish_The_Change(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
-        [Frozen] IMarketplaceRefundTransitionService refundTransitionService,
-        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IMarketplaceRefundTransitionService refundTransitionService,
+        [Frozen]
+        IUnitOfWork unitOfWork,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
@@ -51,7 +67,7 @@ public class CancelAsyncShould
             OrganizationId = "org-1",
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "booking-1",
-            Status = MarketplaceRefundStatusConstants.UnderReview
+            Status = MarketplaceRefundStatusConstants.UnderReview,
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
@@ -82,11 +98,16 @@ public class CancelAsyncShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Reject_Cancellation_After_Provider_Submission(
-        [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IMarketplaceRefundRepository marketplaceRefundRepository,
-        [Frozen] ICachedCustomerService cachedCustomerService,
-        [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
-        [Frozen] IMarketplaceRefundService marketplaceRefundService,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService organizationAuthorizationService,
+        [Frozen]
+        IMarketplaceRefundService marketplaceRefundService,
         MarketplaceRefundAdminService sut,
         CancellationToken cancellationToken)
     {
@@ -97,7 +118,7 @@ public class CancelAsyncShould
             LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             LocalEntityId = "booking-1",
             Status = MarketplaceRefundStatusConstants.ProviderPending,
-            ExternalPaymentRefundId = "re_1"
+            ExternalPaymentRefundId = "re_1",
         };
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("operator-1");
         A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);

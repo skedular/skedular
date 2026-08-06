@@ -41,7 +41,11 @@ public class MaintainAccountingInvoiceState
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(5),
                 TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(10) }
+                RetryPolicy = new RetryPolicy
+                {
+                    MaximumAttempts = 3,
+                    MaximumInterval = TimeSpan.FromSeconds(10),
+                },
             });
 
         if (result.IsTerminal || result.NextSyncAt is null)

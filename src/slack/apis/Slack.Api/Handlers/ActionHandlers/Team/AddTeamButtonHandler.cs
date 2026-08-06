@@ -44,48 +44,71 @@ public class AddTeamButtonHandler(
         {
             BlockId = TeamActionTypes.Name,
             Label = "Name".ToPlainText(),
-            Element = new PlainTextInput { ActionId = TeamActionTypes.Name },
-            Optional = false
+            Element = new PlainTextInput
+            {
+                ActionId = TeamActionTypes.Name,
+            },
+            Optional = false,
         };
 
         var about = new InputBlock
         {
             BlockId = TeamActionTypes.About,
             Label = "About".ToPlainText(),
-            Element = new PlainTextInput { ActionId = TeamActionTypes.About, Multiline = true },
-            Optional = true
+            Element = new PlainTextInput
+            {
+                ActionId = TeamActionTypes.About,
+                Multiline = true,
+            },
+            Optional = true,
         };
 
         var timezone = new InputBlock
         {
             BlockId = OptionLoaderKeys.TimezoneKey,
             Label = "Timezone".ToPlainText(),
-            Element = new ExternalSelectMenu { ActionId = OptionLoaderKeys.TimezoneKey, MinQueryLength = 3 },
-            Optional = true
+            Element = new ExternalSelectMenu
+            {
+                ActionId = OptionLoaderKeys.TimezoneKey,
+                MinQueryLength = 3,
+            },
+            Optional = true,
         };
 
         var primaryLocation = new InputBlock
         {
             BlockId = TeamActionTypes.PrimaryLocation,
             Label = "Primary Location".ToPlainText(),
-            Element = new ExternalSelectMenu { ActionId = OptionLoaderKeys.OrganizationLocationKey, InitialOption = null, MinQueryLength = 0 },
-            Optional = true
+            Element = new ExternalSelectMenu
+            {
+                ActionId = OptionLoaderKeys.OrganizationLocationKey,
+                InitialOption = null,
+                MinQueryLength = 0,
+            },
+            Optional = true,
         };
 
         var updateChannel = new InputBlock
         {
             BlockId = TeamActionTypes.SlackUpdateChannel,
             Label = "Slack update channel".ToPlainText(),
-            Element = new ChannelSelectMenu { ActionId = TeamActionTypes.SlackUpdateChannel },
-            Optional = true
+            Element = new ChannelSelectMenu
+            {
+                ActionId = TeamActionTypes.SlackUpdateChannel,
+            },
+            Optional = true,
         };
 
         var organizationMembers = new InputBlock
         {
             BlockId = OptionLoaderKeys.OrganizationMemberAndCustomerPairKey,
             Label = "Members".ToPlainText(),
-            Element = new ExternalMultiSelectMenu { ActionId = OptionLoaderKeys.OrganizationMemberAndCustomerPairKey, MinQueryLength = 0 },
-            Optional = false
+            Element = new ExternalMultiSelectMenu
+            {
+                ActionId = OptionLoaderKeys.OrganizationMemberAndCustomerPairKey,
+                MinQueryLength = 0,
+            },
+            Optional = false,
         };
 
         var slackApiClient = workspace.GetApiClient();
@@ -98,7 +121,7 @@ public class AddTeamButtonHandler(
                 Close = "Cancel",
                 Submit = "Add",
                 Blocks = [name, about, timezone, primaryLocation, updateChannel, organizationMembers],
-                PrivateMetadata = action.Value
+                PrivateMetadata = action.Value,
             },
             cancellationToken);
     }
@@ -129,7 +152,14 @@ public class AddTeamButtonHandler(
         var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
-        var team = new Shared.Models.Team { Id = randomHelper.Generate(), Organization = new Organization { Id = workspace.Organization.Id } };
+        var team = new Shared.Models.Team
+        {
+            Id = randomHelper.Generate(),
+            Organization = new Organization
+            {
+                Id = workspace.Organization.Id,
+            },
+        };
 
         if (values.TryGetValue(TeamActionTypes.Name, out var nameBlock))
         {
@@ -209,7 +239,10 @@ public class AddTeamButtonHandler(
                 {
                     team.PrimaryLocation = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
                         ? null
-                        : new Shared.Models.Location { Id = value.SelectedOption.Value };
+                        : new Shared.Models.Location
+                        {
+                            Id = value.SelectedOption.Value,
+                        };
                 }
                 else
                 {
@@ -250,8 +283,18 @@ public class AddTeamButtonHandler(
                         {
                             Id = randomHelper.Generate(),
                             Role = TeamMemberRole.Member,
-                            Customer = new Customer { Id = customerId },
-                            OrganizationMember = new OrganizationMember { Id = organizationMemberId, Customer = new Customer { Id = customerId } }
+                            Customer = new Customer
+                            {
+                                Id = customerId,
+                            },
+                            OrganizationMember = new OrganizationMember
+                            {
+                                Id = organizationMemberId,
+                                Customer = new Customer
+                                {
+                                    Id = customerId,
+                                },
+                            },
                         };
                     }).ToList();
                 }

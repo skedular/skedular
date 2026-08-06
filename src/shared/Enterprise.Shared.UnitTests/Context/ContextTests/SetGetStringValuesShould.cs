@@ -16,8 +16,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_correlation_id(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -28,8 +30,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_verifiable_token(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -40,8 +44,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_designation(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -52,8 +58,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_title(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -64,8 +72,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_name(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -76,8 +86,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_given_name(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -88,8 +100,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_middle_name(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -100,8 +114,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_family_name(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -112,8 +128,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_email(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -124,8 +142,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_email_verified(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger)
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger)
     {
         var sut = BuildSut(accessor, logger);
         sut.SetEmailVerified(true);
@@ -135,8 +155,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_timezone(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -147,8 +169,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_locale(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);
@@ -159,8 +183,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_photo_urls(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string url)
     {
         var sut = BuildSut(accessor, logger);
@@ -190,8 +216,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_azure_tenant_id(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         Guid tenantId)
     {
         var sut = BuildSut(accessor, logger);
@@ -202,8 +230,10 @@ public class SetGetStringValuesShould
     [Theory]
     [AutoFakeItEasyData]
     public void Set_and_get_azure_tenant_audience(
-        [Frozen] IHttpContextAccessor accessor,
-        [Frozen] ILogger<Shared.Context.Context> logger,
+        [Frozen]
+        IHttpContextAccessor accessor,
+        [Frozen]
+        ILogger<Shared.Context.Context> logger,
         string value)
     {
         var sut = BuildSut(accessor, logger);

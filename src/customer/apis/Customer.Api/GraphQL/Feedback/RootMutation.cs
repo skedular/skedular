@@ -11,10 +11,15 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     [UseResolverScope]
     public async Task<SubmitCustomerFeedbackPayload> SubmitCustomerFeedbackAsync(
         SubmitCustomerFeedbackInput input,
-        [Service] ICustomerFeedbackService customerFeedbackService,
+        [Service]
+        ICustomerFeedbackService customerFeedbackService,
         CancellationToken cancellationToken)
     {
         var customerFeedback = await customerFeedbackService.SubmitFeedbackAsync(graphQlMapper.MapTo(input), cancellationToken);
-        return new SubmitCustomerFeedbackPayload { ClientMutationId = input.ClientMutationId, Id = customerFeedback.Id };
+        return new SubmitCustomerFeedbackPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Id = customerFeedback.Id,
+        };
     }
 }

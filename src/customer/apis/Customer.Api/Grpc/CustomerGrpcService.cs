@@ -28,7 +28,13 @@ public class CustomerGrpcService(
     {
         var version = versionService.GetVersion();
 
-        return Task.FromResult(new Version { Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision });
+        return Task.FromResult(new Version
+        {
+            Major = version.Major,
+            Minor = version.Minor,
+            Build = version.Build,
+            Revision = version.Revision,
+        });
     }
 
     public override async Task<global::Api.Shared.Grpc.Skedular.Customer.Core.V1.Customer> Get(GetInput request, ServerCallContext context)
@@ -63,10 +69,10 @@ public class CustomerGrpcService(
                         FeedbackChannel.Slack => FeedbackChannelType.Slack,
                         FeedbackChannel.MsTeams => FeedbackChannelType.MsTeams,
                         _ => throw new ArgumentOutOfRangeException(nameof(request.Channel), request.Channel,
-                            $"Unexpected value for {nameof(request.Channel)}: {request.Channel}. Update enum mapping or caller input.")
-                    }
+                            $"Unexpected value for {nameof(request.Channel)}: {request.Channel}. Update enum mapping or caller input."),
+                    },
                 },
-                context.CancellationToken)).Id
+                context.CancellationToken)).Id,
         };
     }
 

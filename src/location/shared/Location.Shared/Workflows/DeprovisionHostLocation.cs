@@ -17,6 +17,10 @@ public class DeprovisionHostLocation
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(2),
                 TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 10, MaximumInterval = TimeSpan.FromMinutes(5) }
+                RetryPolicy = new RetryPolicy
+                {
+                    MaximumAttempts = 10,
+                    MaximumInterval = TimeSpan.FromMinutes(5),
+                },
             });
 }

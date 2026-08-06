@@ -66,7 +66,10 @@ public class ResourceAvailableHoursService(
             existingResource.IsAvailableHoursOverridden = true;
             existingResource.AvailableHours = existingResource.AvailableHours is null
                 ? new OpeningHours(availableHours!, [], [])
-                : existingResource.AvailableHours with { WeekOpeningHours = availableHours! };
+                : existingResource.AvailableHours with
+                {
+                    WeekOpeningHours = availableHours!,
+                };
         }
         else
         {

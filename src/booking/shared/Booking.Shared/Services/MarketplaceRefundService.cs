@@ -188,7 +188,7 @@ public class MarketplaceRefundService(
             RefundPercentage = originalAmount == 0 ? 0 : (int)Math.Round(amount / originalAmount * 100),
             Currency = booking.MarketplaceBooking.Currency,
             TimezoneId = ResolveTimezoneId(booking.InvolvedLocations.Select(item => item.Timezone)),
-            RequestedByCustomerId = requestedByCustomer?.Id
+            RequestedByCustomerId = requestedByCustomer?.Id,
         });
         await AddPaymentAllocationIfAvailableAsync(refund, booking.MarketplaceBooking, cancellationToken);
         marketplaceRefundEventService.Add(refund, MapInitialEventType(refund.Status), requestedByCustomer?.Id, refund.RequestedAt);
@@ -198,6 +198,7 @@ public class MarketplaceRefundService(
                 new ProcessMarketplaceRefundInput(refund.Id, requestedByCustomer?.Id), repositoryFactory.UnitOfWork);
         }
 
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForRefundAsync(refund, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         return refund;
     }
@@ -278,9 +279,14 @@ public class MarketplaceRefundService(
         {
             MarketplaceRefundEntityTypeConstants.MarketplaceBooking => HasConfirmedPayment(marketplaceBooking),
             MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription => await HasConfirmedPaymentAsync(
-                new MarketplaceRefund { LocalEntityType = localEntityType, LocalEntityId = localEntityId, RequestedAt = timeProvider.GetUtcNow() },
+                new MarketplaceRefund
+                {
+                    LocalEntityType = localEntityType,
+                    LocalEntityId = localEntityId,
+                    RequestedAt = timeProvider.GetUtcNow(),
+                },
                 cancellationToken),
-            _ => false
+            _ => false,
         };
 
         var preview = overridePreview ?? await GetPreviewAsync(
@@ -302,7 +308,7 @@ public class MarketplaceRefundService(
                 RefundPercentage = 100,
                 AppliedRuleMinutesBefore = null,
                 BaseAmount = baseAmount,
-                RefundAmount = baseAmount
+                RefundAmount = baseAmount,
             };
         }
 
@@ -337,7 +343,7 @@ public class MarketplaceRefundService(
                     PolicySnapshotJson = JsonSerializer.Serialize(policySnapshot),
                     CalculationResultJson = BuildCalculationResultJson(policySnapshot, preview, timezoneId),
                     TimezoneId = timezoneId,
-                    RequestedByCustomerId = requestedByCustomer?.Id
+                    RequestedByCustomerId = requestedByCustomer?.Id,
                 });
             await AddPaymentAllocationIfAvailableAsync(refund, marketplaceBooking, cancellationToken);
             marketplaceRefundEventService.Add(
@@ -365,6 +371,7 @@ public class MarketplaceRefundService(
                     repositoryFactory.UnitOfWork);
             }
 
+            await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForRefundAsync(refund, cancellationToken);
             return refund;
         }
 
@@ -526,7 +533,7 @@ public class MarketplaceRefundService(
                 SourceCapturedAmount = capturedAmount,
                 AllocatedRefundAmount = 0m,
                 IsSourcePayment = true,
-                Currency = refund.Currency ?? marketplaceBooking.Currency ?? "NZD"
+                Currency = refund.Currency ?? marketplaceBooking.Currency ?? "NZD",
             });
         }
         else if (provider != "BANK_TRANSFER" && source.SourceCapturedAmount != capturedAmount)
@@ -710,7 +717,7 @@ public class MarketplaceRefundService(
             OrganizationBillingCycleConstants.Weekly => startInclusive.AddDays(7),
             OrganizationBillingCycleConstants.Fortnightly => startInclusive.AddDays(14),
             OrganizationBillingCycleConstants.Monthly => startInclusive.AddMonths(1),
-            _ => throw new ArgumentOutOfRangeException(nameof(organizationBillingCycle))
+            _ => throw new ArgumentOutOfRangeException(nameof(organizationBillingCycle)),
         };
 
     private static DateTimeOffset ResolveRecurringBookingCycleEndExclusive(RecurringBookingEntity recurringBooking)
@@ -728,7 +735,7 @@ public class MarketplaceRefundService(
             ProductPricingCadence.FiveMonths => recurringBooking.StartDate.AddMonths(5),
             ProductPricingCadence.SixMonths => recurringBooking.StartDate.AddMonths(6),
             ProductPricingCadence.Yearly => recurringBooking.StartDate.AddYears(1),
-            _ => recurringBooking.StartDate.AddDays(1)
+            _ => recurringBooking.StartDate.AddDays(1),
         };
     }
 }

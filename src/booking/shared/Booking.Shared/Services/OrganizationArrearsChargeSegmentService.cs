@@ -199,7 +199,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
                 OrganizationBillingCycle.Weekly => cursor.AddDays(7),
                 OrganizationBillingCycle.Fortnightly => cursor.AddDays(14),
                 OrganizationBillingCycle.Monthly => cursor.AddMonths(1),
-                _ => throw new ArgumentOutOfRangeException(nameof(billingCycle))
+                _ => throw new ArgumentOutOfRangeException(nameof(billingCycle)),
             };
 
             var periodEnd = nextBoundary < until ? nextBoundary : until;
@@ -235,7 +235,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             ProductPricingCadence.SixMonths => pricing.Price * marketplaceBooking.Quantity,
             ProductPricingCadence.Yearly => pricing.Price * marketplaceBooking.Quantity,
             _ => throw new ArgumentOutOfRangeException(null,
-                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                "Unexpected value encountered. Update enum mapping or caller input to include this case."),
         };
     }
 
@@ -264,7 +264,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             ProductPricingCadence.SixMonths => pricing.Price * marketplaceBooking.Quantity,
             ProductPricingCadence.Yearly => pricing.Price * marketplaceBooking.Quantity,
             _ => throw new ArgumentOutOfRangeException(null,
-                "Unexpected value encountered. Update enum mapping or caller input to include this case.")
+                "Unexpected value encountered. Update enum mapping or caller input to include this case."),
         };
     }
 
@@ -292,7 +292,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
                 ProductPricingCadence.FiveMonths or
                 ProductPricingCadence.SixMonths or
                 ProductPricingCadence.Yearly,
-            _ => false
+            _ => false,
         };
 
     private static List<BillingPeriod> SplitIntoBillingCyclePeriods(
@@ -322,7 +322,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             OrganizationBillingCycle.Weekly => GetCurrentWeekStart(value),
             OrganizationBillingCycle.Fortnightly => GetCurrentFortnightStart(value),
             OrganizationBillingCycle.Monthly => GetCurrentMonthStart(value),
-            _ => throw new ArgumentOutOfRangeException(nameof(billingCycle))
+            _ => throw new ArgumentOutOfRangeException(nameof(billingCycle)),
         };
 
     private static DateTimeOffset GetNextBillingCycleBoundary(DateTimeOffset currentBoundaryStart, OrganizationBillingCycle billingCycle) =>
@@ -331,7 +331,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             OrganizationBillingCycle.Weekly => currentBoundaryStart.AddDays(7),
             OrganizationBillingCycle.Fortnightly => currentBoundaryStart.AddDays(14),
             OrganizationBillingCycle.Monthly => currentBoundaryStart.AddMonths(1),
-            _ => throw new ArgumentOutOfRangeException(nameof(billingCycle))
+            _ => throw new ArgumentOutOfRangeException(nameof(billingCycle)),
         };
 
     private static DateTimeOffset GetCurrentMonthStart(DateTimeOffset value) =>

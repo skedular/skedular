@@ -36,7 +36,10 @@ public class OrganizationTermsOfUseService(
         memoryCache.Set(
             ActiveTermsOfUseCacheKey,
             new CachedTermsOfUse(mappedTermsOfUse, timeProvider.GetUtcNow().Add(s_activeTermsOfUseCacheDuration)),
-            new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = s_activeTermsOfUseCacheDuration });
+            new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = s_activeTermsOfUseCacheDuration,
+            });
 
         return mappedTermsOfUse;
     }

@@ -30,7 +30,8 @@ public class ResourceServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Return_Available_Resources_When_All_Requested_Resources_Are_Available(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         ResourceService sut,
         TimeProvider timeProvider,
         IResourceRepository resourceRepository,
@@ -40,7 +41,17 @@ public class ResourceServiceShould
         var until = from.AddHours(1);
         var resourceIds = new[] { "res-1", "res-2" };
         var tagIds = new[] { "tag-1" };
-        var availableResources = new[] { new Resource { Id = "res-1" }, new Resource { Id = "res-2" } };
+        var availableResources = new[]
+        {
+            new Resource
+            {
+                Id = "res-1",
+            },
+            new Resource
+            {
+                Id = "res-2",
+            },
+        };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -67,7 +78,8 @@ public class ResourceServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_ResourceNotAvailable_When_Not_All_Requested_Resources_Are_Available(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         ResourceService sut,
         TimeProvider timeProvider,
         IResourceRepository resourceRepository,
@@ -77,7 +89,13 @@ public class ResourceServiceShould
         var until = from.AddHours(1);
         var resourceIds = new[] { "res-1", "res-2" };
         var tagIds = new[] { "tag-1" };
-        var availableResources = new[] { new Resource { Id = "res-1" } };
+        var availableResources = new[]
+        {
+            new Resource
+            {
+                Id = "res-1",
+            },
+        };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -103,7 +121,8 @@ public class ResourceServiceShould
     [Theory]
     [AutoFakeItEasyData]
     public async Task Throw_ResourceNotAvailable_When_Available_Resources_Do_Not_Match_Requested_Ids(
-        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
         ResourceService sut,
         TimeProvider timeProvider,
         IResourceRepository resourceRepository,
@@ -113,7 +132,17 @@ public class ResourceServiceShould
         var until = from.AddHours(1);
         var resourceIds = new[] { "res-1", "res-2" };
         var tagIds = new[] { "tag-1" };
-        var availableResources = new[] { new Resource { Id = "res-1" }, new Resource { Id = "res-3" } };
+        var availableResources = new[]
+        {
+            new Resource
+            {
+                Id = "res-1",
+            },
+            new Resource
+            {
+                Id = "res-3",
+            },
+        };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(

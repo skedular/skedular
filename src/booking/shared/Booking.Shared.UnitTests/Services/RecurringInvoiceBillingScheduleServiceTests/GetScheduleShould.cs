@@ -16,11 +16,16 @@ public class GetScheduleShould
     {
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
-            TotalAmount = 58m, ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Daily }
+            TotalAmount = 58m,
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Daily,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
@@ -38,11 +43,16 @@ public class GetScheduleShould
     {
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 4, 30, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 4, 30, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
-            TotalAmount = 100m, ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Monthly }
+            TotalAmount = 100m,
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Monthly,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
@@ -60,11 +70,16 @@ public class GetScheduleShould
     {
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
-            TotalAmount = 600m, ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.SixMonths }
+            TotalAmount = 600m,
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.SixMonths,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
@@ -82,11 +97,16 @@ public class GetScheduleShould
     {
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 6, 30, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 6, 30, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
-            TotalAmount = 300m, ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Quarterly }
+            TotalAmount = 300m,
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Quarterly,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Weekly);
@@ -104,11 +124,16 @@ public class GetScheduleShould
     {
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
-            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.SixMonths, Price = 600m }
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.SixMonths,
+                Price = 600m,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
@@ -126,11 +151,17 @@ public class GetScheduleShould
     {
         var recurringBooking = new RecurringBooking
         {
-            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero)
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
         };
         var marketplaceBooking = new MarketplaceBooking
         {
-            Quantity = 3, ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Daily, Price = 20m }
+            Quantity = 3,
+            ProductPricing = ProductPricing.Empty(pricingId) with
+            {
+                PurchaseCadence = ProductPricingCadence.Daily,
+                Price = 20m,
+            },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
