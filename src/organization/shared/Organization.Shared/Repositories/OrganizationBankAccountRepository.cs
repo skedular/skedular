@@ -151,7 +151,9 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 OrganizationBankAccountOrderField.Name => KeysetPaginationField<OrganizationBankAccount>.Create(
                     nameof(OrganizationBankAccount.Name),
@@ -159,7 +161,7 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            })
-            .ToList();
+            }),
+        ];
     }
 }

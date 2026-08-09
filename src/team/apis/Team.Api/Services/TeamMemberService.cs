@@ -81,7 +81,7 @@ public class TeamMemberService(
             logger.LogInformation("Paginated team members query returned no results for team {TeamId}", team.Id);
         }
 
-        return (paginatedInfo, entityMapper.MapTo(edges, entityMapper.MapTo(team)).ToList(), totalCount);
+        return (paginatedInfo, [.. entityMapper.MapTo(edges, entityMapper.MapTo(team))], totalCount);
     }
 
     public async Task<TeamMember> ChangeRoleAsync(string id, TeamMemberRole memberRole, CancellationToken cancellationToken)
@@ -140,7 +140,7 @@ public class TeamMemberService(
         }
 
         // Exclude calling customer from the list
-        teamMembers = teamMembers.Where(item => item.Customer.Id != customerId).ToList();
+        teamMembers = [.. teamMembers.Where(item => item.Customer.Id != customerId)];
         if (teamMembers.Count == 0)
         {
             return [];
@@ -166,16 +166,18 @@ public class TeamMemberService(
             repositoryFactory.TeamMemberRepository.Update(organizationMember);
         }
 
-        teamOutboxPublisher.PublishTeams(teams.Select(entityMapper.MapTo).ToList(), repositoryFactory.UnitOfWork);
+        teamOutboxPublisher.PublishTeams([.. teams.Select(entityMapper.MapTo)], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         logger.LogInformation("Team member statuses updated for {MemberCount} members to status {Status}", teamMembers.Count, status);
 
-        return teamMembers
-            .Select(item => entityMapper.MapTo(item, entityMapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id))))
-            .ToList();
+        return
+        [
+            .. teamMembers
+                .Select(item => entityMapper.MapTo(item, entityMapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id)))),
+        ];
     }
 
     public async Task<Shared.Models.Team> UpdateMembersAsync(string teamId, IReadOnlyList<TeamMember> members, CancellationToken cancellationToken)
@@ -218,10 +220,10 @@ public class TeamMemberService(
             .Select(teamMember => repositoryFactory.TeamMemberRepository.Add(teamMember)).ToList();
 
         repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
-        existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingTeam.TeamMembers = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         var mappedTeam = entityMapper.MapTo(existingTeam);
-        mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.IsNotDeleted()).ToList();
+        mappedTeam.TeamMembers = [.. mappedTeam.TeamMembers.Where(item => item.IsNotDeleted())];
 
         teamOutboxPublisher.PublishTeams([mappedTeam], repositoryFactory.UnitOfWork);
 
@@ -230,7 +232,7 @@ public class TeamMemberService(
 
         logger.LogInformation("Team members update completed for team {TeamId}", existingTeam.Id);
 
-        existingTeam.TeamMembers = existingTeam.TeamMembers.Where(item => item.IsNotDeleted()).ToList();
+        existingTeam.TeamMembers = [.. existingTeam.TeamMembers.Where(item => item.IsNotDeleted())];
         return entityMapper.MapTo(existingTeam);
     }
 
@@ -304,11 +306,12 @@ public class TeamMemberService(
         if (organization is null)
         {
             var customersToAdd = await repositoryFactory.CustomerRepository.GetByIdsAsync(
-                members
-                    // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-                    .Where(item => item.Customer is not null)
-                    .Select(item => item.Customer.Id)
-                    .ToList(),
+                [
+                    .. members
+                        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+                        .Where(item => item.Customer is not null)
+                        .Select(item => item.Customer.Id),
+                ],
                 cancellationToken);
 
             rebuiltTeamMembers.AddRange(customersToAdd.Select(item => new Shared.Database.Entities.TeamMember
@@ -376,7 +379,7 @@ public class TeamMemberService(
         repositoryFactory.TeamMemberRepository.Remove(teamMemberToRemove);
 
         var mappedTeam = entityMapper.MapTo(existingTeam);
-        mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.IsNotDeleted()).ToList();
+        mappedTeam.TeamMembers = [.. mappedTeam.TeamMembers.Where(item => item.IsNotDeleted())];
 
         teamOutboxPublisher.PublishTeams([mappedTeam], repositoryFactory.UnitOfWork);
 
@@ -418,22 +421,26 @@ public class TeamMemberService(
         repositoryFactory.TeamMemberRepository.RemoveRange(teamMembers);
 
         teamOutboxPublisher.PublishTeams(
-            teams.Select(item =>
-            {
-                var mapped = entityMapper.MapTo(item);
-                mapped.TeamMembers = mapped.TeamMembers.Where(organizationMember => organizationMember.IsNotDeleted()).ToList();
+            [
+                .. teams.Select(item =>
+                {
+                    var mapped = entityMapper.MapTo(item);
+                    mapped.TeamMembers = [.. mapped.TeamMembers.Where(organizationMember => organizationMember.IsNotDeleted())];
 
-                return mapped;
-            }).ToList(),
+                    return mapped;
+                }),
+            ],
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
         logger.LogInformation("Batch team member removal completed for {MemberCount} members", teamMembers.Count);
 
-        return teamMembers
-            .Select(item => entityMapper.MapTo(item, entityMapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id))))
-            .ToList();
+        return
+        [
+            .. teamMembers
+                .Select(item => entityMapper.MapTo(item, entityMapper.MapTo(teams.Single(organization => organization.Id == item.Team.Id)))),
+        ];
     }
 
     public async Task<TeamMember> AddAsync(string teamId, TeamMember member, CancellationToken cancellationToken)
@@ -475,7 +482,7 @@ public class TeamMemberService(
 
                 _ = repositoryFactory.TeamMemberRepository.Update(existingTeamMember);
                 var mappedTeam = entityMapper.MapTo(existingTeam);
-                mappedTeam.TeamMembers = mappedTeam.TeamMembers.Where(item => item.IsNotDeleted()).ToList();
+                mappedTeam.TeamMembers = [.. mappedTeam.TeamMembers.Where(item => item.IsNotDeleted())];
 
                 teamOutboxPublisher.PublishTeams([mappedTeam], repositoryFactory.UnitOfWork);
 

@@ -61,6 +61,7 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -71,6 +72,7 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([resource]);
 
@@ -144,6 +146,7 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -154,6 +157,7 @@ public class PickResourceBasedOnCustomerPreferencesAsyncShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([resource]);
 

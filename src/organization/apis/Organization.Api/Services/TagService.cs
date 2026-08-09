@@ -218,7 +218,7 @@ public class TagService(
         var mappedOrganization = graphQlMapper.MapTo(
             existingOrganization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
-        mappedOrganization.Tags = mappedOrganization.Tags.Where(item => item.Id != tagId).ToList();
+        mappedOrganization.Tags = [.. mappedOrganization.Tags.Where(item => item.Id != tagId)];
 
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
 
@@ -267,7 +267,7 @@ public class TagService(
             graphQlMapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))).ToList();
         foreach (var mappedOrganization in mappedOrganizations)
         {
-            mappedOrganization.Tags = mappedOrganization.Tags.Where(item => !ids.Contains(item.Id)).ToList();
+            mappedOrganization.Tags = [.. mappedOrganization.Tags.Where(item => !ids.Contains(item.Id))];
         }
 
         organizationOutboxPublisher.PublishOrganizations(mappedOrganizations, repositoryFactory.UnitOfWork);
@@ -311,11 +311,12 @@ public class TagService(
             cancellationToken);
 
         return (paginatedInfo,
-            graphQlMapper.MapTo(
+            [
+                .. graphQlMapper.MapTo(
                     edges,
                     graphQlMapper.MapTo(organization,
-                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)))
-                .ToList(),
+                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))),
+            ],
             totalCount);
     }
 

@@ -80,10 +80,12 @@ public class InvitationService(
                 .Select(identity => identity.Email))
             .ToList();
 
-        emails = emails
-            .Where(item => !existingMemberEmails
-                .Any(existingMemberEmail => string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase)))
-            .ToList();
+        emails =
+        [
+            .. emails
+                .Where(item => !existingMemberEmails
+                    .Any(existingMemberEmail => string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase))),
+        ];
         if (emails.Count == 0)
         {
             return [];
@@ -251,7 +253,7 @@ public class InvitationService(
 
         return await repositoryFactory.JoinInvitationRepository.PendingInvitationsCountAsync(
             customer.Id,
-            customer.Identities.Where(item => !string.IsNullOrWhiteSpace(item.Email)).Select(item => item.Email!).ToList(),
+            [.. customer.Identities.Where(item => !string.IsNullOrWhiteSpace(item.Email)).Select(item => item.Email!)],
             cancellationToken);
     }
 
@@ -266,7 +268,7 @@ public class InvitationService(
         searchCriteria = searchCriteria with
         {
             InviteeId = customer.Id,
-            CustomerEmails = customer.Identities.Select(i => i.Email).Where(e => !string.IsNullOrWhiteSpace(e)).Cast<string>().ToList(),
+            CustomerEmails = [.. customer.Identities.Select(i => i.Email).Where(e => !string.IsNullOrWhiteSpace(e)).Cast<string>()],
         };
 
         var (paginatedInfo, edges, totalCount) =
@@ -276,7 +278,7 @@ public class InvitationService(
                 orderByFields,
                 cancellationToken);
 
-        return (paginatedInfo, edges.Select(graphQlMapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, [.. edges.Select(graphQlMapper.MapTo)], totalCount);
     }
 
     private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(

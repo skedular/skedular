@@ -91,7 +91,7 @@ public class RecurringBookingService(
         {
             accessScope = new RecurringBookingAccessScope(
                 [scopedOrganization.Id],
-                scopedOrganization.Teams.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id).ToList());
+                [.. scopedOrganization.Teams.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id)]);
 
             searchCriteria = searchCriteria with
             {
@@ -102,7 +102,7 @@ public class RecurringBookingService(
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.TeamIds.Count != 0)
         {
-            var teams = await repositoryFactory.TeamRepository.GetActiveByIdsAsync(searchCriteria.TeamIds.Distinct().ToList(), cancellationToken);
+            var teams = await repositoryFactory.TeamRepository.GetActiveByIdsAsync([.. searchCriteria.TeamIds.Distinct()], cancellationToken);
 
             foreach (var team in teams)
             {
@@ -117,7 +117,7 @@ public class RecurringBookingService(
                 }
             }
 
-            teamIds = searchCriteria.TeamIds.Distinct().ToList();
+            teamIds = [.. searchCriteria.TeamIds.Distinct()];
         }
 
         if (accessScope is null &&
@@ -155,7 +155,7 @@ public class RecurringBookingService(
             accessScope,
             cancellationToken);
 
-        return (paginatedInfo, edges.Select(graphQlMapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, [.. edges.Select(graphQlMapper.MapTo)], totalCount);
     }
 
     private async Task<List<string>> GetCustomerOrganizationIdsAsync(
@@ -178,7 +178,7 @@ public class RecurringBookingService(
     private async Task<List<string>> GetCustomerTeamIdsAsync(string customerId, CancellationToken cancellationToken)
     {
         var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customerId, cancellationToken);
-        return teams.Select(item => item.Id).ToList();
+        return [.. teams.Select(item => item.Id)];
     }
 
     private async Task EnsureCustomerCanViewRecurringBookingAsync(
@@ -210,16 +210,18 @@ public class RecurringBookingService(
         }
 
         var teamIds = booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
-        if (teamIds.Count != 0)
+        if (teamIds.Count == 0)
         {
-            var teamEntities = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-            foreach (var team in teamEntities)
+            throw new UnauthorizedAccessException();
+        }
+
+        var teamEntities = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
+        foreach (var team in teamEntities)
+        {
+            if (team.Organization is not null &&
+                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
             {
-                if (team.Organization is not null &&
-                    await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
-                {
-                    return;
-                }
+                return;
             }
         }
 

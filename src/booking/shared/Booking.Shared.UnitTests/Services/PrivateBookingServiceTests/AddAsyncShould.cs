@@ -9,7 +9,6 @@ using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore.Storage;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Database.Entities.Organization;
-using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Shared.UnitTests.Services.PrivateBookingServiceTests;
 
@@ -74,7 +73,6 @@ public class AddAsyncShould
                 },
             },
         };
-        var teams = new List<Team>();
 
         A.CallTo(() => repositoryFactory.CustomerRepository.GetByIdsAsync(
                 A<IReadOnlyList<string>>._, true, A<CancellationToken>._))
@@ -85,9 +83,15 @@ public class AddAsyncShould
                 },
             ]));
         A.CallTo(() => repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
-                null, null, A<DateTimeOffset>._, A<DateTimeOffset>._,
-                A<IReadOnlyList<string>>._, A<IReadOnlyList<string>>._,
-                A<IReadOnlyList<string>>._, A<CancellationToken>._))
+                null,
+                null,
+                A<DateTimeOffset>._,
+                A<DateTimeOffset>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
+                A<CancellationToken>._))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Resource>>([
                 new Database.Entities.Resource
                 {
@@ -115,7 +119,7 @@ public class AddAsyncShould
             sut.AddAsync(booking, new Database.Entities.Customer
                 {
                     Id = "customer-1",
-                }, organizations, teams,
+                }, organizations, [],
                 null, cancellationToken));
     }
 
@@ -177,7 +181,6 @@ public class AddAsyncShould
                 },
             },
         };
-        var teams = new List<Team>();
 
         A.CallTo(() => repositoryFactory.CustomerRepository.GetByIdsAsync(
                 A<IReadOnlyList<string>>._, true, A<CancellationToken>._))
@@ -188,9 +191,15 @@ public class AddAsyncShould
                 },
             ]));
         A.CallTo(() => repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
-                null, null, A<DateTimeOffset>._, A<DateTimeOffset>._,
-                A<IReadOnlyList<string>>._, A<IReadOnlyList<string>>._,
-                A<IReadOnlyList<string>>._, A<CancellationToken>._))
+                null,
+                null,
+                A<DateTimeOffset>._,
+                A<DateTimeOffset>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
+                A<CancellationToken>._))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Resource>>([
                 new Database.Entities.Resource
                 {
@@ -217,7 +226,7 @@ public class AddAsyncShould
         var result = await sut.AddAsync(booking, new Database.Entities.Customer
             {
                 Id = "customer-1",
-            }, organizations, teams,
+            }, organizations, [],
             null, cancellationToken);
 
         result.ShouldNotBeNull();
@@ -277,7 +286,6 @@ public class AddAsyncShould
                 Type = OrganizationTypeConstants.Private,
             },
         };
-        var teams = new List<Team>();
 
         A.CallTo(() => repositoryFactory.CustomerRepository.GetByIdsAsync(
                 A<IReadOnlyList<string>>._, true, A<CancellationToken>._))
@@ -288,9 +296,15 @@ public class AddAsyncShould
                 },
             ]));
         A.CallTo(() => repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
-                null, null, A<DateTimeOffset>._, A<DateTimeOffset>._,
-                A<IReadOnlyList<string>>._, A<IReadOnlyList<string>>._,
-                A<IReadOnlyList<string>>._, A<CancellationToken>._))
+                null,
+                null,
+                A<DateTimeOffset>._,
+                A<DateTimeOffset>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
+                A<CancellationToken>._))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Resource>>([
                 new Database.Entities.Resource
                 {
@@ -311,7 +325,7 @@ public class AddAsyncShould
         var result = await sut.AddAsync(booking, new Database.Entities.Customer
             {
                 Id = "customer-1",
-            }, organizations, teams,
+            }, organizations, [],
             null, cancellationToken);
 
         result.ShouldNotBeNull();

@@ -182,7 +182,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.OrganizationCustomDomain,
                 where.LocationIds.ToSafeCollection(),
                 where.NameContains,
-                where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),
+                [.. where.ZoneIds.ToSafeCollection(), .. where.CustomTagIds.ToSafeCollection()],
                 null,
                 where.Types.ToSafeCollection(),
                 where.SearchBoundaries,
@@ -190,7 +190,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.ResourceType,
                 null,
                 where.ProductIds.ToSafeCollection()),
-            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
+            [.. orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field))],
             false,
             cancellationToken);
 
@@ -235,7 +235,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.OrganizationCustomDomain,
                 where.LocationIds.ToSafeCollection(),
                 where.NameContains,
-                where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),
+                [.. where.ZoneIds.ToSafeCollection(), .. where.CustomTagIds.ToSafeCollection()],
                 null,
                 [LocationType.Marketplace],
                 where.SearchBoundaries,
@@ -243,7 +243,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.ResourceType,
                 true,
                 where.ProductIds.ToSafeCollection()),
-            orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
+            [.. orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field))],
             true,
             cancellationToken);
 

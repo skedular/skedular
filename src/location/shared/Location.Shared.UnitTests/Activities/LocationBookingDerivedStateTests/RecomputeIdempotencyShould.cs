@@ -76,7 +76,7 @@ public class RecomputeIdempotencyShould
                 A<IReadOnlyList<DailyDeskBookingCountRecording>>._,
                 A<IReadOnlyList<DailyRoomBookingCountRecording>>._,
                 A<CancellationToken>._))
-            .Invokes(call => capturedRecordings.Add(call.GetArgument<IReadOnlyList<DailyBookingCountRecording>>(1)!.ToList()))
+            .Invokes(call => capturedRecordings.Add([.. call.GetArgument<IReadOnlyList<DailyBookingCountRecording>>(1)!]))
             .Returns(Task.CompletedTask);
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
@@ -119,7 +119,7 @@ public class RecomputeIdempotencyShould
             .Returns(CreateGrpcResponse(bookingResponse));
 
         // Act – first invocation
-        await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
+        await environment.RunAsync(() => sut.RecomputeLocationBookingDerivedStateAsync(LocationId));
 
         // Reset gRPC call counter to allow the second invocation to re-use the same mock
         A.CallTo(() => callInvoker.AsyncUnaryCall(
@@ -130,7 +130,7 @@ public class RecomputeIdempotencyShould
             .Returns(CreateGrpcResponse(bookingResponse));
 
         // Act – second invocation with identical input
-        await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
+        await environment.RunAsync(() => sut.RecomputeLocationBookingDerivedStateAsync(LocationId));
 
         // Assert – exactly 1 record per day after both invocations (no duplication)
         capturedRecordings.Count.ShouldBe(2);
@@ -205,13 +205,13 @@ public class RecomputeIdempotencyShould
                 A<IReadOnlyList<DailyDeskBookingCountRecording>>._,
                 A<IReadOnlyList<DailyRoomBookingCountRecording>>._,
                 A<CancellationToken>._))
-            .Invokes(call => deskRecordings = call.GetArgument<IReadOnlyList<DailyDeskBookingCountRecording>>(2)!.ToList())
+            .Invokes(call => deskRecordings = [.. call.GetArgument<IReadOnlyList<DailyDeskBookingCountRecording>>(2)!])
             .Returns(Task.CompletedTask);
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
         A.CallTo(() => resourceRepository.GetByIdsWithOrganizationTagsUntrackedAsync(
                 A<IReadOnlyList<string>>._, A<CancellationToken>._))
-            .Returns(new[] { deskResource });
+            .Returns([deskResource]);
 
         var day = new DateTimeOffset(2026, 4, 15, 10, 0, 0, TimeSpan.Zero);
         var bookingResponse = new BookingConnection
@@ -248,14 +248,14 @@ public class RecomputeIdempotencyShould
             .Returns(CreateGrpcResponse(bookingResponse));
 
         // Act – run twice
-        await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
+        await environment.RunAsync(() => sut.RecomputeLocationBookingDerivedStateAsync(LocationId));
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetPaginatedBookingsInput, BookingConnection>>._,
                 A<string?>._,
                 A<CallOptions>._,
                 A<Admin_GetPaginatedBookingsInput>._))
             .Returns(CreateGrpcResponse(bookingResponse));
-        await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
+        await environment.RunAsync(() => sut.RecomputeLocationBookingDerivedStateAsync(LocationId));
 
         // Assert – desk booking count is 1, not 2
         deskRecordings.Count.ShouldBe(1);

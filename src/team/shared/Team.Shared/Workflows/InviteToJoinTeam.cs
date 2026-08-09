@@ -56,7 +56,7 @@ public class InviteToJoinTeam
         // Step 3: If no response after 2 weeks, expire the invitation
         if (!responded)
         {
-            await Workflow.ExecuteActivityAsync((InvitationIntegrations activity) => activity.ExpireInvitationAsync(args.JoinInvitationId),
+            await Workflow.ExecuteActivityAsync((InvitationIntegrations activity) => activity.ExpireTeamInvitationAsync(args.JoinInvitationId),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),

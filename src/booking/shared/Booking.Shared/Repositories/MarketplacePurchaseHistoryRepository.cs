@@ -288,7 +288,7 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         }
 
         var page = await query.ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderBy), item => item.SourceId, cancellationToken);
-        return (page.Item1, page.Item2.Select(edge => new Edge<MarketplacePurchaseHistoryRow>(ToRow(edge.Node), edge.Cursor)).ToList(), page.Item3);
+        return (page.Item1, [.. page.Item2.Select(edge => new Edge<MarketplacePurchaseHistoryRow>(ToRow(edge.Node), edge.Cursor))], page.Item3);
     }
 
     private static string ToSourceType(MarketplacePurchaseSourceType sourceType) => sourceType switch

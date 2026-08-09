@@ -7,7 +7,7 @@ namespace Organization.Shared.Activities;
 public class InvitationIntegrations(IRepositoryFactory repositoryFactory)
 {
     [Activity]
-    public virtual async Task ExpireInvitationAsync(string joinInvitationId)
+    public virtual async Task ExpireOrganizationInvitationAsync(string joinInvitationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);

@@ -94,7 +94,7 @@ public class LocationAnalyticsService(
         }
 
         return await GetAnalyticsAsync(
-            locations.Item2.Select(item => item.Node.Id).ToList(),
+            [.. locations.Item2.Select(item => item.Node.Id)],
             locations.Item2.ToDictionary(item => item.Node.Id, item => item.Node.Name),
             from,
             until,
@@ -141,69 +141,72 @@ public class LocationAnalyticsService(
             null,
             cancellationToken);
 
-        return locationIds.Select(locationId =>
-        {
-            var desksOccupancyPercentage = dailyDeskCounts
-                .Where(item => item.Location.Id == locationId && item.Count > 0)
-                .Select(item =>
-                {
-                    var matchedBookingsCount = dailyDeskBookingCounts
-                        .Where(recording => recording.Location.Id == locationId && recording.Date == item.Date)
-                        .Select(recording => recording.Count)
-                        .SingleOrDefault();
+        return
+        [
+            .. locationIds.Select(locationId =>
+            {
+                var desksOccupancyPercentage = dailyDeskCounts
+                    .Where(item => item.Location.Id == locationId && item.Count > 0)
+                    .Select(item =>
+                    {
+                        var matchedBookingsCount = dailyDeskBookingCounts
+                            .Where(recording => recording.Location.Id == locationId && recording.Date == item.Date)
+                            .Select(recording => recording.Count)
+                            .SingleOrDefault();
 
-                    return new LocationDesksOccupancyPercentage
+                        return new LocationDesksOccupancyPercentage
+                        {
+                            Date = item.Date,
+                            Percentage = matchedBookingsCount / (float)item.Count * 100,
+                        };
+                    }).ToList();
+
+                var dailyBookingsTotal = dailyBookingCounts
+                    .Where(item => item.Location.Id == locationId)
+                    .Select(item => new LocationDailyBookingsTotal
                     {
                         Date = item.Date,
-                        Percentage = matchedBookingsCount / (float)item.Count * 100,
-                    };
-                }).ToList();
+                        Total = item.Count,
+                    })
+                    .ToList();
 
-            var dailyBookingsTotal = dailyBookingCounts
-                .Where(item => item.Location.Id == locationId)
-                .Select(item => new LocationDailyBookingsTotal
-                {
-                    Date = item.Date,
-                    Total = item.Count,
-                })
-                .ToList();
-
-            var roomsOccupancyPercentage = dailyRoomCounts
-                .Where(item => item.Location.Id == locationId && item.Count > 0)
-                .Select(item =>
-                {
-                    var matchedBookingsCount = dailyRoomBookingCounts
-                        .Where(recording => recording.Location.Id == locationId && recording.Date == item.Date)
-                        .Select(recording => recording.Count)
-                        .SingleOrDefault();
-
-                    return new LocationRoomsOccupancyPercentage
+                var roomsOccupancyPercentage = dailyRoomCounts
+                    .Where(item => item.Location.Id == locationId && item.Count > 0)
+                    .Select(item =>
                     {
-                        Date = item.Date,
-                        Percentage = matchedBookingsCount / (float)item.Count * 100,
-                    };
-                }).ToList();
+                        var matchedBookingsCount = dailyRoomBookingCounts
+                            .Where(recording => recording.Location.Id == locationId && recording.Date == item.Date)
+                            .Select(recording => recording.Count)
+                            .SingleOrDefault();
 
-            var resourceAvailabilitySnapshots = allResourceAvailabilitySnapshots
-                .Where(item => item.Location.Id == locationId)
-                .GroupBy(item => new
-                {
-                    item.Date,
-                    ResourceType = DetermineResourceType(item.Resource),
-                })
-                .Where(item => item.Key.ResourceType != null)
-                .Select(item => ResourceAvailabilitySnapshotReport.FromSnapshots(item.Key.Date, item.Key.ResourceType!, item.ToList()))
-                .OrderBy(item => item.Date).ThenBy(r => r.ResourceType)
-                .ToList();
+                        return new LocationRoomsOccupancyPercentage
+                        {
+                            Date = item.Date,
+                            Percentage = matchedBookingsCount / (float)item.Count * 100,
+                        };
+                    }).ToList();
 
-            return new LocationAnalytics(
-                locationId,
-                locationNames[locationId],
-                desksOccupancyPercentage,
-                dailyBookingsTotal,
-                roomsOccupancyPercentage,
-                resourceAvailabilitySnapshots);
-        }).ToList();
+                var resourceAvailabilitySnapshots = allResourceAvailabilitySnapshots
+                    .Where(item => item.Location.Id == locationId)
+                    .GroupBy(item => new
+                    {
+                        item.Date,
+                        ResourceType = DetermineResourceType(item.Resource),
+                    })
+                    .Where(item => item.Key.ResourceType != null)
+                    .Select(item => ResourceAvailabilitySnapshotReport.FromSnapshots(item.Key.Date, item.Key.ResourceType!, [.. item]))
+                    .OrderBy(item => item.Date).ThenBy(r => r.ResourceType)
+                    .ToList();
+
+                return new LocationAnalytics(
+                    locationId,
+                    locationNames[locationId],
+                    desksOccupancyPercentage,
+                    dailyBookingsTotal,
+                    roomsOccupancyPercentage,
+                    resourceAvailabilitySnapshots);
+            }),
+        ];
 
         static string? DetermineResourceType(Resource resource)
         {

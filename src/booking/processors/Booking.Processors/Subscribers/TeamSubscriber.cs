@@ -110,7 +110,7 @@ public class TeamSubscriber(
         }
 
         repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
-        existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingTeam.TeamMembers = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         return existingTeam;
     }

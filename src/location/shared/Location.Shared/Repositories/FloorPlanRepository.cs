@@ -101,7 +101,9 @@ public class FloorPlanRepository(LocationDbContext dbContext, TimeProvider timeP
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 FloorPlanOrderField.Name => KeysetPaginationField<FloorPlan>.Create(
                     nameof(FloorPlan.Name),
@@ -109,7 +111,7 @@ public class FloorPlanRepository(LocationDbContext dbContext, TimeProvider timeP
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            })
-            .ToList();
+            }),
+        ];
     }
 }

@@ -203,7 +203,7 @@ public class OrganizationBillingService(
 
         await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(existingOrganization.Id, existingOrganization.CustomDomain, cancellationToken);
         await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
-            existingOrganization.OrganizationMembers.Select(m => m.CustomerId).ToList(),
+            [.. existingOrganization.OrganizationMembers.Select(m => m.CustomerId)],
             cancellationToken);
 
         return mappedOrganization;

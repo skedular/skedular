@@ -196,7 +196,7 @@ public class LocationResourceService(
             cancellationToken: cancellationToken);
         var edges = connection.Edges.Select(item => new ResourceEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList();
 
-        Cache(edges.Select(item => item.Node).ToList());
+        Cache([.. edges.Select(item => item.Node)]);
 
         var enrichedEdges = new List<ResourceEdge>();
         foreach (var item in edges)
@@ -259,17 +259,23 @@ public class LocationResourceService(
             Type = resourceType.Type,
         };
 
-        resource.CustomTags = resource.CustomTags
-            .Select(item => customTags.FirstOrDefault(organizationCustomTag => organizationCustomTag.Id == item.Id) ?? item)
-            .ToList();
+        resource.CustomTags =
+        [
+            .. resource.CustomTags
+                .Select(item => customTags.FirstOrDefault(organizationCustomTag => organizationCustomTag.Id == item.Id) ?? item),
+        ];
 
-        resource.Zones = resource.Zones
-            .Select(item => zones.FirstOrDefault(organizationZone => organizationZone.Id == item.Id) ?? item)
-            .ToList();
+        resource.Zones =
+        [
+            .. resource.Zones
+                .Select(item => zones.FirstOrDefault(organizationZone => organizationZone.Id == item.Id) ?? item),
+        ];
 
-        resource.ProductTags = resource.ProductTags
-            .Select(item => productTags.FirstOrDefault(organizationProductTag => organizationProductTag.Id == item.Id) ?? item)
-            .ToList();
+        resource.ProductTags =
+        [
+            .. resource.ProductTags
+                .Select(item => productTags.FirstOrDefault(organizationProductTag => organizationProductTag.Id == item.Id) ?? item),
+        ];
 
         return resource;
     }
@@ -304,17 +310,23 @@ public class LocationResourceService(
             Type = resourceType.Type,
         };
 
-        resource.CustomTags = resource.CustomTags
-            .Select(item => customTags.FirstOrDefault(organizationCustomTag => organizationCustomTag.Id == item.Id) ?? item)
-            .ToList();
+        resource.CustomTags =
+        [
+            .. resource.CustomTags
+                .Select(item => customTags.FirstOrDefault(organizationCustomTag => organizationCustomTag.Id == item.Id) ?? item),
+        ];
 
-        resource.Zones = resource.Zones
-            .Select(item => zones.FirstOrDefault(organizationZone => organizationZone.Id == item.Id) ?? item)
-            .ToList();
+        resource.Zones =
+        [
+            .. resource.Zones
+                .Select(item => zones.FirstOrDefault(organizationZone => organizationZone.Id == item.Id) ?? item),
+        ];
 
-        resource.ProductTags = resource.ProductTags
-            .Select(item => productTags.FirstOrDefault(organizationProductTag => organizationProductTag.Id == item.Id) ?? item)
-            .ToList();
+        resource.ProductTags =
+        [
+            .. resource.ProductTags
+                .Select(item => productTags.FirstOrDefault(organizationProductTag => organizationProductTag.Id == item.Id) ?? item),
+        ];
 
         return resource;
     }

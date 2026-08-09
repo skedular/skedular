@@ -68,7 +68,7 @@ public class LocationComponents(
             blocks.Add(new DividerBlock());
         }
 
-        return blocks.SkipLast(1).ToList();
+        return [.. blocks.SkipLast(1)];
     }
 
     private async Task<List<Block>> GetLocationCardAsync(

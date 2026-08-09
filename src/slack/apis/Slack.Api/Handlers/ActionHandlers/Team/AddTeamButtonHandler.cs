@@ -270,33 +270,36 @@ public class AddTeamButtonHandler(
                         throw new ArgumentException("No members selected.");
                     }
 
-                    team.TeamMembers = value.SelectedOptions.Select(item =>
-                    {
-                        var memberCustomerIdPair = item.Value.Split(Global.OptionLoaderValueSeparator);
-                        var organizationMemberId = memberCustomerIdPair.First();
-                        var customerId = memberCustomerIdPair.Last();
-
-                        ArgumentException.ThrowIfNullOrWhiteSpace(organizationMemberId);
-                        ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
-
-                        return new TeamMember
+                    team.TeamMembers =
+                    [
+                        .. value.SelectedOptions.Select(item =>
                         {
-                            Id = randomHelper.Generate(),
-                            Role = TeamMemberRole.Member,
-                            Customer = new Customer
+                            var memberCustomerIdPair = item.Value.Split(Global.OptionLoaderValueSeparator);
+                            var organizationMemberId = memberCustomerIdPair.First();
+                            var customerId = memberCustomerIdPair.Last();
+
+                            ArgumentException.ThrowIfNullOrWhiteSpace(organizationMemberId);
+                            ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
+
+                            return new TeamMember
                             {
-                                Id = customerId,
-                            },
-                            OrganizationMember = new OrganizationMember
-                            {
-                                Id = organizationMemberId,
+                                Id = randomHelper.Generate(),
+                                Role = TeamMemberRole.Member,
                                 Customer = new Customer
                                 {
                                     Id = customerId,
                                 },
-                            },
-                        };
-                    }).ToList();
+                                OrganizationMember = new OrganizationMember
+                                {
+                                    Id = organizationMemberId,
+                                    Customer = new Customer
+                                    {
+                                        Id = customerId,
+                                    },
+                                },
+                            };
+                        }),
+                    ];
                 }
                 else
                 {

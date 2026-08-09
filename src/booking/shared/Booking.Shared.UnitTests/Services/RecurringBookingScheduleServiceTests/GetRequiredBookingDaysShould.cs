@@ -299,7 +299,7 @@ public class GetRequiredBookingDaysShould
             Interval = interval,
             ByMonthDay = byMonthDay,
             BySetPosition = bySetPosition,
-            ByWeekDays = byWeekDays.ToSafeCollection().ToList(),
+            ByWeekDays = [.. byWeekDays.ToSafeCollection()],
             EndDate = endDate,
             OccurrenceCount = occurrenceCount,
             SkippedDates = [],

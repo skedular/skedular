@@ -25,8 +25,8 @@
 
     <ItemGroup>
         <!-- Slack Integration -->
-        <PackageReference Include="SlackNet" Version="0.17.10"/>
-        <PackageReference Include="SlackNet.AspNetCore" Version="0.17.10"/>
+        <PackageReference Include="SlackNet" Version="0.17.11"/>
+        <PackageReference Include="SlackNet.AspNetCore" Version="0.17.11"/>
 
         <!-- Entity Framework Core (Design / Migration) -->
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">

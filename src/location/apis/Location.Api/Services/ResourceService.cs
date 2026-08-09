@@ -101,7 +101,7 @@ public class ResourceService(
         }
 
         var organizationTags = await repositoryFactory.OrganizationTagRepository.GetActiveByIdsForOrganizationAsync(
-            resource.Tags.Select(item => item.Id).ToList(),
+            [.. resource.Tags.Select(item => item.Id)],
             existingLocation.Organization.Id,
             null,
             cancellationToken);
@@ -111,14 +111,12 @@ public class ResourceService(
             .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type!.ToOrganizationTagType()))
             .ToList();
 
-        if (resourceTypeTag.Count == 0)
+        switch (resourceTypeTag.Count)
         {
-            throw new ResourceTypeRequired();
-        }
-
-        if (resourceTypeTag.Count > 1)
-        {
-            throw new OnlySingleResourceTypeAllowed();
+            case 0:
+                throw new ResourceTypeRequired();
+            case > 1:
+                throw new OnlySingleResourceTypeAllowed();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -207,7 +205,7 @@ public class ResourceService(
         var deletedResource = entityMapper.MapTo(repositoryFactory.ResourceRepository.Remove(resource), entityMapper.MapTo(existingLocation));
 
         var mappedLocation = entityMapper.MapTo(existingLocation);
-        mappedLocation.Resources = mappedLocation.Resources.Where(item => item.Id != id).ToList();
+        mappedLocation.Resources = [.. mappedLocation.Resources.Where(item => item.Id != id)];
 
         locationOutboxPublisher.PublishLocations([mappedLocation], repositoryFactory.UnitOfWork);
 
@@ -263,7 +261,7 @@ public class ResourceService(
         var mappedLocations = existingLocations.Select(entityMapper.MapTo).ToList();
         foreach (var mappedLocation in mappedLocations)
         {
-            mappedLocation.Resources = mappedLocation.Resources.Where(item => !ids.Contains(item.Id)).ToList();
+            mappedLocation.Resources = [.. mappedLocation.Resources.Where(item => !ids.Contains(item.Id))];
         }
 
         locationOutboxPublisher.PublishLocations(mappedLocations, repositoryFactory.UnitOfWork);
@@ -449,7 +447,7 @@ public class ResourceService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo, entityMapper.MapTo(edges, entityMapper.MapTo(existingLocation)).ToList(), totalCount);
+        return (paginatedInfo, [.. entityMapper.MapTo(edges, entityMapper.MapTo(existingLocation))], totalCount);
     }
 
     private async Task<Resource> UpdateAsync(Resource resource, CancellationToken cancellationToken)
@@ -500,7 +498,7 @@ public class ResourceService(
         }
 
         var organizationTags = await repositoryFactory.OrganizationTagRepository.GetActiveByIdsForOrganizationAsync(
-            resource.Tags.Select(item => item.Id).ToList(),
+            [.. resource.Tags.Select(item => item.Id)],
             existingLocation.Organization.Id,
             null,
             cancellationToken);
@@ -510,14 +508,12 @@ public class ResourceService(
             .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type!.ToOrganizationTagType()))
             .ToList();
 
-        if (resourceTypeTag.Count == 0)
+        switch (resourceTypeTag.Count)
         {
-            throw new ResourceTypeRequired();
-        }
-
-        if (resourceTypeTag.Count > 1)
-        {
-            throw new OnlySingleResourceTypeAllowed();
+            case 0:
+                throw new ResourceTypeRequired();
+            case > 1:
+                throw new OnlySingleResourceTypeAllowed();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);

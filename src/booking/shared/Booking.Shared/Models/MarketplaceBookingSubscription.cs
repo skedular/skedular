@@ -50,9 +50,10 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
 
         var representativeMarketplaceBooking = recurringBookingsInWindow.Last().MarketplaceBooking!;
         var paymentStatus = ResolveAggregatedPaymentStatus(
-            recurringBookingsInWindow
-                .Select(item => item.MarketplaceBooking!)
-                .ToList());
+        [
+            .. recurringBookingsInWindow
+                .Select(item => item.MarketplaceBooking!),
+        ]);
 
         return new MarketplaceBookingPaymentProjection(representativeMarketplaceBooking, paymentStatus);
     }
@@ -122,7 +123,7 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
         }
 
         var paymentStatuses = paymentRequiredBookings.Select(item => item.PaymentStatus).ToList();
-        if (paymentStatuses.All(item => item == PaymentStatus.Confirmed || item == PaymentStatus.NoPaymentRequired))
+        if (paymentStatuses.All(item => item is PaymentStatus.Confirmed or PaymentStatus.NoPaymentRequired))
         {
             return PaymentStatus.Confirmed;
         }
@@ -137,11 +138,6 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
             return PaymentStatus.Expired;
         }
 
-        if (paymentStatuses.Contains(PaymentStatus.RecordNeverCreated))
-        {
-            return PaymentStatus.RecordNeverCreated;
-        }
-
-        return PaymentStatus.Pending;
+        return paymentStatuses.Contains(PaymentStatus.RecordNeverCreated) ? PaymentStatus.RecordNeverCreated : PaymentStatus.Pending;
     }
 }

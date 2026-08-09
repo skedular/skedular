@@ -76,7 +76,7 @@ public class MarketplaceBookingSubscriptionService(
 
         var result = await repositoryFactory.MarketplaceBookingSubscriptionRepository
             .GetPaginatedBookingInstancesUntrackedAsync(subscriptionId, paginationInputParam, from, until, cancellationToken);
-        return (result.Item1, result.Item2.Select(graphQlMapper.MapTo).ToList(), result.Item3);
+        return (result.Item1, [.. result.Item2.Select(graphQlMapper.MapTo)], result.Item3);
     }
 
     public async Task<MarketplaceBookingSubscription> GetByIdAsync(string id, CancellationToken cancellationToken)
@@ -104,7 +104,7 @@ public class MarketplaceBookingSubscriptionService(
 
         var invoices =
             await repositoryFactory.OrganizationArrearsInvoiceRepository.GetByMarketplaceBookingSubscriptionIdUntrackedAsync(id, cancellationToken);
-        return invoices.Select(sharedEntityMapper.MapTo).ToList();
+        return [.. invoices.Select(sharedEntityMapper.MapTo)];
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
@@ -154,7 +154,7 @@ public class MarketplaceBookingSubscriptionService(
         {
             accessScope = new MarketplaceBookingSubscriptionAccessScope(
                 [scopedOrganization.Id],
-                scopedOrganization.Teams.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id).ToList());
+                [.. scopedOrganization.Teams.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id)]);
             searchCriteria = searchCriteria with
             {
                 OrganizationId = null,
@@ -164,7 +164,7 @@ public class MarketplaceBookingSubscriptionService(
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.TeamIds.Count != 0)
         {
-            var teams = await repositoryFactory.TeamRepository.GetActiveByIdsAsync(searchCriteria.TeamIds.Distinct().ToList(), cancellationToken);
+            var teams = await repositoryFactory.TeamRepository.GetActiveByIdsAsync([.. searchCriteria.TeamIds.Distinct()], cancellationToken);
 
             foreach (var team in teams)
             {
@@ -175,7 +175,7 @@ public class MarketplaceBookingSubscriptionService(
                 }
             }
 
-            teamIds = searchCriteria.TeamIds.Distinct().ToList();
+            teamIds = [.. searchCriteria.TeamIds.Distinct()];
         }
 
         if (accessScope is null &&
@@ -212,7 +212,7 @@ public class MarketplaceBookingSubscriptionService(
                 accessScope,
                 cancellationToken);
 
-        return (paginatedInfo, edges.Select(graphQlMapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, [.. edges.Select(graphQlMapper.MapTo)], totalCount);
     }
 
     public async Task<MarketplaceBookingSubscription> AddAsync(MarketplaceBookingSubscription subscription, CancellationToken cancellationToken)
@@ -242,22 +242,24 @@ public class MarketplaceBookingSubscriptionService(
         }
 
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
-            subscription.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                .Select(item => item.Id)
-                .Distinct()
-                .ToList(),
-            subscription.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
-                .Select(item => item.CustomDomain!)
-                .Distinct()
-                .ToList(),
+            [
+                .. subscription.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                    .Select(item => item.Id)
+                    .Distinct(),
+            ],
+            [
+                .. subscription.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                    .Select(item => item.CustomDomain!)
+                    .Distinct(),
+            ],
             customer.Id,
             false,
             cancellationToken);
 
         var teams = await teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
-            subscription.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
+            [.. subscription.InvolvedTeams.Select(item => item.Id).Distinct()],
             customer.Id,
             false,
             cancellationToken);
@@ -365,7 +367,7 @@ public class MarketplaceBookingSubscriptionService(
     private async Task<List<string>> GetCustomerTeamIdsAsync(string customerId, CancellationToken cancellationToken)
     {
         var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customerId, cancellationToken);
-        return teams.Select(item => item.Id).ToList();
+        return [.. teams.Select(item => item.Id)];
     }
 
     private async Task EnsureCustomerCanViewMarketplaceBookingSubscriptionAsync(
@@ -398,16 +400,18 @@ public class MarketplaceBookingSubscriptionService(
         }
 
         var teamIds = subscription.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
-        if (teamIds.Count != 0)
+        if (teamIds.Count == 0)
         {
-            var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-            foreach (var team in teams)
+            throw new UnauthorizedAccessException();
+        }
+
+        var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
+        foreach (var team in teams)
+        {
+            if (team.Organization is not null &&
+                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
             {
-                if (team.Organization is not null &&
-                    await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
-                {
-                    return;
-                }
+                return;
             }
         }
 

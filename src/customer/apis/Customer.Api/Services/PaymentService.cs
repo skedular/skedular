@@ -102,7 +102,7 @@ public class PaymentService(
 
         var stripePaymentMethods = await repositoryFactory.StripePaymentMethodRepository.GetByCustomerIdAsync(customerEntity.Id, cancellationToken);
 
-        return entityMapper.MapTo(stripePaymentMethods).ToList();
+        return [.. entityMapper.MapTo(stripePaymentMethods)];
     }
 
     public async Task<bool> HasAttachedPaymentMethodAsync(string requestedCustomerId, CancellationToken cancellationToken) =>

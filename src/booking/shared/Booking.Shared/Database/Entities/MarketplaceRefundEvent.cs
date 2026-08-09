@@ -44,7 +44,7 @@ public class MarketplaceRefundEventConfiguration : IEntityTypeConfiguration<Mark
         builder.Property(item => item.RefundAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Reason).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.AccountingProvider).HasMaxLength(Constants.MaxAccountingProviderLength);
-        builder.Property(item => item.ExternalRefundId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.ExternalRefundId).HasMaxLength(Constants.MaxExternalRefundIdLength);
         builder.Property(item => item.ExternalRefundNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
         builder.Property(item => item.LastError).HasMaxLength(Constants.MaxAccountingErrorLength);
 

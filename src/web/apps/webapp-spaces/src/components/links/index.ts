@@ -72,6 +72,9 @@ export const getOrganizationBookingBaseLink = (integratedPlatform: string | unde
     editMode: options?.editMode,
   });
 
+export const getOrganizationBookingModificationLink = (integratedPlatform: string | undefined, id: string, bookingId: string) =>
+  `${getOrganizationBookingBaseLink(integratedPlatform, id, bookingId)}/modify`;
+
 export const getOrganizationLocationAddPrivateLink = (integratedPlatform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
   let params = '';
 

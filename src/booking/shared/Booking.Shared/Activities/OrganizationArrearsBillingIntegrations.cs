@@ -184,7 +184,7 @@ public class OrganizationArrearsBillingIntegrations(
 
             var persistedInvoice = await PersistArrearsInvoiceAndAttachToBookingsAsync(
                 draft,
-                draft.Lines.Select(line => line.BookingId).Distinct().ToList(),
+                [.. draft.Lines.Select(line => line.BookingId).Distinct()],
                 invoiceNumber,
                 invoiceUrl,
                 cancellationToken);
@@ -196,7 +196,7 @@ public class OrganizationArrearsBillingIntegrations(
                     xeroConnection!,
                     draft,
                     persistedInvoice,
-                    draft.Lines.Select(line => line.BookingId).Distinct().ToList(),
+                    [.. draft.Lines.Select(line => line.BookingId).Distinct()],
                     cancellationToken);
             }
 
@@ -329,7 +329,7 @@ public class OrganizationArrearsBillingIntegrations(
         var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(draft.CustomerId, true, cancellationToken) ??
                        throw new CustomerNotFound();
         var lineBookings = await repositoryFactory.BookingRepository.GetByIdsMinimalAsync(
-            draft.Lines.Select(item => item.BookingId).ToList(),
+            [.. draft.Lines.Select(item => item.BookingId)],
             cancellationToken);
 
         var organizationArrearsInvoice = repositoryFactory.OrganizationArrearsInvoiceRepository.Add(
@@ -344,17 +344,20 @@ public class OrganizationArrearsBillingIntegrations(
                 BillingPeriodEndExclusive = draft.BillingPeriod.EndExclusive,
                 Currency = draft.Currency.ToCurrency(),
                 TotalAmount = draft.TotalAmount,
-                Lines = draft.Lines.Select(line => new OrganizationArrearsInvoiceLine
-                {
-                    Id = randomHelper.Generate(),
-                    Booking = lineBookings.First(booking => booking.Id == line.BookingId),
-                    SegmentKey = line.SegmentKey,
-                    ServicePeriodStartInclusive = line.ServicePeriod.StartInclusive,
-                    ServicePeriodEndExclusive = line.ServicePeriod.EndExclusive,
-                    EarnedAt = line.EarnedAt,
-                    Amount = line.Amount,
-                    Description = line.Description,
-                }).ToList(),
+                Lines =
+                [
+                    .. draft.Lines.Select(line => new OrganizationArrearsInvoiceLine
+                    {
+                        Id = randomHelper.Generate(),
+                        Booking = lineBookings.First(booking => booking.Id == line.BookingId),
+                        SegmentKey = line.SegmentKey,
+                        ServicePeriodStartInclusive = line.ServicePeriod.StartInclusive,
+                        ServicePeriodEndExclusive = line.ServicePeriod.EndExclusive,
+                        EarnedAt = line.EarnedAt,
+                        Amount = line.Amount,
+                        Description = line.Description,
+                    }),
+                ],
             });
 
         if (bookingIds.Count == 0)
@@ -731,13 +734,16 @@ public class OrganizationArrearsBillingIntegrations(
             Reference = BuildReference(organizationArrearsInvoice, xeroConnection),
             Date = invoiceDate,
             DueDate = dueDate,
-            LineItems = draft.Lines.Select(line => new LineItem
-            {
-                Description = line.Description,
-                Quantity = 1,
-                UnitAmount = line.Amount,
-                AccountCode = xeroConnection.DefaultSalesAccountCode,
-            }).ToList(),
+            LineItems =
+            [
+                .. draft.Lines.Select(line => new LineItem
+                {
+                    Description = line.Description,
+                    Quantity = 1,
+                    UnitAmount = line.Amount,
+                    AccountCode = xeroConnection.DefaultSalesAccountCode,
+                }),
+            ],
         };
     }
 

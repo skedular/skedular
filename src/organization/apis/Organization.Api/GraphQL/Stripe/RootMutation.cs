@@ -61,7 +61,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
     {
-        var accounts = await organizationStripeConnectAccountService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var accounts = await organizationStripeConnectAccountService.DeleteAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new OrganizationStripeConnectAccountsPayload
         {
             ClientMutationId = input.ClientMutationId,

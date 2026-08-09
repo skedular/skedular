@@ -16,7 +16,7 @@ relatedArticleIds:
   - shared-resources
   - shared-bookings
   - shared-subscriptions
-updatedAt: 2026-07-15
+updatedAt: 2026-08-07
 ---
 
 <div class="documentation-concept-support"><strong>Managed in</strong><span>✅ Skedular Spaces</span><span>⚪ Skedular Teams</span><span>⚪ Skedular Host</span></div>
@@ -62,6 +62,12 @@ A Product's pricing option determines whether the purchase is one-time or recurr
 ## Cancellation policies
 
 Each pricing option uses one cancellation policy: no cancellation, full refund before a cutoff, or tiered refunds. Tiered policies contain ordered time thresholds and refund percentages. The policy is part of the Product pricing configuration, while the cancellation and refund workflow is handled by Booking and Commerce.
+
+## Changes after purchase
+
+Changing an eligible marketplace Booking does not create a new purchase or replace its commercial terms. The Booking keeps its original Product version, Price, quantity, payment state, invoice and refund history, and cancellation terms. A customer or authorized operator can only use a new date, time, or Resource that the purchased Product can still fulfill; selecting a replacement Resource does not permit switching to a different Product or Price.
+
+Whether a Booking can be changed depends on its payment state, start time, permissions, and current availability. The Product cancellation cutoff applies to cancellation and refunds, not to an otherwise eligible Booking change. See [Bookings](/docs/shared/core-concepts/bookings) for the change flow and [Subscriptions](/docs/shared/marketplace/subscriptions) for recurring Booking occurrences.
 
 ## Billing and payment configuration
 

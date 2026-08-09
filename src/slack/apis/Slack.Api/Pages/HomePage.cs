@@ -617,7 +617,7 @@ public class HomePage(
             new HomeViewDefinition
             {
                 CallbackId = HomeCallback,
-                Blocks = asyncBlocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
+                Blocks = [.. asyncBlocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1)],
                 PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
@@ -751,7 +751,7 @@ public class HomePage(
         [
             new ActionsBlock
             {
-                Elements = backButton.Concat(addBookingButton).Concat(feedbackButton).Append(actionMenus).ToList(),
+                Elements = [.. backButton, .. addBookingButton, .. feedbackButton, actionMenus],
             },
         ];
     }
@@ -786,39 +786,42 @@ public class HomePage(
         var startOfWeek = pageContext.HomePage.SelectedDate.StartOfWeek(workspaceMember.ToDayOfWeek());
         var bookingButtons = new ActionsBlock
         {
-            Elements = Enumerable.Range(0, DayCount).Select(IActionElement (idx) =>
-            {
-                var from = startOfWeek.AddDays(idx).ToDate(TimeSpan.Zero);
-                var matchingBookings = myBookings.Where(item =>
+            Elements =
+            [
+                .. Enumerable.Range(0, DayCount).Select(IActionElement (idx) =>
                 {
-                    var bookingFrom = item.From;
-                    return from.Year == bookingFrom.Year && from.Month == bookingFrom.Month && from.Day == bookingFrom.Day;
-                }).ToList();
+                    var from = startOfWeek.AddDays(idx).ToDate(TimeSpan.Zero);
+                    var matchingBookings = myBookings.Where(item =>
+                    {
+                        var bookingFrom = item.From;
+                        return from.Year == bookingFrom.Year && from.Month == bookingFrom.Month && from.Day == bookingFrom.Day;
+                    }).ToList();
 
-                string actionId;
-                string value;
-                PlainText buttonText;
-                if (matchingBookings.Count == 0)
-                {
-                    var until = from.EndOfDay();
-                    actionId = $"{BookingActionTypes.InstantAddBooking}{idx}";
-                    buttonText = $"{from.ToShortDateWithoutYear()} {Icons.New}".ToPlainTextWithIcon(Icons.Calendar);
-                    value = new InstantAddBookingContext(pageContext, from, until, InitiationSource.App, customer.Id, null, null).Serialize();
-                }
-                else
-                {
-                    actionId = $"{BookingActionTypes.CancelBooking}{idx}";
-                    buttonText = $"{from.ToShortDateWithoutYear()} {Icons.Cancel}".ToPlainTextWithIcon(Icons.Calendar);
-                    value = new CancelBookingContext(pageContext, matchingBookings.First().Id).Serialize();
-                }
+                    string actionId;
+                    string value;
+                    PlainText buttonText;
+                    if (matchingBookings.Count == 0)
+                    {
+                        var until = from.EndOfDay();
+                        actionId = $"{BookingActionTypes.InstantAddBooking}{idx}";
+                        buttonText = $"{from.ToShortDateWithoutYear()} {Icons.New}".ToPlainTextWithIcon(Icons.Calendar);
+                        value = new InstantAddBookingContext(pageContext, from, until, InitiationSource.App, customer.Id, null, null).Serialize();
+                    }
+                    else
+                    {
+                        actionId = $"{BookingActionTypes.CancelBooking}{idx}";
+                        buttonText = $"{from.ToShortDateWithoutYear()} {Icons.Cancel}".ToPlainTextWithIcon(Icons.Calendar);
+                        value = new CancelBookingContext(pageContext, matchingBookings.First().Id).Serialize();
+                    }
 
-                return new Button
-                {
-                    ActionId = actionId,
-                    Text = buttonText,
-                    Value = value,
-                };
-            }).ToList(),
+                    return new Button
+                    {
+                        ActionId = actionId,
+                        Text = buttonText,
+                        Value = value,
+                    };
+                }),
+            ],
         };
 
         return

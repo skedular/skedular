@@ -147,7 +147,7 @@ public class GrpcMapper : IGrpcMapper
                 PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
                 PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
                 IsOnboardingDone = src.IsOnboardingDone,
-                Identities = MapTo(src.Identities).ToList(),
+                Identities = [.. MapTo(src.Identities)],
                 DefaultOrganization =
                     string.IsNullOrWhiteSpace(src.DefaultOrganizationId)
                         ? null
@@ -155,18 +155,27 @@ public class GrpcMapper : IGrpcMapper
                         {
                             Id = src.DefaultOrganizationId.ToSafeString(),
                         },
-                PreferredLocations = src.PreferredLocationIds.Select(item => new Location
-                {
-                    Id = item,
-                }).ToList(),
-                PreferredResources = src.PreferredResourceIds.Select(item => new Resource
-                {
-                    Id = item,
-                }).ToList(),
-                PreferredOrganizationTags = src.PreferredOrganizationTagIds.Select(item => new OrganizationTag
-                {
-                    Id = item,
-                }).ToList(),
+                PreferredLocations =
+                [
+                    .. src.PreferredLocationIds.Select(item => new Location
+                    {
+                        Id = item,
+                    }),
+                ],
+                PreferredResources =
+                [
+                    .. src.PreferredResourceIds.Select(item => new Resource
+                    {
+                        Id = item,
+                    }),
+                ],
+                PreferredOrganizationTags =
+                [
+                    .. src.PreferredOrganizationTagIds.Select(item => new OrganizationTag
+                    {
+                        Id = item,
+                    }),
+                ],
                 Type = src.Type switch
                 {
                     Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType.Guest => CustomerType.Guest,
@@ -205,8 +214,8 @@ public class GrpcMapper : IGrpcMapper
             IsOwnershipVerified = src.IsOwnershipVerified,
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             HasFutureBooking = src.HasFutureBooking,
-            Tags = MapToOrganizationCustomTag(src.Tags).ToList(),
-            ResourceTypes = MapTo(src.ResourceTypes).ToList(),
+            Tags = [.. MapToOrganizationCustomTag(src.Tags)],
+            ResourceTypes = [.. MapTo(src.ResourceTypes)],
         };
 
     public Location MapTo(Api.Shared.Grpc.Skedular.Location.Core.V1.Location src) =>
@@ -229,7 +238,7 @@ public class GrpcMapper : IGrpcMapper
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Type), src.Type,
                     $"Unexpected value for {nameof(src.Type)}: {src.Type}. Update enum mapping or caller input."),
             },
-            Resources = MapTo(src.Resources).ToList(),
+            Resources = [.. MapTo(src.Resources)],
         };
 
     public Team MapTo(Api.Shared.Grpc.Skedular.Team.Core.V1.Team src)
@@ -262,7 +271,7 @@ public class GrpcMapper : IGrpcMapper
             },
         };
 
-        team.TeamMembers = MapTo(src.Members, team).ToList();
+        team.TeamMembers = [.. MapTo(src.Members, team)];
 
         return team;
     }
@@ -296,26 +305,41 @@ public class GrpcMapper : IGrpcMapper
                 _ => throw new ArgumentOutOfRangeException(nameof(src.Channel), src.Channel,
                     $"Unexpected value for {nameof(src.Channel)}: {src.Channel}. Update enum mapping or caller input."),
             },
-            Resources = src.Resources.Select(item => new Resource
-            {
-                Id = item.Id,
-            }).ToList(),
-            InvolvedCustomers = src.InvolvedCustomerIds.Select(item => new Customer
-            {
-                Id = item,
-            }).ToList(),
-            InvolvedOrganizations = src.InvolvedOrganizationIds.Select(item => new Organization
-            {
-                Id = item,
-            }).ToList(),
-            InvolvedLocations = src.InvolvedLocationIds.Select(item => new Location
-            {
-                Id = item,
-            }).ToList(),
-            InvolvedTeams = src.InvolvedTeamIds.Select(item => new Team
-            {
-                Id = item,
-            }).ToList(),
+            Resources =
+            [
+                .. src.Resources.Select(item => new Resource
+                {
+                    Id = item.Id,
+                }),
+            ],
+            InvolvedCustomers =
+            [
+                .. src.InvolvedCustomerIds.Select(item => new Customer
+                {
+                    Id = item,
+                }),
+            ],
+            InvolvedOrganizations =
+            [
+                .. src.InvolvedOrganizationIds.Select(item => new Organization
+                {
+                    Id = item,
+                }),
+            ],
+            InvolvedLocations =
+            [
+                .. src.InvolvedLocationIds.Select(item => new Location
+                {
+                    Id = item,
+                }),
+            ],
+            InvolvedTeams =
+            [
+                .. src.InvolvedTeamIds.Select(item => new Team
+                {
+                    Id = item,
+                }),
+            ],
         };
 
     public OrganizationPermissions MapTo(Permissions src) =>
@@ -462,18 +486,27 @@ public class GrpcMapper : IGrpcMapper
             {
                 Id = src.ResourceTypeId,
             },
-            CustomTags = src.CustomTagIds.Select(item => new Models_OrganizationCustomTag
-            {
-                Id = item,
-            }).ToList(),
-            Zones = src.ZoneIds.Select(item => new OrganizationZone
-            {
-                Id = item,
-            }).ToList(),
-            ProductTags = src.ProductTagIds.Select(item => new OrganizationProductTag
-            {
-                Id = item,
-            }).ToList(),
+            CustomTags =
+            [
+                .. src.CustomTagIds.Select(item => new Models_OrganizationCustomTag
+                {
+                    Id = item,
+                }),
+            ],
+            Zones =
+            [
+                .. src.ZoneIds.Select(item => new OrganizationZone
+                {
+                    Id = item,
+                }),
+            ],
+            ProductTags =
+            [
+                .. src.ProductTagIds.Select(item => new OrganizationProductTag
+                {
+                    Id = item,
+                }),
+            ],
         };
 
     private static IEnumerable<Models_OrganizationCustomTag> MapToOrganizationCustomTag(IEnumerable<Tag> src) =>

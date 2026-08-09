@@ -29,7 +29,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var failures = await failureReadService.GetVisibleToCustomerAsync(customerId, cancellationToken);
-        return failures.Select(item => graphQlMapper.MapTo(item)).ToList();
+        return [.. failures.Select(graphQlMapper.MapTo)];
     }
 
     public IEnumerable<BookingCategoryDetails> BookingCategories() =>
@@ -137,13 +137,16 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                     Type = decision.ReasonCode,
                     Name = decision.ReasonCode.ToSpacesQuotaReasonCodeName(),
                 },
-            UpgradePlans = decision.UpgradePlans.Select(upgrade => new UpgradePlanDetails
-            {
-                PlanCode = upgrade.PlanCode,
-                Name = upgrade.Name,
-                Availability = upgrade.Availability,
-                PriceDescription = upgrade.PriceDescription,
-            }).ToList(),
+            UpgradePlans =
+            [
+                .. decision.UpgradePlans.Select(upgrade => new UpgradePlanDetails
+                {
+                    PlanCode = upgrade.PlanCode,
+                    Name = upgrade.Name,
+                    Availability = upgrade.Availability,
+                    PriceDescription = upgrade.PriceDescription,
+                }),
+            ],
         };
     }
 
@@ -220,7 +223,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.TeamIds.ToSafeCollection(),
                 where.CustomerIds.ToSafeCollection(),
                 where.RecurringBookingIds.ToSafeCollection()),
-            orderBy.ToSafeCollection().Select(item => new BookingOrder(item.Direction, item.Field)).ToList(),
+            [.. orderBy.ToSafeCollection().Select(item => new BookingOrder(item.Direction, item.Field))],
             false,
             cancellationToken);
 

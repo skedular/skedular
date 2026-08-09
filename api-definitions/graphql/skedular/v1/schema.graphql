@@ -1064,6 +1064,12 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
+  modifyMarketplaceBooking(
+    input: ModifyMarketplaceBookingInput! @fusion__inputField(schema: BOOKING_API)
+  ): ModifyMarketplaceBookingPayload!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   recordBankTransferRefundSent(
     input: RecordBankTransferRefundSentInput! @fusion__inputField(schema: BOOKING_API)
   ): MarketplaceRefundPayload!
@@ -1510,6 +1516,7 @@ type BookingDetails
   channel: BookingChannelDetails! @fusion__field(schema: BOOKING_API)
   createdByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
   deletedByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
+  entityFrameworkVersion: UnsignedInt! @fusion__field(schema: BOOKING_API)
   failure: MarketplaceBookingFailureDetails
     @cost(weight: "10")
     @fusion__cost(schema: BOOKING_API, weight: "10")
@@ -1525,6 +1532,18 @@ type BookingDetails
   involvedTeams: [TeamDetails!]! @fusion__field(schema: BOOKING_API)
   lastModifiedByCustomer: CustomerDetails @fusion__field(schema: BOOKING_API)
   marketplaceBooking: MarketplaceBookingDetails
+    @fusion__field(schema: BOOKING_API)
+  marketplaceBookingModifications: [MarketplaceBookingModificationDetails!]!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
+  marketplaceBookingResourceSelection(
+    from: DateTime @fusion__inputField(schema: BOOKING_API)
+    locationId: String @fusion__inputField(schema: BOOKING_API)
+    until: DateTime @fusion__inputField(schema: BOOKING_API)
+  ): MarketplaceBookingResourceSelectionDetails!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
   notes: String @fusion__field(schema: BOOKING_API)
   recurringBooking: RecurringBookingDetails @fusion__field(schema: BOOKING_API)
@@ -2285,9 +2304,53 @@ type MarketplaceBookingInstanceEdge @fusion__type(schema: BOOKING_API) {
   node: RecurringBookingDetails! @fusion__field(schema: BOOKING_API)
 }
 
+type MarketplaceBookingModificationConflictErrorDetails
+  @fusion__type(schema: BOOKING_API) {
+  code: MarketplaceBookingModificationErrorCode!
+    @fusion__field(schema: BOOKING_API)
+  currentBooking: BookingDetails @fusion__field(schema: BOOKING_API)
+  message: String! @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceBookingModificationDetails @fusion__type(schema: BOOKING_API) {
+  actorKind: MarketplaceBookingModificationActorKind!
+    @fusion__field(schema: BOOKING_API)
+  bookingId: String! @fusion__field(schema: BOOKING_API)
+  id: String! @fusion__field(schema: BOOKING_API)
+  occurredAt: DateTime! @fusion__field(schema: BOOKING_API)
+  originalFrom: DateTime! @fusion__field(schema: BOOKING_API)
+  originalResourceIds: [String!]! @fusion__field(schema: BOOKING_API)
+  originalResourceNames: [String!]! @fusion__field(schema: BOOKING_API)
+  originalUntil: DateTime! @fusion__field(schema: BOOKING_API)
+  reason: String @fusion__field(schema: BOOKING_API)
+  resultFrom: DateTime! @fusion__field(schema: BOOKING_API)
+  resultResourceIds: [String!]! @fusion__field(schema: BOOKING_API)
+  resultResourceNames: [String!]! @fusion__field(schema: BOOKING_API)
+  resultUntil: DateTime! @fusion__field(schema: BOOKING_API)
+  subscriptionOccurrenceOverride: Boolean! @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceBookingModificationEligibilityErrorDetails
+  @fusion__type(schema: BOOKING_API) {
+  code: MarketplaceBookingModificationErrorCode!
+    @fusion__field(schema: BOOKING_API)
+  message: String! @fusion__field(schema: BOOKING_API)
+}
+
 type MarketplaceBookingPaymentStatusDetails @fusion__type(schema: BOOKING_API) {
   name: String! @fusion__field(schema: BOOKING_API)
   type: PaymentStatus! @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceBookingResourceSelectionDetails
+  @fusion__type(schema: BOOKING_API) {
+  availableResourceIds: [String!]! @fusion__field(schema: BOOKING_API)
+  canSelectResources: Boolean! @fusion__field(schema: BOOKING_API)
+  eligibleLocations: [Booking_LocationDetails!]!
+    @fusion__field(schema: BOOKING_API)
+  eligibleResources: [BookingResourceDetails!]!
+    @fusion__field(schema: BOOKING_API)
+  maximumResourceCount: Int! @fusion__field(schema: BOOKING_API)
 }
 
 type MarketplaceBookingSubscriptionCancellationModeDetails
@@ -2577,6 +2640,20 @@ type MarketplaceSubscriptionCancellationAvailabilityDetails
   atPeriodEnd: MarketplaceCancellationAvailabilityDetails!
     @fusion__field(schema: BOOKING_API)
   immediate: MarketplaceCancellationAvailabilityDetails!
+    @fusion__field(schema: BOOKING_API)
+}
+
+type ModifyMarketplaceBookingPayload @fusion__type(schema: BOOKING_API) {
+  accessError: SpacesAccessErrorDetails @fusion__field(schema: BOOKING_API)
+  availabilityError: BookingAvailabilityErrorDetails
+    @fusion__field(schema: BOOKING_API)
+  booking: BookingDetails @fusion__field(schema: BOOKING_API)
+  clientMutationId: String @fusion__field(schema: BOOKING_API)
+  conflictError: MarketplaceBookingModificationConflictErrorDetails
+    @fusion__field(schema: BOOKING_API)
+  eligibilityError: MarketplaceBookingModificationEligibilityErrorDetails
+    @fusion__field(schema: BOOKING_API)
+  modification: MarketplaceBookingModificationDetails
     @fusion__field(schema: BOOKING_API)
 }
 
@@ -4882,6 +4959,17 @@ input MarketplaceRefundWhereInput @fusion__type(schema: BOOKING_API) {
   statuses: [String!] @fusion__inputField(schema: BOOKING_API)
 }
 
+input ModifyMarketplaceBookingInput @fusion__type(schema: BOOKING_API) {
+  actorKind: MarketplaceBookingModificationActorKind! @fusion__inputField(schema: BOOKING_API)
+  bookingId: String! @fusion__inputField(schema: BOOKING_API)
+  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
+  expectedVersion: Int! @fusion__inputField(schema: BOOKING_API)
+  from: DateTime! @fusion__inputField(schema: BOOKING_API)
+  reason: String! @fusion__inputField(schema: BOOKING_API)
+  resourceIds: [String!] @fusion__inputField(schema: BOOKING_API)
+  until: DateTime! @fusion__inputField(schema: BOOKING_API)
+}
+
 input MyInvitationsToJoinOrganizationsWhereInput
   @fusion__type(schema: ORGANIZATION_API) {
   organizationCustomDomain: String @fusion__inputField(schema: ORGANIZATION_API)
@@ -5958,6 +6046,22 @@ enum LocationRestrictedInformationPatchField @fusion__type(schema: LOCATION_API)
 enum LocationType @fusion__type(schema: LOCATION_API) {
   PRIVATE @fusion__enumValue(schema: LOCATION_API)
   MARKETPLACE @fusion__enumValue(schema: LOCATION_API)
+}
+
+enum MarketplaceBookingModificationActorKind @fusion__type(schema: BOOKING_API) {
+  CUSTOMER @fusion__enumValue(schema: BOOKING_API)
+  ORGANIZATION_OPERATOR @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum MarketplaceBookingModificationErrorCode @fusion__type(schema: BOOKING_API) {
+  INVALID_INPUT @fusion__enumValue(schema: BOOKING_API)
+  NOT_ELIGIBLE @fusion__enumValue(schema: BOOKING_API)
+  UNAUTHORIZED @fusion__enumValue(schema: BOOKING_API)
+  OPERATOR_REASON_REQUIRED @fusion__enumValue(schema: BOOKING_API)
+  STALE_VERSION @fusion__enumValue(schema: BOOKING_API)
+  UNAVAILABLE @fusion__enumValue(schema: BOOKING_API)
+  INVALID_RESOURCE_SELECTION @fusion__enumValue(schema: BOOKING_API)
+  OUTSIDE_SUBSCRIPTION_CYCLE @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum MarketplaceBookingPatchField @fusion__type(schema: BOOKING_API) {
@@ -7692,6 +7796,12 @@ scalar LocalTime
     pattern: "\"^\\\\d{2}:\\\\d{2}:\\\\d{2}(?:\\\\.\\\\d{1,9})?$\""
   )
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/local-time.html")
+  @fusion__type(schema: BOOKING_API)
+
+"The `UnsignedInt` scalar type represents an unsigned 32-bit integer."
+scalar UnsignedInt
+  @serializeAs(type: INT)
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/unsigned-int.html")
   @fusion__type(schema: BOOKING_API)
 
 directive @cost(weight: String!) on

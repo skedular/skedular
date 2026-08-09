@@ -118,6 +118,7 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             [],
             [],
             [OrganizationTagTypeConstants.ResourceDesk],
+            [],
             cancellationToken);
 
     private static IReadOnlyList<Resource> SelectResourcesByCustomerPreferences(
@@ -162,10 +163,12 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             .Select(item => item.Id)
             .ToHashSet();
 
-        return locations
-            .OrderByDescending(item => preferredLocationIds.Contains(item.Id))
-            .ThenBy(item => item.Name)
-            .ToList();
+        return
+        [
+            .. locations
+                .OrderByDescending(item => preferredLocationIds.Contains(item.Id))
+                .ThenBy(item => item.Name),
+        ];
     }
 
     private static IReadOnlyList<Organization> ToOrganizations(Organization? organizationEntity) =>

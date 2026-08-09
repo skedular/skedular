@@ -402,7 +402,7 @@ public class ResourcesPage(
             new HomeViewDefinition
             {
                 CallbackId = ResourcesCallback,
-                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
+                Blocks = [.. blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1)],
                 PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
@@ -441,7 +441,7 @@ public class ResourcesPage(
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addDeskButton).Concat(feedbackButton).ToList(),
+                Elements = [.. homeAndBackButtons, .. addDeskButton, .. feedbackButton],
             },
         ];
     }
@@ -643,22 +643,28 @@ public class ResourcesPage(
                 Element = new StaticMultiSelectMenu
                 {
                     ActionId = CustomTagActionTypes.CustomTags,
-                    Options = customTagConnection.Edges.Select(item => item.Node).Select(item => new Option
-                    {
-                        Text = item.Name.ToOptionText(),
-                        Value = item.Id,
-                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
-                    }).ToList(),
-                    InitialOptions = customTagConnection.Edges.Select(item => item.Node)
-                        .Where(item => resource.CustomTags
-                            .Select(organizationCustomTag => organizationCustomTag.Id).Contains(item.Id))
-                        .Select(item =>
-                            new Option
-                            {
-                                Text = item.Name.ToOptionText(),
-                                Value = item.Id,
-                                Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
-                            }).ToList(),
+                    Options =
+                    [
+                        .. customTagConnection.Edges.Select(item => item.Node).Select(item => new Option
+                        {
+                            Text = item.Name.ToOptionText(),
+                            Value = item.Id,
+                            Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
+                        }),
+                    ],
+                    InitialOptions =
+                    [
+                        .. customTagConnection.Edges.Select(item => item.Node)
+                            .Where(item => resource.CustomTags
+                                .Select(organizationCustomTag => organizationCustomTag.Id).Contains(item.Id))
+                            .Select(item =>
+                                new Option
+                                {
+                                    Text = item.Name.ToOptionText(),
+                                    Value = item.Id,
+                                    Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
+                                }),
+                    ],
                 },
                 Optional = true,
             });
@@ -674,21 +680,27 @@ public class ResourcesPage(
                 Element = new StaticMultiSelectMenu
                 {
                     ActionId = ZoneActionTypes.Zones,
-                    Options = zoneConnection.Edges.Select(item => item.Node).Select(item => new Option
-                    {
-                        Text = item.Name.ToOptionText(),
-                        Value = item.Id,
-                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
-                    }).ToList(),
-                    InitialOptions = zoneConnection.Edges.Select(item => item.Node)
-                        .Where(item => resource.Zones.Select(organizationZone => organizationZone.Id).Contains(item.Id))
-                        .Select(item =>
-                            new Option
-                            {
-                                Text = item.Name.ToOptionText(),
-                                Value = item.Id,
-                                Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
-                            }).ToList(),
+                    Options =
+                    [
+                        .. zoneConnection.Edges.Select(item => item.Node).Select(item => new Option
+                        {
+                            Text = item.Name.ToOptionText(),
+                            Value = item.Id,
+                            Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
+                        }),
+                    ],
+                    InitialOptions =
+                    [
+                        .. zoneConnection.Edges.Select(item => item.Node)
+                            .Where(item => resource.Zones.Select(organizationZone => organizationZone.Id).Contains(item.Id))
+                            .Select(item =>
+                                new Option
+                                {
+                                    Text = item.Name.ToOptionText(),
+                                    Value = item.Id,
+                                    Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
+                                }),
+                    ],
                 },
                 Optional = true,
             });

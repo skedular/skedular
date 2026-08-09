@@ -34,6 +34,7 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     void StartWorkflowPayBookingViaBankTransfer(PayBookingViaBankTransferInput args, IUnitOfWork unitOfWork);
 
     void StartWorkflowNotifyMarketplaceBookingFailure(NotifyMarketplaceBookingFailureInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowNotifyMarketplaceBookingModification(NotifyMarketplaceBookingModificationInput args, IUnitOfWork unitOfWork);
     void StartWorkflowResolvePartialMarketplaceBooking(ResolvePartialMarketplaceBookingInput args, IUnitOfWork unitOfWork);
     void StartWorkflowProcessMarketplaceRefund(ProcessMarketplaceRefundInput args, IUnitOfWork unitOfWork);
 
@@ -147,6 +148,7 @@ public class TemporalOutboxService(
     private static readonly string s_generateInitialArrearsBookingInvoice = typeof(GenerateInitialArrearsBookingInvoice).ToWorkflowType();
 
     private static readonly string s_notifyMarketplaceBookingFailure = typeof(NotifyMarketplaceBookingFailure).ToWorkflowType();
+    private static readonly string s_notifyMarketplaceBookingModification = typeof(NotifyMarketplaceBookingModification).ToWorkflowType();
     private static readonly string s_resolvePartialMarketplaceBooking = typeof(ResolvePartialMarketplaceBooking).ToWorkflowType();
     private static readonly string s_processMarketplaceRefund = typeof(ProcessMarketplaceRefund).ToWorkflowType();
 
@@ -222,6 +224,18 @@ public class TemporalOutboxService(
             new WorkflowOptions
             {
                 Id = workflowIdService.NotifyMarketplaceBookingFailure(args.FailureId),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
+            },
+            unitOfWork);
+
+    public void StartWorkflowNotifyMarketplaceBookingModification(NotifyMarketplaceBookingModificationInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<NotifyMarketplaceBookingModification, NotifyMarketplaceBookingModificationInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = workflowIdService.NotifyMarketplaceBookingModification(args.ModificationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
@@ -444,6 +458,22 @@ public class TemporalOutboxService(
 
                 _ = await temporalClient.StartWorkflowAsync(
                     (NotifyMarketplaceBookingFailure workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
+        else if (workflowType == s_notifyMarketplaceBookingModification)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<NotifyMarketplaceBookingModificationInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync(
+                    (NotifyMarketplaceBookingModification workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)

@@ -66,7 +66,8 @@ public class KafkaHelper : IKafkaHelper
             _logger.LogInformation("Creating {NewTopicCount} new Kafka topic(s). EventType={EventType}",
                 allTopicsToCreate.Count, typeof(TEvent).FullName);
             await adminClient.CreateTopicsAsync(
-                allTopicsToCreate
+            [
+                .. allTopicsToCreate
                     .Distinct()
                     .Select(topicName =>
                     {
@@ -79,8 +80,8 @@ public class KafkaHelper : IKafkaHelper
                             Name = topicName,
                             NumPartitions = partitionCount,
                         };
-                    })
-                    .ToList());
+                    }),
+            ]);
         }
 
         if (allTopicsToUpdate.Count != 0)

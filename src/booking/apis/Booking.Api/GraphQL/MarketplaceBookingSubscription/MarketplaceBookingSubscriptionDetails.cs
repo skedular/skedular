@@ -66,6 +66,7 @@ public class MarketplaceBookingSubscriptionDetails : Node
     public string? DeletedByCustomerId { get; set; }
 
     [GraphQLName("bookingInstances")]
+    [UseResolverScope]
     public async Task<Connection<MarketplaceBookingInstanceEdge>> GetBookingInstances(
         string? after,
         int? first,
@@ -127,13 +128,14 @@ public class MarketplaceBookingSubscriptionDetails : Node
         };
     }
 
+    [UseResolverScope]
     public async Task<IEnumerable<OrganizationArrearsInvoiceDetails>> GetArrearsInvoices(
         [Service]
         IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         [Service]
         IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
-        (await marketplaceBookingSubscriptionService.GetArrearsInvoicesAsync(Id, cancellationToken)).Select(graphQlMapper.MapTo).ToList();
+        [.. (await marketplaceBookingSubscriptionService.GetArrearsInvoicesAsync(Id, cancellationToken)).Select(graphQlMapper.MapTo)];
 }
 
 [ObjectType<MarketplaceBookingSubscriptionDetails>]
@@ -167,6 +169,7 @@ public static partial class MarketplaceBookingSubscriptionDetailsType
     public static IEnumerable<TeamDetails> GetInvolvedTeams([Parent] MarketplaceBookingSubscriptionDetails item) =>
         item.InvolvedTeamIds.Select(id => new TeamDetails(id));
 
+    [UseResolverScope]
     public static Task<MarketplaceRefundDetails?> GetRefund(
         [Parent]
         MarketplaceBookingSubscriptionDetails item,
@@ -183,6 +186,7 @@ public static partial class MarketplaceBookingSubscriptionDetailsType
         return model is null ? null : mapper.MapTo(model);
     }
 
+    [UseResolverScope]
     public static async Task<MarketplaceBookingFailureDetails?> GetFailure(
         [Parent]
         MarketplaceBookingSubscriptionDetails item,
@@ -196,7 +200,7 @@ public static partial class MarketplaceBookingSubscriptionDetailsType
         return failure is null ? null : graphQlMapper.MapTo(failure);
     }
 
-
+    [UseResolverScope]
     public static async Task<MarketplaceSubscriptionCancellationAvailabilityDetails> GetCancellationAvailabilityAsync(
         [Parent]
         MarketplaceBookingSubscriptionDetails item,

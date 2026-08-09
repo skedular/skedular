@@ -32,7 +32,7 @@ public class MsTeamsIntegrations(IRepositoryFactory repositoryFactory, IEntityMa
             .ToList();
 
         repositoryFactory.AzureTenantTeamRepository.RemoveRange(teamsToRemove);
-        tenant.AzureTenantTeams = addedTeams.Concat(updatedTeams).Concat(teamsToRemove).ToList();
+        tenant.AzureTenantTeams = [.. addedTeams, .. updatedTeams, .. teamsToRemove];
 
         foreach (var existingAzureTenantTeam in addedTeams.Concat(updatedTeams))
         {
@@ -54,7 +54,7 @@ public class MsTeamsIntegrations(IRepositoryFactory repositoryFactory, IEntityMa
                 .ToList();
 
             repositoryFactory.AzureTenantTeamChannelRepository.RemoveRange(channelsToRemove);
-            existingAzureTenantTeam.AzureTenantTeamChannels = addedChannels.Concat(updatedChannels).Concat(channelsToRemove).ToList();
+            existingAzureTenantTeam.AzureTenantTeamChannels = [.. addedChannels, .. updatedChannels, .. channelsToRemove];
         }
 
         repositoryFactory.AzureTenantRepository.Update(tenant);

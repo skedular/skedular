@@ -25,6 +25,6 @@ public class CsvLocationFileReaderService : ICsvLocationFileReaderService
             });
         csv.Context.RegisterClassMap<LocationMap>();
 
-        return csv.GetRecords<Location>().ToList();
+        return [.. csv.GetRecords<Location>()];
     }
 }

@@ -87,10 +87,12 @@ public class ResourceService(
             }
 
             var productVersion = product.ProductVersions.OrderByDescending(item => item.CreatedAt).First();
-            productRelatedTags = productVersion.OrganizationTags
-                .Where(item => item.Type == OrganizationTagTypeConstants.Product)
-                .Select(item => item.Id)
-                .ToList();
+            productRelatedTags =
+            [
+                .. productVersion.OrganizationTags
+                    .Where(item => item.Type == OrganizationTagTypeConstants.Product)
+                    .Select(item => item.Id),
+            ];
         }
 
         var resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
@@ -99,22 +101,26 @@ public class ResourceService(
             from,
             until,
             [],
-            customTagIds.Concat(zoneIds).Concat(productRelatedTags).ToList(),
+            [.. customTagIds, .. zoneIds, .. productRelatedTags],
+            [],
             [],
             cancellationToken);
 
         var resourcesToInclude = await repositoryFactory.ResourceRepository.GetByIdsAsync(
-            resourceIdsToInclude.Where(item => resources.All(resource => resource.Id != item)).ToList(),
+            [.. resourceIdsToInclude.Where(item => resources.All(resource => resource.Id != item))],
             false,
             cancellationToken);
 
-        resources = resources.Concat(resourcesToInclude).ToList();
-        return grpcMapper.MapTo(resources).Select(item =>
-        {
-            item.Location = graphQlMapper.MapTo(resources.Single(resource => resource.Id == item.Id).Location);
+        resources = [.. resources, .. resourcesToInclude];
+        return
+        [
+            .. grpcMapper.MapTo(resources).Select(item =>
+            {
+                item.Location = graphQlMapper.MapTo(resources.Single(resource => resource.Id == item.Id).Location);
 
-            return item;
-        }).ToList();
+                return item;
+            }),
+        ];
     }
 
     public async Task<(int, int)> GetOrganizationResourceAvailabilityAsync(
@@ -149,6 +155,7 @@ public class ResourceService(
                 location.Id,
                 from,
                 until,
+                [],
                 [],
                 [],
                 [],
@@ -188,20 +195,32 @@ public class ResourceService(
         }
 
         IReadOnlyList<string> productRelatedTags = [];
-        if (!string.IsNullOrWhiteSpace(productId))
+        if (string.IsNullOrWhiteSpace(productId))
         {
-            var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken) ?? throw new ProductNotFound();
-            if (product.OrganizationId != organization.Id)
-            {
-                throw new ProductOrganizationDidNotMatch();
-            }
-
-            var productVersion = product.ProductVersions.OrderByDescending(item => item.CreatedAt).First();
-            productRelatedTags = productVersion.OrganizationTags
-                .Where(item => item.Type == OrganizationTagTypeConstants.Product)
-                .Select(item => item.Id)
-                .ToList();
+            return await repositoryFactory.ResourceRepository.GetAvailableResourcesCountAsync(
+                organization.Id,
+                locationId,
+                from,
+                until,
+                resourceIds,
+                customTagIds.Concat(zoneIds).Concat(productRelatedTags).ToList(),
+                [],
+                cancellationToken);
         }
+
+        var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken) ?? throw new ProductNotFound();
+        if (product.OrganizationId != organization.Id)
+        {
+            throw new ProductOrganizationDidNotMatch();
+        }
+
+        var productVersion = product.ProductVersions.OrderByDescending(item => item.CreatedAt).First();
+        productRelatedTags =
+        [
+            .. productVersion.OrganizationTags
+                .Where(item => item.Type == OrganizationTagTypeConstants.Product)
+                .Select(item => item.Id),
+        ];
 
         return await repositoryFactory.ResourceRepository.GetAvailableResourcesCountAsync(
             organization.Id,

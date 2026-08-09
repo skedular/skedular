@@ -64,7 +64,7 @@ public class GrpcMapper : IGrpcMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            FeatureImages = MapTo(src.FeatureImages).ToList(),
+            FeatureImages = [.. MapTo(src.FeatureImages)],
             Organization = new Organization
             {
                 Id = src.OrganizationId,
@@ -75,10 +75,13 @@ public class GrpcMapper : IGrpcMapper
                 {
                     Id = src.PrimaryLocationId,
                 },
-            TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team
-            {
-                Id = src.Id,
-            })).ToList(),
+            TeamMembers =
+            [
+                .. src.Members.Select(item => MapTo(item, new Shared.Models.Team
+                {
+                    Id = src.Id,
+                })),
+            ],
         };
 
     public Shared.Models.Team MapTo(UpdateInput src) =>
@@ -88,7 +91,7 @@ public class GrpcMapper : IGrpcMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            FeatureImages = MapTo(src.FeatureImages).ToList(),
+            FeatureImages = [.. MapTo(src.FeatureImages)],
             Organization = new Organization
             {
                 Id = src.OrganizationId,
@@ -99,10 +102,13 @@ public class GrpcMapper : IGrpcMapper
                 {
                     Id = src.PrimaryLocationId,
                 },
-            TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team
-            {
-                Id = src.Id,
-            })).ToList(),
+            TeamMembers =
+            [
+                .. src.Members.Select(item => MapTo(item, new Shared.Models.Team
+                {
+                    Id = src.Id,
+                })),
+            ],
         };
 
     private static IEnumerable<global::Api.Shared.Grpc.Skedular.Team.Core.V1.TeamMember> MapToGrpcResponse(IEnumerable<TeamMember> src) =>

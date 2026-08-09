@@ -172,7 +172,9 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 OrganizationTagOrderField.Name => KeysetPaginationField<Tag>.Create(
                     nameof(Tag.Name),
@@ -188,8 +190,8 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            })
-            .ToList();
+            }),
+        ];
     }
 
     /// <summary>

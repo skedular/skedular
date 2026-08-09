@@ -65,7 +65,7 @@ public class BookingGrpcService(
                 request.Where.NameContains,
                 request.Where.Category.ToNullableBookingCategory(),
                 request.Where.Channel.ToNullableBookingChannel(),
-                request.Where.PaymentStatuses.Select(item => item.ToPaymentStatus()).ToList(),
+                [.. request.Where.PaymentStatuses.Select(item => item.ToPaymentStatus())],
                 request.Where.IncludeMineOnly,
                 request.Where.IncludeFutureBookingsOnly,
                 request.Where.OrganizationId.ToSafeString(),
@@ -74,24 +74,26 @@ public class BookingGrpcService(
                 request.Where.TeamIds,
                 request.Where.CustomerIds,
                 []),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Booking.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.From => BookingOrderField.From,
-                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.To => BookingOrderField.To,
-                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Notes => BookingOrderField.Notes,
-                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Category => BookingOrderField.Category,
-                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Channel => BookingOrderField.Channel,
-                    _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Booking.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.From => BookingOrderField.From,
+                        global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.To => BookingOrderField.To,
+                        global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Notes => BookingOrderField.Notes,
+                        global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Category => BookingOrderField.Category,
+                        global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Channel => BookingOrderField.Channel,
+                        _ => throw new ArgumentOutOfRangeException(null,
+                            "Unexpected value encountered. Update enum mapping or caller input to include this case."),
+                    };
 
-                return new BookingOrder(direction, field);
-            }).ToList(),
+                    return new BookingOrder(direction, field);
+                }),
+            ],
             true,
             context.CancellationToken);
 
@@ -130,7 +132,7 @@ public class BookingGrpcService(
                 request.Where.NameContains,
                 request.Where.Category.ToNullableBookingCategory(),
                 request.Where.Channel.ToNullableBookingChannel(),
-                request.Where.PaymentStatuses.Select(x => x.ToPaymentStatus()).ToList(),
+                [.. request.Where.PaymentStatuses.Select(x => x.ToPaymentStatus())],
                 request.Where.IncludeMineOnly,
                 request.Where.IncludeFutureBookingsOnly,
                 request.Where.OrganizationId.ToSafeString(),
@@ -139,24 +141,26 @@ public class BookingGrpcService(
                 request.Where.TeamIds,
                 request.Where.CustomerIds,
                 []),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Booking.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.From => BookingOrderField.From,
-                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.To => BookingOrderField.To,
-                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Notes => BookingOrderField.Notes,
-                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Category => BookingOrderField.Category,
-                    global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Channel => BookingOrderField.Channel,
-                    _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Booking.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.From => BookingOrderField.From,
+                        global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.To => BookingOrderField.To,
+                        global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Notes => BookingOrderField.Notes,
+                        global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Category => BookingOrderField.Category,
+                        global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingOrderField.Channel => BookingOrderField.Channel,
+                        _ => throw new ArgumentOutOfRangeException(null,
+                            "Unexpected value encountered. Update enum mapping or caller input to include this case."),
+                    };
 
-                return new BookingOrder(direction, field);
-            }).ToList(),
+                    return new BookingOrder(direction, field);
+                }),
+            ],
             false,
             context.CancellationToken);
 

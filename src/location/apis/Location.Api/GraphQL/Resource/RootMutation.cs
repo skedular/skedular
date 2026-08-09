@@ -56,7 +56,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var resources = await resourceService.DeleteAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new ResourcesPayload
         {
             ClientMutationId = input.ClientMutationId,
@@ -71,7 +71,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.ActivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var resources = await resourceService.ActivateAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new ResourcesPayload
         {
             ClientMutationId = input.ClientMutationId,
@@ -86,7 +86,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.DeactivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var resources = await resourceService.DeactivateAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new ResourcesPayload
         {
             ClientMutationId = input.ClientMutationId,

@@ -116,7 +116,7 @@ public sealed class MarketplaceRefundOperationsService(
         var normalizedPagination = NormalizeExternalRefundPagination(paginationInputParam);
         var result = await repositoryFactory.MarketplaceRefundRepository.GetExternalReconciliationsAsync(
             organizationId, provider, status, normalizedPagination, cancellationToken);
-        return (result.Item1, result.Item2.Select(edge => (ToModel(edge.Node), edge.Cursor)).ToList(), result.Item3);
+        return (result.Item1, [.. result.Item2.Select(edge => (ToModel(edge.Node), edge.Cursor))], result.Item3);
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<(MarketplaceExternalRefundReconciliationModel Node, string Cursor)>, int)>
@@ -128,7 +128,7 @@ public sealed class MarketplaceRefundOperationsService(
     {
         var result = await repositoryFactory.MarketplaceRefundRepository.GetUnassignedExternalReconciliationsAsync(
             provider, status, NormalizeExternalRefundPagination(paginationInputParam), cancellationToken);
-        return (result.Item1, result.Item2.Select(edge => (ToModel(edge.Node), edge.Cursor)).ToList(), result.Item3);
+        return (result.Item1, [.. result.Item2.Select(edge => (ToModel(edge.Node), edge.Cursor))], result.Item3);
     }
 
     public async Task<MarketplaceExternalRefundReconciliationModel> ResolveUnassignedExternalRefundAsync(

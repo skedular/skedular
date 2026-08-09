@@ -62,6 +62,7 @@ public class ResourceServiceShould
                 A<IReadOnlyList<string>>.That.IsSameSequenceAs(resourceIds),
                 A<IReadOnlyList<string>>.That.IsSameSequenceAs(tagIds),
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns(availableResources);
 
@@ -106,6 +107,7 @@ public class ResourceServiceShould
                 A<IReadOnlyList<string>>.That.IsSameSequenceAs(resourceIds),
                 A<IReadOnlyList<string>>.That.IsSameSequenceAs(tagIds),
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns(availableResources);
 
@@ -153,6 +155,7 @@ public class ResourceServiceShould
                 A<IReadOnlyList<string>>.That.IsSameSequenceAs(resourceIds),
                 A<IReadOnlyList<string>>.That.IsSameSequenceAs(tagIds),
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns(availableResources);
 

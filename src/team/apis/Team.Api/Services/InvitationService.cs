@@ -70,10 +70,12 @@ public class InvitationService(
                 item.Customer.Identities.Where(identity => !string.IsNullOrWhiteSpace(identity.Email)).Select(identity => identity.Email))
             .ToList();
 
-        emails = emails
-            .Where(item => !existingMemberEmails.Any(existingMemberEmail =>
-                string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase)))
-            .ToList();
+        emails =
+        [
+            .. emails
+                .Where(item => !existingMemberEmails.Any(existingMemberEmail =>
+                    string.Equals(item, existingMemberEmail, StringComparison.InvariantCultureIgnoreCase))),
+        ];
         if (emails.Count == 0)
         {
             logger.LogInformation("Invite members request produced no new invitations for team {TeamId}", teamId);
@@ -222,7 +224,7 @@ public class InvitationService(
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var count = await repositoryFactory.JoinInvitationRepository.PendingInvitationsCountAsync(
             customer.Id,
-            customer.Identities.Where(item => !string.IsNullOrWhiteSpace(item.Email)).Select(item => item.Email!).ToList(),
+            [.. customer.Identities.Where(item => !string.IsNullOrWhiteSpace(item.Email)).Select(item => item.Email!)],
             cancellationToken);
 
         if (count == 0)
@@ -256,7 +258,7 @@ public class InvitationService(
             logger.LogInformation("Paginated invitations query returned zero results for customer {CustomerId}", customerId);
         }
 
-        return (paginatedInfo, edges.Select(entityMapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, [.. edges.Select(entityMapper.MapTo)], totalCount);
     }
 
     private static void EnsureCustomerAuthorizedToChangeJoinInvitationStatus(

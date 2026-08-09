@@ -25,9 +25,9 @@ public class MarketplaceRefundPaymentAllocationConfiguration : IEntityTypeConfig
     {
         builder.ConfigureEntityBase();
 
-        builder.Property(x => x.SourcePaymentProvider).HasMaxLength(Constants.MaxAccountingProviderLength).IsRequired();
-        builder.Property(x => x.SourcePaymentReference).HasMaxLength(Constants.MaxAccountingExternalIdLength).IsRequired();
-        builder.Property(x => x.Currency).HasMaxLength(Constants.MaxCurrencyLength).IsRequired();
+        builder.Property(x => x.SourcePaymentProvider).HasMaxLength(Constants.MaxAccountingProviderLength);
+        builder.Property(x => x.SourcePaymentReference).HasMaxLength(Constants.MaxSourcePaymentReferenceLength);
+        builder.Property(x => x.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(x => x.SourceCapturedAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(x => x.AllocatedRefundAmount).HasColumnType("DECIMAL(18,4)");
 

@@ -25,7 +25,7 @@ public class OrganizationBookingDerivedState(
     IEntityMapper entityMapper)
 {
     [Activity]
-    public async Task RecomputeAsync(string organizationId)
+    public async Task RecomputeOrganizationBookingDerivedStateAsync(string organizationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken);
@@ -168,7 +168,7 @@ public class OrganizationBookingDerivedState(
 
             result.AddRange(response.Edges.Select(edge => new BookingSnapshot(
                 edge.Node.From.ToDateTimeOffset(),
-                edge.Node.InvolvedCustomerIds.ToList())));
+                [.. edge.Node.InvolvedCustomerIds])));
 
             after = response.PageInfo.HasNextPage ? response.PageInfo.EndCursor : null;
         } while (!string.IsNullOrWhiteSpace(after));

@@ -88,24 +88,24 @@ public class MarketplaceRefundConfiguration : IEntityTypeConfiguration<Marketpla
         builder.ConfigureEntityBase();
 
         builder.Property(item => item.LocalEntityType).HasMaxLength(Constants.MaxAccountingEntityTypeLength);
-        builder.Property(item => item.LocalEntityId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.LocalEntityId).HasMaxLength(Constants.MaxLocalEntityLength);
         builder.Property(item => item.Status).HasMaxLength(Constants.MaxAccountingStatusLength);
         builder.Property(item => item.BaseAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.RefundAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(item => item.Reason).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.AccountingProvider).HasMaxLength(Constants.MaxAccountingProviderLength);
-        builder.Property(item => item.ExternalRefundId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.ExternalRefundId).HasMaxLength(Constants.MaxExternalRefundIdLength);
         builder.Property(item => item.ExternalRefundNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
         builder.Property(item => item.LastError).HasMaxLength(Constants.MaxAccountingErrorLength);
         builder.Property(item => item.PaymentProvider).HasMaxLength(Constants.MaxAccountingProviderLength);
-        builder.Property(item => item.ExternalPaymentRefundId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.ExternalPaymentRefundId).HasMaxLength(Constants.MaxExternalPaymentRefundIdLength);
         builder.Property(item => item.PaymentRefundStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
         builder.Property(item => item.PaymentRefundLastError).HasMaxLength(Constants.MaxAccountingErrorLength);
         builder.Property(item => item.RefundKind)
             .HasMaxLength(Constants.MaxAccountingStatusLength)
-            .HasDefaultValue(MarketplaceRefundKindConstants.Cancellation).IsRequired();
-        builder.Property(item => item.IdempotencyKey).HasMaxLength(Constants.MaxRefundIdempotencyKeyLength).IsRequired();
+            .HasDefaultValue(MarketplaceRefundKindConstants.Cancellation);
+        builder.Property(item => item.IdempotencyKey).HasMaxLength(Constants.MaxRefundIdempotencyKeyLength);
         builder.Property(item => item.PolicySnapshotJson).HasColumnType("text");
         builder.Property(item => item.CalculationResultJson).HasColumnType("text");
         builder.Property(item => item.TimezoneId).HasMaxLength(Constants.MaxRefundTimezoneIdLength);

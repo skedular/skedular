@@ -86,17 +86,23 @@ public class CustomerService(
             customer.DefaultOrganization = await organizationService.AdminGetAsync(customer.DefaultOrganization.Id, cancellationToken);
         }
 
-        customer.PreferredLocations = customer.PreferredLocations
-            .Select(location => locations.FirstOrDefault(item => item.Id == location.Id) ?? location)
-            .ToList();
+        customer.PreferredLocations =
+        [
+            .. customer.PreferredLocations
+                .Select(location => locations.FirstOrDefault(item => item.Id == location.Id) ?? location),
+        ];
 
-        customer.PreferredResources = customer.PreferredResources
-            .Select(resource => resources.FirstOrDefault(item => item.Id == resource.Id) ?? resource)
-            .ToList();
+        customer.PreferredResources =
+        [
+            .. customer.PreferredResources
+                .Select(resource => resources.FirstOrDefault(item => item.Id == resource.Id) ?? resource),
+        ];
 
-        customer.PreferredOrganizationTags = customer.PreferredOrganizationTags
-            .Select(organizationTag => organizationTags.FirstOrDefault(item => item.Id == organizationTag.Id) ?? organizationTag)
-            .ToList();
+        customer.PreferredOrganizationTags =
+        [
+            .. customer.PreferredOrganizationTags
+                .Select(organizationTag => organizationTags.FirstOrDefault(item => item.Id == organizationTag.Id) ?? organizationTag),
+        ];
 
         return customer;
     }

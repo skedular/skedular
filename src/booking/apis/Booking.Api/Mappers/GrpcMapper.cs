@@ -116,19 +116,28 @@ public class GrpcMapper : IGrpcMapper
                 new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()),
             },
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds().Select(item => new Organization
-            {
-                Id = item,
-            }).ToList(),
+            InvolvedOrganizations =
+            [
+                .. src.OrganizationIds.RemoveInvalidIds().Select(item => new Organization
+                {
+                    Id = item,
+                }),
+            ],
             InvolvedLocations = [],
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team
-            {
-                Id = item,
-            }).ToList(),
-            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource
-            {
-                Id = item,
-            }, customers)).ToList(),
+            InvolvedTeams =
+            [
+                .. src.TeamIds.RemoveInvalidIds().Select(item => new Team
+                {
+                    Id = item,
+                }),
+            ],
+            Resources =
+            [
+                .. src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource
+                {
+                    Id = item,
+                }, customers)),
+            ],
         };
     }
 
@@ -156,19 +165,28 @@ public class GrpcMapper : IGrpcMapper
                 }
                 : [],
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds().Select(item => new Organization
-            {
-                Id = item,
-            }).ToList(),
+            InvolvedOrganizations =
+            [
+                .. src.OrganizationIds.RemoveInvalidIds().Select(item => new Organization
+                {
+                    Id = item,
+                }),
+            ],
             InvolvedLocations = [],
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team
-            {
-                Id = item,
-            }).ToList(),
-            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource
-            {
-                Id = item,
-            }, customers)).ToList(),
+            InvolvedTeams =
+            [
+                .. src.TeamIds.RemoveInvalidIds().Select(item => new Team
+                {
+                    Id = item,
+                }),
+            ],
+            Resources =
+            [
+                .. src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource
+                {
+                    Id = item,
+                }, customers)),
+            ],
         };
     }
 
@@ -196,7 +214,7 @@ public class GrpcMapper : IGrpcMapper
             Color = src.Color,
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationTags = MapTo(src.OrganizationTags).ToList(),
+            OrganizationTags = [.. MapTo(src.OrganizationTags)],
         };
 
     private static IEnumerable<global::Api.Shared.Grpc.Skedular.Booking.Core.V1.BookingSchedule> MapToGrpcResponse(

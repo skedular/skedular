@@ -32,7 +32,7 @@ public class WorkaroundService(
     public async Task RepublishAllTeamsAsync(CancellationToken cancellationToken)
     {
         var teams = await repositoryFactory.TeamRepository.GetAllUntrackedAsync(cancellationToken);
-        await teamPublisher.PublishTeamsAsync(teams.Select(entityMapper.MapTo).ToList(), cancellationToken);
+        await teamPublisher.PublishTeamsAsync([.. teams.Select(entityMapper.MapTo)], cancellationToken);
         logger.LogInformation("RepublishAllTeams completed for {TeamCount} teams", teams.Count);
     }
 }

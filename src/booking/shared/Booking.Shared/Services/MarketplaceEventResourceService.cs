@@ -70,8 +70,9 @@ public class MarketplaceEventResourceService(IRepositoryFactory repositoryFactor
             null,
             from,
             until,
-            matchingResources.Select(item => item.Id).ToList(),
+            [.. matchingResources.Select(item => item.Id)],
             productTagIds,
+            [],
             [],
             cancellationToken);
 

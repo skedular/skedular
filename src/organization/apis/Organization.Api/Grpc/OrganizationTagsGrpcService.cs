@@ -28,21 +28,23 @@ public class OrganizationTagsGrpcService(
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new TagSearchCriteria(request.Where.OrganizationId, null, request.Where.Types_, request.Where.NameContains),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    TagOrderField.Name => OrganizationTagOrderField.Name,
-                    TagOrderField.Description => OrganizationTagOrderField.Description,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        TagOrderField.Name => OrganizationTagOrderField.Name,
+                        TagOrderField.Description => OrganizationTagOrderField.Description,
+                        _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                            $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
+                    };
 
-                return new TagOrder(direction, field);
-            }).ToList(),
+                    return new TagOrder(direction, field);
+                }),
+            ],
             false,
             context.CancellationToken);
 
@@ -76,21 +78,23 @@ public class OrganizationTagsGrpcService(
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new TagSearchCriteria(request.Where.OrganizationId, null, request.Where.Types_, request.Where.NameContains),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    TagOrderField.Name => OrganizationTagOrderField.Name,
-                    TagOrderField.Description => OrganizationTagOrderField.Description,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        TagOrderField.Name => OrganizationTagOrderField.Name,
+                        TagOrderField.Description => OrganizationTagOrderField.Description,
+                        _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                            $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
+                    };
 
-                return new TagOrder(direction, field);
-            }).ToList(),
+                    return new TagOrder(direction, field);
+                }),
+            ],
             true,
             context.CancellationToken);
 
@@ -150,21 +154,23 @@ public class OrganizationTagsGrpcService(
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new TagSearchCriteria(request.Where.OrganizationId, null, [OrganizationTagTypeConstants.Custom], request.Where.NameContains),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    CustomTagOrderField.Name => OrganizationTagOrderField.Name,
-                    CustomTagOrderField.Description => OrganizationTagOrderField.Description,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        CustomTagOrderField.Name => OrganizationTagOrderField.Name,
+                        CustomTagOrderField.Description => OrganizationTagOrderField.Description,
+                        _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                            $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
+                    };
 
-                return new TagOrder(direction, field);
-            }).ToList(),
+                    return new TagOrder(direction, field);
+                }),
+            ],
             false,
             context.CancellationToken);
 
@@ -228,21 +234,23 @@ public class OrganizationTagsGrpcService(
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new TagSearchCriteria(request.Where.OrganizationId, null, [OrganizationTagTypeConstants.Product], request.Where.NameContains),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    ProductTagOrderField.Name => OrganizationTagOrderField.Name,
-                    ProductTagOrderField.Description => OrganizationTagOrderField.Description,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        ProductTagOrderField.Name => OrganizationTagOrderField.Name,
+                        ProductTagOrderField.Description => OrganizationTagOrderField.Description,
+                        _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                            $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
+                    };
 
-                return new TagOrder(direction, field);
-            }).ToList(),
+                    return new TagOrder(direction, field);
+                }),
+            ],
             false,
             context.CancellationToken);
 

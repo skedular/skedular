@@ -51,7 +51,7 @@ public class WorkspaceChannelService(IEntityMapper entityMapper, IRepositoryFact
             .ToList();
 
         repositoryFactory.WorkspaceChannelRepository.RemoveRange(itemsToRemove);
-        existingWorkspace.Channels = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingWorkspace.Channels = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         repositoryFactory.WorkspaceRepository.Update(existingWorkspace);
 

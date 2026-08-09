@@ -107,10 +107,12 @@ public class MarketplaceBookingFailureNotificationService(IRepositoryFactory rep
             }
         }
 
-        return recipients
-            .GroupBy(item => $"{item.RecipientKey}\u001f{item.Channel}", StringComparer.OrdinalIgnoreCase)
-            .Select(item => item.First())
-            .ToList();
+        return
+        [
+            .. recipients
+                .GroupBy(item => $"{item.RecipientKey}\u001f{item.Channel}", StringComparer.OrdinalIgnoreCase)
+                .Select(item => item.First()),
+        ];
     }
 
     public async Task<(string Subject, string Text, string Html)> RenderAsync(
@@ -152,7 +154,7 @@ public class MarketplaceBookingFailureNotificationService(IRepositoryFactory rep
             {
                 return new RecipientSource(
                     booking.CreatedByCustomer,
-                    booking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList());
+                    [.. booking.InvolvedOrganizations.Select(item => item.Id).Distinct()]);
             }
         }
 
@@ -165,7 +167,7 @@ public class MarketplaceBookingFailureNotificationService(IRepositoryFactory rep
             {
                 return new RecipientSource(
                     recurringBooking.CreatedByCustomer ?? recurringBooking.InvolvedCustomers.FirstOrDefault(),
-                    recurringBooking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList());
+                    [.. recurringBooking.InvolvedOrganizations.Select(item => item.Id).Distinct()]);
             }
         }
 

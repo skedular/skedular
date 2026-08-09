@@ -30,7 +30,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         var (paginatedInfo, edges, totalCount) = await customerService.GetPaginatedCustomersAsync(
             new PaginationInputParam(after, first, before, last),
             new CustomerSearchCriteria(where.NameContains, where.LocationId),
-            orderBy.ToSafeCollection().Select(item => new CustomerOrder(item.Direction, item.Field)).ToList(),
+            [.. orderBy.ToSafeCollection().Select(item => new CustomerOrder(item.Direction, item.Field))],
             cancellationToken);
 
         return new Connection<CustomerEdge>

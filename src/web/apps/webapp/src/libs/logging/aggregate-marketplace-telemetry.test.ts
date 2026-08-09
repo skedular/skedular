@@ -5,6 +5,9 @@ import {
   logAggregateMarketplaceFailure,
   logAggregateMarketplaceLocationSelected,
   logCustomerPurchaseHubLoaded,
+  logCustomerMarketplaceBookingModificationCompleted,
+  logCustomerMarketplaceBookingModificationFailed,
+  logCustomerMarketplaceBookingModificationStarted,
   logCustomerSelfServiceActionRejected,
   logCustomerSelfServiceActionStarted,
   logOwnerSpecificMarketplaceEntryResolved,
@@ -75,6 +78,24 @@ describe('aggregate marketplace telemetry', () => {
       2,
       expect.objectContaining({ event: 'UnsupportedWebappPathHandled', pathCategory: 'admin', ownerClassification: 'webapp-teams' }),
       'Unsupported webapp path handled in place',
+    );
+  });
+
+  it('logs booking modification lifecycle without customer content', () => {
+    const logger = createLogger();
+
+    logCustomerMarketplaceBookingModificationStarted({ logger, correlationId: 'request-5', bookingId: 'booking-1' });
+    logCustomerMarketplaceBookingModificationCompleted({ logger, correlationId: 'request-5', bookingId: 'booking-1' });
+    logCustomerMarketplaceBookingModificationFailed({ logger, correlationId: 'request-5', bookingId: 'booking-1', reasonCode: 'availability_conflict' });
+
+    expect(logger.info).toHaveBeenNthCalledWith(
+      1,
+      expect.not.objectContaining({ customerEmail: expect.any(String), customerName: expect.any(String) }),
+      'Customer marketplace booking modification started',
+    );
+    expect(logger.warn).toHaveBeenCalledWith(
+      expect.objectContaining({ event: 'CustomerMarketplaceBookingModificationFailed', bookingId: 'booking-1', reasonCode: 'availability_conflict' }),
+      'Customer marketplace booking modification failed',
     );
   });
 

@@ -17,7 +17,7 @@ relatedArticleIds:
   - shared-customers
   - shared-bookings
   - shared-payments
-updatedAt: 2026-08-02
+updatedAt: 2026-08-07
 ---
 
 <div class="documentation-concept-support"><strong>Managed in</strong><span>✅ Skedular Spaces</span></div>
@@ -65,6 +65,12 @@ The initial Booking series is confirmed only when every required occurrence can 
 After a Subscription is active, a later occurrence can fail independently when capacity changes. Skedular retains that outcome and communicates it without cancelling the Subscription or unrelated occurrences. An operator can edit an individual Booking, which prevents further automatic changes to it without changing the Subscription’s weekly pattern. Refund decisions remain separate from availability and follow the Product Price cancellation policy.
 
 Existing Booking instances are not the Subscription itself. They retain their own dates, payment state, and Resource reservations while the Subscription coordinates the recurring access that produced them.
+
+## Modify one Subscription Booking occurrence
+
+An eligible customer or authorized organization operator can modify one confirmed or payment-not-required recurring Booking occurrence before it starts. The new date must remain in the current Subscription cycle. In Skedular Spaces, the actor can also select currently available Resources eligible for the purchased Product, up to the purchased Resource quantity. Skedular validates the complete proposal before saving; when it cannot fulfill the proposal, the original occurrence stays unchanged.
+
+The modified occurrence becomes an explicit override. It does not change the Subscription's Product, Price, quantity, purchase cadence, billing cadence, renewal, selected weekly days, or any other occurrence. Subscription maintenance preserves that override instead of restoring the original schedule. An operator must provide a reason, and the customer is notified of the completed operator change. Scheduler Host does not currently offer marketplace Subscriptions.
 
 ## Renewal
 

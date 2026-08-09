@@ -356,7 +356,9 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 MarketplaceBookingSubscriptionOrderField.StartedAt => KeysetPaginationField<MarketplaceBookingSubscription>.Create(
                     nameof(MarketplaceBookingSubscription.StartedAt),
@@ -376,7 +378,7 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            })
-            .ToList();
+            }),
+        ];
     }
 }

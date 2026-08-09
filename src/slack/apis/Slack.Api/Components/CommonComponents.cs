@@ -15,7 +15,7 @@ public interface ICommonComponents
 public class CommonComponents(IHomePageContextService homePageContextService) : ICommonComponents
 {
     public IReadOnlyList<IActionElement> GetHomeAndBackButtons(PageContext pageContext, string timezone) =>
-        GetHomeButtons(pageContext).Concat(GetBackButton(pageContext)).ToList();
+        [.. GetHomeButtons(pageContext), .. GetBackButton(pageContext)];
 
     public IReadOnlyList<IActionElement> GetFeedbackButton(PageContext pageContext)
     {

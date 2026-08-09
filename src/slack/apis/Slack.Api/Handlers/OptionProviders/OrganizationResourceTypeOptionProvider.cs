@@ -19,11 +19,14 @@ public class OrganizationResourceTypeOptionProvider(IRepositoryFactory repositor
 
         return new BlockOptionsResponse
         {
-            Options = organization.ResourceTypes.Select(item => new Option
-            {
-                Text = item.Name.ToOptionText(),
-                Value = item.Id,
-            }).ToList(),
+            Options =
+            [
+                .. organization.ResourceTypes.Select(item => new Option
+                {
+                    Text = item.Name.ToOptionText(),
+                    Value = item.Id,
+                }),
+            ],
         };
     }
 }

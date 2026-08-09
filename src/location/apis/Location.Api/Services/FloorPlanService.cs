@@ -104,7 +104,7 @@ public class FloorPlanService(
             resources = resourcePositions.Count == 0
                 ? []
                 : await repositoryFactory.ResourceRepository.GetByIdsAsync(
-                    resourcePositions.Select(item => item.Resource.Id).ToList(),
+                    [.. resourcePositions.Select(item => item.Resource.Id)],
                     cancellationToken);
             if (resources.Any(item => item.Location.Id != existingLocation.Id))
             {
@@ -122,17 +122,20 @@ public class FloorPlanService(
         var floorPlanEntity = entityMapper.MapTo(floorPlan, existingLocation, []);
         if (updateResourcePositions)
         {
-            floorPlanEntity.ResourcePositions = resourcePositions
-                .Select(resourcePosition =>
-                {
-                    resourcePosition.Id = randomHelper.Generate();
+            floorPlanEntity.ResourcePositions =
+            [
+                .. resourcePositions
+                    .Select(resourcePosition =>
+                    {
+                        resourcePosition.Id = randomHelper.Generate();
 
-                    return repositoryFactory.ResourcePositionRepository.Add(
-                        entityMapper.MapToEntity(
-                            resourcePosition,
-                            resources.First(item => item.Id == resourcePosition.Resource.Id),
-                            floorPlanEntity));
-                }).ToList();
+                        return repositoryFactory.ResourcePositionRepository.Add(
+                            entityMapper.MapToEntity(
+                                resourcePosition,
+                                resources.First(item => item.Id == resourcePosition.Resource.Id),
+                                floorPlanEntity));
+                    }),
+            ];
         }
 
         repositoryFactory.FloorPlanRepository.Add(floorPlanEntity);
@@ -259,7 +262,7 @@ public class FloorPlanService(
         var resources = resourcePositions.Count == 0
             ? []
             : await repositoryFactory.ResourceRepository.GetByIdsAsync(
-                resourcePositions.Select(item => item.Resource.Id).ToList(),
+                [.. resourcePositions.Select(item => item.Resource.Id)],
                 cancellationToken);
 
         if (resources.Any(item => item.Location.Id != existingFloorPlan.Location.Id))
@@ -308,7 +311,7 @@ public class FloorPlanService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         repositoryFactory.ResourcePositionRepository.RemoveRange(resourcePositionToRemove);
-        existingFloorPlan.ResourcePositions = addedResourcePosition.Concat(updatedResourcePosition).ToList();
+        existingFloorPlan.ResourcePositions = [.. addedResourcePosition, .. updatedResourcePosition];
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -388,7 +391,7 @@ public class FloorPlanService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo, edges.Select(item => new Edge<FloorPlan>(entityMapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
+        return (paginatedInfo, [.. edges.Select(item => new Edge<FloorPlan>(entityMapper.MapTo(item.Node), item.Cursor))], totalCount);
     }
 
     private async Task<FloorPlan> UpdateAsync(FloorPlan floorPlan, bool updateResourcePositions, CancellationToken cancellationToken)
@@ -427,7 +430,7 @@ public class FloorPlanService(
             var resources = resourcePositions.Count == 0
                 ? []
                 : await repositoryFactory.ResourceRepository.GetByIdsAsync(
-                    resourcePositions.Select(item => item.Resource.Id).ToList(),
+                    [.. resourcePositions.Select(item => item.Resource.Id)],
                     cancellationToken);
 
             if (resources.Any(item => item.Location.Id != existingFloorPlan.Location.Id))
@@ -440,39 +443,46 @@ public class FloorPlanService(
                 throw new ResourceIsPlacedOnDifferentFloorPlan();
             }
 
-            resourcePositionToRemove = existingFloorPlan.ResourcePositions
-                .Where(resourcePosition => resourcePositions.All(item => item.Resource.Id != resourcePosition.Resource.Id))
-                .ToList();
-            updatedResourcePosition = existingFloorPlan.ResourcePositions
-                .Where(resourcePosition => resourcePositions.Any(item => item.Resource.Id == resourcePosition.Resource.Id))
-                .Select(resourcePosition =>
-                {
-                    var matchingResourcePosition = resourcePositions.First(item => item.Resource.Id == resourcePosition.Resource.Id);
-                    matchingResourcePosition.Id = resourcePosition.Id;
+            resourcePositionToRemove =
+            [
+                .. existingFloorPlan.ResourcePositions
+                    .Where(resourcePosition => resourcePositions.All(item => item.Resource.Id != resourcePosition.Resource.Id)),
+            ];
+            updatedResourcePosition =
+            [
+                .. existingFloorPlan.ResourcePositions
+                    .Where(resourcePosition => resourcePositions.Any(item => item.Resource.Id == resourcePosition.Resource.Id))
+                    .Select(resourcePosition =>
+                    {
+                        var matchingResourcePosition = resourcePositions.First(item => item.Resource.Id == resourcePosition.Resource.Id);
+                        matchingResourcePosition.Id = resourcePosition.Id;
 
-                    return repositoryFactory.ResourcePositionRepository.Update(
-                        entityMapper.MergeToEntity(
-                            matchingResourcePosition,
-                            resourcePosition,
-                            resources.First(item => item.Id == resourcePosition.Resource.Id),
-                            existingFloorPlan));
-                })
-                .ToList();
+                        return repositoryFactory.ResourcePositionRepository.Update(
+                            entityMapper.MergeToEntity(
+                                matchingResourcePosition,
+                                resourcePosition,
+                                resources.First(item => item.Id == resourcePosition.Resource.Id),
+                                existingFloorPlan));
+                    }),
+            ];
 
             var copiedExistingFloorPlan = existingFloorPlan;
-            addedResourcePosition = resourcePositions
-                .Where(resourcePosition => copiedExistingFloorPlan.ResourcePositions.All(item => item.Resource.Id != resourcePosition.Resource.Id))
-                .Select(resourcePosition =>
-                {
-                    resourcePosition.Id = randomHelper.Generate();
+            addedResourcePosition =
+            [
+                .. resourcePositions
+                    .Where(resourcePosition =>
+                        copiedExistingFloorPlan.ResourcePositions.All(item => item.Resource.Id != resourcePosition.Resource.Id))
+                    .Select(resourcePosition =>
+                    {
+                        resourcePosition.Id = randomHelper.Generate();
 
-                    return repositoryFactory.ResourcePositionRepository.Add(
-                        entityMapper.MapToEntity(
-                            resourcePosition,
-                            resources.First(item => item.Id == resourcePosition.Resource.Id),
-                            copiedExistingFloorPlan));
-                })
-                .ToList();
+                        return repositoryFactory.ResourcePositionRepository.Add(
+                            entityMapper.MapToEntity(
+                                resourcePosition,
+                                resources.First(item => item.Id == resourcePosition.Resource.Id),
+                                copiedExistingFloorPlan));
+                    }),
+            ];
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);

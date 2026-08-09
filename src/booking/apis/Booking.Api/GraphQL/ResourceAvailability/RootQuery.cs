@@ -58,16 +58,16 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
         {
             Date = filter.Date,
             OrganizationCustomDomain = filter.OrganizationCustomDomain,
-            LocationIds = filter.LocationIds.ToList(),
+            LocationIds = [.. filter.LocationIds],
             FloorId = filter.FloorId,
             ZoneId = filter.ZoneId,
             ResourceType = filter.ResourceType,
-            Statuses = filter.Statuses.ToList(),
+            Statuses = [.. filter.Statuses],
         };
 
         var result = await service.GetAsync(
             domainFilter,
-            orderBy.Select(item => new ResourceAvailabilityOrder(item.Direction, item.Field)).ToList(),
+            [.. orderBy.Select(item => new ResourceAvailabilityOrder(item.Direction, item.Field))],
             [],
             cancellationToken);
 

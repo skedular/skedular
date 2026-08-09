@@ -25,18 +25,14 @@ public class MarketplaceRefundNotificationDeliveryConfiguration
     {
         builder.ConfigureEntityBase();
 
-        builder.Property(item => item.MarketplaceRefundId).HasMaxLength(Constants.MaxAccountingExternalIdLength).IsRequired();
-        builder.Property(item => item.EventType).HasMaxLength(Constants.MaxAccountingStatusLength).IsRequired();
-        builder.Property(item => item.RecipientId).HasMaxLength(Constants.MaxRefundNotificationRecipientIdLength).IsRequired();
+        builder.Property(item => item.EventType).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.RecipientId).HasMaxLength(Constants.MaxRefundNotificationRecipientIdLength);
         builder.Property(item => item.Status)
             .HasMaxLength(Constants.MaxRefundNotificationStatusLength)
-            .HasDefaultValue(MarketplaceRefundNotificationDeliveryStatusConstants.Pending).IsRequired();
+            .HasDefaultValue(MarketplaceRefundNotificationDeliveryStatusConstants.Pending);
         builder.Property(item => item.LastError).HasMaxLength(Constants.MaxRefundResolutionReasonLength);
 
-        builder.HasOne(item => item.MarketplaceRefund)
-            .WithMany()
-            .HasForeignKey(item => item.MarketplaceRefundId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(item => item.MarketplaceRefund).WithMany().HasForeignKey(item => item.MarketplaceRefundId);
 
         builder.HasIndex(item => new
         {

@@ -164,48 +164,51 @@ public class EditTeamButtonHandler(
                         throw new ArgumentException("No members selected.");
                     }
 
-                    team.TeamMembers = value.SelectedOptions
-                        .Select(item =>
-                        {
-                            var memberCustomerIdPair = item.Value.Split(Global.OptionLoaderValueSeparator);
-                            var organizationMemberId = memberCustomerIdPair.First();
-                            var customerId = memberCustomerIdPair.Last();
-
-                            ArgumentException.ThrowIfNullOrWhiteSpace(organizationMemberId);
-                            ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
-
-                            var existingMember = existingTeam.TeamMembers.FirstOrDefault(teamMember =>
-                                teamMember.OrganizationMember is not null &&
-                                teamMember.OrganizationMember.Customer.Id == customerId);
-
-                            return new TeamMember
+                    team.TeamMembers =
+                    [
+                        .. value.SelectedOptions
+                            .Select(item =>
                             {
-                                Id = existingMember is null ? randomHelper.Generate() : existingMember.Id,
-                                Role = existingMember is null
-                                    ? TeamMemberRole.Member
-                                    : existingMember.Role switch
-                                    {
-                                        TeamMemberRole.Owner => TeamMemberRole.Owner,
-                                        TeamMemberRole.Administrator => TeamMemberRole.Administrator,
-                                        TeamMemberRole.Member => TeamMemberRole.Member,
-                                        _ => throw new ArgumentOutOfRangeException(nameof(existingMember.Role), existingMember.Role,
-                                            $"Unexpected value for {nameof(existingMember.Role)}: {existingMember.Role}. Update enum mapping or caller input."),
-                                    },
-                                Status = TeamMemberStatus.Active,
-                                Customer = new Customer
+                                var memberCustomerIdPair = item.Value.Split(Global.OptionLoaderValueSeparator);
+                                var organizationMemberId = memberCustomerIdPair.First();
+                                var customerId = memberCustomerIdPair.Last();
+
+                                ArgumentException.ThrowIfNullOrWhiteSpace(organizationMemberId);
+                                ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
+
+                                var existingMember = existingTeam.TeamMembers.FirstOrDefault(teamMember =>
+                                    teamMember.OrganizationMember is not null &&
+                                    teamMember.OrganizationMember.Customer.Id == customerId);
+
+                                return new TeamMember
                                 {
-                                    Id = customerId,
-                                },
-                                OrganizationMember = new OrganizationMember
-                                {
-                                    Id = organizationMemberId,
+                                    Id = existingMember is null ? randomHelper.Generate() : existingMember.Id,
+                                    Role = existingMember is null
+                                        ? TeamMemberRole.Member
+                                        : existingMember.Role switch
+                                        {
+                                            TeamMemberRole.Owner => TeamMemberRole.Owner,
+                                            TeamMemberRole.Administrator => TeamMemberRole.Administrator,
+                                            TeamMemberRole.Member => TeamMemberRole.Member,
+                                            _ => throw new ArgumentOutOfRangeException(nameof(existingMember.Role), existingMember.Role,
+                                                $"Unexpected value for {nameof(existingMember.Role)}: {existingMember.Role}. Update enum mapping or caller input."),
+                                        },
+                                    Status = TeamMemberStatus.Active,
                                     Customer = new Customer
                                     {
                                         Id = customerId,
                                     },
-                                },
-                            };
-                        }).ToList();
+                                    OrganizationMember = new OrganizationMember
+                                    {
+                                        Id = organizationMemberId,
+                                        Customer = new Customer
+                                        {
+                                            Id = customerId,
+                                        },
+                                    },
+                                };
+                            }),
+                    ];
                 }
                 else
                 {

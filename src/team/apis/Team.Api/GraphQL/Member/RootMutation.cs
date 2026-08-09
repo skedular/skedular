@@ -126,13 +126,15 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
 
         try
         {
-            var organizationMembers =
-                await organizationMemberService.ChangeStatusAsync(input.Ids.RemoveInvalidIds().ToList(), input.Status, cancellationToken);
+            var organizationMembers = await organizationMemberService.ChangeStatusAsync(
+                [.. input.Ids.RemoveInvalidIds()],
+                input.Status,
+                cancellationToken);
             logger.LogInformation("Completed {OperationName}", nameof(ChangeTeamMembersStatusAsync));
             return new TeamMembersDetailsPayload
             {
                 ClientMutationId = input.ClientMutationId,
-                Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray(),
+                Members = [.. organizationMembers.Select(graphQlMapper.MapTo)],
             };
         }
         catch (Exception ex)
@@ -153,7 +155,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
 
         try
         {
-            var organizationMembers = await teamMemberService.RemoveAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+            var organizationMembers = await teamMemberService.RemoveAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
             logger.LogInformation("Completed {OperationName}", nameof(RemoveTeamMembersAsync));
             return new TeamMembersDetailsPayload
             {

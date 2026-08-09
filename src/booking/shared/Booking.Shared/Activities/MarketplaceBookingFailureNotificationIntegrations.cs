@@ -26,7 +26,7 @@ public class MarketplaceBookingFailureNotificationIntegrations(
     ILogger<MarketplaceBookingFailureNotificationIntegrations> logger)
 {
     [Activity]
-    public async Task DispatchAsync(DispatchMarketplaceBookingFailureNotificationsInput input)
+    public async Task DispatchMarketplaceBookingFailureAsync(DispatchMarketplaceBookingFailureNotificationsInput input)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var failure = await repositoryFactory.MarketplaceBookingFailureRepository.GetByIdAsync(input.FailureId, cancellationToken);

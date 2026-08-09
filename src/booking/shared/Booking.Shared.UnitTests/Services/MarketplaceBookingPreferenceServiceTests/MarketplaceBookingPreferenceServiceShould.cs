@@ -46,7 +46,8 @@ public class MarketplaceBookingPreferenceServiceShould
         };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(null, null, from, until, emptyIds, emptyIds, emptyIds, cancellationToken))
+        A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(null, null, from, until, emptyIds, emptyIds, emptyIds, Array.Empty<string>(),
+                cancellationToken))
             .Returns(availableResources);
 
         // Act
@@ -100,7 +101,8 @@ public class MarketplaceBookingPreferenceServiceShould
         };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(null, null, from, until, emptyIds, emptyIds, emptyIds, cancellationToken))
+        A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(null, null, from, until, emptyIds, emptyIds, emptyIds, Array.Empty<string>(),
+                cancellationToken))
             .Returns(availableResources);
 
         // Act
@@ -139,7 +141,8 @@ public class MarketplaceBookingPreferenceServiceShould
         };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(null, null, from, until, emptyIds, emptyIds, emptyIds, cancellationToken))
+        A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(null, null, from, until, emptyIds, emptyIds, emptyIds, Array.Empty<string>(),
+                cancellationToken))
             .Returns(availableResources);
 
         // Act & Assert

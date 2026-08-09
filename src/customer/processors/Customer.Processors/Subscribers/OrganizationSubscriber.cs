@@ -92,7 +92,7 @@ public class OrganizationSubscriber(
         var customers = await UpdateOrganizationMembersDefaultOrganizationAsync(
             existingOrganization.Id, existingOrganization.OrganizationMembers,
             cancellationToken);
-        customers = customers.Concat(await UpdateCustomerDefaultOrganizationAsync(existingOrganization, cancellationToken)).ToList();
+        customers = [.. customers, .. await UpdateCustomerDefaultOrganizationAsync(existingOrganization, cancellationToken)];
         repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
         existingOrganization.CustomDomain = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
@@ -141,7 +141,7 @@ public class OrganizationSubscriber(
         await UpdateOrganizationMembersDefaultOrganizationAsync(organization.Id, itemsToRemove, cancellationToken);
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);
-        existingOrganization.OrganizationMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingOrganization.OrganizationMembers = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         return existingOrganization;
     }
@@ -171,15 +171,19 @@ public class OrganizationSubscriber(
             var newOrganizationId = customer.DefaultOrganization?.Id;
 
             var existingLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredLocations = customer.PreferredLocations
-                .Where(location => location.Organization is not null && location.Organization.Id != organizationId)
-                .ToList();
+            customer.PreferredLocations =
+            [
+                .. customer.PreferredLocations
+                    .Where(location => location.Organization is not null && location.Organization.Id != organizationId),
+            ];
             var newLocationIds = customer.PreferredLocations.Select(item => item.Id).Distinct().ToList();
 
             var existingResourceIds = customer.PreferredResources.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredResources = customer.PreferredResources
-                .Where(resource => resource.Location?.Organization is null || resource.Location.Organization.Id != organizationId)
-                .ToList();
+            customer.PreferredResources =
+            [
+                .. customer.PreferredResources
+                    .Where(resource => resource.Location?.Organization is null || resource.Location.Organization.Id != organizationId),
+            ];
             var newResourceIds = customer.PreferredResources.Select(item => item.Id).Distinct().ToList();
 
             customer = repositoryFactory.CustomerRepository.Update(customer);
@@ -239,7 +243,7 @@ public class OrganizationSubscriber(
             .ToList();
 
         repositoryFactory.OrganizationTagRepository.RemoveRange(itemsToRemove);
-        existingOrganization.Tags = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingOrganization.Tags = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         return existingOrganization;
     }

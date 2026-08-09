@@ -63,6 +63,15 @@ export const logCustomerSelfServiceActionRejected = ({
 }: BaseTelemetryInput & { actionType: string; purchaseType: string; reasonCode: string }) =>
   logger.warn(withCorrelation('CustomerSelfServiceActionRejected', correlationId, { actionType, purchaseType, reasonCode }), 'Customer self-service action rejected');
 
+export const logCustomerMarketplaceBookingModificationStarted = ({ logger, correlationId, bookingId }: BaseTelemetryInput & { bookingId: string }) =>
+  logger.info(withCorrelation('CustomerMarketplaceBookingModificationStarted', correlationId, { bookingId }), 'Customer marketplace booking modification started');
+
+export const logCustomerMarketplaceBookingModificationCompleted = ({ logger, correlationId, bookingId }: BaseTelemetryInput & { bookingId: string }) =>
+  logger.info(withCorrelation('CustomerMarketplaceBookingModificationCompleted', correlationId, { bookingId }), 'Customer marketplace booking modification completed');
+
+export const logCustomerMarketplaceBookingModificationFailed = ({ logger, correlationId, bookingId, reasonCode }: BaseTelemetryInput & { bookingId: string; reasonCode: string }) =>
+  logger.warn(withCorrelation('CustomerMarketplaceBookingModificationFailed', correlationId, { bookingId, reasonCode }), 'Customer marketplace booking modification failed');
+
 export const logUnsupportedWebappPathHandled = ({
   logger,
   correlationId,

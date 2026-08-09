@@ -168,16 +168,18 @@ public class EntityMapper : IEntityMapper
             Organization = organization,
         };
 
-        organizationOffering.OrganizationOfferingActiveMembers = src.OrganizationOfferingActiveMembers
-            .Select(item => new OrganizationOfferingActiveMember
-            {
-                Id = item.Id,
-                CreatedAt = src.CreatedAt,
-                ModifiedAt = src.ModifiedAt,
-                OrganizationMember = MapTo(item.OrganizationMember, organization),
-                OrganizationOffering = organizationOffering,
-            })
-            .ToList();
+        organizationOffering.OrganizationOfferingActiveMembers =
+        [
+            .. src.OrganizationOfferingActiveMembers
+                .Select(item => new OrganizationOfferingActiveMember
+                {
+                    Id = item.Id,
+                    CreatedAt = src.CreatedAt,
+                    ModifiedAt = src.ModifiedAt,
+                    OrganizationMember = MapTo(item.OrganizationMember, organization),
+                    OrganizationOffering = organizationOffering,
+                }),
+        ];
 
         return organizationOffering;
     }
@@ -206,21 +208,21 @@ public class EntityMapper : IEntityMapper
             IsOwnershipVerified = src.IsOwnershipVerified,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             TermsOfUse = MapTo(src.TermsOfUse),
-            IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList(),
+            IndustrySubCategories = [.. MapTo(src.IndustrySubCategories)],
         };
 
-        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
-        organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
+        organization.OrganizationMembers = [.. MapTo(src.OrganizationMembers, organization)];
+        organization.OrganizationOfferings = [.. MapTo(src.OrganizationOfferings, organization)];
         organization.OrganizationSpacesSubscription = includeSpacesSubscription
             ? src.OrganizationOfferings.Where(item => IsSpacesOffering(src, item)).Select(item => MapToSpacesSubscription(item, src))
                 .SingleOrDefault()
             : null;
-        organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
-        organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
-        organization.Tags = MapTo(src.Tags, organization).ToList();
+        organization.DailyMemberCountRecordings = [.. MapTo(src.DailyMemberCountRecordings, organization)];
+        organization.JoinInvitations = [.. MapTo(src.JoinInvitations, organization)];
+        organization.Tags = [.. MapTo(src.Tags, organization)];
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
-        organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
-        organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
+        organization.OrganizationStripePaymentMethods = [.. MapTo(src.OrganizationStripePaymentMethods, organization)];
+        organization.OrganizationStripeConnectAccounts = [.. MapTo(src.OrganizationStripeConnectAccounts, organization)];
         organization.OrganizationXeroConnection = MapTo(src.OrganizationXeroConnection, organization);
 
         return organization;
@@ -352,7 +354,7 @@ public class EntityMapper : IEntityMapper
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
                 Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList(),
+                Identities = [.. MapTo(src.Identities)],
             };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Database.Entities.Identity> src) => src.Select(MapTo);

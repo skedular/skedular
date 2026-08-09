@@ -8,7 +8,7 @@ namespace Team.Shared.Activities;
 public class InvitationIntegrations(IRepositoryFactory repositoryFactory, ILogger<InvitationIntegrations> logger)
 {
     [Activity]
-    public async Task ExpireInvitationAsync(string joinInvitationId)
+    public async Task ExpireTeamInvitationAsync(string joinInvitationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);

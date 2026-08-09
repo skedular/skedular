@@ -25,9 +25,10 @@ public sealed class MarketplaceBookingFailureReadService(IRepositoryFactory repo
             .GetByMarketplaceBookingSubscriptionIdAsync(subscriptionId, cancellationToken));
 
     public async Task<IReadOnlyList<FailureModel>> GetVisibleToCustomerAsync(string customerId, CancellationToken cancellationToken) =>
-        (await repositoryFactory.MarketplaceBookingFailureRepository.GetVisibleToCustomerAsync(customerId, cancellationToken))
-        .Select(item => Map(item)!)
-        .ToList();
+    [
+        .. (await repositoryFactory.MarketplaceBookingFailureRepository.GetVisibleToCustomerAsync(customerId, cancellationToken))
+        .Select(item => Map(item)!),
+    ];
 
     private static FailureModel? Map(BookingEntity? entity) => entity is null
         ? null

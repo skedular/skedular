@@ -111,26 +111,28 @@ public class OrganizationGrpcService(
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new OrganizationMemberSearchCriteria(request.Where.OrganizationId, null, request.Where.NameContains, request.Where.CustomerId),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    MemberOrderField.RoleType => OrganizationMemberOrderField.Role,
-                    MemberOrderField.Status => OrganizationMemberOrderField.Status,
-                    MemberOrderField.Name => OrganizationMemberOrderField.Name,
-                    MemberOrderField.GivenName => OrganizationMemberOrderField.GivenName,
-                    MemberOrderField.MiddleName => OrganizationMemberOrderField.MiddleName,
-                    MemberOrderField.FamilyName => OrganizationMemberOrderField.FamilyName,
-                    MemberOrderField.PhoneNumber => OrganizationMemberOrderField.PhoneNumber,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        MemberOrderField.RoleType => OrganizationMemberOrderField.Role,
+                        MemberOrderField.Status => OrganizationMemberOrderField.Status,
+                        MemberOrderField.Name => OrganizationMemberOrderField.Name,
+                        MemberOrderField.GivenName => OrganizationMemberOrderField.GivenName,
+                        MemberOrderField.MiddleName => OrganizationMemberOrderField.MiddleName,
+                        MemberOrderField.FamilyName => OrganizationMemberOrderField.FamilyName,
+                        MemberOrderField.PhoneNumber => OrganizationMemberOrderField.PhoneNumber,
+                        _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                            $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
+                    };
 
-                return new OrganizationMemberOrder(direction, field);
-            }).ToList(),
+                    return new OrganizationMemberOrder(direction, field);
+                }),
+            ],
             context.CancellationToken);
 
         var connection = new MemberConnection

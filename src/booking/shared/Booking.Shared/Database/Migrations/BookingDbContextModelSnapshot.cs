@@ -844,8 +844,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("numeric(18,2)");
 
                     b.Property<string>("BookingId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -882,8 +881,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("MarketplaceBookingSubscriptionId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -893,8 +891,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(100000)");
 
                     b.Property<string>("RecurringBookingId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("RequestedFrom")
                         .HasColumnType("timestamp with time zone");
@@ -907,8 +904,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ResolutionActorCustomerId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("ResolutionDeadlineAt")
                         .HasColumnType("timestamp with time zone");
@@ -945,6 +941,8 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("RecurringBookingId");
+
+                    b.HasIndex("ResolutionActorCustomerId");
 
                     b.HasIndex("ResolutionDecision", "ResolutionDeadlineAt");
 
@@ -994,8 +992,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("RecipientCustomerId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("RecipientEmail")
                         .HasMaxLength(320)
@@ -1020,6 +1017,8 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasIndex("ModifiedAt");
 
+                    b.HasIndex("RecipientCustomerId");
+
                     b.HasIndex("Status", "LastAttemptAt");
 
                     b.HasIndex("MarketplaceBookingFailureId", "RecipientKey", "Channel")
@@ -1035,8 +1034,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("ActorCustomerId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1072,6 +1070,8 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ActorCustomerId");
+
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("ModifiedAt");
@@ -1079,6 +1079,152 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("MarketplaceBookingFailureId", "OccurredAt", "CreatedAt");
 
                     b.ToTable("MarketplaceBookingFailureEvent");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingModification", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ActorCustomerId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("ActorKind")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("BookingId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("OccurredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("OriginalFrom")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.PrimitiveCollection<string>("OriginalResourceIds")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTimeOffset>("OriginalUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<DateTimeOffset>("ResultFrom")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.PrimitiveCollection<string>("ResultResourceIds")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTimeOffset>("ResultUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("SubscriptionOccurrenceOverride")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActorCustomerId");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("BookingId", "OccurredAt");
+
+                    b.ToTable("MarketplaceBookingModification");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingModificationNotificationDelivery", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DeliveryKey")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTimeOffset?>("LastAttemptAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<string>("MarketplaceBookingModificationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RecipientCustomerId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("RecipientEmail")
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)");
+
+                    b.Property<string>("RecipientName")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<DateTimeOffset?>("SentAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("RecipientCustomerId");
+
+                    b.HasIndex("MarketplaceBookingModificationId", "DeliveryKey")
+                        .IsUnique();
+
+                    b.HasIndex("Status", "LastAttemptAt");
+
+                    b.ToTable("MarketplaceBookingModificationNotificationDelivery");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingSubscription", b =>
@@ -1213,8 +1359,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Provider")
                         .IsRequired()
@@ -1222,8 +1367,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(64)");
 
                     b.Property<string>("ResolutionActorCustomerId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("ResolutionCorrelationId")
                         .HasMaxLength(128)
@@ -1252,6 +1396,8 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("ResolutionActorCustomerId");
 
                     b.HasIndex("Status");
 
@@ -1298,12 +1444,10 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(20)");
 
                     b.Property<string>("CustomerId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("DeletedByCustomerId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<uint>("EntityFrameworkVersion")
                         .IsConcurrencyToken()
@@ -1315,28 +1459,24 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("LatestRefundId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("LatestRefundStatus")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
                     b.Property<string>("MarketplaceBookingId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("MarketplaceBookingSubscriptionId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("PaymentStatus")
                         .HasMaxLength(32)
@@ -1347,16 +1487,15 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(100000)");
 
                     b.Property<string>("ProductVersionId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset>("PurchasedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("SourceId")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("SourceType")
                         .IsRequired()
@@ -1762,8 +1901,7 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Property<string>("MarketplaceRefundId")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -3610,6 +3748,33 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("RecurringBooking");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingFailure", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId");
+
+                    b.HasOne("Booking.Shared.Database.Entities.MarketplaceBookingSubscription", "MarketplaceBookingSubscription")
+                        .WithMany()
+                        .HasForeignKey("MarketplaceBookingSubscriptionId");
+
+                    b.HasOne("Booking.Shared.Database.Entities.Booking", "RecurringBooking")
+                        .WithMany()
+                        .HasForeignKey("RecurringBookingId");
+
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "ResolutionActorCustomer")
+                        .WithMany()
+                        .HasForeignKey("ResolutionActorCustomerId");
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("MarketplaceBookingSubscription");
+
+                    b.Navigation("RecurringBooking");
+
+                    b.Navigation("ResolutionActorCustomer");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingFailureDelivery", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.MarketplaceBookingFailure", "MarketplaceBookingFailure")
@@ -3618,18 +3783,66 @@ namespace Booking.Shared.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "RecipientCustomer")
+                        .WithMany()
+                        .HasForeignKey("RecipientCustomerId");
+
                     b.Navigation("MarketplaceBookingFailure");
+
+                    b.Navigation("RecipientCustomer");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingFailureEvent", b =>
                 {
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "ActorCustomer")
+                        .WithMany()
+                        .HasForeignKey("ActorCustomerId");
+
                     b.HasOne("Booking.Shared.Database.Entities.MarketplaceBookingFailure", "MarketplaceBookingFailure")
                         .WithMany("Events")
                         .HasForeignKey("MarketplaceBookingFailureId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("ActorCustomer");
+
                     b.Navigation("MarketplaceBookingFailure");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingModification", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "ActorCustomer")
+                        .WithMany()
+                        .HasForeignKey("ActorCustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ActorCustomer");
+
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingModificationNotificationDelivery", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.MarketplaceBookingModification", "MarketplaceBookingModification")
+                        .WithMany("NotificationDeliveries")
+                        .HasForeignKey("MarketplaceBookingModificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "RecipientCustomer")
+                        .WithMany()
+                        .HasForeignKey("RecipientCustomerId");
+
+                    b.Navigation("MarketplaceBookingModification");
+
+                    b.Navigation("RecipientCustomer");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingSubscription", b =>
@@ -3661,43 +3874,46 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("ProductVersion");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceExternalRefundReconciliation", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "ResolutionActorCustomer")
+                        .WithMany()
+                        .HasForeignKey("ResolutionActorCustomerId");
+
+                    b.Navigation("ResolutionActorCustomer");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplacePurchaseHistory", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("Booking.Shared.Database.Entities.Customer", "DeletedByCustomer")
                         .WithMany()
-                        .HasForeignKey("DeletedByCustomerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("DeletedByCustomerId");
 
                     b.HasOne("Booking.Shared.Database.Entities.MarketplaceRefund", "LatestRefund")
                         .WithMany()
-                        .HasForeignKey("LatestRefundId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("LatestRefundId");
 
                     b.HasOne("Booking.Shared.Database.Entities.MarketplaceBooking", "MarketplaceBooking")
                         .WithMany()
-                        .HasForeignKey("MarketplaceBookingId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("MarketplaceBookingId");
 
                     b.HasOne("Booking.Shared.Database.Entities.MarketplaceBookingSubscription", "MarketplaceBookingSubscription")
                         .WithMany()
-                        .HasForeignKey("MarketplaceBookingSubscriptionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("MarketplaceBookingSubscriptionId");
 
                     b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
                         .WithMany()
                         .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Booking.Shared.Database.Entities.ProductVersion", "ProductVersion")
                         .WithMany()
-                        .HasForeignKey("ProductVersionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ProductVersionId");
 
                     b.Navigation("Customer");
 
@@ -4393,6 +4609,11 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("Deliveries");
 
                     b.Navigation("Events");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingModification", b =>
+                {
+                    b.Navigation("NotificationDeliveries");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingSubscription", b =>

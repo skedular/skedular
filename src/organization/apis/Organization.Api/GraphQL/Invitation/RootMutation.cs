@@ -17,13 +17,15 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            InvitesCustomersToJoinOrganization = graphQlMapper.MapTo(
+            InvitesCustomersToJoinOrganization =
+            [
+                .. graphQlMapper.MapTo(
                     await invitationService.InviteMembersByEmailsAsync(
                         input.OrganizationId,
                         input.OrganizationCustomDomain,
-                        input.Emails.ToList(),
-                        cancellationToken))
-                .ToList(),
+                        [.. input.Emails],
+                        cancellationToken)),
+            ],
         };
 
     [UseResolverScope]

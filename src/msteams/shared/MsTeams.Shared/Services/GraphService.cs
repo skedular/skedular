@@ -81,9 +81,11 @@ public class GraphService(IGraphServiceClientFactory graphServiceClientFactory, 
         ArgumentNullException.ThrowIfNull(response);
         ArgumentNullException.ThrowIfNull(response.Value);
 
-        return response.Value
-            .Where(item => !item.IsArchived.HasValue || !item.IsArchived.Value)
-            .Select(entityMapper.MapTo)
-            .ToList();
+        return
+        [
+            .. response.Value
+                .Where(item => !item.IsArchived.HasValue || !item.IsArchived.Value)
+                .Select(entityMapper.MapTo),
+        ];
     }
 }

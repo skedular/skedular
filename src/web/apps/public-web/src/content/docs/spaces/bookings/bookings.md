@@ -17,7 +17,7 @@ terminologyRefs:
 relatedArticleIds:
   - spaces-products-pricing
   - spaces-subscriptions
-updatedAt: 2026-07-24
+updatedAt: 2026-08-07
 ---
 
 ## Understand Bookings in Spaces
@@ -47,6 +47,14 @@ Open a Booking to edit its supported details. Depending on the Booking type and 
 The organization's **Marketplace purchases** page is the unified history for marketplace activity. It lists standalone Bookings alongside Subscriptions and shows the customer, Product, booking window, amount, payment state, and lifecycle state where available. Canceled and deleted purchases remain visible when they have historical activity, allowing operators to review what happened without treating a removed purchase as erased history.
 
 Use the purchase history for the commercial overview and the Booking details for individual Resource reservations and scheduling changes. Access is limited to authorized organization operators.
+
+## Modify a marketplace Booking
+
+Customers can open their own marketplace Booking details to change an eligible future Booking. Authorized organization owners and administrators can open the Booking details or Marketplace purchases history to make the change for the customer. The Booking must be **Confirmed** or **Payment not required**, and the change must be completed before the Booking starts. This change is separate from cancellation, so the Product cancellation cutoff does not control it.
+
+Choose the new date and time, then select any available Resources that the originally purchased Product can fulfill. The selection can use a different eligible Resource type or individual Resource, but cannot exceed the purchased Resource quantity or switch the Product or Price. If no replacement Resources are selected, Spaces may retain the current Resources or use its normal automatic allocation. Spaces checks the full date, time, and Resource set together. If capacity or eligibility has changed, it leaves the original Booking unchanged and shows the reason.
+
+The completed change keeps the purchase, payment, invoice, refund, and cancellation terms unchanged. Customers can review the resulting Booking and change history. An operator must enter a reason; Spaces records it in the audit history and notifies the customer. If notification delivery needs follow-up, the operator can see that recovery state with the change record.
 
 ## Customers and Bookings
 

@@ -23,7 +23,7 @@ public class LocationResourceSlot(
 
         return location is null || location.IsReplicatedDeleted() || (location.Organization != null && location.Organization.IsReplicatedDeleted())
             ? new ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse(false, [])
-            : new ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse(true, location.Resources.Select(item => item.Id).ToList());
+            : new ExecuteAllLocationResourcesSlotGenerationWorkflowsResponse(true, [.. location.Resources.Select(item => item.Id)]);
     }
 
     [Activity]

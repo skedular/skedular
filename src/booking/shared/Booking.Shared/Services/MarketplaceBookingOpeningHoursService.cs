@@ -140,12 +140,13 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
         foreach (var location in candidateLocations)
         {
             var orderedResources = OrderResources(
-                    location.Resources
-                        .Where(resource => !resource.DeletedAt.HasValue)
-                        .Where(resource => !resource.Inactive)
-                        .Where(resource => requiredResourceIds.Count == 0 || requiredResourceIds.Contains(resource.Id))
-                        .Where(resource => resource.OrganizationTags.Any(tag => !tag.DeletedAt.HasValue && productTagIds.Contains(tag.Id)))
-                        .ToList(),
+                    [
+                        .. location.Resources
+                            .Where(resource => !resource.DeletedAt.HasValue)
+                            .Where(resource => !resource.Inactive)
+                            .Where(resource => requiredResourceIds.Count == 0 || requiredResourceIds.Contains(resource.Id))
+                            .Where(resource => resource.OrganizationTags.Any(tag => !tag.DeletedAt.HasValue && productTagIds.Contains(tag.Id))),
+                    ],
                     customer,
                     preferredResourceIds)
                 .ToList();
@@ -180,8 +181,9 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
                     location.Id,
                     resourceWindowGroup.Key.From,
                     resourceWindowGroup.Key.Until,
-                    resourceWindowGroup.Select(item => item.Resource.Id).ToList(),
+                    [.. resourceWindowGroup.Select(item => item.Resource.Id)],
                     productTagIds,
+                    [],
                     [],
                     cancellationToken);
                 if (availableResources.Count < requiredResourceCount)
@@ -192,7 +194,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
                 return new MarketplaceBookingDailyPlan(
                     resourceWindowGroup.Key.From,
                     resourceWindowGroup.Key.Until,
-                    OrderResources(availableResources, customer, preferredResourceIds).Take(requiredResourceCount).ToList());
+                    [.. OrderResources(availableResources, customer, preferredResourceIds).Take(requiredResourceCount)]);
             }
         }
 

@@ -68,7 +68,7 @@ public class CustomTagComponents(ICustomerService customerService, IOrganization
             blocks.Add(new DividerBlock());
         }
 
-        return blocks.SkipLast(1).ToList();
+        return [.. blocks.SkipLast(1)];
     }
 
     private static List<Block> GetCustomTagCard(

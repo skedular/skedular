@@ -39,7 +39,7 @@ public class WorkaroundService(
     public async Task RepublishAllBookingsAsync(CancellationToken cancellationToken)
     {
         var bookings = await repositoryFactory.BookingRepository.GetAllUntrackedAsync(cancellationToken);
-        await bookingPublisher.PublishBookingsAsync(bookings.Select(entityMapper.MapTo).ToList(), cancellationToken);
+        await bookingPublisher.PublishBookingsAsync([.. bookings.Select(entityMapper.MapTo)], cancellationToken);
     }
 
     public async Task GenerateLocationResourcesSlotsAsync(string locationId, CancellationToken cancellationToken)

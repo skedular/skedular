@@ -23,7 +23,7 @@ relatedArticleIds:
   - shared-tags
   - shared-zones
   - shared-products
-updatedAt: 2026-07-15
+updatedAt: 2026-08-07
 ---
 
 ## Overview
@@ -69,6 +69,8 @@ Capacity describes how many people or units a resource can accommodate. Set it a
 ## Booking Behavior
 
 Resources are booked through the [Skedular booking engine](/docs/shared/core-concepts/bookings). A booking can reserve one or more resources. A confirmed booking makes each selected resource unavailable for the selected period, prevents overlapping bookings, and updates availability. Bookings use 15-minute increments and can be made up to one year in advance.
+
+For an eligible Skedular Spaces marketplace Booking, a customer or authorized operator can select replacement Resources while changing the Booking. Every replacement must be currently available and eligible for the originally purchased Product, and the selection cannot exceed the Resource quantity included in that purchase. Skedular reserves the complete replacement set together, so it never leaves a Booking with only part of its required Resources. A replacement cannot switch the Product, Price, or purchased quantity. Skedular Host does not show this picker because it manages the underlying Resource for the whole place automatically.
 
 ## Opening Hours and Availability
 

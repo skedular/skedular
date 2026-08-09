@@ -142,7 +142,7 @@ public class LocationService(
         }
 
         var organizationTags = await repositoryFactory.OrganizationTagRepository.GetActiveByIdsForOrganizationAsync(
-            location.OrganizationTags.Select(item => item.Id).ToList(),
+            [.. location.OrganizationTags.Select(item => item.Id)],
             location.Organization.Id,
             location.Organization.CustomDomain,
             cancellationToken);
@@ -339,7 +339,7 @@ public class LocationService(
             var enrichedLocation = await EnrichLocationAsync(customer, edge.Node, cancellationToken);
 
             searchCriteria.TagIds.ForEach(id =>
-                enrichedLocation.Resources = enrichedLocation.Resources.Where(desk => desk.Tags.Select(tag => tag.Id).Contains(id)).ToList());
+                enrichedLocation.Resources = [.. enrichedLocation.Resources.Where(desk => desk.Tags.Select(tag => tag.Id).Contains(id))]);
 
             mappedLocations.Add(new Edge<Shared.Models.Location>(enrichedLocation, edge.Cursor));
         }
@@ -372,7 +372,7 @@ public class LocationService(
 
         var locations = await repositoryFactory.LocationRepository.GetByCustomerIdUntrackedAsync(customerId, organization?.Id, cancellationToken);
 
-        return locations.Select(entityMapper.MapTo).ToList();
+        return [.. locations.Select(entityMapper.MapTo)];
     }
 
     private async Task<Shared.Models.Location> UpdateAsync(
@@ -425,7 +425,7 @@ public class LocationService(
         }
 
         var organizationTags = await repositoryFactory.OrganizationTagRepository.GetActiveByIdsForOrganizationAsync(
-            location.OrganizationTags.Select(item => item.Id).ToList(),
+            [.. location.OrganizationTags.Select(item => item.Id)],
             existingLocation.Organization.Id,
             existingLocation.Organization.CustomDomain,
             cancellationToken);
@@ -569,7 +569,7 @@ public class LocationService(
         }
         else if (!mappedLocation.Permissions.CanModify)
         {
-            mappedLocation.RestrictedInformation = mappedLocation.RestrictedInformation.Where(item => item.Active).ToList();
+            mappedLocation.RestrictedInformation = [.. mappedLocation.RestrictedInformation.Where(item => item.Active)];
         }
 
         if (!mappedLocation.Permissions.CanModify)
@@ -584,8 +584,11 @@ public class LocationService(
         {
             mappedLocation.ExtraMetadata = mappedLocation.ExtraMetadata with
             {
-                OtherLinks = mappedLocation.ExtraMetadata.OtherLinks.Where(item =>
-                    item.Contains("sharedspace.co.nz", StringComparison.InvariantCultureIgnoreCase)).ToList(),
+                OtherLinks =
+                [
+                    .. mappedLocation.ExtraMetadata.OtherLinks.Where(item =>
+                        item.Contains("sharedspace.co.nz", StringComparison.InvariantCultureIgnoreCase)),
+                ],
             };
         }
 

@@ -1,0 +1,41 @@
+# GraphQL Contract: Marketplace Booking Modification
+
+The final source contract belongs in Booking API GraphQL source files and must be regenerated; this document defines the intended client contract.
+
+```graphql
+extend type Mutation {
+  modifyMarketplaceBooking(input: ModifyMarketplaceBookingInput!): ModifyMarketplaceBookingPayload!
+}
+
+input ModifyMarketplaceBookingInput {
+  clientMutationId: String
+  bookingId: String!
+  expectedVersion: Int!
+  from: DateTime!
+  until: DateTime!
+  resourceIds: [String!]
+  reason: String!
+}
+
+type ModifyMarketplaceBookingPayload {
+  clientMutationId: String
+  booking: BookingDetails
+  modification: MarketplaceBookingModificationDetails
+  eligibilityError: MarketplaceBookingModificationEligibilityErrorDetails
+  availabilityError: BookingAvailabilityErrorDetails
+  conflictError: MarketplaceBookingModificationConflictErrorDetails
+  accessError: SpacesAccessErrorDetails
+}
+```
+
+## Semantics
+
+- `resourceIds: null` means retain the current assignment when valid or follow existing automatic allocation behavior. A non-empty list is an explicit selected set; empty, over-limit, unavailable, or product-ineligible lists are rejected.
+- The server derives the actor, purchaser, product owner, payment status, entitlement, subscription cycle, and resource count from persisted data. Clients cannot supply them.
+- `reason` is mandatory for every actor.
+- A stale `expectedVersion` returns `conflictError` with current booking details for reload; an availability failure returns unavailable resource ids; an eligibility failure returns a stable code and user-safe explanation.
+- The command never creates/refunds/reprices/invoices a purchase or updates parent subscription schedule/preferences.
+
+## Read fields
+
+Expose modification eligibility, current booking version, modification history, and notification recovery status through the booking detail query. Collocate Relay fragments with the customer and operator components that consume them.

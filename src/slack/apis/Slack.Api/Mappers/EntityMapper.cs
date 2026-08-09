@@ -102,7 +102,7 @@ public class EntityMapper : IEntityMapper
             Organization = MapTo(src.Organization),
         };
 
-        workspace.WorkspaceMembers = MapTo(src.WorkspaceMembers, workspace).ToList();
+        workspace.WorkspaceMembers = [.. MapTo(src.WorkspaceMembers, workspace)];
 
         return workspace;
     }
@@ -154,7 +154,7 @@ public class EntityMapper : IEntityMapper
             Type = src.Type.ToNullableCustomerType(),
         };
 
-        customer.Identities = MapTo(src.Identities, customer).ToList();
+        customer.Identities = [.. MapTo(src.Identities, customer)];
 
         return customer;
     }
@@ -201,7 +201,7 @@ public class EntityMapper : IEntityMapper
             SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt,
         };
 
-        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
+        organization.OrganizationMembers = [.. MapTo(src.OrganizationMembers, organization)];
 
         return organization;
     }

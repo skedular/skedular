@@ -13,7 +13,7 @@ evidenceRefs:
 terminologyRefs:
   - docs-glossary:v1
 relatedArticleIds: []
-updatedAt: 2026-07-24
+updatedAt: 2026-08-07
 ---
 
 When a renter books your place, the Booking appears in the Host bookings area. Use it to review the time reserved, see who booked, check payment status when payment is required, and manage the actions available for that Booking.
@@ -44,6 +44,14 @@ From a Booking card, you can:
 - Use the available payment actions when payment requires operator attention: **Confirm Payment**, **Reject Payment**, or **Make Payment Not Required**.
 
 Cancellation changes the Booking. It does not by itself decide or complete a refund. The cancellation policy that applies to the pricing option determines refund eligibility, while the operational refund workflow is documented in [Payments and refunds](/docs/host/payments-and-refunds). Pricing, opening hours, duration limits, and cancellation-policy configuration are covered in [Pricing and availability](/docs/host/pricing-and-availability).
+
+## Modify a marketplace Booking
+
+A renter can change the date and time of their eligible future marketplace Booking from its details. An authorized Host owner or administrator can make the same change for the renter. The Booking must be **Confirmed** or **Payment not required**, and the change must be completed before it starts. This is separate from cancellation, so a cancellation cutoff does not control an otherwise eligible Booking change.
+
+Host checks the proposed date and time against the place's purchased booking rules, opening hours, and live availability before saving. If the time is no longer available, Host leaves the original Booking unchanged and explains why. The change keeps the original purchase, Price, payment, invoice, refund, and cancellation terms; it does not create a new purchase or financial action.
+
+Host does not show an individual Resource picker: the Booking reserves the entire place and Host manages its underlying Resource automatically. An operator must enter a reason for a change. Host records that reason in the Booking history and notifies the renter. Marketplace Subscription occurrence changes are currently available in Skedular Spaces, not Host.
 
 ## Review a new Booking
 

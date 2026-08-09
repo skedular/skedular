@@ -107,7 +107,7 @@ public class LocationSubscriber(
             .ToList();
 
         repositoryFactory.ResourceRepository.RemoveRange(itemsToRemove);
-        existingLocation.Resources = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingLocation.Resources = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         return existingLocation;
     }
@@ -118,11 +118,11 @@ public class LocationSubscriber(
         foreach (var customerId in customerIds)
         {
             var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, cancellationToken) ?? throw new CustomerNotFound();
-            customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != location.Id).ToList();
+            customer.PreferredLocations = [.. customer.PreferredLocations.Where(item => item.Id != location.Id)];
             customer.PreferredResources =
-                customer.PreferredResources.Where(item => item.Location is not null && item.Location.Id != location.Id).ToList();
+                [.. customer.PreferredResources.Where(item => item.Location is not null && item.Location.Id != location.Id)];
 
-            customer.FavouriteLocations = customer.FavouriteLocations.Where(item => item.Id != location.Id).ToList();
+            customer.FavouriteLocations = [.. customer.FavouriteLocations.Where(item => item.Id != location.Id)];
 
             _ = repositoryFactory.CustomerRepository.Update(customer);
 

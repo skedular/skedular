@@ -156,7 +156,7 @@ public class LocationDetails : Node
                     : where.CustomTagIds.ToSafeCollection().Concat(
                         where.ZoneIds.ToSafeCollection()).Concat(where.ProductTagIds.ToSafeCollection()).ToList(),
                 where?.FloorPlanId),
-            orderBy.ToSafeCollection().Select(item => new ResourceOrder(item.Direction, item.Field)).ToList(),
+            [.. orderBy.ToSafeCollection().Select(item => new ResourceOrder(item.Direction, item.Field))],
             cancellationToken);
 
         return new Connection<ResourceEdge>

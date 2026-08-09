@@ -297,14 +297,17 @@ public class MarketplaceRefundAdminService(
         ReconciliationLeaseOwner = src.ReconciliationLeaseOwner,
         ReconciliationLeaseExpiresAt = src.ReconciliationLeaseExpiresAt,
         ReconciliationLeaseRenewedAt = src.ReconciliationLeaseRenewedAt,
-        PaymentAllocations = src.PaymentAllocations.Select(item => new MarketplaceRefundPaymentAllocationModel
-        {
-            SourcePaymentProvider = item.SourcePaymentProvider,
-            SourcePaymentReference = item.SourcePaymentReference,
-            SourcePaymentAmount = item.SourceCapturedAmount,
-            AllocatedRefundAmount = item.AllocatedRefundAmount,
-            Currency = item.Currency.ToCurrency(),
-        }).ToList(),
+        PaymentAllocations =
+        [
+            .. src.PaymentAllocations.Select(item => new MarketplaceRefundPaymentAllocationModel
+            {
+                SourcePaymentProvider = item.SourcePaymentProvider,
+                SourcePaymentReference = item.SourcePaymentReference,
+                SourcePaymentAmount = item.SourceCapturedAmount,
+                AllocatedRefundAmount = item.AllocatedRefundAmount,
+                Currency = item.Currency.ToCurrency(),
+            }),
+        ],
     };
 
     private async Task<MarketplaceRefund> GetAuthorizedRefundAsync(string id, CancellationToken cancellationToken)

@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Booking.Api.GraphQL.RecurringBooking;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
@@ -10,6 +11,9 @@ namespace Booking.Api.GraphQL.Booking;
 [GraphQLName("BookingDetails")]
 public class BookingDetails : Node
 {
+    [GraphQLName("entityFrameworkVersion")]
+    public uint EntityFrameworkVersion { get; set; }
+
     [GraphQLName("from")]
     public DateTimeOffset From { get; set; }
 
@@ -64,6 +68,7 @@ public class BookingDetails : Node
     [GraphQLName("hasRecurringInstanceOverrides")]
     public bool? HasRecurringInstanceOverrides { get; set; }
 
+    [UseResolverScope]
     public async Task<IEnumerable<OrganizationArrearsInvoiceDetails>> GetArrearsInvoicesAsync(
         [Service]
         IBookingService bookingService,
@@ -73,6 +78,75 @@ public class BookingDetails : Node
         BookingDetails booking,
         CancellationToken cancellationToken) =>
         (await bookingService.GetArrearsInvoicesAsync(booking.Id, cancellationToken)).Select(graphQlMapper.MapTo);
+
+    [UseResolverScope]
+    public async Task<IReadOnlyList<MarketplaceBookingModificationDetails>> GetMarketplaceBookingModificationsAsync(
+        [Service]
+        IMarketplaceBookingModificationService marketplaceBookingModificationService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
+        [Parent]
+        BookingDetails booking,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return [.. (await marketplaceBookingModificationService.GetHistoryAsync(booking.Id, cancellationToken)).Select(graphQlMapper.MapTo)];
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return [];
+        }
+        catch (CustomerNotFound)
+        {
+            return [];
+        }
+    }
+
+    [UseResolverScope]
+    public async Task<MarketplaceBookingResourceSelectionDetails> GetMarketplaceBookingResourceSelectionAsync(
+        DateTimeOffset? from,
+        DateTimeOffset? until,
+        string? locationId,
+        [Service]
+        IMarketplaceBookingModificationService marketplaceBookingModificationService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
+        [Parent]
+        BookingDetails booking,
+        CancellationToken cancellationToken)
+    {
+        MarketplaceBookingResourceSelection selection;
+        try
+        {
+            selection = await marketplaceBookingModificationService.GetResourceSelectionAsync(booking.Id, from, until, locationId,
+                cancellationToken);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return new MarketplaceBookingResourceSelectionDetails();
+        }
+        catch (CustomerNotFound)
+        {
+            return new MarketplaceBookingResourceSelectionDetails();
+        }
+
+        return new MarketplaceBookingResourceSelectionDetails
+        {
+            CanSelectResources = selection.CanSelectResources,
+            MaximumResourceCount = selection.MaximumResourceCount,
+            EligibleResources = [.. graphQlMapper.MapTo(selection.EligibleResources)],
+            AvailableResourceIds = [.. selection.AvailableResourceIds],
+            EligibleLocations =
+            [
+                .. selection.EligibleLocations.Select(location => new LocationDetails
+                {
+                    Id = location.Id,
+                    Name = location.Name ?? string.Empty,
+                }),
+            ],
+        };
+    }
 }
 
 [ObjectType<BookingDetails>]

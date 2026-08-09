@@ -124,28 +124,28 @@ public class MarketplaceBookingSubscriptionService(
         var hasFixedWeeklySelection = MarketplaceBookingWeeklyDaySelectionService.UsesFixedWeeklySchedule(
             marketplaceBooking.ProductPricing,
             subscription.WeeklySelectedDays);
-        if (!hasFixedWeeklySelection && !marketplaceBookingAvailableDaysService.IsAvailable(
+        switch (hasFixedWeeklySelection)
+        {
+            case false when !marketplaceBookingAvailableDaysService.IsAvailable(
                 marketplaceBooking.ProductPricing,
                 subscription.StartedAt,
-                out var localDate))
-        {
-            logger.LogWarning(
-                "Rejected marketplace subscription for unavailable price day. ProductVersionId: {ProductVersionId}, PricingId: {PricingId}, StartedAt: {StartedAt}, LocalDate: {LocalDate}",
-                productVersion.Id,
-                marketplaceBooking.ProductPricing.Id,
-                subscription.StartedAt,
-                localDate);
-            throw new MarketplaceBookingDateUnavailable();
-        }
+                out var localDate):
+                logger.LogWarning(
+                    "Rejected marketplace subscription for unavailable price day. ProductVersionId: {ProductVersionId}, PricingId: {PricingId}, StartedAt: {StartedAt}, LocalDate: {LocalDate}",
+                    productVersion.Id,
+                    marketplaceBooking.ProductPricing.Id,
+                    subscription.StartedAt,
+                    localDate);
+                throw new MarketplaceBookingDateUnavailable();
 
-        if (!hasFixedWeeklySelection)
-        {
-            await EnsureRequestedResourceCanBeBookedAsync(
-                subscription,
-                productVersion,
-                marketplaceBooking,
-                marketplaceBookingOpeningHoursService,
-                cancellationToken);
+            case false:
+                await EnsureRequestedResourceCanBeBookedAsync(
+                    subscription,
+                    productVersion,
+                    marketplaceBooking,
+                    marketplaceBookingOpeningHoursService,
+                    cancellationToken);
+                break;
         }
 
         // Subscription checkout also happens asynchronously later in Temporal, so the initial
@@ -403,11 +403,13 @@ public class MarketplaceBookingSubscriptionService(
         ArgumentNullException.ThrowIfNull(productVersion.Product);
         ArgumentNullException.ThrowIfNull(productVersion.Product.Organization);
 
-        return organizations
-            .Append(productVersion.Product.Organization)
-            .GroupBy(item => item.Id)
-            .Select(item => item.First())
-            .ToList();
+        return
+        [
+            .. organizations
+                .Append(productVersion.Product.Organization)
+                .GroupBy(item => item.Id)
+                .Select(item => item.First()),
+        ];
     }
 
     private static string? NormalizeCheckoutReturnUrl(string? checkoutReturnUrl)

@@ -199,10 +199,13 @@ public class GraphQlMapper : IGraphQlMapper
                     Id = src.OrganizationId.ToSafeString(),
                     CustomDomain = src.OrganizationCustomDomain.ToSafeString(),
                 },
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
-            {
-                Id = item,
-            }).ToList(),
+            OrganizationTags =
+            [
+                .. src.TagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }),
+            ],
             PhysicalAddress = MapTo(src.PhysicalAddress),
             OpeningHours = src.WeekOpeningHours is null ? null : new OpeningHours(MapTo(src.WeekOpeningHours)!, [], []),
         };
@@ -217,10 +220,13 @@ public class GraphQlMapper : IGraphQlMapper
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
-            {
-                Id = item,
-            }).ToList(),
+            OrganizationTags =
+            [
+                .. src.TagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }),
+            ],
         };
 
     public LocationRestrictedInformation MapTo(AddLocationRestrictedInformationInput src) =>
@@ -259,15 +265,17 @@ public class GraphQlMapper : IGraphQlMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
             Capacity = src.Capacity,
-            Tags = src.CustomTagIds
-                .Concat(src.ZoneIds)
-                .Concat(src.ProductTagIds)
-                .Append(src.OrganizationResourceTypeId)
-                .Select(item => new OrganizationTag
-                {
-                    Id = item,
-                })
-                .ToList(),
+            Tags =
+            [
+                .. src.CustomTagIds
+                    .Concat(src.ZoneIds)
+                    .Concat(src.ProductTagIds)
+                    .Append(src.OrganizationResourceTypeId)
+                    .Select(item => new OrganizationTag
+                    {
+                        Id = item,
+                    }),
+            ],
             Location = new Shared.Models.Location
             {
                 Id = src.LocationId,
@@ -283,15 +291,17 @@ public class GraphQlMapper : IGraphQlMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color,
             Capacity = src.Capacity,
-            Tags = src.CustomTagIds
-                .Concat(src.ZoneIds)
-                .Concat(src.ProductTagIds)
-                .Append(src.OrganizationResourceTypeId)
-                .Select(item => new OrganizationTag
-                {
-                    Id = item,
-                })
-                .ToList(),
+            Tags =
+            [
+                .. src.CustomTagIds
+                    .Concat(src.ZoneIds)
+                    .Concat(src.ProductTagIds)
+                    .Append(src.OrganizationResourceTypeId)
+                    .Select(item => new OrganizationTag
+                    {
+                        Id = item,
+                    }),
+            ],
         };
 
     public ResourceEdge MapTo(Edge<Resource> src) => new(MapTo(src.Node), src.Cursor);
@@ -316,7 +326,7 @@ public class GraphQlMapper : IGraphQlMapper
             Id = floorPlanId,
             Name = src.Name,
             Image = src.Image,
-            ResourcePositions = src.ResourcePositions.ToSafeCollection().Select(item => MapTo(item, floorPlanId)).ToList(),
+            ResourcePositions = [.. src.ResourcePositions.ToSafeCollection().Select(item => MapTo(item, floorPlanId))],
             Location = new Shared.Models.Location
             {
                 Id = src.LocationId,
@@ -330,7 +340,7 @@ public class GraphQlMapper : IGraphQlMapper
             Id = src.Id,
             Name = src.Name,
             Image = src.Image,
-            ResourcePositions = src.ResourcePositions.ToSafeCollection().Select(item => MapTo(item, src.Id)).ToList(),
+            ResourcePositions = [.. src.ResourcePositions.ToSafeCollection().Select(item => MapTo(item, src.Id))],
         };
 
     public FloorPlanEdge MapTo(Edge<FloorPlan> src) => new(MapTo(src.Node)!, src.Cursor);
@@ -383,13 +393,15 @@ public class GraphQlMapper : IGraphQlMapper
     public BulkAddResources MapTo(BulkAddResourcesInput src) =>
         new(
             src.LocationId,
-            src.Rows.Select((row, _) => new BulkAddResourceRow(
-                row.OrganizationResourceTypeTagId,
-                row.BaseName,
-                row.Quantity,
-                row.CustomTagIds,
-                row.ZoneIds,
-                row.ProductTagIds)).ToList());
+            [
+                .. src.Rows.Select((row, _) => new BulkAddResourceRow(
+                    row.OrganizationResourceTypeTagId,
+                    row.BaseName,
+                    row.Quantity,
+                    row.CustomTagIds,
+                    row.ZoneIds,
+                    row.ProductTagIds)),
+            ]);
 
     public BulkAddResourceRowResult MapTo(BulkAddRowResult src) =>
         new()

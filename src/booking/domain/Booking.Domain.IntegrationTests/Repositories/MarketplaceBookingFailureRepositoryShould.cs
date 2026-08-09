@@ -5,6 +5,7 @@ using Booking.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Resource = Booking.Shared.Database.Entities.Resource;
 using ResourceBookingSlot = Booking.Shared.Database.Entities.ResourceBookingSlot;
+using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 
 namespace Booking.Domain.IntegrationTests.Repositories;
 
@@ -23,6 +24,8 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
     {
         var firstFinalizedAt = new DateTimeOffset(2026, 7, 24, 10, 0, 0, TimeSpan.Zero);
         var latestFinalizedAt = firstFinalizedAt.AddMinutes(5);
+
+        await SeedRecurringOccurrenceContextAsync(subscriptionId, recurringBookingId, firstFinalizedAt, cancellationToken);
 
         repositoryFactory.MarketplaceBookingFailureRepository.Add(new MarketplaceBookingFailure
         {
@@ -56,6 +59,37 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
         byRecurringBooking.FinalizedAt.ShouldBe(latestFinalizedAt);
         bySubscription.ShouldNotBeNull();
         bySubscription.Id.ShouldBe(latestFailureId);
+    }
+
+    private async Task SeedRecurringOccurrenceContextAsync(
+        string subscriptionId,
+        string recurringBookingId,
+        DateTimeOffset from,
+        CancellationToken cancellationToken)
+    {
+        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+            $"organization-{subscriptionId}", cancellationToken);
+        var product = await repositoryFactory.ProductRepository.UpsertNakedAsync(
+            $"product-{subscriptionId}", organization, cancellationToken);
+        var productVersion = await repositoryFactory.ProductVersionRepository.UpsertNakedAsync(
+            $"product-version-{subscriptionId}", product, cancellationToken);
+
+        var subscription = repositoryFactory.MarketplaceBookingSubscriptionRepository.Add(new MarketplaceBookingSubscriptionEntity
+        {
+            Id = subscriptionId,
+            StartedAt = from,
+            Status = MarketplaceBookingSubscriptionStatusConstants.Active,
+            ProductVersion = productVersion,
+        });
+        repositoryFactory.BookingRepository.Add(new Shared.Database.Entities.Booking
+        {
+            Id = recurringBookingId,
+            From = from,
+            Until = from.AddHours(1),
+            Category = BookingCategory.WorkingFromCoworkingSpace.ToBookingCategory(),
+            Channel = BookingChannel.Marketplace.ToBookingChannel(),
+            Schedules = [],
+        });
     }
 
     [Theory]

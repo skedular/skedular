@@ -254,10 +254,10 @@ public class LocationService(
                 HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges.Select(item => new LocationEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList(),
+            Edges = [.. connection.Edges.Select(item => new LocationEdge(grpcMapper.MapTo(item.Node), item.Cursor))],
         };
 
-        Cache(result.Edges.Select(item => item.Node).ToList());
+        Cache([.. result.Edges.Select(item => item.Node)]);
 
         return result;
     }

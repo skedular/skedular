@@ -29,7 +29,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         CancellationToken cancellationToken)
     {
         var organizationMembers =
-            await organizationMemberService.ChangeStatusAsync(input.Ids.RemoveInvalidIds().ToList(), input.Status, cancellationToken);
+            await organizationMemberService.ChangeStatusAsync([.. input.Ids.RemoveInvalidIds()], input.Status, cancellationToken);
         return new OrganizationMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId,
@@ -44,7 +44,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         IOrganizationMemberService organizationMemberService,
         CancellationToken cancellationToken)
     {
-        var organizationMembers = await organizationMemberService.RemoveAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var organizationMembers = await organizationMemberService.RemoveAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new OrganizationMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId,

@@ -198,7 +198,7 @@ public class SettingsPage(
             new HomeViewDefinition
             {
                 CallbackId = SettingsCallback,
-                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
+                Blocks = [.. blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1)],
                 PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
@@ -250,7 +250,7 @@ public class SettingsPage(
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(feedbackButton).Concat(actionMenus).ToList(),
+                Elements = [.. homeAndBackButtons, .. feedbackButton, .. actionMenus],
             },
         ];
     }

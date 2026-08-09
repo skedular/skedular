@@ -132,15 +132,18 @@ public class GrpcMapper : IGrpcMapper
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
-            FeatureImages = MapTo(src.FeatureImages).ToList(),
+            FeatureImages = [.. MapTo(src.FeatureImages)],
             Organization = new Organization
             {
                 Id = src.OrganizationId,
             },
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
-            {
-                Id = item,
-            }).ToList(),
+            OrganizationTags =
+            [
+                .. src.TagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }),
+            ],
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString(),
@@ -160,15 +163,18 @@ public class GrpcMapper : IGrpcMapper
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
-            FeatureImages = MapTo(src.FeatureImages).ToList(),
+            FeatureImages = [.. MapTo(src.FeatureImages)],
             Organization = new Organization
             {
                 Id = src.OrganizationId,
             },
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
-            {
-                Id = item,
-            }).ToList(),
+            OrganizationTags =
+            [
+                .. src.TagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }),
+            ],
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString(),
@@ -188,15 +194,18 @@ public class GrpcMapper : IGrpcMapper
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
-            FeatureImages = MapTo(src.FeatureImages).ToList(),
+            FeatureImages = [.. MapTo(src.FeatureImages)],
             Organization = new Organization
             {
                 Id = src.OrganizationId,
             },
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
-            {
-                Id = item,
-            }).ToList(),
+            OrganizationTags =
+            [
+                .. src.TagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }),
+            ],
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString(),
@@ -216,15 +225,18 @@ public class GrpcMapper : IGrpcMapper
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
             },
-            FeatureImages = MapTo(src.FeatureImages).ToList(),
+            FeatureImages = [.. MapTo(src.FeatureImages)],
             Organization = new Organization
             {
                 Id = src.OrganizationId,
             },
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
-            {
-                Id = item,
-            }).ToList(),
+            OrganizationTags =
+            [
+                .. src.TagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }),
+            ],
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString(),
@@ -243,10 +255,13 @@ public class GrpcMapper : IGrpcMapper
             {
                 Id = src.LocationId,
             },
-            Tags = src.TagIds.Select(item => new OrganizationTag
-            {
-                Id = item,
-            }).ToList(),
+            Tags =
+            [
+                .. src.TagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }),
+            ],
         };
 
     public Shared.Models.Resource MapTo(UpdateResourceInput src) =>
@@ -258,10 +273,13 @@ public class GrpcMapper : IGrpcMapper
             RequireBookingApproval = src.RequireBookingApproval,
             Color = src.Color.ToSafeString(),
             Capacity = src.Capacity,
-            Tags = src.TagIds.Select(item => new OrganizationTag
-            {
-                Id = item,
-            }).ToList(),
+            Tags =
+            [
+                .. src.TagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }),
+            ],
         };
 
     private IEnumerable<Resource> MapToGrpcResponse(

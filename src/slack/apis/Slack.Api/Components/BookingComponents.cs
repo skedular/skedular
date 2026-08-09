@@ -93,7 +93,7 @@ public class BookingComponents(
             blocks.Add(new DividerBlock());
         }
 
-        return blocks.SkipLast(1).ToList();
+        return [.. blocks.SkipLast(1)];
     }
 
     public IReadOnlyList<Block> GetBookingCard(
@@ -117,7 +117,7 @@ public class BookingComponents(
         blocks.AddRange(booking.InvolvedCustomers.Select(item => new SectionBlock
         {
             Text = sharedWorkspaceMemberService
-                .GetMentionedCustomerNameInSlackFormat(workspace, item.Identities.Select(identity => identity.Id).ToList(), item)
+                .GetMentionedCustomerNameInSlackFormat(workspace, [.. item.Identities.Select(identity => identity.Id)], item)
                 .ToMarkdown(),
         }));
 

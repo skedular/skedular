@@ -88,6 +88,8 @@ public static class BookingExtensions
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession)
             .Include(query => query.RecurringBooking)
+            .ThenInclude(query => query!.MarketplaceBookingSubscription)
+            .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.RequestedResources)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.PaidByCustomer)
@@ -136,6 +138,8 @@ public static class BookingExtensions
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession)
+            .Include(query => query.RecurringBooking)
+            .ThenInclude(query => query!.MarketplaceBookingSubscription)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.PaidByCustomer)
             .Include(query => query.MarketplaceBooking)
@@ -425,7 +429,9 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 BookingOrderField.From => KeysetPaginationField<Database.Entities.Booking>.Create(
                     nameof(Database.Entities.Booking.From),
@@ -449,7 +455,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            })
-            .ToList();
+            }),
+        ];
     }
 }

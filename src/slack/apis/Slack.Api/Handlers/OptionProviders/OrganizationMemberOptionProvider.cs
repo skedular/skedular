@@ -27,14 +27,16 @@ public class OrganizationMemberOptionProvider(IRepositoryFactory repositoryFacto
 
         return new BlockOptionsResponse
         {
-            Options = connection.Edges
-                .Select(item => item.Node)
-                .Select(item => new Option
-                {
-                    Text = string.IsNullOrWhiteSpace(item.Customer.DisplayableName) ? "???" : item.Customer.DisplayableName.ToOptionText(),
-                    Value = item.Customer.Id,
-                })
-                .ToList(),
+            Options =
+            [
+                .. connection.Edges
+                    .Select(item => item.Node)
+                    .Select(item => new Option
+                    {
+                        Text = string.IsNullOrWhiteSpace(item.Customer.DisplayableName) ? "???" : item.Customer.DisplayableName.ToOptionText(),
+                        Value = item.Customer.Id,
+                    }),
+            ],
         };
     }
 }

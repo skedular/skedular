@@ -14,12 +14,8 @@ public class MarketplaceBookingWeeklyDaySelectionService : IMarketplaceBookingWe
     {
         var requestedDays = selectedDays.ToList();
         var selectedDaysDistinct = requestedDays.Distinct().ToList();
-        if (selectedDaysDistinct.Count != requestedDays.Count)
-        {
-            throw new MarketplaceBookingWeeklyDaySelectionInvalid();
-        }
-
-        if (pricing.PurchaseCadence != ProductPricingCadence.Weekly && selectedDaysDistinct.Count != 0)
+        if (selectedDaysDistinct.Count != requestedDays.Count ||
+            (pricing.PurchaseCadence != ProductPricingCadence.Weekly && selectedDaysDistinct.Count != 0))
         {
             throw new MarketplaceBookingWeeklyDaySelectionInvalid();
         }
@@ -37,12 +33,9 @@ public class MarketplaceBookingWeeklyDaySelectionService : IMarketplaceBookingWe
         var availableDays = pricing.AvailableDays is { Count: > 0 }
             ? pricing.AvailableDays.ToHashSet()
             : Enum.GetValues<DayOfWeek>().ToHashSet();
-        if (selectedDaysDistinct.Any(day => !availableDays.Contains(day)))
-        {
-            throw new MarketplaceBookingWeeklyDaySelectionInvalid();
-        }
-
-        return selectedDaysDistinct;
+        return selectedDaysDistinct.Any(day => !availableDays.Contains(day))
+            ? throw new MarketplaceBookingWeeklyDaySelectionInvalid()
+            : selectedDaysDistinct;
     }
 
     internal static bool UsesFixedWeeklySchedule(ProductPricing pricing, IReadOnlyCollection<DayOfWeek> selectedDays) =>

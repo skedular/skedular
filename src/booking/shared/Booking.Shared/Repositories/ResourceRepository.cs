@@ -47,6 +47,13 @@ public interface IResourceRepository : IRepository<Resource>
         IReadOnlyList<string> resourceIds,
         IReadOnlyList<string> tagIds,
         IReadOnlyList<string> tagTypes,
+        IReadOnlyList<string> excludedResourceIds,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<Resource>> GetResourcesByOrganizationAndTagIdsAsync(
+        string organizationId,
+        IReadOnlyList<string> tagIds,
+        string? locationId,
         CancellationToken cancellationToken);
 
     Task<int> GetAvailableResourcesCountAsync(
@@ -64,6 +71,17 @@ public interface IResourceRepository : IRepository<Resource>
         IReadOnlyCollection<string> resourceIds,
         CancellationToken cancellationToken);
 
+    /// <summary>
+    ///     Replaces a booking's complete resource-slot claim inside the caller's serializable transaction.
+    ///     A failed target claim leaves the caller able to roll the entire change back without losing the original claim.
+    /// </summary>
+    Task<ResourceSlotClaimResult> ReplaceClaimAsync(
+        BookingEntity booking,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        IReadOnlyCollection<string> resourceIds,
+        CancellationToken cancellationToken);
+
     Task ReleaseClaimAsync(string bookingId, CancellationToken cancellationToken);
 }
 
@@ -71,6 +89,51 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
     : RepositoryBase<BookingDbContext, Resource>(dbContext, timeProvider), IResourceRepository
 {
     private const int ClaimRetryLimit = 3;
+
+    public async Task<ResourceSlotClaimResult> ReplaceClaimAsync(
+        BookingEntity booking,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        IReadOnlyCollection<string> resourceIds,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
+        if (DbContext.Database.CurrentTransaction is null)
+        {
+            throw new InvalidOperationException("Marketplace resource replacement requires a caller-owned transaction.");
+        }
+
+        var currentSlots = await DbContext.ResourceBookingSlot
+            .Where(slot => slot.Bookings.Any(existing => existing.Id == booking.Id))
+            .Include(slot => slot.Bookings.Where(existing => existing.Id == booking.Id))
+            .Include(slot => slot.Customers)
+            .ToListAsync(cancellationToken);
+        foreach (var slot in currentSlots)
+        {
+            var existingBooking = slot.Bookings.FirstOrDefault(existing => existing.Id == booking.Id);
+            if (existingBooking is not null)
+            {
+                slot.Bookings.Remove(existingBooking);
+            }
+
+            foreach (var customer in booking.InvolvedCustomers)
+            {
+                var existingCustomer = slot.Customers.FirstOrDefault(existing => existing.Id == customer.Id);
+                if (existingCustomer is not null)
+                {
+                    slot.Customers.Remove(existingCustomer);
+                }
+            }
+
+            slot.ModifiedAt = TimeProvider.GetUtcNow();
+        }
+
+        booking.From = from;
+        booking.Until = until;
+        await DbContext.SaveChangesAsync(cancellationToken);
+
+        return await TryClaimCompleteSlotSetAsync(booking, resourceIds, cancellationToken);
+    }
 
     public async Task<ResourceSlotClaimResult> TryClaimCompleteSlotSetAsync(
         BookingEntity booking,
@@ -127,6 +190,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
 
                 var slots = await DbContext.ResourceBookingSlot
                     .Where(item => slotStates.Select(state => state.Id).Contains(item.Id))
+                    .Include(item => item.Customers)
                     .ToListAsync(cancellationToken);
                 foreach (var slot in slots)
                 {
@@ -390,10 +454,12 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         IReadOnlyList<string> resourceIds,
         IReadOnlyList<string> tagIds,
         IReadOnlyList<string> tagTypes,
+        IReadOnlyList<string> excludedResourceIds,
         CancellationToken cancellationToken)
     {
         var availableResourceIds =
-            await GetAvailableResourceIdsAsync(organizationId, locationId, from, until, resourceIds, tagIds, tagTypes, cancellationToken);
+            await GetAvailableResourceIdsAsync(
+                organizationId, locationId, from, until, resourceIds, tagIds, tagTypes, excludedResourceIds, cancellationToken);
 
         var resources = await DbContext.Resource
             .Where(query => availableResourceIds.Contains(query.Id))
@@ -409,6 +475,27 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         return resources;
     }
 
+    public async Task<IReadOnlyList<Resource>> GetResourcesByOrganizationAndTagIdsAsync(
+        string organizationId,
+        IReadOnlyList<string> tagIds,
+        string? locationId,
+        CancellationToken cancellationToken) =>
+        await DbContext.Resource
+            .Where(resource =>
+                !resource.DeletedAt.HasValue &&
+                !resource.Inactive &&
+                resource.Location != null &&
+                !resource.Location.DeletedAt.HasValue &&
+                resource.Location.Organization != null &&
+                !resource.Location.Organization.DeletedAt.HasValue &&
+                resource.Location.Organization.Id == organizationId &&
+                (locationId == null || resource.Location.Id == locationId) &&
+                resource.OrganizationTags.Any(tag => !tag.DeletedAt.HasValue && tagIds.Contains(tag.Id)))
+            .Include(resource => resource.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(resource => resource.Location)
+            .OrderBy(resource => resource.Name)
+            .ToListAsync(cancellationToken);
+
     public async Task<int> GetAvailableResourcesCountAsync(
         string? organizationId,
         string? locationId,
@@ -418,7 +505,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         IReadOnlyList<string> tagIds,
         IReadOnlyList<string> tagTypes,
         CancellationToken cancellationToken) =>
-        (await GetAvailableResourceIdsAsync(organizationId, locationId, from, until, resourceIds, tagIds, tagTypes, cancellationToken)).Count;
+        (await GetAvailableResourceIdsAsync(organizationId, locationId, from, until, resourceIds, tagIds, tagTypes, [], cancellationToken)).Count;
 
     // Translates ResourceAvailabilityOrder clauses into EF IQueryable ORDER BY expressions so the
     // database engine handles sorting rather than the application layer.
@@ -515,6 +602,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         IReadOnlyList<string> resourceIds,
         IReadOnlyList<string> tagIds,
         IReadOnlyList<string> tagTypes,
+        IReadOnlyList<string> excludedResourceIds,
         CancellationToken cancellationToken)
     {
         var slots = await DbContext.ResourceBookingSlot
@@ -541,17 +629,20 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
-        return slots
-            .GroupBy(slot => slot.Resource.Id)
-            .Select(group => new
-            {
-                group.First().Resource,
-                Slots = group.ToList(),
-            })
-            .Where(grouped => grouped.Slots.All(slot => slot is { Available: true, Bookings.Count: 0 }))
-            .GroupBy(slot => slot.Resource.Id)
-            .Select(item => item.Key)
-            .ToList();
+        return
+        [
+            .. slots
+                .GroupBy(slot => slot.Resource.Id)
+                .Select(group => new
+                {
+                    group.First().Resource,
+                    Slots = group.ToList(),
+                })
+                .Where(grouped => excludedResourceIds.Contains(grouped.Resource.Id) ||
+                                  grouped.Slots.All(slot => slot.Available && slot.Bookings.All(booking => booking.DeletedByCustomer != null)))
+                .GroupBy(slot => slot.Resource.Id)
+                .Select(item => item.Key),
+        ];
     }
 
     private static bool IsSerializableConflict(Exception exception)
@@ -599,6 +690,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
 
         var slots = await DbContext.ResourceBookingSlot
             .Where(item => slotStates.Select(state => state.Id).Contains(item.Id))
+            .Include(item => item.Customers)
             .ToListAsync(cancellationToken);
         foreach (var slot in slots)
         {

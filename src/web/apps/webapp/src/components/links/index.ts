@@ -89,6 +89,9 @@ export const getMarketplaceBookingDetailsLink = (integratedPlatform: string | un
   return integratedPlatform ? `/${integratedPlatform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
 
+export const getMarketplaceBookingModificationLink = (integratedPlatform: string | undefined, isCustomDomain: boolean, organizationCustomDomain: string, bookingId: string) =>
+  `${getMarketplaceBookingDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, bookingId)}/modify`;
+
 export const getMarketplaceProductSubscribeLink = (
   integratedPlatform: string | undefined,
   isCustomDomain: boolean,

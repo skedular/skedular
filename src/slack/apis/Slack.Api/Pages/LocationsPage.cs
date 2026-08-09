@@ -411,19 +411,21 @@ public class LocationsPage(
 
         var locations = connection.Edges.Select(item => item.Node).ToList();
         var locationIds = locations.Select(item => item.Id).ToList();
-        var locationsWithChannel = await repositoryFactory.LocationRepository
-            .GetActiveByIdsAsync(locationIds, cancellationToken);
-        locations = locations.Select(item =>
-        {
-            var matchedLocation =
-                locationsWithChannel.FirstOrDefault(replicatedLocation => replicatedLocation.Id == item.Id);
-            if (matchedLocation is not null)
+        var locationsWithChannel = await repositoryFactory.LocationRepository.GetActiveByIdsAsync(locationIds, cancellationToken);
+        locations =
+        [
+            .. locations.Select(item =>
             {
-                item.DailyUpdateChannel = entityMapper.MapTo(matchedLocation.DailyUpdateChannel);
-            }
+                var matchedLocation =
+                    locationsWithChannel.FirstOrDefault(replicatedLocation => replicatedLocation.Id == item.Id);
+                if (matchedLocation is not null)
+                {
+                    item.DailyUpdateChannel = entityMapper.MapTo(matchedLocation.DailyUpdateChannel);
+                }
 
-            return item;
-        }).ToList();
+                return item;
+            }),
+        ];
 
         var asyncBlocks = await Task.WhenAll(
             GetToolbarAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
@@ -447,7 +449,7 @@ public class LocationsPage(
             new HomeViewDefinition
             {
                 CallbackId = LocationsCallback,
-                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
+                Blocks = [.. blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1)],
                 PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
@@ -486,11 +488,12 @@ public class LocationsPage(
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>()
-                    .Concat(homeAndBackButtons)
-                    .Concat(addLocationButton)
-                    .Concat(feedbackButton)
-                    .ToList(),
+                Elements =
+                [
+                    .. homeAndBackButtons,
+                    .. addLocationButton,
+                    .. feedbackButton,
+                ],
             },
         ];
     }

@@ -1,0 +1,17 @@
+SKEDULAR
+Booking update
+
+Hello {{RECIPIENT_NAME}},
+
+An organization administrator updated your booking in Skedular.
+
+Previous time: {{ORIGINAL_WINDOW}}
+New time: {{RESULT_WINDOW}}
+Reason: {{REASON}}
+Previous resources: {{ORIGINAL_RESOURCES}}
+New resources: {{RESULT_RESOURCES}}
+
+Please review your booking in Skedular. Contact the organization if you have questions.
+
+---
+Powered by Skedular

@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from '@/components/icons';
-import { getMarketplaceLocationLink } from '@/components/links';
+import { getMarketplaceBookingModificationLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { getCustomerFullName, getRelayErrorMessage, isStoredFullDayRange, RelayError, toRootError, toStoredBookingTimeRange, useIntegratedPlatform } from '@skedular/shared';
@@ -11,6 +11,7 @@ import {
   SmallIconTypography,
   StackColumn,
   StackRow,
+  SettingsSectionCard,
   SubtitleIconTypography,
   TwoButtonsDialogActions,
 } from '@skedular/ui';
@@ -30,10 +31,8 @@ import Container from '@mui/material/Container';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import dayjs from 'dayjs';
-import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, ReactNode, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -43,12 +42,15 @@ import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from './marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from './marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from './marketplace-refund-status-card';
+import { canRequestMarketplaceBookingModification } from './marketplace-self-service-eligibility';
 import { RefundHistoryTimeline } from '@/components/refund/RefundHistoryTimeline';
 
 const RootQuery = graphql`
   query marketplaceProductBookingDetails_rootQuery($bookingId: String!) {
+    ...modifyMarketplaceBookingDialog_query @arguments(bookingId: $bookingId)
     booking(id: $bookingId) {
       id
+      entityFrameworkVersion
       from
       until
       deletedByCustomer {
@@ -77,6 +79,13 @@ const RootQuery = graphql`
         resource {
           id
           name
+        }
+      }
+      recurringBooking {
+        marketplaceBooking {
+          paymentStatus {
+            type
+          }
         }
       }
       marketplaceBooking {
@@ -165,6 +174,18 @@ const RootQuery = graphql`
           name
         }
       }
+      marketplaceBookingModifications {
+        id
+        occurredAt
+        actorKind
+        reason
+        originalFrom
+        originalUntil
+        resultFrom
+        resultUntil
+        originalResourceNames
+        resultResourceNames
+      }
       arrearsInvoices {
         invoiceNumber
         invoiceUrl
@@ -178,6 +199,9 @@ const RootQuery = graphql`
 const BookingSubscription = graphql`
   subscription marketplaceProductBookingDetails_booking_Subscription($bookingId: String!) {
     booking(id: $bookingId) {
+      entityFrameworkVersion
+      from
+      until
       deletedByCustomer {
         id
       }
@@ -250,6 +274,18 @@ const BookingSubscription = graphql`
           name
         }
       }
+      marketplaceBookingModifications {
+        id
+        occurredAt
+        actorKind
+        reason
+        originalFrom
+        originalUntil
+        resultFrom
+        resultUntil
+        originalResourceNames
+        resultResourceNames
+      }
       arrearsInvoices {
         invoiceNumber
         invoiceUrl
@@ -293,6 +329,8 @@ const DeclinePartialMutation = graphql`
   }
 `;
 
+const getMarketplaceBookingModificationActorLabel = (actorKind: string) => (actorKind === 'ORGANIZATION_OPERATOR' ? 'Organization administrator' : 'Customer');
+
 const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: PreloadedQuery<marketplaceProductBookingDetails_rootQuery, Record<string, unknown>> }) => {
   const rootData = usePreloadedQuery<marketplaceProductBookingDetails_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
@@ -308,11 +346,22 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
   const [commitDeclinePartial] = useMutation(DeclinePartialMutation);
   const isCancelled = hasCancelledLocally || !!booking?.deletedByCustomer?.id;
   const hasConfirmedPayment = marketplaceBooking?.paymentStatus.type === 'CONFIRMED';
+  const canRequestModification = canRequestMarketplaceBookingModification({
+    bookingStartsAt: booking?.from,
+    isCancelled,
+    paymentStatusType: marketplaceBooking?.paymentStatus.type ?? booking?.recurringBooking?.marketplaceBooking?.paymentStatus.type,
+    now: new Date(),
+  });
   const cancellationAvailability = booking?.cancellationAvailability;
   const canRequestCancellation = !isCancelled && cancellationAvailability?.canCancel === true;
   const productTitle = marketplaceBooking?.productVersion?.listingMetadata.title ?? 'this booking';
   const handleRequestCancellationClick = () => {
-    logCustomerSelfServiceActionStarted({ logger, actionType: 'cancel_booking', purchaseId: booking?.id ?? 'unknown', purchaseType: 'booking' });
+    logCustomerSelfServiceActionStarted({
+      logger,
+      actionType: 'cancel_booking',
+      purchaseId: booking?.id ?? 'unknown',
+      purchaseType: 'booking',
+    });
     setPendingCancellationConfirmation(true);
   };
   const handleCancelCancellationClick = () => {
@@ -350,7 +399,12 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
           return;
         }
         if (errors && errors.length > 0) {
-          logCustomerSelfServiceActionRejected({ logger, actionType: 'cancel_booking', purchaseType: 'booking', reasonCode: getRelayErrorMessage(errors) });
+          logCustomerSelfServiceActionRejected({
+            logger,
+            actionType: 'cancel_booking',
+            purchaseType: 'booking',
+            reasonCode: getRelayErrorMessage(errors),
+          });
           toast(
             <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(getRelayErrorMessage(errors))}`} />,
             errorNotificationOptions,
@@ -362,7 +416,12 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
         setHasCancelledLocally(true);
       },
       onError: (error) => {
-        logCustomerSelfServiceActionRejected({ logger, actionType: 'cancel_booking', purchaseType: 'booking', reasonCode: getRelayErrorMessage(error) });
+        logCustomerSelfServiceActionRejected({
+          logger,
+          actionType: 'cancel_booking',
+          purchaseType: 'booking',
+          reasonCode: getRelayErrorMessage(error),
+        });
         toast(
           <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(getRelayErrorMessage(error))}`} />,
           errorNotificationOptions,
@@ -419,9 +478,22 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
               alignItems: 'start',
             }}
           >
-            <Card sx={{ borderRadius: 4, border: 1, borderColor: (theme) => theme.palette.divider }}>
+            <Card
+              sx={{
+                borderRadius: 4,
+                border: 1,
+                borderColor: (theme) => theme.palette.divider,
+              }}
+            >
               <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
-                <CaptionIconTypography label="Booking details" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
+                <CaptionIconTypography
+                  label="Booking details"
+                  sx={{
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    opacity: 0.66,
+                  }}
+                />
                 <LeadIconTypography label="Review your booking and payment status" sx={{ mt: 1 }} />
                 <BodyIconTypography
                   label={
@@ -466,10 +538,28 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                     ) : null}
                     {marketplaceBooking.failure.resolutionDeadlineAt && !marketplaceBooking.failure.resolutionDecision ? (
                       <StackRow sx={{ mt: 1 }}>
-                        <Button variant="contained" onClick={() => commitAcceptPartial({ variables: { input: { id: marketplaceBooking.failure!.id } } })}>
+                        <Button
+                          variant="contained"
+                          onClick={() =>
+                            commitAcceptPartial({
+                              variables: {
+                                input: { id: marketplaceBooking.failure!.id },
+                              },
+                            })
+                          }
+                        >
                           Keep available bookings
                         </Button>
-                        <Button variant="outlined" onClick={() => commitDeclinePartial({ variables: { input: { id: marketplaceBooking.failure!.id } } })}>
+                        <Button
+                          variant="outlined"
+                          onClick={() =>
+                            commitDeclinePartial({
+                              variables: {
+                                input: { id: marketplaceBooking.failure!.id },
+                              },
+                            })
+                          }
+                        >
                           Cancel all and refund
                         </Button>
                       </StackRow>
@@ -488,7 +578,15 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                       refund={marketplaceBooking.refund}
                     />
                     {marketplaceBooking.refund.events.length > 0 ? (
-                      <Card sx={{ mt: 3, borderRadius: 3, border: 1, borderColor: (theme) => theme.palette.divider, boxShadow: 'none' }}>
+                      <Card
+                        sx={{
+                          mt: 3,
+                          borderRadius: 3,
+                          border: 1,
+                          borderColor: (theme) => theme.palette.divider,
+                          boxShadow: 'none',
+                        }}
+                      >
                         <CardContent sx={{ p: 2.5 }}>
                           <SubtitleIconTypography label="Refund history" />
                           <RefundHistoryTimeline
@@ -507,10 +605,58 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                   </>
                 ) : null}
 
-                {canRequestCancellation ? (
-                  <Card sx={{ mt: 3, borderRadius: 3, border: 1, borderColor: (theme) => theme.palette.divider, boxShadow: 'none' }}>
+                {canRequestModification ? (
+                  <Card
+                    sx={{
+                      mt: 3,
+                      borderRadius: 3,
+                      border: 1,
+                      borderColor: (theme) => theme.palette.divider,
+                      boxShadow: 'none',
+                    }}
+                  >
                     <CardContent sx={{ p: 2.5 }}>
-                      <CaptionIconTypography label="Booking actions" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.68 }} />
+                      <CaptionIconTypography
+                        label="Booking actions"
+                        sx={{
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          opacity: 0.68,
+                        }}
+                      />
+                      <SubtitleIconTypography label="Change date and time" sx={{ mt: 1 }} />
+                      <BodyIconTypography
+                        label="Check a new date and time for this confirmed booking. Your product, price, and payment will not change."
+                        sx={{ mt: 1, opacity: 0.82 }}
+                      />
+                      <StackRow sx={{ mt: 2 }}>
+                        <Button variant="outlined" onClick={() => router.push(getMarketplaceBookingModificationLink(integratedPlatform, true, '', booking.id))}>
+                          Change booking
+                        </Button>
+                      </StackRow>
+                    </CardContent>
+                  </Card>
+                ) : null}
+
+                {canRequestCancellation ? (
+                  <Card
+                    sx={{
+                      mt: 3,
+                      borderRadius: 3,
+                      border: 1,
+                      borderColor: (theme) => theme.palette.divider,
+                      boxShadow: 'none',
+                    }}
+                  >
+                    <CardContent sx={{ p: 2.5 }}>
+                      <CaptionIconTypography
+                        label="Booking actions"
+                        sx={{
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          opacity: 0.68,
+                        }}
+                      />
                       <SubtitleIconTypography label="Cancel booking" sx={{ mt: 1 }} />
                       <BodyIconTypography
                         label={
@@ -536,68 +682,52 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                     {cancellationAvailability.unavailableReason}
                   </Alert>
                 ) : null}
+              </CardContent>
+            </Card>
 
-                <StackColumn spacing={2} sx={{ mt: 3 }}>
+            <StackColumn spacing={2} sx={{ gridColumn: { xs: '1', lg: '2' }, gridRow: { xs: 'auto', lg: 1 } }}>
+              {!isCancelled ? (
+                <MarketplaceProductBookingPaymentPanel
+                  checkoutUrl={marketplaceBooking.bookingCheckoutSession?.checkoutUrl ?? null}
+                  entityLabel="booking"
+                  invoices={booking.arrearsInvoices ?? []}
+                  invoiceUrl={marketplaceBooking.invoiceUrl ?? null}
+                  isPaymentRequired={marketplaceBooking.isPaymentRequired}
+                  paymentExpiry={marketplaceBooking.paymentExpiry}
+                  paymentMethodType={marketplaceBooking.paymentMethod.type}
+                  paymentStatusLabel={marketplaceBooking.paymentStatus.name}
+                  paymentStatusType={marketplaceBooking.paymentStatus.type}
+                />
+              ) : null}
+              <SettingsSectionCard title="Booking Summary" description="Your current booking details.">
+                <StackColumn spacing={2}>
                   <DetailsRow label="Booking date" value={toStoredBookingDate(booking.from)} />
                   {!isStoredFullDayRange(booking.from, booking.until) ? <DetailsRow label="Booking time" value={toStoredBookingTimeRange(booking.from, booking.until)} /> : null}
                   {marketplaceBooking.productVersion?.type.type !== 'EVENT' ? <DetailsRow label="Quantity" value={`${marketplaceBooking.quantity}`} /> : null}
                   <DetailsRow label="Booked for" value={booking.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
-                  {booking.cancellationPolicyOverridden ? <DetailsRow label="Cancellation reason" value={booking.cancellationOverrideReason ?? 'Policy overridden'} /> : null}
-                  <DetailsRow
-                    label="Location"
-                    value={
-                      booking.involvedLocations.length > 0 ? (
-                        <StackRow sx={{ rowGap: 1 }}>
-                          {booking.involvedLocations.map((location) => (
-                            <Link
-                              key={location.uniqueId}
-                              component={NextLink}
-                              href={getMarketplaceLocationLink(integratedPlatform, location.uniqueId)}
-                              underline="none"
-                              color="inherit"
-                              sx={{
-                                display: 'inline-flex',
-                                width: 'fit-content',
-                                px: 1.25,
-                                py: 0.75,
-                                borderRadius: 2,
-                                bgcolor: (theme) => theme.palette.action.hover,
-                                border: 1,
-                                borderColor: (theme) => theme.palette.divider,
-                                transition: 'background-color 120ms ease, border-color 120ms ease, transform 120ms ease',
-                                '&:hover': {
-                                  bgcolor: (theme) => theme.palette.action.selected,
-                                  borderColor: (theme) => theme.palette.primary.main,
-                                  transform: 'translateY(-1px)',
-                                },
-                              }}
-                            >
-                              <SubtitleIconTypography label={location.name} />
-                            </Link>
-                          ))}
-                        </StackRow>
-                      ) : (
-                        'Not available'
-                      )
-                    }
-                  />
+                  <DetailsRow label="Location" value={booking.involvedLocations.map((location) => location.name).join(', ') || 'Not available'} />
                   <DetailsRow label="Resources" value={booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later'} />
                 </StackColumn>
-              </CardContent>
-            </Card>
+              </SettingsSectionCard>
+            </StackColumn>
 
-            {!isCancelled ? (
-              <MarketplaceProductBookingPaymentPanel
-                checkoutUrl={marketplaceBooking.bookingCheckoutSession?.checkoutUrl ?? null}
-                entityLabel="booking"
-                invoices={booking.arrearsInvoices ?? []}
-                invoiceUrl={marketplaceBooking.invoiceUrl ?? null}
-                isPaymentRequired={marketplaceBooking.isPaymentRequired}
-                paymentExpiry={marketplaceBooking.paymentExpiry}
-                paymentMethodType={marketplaceBooking.paymentMethod.type}
-                paymentStatusLabel={marketplaceBooking.paymentStatus.name}
-                paymentStatusType={marketplaceBooking.paymentStatus.type}
-              />
+            {booking.marketplaceBookingModifications.length > 0 ? (
+              <SettingsSectionCard title="Change History" description="Recorded schedule and resource changes for this booking." sx={{ mt: 0, gridColumn: { xs: '1', lg: '1' } }}>
+                {booking.marketplaceBookingModifications.map((modification) => (
+                  <StackColumn key={modification.id} spacing={0.25} sx={{ mb: 1.5 }}>
+                    <BodyIconTypography label={`${toStoredBookingDate(modification.originalFrom)} → ${toStoredBookingDate(modification.resultFrom)}`} />
+                    <SmallIconTypography
+                      label={`${dayjs(modification.occurredAt).format('D MMM YYYY, h:mm A')} · ${getMarketplaceBookingModificationActorLabel(modification.actorKind)}`}
+                      sx={{ opacity: 0.72 }}
+                    />
+                    <SmallIconTypography label={`Reason: ${modification.reason?.trim() || 'Not provided'}`} sx={{ opacity: 0.82 }} />
+                    <SmallIconTypography
+                      label={`Resources: ${modification.originalResourceNames.join(', ') || 'None'} → ${modification.resultResourceNames.join(', ') || 'None'}`}
+                      sx={{ opacity: 0.82 }}
+                    />
+                  </StackColumn>
+                ))}
+              </SettingsSectionCard>
             ) : null}
           </Box>
         )}
@@ -641,7 +771,14 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
 
 const DetailsRow = ({ label, value }: { label: string; value: ReactNode }) => (
   <StackColumn spacing={0.35}>
-    <SmallIconTypography label={label} sx={{ opacity: 0.62, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
+    <SmallIconTypography
+      label={label}
+      sx={{
+        opacity: 0.62,
+        textTransform: 'uppercase',
+        letterSpacing: '0.06em',
+      }}
+    />
     {typeof value === 'string' ? <SubtitleIconTypography label={value} /> : value}
   </StackColumn>
 );

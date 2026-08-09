@@ -1,11 +1,16 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change: 2.3.0 → 2.4.0
+Version change: 2.5.0 → 2.6.0
 
 Modified principles:
+  - II. Domain Ownership and Architecture Boundaries — API and repository methods MUST place all required
+    parameters before CancellationToken; CancellationToken MUST be the final parameter, and trailing optional
+    parameters are prohibited unless the contract explicitly requires optionality
   - IV. Frontend Consistency — added a mandatory public-documentation review/update for
     customer-facing or operator-facing behavior changes
+  - V. Change Safety and Pattern Consistency — local persisted-entity references MUST use
+    explicit EF Core foreign keys, with nullability defining relationship requiredness
 
 Added sections: none
 Removed sections: none
@@ -160,6 +165,13 @@ that list each supported source value. Direct `Enum.Parse`, `Enum.TryParse`, or 
 MUST NOT be used for source-to-model mapping; unknown values MUST follow the owning mapping's explicit fallback or
 error policy.
 
+#### API Parameter Ordering
+
+Public and internal API, service, and repository methods MUST declare all required parameters before the
+`CancellationToken`. The `CancellationToken` MUST be the final parameter in the signature and in every call. Do not
+add trailing optional parameters after it; make such parameters required, move them before the token, or introduce an
+explicit request/options model when optionality is part of the contract.
+
 Each domain (booking, organization, location, marketplace, etc.) owns its own data, services,
 workflows, and Kafka event definitions. Cross-domain collaboration MUST go through public
 service or event interfaces, never through direct database or internal-class access. GraphQL
@@ -259,6 +271,13 @@ required.
 Changes that affect contracts, schemas, event definitions, GraphQL types, or generated surfaces
 MUST explicitly account for regeneration and downstream impact before implementation begins.
 New work MUST favor consistency with existing patterns over introducing parallel abstractions.
+Local persisted-entity references MUST be modeled as explicit EF Core foreign keys with a
+navigation property. Nullable FK and navigation properties define optional relationships;
+non-nullable properties define required relationships. FK IDs and navigations MUST be grouped
+together in entity classes, with the repository's ReSharper suppression comment immediately
+above string ID properties. Plain indexed IDs are reserved for external, polymorphic,
+snapshot, or intentionally unresolved references. Entity configuration MUST be updated before
+regenerating migrations, migration designers, and model snapshots.
 Any deviation from established patterns — new frameworks, alternative persistence approaches,
 alternative event serialization — requires explicit justification documented in the relevant
 plan or ADR. Exceptions to any principle in this constitution MUST be rare, explicit, and
@@ -336,4 +355,4 @@ explicit, documented exception is agreed and committed alongside the change.
 
 ---
 
-**Version**: 2.1.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-07-28
+**Version**: 2.5.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-08-08

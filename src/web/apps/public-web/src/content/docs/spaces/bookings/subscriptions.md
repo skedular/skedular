@@ -17,7 +17,7 @@ terminologyRefs:
 relatedArticleIds:
   - spaces-bookings
   - spaces-products-pricing
-updatedAt: 2026-08-01
+updatedAt: 2026-08-07
 ---
 
 ## Understand Subscriptions in Spaces
@@ -67,6 +67,14 @@ After a Subscription is active, a later occurrence can fail independently if cap
 When payment has been captured and only part of a requested recurring series can be created, the target customer workflow shows the available and unavailable occurrences and gives the customer 24 hours to decide whether the partial series works. Acceptance keeps the created occurrences and refunds the unavailable portion. Rejection or no response cancels the created occurrences and refunds the full payment. This decision is recorded separately from the Subscription status and from the refund's provider status; see [Refunds](/docs/spaces/billing-and-payments/refunds) for the financial workflow.
 
 If payment for a recurring cycle expires or fails before confirmation, Spaces releases the affected unpaid-cycle capacity and retains the payment outcome. The Subscription configuration remains available for its normal lifecycle and operator review.
+
+## Modify one recurring Booking occurrence
+
+Customers can change an eligible occurrence from their Booking details, and authorized organization owners and administrators can make the change from the occurrence or Subscription workflow. The occurrence must be **Confirmed** or **Payment not required**, must not have started, and can move only within its current Subscription cycle. An operator must provide a reason, which is recorded with the change; Spaces notifies the customer and retains a delivery-recovery record when follow-up is needed.
+
+The actor chooses a new date and time and can select currently available Resources that the purchased Product can fulfill, up to the purchased Resource quantity. Spaces validates the complete proposed result against the original entitlement and live availability. If it cannot fulfill the proposal, it keeps the original occurrence unchanged and explains why.
+
+This change creates an occurrence override. It does not change the parent Subscription, Product, Price, payment or billing cadence, renewal, selected weekly days, or other occurrences. Subscription maintenance preserves the override rather than rewriting it to the recurring pattern.
 
 ## Auto-renewal
 

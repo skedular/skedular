@@ -49,7 +49,7 @@ public class CustomerLocationSettingsService(
             return entityMapper.MapTo(customer);
         }
 
-        customer.PreferredLocations = customer.PreferredLocations.Append(location).ToList();
+        customer.PreferredLocations = [.. customer.PreferredLocations, location];
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
@@ -63,7 +63,7 @@ public class CustomerLocationSettingsService(
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != locationId).ToList();
+        customer.PreferredLocations = [.. customer.PreferredLocations.Where(item => item.Id != locationId)];
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
@@ -81,7 +81,7 @@ public class CustomerLocationSettingsService(
             return entityMapper.MapTo(customer);
         }
 
-        customer.FavouriteLocations = customer.FavouriteLocations.Append(location).ToList();
+        customer.FavouriteLocations = [.. customer.FavouriteLocations, location];
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
@@ -90,7 +90,7 @@ public class CustomerLocationSettingsService(
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
         var customer = await customerHelperService.GetCustomerAsync(cancellationToken);
-        customer.FavouriteLocations = customer.FavouriteLocations.Where(item => item.Id != locationId).ToList();
+        customer.FavouriteLocations = [.. customer.FavouriteLocations.Where(item => item.Id != locationId)];
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 }

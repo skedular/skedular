@@ -38,6 +38,7 @@ public interface IRepositoryFactory
     IMarketplaceBookingFailureRepository MarketplaceBookingFailureRepository { get; }
     IMarketplaceBookingFailureEventRepository MarketplaceBookingFailureEventRepository { get; }
     IMarketplaceBookingFailureDeliveryRepository MarketplaceBookingFailureDeliveryRepository { get; }
+    IMarketplaceBookingModificationRepository MarketplaceBookingModificationRepository { get; }
     IAccountingInvoiceExportLinkRepository AccountingInvoiceExportLinkRepository { get; }
     IAccountingInvoiceInstanceRepository AccountingInvoiceInstanceRepository { get; }
     IAccountingContactLinkRepository AccountingContactLinkRepository { get; }
@@ -81,6 +82,7 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         MarketplaceBookingFailureRepository = new MarketplaceBookingFailureRepository(_dbContext, timeProvider);
         MarketplaceBookingFailureEventRepository = new MarketplaceBookingFailureEventRepository(_dbContext, timeProvider);
         MarketplaceBookingFailureDeliveryRepository = new MarketplaceBookingFailureDeliveryRepository(_dbContext, timeProvider);
+        MarketplaceBookingModificationRepository = new MarketplaceBookingModificationRepository(_dbContext, timeProvider);
         AccountingInvoiceExportLinkRepository = new AccountingInvoiceExportLinkRepository(_dbContext, timeProvider);
         AccountingInvoiceInstanceRepository = new AccountingInvoiceInstanceRepository(_dbContext, timeProvider);
         AccountingContactLinkRepository = new AccountingContactLinkRepository(_dbContext, timeProvider);
@@ -119,6 +121,7 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
     public IMarketplaceBookingFailureRepository MarketplaceBookingFailureRepository { get; }
     public IMarketplaceBookingFailureEventRepository MarketplaceBookingFailureEventRepository { get; }
     public IMarketplaceBookingFailureDeliveryRepository MarketplaceBookingFailureDeliveryRepository { get; }
+    public IMarketplaceBookingModificationRepository MarketplaceBookingModificationRepository { get; }
     public IAccountingInvoiceExportLinkRepository AccountingInvoiceExportLinkRepository { get; }
     public IAccountingInvoiceInstanceRepository AccountingInvoiceInstanceRepository { get; }
     public IAccountingContactLinkRepository AccountingContactLinkRepository { get; }

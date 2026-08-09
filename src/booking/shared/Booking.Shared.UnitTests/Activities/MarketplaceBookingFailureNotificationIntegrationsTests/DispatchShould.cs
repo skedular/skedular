@@ -72,7 +72,7 @@ public class DispatchShould
             .ThrowsAsync(new InvalidOperationException("mail unavailable"));
 
         await Should.ThrowAsync<ApplicationFailureException>(() => environment.RunAsync(() =>
-            sut.DispatchAsync(new DispatchMarketplaceBookingFailureNotificationsInput(failure.Id))));
+            sut.DispatchMarketplaceBookingFailureAsync(new DispatchMarketplaceBookingFailureNotificationsInput(failure.Id))));
 
         delivery.Status.ShouldBe(MarketplaceBookingFailureDeliveryStatusConstants.Failed);
         delivery.AttemptCount.ShouldBe(1);
@@ -127,7 +127,7 @@ public class DispatchShould
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, environment.CancellationTokenSource.Token)).Returns(transaction);
 
         await environment.RunAsync(() =>
-            sut.DispatchAsync(new DispatchMarketplaceBookingFailureNotificationsInput(failure.Id)));
+            sut.DispatchMarketplaceBookingFailureAsync(new DispatchMarketplaceBookingFailureNotificationsInput(failure.Id)));
 
         delivery.Status.ShouldBe(MarketplaceBookingFailureDeliveryStatusConstants.Sent);
         delivery.AttemptCount.ShouldBe(1);

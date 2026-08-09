@@ -389,7 +389,7 @@ public class BookingsPage(
             new HomeViewDefinition
             {
                 CallbackId = BookingsCallback,
-                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
+                Blocks = [.. blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1)],
                 PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
@@ -424,11 +424,12 @@ public class BookingsPage(
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>()
-                    .Concat(homeAndBackButtons)
-                    .Concat(addBookingButton)
-                    .Concat(feedbackButton)
-                    .ToList(),
+                Elements =
+                [
+                    .. homeAndBackButtons,
+                    .. addBookingButton,
+                    .. feedbackButton,
+                ],
             },
         ];
     }
@@ -544,10 +545,13 @@ public class BookingsPage(
 
         if (!bookingConnection.Edges.Any())
         {
-            return dateRangeActionBlock.Append(new SectionBlock
-            {
-                Text = "No booking found".ToMarkdown(),
-            }).ToList();
+            return
+            [
+                .. dateRangeActionBlock, new SectionBlock
+                {
+                    Text = "No booking found".ToMarkdown(),
+                },
+            ];
         }
 
         var totalBookingsCount = new SectionBlock
@@ -556,7 +560,7 @@ public class BookingsPage(
         };
         if (bookingConnection.TotalCount <= BookingsPageSize)
         {
-            return dateRangeActionBlock.Append(totalBookingsCount).ToList();
+            return [.. dateRangeActionBlock, totalBookingsCount];
         }
 
         pageContext = pageContext.Clone();

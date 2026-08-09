@@ -61,5 +61,9 @@
         <EmbeddedResource Include="EmailTemplates/BookingFailureCustomer/template.txt"/>
         <EmbeddedResource Include="EmailTemplates/BookingFailureInternal/template.html"/>
         <EmbeddedResource Include="EmailTemplates/BookingFailureInternal/template.txt"/>
+        <EmbeddedResource Include="EmailTemplates/MarketplaceBookingModificationCustomer/template.html"/>
+        <EmbeddedResource Include="EmailTemplates/MarketplaceBookingModificationCustomer/template.txt"/>
+        <EmbeddedResource Include="EmailTemplates/MarketplaceBookingModificationOrganization/template.html"/>
+        <EmbeddedResource Include="EmailTemplates/MarketplaceBookingModificationOrganization/template.txt"/>
     </ItemGroup>
 </Project>

@@ -51,7 +51,7 @@ public class EntityMapper : IEntityMapper
             Organization = MapTo(src.Organization),
         };
 
-        product.ProductVersions = MapTo(src.ProductVersions, src).ToList();
+        product.ProductVersions = [.. MapTo(src.ProductVersions, src)];
 
         return product;
     }
@@ -66,8 +66,8 @@ public class EntityMapper : IEntityMapper
             Currency = src.Currency.ToCurrency(),
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            OrganizationTags = MapTo(src.OrganizationTags).ToList(),
-            PricingOptions = src.PricingOptions.ToList(),
+            OrganizationTags = [.. MapTo(src.OrganizationTags)],
+            PricingOptions = [.. src.PricingOptions],
             Product = new Product
             {
                 Id = product.Id,
@@ -94,7 +94,7 @@ public class EntityMapper : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             Inactive = src.Inactive,
             Organization = organization,
-            ProductVersions = MapTo(src.ProductVersions, src).ToList(),
+            ProductVersions = [.. MapTo(src.ProductVersions, src)],
         };
 
     public Models.Organization MapTo(Organization src) =>
@@ -110,7 +110,7 @@ public class EntityMapper : IEntityMapper
             Website = src.Website,
             LogoUrl = src.LogoUrl,
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
-            Tags = MapTo(src.Tags).ToList(),
+            Tags = [.. MapTo(src.Tags)],
         };
 
     public Database.Entities.ProductVersion MapTo(
@@ -154,10 +154,10 @@ public class EntityMapper : IEntityMapper
         dest.ListingMetadata = src.ListingMetadata;
         dest.Type = src.Type.ToProductType();
         dest.Currency = src.Currency.ToCurrency();
-        dest.FeatureImages = src.FeatureImages.ToList();
-        dest.OrganizationTags = organizationTags.ToList();
+        dest.FeatureImages = [.. src.FeatureImages];
+        dest.OrganizationTags = [.. organizationTags];
         dest.Product = product;
-        dest.PricingOptions = src.PricingOptions.ToList();
+        dest.PricingOptions = [.. src.PricingOptions];
         return dest;
     }
 }

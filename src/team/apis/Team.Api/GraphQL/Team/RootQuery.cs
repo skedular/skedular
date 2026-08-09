@@ -49,7 +49,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 null,
                 where?.NameContains,
                 where is null ? [] : where.PrimaryLocationIds.ToSafeCollection()),
-            orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field)).ToList(),
+            [.. orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field))],
             cancellationToken);
 
         return new Connection<TeamEdge>
@@ -86,7 +86,7 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where?.CustomerId,
                 where?.NameContains,
                 where is null ? [] : where.PrimaryLocationIds.ToSafeCollection()),
-            orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field)).ToList(),
+            [.. orderBy.ToSafeCollection().Select(item => new TeamOrder(item.Direction, item.Field))],
             cancellationToken);
 
         return new Connection<TeamEdge>

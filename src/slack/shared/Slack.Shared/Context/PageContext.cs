@@ -89,7 +89,7 @@ public class PageContext
         }
 
         var page = VisitedPagesHistory.Last();
-        VisitedPagesHistory = VisitedPagesHistory.SkipLast(1).ToList();
+        VisitedPagesHistory = [.. VisitedPagesHistory.SkipLast(1)];
         return page;
     }
 }

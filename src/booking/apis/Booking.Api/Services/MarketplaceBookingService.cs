@@ -78,21 +78,23 @@ public class MarketplaceBookingService(
         }
 
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
-            booking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                .Select(item => item.Id)
-                .Distinct()
-                .ToList(),
-            booking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
-                .Select(item => item.CustomDomain!)
-                .Distinct()
-                .ToList(),
+            [
+                .. booking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                    .Select(item => item.Id)
+                    .Distinct(),
+            ],
+            [
+                .. booking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                    .Select(item => item.CustomDomain!)
+                    .Distinct(),
+            ],
             customer.Id,
             false,
             cancellationToken);
         var teams = await teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
-            booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
+            [.. booking.InvolvedTeams.Select(item => item.Id).Distinct()],
             customer.Id,
             false,
             cancellationToken);
@@ -286,21 +288,23 @@ public class MarketplaceBookingService(
         }
 
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
-            booking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                .Select(item => item.Id)
-                .Distinct()
-                .ToList(),
-            booking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
-                .Select(item => item.CustomDomain!)
-                .Distinct()
-                .ToList(),
+            [
+                .. booking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                    .Select(item => item.Id)
+                    .Distinct(),
+            ],
+            [
+                .. booking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                    .Select(item => item.CustomDomain!)
+                    .Distinct(),
+            ],
             callingCustomer.Id,
             true,
             cancellationToken);
         var teams = await teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
-            booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
+            [.. booking.InvolvedTeams.Select(item => item.Id).Distinct()],
             callingCustomer.Id,
             true,
             cancellationToken);

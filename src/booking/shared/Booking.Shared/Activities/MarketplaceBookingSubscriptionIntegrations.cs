@@ -223,7 +223,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 recurringBooking.MarketplaceBookingSubscription?.Id,
                 recurringBooking.StartDate,
                 recurringBooking.EndDate,
-                recurringBooking.RequestedResources.Select(item => item.Id).ToList(),
+                [.. recurringBooking.RequestedResources.Select(item => item.Id)],
                 MarketplaceBookingFailureCustomerActionConstants.ReviewSubscription,
                 null,
                 "Recurring booking payment was not completed before resources were released.",
@@ -488,14 +488,16 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 booking.From = dailyPlan.From;
                 booking.Until = dailyPlan.Until;
                 booking.Schedules = [new BookingSchedule(booking.From, booking.Until)];
-                booking.Resources = dailyPlan.Resources
-                    .Select(item => new ResourceCustomersPair(
-                        new Resource
-                        {
-                            Id = item.Id,
-                        },
-                        booking.InvolvedCustomers.ToList()))
-                    .ToList();
+                booking.Resources =
+                [
+                    .. dailyPlan.Resources
+                        .Select(item => new ResourceCustomersPair(
+                            new Resource
+                            {
+                                Id = item.Id,
+                            },
+                            [.. booking.InvolvedCustomers])),
+                ];
             }
 
             var marketplaceBooking = entityMapper.MapTo(recurringBooking.MarketplaceBooking)!;
@@ -516,8 +518,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 var createdBooking = await marketplaceBookingService.AddAsync(
                     booking,
                     recurringBooking.InvolvedCustomers.First(),
-                    recurringBooking.InvolvedOrganizations.ToList(),
-                    recurringBooking.InvolvedTeams.ToList(),
+                    [.. recurringBooking.InvolvedOrganizations],
+                    [.. recurringBooking.InvolvedTeams],
                     recurringBooking,
                     allowAutomaticResourceAssignment,
                     !isInitialSeriesMaterialization,
@@ -639,6 +641,9 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 null,
                 cancellationToken);
             var previousPreferredResourceIds = previousBookings
+                // A customer-selected resource on an overridden occurrence is local to that
+                // occurrence. It must never become the preferred resource for a renewed cycle.
+                .Where(item => item.HasRecurringInstanceOverrides != true)
                 .OrderByDescending(item => item.From)
                 .SelectMany(item => item.InvolvedResources.Select(resource => resource.Id))
                 .Distinct()
@@ -653,10 +658,11 @@ public class MarketplaceBookingSubscriptionIntegrations(
     }
 
     private static IReadOnlyList<string> ResolveRequiredResourceIds(MarketplaceBookingSubscription subscription) =>
-        subscription.RequestedResources
+    [
+        .. subscription.RequestedResources
             .Select(item => item.Id)
-            .Distinct()
-            .ToList();
+            .Distinct(),
+    ];
 
     private async Task<RecurringBooking> EnsureCurrentCycleRecurringBookingAsync(
         MarketplaceBookingSubscription subscription,
@@ -697,7 +703,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 Interval = 1,
                 ByMonthDay = null,
                 BySetPosition = null,
-                ByWeekDays = subscription.WeeklySelectedDays.Select(item => item.ToString()).ToList(),
+                ByWeekDays = [.. subscription.WeeklySelectedDays.Select(item => item.ToString())],
                 EndType = RecurringBookingEndTypeConstants.UntilDate,
                 StartDate = cycleStart,
                 EndDate = cycleEnd,
@@ -723,7 +729,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 new PayRecurringBookingViaCardInput(
                     recurringBooking.Id,
                     recurringMarketplaceBooking.PaymentExpiry,
-                    recurringMarketplaceBooking.InvoiceEmailList.ToList()),
+                    [.. recurringMarketplaceBooking.InvoiceEmailList]),
                 cancellationToken);
         }
         else if (ShouldStartRecurringBookingBankTransferPaymentWorkflow(recurringMarketplaceBooking))
@@ -732,7 +738,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 new PayRecurringBookingViaBankTransferInput(
                     recurringBooking.Id,
                     recurringMarketplaceBooking.PaymentExpiry,
-                    recurringMarketplaceBooking.InvoiceEmailList.ToList()),
+                    [.. recurringMarketplaceBooking.InvoiceEmailList]),
                 cancellationToken);
         }
 
@@ -770,7 +776,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 new PayRecurringBookingViaCardInput(
                     recurringBooking.Id,
                     marketplaceBooking.PaymentExpiry,
-                    marketplaceBooking.InvoiceEmailList.ToList()),
+                    [.. marketplaceBooking.InvoiceEmailList]),
                 cancellationToken);
         }
         else if (ShouldStartRecurringBookingBankTransferPaymentWorkflow(marketplaceBooking))
@@ -784,7 +790,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 new PayRecurringBookingViaBankTransferInput(
                     recurringBooking.Id,
                     marketplaceBooking.PaymentExpiry,
-                    marketplaceBooking.InvoiceEmailList.ToList()),
+                    [.. marketplaceBooking.InvoiceEmailList]),
                 cancellationToken);
         }
 
@@ -812,7 +818,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
         await temporalService.StartWorkflowGenerateInitialArrearsRecurringBookingInvoiceAsync(
             new GenerateInitialArrearsRecurringBookingInvoiceInput(
                 recurringBooking.Id,
-                recurringMarketplaceBooking.InvoiceEmailList.ToList()),
+                [.. recurringMarketplaceBooking.InvoiceEmailList]),
             cancellationToken);
     }
 
@@ -905,7 +911,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             }
 
             var renewedProductPricing =
-                productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions.ToList(),
+                productVersionHelperService.FindMatchingPricing([.. productVersion.PricingOptions],
                     subscription.MarketplaceBooking.ProductPricing);
             if (renewedProductPricing is null || !renewedProductPricing.SupportsSubscriptionAutoRenewal)
             {
@@ -931,11 +937,13 @@ public class MarketplaceBookingSubscriptionIntegrations(
                         RequiredDaysPerWeek = selectedDays.Count,
                     }
                     : renewedProductPricing;
-                subscription.WeeklySelectedDays = marketplaceBookingWeeklyDaySelectionService.Validate(
-                        validationPricing,
-                        selectedDays)
-                    .Select(item => item.ToDayOfWeek())
-                    .ToList();
+                subscription.WeeklySelectedDays =
+                [
+                    .. marketplaceBookingWeeklyDaySelectionService.Validate(
+                            validationPricing,
+                            selectedDays)
+                        .Select(item => item.ToDayOfWeek()),
+                ];
             }
             catch (MarketplaceBookingWeeklyDaySelectionInvalid exception)
             {

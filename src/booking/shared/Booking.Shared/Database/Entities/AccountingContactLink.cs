@@ -31,8 +31,8 @@ public class AccountingContactLinkConfiguration : IEntityTypeConfiguration<Accou
 
         builder.Property(item => item.Provider).HasMaxLength(Constants.MaxAccountingProviderLength);
         builder.Property(item => item.LocalEntityType).HasMaxLength(Constants.MaxAccountingEntityTypeLength);
-        builder.Property(item => item.LocalEntityId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
-        builder.Property(item => item.ExternalContactId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.LocalEntityId).HasMaxLength(Constants.MaxLocalEntityLength);
+        builder.Property(item => item.ExternalContactId).HasMaxLength(Constants.MaxExternalContactIdLength);
         builder.Property(item => item.ExternalContactName).HasMaxLength(Constants.MaxOrganizationNameLength);
         builder.Property(item => item.LastError).HasMaxLength(Constants.MaxAccountingErrorLength);
 

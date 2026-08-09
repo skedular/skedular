@@ -71,7 +71,7 @@ public class WorkspaceMemberService(
             .ToList();
 
         repositoryFactory.WorkspaceMemberRepository.RemoveRange(itemsToRemove);
-        existingWorkspace.WorkspaceMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingWorkspace.WorkspaceMembers = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         repositoryFactory.WorkspaceRepository.Update(existingWorkspace);
 

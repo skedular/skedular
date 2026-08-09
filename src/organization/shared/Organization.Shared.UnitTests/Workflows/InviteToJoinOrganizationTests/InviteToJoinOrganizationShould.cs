@@ -100,7 +100,7 @@ public class InviteToJoinOrganizationShould
 
                 await handle.GetResultAsync();
 
-                A.CallTo(() => mockInvitationActivity.ExpireInvitationAsync(A<string>._)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => mockInvitationActivity.ExpireOrganizationInvitationAsync(A<string>._)).MustHaveHappenedOnceExactly();
             },
             cancellationToken);
     }
@@ -131,7 +131,7 @@ public class InviteToJoinOrganizationShould
 
                 await handle.GetResultAsync();
 
-                A.CallTo(() => mockInvitationActivity.ExpireInvitationAsync(A<string>._)).MustNotHaveHappened();
+                A.CallTo(() => mockInvitationActivity.ExpireOrganizationInvitationAsync(A<string>._)).MustNotHaveHappened();
             },
             cancellationToken);
     }

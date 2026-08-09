@@ -195,7 +195,9 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 ResourceOrderField.Name => KeysetPaginationField<Resource>.Create(
                     nameof(Resource.Name),
@@ -203,8 +205,8 @@ public class ResourceRepository(LocationDbContext dbContext, TimeProvider timePr
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            })
-            .ToList();
+            }),
+        ];
     }
 
     /// <summary>

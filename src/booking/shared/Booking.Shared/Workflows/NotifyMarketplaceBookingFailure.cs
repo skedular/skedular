@@ -13,7 +13,7 @@ public class NotifyMarketplaceBookingFailure
     public async Task ExecuteAsync(NotifyMarketplaceBookingFailureInput input) =>
         await Workflow.ExecuteActivityAsync(
             (MarketplaceBookingFailureNotificationIntegrations activity) =>
-                activity.DispatchAsync(new DispatchMarketplaceBookingFailureNotificationsInput(input.FailureId)),
+                activity.DispatchMarketplaceBookingFailureAsync(new DispatchMarketplaceBookingFailureNotificationsInput(input.FailureId)),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(2),

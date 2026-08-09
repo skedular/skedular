@@ -17,13 +17,13 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IEntityMapp
     {
         var products = await repositoryFactory.ProductRepository.GetAllByOrganizationIdAsync(organizationId, cancellationToken);
 
-        await marketplacePublisher.PublishProductsAsync(products.Select(entityMapper.MapTo).ToList(), cancellationToken);
+        await marketplacePublisher.PublishProductsAsync([.. products.Select(entityMapper.MapTo)], cancellationToken);
     }
 
     public async Task RepublishAllProductsAsync(CancellationToken cancellationToken)
     {
         var products = await repositoryFactory.ProductRepository.GetAllUntrackedAsync(cancellationToken);
 
-        await marketplacePublisher.PublishProductsAsync(products.Select(entityMapper.MapTo).ToList(), cancellationToken);
+        await marketplacePublisher.PublishProductsAsync([.. products.Select(entityMapper.MapTo)], cancellationToken);
     }
 }

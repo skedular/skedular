@@ -60,8 +60,8 @@ public class EntityMapper : IEntityMapper
             PrimaryLocation = MapTo(src.PrimaryLocation),
         };
 
-        team.TeamMembers = MapTo(src.TeamMembers, team).ToList();
-        team.JoinInvitations = MapTo(src.JoinInvitations, team).ToList();
+        team.TeamMembers = [.. MapTo(src.TeamMembers, team)];
+        team.JoinInvitations = [.. MapTo(src.JoinInvitations, team)];
 
         return team;
     }
@@ -79,7 +79,7 @@ public class EntityMapper : IEntityMapper
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Timezone = src.Timezone;
-        dest.FeatureImages = src.FeatureImages.ToList();
+        dest.FeatureImages = [.. src.FeatureImages];
         dest.Organization = organization;
         dest.PrimaryLocation = primaryLocation;
         return dest;
@@ -134,7 +134,7 @@ public class EntityMapper : IEntityMapper
                 MiddleName = src.MiddleName,
                 FamilyName = src.FamilyName,
                 Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList(),
+                Identities = [.. MapTo(src.Identities)],
             };
 
     private IEnumerable<TeamMember> MapTo(IEnumerable<Database.Entities.TeamMember> src, Models.Team team) =>

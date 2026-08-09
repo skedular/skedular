@@ -262,7 +262,7 @@ public class BookingIntegrations(
                 null,
                 booking.From,
                 booking.Until,
-                booking.InvolvedResources.Select(item => item.Id).ToList(),
+                [.. booking.InvolvedResources.Select(item => item.Id)],
                 MarketplaceBookingFailureCustomerActionConstants.Rebook,
                 null,
                 "Payment was not completed before the booking resources were released.",

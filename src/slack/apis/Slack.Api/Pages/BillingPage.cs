@@ -47,7 +47,7 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
             new HomeViewDefinition
             {
                 CallbackId = BillingCallback,
-                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
+                Blocks = [.. blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1)],
                 PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
@@ -73,10 +73,11 @@ public class BillingPage(ICommonComponents commonComponents) : IBillingPage
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>()
-                    .Concat(homeAndBackButtons)
-                    .Concat(feedbackButton)
-                    .ToList(),
+                Elements =
+                [
+                    .. homeAndBackButtons,
+                    .. feedbackButton,
+                ],
             },
         ];
     }

@@ -30,8 +30,8 @@ public class AccountingPaymentEventConfiguration : IEntityTypeConfiguration<Acco
         builder.ConfigureEntityBase();
 
         builder.Property(item => item.Provider).HasMaxLength(Constants.MaxAccountingProviderLength);
-        builder.Property(item => item.ExternalInvoiceId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
-        builder.Property(item => item.ExternalPaymentId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.ExternalInvoiceId).HasMaxLength(Constants.MaxExternalInvoiceIdLength);
+        builder.Property(item => item.ExternalPaymentId).HasMaxLength(Constants.MaxExternalPaymentIdLength);
         builder.Property(item => item.ExternalStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
         builder.Property(item => item.PayloadJson).HasMaxLength(Constants.MaxDescriptionLength);
 

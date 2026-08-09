@@ -2,6 +2,8 @@ export { default as AppReviewBanner } from './app-shell/app-review-banner';
 export { default as AppShellLayout } from './app-shell/app-shell-layout';
 export type { AppShellNavigationItem } from './app-shell/app-shell-layout';
 export { default as ManagementPageShell } from './app-shell/management-page-shell';
+export { default as MarketplaceBookingModificationForm } from './marketplace-booking-modification-form';
+export type { MarketplaceBookingModificationFormValues, MarketplaceBookingResourceOption, MarketplaceBookingLocationOption } from './marketplace-booking-modification-form';
 export { default as OrganisationEmptyState } from './app-shell/organisation-empty-state';
 export * from './commons/index';
 export { default as EditorActionBar } from './editor-action-bar';

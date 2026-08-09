@@ -136,7 +136,7 @@ public class CustomerSubscriber(
             .ToList();
 
         repositoryFactory.IdentityRepository.RemoveRange(itemsToRemove);
-        existingCustomer.Identities = addedItems.Concat(updatedItems).ToList();
+        existingCustomer.Identities = [.. addedItems, .. updatedItems];
 
         return existingCustomer;
     }

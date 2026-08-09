@@ -4,6 +4,7 @@ using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
 using HotChocolate;
+using HotChocolate.Types;
 
 namespace Booking.Api.GraphQL.MarketplacePurchaseHistory;
 
@@ -34,6 +35,7 @@ public sealed class MarketplacePurchaseHistoryDetails
     public string? BookingId { get; init; }
     public required bool IsDeleted { get; init; }
 
+    [UseResolverScope]
     public async Task<MarketplaceRefundDetails?> GetRefund(
         [Service]
         IMarketplaceRefundReadService marketplaceRefundReadService,

@@ -30,20 +30,22 @@ public class LocationResourcesGrpcService(
         var (paginatedInfo, edges, totalCount) = await resourceService.GetPaginatedResourcesAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new ResourceSearchCriteria(request.Where.LocationId, request.Where.NameContains, request.Where.TagIds, request.Where.FloorPlanId),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Location.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    ResourceOrderField.ResourceName => Shared.Models.ResourceOrderField.Name,
-                    _ => throw new ArgumentOutOfRangeException(null,
-                        "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Location.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        ResourceOrderField.ResourceName => Shared.Models.ResourceOrderField.Name,
+                        _ => throw new ArgumentOutOfRangeException(null,
+                            "Unexpected value encountered. Update enum mapping or caller input to include this case."),
+                    };
 
-                return new ResourceOrder(direction, field);
-            }).ToList(),
+                    return new ResourceOrder(direction, field);
+                }),
+            ],
             context.CancellationToken);
 
         var connection = new ResourceConnection

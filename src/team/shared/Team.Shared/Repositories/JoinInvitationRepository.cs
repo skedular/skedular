@@ -139,7 +139,9 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 JoinTeamInvitationOrderField.CreatedAt => KeysetPaginationField<JoinInvitation>.Create(
                     nameof(JoinInvitation.CreatedAt),
@@ -151,7 +153,7 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(nameof(orderField.Field), orderField.Field,
                     $"Unexpected value for {nameof(orderField.Field)}: {orderField.Field}. Update enum mapping or caller input."),
-            })
-            .ToList();
+            }),
+        ];
     }
 }

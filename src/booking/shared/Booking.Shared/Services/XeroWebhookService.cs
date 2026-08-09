@@ -184,7 +184,7 @@ public class XeroWebhookService(
             syncTargets[key] = candidateTarget;
         }
 
-        return syncTargets.Values.ToList();
+        return [.. syncTargets.Values];
     }
 
     private static string? ResolveExternalInvoiceIdHint(AccountingInvoiceExportLink accountingInvoiceLink, string externalInvoiceId)

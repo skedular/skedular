@@ -176,6 +176,8 @@ type Mutation {
     @cost(weight: "10")
   updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload!
     @cost(weight: "10")
+  modifyMarketplaceBooking(input: ModifyMarketplaceBookingInput!): ModifyMarketplaceBookingPayload!
+    @cost(weight: "10")
   deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload!
     @cost(weight: "10")
   addMarketplaceBookingSubscription(
@@ -250,6 +252,14 @@ type BookingDetails @key(fields: "id") {
   cancellationAvailability: MarketplaceCancellationAvailabilityDetails!
     @cost(weight: "10")
   arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
+  marketplaceBookingModifications: [MarketplaceBookingModificationDetails!]!
+    @cost(weight: "10")
+  marketplaceBookingResourceSelection(
+    from: DateTime
+    until: DateTime
+    locationId: String
+  ): MarketplaceBookingResourceSelectionDetails! @cost(weight: "10")
+  entityFrameworkVersion: UnsignedInt!
   from: DateTime!
   until: DateTime!
   notes: String
@@ -461,9 +471,45 @@ type MarketplaceBookingInstanceEdge {
   cursor: String!
 }
 
+type MarketplaceBookingModificationConflictErrorDetails {
+  code: MarketplaceBookingModificationErrorCode!
+  message: String!
+  currentBooking: BookingDetails
+}
+
+type MarketplaceBookingModificationDetails {
+  id: String!
+  bookingId: String!
+  occurredAt: DateTime!
+  actorKind: MarketplaceBookingModificationActorKind!
+  reason: String
+  originalFrom: DateTime!
+  originalUntil: DateTime!
+  resultFrom: DateTime!
+  resultUntil: DateTime!
+  originalResourceIds: [String!]!
+  resultResourceIds: [String!]!
+  originalResourceNames: [String!]!
+  resultResourceNames: [String!]!
+  subscriptionOccurrenceOverride: Boolean!
+}
+
+type MarketplaceBookingModificationEligibilityErrorDetails {
+  code: MarketplaceBookingModificationErrorCode!
+  message: String!
+}
+
 type MarketplaceBookingPaymentStatusDetails {
   type: PaymentStatus!
   name: String!
+}
+
+type MarketplaceBookingResourceSelectionDetails {
+  canSelectResources: Boolean!
+  maximumResourceCount: Int!
+  eligibleResources: [BookingResourceDetails!]!
+  availableResourceIds: [String!]!
+  eligibleLocations: [Booking_LocationDetails!]!
 }
 
 type MarketplaceBookingSubscriptionCancellationModeDetails {
@@ -702,6 +748,16 @@ type MarketplaceRefundStatusDetails {
 type MarketplaceSubscriptionCancellationAvailabilityDetails {
   immediate: MarketplaceCancellationAvailabilityDetails!
   atPeriodEnd: MarketplaceCancellationAvailabilityDetails!
+}
+
+type ModifyMarketplaceBookingPayload {
+  clientMutationId: String
+  booking: BookingDetails
+  modification: MarketplaceBookingModificationDetails
+  eligibilityError: MarketplaceBookingModificationEligibilityErrorDetails
+  availabilityError: BookingAvailabilityErrorDetails
+  conflictError: MarketplaceBookingModificationConflictErrorDetails
+  accessError: SpacesAccessErrorDetails
 }
 
 type OrganizationArrearsInvoiceDetails {
@@ -1153,6 +1209,17 @@ input MarketplaceRefundWhereInput {
   requestedAtLte: DateTime
 }
 
+input ModifyMarketplaceBookingInput {
+  clientMutationId: String
+  bookingId: String!
+  expectedVersion: Int!
+  from: DateTime!
+  until: DateTime!
+  resourceIds: [String!]
+  reason: String!
+  actorKind: MarketplaceBookingModificationActorKind!
+}
+
 input OrganizationAvailableResourcesWhereInput {
   organizationId: String
   organizationCustomDomain: String
@@ -1360,6 +1427,22 @@ enum DayOfWeek {
   THURSDAY
   FRIDAY
   SATURDAY
+}
+
+enum MarketplaceBookingModificationActorKind {
+  CUSTOMER
+  ORGANIZATION_OPERATOR
+}
+
+enum MarketplaceBookingModificationErrorCode {
+  INVALID_INPUT
+  NOT_ELIGIBLE
+  UNAUTHORIZED
+  OPERATOR_REASON_REQUIRED
+  STALE_VERSION
+  UNAVAILABLE
+  INVALID_RESOURCE_SELECTION
+  OUTSIDE_SUBSCRIPTION_CYCLE
 }
 
 enum MarketplaceBookingPatchField {
@@ -1792,6 +1875,11 @@ scalar LocalDate
 scalar LocalTime
   @serializeAs(type: STRING, pattern: "^\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?$")
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/local-time.html")
+
+"The `UnsignedInt` scalar type represents an unsigned 32-bit integer."
+scalar UnsignedInt
+  @serializeAs(type: INT)
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/unsigned-int.html")
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost(

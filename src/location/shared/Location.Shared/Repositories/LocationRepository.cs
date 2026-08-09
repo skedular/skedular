@@ -288,7 +288,9 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 LocationOrderField.Name => KeysetPaginationField<Database.Entities.Location>.Create(
                     nameof(Database.Entities.Location.Name),
@@ -304,7 +306,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            })
-            .ToList();
+            }),
+        ];
     }
 }

@@ -13,7 +13,10 @@ public class MarketplaceBookingFailureEvent : EntityBase
     public DateTimeOffset OccurredAt { get; set; }
     public string? Reason { get; set; }
     public string? LastError { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? ActorCustomerId { get; set; }
+    public virtual Customer? ActorCustomer { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string MarketplaceBookingFailureId { get; set; }
@@ -30,9 +33,9 @@ public class MarketplaceBookingFailureEventConfiguration : IEntityTypeConfigurat
         builder.Property(item => item.EventType).HasMaxLength(Constants.MaxAccountingStatusLength);
         builder.Property(item => item.Reason).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.LastError).HasMaxLength(Constants.MaxAccountingErrorLength);
-        builder.Property(item => item.ActorCustomerId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
 
         builder.HasOne(item => item.MarketplaceBookingFailure).WithMany(item => item.Events).HasForeignKey(item => item.MarketplaceBookingFailureId);
+        builder.HasOne(item => item.ActorCustomer).WithMany().HasForeignKey(item => item.ActorCustomerId);
 
         builder.HasIndex(item => new
         {

@@ -54,7 +54,7 @@ public sealed class DayOfWeekListJsonConverter : JsonConverter<IReadOnlyList<Day
     public override IReadOnlyList<DayOfWeek> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var days = JsonSerializer.Deserialize<List<string>>(ref reader, options) ?? [];
-        return days.Select(Enum.Parse<DayOfWeek>).ToList();
+        return [.. days.Select(Enum.Parse<DayOfWeek>)];
     }
 
     public override void Write(Utf8JsonWriter writer, IReadOnlyList<DayOfWeek> value, JsonSerializerOptions options) =>

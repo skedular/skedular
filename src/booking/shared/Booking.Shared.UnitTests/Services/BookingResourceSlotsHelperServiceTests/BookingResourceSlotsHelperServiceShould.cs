@@ -46,7 +46,7 @@ public class BookingResourceSlotsHelperServiceShould
         A.CallTo(() => repositoryFactory.ResourceBookingSlotRepository).Returns(resourceBookingSlotRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => resourceBookingSlotRepository.UpdateRange(A<IEnumerable<ResourceBookingSlot>>._))
-            .Invokes((IEnumerable<ResourceBookingSlot> slots) => updatedSlots = slots.ToList());
+            .Invokes((IEnumerable<ResourceBookingSlot> slots) => updatedSlots = [.. slots]);
 
         // Act
         sut.RemoveAllSlotsFromBooking(booking);

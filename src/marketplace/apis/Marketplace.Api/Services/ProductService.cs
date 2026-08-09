@@ -502,7 +502,7 @@ public class ProductService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo, edges.Select(item => new Edge<Product>(entityMapper.MapTo(item.Node), item.Cursor)).ToList(), totalCount);
+        return (paginatedInfo, [.. edges.Select(item => new Edge<Product>(entityMapper.MapTo(item.Node), item.Cursor))], totalCount);
     }
 
     private async Task<Product> UpdateInternalAsync(
@@ -814,12 +814,8 @@ public class ProductService(
                     }
 
                     var orderedRules = pricing.CancellationRefundRules.OrderByDescending(item => item.MinutesBefore).ToList();
-                    if (orderedRules.Any(item => item.MinutesBefore < 0 || item.RefundPercentage is < 0 or > 100))
-                    {
-                        throw new ProductPricingCancellationPolicyInvalid();
-                    }
-
-                    if (orderedRules.Select(item => item.MinutesBefore).Distinct().Count() != orderedRules.Count)
+                    if (orderedRules.Any(item => item.MinutesBefore < 0 || item.RefundPercentage is < 0 or > 100) ||
+                        orderedRules.Select(item => item.MinutesBefore).Distinct().Count() != orderedRules.Count)
                     {
                         throw new ProductPricingCancellationPolicyInvalid();
                     }

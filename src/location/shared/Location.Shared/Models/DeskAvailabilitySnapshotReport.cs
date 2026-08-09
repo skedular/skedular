@@ -26,18 +26,22 @@ public class ResourceAvailabilitySnapshotReport : ModelBaseWithDeleted
             UnavailableCount = snapshots.Count(s => s.Classification == ResourceAvailabilityClassificationConstants.Unavailable),
             BookedCount = snapshots.Count(item => item.Classification == ResourceAvailabilityClassificationConstants.Booked),
             AvailableResourceNames =
-                snapshots
+            [
+                .. snapshots
                     .Where(item => item.Classification == ResourceAvailabilityClassificationConstants.Available)
-                    .Select(s => s.Resource.Name)
-                    .ToList(),
+                    .Select(s => s.Resource.Name),
+            ],
             UnavailableResourceNames =
-                snapshots
+            [
+                .. snapshots
                     .Where(s => s.Classification == ResourceAvailabilityClassificationConstants.Unavailable)
-                    .Select(s => s.Resource.Name)
-                    .ToList(),
-            BookedResourceNames = snapshots
-                .Where(s => s.Classification == ResourceAvailabilityClassificationConstants.Booked)
-                .Select(s => s.Resource.Name)
-                .ToList(),
+                    .Select(s => s.Resource.Name),
+            ],
+            BookedResourceNames =
+            [
+                .. snapshots
+                    .Where(s => s.Classification == ResourceAvailabilityClassificationConstants.Booked)
+                    .Select(s => s.Resource.Name),
+            ],
         };
 }

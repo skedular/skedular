@@ -11,6 +11,8 @@ using IPrivateBookingService = Booking.Api.Services.IPrivateBookingService;
 using IPrivateRecurringBookingService = Booking.Api.Services.IPrivateRecurringBookingService;
 using IResourceService = Booking.Api.Services.IResourceService;
 using MarketplaceBookingService = Booking.Api.Services.MarketplaceBookingService;
+using MarketplaceBookingModificationService = Booking.Api.Services.MarketplaceBookingModificationService;
+using IMarketplaceBookingModificationService = Booking.Api.Services.IMarketplaceBookingModificationService;
 using MarketplaceBookingSubscriptionService = Booking.Api.Services.MarketplaceBookingSubscriptionService;
 using PrivateBookingService = Booking.Api.Services.PrivateBookingService;
 using PrivateRecurringBookingService = Booking.Api.Services.PrivateRecurringBookingService;
@@ -45,6 +47,7 @@ public static class Extensions
                 .AddScoped<IPrivateBookingService, PrivateBookingService>()
                 .AddScoped<IPrivateRecurringBookingService, PrivateRecurringBookingService>()
                 .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>()
+                .AddScoped<IMarketplaceBookingModificationService, MarketplaceBookingModificationService>()
                 .AddScoped<IMarketplaceCancellationAvailabilityService, MarketplaceCancellationAvailabilityService>()
                 .AddScoped<ICancellationDecisionService, CancellationDecisionService>()
                 .AddScoped<IMarketplaceBookingFailureReadService, MarketplaceBookingFailureReadService>()

@@ -8,5 +8,5 @@ public sealed record ResourceSlotClaimResult(
     public static ResourceSlotClaimResult Success() => new(true, false, []);
 
     public static ResourceSlotClaimResult Conflict(IEnumerable<string> resourceIds, bool retryExhausted = false) =>
-        new(false, retryExhausted, resourceIds.Distinct().ToList());
+        new(false, retryExhausted, [.. resourceIds.Distinct()]);
 }

@@ -53,7 +53,7 @@ public class BookingService(
         await EnsureCustomerCanViewBookingAsync(booking, customerId, cancellationToken);
 
         var invoices = await repositoryFactory.OrganizationArrearsInvoiceRepository.GetByBookingIdUntrackedAsync(bookingId, cancellationToken);
-        return invoices.Select(sharedEntityMapper.MapTo).ToList();
+        return [.. invoices.Select(sharedEntityMapper.MapTo)];
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
@@ -105,8 +105,8 @@ public class BookingService(
         {
             accessScope = new BookingAccessScope(
                 [scopedOrganization.Id],
-                scopedOrganization.Locations.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id).ToList(),
-                scopedOrganization.Teams.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id).ToList());
+                [.. scopedOrganization.Locations.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id)],
+                [.. scopedOrganization.Teams.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id)]);
 
             searchCriteria = searchCriteria with
             {
@@ -118,14 +118,11 @@ public class BookingService(
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.LocationIds.Count != 0)
         {
             var locations =
-                await repositoryFactory.LocationRepository.GetActiveByIdsAsync(searchCriteria.LocationIds.Distinct().ToList(), cancellationToken);
+                await repositoryFactory.LocationRepository.GetActiveByIdsAsync([.. searchCriteria.LocationIds.Distinct()], cancellationToken);
 
             foreach (var location in locations)
             {
-                if (organizationIds is null)
-                {
-                    organizationIds = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-                }
+                organizationIds ??= await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
 
                 if (location.Organization is null || !organizationIds.Contains(location.Organization.Id))
                 {
@@ -133,19 +130,16 @@ public class BookingService(
                 }
             }
 
-            locationIds = searchCriteria.LocationIds.Distinct().ToList();
+            locationIds = [.. searchCriteria.LocationIds.Distinct()];
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.TeamIds.Count != 0)
         {
-            var teams = await repositoryFactory.TeamRepository.GetActiveByIdsAsync(searchCriteria.TeamIds.Distinct().ToList(), cancellationToken);
+            var teams = await repositoryFactory.TeamRepository.GetActiveByIdsAsync([.. searchCriteria.TeamIds.Distinct()], cancellationToken);
 
             foreach (var team in teams)
             {
-                if (organizationIds is null)
-                {
-                    organizationIds = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-                }
+                organizationIds ??= await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
 
                 if (team.Organization is null || !organizationIds.Contains(team.Organization.Id))
                 {
@@ -153,7 +147,7 @@ public class BookingService(
                 }
             }
 
-            teamIds = searchCriteria.TeamIds.Distinct().ToList();
+            teamIds = [.. searchCriteria.TeamIds.Distinct()];
         }
 
         if (accessScope is null &&
@@ -192,7 +186,7 @@ public class BookingService(
             accessScope,
             cancellationToken);
 
-        return (paginatedInfo, edges.Select(graphQlMapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, [.. edges.Select(graphQlMapper.MapTo)], totalCount);
     }
 
     private async Task<List<string>> GetCustomerOrganizationIdsAsync(
@@ -215,13 +209,13 @@ public class BookingService(
     private async Task<List<string>> GetCustomerLocationIdsAsync(string customerId, CancellationToken cancellationToken)
     {
         var locations = await repositoryFactory.LocationRepository.GetByCustomerIdAsync(customerId, false, cancellationToken);
-        return locations.Select(item => item.Id).ToList();
+        return [.. locations.Select(item => item.Id)];
     }
 
     private async Task<List<string>> GetCustomerTeamIdsAsync(string customerId, CancellationToken cancellationToken)
     {
         var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customerId, cancellationToken);
-        return teams.Select(item => item.Id).ToList();
+        return [.. teams.Select(item => item.Id)];
     }
 
     private async Task EnsureCustomerCanViewBookingAsync(
@@ -253,16 +247,18 @@ public class BookingService(
         }
 
         var teamIds = booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
-        if (teamIds.Count != 0)
+        if (teamIds.Count == 0)
         {
-            var teamEntities = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-            foreach (var team in teamEntities)
+            throw new UnauthorizedAccessException();
+        }
+
+        var teamEntities = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
+        foreach (var team in teamEntities)
+        {
+            if (team.Organization is not null &&
+                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
             {
-                if (team.Organization is not null &&
-                    await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
-                {
-                    return;
-                }
+                return;
             }
         }
 

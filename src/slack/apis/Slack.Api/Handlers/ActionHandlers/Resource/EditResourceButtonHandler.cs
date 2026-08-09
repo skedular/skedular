@@ -185,10 +185,13 @@ public class EditResourceButtonHandler(
             {
                 if (customTags is StaticMultiSelectValue value)
                 {
-                    resource.CustomTags = value.SelectedOptions.Select(item => new OrganizationCustomTag
-                    {
-                        Id = item.Value,
-                    }).ToList();
+                    resource.CustomTags =
+                    [
+                        .. value.SelectedOptions.Select(item => new OrganizationCustomTag
+                        {
+                            Id = item.Value,
+                        }),
+                    ];
                 }
                 else
                 {
@@ -207,10 +210,13 @@ public class EditResourceButtonHandler(
             {
                 if (zones is StaticMultiSelectValue value)
                 {
-                    resource.Zones = value.SelectedOptions.Select(item => new OrganizationZone
-                    {
-                        Id = item.Value,
-                    }).ToList();
+                    resource.Zones =
+                    [
+                        .. value.SelectedOptions.Select(item => new OrganizationZone
+                        {
+                            Id = item.Value,
+                        }),
+                    ];
                 }
                 else
                 {

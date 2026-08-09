@@ -460,9 +460,10 @@ public class MarketplaceRefundService(
     private static CancellationPolicySnapshot BuildPolicySnapshot(ProductPricing pricing, DateTimeOffset capturedAt) =>
         new(
             pricing.CancellationPolicyType.ToString(),
-            pricing.CancellationRefundRules
-                .Select(r => new CancellationRefundRuleSnapshot(r.MinutesBefore, r.RefundPercentage))
-                .ToList(),
+            [
+                .. pricing.CancellationRefundRules
+                    .Select(r => new CancellationRefundRuleSnapshot(r.MinutesBefore, r.RefundPercentage)),
+            ],
             capturedAt,
             pricing.Id);
 

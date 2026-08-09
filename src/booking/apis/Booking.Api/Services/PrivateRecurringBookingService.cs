@@ -53,22 +53,24 @@ public class PrivateRecurringBookingService(
         }
 
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
-            recurringBooking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                .Select(item => item.Id)
-                .Distinct()
-                .ToList(),
-            recurringBooking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
-                .Select(item => item.CustomDomain!)
-                .Distinct()
-                .ToList(),
+            [
+                .. recurringBooking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                    .Select(item => item.Id)
+                    .Distinct(),
+            ],
+            [
+                .. recurringBooking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                    .Select(item => item.CustomDomain!)
+                    .Distinct(),
+            ],
             customer.Id,
             false,
             cancellationToken);
 
         var teams = await teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
-            recurringBooking.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
+            [.. recurringBooking.InvolvedTeams.Select(item => item.Id).Distinct()],
             customer.Id,
             false,
             cancellationToken);
@@ -152,15 +154,17 @@ public class PrivateRecurringBookingService(
         }
 
         var teamIds = existingRecurringBooking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
-        if (teamIds.Count != 0)
+        if (teamIds.Count == 0)
         {
-            var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-            foreach (var team in teams)
+            return await sharedPrivateRecurringBookingService.DeleteAsync(existingRecurringBooking, customer, cancellationToken);
+        }
+
+        var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
+        foreach (var team in teams)
+        {
+            if (!await teamAuthorizationService.CanDeleteBookingAsync(team, customer.Id, cancellationToken))
             {
-                if (!await teamAuthorizationService.CanDeleteBookingAsync(team, customer.Id, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                throw new UnauthorizedAccessException();
             }
         }
 
@@ -189,21 +193,23 @@ public class PrivateRecurringBookingService(
         CancellationToken cancellationToken)
     {
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
-            recurringBooking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                .Select(item => item.Id)
-                .Distinct()
-                .ToList(),
-            recurringBooking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
-                .Select(item => item.CustomDomain!)
-                .Distinct()
-                .ToList(),
+            [
+                .. recurringBooking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                    .Select(item => item.Id)
+                    .Distinct(),
+            ],
+            [
+                .. recurringBooking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                    .Select(item => item.CustomDomain!)
+                    .Distinct(),
+            ],
             callingCustomer.Id,
             true,
             cancellationToken);
         var teams = await teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
-            recurringBooking.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
+            [.. recurringBooking.InvolvedTeams.Select(item => item.Id).Distinct()],
             callingCustomer.Id,
             true,
             cancellationToken);

@@ -23,7 +23,7 @@ public class LocationBookingDerivedState(
     ICachedLocationService cachedLocationService)
 {
     [Activity]
-    public async Task RecomputeAsync(string locationId)
+    public async Task RecomputeLocationBookingDerivedStateAsync(string locationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken);
@@ -139,7 +139,7 @@ public class LocationBookingDerivedState(
 
             result.AddRange(response.Edges.Select(edge => new BookingSnapshot(
                 edge.Node.From.ToDateTimeOffset(),
-                edge.Node.Resources.Select(resource => resource.Id).ToList())));
+                [.. edge.Node.Resources.Select(resource => resource.Id)])));
 
             after = response.PageInfo.HasNextPage ? response.PageInfo.EndCursor : null;
         } while (!string.IsNullOrWhiteSpace(after));

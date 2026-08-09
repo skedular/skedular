@@ -64,14 +64,16 @@ public class EventMapper : IEventMapper
                 _ => throw new ArgumentOutOfRangeException(nameof(customer.Type), customer.Type,
                     $"Unexpected value for {nameof(customer.Type)}: {customer.Type}. Update enum mapping or caller input."),
             },
-            Identities = customer.Identities
-                .Select(item => new Identity
-                {
-                    Id = item.Id,
-                    Email = item.Email.ToSafeString(),
-                    EmailVerified = item.EmailVerified,
-                })
-                .ToList(),
+            Identities =
+            [
+                .. customer.Identities
+                    .Select(item => new Identity
+                    {
+                        Id = item.Id,
+                        Email = item.Email.ToSafeString(),
+                        EmailVerified = item.EmailVerified,
+                    }),
+            ],
         };
     }
 
@@ -94,7 +96,7 @@ public class EventMapper : IEventMapper
         dest.PhotoUrl512 = src.PhotoUrl512;
         dest.PhoneNumber = src.PhoneNumber;
         dest.Type = src.Type.ToNullableCustomerType();
-        dest.Identities = identities.ToList();
+        dest.Identities = [.. identities];
         return dest;
     }
 
@@ -139,17 +141,17 @@ public class EventMapper : IEventMapper
             IsOwnershipVerified = src.IsOwnershipVerified,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             TermsOfUse = MapTo(src.TermsOfUse),
-            IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList(),
+            IndustrySubCategories = [.. MapTo(src.IndustrySubCategories)],
         };
 
-        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
-        organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
-        organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
-        organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
-        organization.Tags = MapTo(src.Tags, organization).ToList();
+        organization.OrganizationMembers = [.. MapTo(src.OrganizationMembers, organization)];
+        organization.OrganizationOfferings = [.. MapTo(src.OrganizationOfferings, organization)];
+        organization.DailyMemberCountRecordings = [.. MapTo(src.DailyMemberCountRecordings, organization)];
+        organization.JoinInvitations = [.. MapTo(src.JoinInvitations, organization)];
+        organization.Tags = [.. MapTo(src.Tags, organization)];
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
-        organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
-        organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
+        organization.OrganizationStripePaymentMethods = [.. MapTo(src.OrganizationStripePaymentMethods, organization)];
+        organization.OrganizationStripeConnectAccounts = [.. MapTo(src.OrganizationStripeConnectAccounts, organization)];
 
         return organization;
     }
@@ -216,7 +218,7 @@ public class EventMapper : IEventMapper
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
                 Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList(),
+                Identities = [.. MapTo(src.Identities)],
             };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
@@ -272,16 +274,18 @@ public class EventMapper : IEventMapper
             Organization = organization,
         };
 
-        organizationOffering.OrganizationOfferingActiveMembers = src.OrganizationOfferingActiveMembers
-            .Select(item => new OrganizationOfferingActiveMember
-            {
-                Id = item.Id,
-                CreatedAt = src.CreatedAt,
-                ModifiedAt = src.ModifiedAt,
-                OrganizationMember = MapTo(item.OrganizationMember, organization),
-                OrganizationOffering = organizationOffering,
-            })
-            .ToList();
+        organizationOffering.OrganizationOfferingActiveMembers =
+        [
+            .. src.OrganizationOfferingActiveMembers
+                .Select(item => new OrganizationOfferingActiveMember
+                {
+                    Id = item.Id,
+                    CreatedAt = src.CreatedAt,
+                    ModifiedAt = src.ModifiedAt,
+                    OrganizationMember = MapTo(item.OrganizationMember, organization),
+                    OrganizationOffering = organizationOffering,
+                }),
+        ];
 
         return organizationOffering;
     }

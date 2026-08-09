@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c0b7bd8b0a6ca1fd852664128ae48ccf>>
+ * @generated SignedSource<<81189f24dfa4f3116f44f7f4416c81b4>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type Currency = "NZD" | "USD" | "%future added value";
+export type MarketplaceBookingModificationActorKind = "CUSTOMER" | "ORGANIZATION_OPERATOR" | "%future added value";
 export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
@@ -42,6 +43,7 @@ export type editMarketplaceBooking_booking_query$data = {
     readonly category: {
       readonly category: BookingCategory;
     };
+    readonly entityFrameworkVersion: any;
     readonly from: any;
     readonly hasRecurringInstanceOverrides: boolean | null | undefined;
     readonly id: string;
@@ -95,6 +97,16 @@ export type editMarketplaceBooking_booking_query$data = {
         readonly xeroProcessingBlockedReason: string | null | undefined;
       } | null | undefined;
     } | null | undefined;
+    readonly marketplaceBookingModifications: ReadonlyArray<{
+      readonly actorKind: MarketplaceBookingModificationActorKind;
+      readonly id: string;
+      readonly occurredAt: any;
+      readonly originalFrom: any;
+      readonly originalResourceNames: ReadonlyArray<string>;
+      readonly reason: string | null | undefined;
+      readonly resultFrom: any;
+      readonly resultResourceNames: ReadonlyArray<string>;
+    }>;
     readonly notes: string | null | undefined;
     readonly recurringBooking: {
       readonly endDate: any | null | undefined;
@@ -168,6 +180,13 @@ v7 = {
   "kind": "ScalarField",
   "name": "invoiceUrl",
   "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "reason",
+  "storageKey": null
 };
 return {
   "argumentDefinitions": [
@@ -201,6 +220,13 @@ return {
       "plural": false,
       "selections": [
         (v0/*:: as any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "entityFrameworkVersion",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -461,13 +487,7 @@ return {
                   "name": "currencyToDisplay",
                   "storageKey": null
                 },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "reason",
-                  "storageKey": null
-                },
+                (v8/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -504,6 +524,61 @@ return {
                   "storageKey": null
                 }
               ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceBookingModificationDetails",
+          "kind": "LinkedField",
+          "name": "marketplaceBookingModifications",
+          "plural": true,
+          "selections": [
+            (v0/*:: as any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "occurredAt",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "actorKind",
+              "storageKey": null
+            },
+            (v8/*:: as any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "originalFrom",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "resultFrom",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "originalResourceNames",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "resultResourceNames",
               "storageKey": null
             }
           ],
@@ -599,6 +674,6 @@ return {
 };
 })();
 
-(node as any).hash = "9bb5a77a22b380ca156575ec21840661";
+(node as any).hash = "8f7640115497f7288a71cc1a95961844";
 
 export default node;

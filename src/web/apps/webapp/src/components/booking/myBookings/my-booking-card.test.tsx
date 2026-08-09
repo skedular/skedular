@@ -63,6 +63,7 @@ vi.mock(import('@skedular/shared'), async (importOriginal) => {
 
 vi.mock('@/components/links', () => ({
   getOrganizationBookingBaseLink: () => '/bookings/booking-1',
+  getMarketplaceBookingDetailsLink: () => '/marketplace/bookings/booking-1',
 }));
 
 vi.mock('@/components/moreActionsMenu', () => ({

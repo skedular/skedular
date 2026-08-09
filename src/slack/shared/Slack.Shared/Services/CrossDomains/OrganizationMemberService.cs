@@ -112,18 +112,21 @@ public class OrganizationMemberService(
                 HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges
-                .Select(item =>
-                {
-                    var member = grpcMapper.MapTo(item.Node);
-                    var matchingCustomer = customers.FirstOrDefault(customer => customer.Id == member.Customer.Id);
-                    if (matchingCustomer is not null)
+            Edges =
+            [
+                .. connection.Edges
+                    .Select(item =>
                     {
-                        member.Customer = matchingCustomer;
-                    }
+                        var member = grpcMapper.MapTo(item.Node);
+                        var matchingCustomer = customers.FirstOrDefault(customer => customer.Id == member.Customer.Id);
+                        if (matchingCustomer is not null)
+                        {
+                            member.Customer = matchingCustomer;
+                        }
 
-                    return new OrganizationMemberEdge(member, item.Cursor);
-                }).ToList(),
+                        return new OrganizationMemberEdge(member, item.Cursor);
+                    }),
+            ],
         };
     }
 }

@@ -13,15 +13,26 @@ using Booking.Shared.Database;
 using Enterprise.Shared;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Configurations;
+using Enterprise.Shared.Context;
 using Enterprise.Shared.Database.PostgreSql;
+using Enterprise.Shared.Encryption;
+using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Outbox.Temporal;
+using Enterprise.Shared.Random;
+using Enterprise.Shared.Telemetry;
+using Enterprise.Shared.Telemetry.PropagatorFunctions;
+using Enterprise.Shared.Temporal;
+using Enterprise.Shared.Temporal.Configurations;
 using Flurl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
+using OpenTelemetry.Context.Propagation;
 using Projects;
+using Temporalio.Client;
 using Testing.Shared.IntegrationTests;
 using Testing.Shared.IntegrationTests.Aspire;
 
@@ -45,6 +56,8 @@ public class Startup
 
         var kafkaConnectionString = distributedApp.GetConnectionStringAsync("kafka").Result;
         var bookingDbConnectionString = distributedApp.GetConnectionStringAsync("bookingdb").Result;
+        var temporalConnectionString = distributedApp.GetConnectionStringAsync("temporal").Result;
+        var schemaRegistryEndpoint = distributedApp.GetEndpoint("redpanda", "schema-registry").ToString();
 #pragma warning restore CA2012
 #pragma warning restore VSTHRD002
 #pragma warning restore VSTHRD104
@@ -60,6 +73,40 @@ public class Startup
         ArgumentNullException.ThrowIfNull(bookingApiClient.BaseAddress);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
+        configuration["Kafka:SchemaRegistry:Url"] = schemaRegistryEndpoint;
+        services.AddSingleton(
+            configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>() ??
+            new ApplicationConfiguration());
+        services.AddHttpContextAccessor();
+        services.AddSingleton<IContext, Context>();
+        services.AddSingleton<IActivityAccessor, ActivityAccessor>();
+        services.AddSingleton<IActivityGetter, ActivityGetter>();
+        services.AddSingleton(typeof(IActivityPropagator<>), typeof(ActivityPropagator<>));
+        services.AddSingleton<IPropagationContextGetter, PropagationContextGetter>();
+        services.AddSingleton<TextMapPropagator>(_ => Propagators.DefaultTextMapPropagator);
+        services.AddSingleton<IPropagatorFunctionProvider<IDictionary<string, string>>, StringDictionaryPropagatorFunctions>();
+        services.AddSingleton<IRandomHelper, RandomHelper>();
+        services.AddSingleton<ITemporalClient>(_ =>
+            TemporalClient.ConnectAsync(new TemporalClientConnectOptions
+            {
+                TargetHost = temporalConnectionString,
+                Namespace = "default",
+#pragma warning disable VSTHRD002
+            }).Result);
+#pragma warning restore VSTHRD002
+        services.AddSingleton<ITemporalHelperService, TemporalHelperService>();
+        services.AddSingleton(new TemporalConfiguration
+        {
+            Connection = new ConnectionConfig
+            {
+                Namespace = "default",
+                Target = temporalConnectionString ?? string.Empty,
+            },
+        });
+        services.AddTemporalOutboxService();
+        services.AddHybridCache();
+        services.AddSingleton<IGraphQlTopicEventSender, NoOpGraphQlTopicEventSender>();
+        services.AddSingleton<IStringEncryptionAlgorithm, StringEncryptionAlgorithm>();
         var bookingApiGrpcChannel = GrpcChannelFactory.Create(bookingApiGrpcEndpoint);
         var infrastructureSharedGrpcChannel = GrpcChannelFactory.Create(infrastructureSharedGrpcEndpoint);
 
@@ -109,7 +156,7 @@ public class Startup
             .AddSkedularGraphQLV1()
             .ConfigureHttpClient(
                 httpClient => httpClient.BaseAddress = bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri(),
-                builder => builder.AddHttpMessageHandler<TestBearerTokenHandler>())
+                clientBuilder => clientBuilder.AddHttpMessageHandler<TestBearerTokenHandler>())
             .ConfigureWebSocketClient(webSocketClient =>
             {
                 var wsUri = new UriBuilder(bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri())
@@ -118,5 +165,10 @@ public class Startup
                 }.Uri;
                 webSocketClient.Uri = wsUri;
             });
+    }
+
+    private sealed class NoOpGraphQlTopicEventSender : IGraphQlTopicEventSender
+    {
+        public Task RaiseGraphqlChangeAsync(string topicName, string id, CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }

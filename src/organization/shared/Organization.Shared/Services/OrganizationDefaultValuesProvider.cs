@@ -12,10 +12,11 @@ public interface IOrganizationDefaultValuesProvider
 public class OrganizationDefaultValuesProvider(IRandomHelper randomHelper) : IOrganizationDefaultValuesProvider
 {
     public IReadOnlyList<Tag> GetDefaultTags(Database.Entities.Organization organizationEntity) =>
-        GetResourceTags(organizationEntity)
-            .Concat(GetLocationSpaceTypeTags(organizationEntity))
-            .Concat(GetAmenitiesTags(organizationEntity))
-            .ToList();
+    [
+        .. GetResourceTags(organizationEntity),
+        .. GetLocationSpaceTypeTags(organizationEntity),
+        .. GetAmenitiesTags(organizationEntity),
+    ];
 
     private IEnumerable<Tag> GetResourceTags(Database.Entities.Organization organizationEntity) =>
     [

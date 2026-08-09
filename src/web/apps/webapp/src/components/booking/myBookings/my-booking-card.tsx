@@ -2,7 +2,7 @@ import { CustomerAvatar } from '@/components/avatars';
 import RecurringBookingDeleteConfirmationDialog from '@/components/booking/recurring-booking-delete-confirmation-dialog';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon, EllipseMenuIcon, NotesIcon, PaymentStatusIcon, PdfIcon, TeamIcon } from '@/components/icons';
-import { getOrganizationBookingBaseLink } from '@/components/links';
+import { getMarketplaceBookingDetailsLink, getOrganizationBookingBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { RefundStatusBadge } from '@/components/refund/RefundStatusBadge';
@@ -257,6 +257,9 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
   const recurringDeleteDialogDescription = pendingRecurringDeleteAction === 'occurrence' ? recurringOccurrenceDeleteConfirmationMessage : recurringDeleteConfirmationMessage;
   const recurringDeleteDialogPrimaryLabel =
     pendingRecurringDeleteAction === 'occurrence' ? 'Remove this booking' : isMarketplaceRecurringBooking ? 'Cancel series' : 'Remove series';
+  const bookingDetailsLink = bookingDetails.marketplaceBooking
+    ? getMarketplaceBookingDetailsLink(integratedPlatform, false, organizationCustomDomain, bookingDetails.id)
+    : getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     canEditRecurringSeries
@@ -296,7 +299,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        router.push(getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id));
+        router.push(bookingDetailsLink);
         break;
 
       case MoreActionsMenuOptionType.EditRecurringBooking:
@@ -532,13 +535,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
             <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'nowrap', gap: 2 }}>
               <StackColumn spacing={0.75} sx={{ minWidth: 0, flexGrow: 1 }}>
                 <Tooltip title={locationName}>
-                  <Link
-                    component={NextLink}
-                    href={getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id)}
-                    underline="none"
-                    color="inherit"
-                    sx={{ display: 'block', minWidth: 0, maxWidth: '100%' }}
-                  >
+                  <Link component={NextLink} href={bookingDetailsLink} underline="none" color="inherit" sx={{ display: 'block', minWidth: 0, maxWidth: '100%' }}>
                     <LeadIconTypography label={locationName} noWrap sx={{ minWidth: 0, maxWidth: '100%' }} />
                   </Link>
                 </Tooltip>

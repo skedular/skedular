@@ -57,7 +57,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         ITagService tagService,
         CancellationToken cancellationToken)
     {
-        var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var tags = await tagService.DeleteAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new OrganizationTagsPayload
         {
             ClientMutationId = input.ClientMutationId,
@@ -110,7 +110,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         ITagService tagService,
         CancellationToken cancellationToken)
     {
-        var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var tags = await tagService.DeleteAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new OrganizationTagsPayload
         {
             ClientMutationId = input.ClientMutationId,
@@ -164,7 +164,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         ITagService tagService,
         CancellationToken cancellationToken)
     {
-        var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var tags = await tagService.DeleteAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new OrganizationTagsPayload
         {
             ClientMutationId = input.ClientMutationId,

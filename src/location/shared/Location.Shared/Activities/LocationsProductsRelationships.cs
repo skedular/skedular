@@ -51,11 +51,13 @@ public class LocationsProductsRelationships(
                     Organization = location.Organization,
                     Location = location,
                     Product = product,
-                    OrganizationTags = organizationTagIds
-                        .Select(item => organizationTags.First(tag => tag.Id == item))
-                        .Where(item => !string.IsNullOrWhiteSpace(item.Type))
-                        .Where(item => OrganizationTagTypeConstants.ResourceTypes.Contains(item.Type!.ToOrganizationTagType()))
-                        .ToList(),
+                    OrganizationTags =
+                    [
+                        .. organizationTagIds
+                            .Select(item => organizationTags.First(tag => tag.Id == item))
+                            .Where(item => !string.IsNullOrWhiteSpace(item.Type))
+                            .Where(item => OrganizationTagTypeConstants.ResourceTypes.Contains(item.Type!.ToOrganizationTagType())),
+                    ],
                 });
 
                 locationIds.Add(location.Id);

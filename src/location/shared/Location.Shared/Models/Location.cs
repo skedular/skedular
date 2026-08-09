@@ -25,23 +25,25 @@ public class Location : ModelBaseWithDeleted
     public IReadOnlyList<OrganizationTag> OrganizationTags { get; set; } = [];
 
     public IReadOnlyList<OrganizationTag> CustomTags =>
-        Resources
+    [
+        .. Resources
             .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom))
             .GroupBy(item => item.Id)
-            .Select(group => group.First())
-            .ToList();
+            .Select(group => group.First()),
+    ];
 
     public IReadOnlyList<OrganizationTag> Zones =>
-        Resources.SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone))
+    [
+        .. Resources.SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone))
             .GroupBy(item => item.Id)
-            .Select(group => group.First())
-            .ToList();
+            .Select(group => group.First()),
+    ];
 
     public IReadOnlyList<OrganizationTag> SpaceTypes =>
-        OrganizationTags.Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => item.Type == tagType)).ToList();
+        [.. OrganizationTags.Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => item.Type == tagType))];
 
     public IReadOnlyList<OrganizationTag> Amenities =>
-        OrganizationTags.Where(item => OrganizationTagTypeConstants.Amenities.Any(tagType => item.Type == tagType)).ToList();
+        [.. OrganizationTags.Where(item => OrganizationTagTypeConstants.Amenities.Any(tagType => item.Type == tagType))];
 
     public IReadOnlyList<FloorPlan> FloorPlans { get; set; } = [];
     public LocationPhysicalAddress? PhysicalAddress { get; set; }

@@ -58,10 +58,13 @@ public class JoinBookingButtonHandler(
                     Id = workspace.Organization.Id,
                 },
             ],
-            InvolvedTeams = existingBooking.InvolvedTeams.Select(item => new Shared.Models.Team
-            {
-                Id = item.Id,
-            }).ToList(),
+            InvolvedTeams =
+            [
+                .. existingBooking.InvolvedTeams.Select(item => new Shared.Models.Team
+                {
+                    Id = item.Id,
+                }),
+            ],
         };
 
         await bookingService.AddPrivateAsync(workspaceMember.Id, booking, cancellationToken);

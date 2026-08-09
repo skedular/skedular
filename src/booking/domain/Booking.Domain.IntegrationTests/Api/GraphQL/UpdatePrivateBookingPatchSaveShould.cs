@@ -11,8 +11,7 @@ namespace Booking.Domain.IntegrationTests.Api.GraphQL;
 [Collection("Booking.Api")]
 public class UpdatePrivateBookingPatchSaveShould(
     IUpdatePrivateBookingPatchSaveMutation updatePrivateBookingPatchSaveMutation,
-    IRepositoryFactory repositoryFactory,
-    TimeProvider timeProvider)
+    IRepositoryFactory repositoryFactory)
 {
     [Theory]
     [AutoFakeItEasyData]
@@ -24,7 +23,7 @@ public class UpdatePrivateBookingPatchSaveShould(
         string updatedNotes,
         CancellationToken cancellationToken)
     {
-        var from = timeProvider.GetUtcNow().AddDays(1);
+        var from = new DateTimeOffset(2026, 8, 20, 10, 0, 0, TimeSpan.Zero);
         var until = from.AddHours(1);
         await SeedPrivateBookingAsync(bookingId, customerId, identityId, originalNotes, from, until, cancellationToken);
 

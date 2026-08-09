@@ -57,11 +57,11 @@ public class RootSubscription
         {
             Date = filter.Date,
             OrganizationCustomDomain = filter.OrganizationCustomDomain,
-            LocationIds = filter.LocationIds.ToList(),
+            LocationIds = [.. filter.LocationIds],
             FloorId = filter.FloorId,
             ZoneId = filter.ZoneId,
             ResourceType = filter.ResourceType,
-            Statuses = filter.Statuses.ToList(),
+            Statuses = [.. filter.Statuses],
         };
 
         var result = await service.GetAsync(domainFilter, [], [], cancellationToken);

@@ -413,7 +413,7 @@ public class BookingInvoiceService(
             ArgumentNullException.ThrowIfNull(marketplaceBooking);
             ArgumentNullException.ThrowIfNull(ProductVersion.PricingOptions);
 
-            var pricing = productVersionHelperService.FindMatchingPricing(ProductVersion.PricingOptions.ToList(), marketplaceBooking.ProductPricing);
+            var pricing = productVersionHelperService.FindMatchingPricing([.. ProductVersion.PricingOptions], marketplaceBooking.ProductPricing);
             ArgumentNullException.ThrowIfNull(pricing);
             return pricing;
         }

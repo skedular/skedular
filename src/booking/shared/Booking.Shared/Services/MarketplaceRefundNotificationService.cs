@@ -422,7 +422,7 @@ public class MarketplaceRefundNotificationService(
             }
         }
 
-        return emails.ToList();
+        return [.. emails];
     }
 
     private static bool IsValidEmailAddress(string value)

@@ -40,7 +40,7 @@ public class OrganizationOwnershipService(
 
         await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
         await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
-            organization.OrganizationMembers.Select(item => item.CustomerId).ToList(),
+            [.. organization.OrganizationMembers.Select(item => item.CustomerId)],
             cancellationToken);
 
         logger.LogInformation(
@@ -67,7 +67,7 @@ public class OrganizationOwnershipService(
 
         await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
         await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
-            organization.OrganizationMembers.Select(item => item.CustomerId).ToList(),
+            [.. organization.OrganizationMembers.Select(item => item.CustomerId)],
             cancellationToken);
 
         logger.LogWarning(

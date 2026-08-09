@@ -68,6 +68,7 @@ import MarketplaceProductBookingDetailsHero from '../marketplaceProductBooking/m
 import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from '../marketplaceProductBooking/marketplace-refund-status-card';
 import { canRequestMarketplaceSubscriptionCancellation } from '../marketplaceProductBooking/marketplace-self-service-eligibility';
+import { getSubscriptionOccurrenceModificationLabel } from './subscription-occurrence-display';
 
 type PendingCancellationConfirmation = {
   type: SupportedMarketplaceBookingSubscriptionCancellationMode;
@@ -943,7 +944,9 @@ const MarketplaceProductSubscriptionDetails = ({
                                   <StackColumn spacing={0.75} sx={{ alignItems: 'flex-end' }}>
                                     {isTodayBooking ? <Chip size="small" label="Today" color="primary" /> : null}
                                     {isResourceAssignmentPending ? <Chip size="small" label="Awaiting resource assignment" color="warning" variant="outlined" /> : null}
-                                    {booking.hasRecurringInstanceOverrides ? <Chip size="small" label="Individually updated" variant="outlined" /> : null}
+                                    {getSubscriptionOccurrenceModificationLabel(booking.hasRecurringInstanceOverrides) ? (
+                                      <Chip size="small" label={getSubscriptionOccurrenceModificationLabel(booking.hasRecurringInstanceOverrides)!} variant="outlined" />
+                                    ) : null}
                                     <Chip
                                       size="small"
                                       icon={<PaymentStatusIcon />}

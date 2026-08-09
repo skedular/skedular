@@ -74,21 +74,23 @@ public class TeamGrpcService(
                 request.Where.CustomerId,
                 request.Where.NameContains,
                 request.Where.PrimaryLocationIds.ToSafeCollection()),
-            request.OrderBy.Select(item =>
-            {
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    TeamOrderField.Name => Shared.Models.TeamOrderField.Name,
-                    TeamOrderField.About => Shared.Models.TeamOrderField.About,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
-                };
+                    var field = item.Field switch
+                    {
+                        TeamOrderField.Name => Shared.Models.TeamOrderField.Name,
+                        TeamOrderField.About => Shared.Models.TeamOrderField.About,
+                        _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                            $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
+                    };
 
-                var direction = item.Direction == OrderDirection.Ascending
-                    ? Enterprise.Shared.Pagination.OrderDirection.Ascending
-                    : Enterprise.Shared.Pagination.OrderDirection.Descending;
-                return new TeamOrder(direction, field);
-            }).ToList(),
+                    var direction = item.Direction == OrderDirection.Ascending
+                        ? Enterprise.Shared.Pagination.OrderDirection.Ascending
+                        : Enterprise.Shared.Pagination.OrderDirection.Descending;
+                    return new TeamOrder(direction, field);
+                }),
+            ],
             context.CancellationToken);
 
         var connection = new TeamConnection

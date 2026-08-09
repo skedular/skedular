@@ -167,7 +167,9 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 TeamMemberOrderField.Role => KeysetPaginationField<TeamMember>.Create(
                     nameof(TeamMember.Role),
@@ -194,7 +196,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(nameof(orderField.Field), orderField.Field,
                     $"Unexpected value for {nameof(orderField.Field)}: {orderField.Field}. Update enum mapping or caller input."),
-            })
-            .ToList();
+            }),
+        ];
     }
 }

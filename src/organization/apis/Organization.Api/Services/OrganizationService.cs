@@ -331,7 +331,7 @@ public class OrganizationService(
 
         await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
         await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
-            organization.OrganizationMembers.Select(item => item.CustomerId).ToList(),
+            [.. organization.OrganizationMembers.Select(item => item.CustomerId)],
             cancellationToken);
         await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync([customer.Id], cancellationToken);
 
@@ -427,7 +427,7 @@ public class OrganizationService(
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var myOrganizations = await cachedOrganizationService.GetMyOrganizationsByCustomerIdAsync(customerId, cancellationToken);
 
-        return graphQlMapper.MapTo(myOrganizations).ToList();
+        return [.. graphQlMapper.MapTo(myOrganizations)];
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(

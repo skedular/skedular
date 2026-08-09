@@ -240,11 +240,11 @@ public class GraphQlMapper : IGraphQlMapper
             InvoiceDueInDays = src.InvoiceDueInDays,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            RefundNotificationEmails = src.RefundNotificationEmails.ToList(),
+            RefundNotificationEmails = [.. src.RefundNotificationEmails],
             IsOwnershipVerified = src.IsOwnershipVerified,
-            FeatureImages = src.FeatureImages.ToList(),
+            FeatureImages = [.. src.FeatureImages],
             TermsOfUse = termsOfUse,
-            IndustrySubCategories = industrySubCategories.ToList(),
+            IndustrySubCategories = [.. industrySubCategories],
         };
 
     public Shared.Database.Entities.Organization MergeTo(
@@ -265,10 +265,10 @@ public class GraphQlMapper : IGraphQlMapper
         dest.InvoiceDueInDays = src.InvoiceDueInDays;
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
-        dest.RefundNotificationEmails = src.RefundNotificationEmails.ToList();
+        dest.RefundNotificationEmails = [.. src.RefundNotificationEmails];
         dest.IsOwnershipVerified = src.IsOwnershipVerified;
-        dest.FeatureImages = src.FeatureImages.ToList();
-        dest.IndustrySubCategories = industrySubCategories.ToList();
+        dest.FeatureImages = [.. src.FeatureImages];
+        dest.IndustrySubCategories = [.. industrySubCategories];
         return dest;
     }
 
@@ -295,7 +295,7 @@ public class GraphQlMapper : IGraphQlMapper
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
                 Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList(),
+                Identities = [.. MapTo(src.Identities)],
             };
 
     public Shared.Models.TermsOfUse? MapTo(TermsOfUse? src) =>
@@ -502,10 +502,13 @@ public class GraphQlMapper : IGraphQlMapper
             RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
-            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory
-            {
-                Id = item,
-            }).ToList(),
+            IndustrySubCategories =
+            [
+                .. src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory
+                {
+                    Id = item,
+                }),
+            ],
             TermsOfUse = new Shared.Models.TermsOfUse
             {
                 Id = src.TermsOfUseId,
@@ -1180,27 +1183,27 @@ public class GraphQlMapper : IGraphQlMapper
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             StripeAuthorizeExistingConnectAccountUrl = stripeAuthorizeExistingConnectAccountUrl,
             TermsOfUse = MapTo(src.TermsOfUse),
-            IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList(),
+            IndustrySubCategories = [.. MapTo(src.IndustrySubCategories, null)],
             OrganizationSsoSettings = MapTo(src.OrganizationSsoSettings),
             OrganizationTaxDetails = MapTo(src.OrganizationTaxDetails),
             OrganizationXeroConnection = MapTo(src.OrganizationXeroConnection),
         };
 
-        organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
-        organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
+        organization.OrganizationMembers = [.. MapTo(src.OrganizationMembers, organization)];
+        organization.OrganizationOfferings = [.. MapTo(src.OrganizationOfferings, organization)];
         organization.OrganizationSpacesSubscription = includeSpacesSubscription
             ? src.OrganizationOfferings.Where(item => IsSpacesOffering(src, item)).Select(item => MapToSpacesSubscription(item, src))
                 .SingleOrDefault()
             : null;
-        organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
-        organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
-        organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
-        organization.Tags = MapTo(src.Tags, organization).ToList();
+        organization.DailyMemberCountRecordings = [.. MapTo(src.DailyMemberCountRecordings, organization)];
+        organization.JoinInvitations = [.. MapTo(src.JoinInvitations, organization)];
+        organization.AzureTenants = [.. MapTo(src.AzureTenants, organization)];
+        organization.Tags = [.. MapTo(src.Tags, organization)];
         organization.PhysicalAddress = MapTo(src.PhysicalAddress, organization);
         organization.BillingDetails = MapTo(src.BillingDetails, organization);
-        organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
+        organization.OrganizationStripePaymentMethods = [.. MapTo(src.OrganizationStripePaymentMethods, organization)];
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
-        organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
+        organization.OrganizationStripeConnectAccounts = [.. MapTo(src.OrganizationStripeConnectAccounts, organization)];
 
         return organization;
     }
@@ -1405,7 +1408,7 @@ public class GraphQlMapper : IGraphQlMapper
             Name = src.Name,
         };
 
-        industryMainCategory.IndustrySubCategories = MapTo(src.IndustrySubCategories, industryMainCategory).ToList();
+        industryMainCategory.IndustrySubCategories = [.. MapTo(src.IndustrySubCategories, industryMainCategory)];
 
         return industryMainCategory;
     }
@@ -1541,7 +1544,7 @@ public class GraphQlMapper : IGraphQlMapper
             Organization = organization,
         };
 
-        azureTenant.AzureTenantMembers = MapTo(src.AzureTenantMembers, azureTenant).ToList();
+        azureTenant.AzureTenantMembers = [.. MapTo(src.AzureTenantMembers, azureTenant)];
 
         return azureTenant;
     }

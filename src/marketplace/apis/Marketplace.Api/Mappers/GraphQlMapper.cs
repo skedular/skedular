@@ -26,11 +26,14 @@ public class GraphQlMapper : IGraphQlMapper
             Currency = src.Currency,
             Type = src.Type,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
-            {
-                Id = item,
-            }).ToList(),
-            PricingOptions = src.PricingOptions.ToList(),
+            OrganizationTags =
+            [
+                .. src.TagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }),
+            ],
+            PricingOptions = [.. src.PricingOptions],
         };
 
     public ProductVersion MapTo(UpdateProductInput src) =>
@@ -40,11 +43,14 @@ public class GraphQlMapper : IGraphQlMapper
             Currency = src.Currency,
             Type = src.Type,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            OrganizationTags = src.TagIds.Select(item => new OrganizationTag
-            {
-                Id = item,
-            }).ToList(),
-            PricingOptions = src.PricingOptions.ToList(),
+            OrganizationTags =
+            [
+                .. src.TagIds.Select(item => new OrganizationTag
+                {
+                    Id = item,
+                }),
+            ],
+            PricingOptions = [.. src.PricingOptions],
         };
 
     public ProductDetails? MapTo(Product? src)

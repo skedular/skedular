@@ -89,11 +89,12 @@ public class PrivateBookingService(
                     customerEntities.First(),
                     booking.From,
                     booking.Until,
-                    booking.InvolvedOrganizations.Where(item => !string.IsNullOrWhiteSpace(item.Id)).Select(item => item.Id).ToList(),
-                    booking.InvolvedOrganizations
-                        .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
-                        .Select(item => item.CustomDomain!)
-                        .ToList(),
+                    [.. booking.InvolvedOrganizations.Where(item => !string.IsNullOrWhiteSpace(item.Id)).Select(item => item.Id)],
+                    [
+                        .. booking.InvolvedOrganizations
+                            .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                            .Select(item => item.CustomDomain!),
+                    ],
                     cancellationToken);
             }
         }
@@ -229,6 +230,7 @@ public class PrivateBookingService(
                 resourceIds,
                 [],
                 [],
+                [],
                 cancellationToken);
 
             // If no requested resource is available, try to auto-pick one by customer preference.
@@ -238,14 +240,16 @@ public class PrivateBookingService(
                     customerEntities.First(),
                     booking.From,
                     booking.Until,
-                    booking.InvolvedOrganizations
-                        .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                        .Select(item => item.Id)
-                        .ToList(),
-                    booking.InvolvedOrganizations
-                        .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
-                        .Select(item => item.CustomDomain!)
-                        .ToList(),
+                    [
+                        .. booking.InvolvedOrganizations
+                            .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                            .Select(item => item.Id),
+                    ],
+                    [
+                        .. booking.InvolvedOrganizations
+                            .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                            .Select(item => item.CustomDomain!),
+                    ],
                     cancellationToken);
             }
         }

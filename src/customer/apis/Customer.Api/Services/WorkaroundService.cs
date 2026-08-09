@@ -38,7 +38,7 @@ public class WorkaroundService(
         logger.LogInformation("Backfill: republishing all customers");
 
         var customers = await repositoryFactory.CustomerRepository.GetAllUntrackedAsync(cancellationToken);
-        await customerPublisher.PublishCustomersAsync(customers.Select(entityMapper.MapTo).ToList(), cancellationToken);
+        await customerPublisher.PublishCustomersAsync([.. customers.Select(entityMapper.MapTo)], cancellationToken);
 
         logger.LogInformation("Backfill: republish dispatched for {CustomerCount} customers", customers.Count);
     }

@@ -206,10 +206,13 @@ public class EditBookingButtonHandler(
             {
                 if (block is StaticMultiSelectValue value)
                 {
-                    booking.Resources = value.SelectedOptions.Select(item => new Shared.Models.Resource
-                    {
-                        Id = item.Value,
-                    }).ToList();
+                    booking.Resources =
+                    [
+                        .. value.SelectedOptions.Select(item => new Shared.Models.Resource
+                        {
+                            Id = item.Value,
+                        }),
+                    ];
                 }
                 else
                 {
@@ -296,7 +299,7 @@ public class EditBookingButtonHandler(
             workspace.Organization.Id,
             booking.From.ToDate(),
             booking.Until.ToDate(),
-            booking.Resources.Select(item => item.Id).ToList(),
+            [.. booking.Resources.Select(item => item.Id)],
             cancellationToken);
 
         var resourcesOptions = availableResources.Select(item =>
@@ -324,7 +327,7 @@ public class EditBookingButtonHandler(
         {
             ActionId = ResourcesKey,
             Options = resourcesOptions,
-            InitialOptions = resourcesOptions.Where(item => resourceIds.Contains(item.Value)).ToList(),
+            InitialOptions = [.. resourcesOptions.Where(item => resourceIds.Contains(item.Value))],
         };
 
         return new InputBlock

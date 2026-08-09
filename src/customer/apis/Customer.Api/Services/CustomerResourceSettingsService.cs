@@ -44,7 +44,7 @@ public class CustomerResourceSettingsService(
             return entityMapper.MapTo(customer);
         }
 
-        customer.PreferredResources = customer.PreferredResources.Append(resource).ToList();
+        customer.PreferredResources = [.. customer.PreferredResources, resource];
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
@@ -58,7 +58,7 @@ public class CustomerResourceSettingsService(
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        customer.PreferredResources = customer.PreferredResources.Where(item => item.Id != resourceId).ToList();
+        customer.PreferredResources = [.. customer.PreferredResources.Where(item => item.Id != resourceId)];
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 }

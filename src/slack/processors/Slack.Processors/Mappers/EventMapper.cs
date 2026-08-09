@@ -79,14 +79,16 @@ public class EventMapper : IEventMapper
                 _ => throw new ArgumentOutOfRangeException(nameof(customer.Type), customer.Type,
                     $"Unexpected value for {nameof(customer.Type)}: {customer.Type}. Update enum mapping or caller input."),
             },
-            Identities = customer.Identities
-                .Select(item => new Identity
-                {
-                    Id = item.Id,
-                    Email = item.Email.ToSafeString(),
-                    EmailVerified = item.EmailVerified,
-                })
-                .ToList(),
+            Identities =
+            [
+                .. customer.Identities
+                    .Select(item => new Identity
+                    {
+                        Id = item.Id,
+                        Email = item.Email.ToSafeString(),
+                        EmailVerified = item.EmailVerified,
+                    }),
+            ],
         };
     }
 
@@ -99,7 +101,7 @@ public class EventMapper : IEventMapper
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Timezone = src.Timezone;
         dest.Type = src.Type.ToNullableCustomerType();
-        dest.Identities = identities.ToList();
+        dest.Identities = [.. identities];
 
         return dest;
     }
@@ -174,30 +176,33 @@ public class EventMapper : IEventMapper
             IsOwnershipVerified = organizationAfterState.IsOwnershipVerified,
         };
 
-        organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
-        {
-            Id = item.Id,
-            Role = item.Role switch
+        organization.OrganizationMembers =
+        [
+            .. organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
             {
-                OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
-                OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
-                OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
-                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
-            },
-            Status = item.Status switch
-            {
-                OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
-                OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
-                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
-            },
-            Customer = new Customer
-            {
-                Id = item.CustomerId,
-            },
-            Organization = organization,
-        }).ToList();
+                Id = item.Id,
+                Role = item.Role switch
+                {
+                    OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
+                    OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
+                    OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
+                        $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
+                },
+                Status = item.Status switch
+                {
+                    OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
+                    OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
+                        $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
+                },
+                Customer = new Customer
+                {
+                    Id = item.CustomerId,
+                },
+                Organization = organization,
+            }),
+        ];
 
         organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
             ? null

@@ -121,7 +121,7 @@ public class LocationDailyUpdaterService(
                     {
                         Text = workspaceMemberService.GetMentionedCustomerNameInSlackFormat(
                             workspace,
-                            customer.Identities.Select(item => item.Id).ToList(),
+                            [.. customer.Identities.Select(item => item.Id)],
                             customer).ToMarkdownWithIcon(Icons.People),
                     });
                     blocks.AddRange(bookingComponents.GetResourcesLines(booking));

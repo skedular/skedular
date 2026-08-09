@@ -96,6 +96,30 @@ This file applies to the whole repository.
 - Service-layer code may coordinate repository calls and construct domain/entity values, but it must not reach through
   `IRepositoryFactory.DbContext`.
 
+## API Parameter Ordering
+
+- Put all required parameters before `CancellationToken`.
+- `CancellationToken` must be the final parameter in method signatures and call sites.
+- Do not add optional parameters after `CancellationToken`; use a required parameter, move it before the token, or use
+  an explicit request/options model when optionality is required.
+
+## Entity Foreign-Key Conventions
+
+- Any property that references a local persisted entity must be modeled as an EF Core foreign key, not only as an
+  indexed string ID. Add the corresponding navigation property and explicit `HasOne(...).WithMany().HasForeignKey(...)`
+  mapping.
+- Let nullable-reference-type annotations define relationship requiredness: non-nullable FK/navigation properties are
+  required; nullable FK/navigation properties are optional. Keep the annotations consistent and do not add
+  `IsRequired()`
+  solely to override them.
+- Group each FK ID immediately with its navigation property. Place related FK/navigation pairs together before unrelated
+  scalar fields. For string IDs, keep the repository convention comment immediately above the property:
+  `// ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength`.
+- Use plain indexed IDs only for external identifiers, polymorphic references, snapshots, or intentionally unresolved
+  recovery/audit values that cannot safely reference a local row.
+- When adding or correcting relationships, update the entity configuration first and regenerate the EF migration,
+  migration designer, and model snapshot. Do not hand-edit generated metadata as a substitute for the source mapping.
+
 ## Shared Xero Wiring
 
 - Reusable Xero configuration and Enterprise-level service registration live in

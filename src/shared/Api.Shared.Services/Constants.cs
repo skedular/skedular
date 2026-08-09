@@ -30,6 +30,8 @@ public static class Constants
 
     public const int MaxDescriptionLength = 100000;
 
+    public const int MaxCorrelationIdLength = 200;
+
     public const int MaxOrganizationCustomDomainLength = 63;
     public const int MaxOrganizationNameLength = 200;
     public const int MaxOrganizationIndustryMainCategoryNameLength = 100;
@@ -42,6 +44,7 @@ public static class Constants
     public const int MaxResourceNameLength = 200;
     public const int MaxResourceAvailabilityClassificationLength = 32;
 
+    public const int MaxBrandingThemeLength = 200;
     public const int MaxTagNameLength = 100;
     public const int MaxTagDescriptionLength = 1000;
     public const int MaxTagTypeLength = 50;
@@ -133,7 +136,6 @@ public static class Constants
     public const int MaxAccountingProviderLength = 32;
     public const int MaxAccountingEntityTypeLength = 64;
     public const int MaxAccountingStatusLength = 64;
-    public const int MaxAccountingExternalIdLength = 200;
     public const int MaxAccountingAccountCodeLength = 50;
     public const int MaxAccountingReferencePrefixLength = 100;
     public const int MaxAccountingScopesLength = 4000;
@@ -141,6 +143,16 @@ public static class Constants
     public const int MaxEncryptedTokenLength = 10000;
     public const int MaxXeroTenantIdLength = 100;
     public const int MaxXeroBillingModeLength = 50;
+    public const int MaxLocalEntityLength = 200;
+    public const int MaxExternalContactIdLength = 200;
+    public const int MaxExternalInvoiceIdLength = 200;
+    public const int MaxSourcePaymentReferenceLength = 200;
+    public const int MaxExternalRefundIdLength = 200;
+    public const int MaxExternalPaymentRefundIdLength = 200;
+    public const int MaxFailureKeyLength = 200;
+    public const int MaxExternalPaymentIdLength = 200;
+    public const int MaxExternalDeliverKeyLength = 200;
+    public const int MaxRecipientKeyLength = 200;
 
     public const int MaxRefundCorrelationIdLength = 128;
     public const int MaxRefundProviderLength = 64;

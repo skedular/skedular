@@ -82,41 +82,47 @@ public class EventMapper : IEventMapper
             IsOwnershipVerified = organizationAfterState.IsOwnershipVerified,
         };
 
-        organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
-        {
-            Id = item.Id,
-            EventRaisedAt = eventRaisedAt,
-            Role = item.Role switch
+        organization.OrganizationMembers =
+        [
+            .. organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
             {
-                OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
-                OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
-                OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
-                    $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
-            },
-            Status = item.Status switch
-            {
-                OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
-                OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
-                    $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
-            },
-            Customer = new Shared.Models.Customer
-            {
-                Id = item.CustomerId,
-            },
-            Organization = organization,
-        }).ToList();
+                Id = item.Id,
+                EventRaisedAt = eventRaisedAt,
+                Role = item.Role switch
+                {
+                    OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
+                    OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
+                    OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Role), item.Role,
+                        $"Unexpected value for {nameof(item.Role)}: {item.Role}. Update enum mapping or caller input."),
+                },
+                Status = item.Status switch
+                {
+                    OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
+                    OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
+                    _ => throw new ArgumentOutOfRangeException(nameof(item.Status), item.Status,
+                        $"Unexpected value for {nameof(item.Status)}: {item.Status}. Update enum mapping or caller input."),
+                },
+                Customer = new Shared.Models.Customer
+                {
+                    Id = item.CustomerId,
+                },
+                Organization = organization,
+            }),
+        ];
 
-        organization.Tags = organizationAfterState.Tags.Select(item => new OrganizationTag
-        {
-            Id = item.Id,
-            EventRaisedAt = eventRaisedAt,
-            Name = item.Name.ToSafeString(),
-            Type = item.Type.ToNullableOrganizationTagType(),
-            Color = item.Color.ToSafeString(),
-            Organization = organization,
-        }).ToList();
+        organization.Tags =
+        [
+            .. organizationAfterState.Tags.Select(item => new OrganizationTag
+            {
+                Id = item.Id,
+                EventRaisedAt = eventRaisedAt,
+                Name = item.Name.ToSafeString(),
+                Type = item.Type.ToNullableOrganizationTagType(),
+                Color = item.Color.ToSafeString(),
+                Organization = organization,
+            }),
+        ];
 
         organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
             ? null
@@ -158,14 +164,17 @@ public class EventMapper : IEventMapper
             },
         };
 
-        location.Resources = locationAfterState.Resources.Select(item =>
-            new Shared.Models.Resource
-            {
-                Id = item.Id,
-                DeletedAt = deletedAt,
-                EventRaisedAt = eventRaisedAt,
-                Location = location,
-            }).ToList();
+        location.Resources =
+        [
+            .. locationAfterState.Resources.Select(item =>
+                new Shared.Models.Resource
+                {
+                    Id = item.Id,
+                    DeletedAt = deletedAt,
+                    EventRaisedAt = eventRaisedAt,
+                    Location = location,
+                }),
+        ];
 
         return location;
     }
@@ -197,12 +206,12 @@ public class EventMapper : IEventMapper
                 PhoneNumber = src.PhoneNumber,
                 BillingDetails = MapBillingDetails(src.BillingDetails),
                 IsOnboardingDone = src.IsOnboardingDone,
-                Identities = MapIdentities(src.Identities).ToList(),
+                Identities = [.. MapIdentities(src.Identities)],
                 DefaultOrganization = MapOrganization(src.DefaultOrganization),
-                PreferredLocations = MapLocations(src.PreferredLocations).ToList(),
-                PreferredResources = MapResources(src.PreferredResources).ToList(),
-                PreferredOrganizationTags = MapOrganizationTags(src.PreferredOrganizationTags).ToList(),
-                FavouriteLocations = MapLocations(src.FavouriteLocations).ToList(),
+                PreferredLocations = [.. MapLocations(src.PreferredLocations)],
+                PreferredResources = [.. MapResources(src.PreferredResources)],
+                PreferredOrganizationTags = [.. MapOrganizationTags(src.PreferredOrganizationTags)],
+                FavouriteLocations = [.. MapLocations(src.FavouriteLocations)],
                 PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility(),
                 Type = src.Type.ToCustomerType(),
             };

@@ -49,7 +49,7 @@ public class LocationRestrictedInformationService(
         var restrictedInformation =
             await repositoryFactory.LocationRestrictedInformationRepository.GetActiveByLocationIdUntrackedAsync(locationId, cancellationToken);
 
-        return restrictedInformation.Select(MapTo).ToList();
+        return [.. restrictedInformation.Select(MapTo)];
     }
 
     public async Task<Shared.Models.Location> AddAsync(

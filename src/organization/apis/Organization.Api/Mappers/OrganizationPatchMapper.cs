@@ -144,7 +144,7 @@ public class OrganizationPatchMapper : IOrganizationPatchMapper
                 OrganizationPatchField.RefundNotificationEmails => ApplyStringListPatch(
                     request.RefundNotificationEmails,
                     organization.RefundNotificationEmails,
-                    value => organization.RefundNotificationEmails = value.ToList()) || changed,
+                    value => organization.RefundNotificationEmails = [.. value]) || changed,
                 OrganizationPatchField.IndustrySubCategories => ApplyIndustrySubCategoriesPatch(industrySubCategories, organization) || changed,
                 OrganizationPatchField.FeatureImages => ApplyFeatureImagesPatch(request.FeatureImages, organization) || changed,
                 OrganizationPatchField.MarketplaceListingMetadata => ApplyMarketplaceListingMetadataPatch(request.MarketplaceListingMetadata,
@@ -197,7 +197,7 @@ public class OrganizationPatchMapper : IOrganizationPatchMapper
             return false;
         }
 
-        organization.IndustrySubCategories = industrySubCategories.ToList();
+        organization.IndustrySubCategories = [.. industrySubCategories];
         return true;
     }
 
@@ -208,7 +208,7 @@ public class OrganizationPatchMapper : IOrganizationPatchMapper
             return false;
         }
 
-        organization.FeatureImages = featureImages.ToList();
+        organization.FeatureImages = [.. featureImages];
         return true;
     }
 

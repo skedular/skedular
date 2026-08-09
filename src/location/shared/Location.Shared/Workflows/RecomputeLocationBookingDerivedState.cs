@@ -21,7 +21,7 @@ public class RecomputeLocationBookingDerivedState
             await Workflow.DelayAsync(TimeSpan.FromSeconds(10));
 
             await Workflow.ExecuteActivityAsync(
-                (LocationBookingDerivedState activity) => activity.RecomputeAsync(args.LocationId),
+                (LocationBookingDerivedState activity) => activity.RecomputeLocationBookingDerivedStateAsync(args.LocationId),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(10),

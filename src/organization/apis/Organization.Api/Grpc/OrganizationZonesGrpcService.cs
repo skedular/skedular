@@ -26,21 +26,23 @@ public class OrganizationZonesGrpcService(
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new TagSearchCriteria(request.Where.OrganizationId, null, [OrganizationTagTypeConstants.Zone], request.Where.NameContains),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    ZoneOrderField.Name => OrganizationTagOrderField.Name,
-                    ZoneOrderField.Description => OrganizationTagOrderField.Description,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        ZoneOrderField.Name => OrganizationTagOrderField.Name,
+                        ZoneOrderField.Description => OrganizationTagOrderField.Description,
+                        _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                            $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
+                    };
 
-                return new TagOrder(direction, field);
-            }).ToList(),
+                    return new TagOrder(direction, field);
+                }),
+            ],
             false,
             context.CancellationToken);
 

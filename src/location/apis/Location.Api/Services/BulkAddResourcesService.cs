@@ -273,7 +273,7 @@ public class BulkAddResourcesService(
             results.Add(new BulkAddRowResult(rowIdx, createdModels, null));
         }
 
-        return results.OrderBy(r => r.RowIndex).ToList();
+        return [.. results.OrderBy(r => r.RowIndex)];
     }
 
     /// <summary>

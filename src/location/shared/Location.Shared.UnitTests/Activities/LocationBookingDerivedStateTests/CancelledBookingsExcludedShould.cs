@@ -103,7 +103,7 @@ public class CancelledBookingsExcludedShould
                 A<IReadOnlyList<DailyDeskBookingCountRecording>>._,
                 A<IReadOnlyList<DailyRoomBookingCountRecording>>._,
                 A<CancellationToken>._))
-            .Invokes(call => recordings = call.GetArgument<IReadOnlyList<DailyBookingCountRecording>>(1)!.ToList())
+            .Invokes(call => recordings = [.. call.GetArgument<IReadOnlyList<DailyBookingCountRecording>>(1)!])
             .Returns(Task.CompletedTask);
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
@@ -125,7 +125,7 @@ public class CancelledBookingsExcludedShould
             .Returns(CreateGrpcResponse(bookingResponse));
 
         // Act
-        await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
+        await environment.RunAsync(() => sut.RecomputeLocationBookingDerivedStateAsync(LocationId));
 
         // Assert – only 2 day records, matching the 2 distinct booking days the server returned
         recordings.Count.ShouldBe(2);
@@ -182,7 +182,7 @@ public class CancelledBookingsExcludedShould
                 A<IReadOnlyList<DailyDeskBookingCountRecording>>._,
                 A<IReadOnlyList<DailyRoomBookingCountRecording>>._,
                 A<CancellationToken>._))
-            .Invokes(call => recordings = call.GetArgument<IReadOnlyList<DailyBookingCountRecording>>(1)!.ToList())
+            .Invokes(call => recordings = [.. call.GetArgument<IReadOnlyList<DailyBookingCountRecording>>(1)!])
             .Returns(Task.CompletedTask);
         A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
         A.CallTo(() => locationRepository.Update(A<LocationEntity>._)).Returns(location);
@@ -207,7 +207,7 @@ public class CancelledBookingsExcludedShould
             .Returns(CreateGrpcResponse(emptyResponse));
 
         // Act
-        await environment.RunAsync(() => sut.RecomputeAsync(LocationId));
+        await environment.RunAsync(() => sut.RecomputeLocationBookingDerivedStateAsync(LocationId));
 
         // Assert
         recordings.ShouldBeEmpty();

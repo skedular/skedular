@@ -97,11 +97,14 @@ public class GrpcMapper : IGrpcMapper
                     Id = src.TermsOfUseId,
                 },
             LogoUrl = src.LogoUrl,
-            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory
-            {
-                Id = item,
-            }).ToList(),
-            FeatureImages = MapTo(src.FeatureImages).ToList(),
+            IndustrySubCategories =
+            [
+                .. src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory
+                {
+                    Id = item,
+                }),
+            ],
+            FeatureImages = [.. MapTo(src.FeatureImages)],
             BillingCycle = src.BillingCycle switch
             {
                 OrganizationBillingCycle.Weekly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Weekly,

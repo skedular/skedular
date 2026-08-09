@@ -52,9 +52,9 @@ public class EmailService(ILogger<EmailService> logger) : IEmailService
             Source = sender,
             Destination = new Destination
             {
-                ToAddresses = toAddresses.ToList(),
-                CcAddresses = ccAddresses.ToList(),
-                BccAddresses = bccAddresses.ToList(),
+                ToAddresses = [.. toAddresses],
+                CcAddresses = [.. ccAddresses],
+                BccAddresses = [.. bccAddresses],
             },
             Template = templateId,
             TemplateData = templateData,

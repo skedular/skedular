@@ -99,7 +99,7 @@ public class Startup
             .AddSkedularGraphQLV1()
             .ConfigureHttpClient(
                 httpClient => httpClient.BaseAddress = organizationApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri(),
-                builder => builder.AddHttpMessageHandler<TestBearerTokenHandler>());
+                clientBuilder => clientBuilder.AddHttpMessageHandler<TestBearerTokenHandler>());
 
         OrganizationIntegrationTestServices.Provider = services.BuildServiceProvider();
     }

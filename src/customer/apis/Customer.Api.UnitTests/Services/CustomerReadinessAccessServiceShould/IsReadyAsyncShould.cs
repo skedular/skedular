@@ -70,7 +70,7 @@ public class IsReadyAsyncShould
         var customer = new CustomerEntity
         {
             Id = customerId,
-            ProvisionedDomains = CustomerReadinessState.RequiredDomains.ToList(),
+            ProvisionedDomains = [.. CustomerReadinessState.RequiredDomains],
         };
 
         A.CallTo(() => cachedCustomerService.GetNullableAsync(cancellationToken))
@@ -100,7 +100,7 @@ public class IsReadyAsyncShould
         var refreshed = new CustomerEntity
         {
             Id = customerId,
-            ProvisionedDomains = CustomerReadinessState.RequiredDomains.ToList(),
+            ProvisionedDomains = [.. CustomerReadinessState.RequiredDomains],
         };
 
         A.CallTo(() => cachedCustomerService.GetNullableAsync(cancellationToken)).Returns(initial);

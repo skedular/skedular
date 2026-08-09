@@ -9,9 +9,12 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore.Storage;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
+using MarketplaceBookingModificationActorKind = Booking.Shared.Models.MarketplaceBookingModificationActorKind;
+using MarketplaceBookingModificationRequest = Booking.Shared.Models.MarketplaceBookingModificationRequest;
 using ResourceSlotClaimResult = Booking.Shared.Models.ResourceSlotClaimResult;
 using Offering = Api.Shared.Services.Models.Offering;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
+using BookingEntity = Booking.Shared.Database.Entities.Booking;
 
 namespace Booking.Shared.UnitTests.Services.MarketplaceBookingServiceTests;
 
@@ -197,7 +200,7 @@ public class MarketplaceBookingServiceShould
         {
             Id = "marketplace-booking-1",
         };
-        var bookingEntity = new Database.Entities.Booking
+        var bookingEntity = new BookingEntity
         {
             Id = "booking-1",
         };
@@ -307,7 +310,7 @@ public class MarketplaceBookingServiceShould
             PricingOptions = [pricing],
             OrganizationTags = [productTag],
         };
-        var booking = new Database.Entities.Booking
+        var booking = new BookingEntity
         {
             Id = "booking-1",
             From = new DateTimeOffset(2026, 6, 15, 9, 0, 0, TimeSpan.Zero),
@@ -340,6 +343,7 @@ public class MarketplaceBookingServiceShould
                 A<IReadOnlyList<string>>.That.Matches(resourceIds => resourceIds.SequenceEqual(new[] { requestedResource.Id })),
                 A<IReadOnlyList<string>>.That.Matches(tagIds => tagIds.SequenceEqual(new[] { productTag.Id })),
                 Array.Empty<string>(),
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([]);
         A.CallTo(() => marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
@@ -367,6 +371,7 @@ public class MarketplaceBookingServiceShould
                 A<IReadOnlyList<string>>.That.Matches(resourceIds => resourceIds.SequenceEqual(new[] { requestedResource.Id })),
                 A<IReadOnlyList<string>>.That.Matches(tagIds => tagIds.SequenceEqual(new[] { productTag.Id })),
                 Array.Empty<string>(),
+                Array.Empty<string>(),
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
@@ -380,7 +385,7 @@ public class MarketplaceBookingServiceShould
         // Arrange
         var booking = new Shared.Models.Booking();
         var lastModifiedByCustomer = new Customer();
-        var existingBooking = new Database.Entities.Booking
+        var existingBooking = new BookingEntity
         {
             Channel = BookingChannelConstants.Private,
         };
@@ -398,7 +403,7 @@ public class MarketplaceBookingServiceShould
     {
         // Arrange
         var deletedByCustomer = new Customer();
-        var existingBooking = new Database.Entities.Booking
+        var existingBooking = new BookingEntity
         {
             Channel = BookingChannelConstants.Private,
         };
@@ -709,7 +714,7 @@ public class MarketplaceBookingServiceShould
             Id = "resource-1",
             ResourceBookingSlots = [],
         };
-        var existingBooking = new Database.Entities.Booking
+        var existingBooking = new BookingEntity
         {
             Id = "booking-1",
             Channel = BookingChannelConstants.Marketplace,
@@ -824,7 +829,7 @@ public class MarketplaceBookingServiceShould
             .MustNotHaveHappened();
     }
 
-    private static Database.Entities.Booking CreateMarketplaceBooking(
+    private static BookingEntity CreateMarketplaceBooking(
         DateTimeOffset from,
         bool isPaymentRequired,
         ProductPricingCancellationPolicyType cancellationPolicyType,
@@ -847,4 +852,168 @@ public class MarketplaceBookingServiceShould
                 },
             },
         };
+
+    #region Fixture Builders for Marketplace Booking Modification
+
+    private static BookingEntity CreateConfirmedMarketplaceBooking(
+        string id = "booking-1",
+        DateTimeOffset? from = null,
+        DateTimeOffset? until = null,
+        PaymentStatus? paymentStatus = null,
+        string? customerId = null,
+        string? productVersionId = null,
+        ProductPricing? pricing = null,
+        int quantity = 1,
+        uint entityFrameworkVersion = 3)
+    {
+        var now = DateTimeOffset.UtcNow;
+        return new BookingEntity
+        {
+            Id = id,
+            Channel = BookingChannelConstants.Marketplace,
+            EntityFrameworkVersion = entityFrameworkVersion,
+            From = from ?? now.AddDays(1),
+            Until = until ?? now.AddDays(1).AddHours(1),
+            MarketplaceBooking = new Database.Entities.MarketplaceBooking
+            {
+                PaymentStatus = paymentStatus?.ToString() ?? PaymentStatusConstants.Confirmed,
+                ProductVersion = new Database.Entities.ProductVersion
+                {
+                    Id = productVersionId ?? "product-version-1",
+                },
+                ProductPricing = pricing ?? ProductPricing.Empty("pricing-1") with
+                {
+                    PurchaseCadence = ProductPricingCadence.OneTime,
+                    BookingCadence = ProductPricingCadence.OneTime,
+                    NumberOfResourcesToBook = 1,
+                },
+                Quantity = quantity,
+                PaymentMethod = PaymentMethodConstants.Card,
+            },
+            InvolvedCustomers = customerId != null
+                ?
+                [
+                    new Customer
+                    {
+                        Id = customerId,
+                    },
+                ]
+                : [],
+        };
+    }
+
+    private static BookingEntity CreateConfirmedSubscriptionOccurrenceBooking(
+        string id = "booking-1",
+        DateTimeOffset? from = null,
+        DateTimeOffset? until = null,
+        string? parentRecurringBookingId = null,
+        bool hasRecurringInstanceOverrides = false)
+    {
+        var now = DateTimeOffset.UtcNow;
+        return new BookingEntity
+        {
+            Id = id,
+            Channel = BookingChannelConstants.Marketplace,
+            EntityFrameworkVersion = 3,
+            From = from ?? now.AddDays(1),
+            Until = until ?? now.AddDays(1).AddHours(1),
+            MarketplaceBooking = new Database.Entities.MarketplaceBooking
+            {
+                PaymentStatus = PaymentStatusConstants.Confirmed,
+                ProductVersion = new Database.Entities.ProductVersion
+                {
+                    Id = "product-version-1",
+                },
+                ProductPricing = ProductPricing.Empty("pricing-1") with
+                {
+                    PurchaseCadence = ProductPricingCadence.Weekly,
+                    BookingCadence = ProductPricingCadence.Weekly,
+                    NumberOfResourcesToBook = 1,
+                },
+                Quantity = 1,
+                PaymentMethod = PaymentMethodConstants.Card,
+            },
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-1",
+                },
+            ],
+            HasRecurringInstanceOverrides = hasRecurringInstanceOverrides,
+        };
+    }
+
+    private static Database.Entities.ProductVersion CreateProductVersion(
+        string id = "product-version-1",
+        ProductType? type = null,
+        Currency currency = Currency.Nzd,
+        Organization? organization = null,
+        List<ProductPricing>? pricingOptions = null) =>
+        new()
+        {
+            Id = id,
+            Type = type?.ToString() ?? ProductTypeConstants.Event,
+            Currency = currency.ToString(),
+            Product = new Product
+            {
+                Id = "product-1",
+                Organization = organization ?? new Organization
+                {
+                    Id = "org-1",
+                    Type = OrganizationTypeConstants.Marketplace,
+                },
+            },
+            OrganizationTags =
+            [
+                new OrganizationTag
+                {
+                    Id = "product-tag-1",
+                    Type = OrganizationTagTypeConstants.Product,
+                },
+            ],
+            PricingOptions = pricingOptions ?? [ProductPricing.Empty("pricing-1")],
+        };
+
+    private static Resource CreateResource(
+        string id = "resource-1",
+        string? locationId = null,
+        List<string>? tagIds = null) =>
+        new()
+        {
+            Id = id,
+            Location = new Location
+            {
+                Id = locationId ?? "location-1",
+            },
+            OrganizationTags = tagIds?.Select(tagId => new OrganizationTag
+            {
+                Id = tagId,
+                Type = OrganizationTagTypeConstants.Product,
+            }).ToList() ?? [],
+        };
+
+    private static MarketplaceBookingModificationRequest CreateModificationRequest(
+        string bookingId = "booking-1",
+        uint expectedVersion = 3,
+        DateTimeOffset? newFrom = null,
+        DateTimeOffset? newUntil = null,
+        List<string>? resourceIds = null,
+        string? reason = null,
+        string? actorCustomerId = "customer-1",
+        MarketplaceBookingModificationActorKind actorKind = MarketplaceBookingModificationActorKind.Customer)
+    {
+        var now = DateTimeOffset.UtcNow;
+        return new MarketplaceBookingModificationRequest(
+            bookingId,
+            expectedVersion,
+            newFrom ?? now.AddDays(2),
+            newUntil ?? now.AddDays(2).AddHours(1),
+            resourceIds,
+            reason,
+            actorCustomerId ?? "customer-1",
+            actorKind);
+    }
+
+    #endregion
 }

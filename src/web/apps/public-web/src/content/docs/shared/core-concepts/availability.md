@@ -19,7 +19,7 @@ relatedArticleIds:
   - shared-bookings
   - shared-locations
   - shared-floor-plans
-updatedAt: 2026-07-15
+updatedAt: 2026-08-07
 ---
 
 ## Overview
@@ -82,6 +82,8 @@ Location Opening Hours provide the default bookable schedule. A Resource can use
 ## Managing Availability
 
 Availability is maintained by the booking and scheduling system. Creating, changing, or cancelling a booking changes the affected resource state. Changing Location or Resource opening hours also changes the calculated schedule. Administrators do not manually set a resource to Available or Booked in this view.
+
+When a customer or authorized operator modifies an eligible marketplace Booking, Skedular validates the new date, time, and any replacement Resources against the purchased Product rules, price calendar-day rules, opening hours, and current booking conflicts. Availability is checked again when the change is confirmed. If another Booking takes capacity first, Skedular does not apply a partial change; the original Booking and its Resources stay in place.
 
 ## Product Differences
 

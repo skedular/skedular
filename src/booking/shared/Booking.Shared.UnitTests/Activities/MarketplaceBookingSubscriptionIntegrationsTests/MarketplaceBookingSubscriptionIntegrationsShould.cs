@@ -18,7 +18,7 @@ namespace Booking.Shared.UnitTests.Activities.MarketplaceBookingSubscriptionInte
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class MarketplaceBookingSubscriptionIntegrationsShould
 {
-    [Theory(Skip = "Requires the persisted recurring aggregate fixture used by Booking.Domain integration tests.")]
+    [Theory]
     [AutoFakeItEasyData]
     public async Task Keep_Workflow_Alive_Without_Renewing_When_Spaces_Access_Is_Expired(
         [Frozen]
@@ -30,9 +30,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         string organizationId)
     {
         var environment = new ActivityEnvironment();
-        var subscription = CreateSubscription(
-            MarketplaceBookingSubscriptionStatus.Active,
-            new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero));
+        var subscription = CreateSubscription(MarketplaceBookingSubscriptionStatus.Active, new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero));
         subscription.InvolvedOrganizations =
         [
             new Organization

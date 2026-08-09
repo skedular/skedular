@@ -24,24 +24,27 @@ public class BookingComponents : IBookingComponents
             ];
         }
 
-        return booking.Resources.Select(Block (item) =>
-        {
-            var resourceLabel = $"{Icons.Resources} {item.Name}";
-
-            if (item.Zones.Count != 0)
+        return
+        [
+            .. booking.Resources.Select(Block (item) =>
             {
-                resourceLabel += $" {Icons.Zones} {string.Join(",", item.Zones.Select(tag => tag.Name))}";
-            }
+                var resourceLabel = $"{Icons.Resources} {item.Name}";
 
-            if (item.CustomTags.Count != 0)
-            {
-                resourceLabel += $" {Icons.CustomTags} {string.Join(",", item.CustomTags.Select(tag => tag.Name))}";
-            }
+                if (item.Zones.Count != 0)
+                {
+                    resourceLabel += $" {Icons.Zones} {string.Join(",", item.Zones.Select(tag => tag.Name))}";
+                }
 
-            return new SectionBlock
-            {
-                Text = resourceLabel.ToMarkdown(),
-            };
-        }).ToList();
+                if (item.CustomTags.Count != 0)
+                {
+                    resourceLabel += $" {Icons.CustomTags} {string.Join(",", item.CustomTags.Select(tag => tag.Name))}";
+                }
+
+                return new SectionBlock
+                {
+                    Text = resourceLabel.ToMarkdown(),
+                };
+            }),
+        ];
     }
 }

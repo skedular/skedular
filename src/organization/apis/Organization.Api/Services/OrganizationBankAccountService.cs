@@ -264,7 +264,7 @@ public class OrganizationBankAccountService(
                 orderByFields,
                 cancellationToken);
 
-        return (paginatedInfo, edges.Select(item => new Edge<OrganizationBankAccount>(graphQlMapper.MapTo(item.Node), item.Cursor)).ToList(),
+        return (paginatedInfo, [.. edges.Select(item => new Edge<OrganizationBankAccount>(graphQlMapper.MapTo(item.Node), item.Cursor))],
             totalCount);
     }
 
@@ -304,9 +304,11 @@ public class OrganizationBankAccountService(
 
     private void PublishOrganizations(IEnumerable<Shared.Database.Entities.Organization> organizations) =>
         organizationOutboxPublisher.PublishOrganizations(
-            organizations.Select(organization =>
-                graphQlMapper.MapTo(organization,
-                    organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))).ToList(),
+            [
+                .. organizations.Select(organization =>
+                    graphQlMapper.MapTo(organization,
+                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))),
+            ],
             repositoryFactory.UnitOfWork);
 
     private static void ValidatePatchRequest(OrganizationBankAccountPatchRequest request)

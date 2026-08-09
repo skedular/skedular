@@ -17,6 +17,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Constants = Booking.Shared.GraphQL.Constants;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
+using MarketplaceBookingModificationActorKind = Booking.Shared.Models.MarketplaceBookingModificationActorKind;
+using MarketplaceBookingModificationActorKindExtensions = Booking.Shared.Models.MarketplaceBookingModificationActorKindExtensions;
+using MarketplaceBookingModificationError = Booking.Shared.Models.MarketplaceBookingModificationError;
+using MarketplaceBookingModificationErrorCode = Booking.Shared.Models.MarketplaceBookingModificationErrorCode;
+using MarketplaceBookingModificationRequest = Booking.Shared.Models.MarketplaceBookingModificationRequest;
+using MarketplaceBookingModificationResult = Booking.Shared.Models.MarketplaceBookingModificationResult;
+using MarketplaceBookingModificationSummary = Booking.Shared.Models.MarketplaceBookingModificationSummary;
+using MarketplaceBookingModificationNotificationDeliveryStatusConstants =
+    Booking.Shared.Models.MarketplaceBookingModificationNotificationDeliveryStatusConstants;
 using MarketplaceBookingFailureCategoryConstants = Booking.Shared.Models.MarketplaceBookingFailureCategoryConstants;
 using MarketplaceBookingFailureCustomerActionConstants = Booking.Shared.Models.MarketplaceBookingFailureCustomerActionConstants;
 using MarketplaceBookingFailureFinalization = Booking.Shared.Models.MarketplaceBookingFailureFinalization;
@@ -78,11 +87,19 @@ public interface IMarketplaceBookingService
         CancellationToken cancellationToken);
 
     /// <summary>
+    ///     Atomically modifies the fulfillment schedule and optional resource assignment of an eligible marketplace booking.
+    /// </summary>
+    Task<MarketplaceBookingModificationResult> ModifyAsync(
+        MarketplaceBookingModificationRequest request,
+        CancellationToken cancellationToken);
+
+    /// <summary>
     ///     Deletes a marketplace booking.
     /// </summary>
     /// <param name="existingBooking">The existing booking entity to delete.</param>
     /// <param name="deletedByCustomer">The customer performing the deletion.</param>
     /// <param name="ignoreCancellationPolicy">Whether operator permissions should bypass the customer cancellation window.</param>
+    /// <param name="cancellationOverrideReason"></param>
     /// <param name="createRefund"></param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>The deleted booking model.</returns>
@@ -129,6 +146,320 @@ public class MarketplaceBookingService(
     IMarketplaceBookingFailureNotificationService marketplaceBookingFailureNotificationService,
     ILogger<MarketplaceBookingService> logger) : IMarketplaceBookingService
 {
+    public async Task<MarketplaceBookingModificationResult> ModifyAsync(
+        MarketplaceBookingModificationRequest request,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.BookingId);
+        logger.LogInformation(
+            "Marketplace booking modification started. BookingId={BookingId}, ActorKind={ActorKind}, RequestedResourceCount={RequestedResourceCount}",
+            request.BookingId, request.ActorKind, request.ResourceIds?.Count ?? 0);
+        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(request.BookingId, cancellationToken);
+        if (existingBooking is null || existingBooking.MarketplaceBooking is null ||
+            existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.NotEligible, "This booking cannot be modified.");
+        }
+
+        if (existingBooking.EntityFrameworkVersion != request.ExpectedVersion)
+        {
+            var sharedBooking = entityMapper.MapTo(existingBooking);
+            return ModificationError(MarketplaceBookingModificationErrorCode.StaleVersion,
+                "This booking changed before your update could be applied. Reload and try again.",
+                null,
+                sharedBooking);
+        }
+
+        var paymentStatus = ResolvePaymentStatus(existingBooking);
+        if (paymentStatus.ToPaymentStatus() is not
+                (PaymentStatus.Confirmed or PaymentStatus.NoPaymentRequired) || existingBooking.From <= timeProvider.GetUtcNow())
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.NotEligible,
+                "Only confirmed future marketplace bookings can be modified.");
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Reason))
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.OperatorReasonRequired,
+                "A reason is required when changing a booking.");
+        }
+
+        var isFullDayWindow = request.From.TimeOfDay == TimeSpan.Zero &&
+                              request.Until.Date == request.From.Date.AddDays(1) &&
+                              request.Until.TimeOfDay == TimeSpan.Zero;
+        if (request.From >= request.Until || (request.From.Date != request.Until.Date && !isFullDayWindow))
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.NotEligible,
+                "The requested booking window is invalid.");
+        }
+
+        if (request.ResourceIds is { Count: 0 })
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.InvalidResourceSelection,
+                "Select at least one resource or leave resource selection unchanged.");
+        }
+
+        var subscriptionOccurrence = existingBooking.RecurringBooking?.MarketplaceBookingSubscription;
+        if (subscriptionOccurrence is not null && !IsWithinSubscriptionCycle(existingBooking.RecurringBooking!, request.From, request.Until))
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.OutsideSubscriptionCycle,
+                "A subscription booking can only be moved within its current subscription cycle.");
+        }
+
+        var marketplaceBooking = existingBooking.MarketplaceBooking;
+        if (request.Until - request.From != existingBooking.Until - existingBooking.From)
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.NotEligible,
+                "The booking duration cannot be changed.");
+        }
+
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken);
+        if (productVersion is null || productVersion.OrganizationTags.All(tag => tag.Type != OrganizationTagTypeConstants.Product))
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.NotEligible,
+                "The purchased product is no longer available for booking changes.");
+        }
+
+        var resourceIds = (request.ResourceIds ?? [.. existingBooking.InvolvedResources.Select(resource => resource.Id)])
+            .Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToList();
+        var maxResourceCount = ResolveRequestedResourceCount(productVersion.Type == ProductTypeConstants.Event, marketplaceBooking);
+        if (resourceIds.Count > maxResourceCount)
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.InvalidResourceSelection,
+                "The selected resources exceed the original purchase entitlement.");
+        }
+
+        if (!marketplaceBookingAvailableDaysService.IsAvailable(marketplaceBooking.ProductPricing, request.From, out _))
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.NotEligible,
+                "The requested date is not available for the purchased product.");
+        }
+
+        if (request.ResourceIds is null && resourceIds.Count == 0 && maxResourceCount > 0)
+        {
+            var automaticResources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                existingBooking.InvolvedCustomers.Count == 1 ? existingBooking.InvolvedCustomers.First() : null,
+                request.From,
+                request.Until,
+                productVersion,
+                maxResourceCount,
+                cancellationToken);
+            resourceIds = [.. automaticResources.Select(resource => resource.Id).Distinct()];
+        }
+
+        var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(resourceIds, true, cancellationToken);
+        var productTagIds = productVersion.OrganizationTags.Where(tag => tag.Type == OrganizationTagTypeConstants.Product).Select(tag => tag.Id)
+            .ToHashSet();
+        if (resources.Count != resourceIds.Count || resources.Any(resource => resource.OrganizationTags.All(tag => !productTagIds.Contains(tag.Id))))
+        {
+            return ModificationError(MarketplaceBookingModificationErrorCode.InvalidResourceSelection,
+                "Every selected resource must be eligible for the purchased product.");
+        }
+
+        var originalFrom = existingBooking.From;
+        var originalUntil = existingBooking.Until;
+        var originalResourceIds = existingBooking.InvolvedResources.Select(resource => resource.Id).ToList();
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+        var claim = await repositoryFactory.ResourceRepository.ReplaceClaimAsync(existingBooking, request.From, request.Until, resourceIds,
+            cancellationToken);
+        if (!claim.Claimed)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            repositoryFactory.ResetChangeTracker();
+            logger.LogInformation(
+                "Marketplace booking modification rejected by resource availability. BookingId={BookingId}, UnavailableResourceCount={UnavailableResourceCount}",
+                request.BookingId, claim.UnavailableResourceIds.Count);
+            return ModificationError(MarketplaceBookingModificationErrorCode.Unavailable,
+                "One or more selected resources are no longer available.", claim.UnavailableResourceIds);
+        }
+
+        existingBooking.InvolvedResources.Clear();
+        foreach (var resource in resources)
+        {
+            existingBooking.InvolvedResources.Add(resource);
+        }
+
+        existingBooking.InvolvedLocations.Clear();
+        foreach (var location in resources.Select(resource => resource.Location).Where(location => location is not null)
+                     .DistinctBy(location => location!.Id))
+        {
+            existingBooking.InvolvedLocations.Add(location!);
+        }
+
+        existingBooking.Schedules = [new BookingSchedule(request.From, request.Until)];
+
+        var isSubscriptionOccurrence = subscriptionOccurrence is not null;
+        if (isSubscriptionOccurrence)
+        {
+            existingBooking.HasRecurringInstanceOverrides = true;
+        }
+
+        var modification = repositoryFactory.MarketplaceBookingModificationRepository.Add(new MarketplaceBookingModification
+        {
+            Id = randomHelper.Generate(),
+            BookingId = existingBooking.Id,
+            ActorCustomerId = request.ActorCustomerId,
+            ActorKind = MarketplaceBookingModificationActorKindExtensions.ToMarketplaceBookingModificationActorKindValue(request.ActorKind),
+            Reason = request.Reason,
+            OccurredAt = timeProvider.GetUtcNow(),
+            OriginalFrom = originalFrom,
+            OriginalUntil = originalUntil,
+            ResultFrom = request.From,
+            ResultUntil = request.Until,
+            OriginalResourceIds = originalResourceIds,
+            ResultResourceIds = resourceIds,
+            SubscriptionOccurrenceOverride = isSubscriptionOccurrence,
+        });
+        if (request.ActorKind == MarketplaceBookingModificationActorKind.OrganizationOperator)
+        {
+            var recipientCustomerIds = existingBooking.InvolvedCustomers
+                .Select(customer => customer.Id)
+                .Append(existingBooking.CreatedByCustomer?.Id)
+                .Append(marketplaceBooking.PaidByCustomer?.Id)
+                .Where(id => !string.IsNullOrWhiteSpace(id))
+                .Distinct(StringComparer.Ordinal)
+                .ToList();
+            logger.LogInformation(
+                "Marketplace booking modification customer notification recipients resolved. BookingId={BookingId}, ModificationId={ModificationId}, RecipientCount={RecipientCount}, InvolvedCustomerCount={InvolvedCustomerCount}, CreatedByCustomerIdPresent={CreatedByCustomerIdPresent}, PaidByCustomerIdPresent={PaidByCustomerIdPresent}",
+                existingBooking.Id,
+                modification.Id,
+                recipientCustomerIds.Count,
+                existingBooking.InvolvedCustomers.Count,
+                !string.IsNullOrWhiteSpace(existingBooking.CreatedByCustomer?.Id),
+                !string.IsNullOrWhiteSpace(marketplaceBooking.PaidByCustomer?.Id));
+            foreach (var recipientCustomerId in recipientCustomerIds)
+            {
+                repositoryFactory.MarketplaceBookingModificationRepository.AddDelivery(
+                    new MarketplaceBookingModificationNotificationDelivery
+                    {
+                        Id = randomHelper.Generate(),
+                        MarketplaceBookingModificationId = modification.Id,
+                        DeliveryKey = $"customer:{recipientCustomerId}",
+                        RecipientCustomerId = recipientCustomerId,
+                        Status = MarketplaceBookingModificationNotificationDeliveryStatusConstants.Pending,
+                    });
+            }
+
+            if (recipientCustomerIds.Count > 0)
+            {
+                temporalOutboxService.StartWorkflowNotifyMarketplaceBookingModification(
+                    new NotifyMarketplaceBookingModificationInput(modification.Id),
+                    repositoryFactory.UnitOfWork);
+            }
+
+            if (recipientCustomerIds.Count == 0)
+            {
+                // Keep an explicit durable recovery row even when the booking no longer
+                // contains a resolvable customer. Operators can repair the recipient later.
+                repositoryFactory.MarketplaceBookingModificationRepository.AddDelivery(
+                    new MarketplaceBookingModificationNotificationDelivery
+                    {
+                        Id = randomHelper.Generate(),
+                        MarketplaceBookingModificationId = modification.Id,
+                        DeliveryKey = "customer:unresolved",
+                        RecipientCustomerId = null,
+                        Status = MarketplaceBookingModificationNotificationDeliveryStatusConstants.RecoveryRequired,
+                        LastError = "No customer recipient could be resolved for notification delivery.",
+                    });
+                logger.LogWarning(
+                    "Marketplace booking modification notification requires recovery but no customer could be identified. BookingId={BookingId}, ModificationId={ModificationId}",
+                    existingBooking.Id, modification.Id);
+            }
+        }
+        else
+        {
+            var organizations = existingBooking.InvolvedLocations
+                .Select(location => location.Organization)
+                .Where(organization => organization is not null)
+                .GroupBy(organization => organization!.Id, StringComparer.Ordinal)
+                .Select(group => group.First()!)
+                .ToList();
+            logger.LogInformation(
+                "Marketplace booking modification organization notification recipients resolved. BookingId={BookingId}, ModificationId={ModificationId}, LocationCount={LocationCount}, OrganizationCount={OrganizationCount}, OrganizationsWithEmail={OrganizationsWithEmail}",
+                existingBooking.Id,
+                modification.Id,
+                existingBooking.InvolvedLocations.Count,
+                organizations.Count,
+                organizations.Count(organization => !string.IsNullOrWhiteSpace(organization.ContactEmail)));
+            foreach (var organization in organizations)
+            {
+                var email = organization.ContactEmail?.Trim();
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    continue;
+                }
+
+                repositoryFactory.MarketplaceBookingModificationRepository.AddDelivery(
+                    new MarketplaceBookingModificationNotificationDelivery
+                    {
+                        Id = randomHelper.Generate(),
+                        MarketplaceBookingModificationId = modification.Id,
+                        DeliveryKey = $"organization:{organization.Id}",
+                        RecipientEmail = email,
+                        RecipientName = organization.Name,
+                        Status = MarketplaceBookingModificationNotificationDeliveryStatusConstants.Pending,
+                    });
+            }
+
+            if (organizations.Any(organization => !string.IsNullOrWhiteSpace(organization.ContactEmail)))
+            {
+                temporalOutboxService.StartWorkflowNotifyMarketplaceBookingModification(
+                    new NotifyMarketplaceBookingModificationInput(modification.Id),
+                    repositoryFactory.UnitOfWork);
+            }
+            else
+            {
+                logger.LogWarning(
+                    "Marketplace booking modification notification not scheduled because no location owner has a contact email. BookingId={BookingId}, ModificationId={ModificationId}",
+                    existingBooking.Id,
+                    modification.Id);
+            }
+        }
+
+        repositoryFactory.BookingRepository.Update(existingBooking);
+        var updated = entityMapper.MapTo(existingBooking);
+        bookingOutboxPublisher.PublishBookings([updated], repositoryFactory.UnitOfWork);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        try
+        {
+            await cachedBookingService.UpdateByIdAsync(existingBooking.Id, cancellationToken);
+            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, existingBooking.Id, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            // Persistence and booking outbox publication are authoritative. Cache/GraphQL
+            // invalidation is retried by the surrounding infrastructure and must not make a
+            // committed modification appear to have failed to the caller.
+            logger.LogError(exception, "Marketplace booking modification committed but post-commit notification failed. BookingId={BookingId}",
+                existingBooking.Id);
+        }
+
+        logger.LogInformation(
+            "Marketplace booking modification completed. BookingId={BookingId}, ModificationId={ModificationId}, SubscriptionOccurrenceOverride={SubscriptionOccurrenceOverride}",
+            existingBooking.Id, modification.Id, isSubscriptionOccurrence);
+
+        return new MarketplaceBookingModificationResult(
+            updated,
+            new MarketplaceBookingModificationSummary(
+                modification.Id,
+                existingBooking.Id,
+                modification.OccurredAt,
+                request.ActorKind,
+                request.Reason,
+                modification.OriginalFrom,
+                modification.OriginalUntil,
+                modification.ResultFrom,
+                modification.ResultUntil,
+                [.. modification.OriginalResourceIds],
+                [.. modification.ResultResourceIds],
+                [],
+                [],
+                isSubscriptionOccurrence),
+            null);
+    }
+
     /// <summary>
     ///     Adds a new marketplace booking.
     ///     Validates the booking window, customer entities, product version, pricing, and resources.
@@ -183,7 +514,7 @@ public class MarketplaceBookingService(
         ArgumentNullException.ThrowIfNull(productVersion.PricingOptions);
 
         marketplaceBooking.ProductPricing =
-            (productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions!.ToList(), marketplaceBooking.ProductPricing) ??
+            (productVersionHelperService.FindMatchingPricing([.. productVersion.PricingOptions!], marketplaceBooking.ProductPricing) ??
              throw new ProductPricingNotFound()) with
             {
                 BookingCadence = marketplaceBooking.ProductPricing.BookingCadence,
@@ -225,8 +556,8 @@ public class MarketplaceBookingService(
             resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
                 booking.From,
                 booking.Until,
-                booking.Resources.Select(item => item.Resource.Id).ToList(),
-                productVersion.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id).ToList(),
+                [.. booking.Resources.Select(item => item.Resource.Id)],
+                [.. productVersion.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id)],
                 cancellationToken);
             if (resources.Count > requestedResourceCount)
             {
@@ -288,7 +619,7 @@ public class MarketplaceBookingService(
 
             var recipients = await marketplaceBookingFailureNotificationService.ResolveRecipientsAsync(
                 customer,
-                organizations.Select(item => item.Id).ToList(),
+                [.. organizations.Select(item => item.Id)],
                 cancellationToken);
             var requestedResourceIds = booking.Resources.Select(r => r.Resource.Id).ToList();
             var failure = await FinalizeSubmissionAvailabilityConflictAsync(
@@ -330,7 +661,7 @@ public class MarketplaceBookingService(
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         var claim = await repositoryFactory.ResourceRepository.TryClaimCompleteSlotSetAsync(
             bookingEntity,
-            resources.Select(item => item.Id).ToList(),
+            [.. resources.Select(item => item.Id)],
             cancellationToken);
         if (!claim.Claimed)
         {
@@ -351,14 +682,14 @@ public class MarketplaceBookingService(
 
             var recipients = await marketplaceBookingFailureNotificationService.ResolveRecipientsAsync(
                 customer,
-                organizations.Select(item => item.Id).ToList(),
+                [.. organizations.Select(item => item.Id)],
                 cancellationToken);
             var failure = await FinalizeSubmissionAvailabilityConflictAsync(
                 booking.Id,
                 null,
                 booking.From,
                 booking.Until,
-                resources.Select(r => r.Id).ToList(),
+                [.. resources.Select(r => r.Id)],
                 customer.Id,
                 recipients,
                 cancellationToken);
@@ -457,7 +788,7 @@ public class MarketplaceBookingService(
             {
                 if (!finalizeAvailabilityFailure)
                 {
-                    throw new MarketplaceBookingAvailabilityConflict(resources.Select(item => item.Id).ToList());
+                    throw new MarketplaceBookingAvailabilityConflict([.. resources.Select(item => item.Id)]);
                 }
 
                 throw;
@@ -467,23 +798,23 @@ public class MarketplaceBookingService(
             repositoryFactory.ResetChangeTracker();
             if (!finalizeAvailabilityFailure)
             {
-                throw new MarketplaceBookingAvailabilityConflict(resources.Select(item => item.Id).ToList());
+                throw new MarketplaceBookingAvailabilityConflict([.. resources.Select(item => item.Id)]);
             }
 
             var recipients = await marketplaceBookingFailureNotificationService.ResolveRecipientsAsync(
                 customer,
-                organizations.Select(item => item.Id).ToList(),
+                [.. organizations.Select(item => item.Id)],
                 cancellationToken);
             var failure = await FinalizeSubmissionAvailabilityConflictAsync(
                 booking.Id,
                 null,
                 booking.From,
                 booking.Until,
-                resources.Select(item => item.Id).ToList(),
+                [.. resources.Select(item => item.Id)],
                 customer.Id,
                 recipients,
                 cancellationToken);
-            throw new MarketplaceBookingAvailabilityConflict(resources.Select(item => item.Id).ToList(), failure);
+            throw new MarketplaceBookingAvailabilityConflict([.. resources.Select(item => item.Id)], failure);
         }
 
         if (ownsTransaction)
@@ -598,6 +929,7 @@ public class MarketplaceBookingService(
                 resourceIds,
                 [],
                 [],
+                [],
                 cancellationToken);
 
             // If no requested resource is available, try to auto-pick one by customer preference.
@@ -631,7 +963,7 @@ public class MarketplaceBookingService(
                         existingBooking.Until,
                         productVersion,
                         cancellationToken)
-                    : existingBooking.InvolvedResources.ToList();
+                    : [.. existingBooking.InvolvedResources];
             }
             else
             {
@@ -639,7 +971,7 @@ public class MarketplaceBookingService(
                     existingBooking.From,
                     existingBooking.Until,
                     resourceIds,
-                    productVersion.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id).ToList(),
+                    [.. productVersion.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id)],
                     cancellationToken);
             }
         }
@@ -706,6 +1038,7 @@ public class MarketplaceBookingService(
     /// <param name="existingBooking">The existing booking entity to delete.</param>
     /// <param name="deletedByCustomer">The customer performing the deletion.</param>
     /// <param name="ignoreCancellationPolicy">Whether operator permissions should bypass the customer cancellation window.</param>
+    /// <param name="cancellationOverrideReason"></param>
     /// <param name="createRefund"></param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>The deleted booking model.</returns>
@@ -858,6 +1191,7 @@ public class MarketplaceBookingService(
                 .Select(item => item.Id)
                 .ToList(),
             [],
+            [],
             cancellationToken);
 
         // If no requested resource is available, try to auto-pick one by customer preference.
@@ -919,6 +1253,63 @@ public class MarketplaceBookingService(
 
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
     }
+
+    private static string ResolvePaymentStatus(Database.Entities.Booking booking)
+    {
+        // Generated recurring occurrences do not carry the billed payment state themselves. The
+        // parent recurring marketplace booking is authoritative for those occurrences.
+        if (booking.RecurringBooking?.MarketplaceBooking is { } recurringMarketplaceBooking)
+        {
+            return recurringMarketplaceBooking.PaymentStatus;
+        }
+
+        // One-time marketplace bookings are billed directly on their own marketplace record.
+        return booking.MarketplaceBooking?.PaymentStatus ?? string.Empty;
+    }
+
+    private static MarketplaceBookingModificationResult ModificationError(
+        MarketplaceBookingModificationErrorCode code,
+        string message,
+        IReadOnlyCollection<string>? unavailableResourceIds = null,
+        Models.Booking? currentBooking = null) =>
+        new(null, null, new MarketplaceBookingModificationError(code, message, unavailableResourceIds, currentBooking));
+
+    private static bool IsWithinSubscriptionCycle(
+        RecurringBooking recurringBooking,
+        DateTimeOffset from,
+        DateTimeOffset until)
+    {
+        var subscription = recurringBooking.MarketplaceBookingSubscription;
+        if (subscription is null)
+        {
+            return false;
+        }
+
+        var cycleEnd = subscription.NextRenewalAt ?? ResolveCycleEnd(subscription.StartedAt, recurringBooking);
+        var cycleStart = subscription.NextRenewalAt is { } nextRenewal
+            ? ResolveCycleStart(nextRenewal, recurringBooking)
+            : subscription.StartedAt;
+
+        return from >= cycleStart && until <= cycleEnd;
+    }
+
+    private static DateTimeOffset ResolveCycleStart(DateTimeOffset cycleEnd, RecurringBooking recurringBooking) =>
+        recurringBooking.MarketplaceBooking?.ProductPricing.PurchaseCadence switch
+        {
+            ProductPricingCadence.Monthly => cycleEnd.AddMonths(-1),
+            ProductPricingCadence.Weekly => cycleEnd.AddDays(-7),
+            ProductPricingCadence.Fortnightly => cycleEnd.AddDays(-14),
+            _ => cycleEnd.AddDays(-1),
+        };
+
+    private static DateTimeOffset ResolveCycleEnd(DateTimeOffset cycleStart, RecurringBooking recurringBooking) =>
+        recurringBooking.MarketplaceBooking?.ProductPricing.PurchaseCadence switch
+        {
+            ProductPricingCadence.Monthly => cycleStart.AddMonths(1),
+            ProductPricingCadence.Weekly => cycleStart.AddDays(7),
+            ProductPricingCadence.Fortnightly => cycleStart.AddDays(14),
+            _ => cycleStart.AddDays(1),
+        };
 
     private static bool ShouldEnforceSpacesQuota(Organization organization) =>
         organization.Type == OrganizationTypeConstants.Marketplace;

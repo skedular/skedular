@@ -42,8 +42,10 @@ public class WorkaroundService(
     {
         var organizations = await repositoryFactory.OrganizationRepository.GetAllUntrackedAsync(cancellationToken);
         await organizationPublisher.PublishOrganizationsAsync(
-            organizations.Select(item =>
-                graphQlMapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))).ToList(),
+            [
+                .. organizations.Select(item =>
+                    graphQlMapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))),
+            ],
             cancellationToken);
     }
 

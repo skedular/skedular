@@ -61,7 +61,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             ClientMutationId = input.ClientMutationId,
             FloorPlan = graphQlMapper.MapTo(
                 await floorPlanService.UpdateResourcePositionsAsync(
-                    new ResourcePositionsPatchRequest(input.FloorPlanId, graphQlMapper.MapTo(input).ToList(), input.FieldsToUpdate),
+                    new ResourcePositionsPatchRequest(input.FloorPlanId, [.. graphQlMapper.MapTo(input)], input.FieldsToUpdate),
                     cancellationToken))!,
         };
 }

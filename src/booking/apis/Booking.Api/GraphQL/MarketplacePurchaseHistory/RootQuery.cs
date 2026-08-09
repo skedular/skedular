@@ -13,6 +13,7 @@ namespace Booking.Api.GraphQL.MarketplacePurchaseHistory;
 public sealed class RootQuery
 {
     [GraphQLName("marketplacePurchases")]
+    [UseResolverScope]
     public async Task<Connection<MarketplacePurchaseHistoryEdge>> MarketplacePurchasesAsync(
         string? after,
         int? first,

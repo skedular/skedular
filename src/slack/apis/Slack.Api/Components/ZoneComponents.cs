@@ -67,7 +67,7 @@ public class ZoneComponents(ICustomerService customerService, IOrganizationPermi
             blocks.Add(new DividerBlock());
         }
 
-        return blocks.SkipLast(1).ToList();
+        return [.. blocks.SkipLast(1)];
     }
 
     private static List<Block> GetZoneCard(OrganizationZone zone, Customer customer, bool canModify, bool canDelete, PageContext pageContext)

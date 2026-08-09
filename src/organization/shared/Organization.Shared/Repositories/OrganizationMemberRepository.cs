@@ -149,7 +149,9 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 OrganizationMemberOrderField.Role => KeysetPaginationField<OrganizationMember>.Create(
                     nameof(OrganizationMember.Role),
@@ -181,7 +183,7 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            })
-            .ToList();
+            }),
+        ];
     }
 }

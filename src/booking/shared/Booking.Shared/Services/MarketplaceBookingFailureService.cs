@@ -58,7 +58,7 @@ public class MarketplaceBookingFailureService(
             MarketplaceBookingSubscriptionId = finalization.MarketplaceBookingSubscriptionId,
             RequestedFrom = finalization.RequestedFrom,
             RequestedUntil = finalization.RequestedUntil,
-            RequestedResourceIds = finalization.RequestedResourceIds.Distinct().ToList(),
+            RequestedResourceIds = [.. finalization.RequestedResourceIds.Distinct()],
             CustomerAction = finalization.CustomerAction,
             CorrelationId = finalization.CorrelationId,
             Reason = finalization.Reason,

@@ -91,22 +91,25 @@ public class GraphQlMapper : IGraphQlMapper
                 {
                     Id = src.PrimaryLocationId,
                 },
-            TeamMembers = src.CustomerIds
-                .Select(item => new TeamMember
-                {
-                    Customer = new Customer
+            TeamMembers =
+            [
+                .. src.CustomerIds
+                    .Select(item => new TeamMember
                     {
-                        Id = item,
-                    },
-                })
-                .Concat(src.OrganizationMemberIds.Select(item => new TeamMember
+                        Customer = new Customer
+                        {
+                            Id = item,
+                        },
+                    }),
+
+                .. src.OrganizationMemberIds.Select(item => new TeamMember
                 {
                     OrganizationMember = new OrganizationMember
                     {
                         Id = item,
                     },
-                }))
-                .ToList(),
+                }),
+            ],
         };
 
     public Shared.Models.Team MapTo(UpdateTeamInput src) =>
@@ -145,22 +148,25 @@ public class GraphQlMapper : IGraphQlMapper
                 {
                     Id = src.PrimaryLocationId,
                 },
-            TeamMembers = src.CustomerIds
-                .Select(item => new TeamMember
-                {
-                    Customer = new Customer
+            TeamMembers =
+            [
+                .. src.CustomerIds
+                    .Select(item => new TeamMember
                     {
-                        Id = item,
-                    },
-                })
-                .Concat(src.OrganizationMemberIds.Select(item => new TeamMember
+                        Customer = new Customer
+                        {
+                            Id = item,
+                        },
+                    }),
+
+                .. src.OrganizationMemberIds.Select(item => new TeamMember
                 {
                     OrganizationMember = new OrganizationMember
                     {
                         Id = item,
                     },
-                }))
-                .ToList(),
+                }),
+            ],
         };
 
     public TeamMember MapTo(AddTeamMemberInput src)
@@ -187,22 +193,24 @@ public class GraphQlMapper : IGraphQlMapper
     }
 
     public IReadOnlyList<TeamMember> MapToTeamMembers(UpdateTeamMembersInput src) =>
-        src.CustomerIds
+    [
+        .. src.CustomerIds
             .Select(item => new TeamMember
             {
                 Customer = new Customer
                 {
                     Id = item,
                 },
-            })
-            .Concat(src.OrganizationMemberIds.Select(item => new TeamMember
+            }),
+
+        .. src.OrganizationMemberIds.Select(item => new TeamMember
+        {
+            OrganizationMember = new OrganizationMember
             {
-                OrganizationMember = new OrganizationMember
-                {
-                    Id = item,
-                },
-            }))
-            .ToList();
+                Id = item,
+            },
+        }),
+    ];
 
     public TeamEdge MapTo(Edge<Shared.Models.Team> src) => new(MapTo(src.Node)!, src.Cursor);
 

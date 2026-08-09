@@ -11,11 +11,12 @@ public static class IdentityDetailsExtensions
     extension(IEnumerable<string?> src)
     {
         public IReadOnlyList<string> ToEmails() =>
-            src
+        [
+            .. src
                 .Where(item => !string.IsNullOrWhiteSpace(item))
                 .Select(item => item!.ToLowerInvariant())
-                .Distinct()
-                .ToList();
+                .Distinct(),
+        ];
     }
 
     extension<T>(IEnumerable<T> src) where T : IIdentityDetails

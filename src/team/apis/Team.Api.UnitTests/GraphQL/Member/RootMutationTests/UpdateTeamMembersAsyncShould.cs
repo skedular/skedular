@@ -25,11 +25,10 @@ public class UpdateTeamMembersAsyncShould
         Shared.Models.Team team,
         CancellationToken cancellationToken)
     {
-        var mappedMembers = new List<TeamMember>();
         var teamDetails = new TeamDetails();
 
-        A.CallTo(() => graphQlMapper.MapToTeamMembers(input)).Returns(mappedMembers);
-        A.CallTo(() => teamMemberService.UpdateMembersAsync(input.Id, mappedMembers, cancellationToken)).Returns(team);
+        A.CallTo(() => graphQlMapper.MapToTeamMembers(input)).Returns([]);
+        A.CallTo(() => teamMemberService.UpdateMembersAsync(input.Id, Array.Empty<TeamMember>(), cancellationToken)).Returns(team);
         A.CallTo(() => graphQlMapper.MapTo(team)).Returns(teamDetails);
 
         await sut.UpdateTeamMembersAsync(input, teamMemberService, cancellationToken);

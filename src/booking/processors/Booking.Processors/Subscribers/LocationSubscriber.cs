@@ -176,7 +176,6 @@ public class LocationSubscriber(
                         .Any(organizationTag => organizationTag.Id == tag.Id))
                     .ToList();
 
-
                 var resource = location.Resources.First(item => item.Id == existingResource.Id);
 
                 if (resource.IsAvailableHoursOverridden != existingResource.IsAvailableHoursOverridden ||
@@ -191,6 +190,7 @@ public class LocationSubscriber(
                 return repositoryFactory.ResourceRepository.Update(updatedResource);
             })
             .ToList();
+
         var addedItems = location.Resources
             .Where(resource => resources.All(item => item.Id != resource.Id))
             .Select(resource =>
@@ -204,10 +204,10 @@ public class LocationSubscriber(
             .ToList();
 
         repositoryFactory.ResourceRepository.RemoveRange(itemsToRemove);
-        existingLocation.Resources = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingLocation.Resources = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         resourceIdsToRegenerateBookingSlots.AddRange(addedItems.Select(item => item.Id));
 
-        return (existingLocation, resourceIdsToRegenerateBookingSlots.Distinct().ToList());
+        return (existingLocation, [.. resourceIdsToRegenerateBookingSlots.Distinct()]);
     }
 }

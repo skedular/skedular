@@ -55,7 +55,7 @@ public class CustomerOrganizationTagSettingsService(
             return entityMapper.MapTo(customer);
         }
 
-        customer.PreferredOrganizationTags = customer.PreferredOrganizationTags.Append(organizationTag).ToList();
+        customer.PreferredOrganizationTags = [.. customer.PreferredOrganizationTags, organizationTag];
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
@@ -69,7 +69,7 @@ public class CustomerOrganizationTagSettingsService(
         var customer = string.IsNullOrWhiteSpace(customerId)
             ? await customerHelperService.GetCustomerAsync(cancellationToken)
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
-        customer.PreferredOrganizationTags = customer.PreferredOrganizationTags.Where(item => item.Id != organizationTagId).ToList();
+        customer.PreferredOrganizationTags = [.. customer.PreferredOrganizationTags.Where(item => item.Id != organizationTagId)];
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 }

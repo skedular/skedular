@@ -377,7 +377,7 @@ public class CustomTagsPage(
             cancellationToken), customTagComponents.GetCustomTagCardsAsync(
             workspace,
             workspaceMember,
-            customTagConnection.Edges.Select(item => item.Node).ToList(),
+            [.. customTagConnection.Edges.Select(item => item.Node)],
             commonPageContext.PageContext,
             cancellationToken));
 
@@ -395,7 +395,7 @@ public class CustomTagsPage(
             new HomeViewDefinition
             {
                 CallbackId = CustomTagsCallback,
-                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
+                Blocks = [.. blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1)],
                 PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
@@ -436,11 +436,12 @@ public class CustomTagsPage(
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>()
-                    .Concat(homeAndBackButtons)
-                    .Concat(addCustomTagButton)
-                    .Concat(feedbackButton)
-                    .ToList(),
+                Elements =
+                [
+                    .. homeAndBackButtons,
+                    .. addCustomTagButton,
+                    .. feedbackButton,
+                ],
             },
         ];
     }

@@ -54,8 +54,10 @@ public class MarketplaceRefundRootQuery
         [Service]
         IGraphQlMapper graphQlMapper,
         CancellationToken cancellationToken) =>
-        (await marketplaceRefundReadService.GetByOrganizationCustomDomainAsync(organizationCustomDomain, statuses?.ToList(), cancellationToken))
-        .Select(graphQlMapper.MapTo).ToList();
+    [
+        .. (await marketplaceRefundReadService.GetByOrganizationCustomDomainAsync(organizationCustomDomain, statuses?.ToList(), cancellationToken))
+        .Select(graphQlMapper.MapTo),
+    ];
 
     [UseResolverScope]
     public async Task<Connection<MarketplaceRefundEdge>> MarketplaceRefundQueueAsync(

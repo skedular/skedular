@@ -383,7 +383,7 @@ public class TeamService(
 
         await cachedTeamService.UpdateAsync(teams, cancellationToken);
 
-        return teams.Select(entityMapper.MapTo).ToList();
+        return [.. teams.Select(entityMapper.MapTo)];
     }
 
     private async Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken)
@@ -476,7 +476,7 @@ public class TeamService(
                 .Select(teamMember => repositoryFactory.TeamMemberRepository.Add(teamMember)).ToList();
 
             repositoryFactory.TeamMemberRepository.RemoveRange(itemsToRemove);
-            existingTeam.TeamMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+            existingTeam.TeamMembers = [.. addedItems, .. updatedItems, .. itemsToRemove];
         }
 
         team = entityMapper.MapTo(repositoryFactory.TeamRepository.Update(entityMapper.MergeTo(team, existingTeam, organization, primaryLocation)));

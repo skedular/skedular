@@ -41,8 +41,8 @@ public class AccountingInvoiceExportLinkConfiguration : IEntityTypeConfiguration
 
         builder.Property(item => item.Provider).HasMaxLength(Constants.MaxAccountingProviderLength);
         builder.Property(item => item.LocalEntityType).HasMaxLength(Constants.MaxAccountingEntityTypeLength);
-        builder.Property(item => item.LocalEntityId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
-        builder.Property(item => item.ExternalInvoiceId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.LocalEntityId).HasMaxLength(Constants.MaxLocalEntityLength);
+        builder.Property(item => item.ExternalInvoiceId).HasMaxLength(Constants.MaxExternalInvoiceIdLength);
         builder.Property(item => item.ExternalInvoiceNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
         builder.Property(item => item.ExternalInvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.ExternalInvoiceMode).HasMaxLength(Constants.MaxAccountingEntityTypeLength);

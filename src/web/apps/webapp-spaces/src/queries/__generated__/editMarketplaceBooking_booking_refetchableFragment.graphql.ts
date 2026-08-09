@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0302c3be1bbf7f73586d20c12003244f>>
+ * @generated SignedSource<<eabe283061480be98d853ae74ab27ba1>>
  * @lightSyntaxTransform
  */
 
@@ -11,6 +11,9 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type editMarketplaceBooking_booking_refetchableFragment$variables = {
   bookingId: string;
+  from?: any | null | undefined;
+  locationId?: string | null | undefined;
+  until?: any | null | undefined;
 };
 export type editMarketplaceBooking_booking_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"editMarketplaceBooking_booking_query">;
@@ -26,42 +29,81 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "bookingId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "from"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "locationId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "until"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "from",
+    "variableName": "from"
+  },
+  {
+    "kind": "Variable",
+    "name": "locationId",
+    "variableName": "locationId"
+  },
+  {
+    "kind": "Variable",
+    "name": "until",
+    "variableName": "until"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
-  (v1/*:: as any*/),
-  (v2/*:: as any*/)
-],
 v4 = [
-  (v2/*:: as any*/)
+  (v2/*:: as any*/),
+  (v3/*:: as any*/)
 ],
-v5 = {
+v5 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "uniqueId",
+    "storageKey": null
+  },
+  (v3/*:: as any*/)
+],
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v6 = [
-  (v1/*:: as any*/),
-  (v2/*:: as any*/),
-  (v5/*:: as any*/)
-],
 v7 = [
+  (v2/*:: as any*/),
+  (v3/*:: as any*/),
+  (v6/*:: as any*/)
+],
+v8 = [
   {
     "alias": null,
     "args": null,
@@ -69,13 +111,20 @@ v7 = [
     "name": "type",
     "storageKey": null
   },
-  (v2/*:: as any*/)
+  (v3/*:: as any*/)
 ],
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "invoiceUrl",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "reason",
   "storageKey": null
 };
 return {
@@ -86,7 +135,7 @@ return {
     "name": "editMarketplaceBooking_booking_refetchableFragment",
     "selections": [
       {
-        "args": null,
+        "args": (v1/*:: as any*/),
         "kind": "FragmentSpread",
         "name": "editMarketplaceBooking_booking_query"
       }
@@ -114,7 +163,14 @@ return {
         "name": "booking",
         "plural": false,
         "selections": [
-          (v1/*:: as any*/),
+          (v2/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "entityFrameworkVersion",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -176,8 +232,8 @@ return {
             "name": "involvedCustomers",
             "plural": true,
             "selections": [
-              (v1/*:: as any*/),
               (v2/*:: as any*/),
+              (v3/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -216,7 +272,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedOrganizations",
             "plural": true,
-            "selections": (v3/*:: as any*/),
+            "selections": (v4/*:: as any*/),
             "storageKey": null
           },
           {
@@ -226,7 +282,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedLocations",
             "plural": true,
-            "selections": (v4/*:: as any*/),
+            "selections": (v5/*:: as any*/),
             "storageKey": null
           },
           {
@@ -236,7 +292,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedTeams",
             "plural": true,
-            "selections": (v3/*:: as any*/),
+            "selections": (v4/*:: as any*/),
             "storageKey": null
           },
           {
@@ -255,9 +311,9 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v1/*:: as any*/),
                   (v2/*:: as any*/),
-                  (v5/*:: as any*/),
+                  (v3/*:: as any*/),
+                  (v6/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -265,7 +321,7 @@ return {
                     "kind": "LinkedField",
                     "name": "customTags",
                     "plural": true,
-                    "selections": (v6/*:: as any*/),
+                    "selections": (v7/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -275,7 +331,70 @@ return {
                     "kind": "LinkedField",
                     "name": "zones",
                     "plural": true,
-                    "selections": (v6/*:: as any*/),
+                    "selections": (v7/*:: as any*/),
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v1/*:: as any*/),
+            "concreteType": "MarketplaceBookingResourceSelectionDetails",
+            "kind": "LinkedField",
+            "name": "marketplaceBookingResourceSelection",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "canSelectResources",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "maximumResourceCount",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "availableResourceIds",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Booking_LocationDetails",
+                "kind": "LinkedField",
+                "name": "eligibleLocations",
+                "plural": true,
+                "selections": (v5/*:: as any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "BookingResourceDetails",
+                "kind": "LinkedField",
+                "name": "eligibleResources",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ResourceDetails",
+                    "kind": "LinkedField",
+                    "name": "resource",
+                    "plural": false,
+                    "selections": (v4/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -292,7 +411,7 @@ return {
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v1/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -307,10 +426,10 @@ return {
                 "kind": "LinkedField",
                 "name": "paymentStatus",
                 "plural": false,
-                "selections": (v7/*:: as any*/),
+                "selections": (v8/*:: as any*/),
                 "storageKey": null
               },
-              (v8/*:: as any*/),
+              (v9/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -319,7 +438,7 @@ return {
                 "name": "refund",
                 "plural": false,
                 "selections": [
-                  (v1/*:: as any*/),
+                  (v2/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -327,7 +446,7 @@ return {
                     "kind": "LinkedField",
                     "name": "currency",
                     "plural": false,
-                    "selections": (v7/*:: as any*/),
+                    "selections": (v8/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -337,7 +456,7 @@ return {
                     "kind": "LinkedField",
                     "name": "status",
                     "plural": false,
-                    "selections": (v7/*:: as any*/),
+                    "selections": (v8/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -375,13 +494,7 @@ return {
                     "name": "currencyToDisplay",
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "reason",
-                    "storageKey": null
-                  },
+                  (v10/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -426,12 +539,67 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "MarketplaceBookingModificationDetails",
+            "kind": "LinkedField",
+            "name": "marketplaceBookingModifications",
+            "plural": true,
+            "selections": [
+              (v2/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "occurredAt",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "actorKind",
+                "storageKey": null
+              },
+              (v10/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "originalFrom",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "resultFrom",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "originalResourceNames",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "resultResourceNames",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "RecurringBookingDetails",
             "kind": "LinkedField",
             "name": "recurringBooking",
             "plural": false,
             "selections": [
-              (v1/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -453,7 +621,9 @@ return {
                 "kind": "LinkedField",
                 "name": "frequency",
                 "plural": false,
-                "selections": (v4/*:: as any*/),
+                "selections": [
+                  (v3/*:: as any*/)
+                ],
                 "storageKey": null
               },
               {
@@ -464,7 +634,7 @@ return {
                 "name": "marketplaceBooking",
                 "plural": false,
                 "selections": [
-                  (v1/*:: as any*/)
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -486,7 +656,7 @@ return {
                 "name": "invoiceNumber",
                 "storageKey": null
               },
-              (v8/*:: as any*/),
+              (v9/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -510,16 +680,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "33502a913d3a40cd979a28febbeb08b0",
+    "cacheID": "cafec16826f8c550ede3c2a5a4003b76",
     "id": null,
     "metadata": {},
     "name": "editMarketplaceBooking_booking_refetchableFragment",
     "operationKind": "query",
-    "text": "query editMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...editMarketplaceBooking_booking_query\n}\n\nfragment editMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    cancellationOverrideReason\n    from\n    until\n    notes\n    hasRecurringInstanceOverrides\n    category {\n      category\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      id\n      name\n    }\n    involvedLocations {\n      name\n    }\n    involvedTeams {\n      id\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n        color\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n      }\n    }\n    marketplaceBooking {\n      id\n      isPaymentRequired\n      paymentStatus {\n        type\n        name\n      }\n      invoiceUrl\n      refund {\n        id\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        canProcessInXero\n        xeroProcessingBlockedReason\n      }\n    }\n    recurringBooking {\n      id\n      startDate\n      endDate\n      frequency {\n        name\n      }\n      marketplaceBooking {\n        id\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
+    "text": "query editMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n  $from: DateTime\n  $locationId: String\n  $until: DateTime\n) {\n  ...editMarketplaceBooking_booking_query_3L0fvV\n}\n\nfragment editMarketplaceBooking_booking_query_3L0fvV on Query {\n  booking(id: $bookingId) {\n    id\n    entityFrameworkVersion\n    cancellationOverrideReason\n    from\n    until\n    notes\n    hasRecurringInstanceOverrides\n    category {\n      category\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      id\n      name\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    involvedTeams {\n      id\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n        color\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n      }\n    }\n    marketplaceBookingResourceSelection(from: $from, until: $until, locationId: $locationId) {\n      canSelectResources\n      maximumResourceCount\n      availableResourceIds\n      eligibleLocations {\n        uniqueId\n        name\n      }\n      eligibleResources {\n        resource {\n          id\n          name\n        }\n      }\n    }\n    marketplaceBooking {\n      id\n      isPaymentRequired\n      paymentStatus {\n        type\n        name\n      }\n      invoiceUrl\n      refund {\n        id\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        canProcessInXero\n        xeroProcessingBlockedReason\n      }\n    }\n    marketplaceBookingModifications {\n      id\n      occurredAt\n      actorKind\n      reason\n      originalFrom\n      resultFrom\n      originalResourceNames\n      resultResourceNames\n    }\n    recurringBooking {\n      id\n      startDate\n      endDate\n      frequency {\n        name\n      }\n      marketplaceBooking {\n        id\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9bb5a77a22b380ca156575ec21840661";
+(node as any).hash = "84db2829264de89e17eab8ee156b48b5";
 
 export default node;

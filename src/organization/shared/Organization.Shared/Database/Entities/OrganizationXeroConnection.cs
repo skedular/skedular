@@ -55,7 +55,7 @@ public class OrganizationXeroConnectionConfiguration : IEntityTypeConfiguration<
         builder.Property(item => item.DefaultReceivablesAccountCode).HasMaxLength(Constants.MaxAccountingAccountCodeLength);
         builder.Property(item => item.DefaultTrackingCategory1).HasMaxLength(Constants.MaxTagNameLength);
         builder.Property(item => item.DefaultTrackingCategory2).HasMaxLength(Constants.MaxTagNameLength);
-        builder.Property(item => item.DefaultBrandingThemeId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.DefaultBrandingThemeId).HasMaxLength(Constants.MaxBrandingThemeLength);
         builder.Property(item => item.DefaultReferencePrefix).HasMaxLength(Constants.MaxAccountingReferencePrefixLength);
         builder.Property(item => item.AccessTokenEncrypted).HasMaxLength(Constants.MaxEncryptedTokenLength);
         builder.Property(item => item.RefreshTokenEncrypted).HasMaxLength(Constants.MaxEncryptedTokenLength);

@@ -351,32 +351,35 @@ public class TeamService(
                 HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges.Select(item =>
-            {
-                var team = grpcMapper.MapTo(item.Node);
-                foreach (var member in team.TeamMembers)
+            Edges =
+            [
+                .. connection.Edges.Select(item =>
                 {
-                    var matchingCustomer = customers.FirstOrDefault(customer => customer.Id == member.Customer.Id);
-                    if (matchingCustomer is not null)
+                    var team = grpcMapper.MapTo(item.Node);
+                    foreach (var member in team.TeamMembers)
                     {
-                        member.Customer = matchingCustomer;
+                        var matchingCustomer = customers.FirstOrDefault(customer => customer.Id == member.Customer.Id);
+                        if (matchingCustomer is not null)
+                        {
+                            member.Customer = matchingCustomer;
+                        }
                     }
-                }
 
-                if (team.PrimaryLocation is not null)
-                {
-                    var matchingPrimaryLocation = locations.FirstOrDefault(location => location.Id == team.PrimaryLocation.Id);
-                    if (matchingPrimaryLocation is not null)
+                    if (team.PrimaryLocation is not null)
                     {
-                        team.PrimaryLocation = matchingPrimaryLocation;
+                        var matchingPrimaryLocation = locations.FirstOrDefault(location => location.Id == team.PrimaryLocation.Id);
+                        if (matchingPrimaryLocation is not null)
+                        {
+                            team.PrimaryLocation = matchingPrimaryLocation;
+                        }
                     }
-                }
 
-                return new TeamEdge(team, item.Cursor);
-            }).ToList(),
+                    return new TeamEdge(team, item.Cursor);
+                }),
+            ],
         };
 
-        Cache(result.Edges.Select(item => item.Node).ToList());
+        Cache([.. result.Edges.Select(item => item.Node)]);
 
         return result;
     }

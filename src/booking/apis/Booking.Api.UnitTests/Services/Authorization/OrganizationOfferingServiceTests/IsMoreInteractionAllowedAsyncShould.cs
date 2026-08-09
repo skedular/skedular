@@ -89,7 +89,7 @@ public class IsMoreInteractionAllowedAsyncShould
             Offering = new Offering
             {
                 Code = OfferingCode.FreeTierV1,
-                ActiveCustomerIds = Enumerable.Range(0, 11).Select(index => $"customer-{index}").ToList(),
+                ActiveCustomerIds = [.. Enumerable.Range(0, 11).Select(index => $"customer-{index}")],
             },
         };
 

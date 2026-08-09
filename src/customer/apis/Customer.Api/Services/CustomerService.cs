@@ -139,7 +139,7 @@ public class CustomerService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo, edges.Select(entityMapper.MapTo).ToList(), totalCount);
+        return (paginatedInfo, [.. edges.Select(entityMapper.MapTo)], totalCount);
     }
 
     public async Task<Shared.Models.Customer> AddAsync(
@@ -234,7 +234,7 @@ public class CustomerService(
         {
             var identity = entityMapper.MapToIdentity(context);
             identity.CreatedAt = timeProvider.GetUtcNow();
-            existingCustomer.Identities = existingCustomer.Identities.Append(identity).ToList();
+            existingCustomer.Identities = [.. existingCustomer.Identities, identity];
             existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
             customer = entityMapper.MapTo(existingCustomer);
         }
@@ -271,7 +271,7 @@ public class CustomerService(
 
             var identityToAdd = entityMapper.MapTo(identity, existingCustomer);
             repositoryFactory.IdentityRepository.Add(identityToAdd);
-            existingCustomer.Identities = existingCustomer.Identities.Append(identityToAdd).ToList();
+            existingCustomer.Identities = [.. existingCustomer.Identities, identityToAdd];
             existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
 
             customerOutboxPublisher.PublishCustomers([entityMapper.MapTo(existingCustomer)], repositoryFactory.UnitOfWork);

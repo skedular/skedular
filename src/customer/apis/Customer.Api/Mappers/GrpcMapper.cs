@@ -96,14 +96,16 @@ public class GrpcMapper : IGrpcMapper
             Timezone = src.Timezone,
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
-            Identities = src.Identities
-                .Select(item => new Identity
-                {
-                    Id = item.Id,
-                    Email = item.Email.ToSafeString(),
-                    EmailVerified = item.EmailVerified,
-                })
-                .ToList(),
+            Identities =
+            [
+                .. src.Identities
+                    .Select(item => new Identity
+                    {
+                        Id = item.Id,
+                        Email = item.Email.ToSafeString(),
+                        EmailVerified = item.EmailVerified,
+                    }),
+            ],
             IsOnboardingDone = src.IsOnboardingDone,
             DefaultOrganization = string.IsNullOrWhiteSpace(src.DefaultOrganizationId)
                 ? null
@@ -111,7 +113,9 @@ public class GrpcMapper : IGrpcMapper
                 {
                     Id = src.DefaultOrganizationId,
                 },
-            PreferredLocations = src.PreferredLocations.Select(item =>
+            PreferredLocations =
+            [
+                .. src.PreferredLocations.Select(item =>
                     new Location
                     {
                         Id = item.Id,
@@ -119,28 +123,32 @@ public class GrpcMapper : IGrpcMapper
                         {
                             Id = item.Organization.Id,
                         },
-                    })
-                .ToList(),
-            PreferredResources = src.PreferredResources
-                .Select(item => new Resource
-                {
-                    Id = item.Id,
-                    Location = new Location
+                    }),
+            ],
+            PreferredResources =
+            [
+                .. src.PreferredResources
+                    .Select(item => new Resource
                     {
-                        Id = item.Location.Id,
-                    },
-                })
-                .ToList(),
-            PreferredOrganizationTags = src.PreferredOrganizationTags
-                .Select(item => new OrganizationTag
-                {
-                    Id = item.Id,
-                    Organization = new Organization
+                        Id = item.Id,
+                        Location = new Location
+                        {
+                            Id = item.Location.Id,
+                        },
+                    }),
+            ],
+            PreferredOrganizationTags =
+            [
+                .. src.PreferredOrganizationTags
+                    .Select(item => new OrganizationTag
                     {
-                        Id = item.Organization.Id,
-                    },
-                })
-                .ToList(),
+                        Id = item.Id,
+                        Organization = new Organization
+                        {
+                            Id = item.Organization.Id,
+                        },
+                    }),
+            ],
             FavouriteLocations = [],
             PersonalInformationVisibility = src.PersonalInformationVisibility switch
             {

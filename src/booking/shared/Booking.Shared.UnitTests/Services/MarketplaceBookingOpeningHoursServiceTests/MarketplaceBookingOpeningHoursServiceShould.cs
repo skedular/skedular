@@ -65,6 +65,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([resource]);
 
@@ -138,6 +139,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([resource]);
 
@@ -300,6 +302,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([firstResource, secondResource]);
 
@@ -427,6 +430,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([otherResource, preferredResource]);
 

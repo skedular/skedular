@@ -96,25 +96,27 @@ public class EntityMapper : IEntityMapper
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization),
-            OrganizationTags = MapTo(src.OrganizationTags).ToList(),
+            OrganizationTags = [.. MapTo(src.OrganizationTags)],
             UniqueClaimCode = src.UniqueClaimCode,
             ContactedViaEmail = src.ContactedViaEmail,
             ContactedViaSms = src.ContactedViaSms,
             ContactedViaCall = src.ContactedViaCall,
             ContactedViaWhatsapp = src.ContactedViaWhatsapp,
-            PrecomputedLocationProducts = MapTo(src.PrecomputedLocationProducts).ToList(),
-            RestrictedInformation = src.RestrictedInformation
-                .OrderBy(item => item.SortOrder)
-                .ThenBy(item => item.Title)
-                .Select(MapTo)
-                .ToList(),
+            PrecomputedLocationProducts = [.. MapTo(src.PrecomputedLocationProducts)],
+            RestrictedInformation =
+            [
+                .. src.RestrictedInformation
+                    .OrderBy(item => item.SortOrder)
+                    .ThenBy(item => item.Title)
+                    .Select(MapTo),
+            ],
         };
 
-        location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
-        location.DailyRoomCountRecordings = MapTo(src.DailyRoomCountRecordings, location).ToList();
-        location.Resources = MapTo(src.Resources, location).ToList();
+        location.DailyDeskCountRecordings = [.. MapTo(src.DailyDeskCountRecordings, location)];
+        location.DailyRoomCountRecordings = [.. MapTo(src.DailyRoomCountRecordings, location)];
+        location.Resources = [.. MapTo(src.Resources, location)];
         location.PhysicalAddress = MapTo(src.PhysicalAddress, location);
-        location.FloorPlans = src.FloorPlans.Select(MapTo).ToList();
+        location.FloorPlans = [.. src.FloorPlans.Select(MapTo)];
 
         return location;
     }
@@ -131,10 +133,10 @@ public class EntityMapper : IEntityMapper
             Timezone = src.Timezone,
             Type = src.Type.ToLocationType(),
             ExtraMetadata = src.ExtraMetadata,
-            FeatureImages = src.FeatureImages.ToList(),
+            FeatureImages = [.. src.FeatureImages],
             OpeningHours = src.OpeningHours,
             Organization = organization,
-            OrganizationTags = organizationTags.ToList(),
+            OrganizationTags = [.. organizationTags],
             UniqueClaimCode = src.UniqueClaimCode,
             ContactedViaEmail = src.ContactedViaEmail,
             ContactedViaSms = src.ContactedViaSms,
@@ -153,9 +155,9 @@ public class EntityMapper : IEntityMapper
         dest.Timezone = src.Timezone;
         dest.Type = src.Type.ToLocationType();
         dest.ExtraMetadata = src.ExtraMetadata;
-        dest.FeatureImages = src.FeatureImages.ToList();
+        dest.FeatureImages = [.. src.FeatureImages];
         dest.OpeningHours = src.OpeningHours;
-        dest.OrganizationTags = organizationTags.ToList();
+        dest.OrganizationTags = [.. organizationTags];
         dest.UniqueClaimCode = src.UniqueClaimCode;
         dest.ContactedViaEmail = src.ContactedViaEmail;
         dest.ContactedViaSms = src.ContactedViaSms;
@@ -178,7 +180,7 @@ public class EntityMapper : IEntityMapper
             Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
-            Tags = MapTo(src.OrganizationTags).ToList(),
+            Tags = [.. MapTo(src.OrganizationTags)],
             ResourcePosition = MapTo(src.ResourcePosition),
         };
 
@@ -202,7 +204,7 @@ public class EntityMapper : IEntityMapper
         dest.Capacity = src.Capacity;
         dest.IsAvailableHoursOverridden = src.IsAvailableHoursOverridden;
         dest.AvailableHours = src.AvailableHours;
-        dest.OrganizationTags = organizationTags.ToList();
+        dest.OrganizationTags = [.. organizationTags];
         dest.Location = location;
         return dest;
     }
@@ -222,7 +224,7 @@ public class EntityMapper : IEntityMapper
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden ?? false,
             AvailableHours = src.AvailableHours,
             Location = location,
-            Tags = MapTo(src.OrganizationTags, location.Organization).ToList(),
+            Tags = [.. MapTo(src.OrganizationTags, location.Organization)],
         };
 
     public IEnumerable<Edge<Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Models.Location location) =>
@@ -247,7 +249,7 @@ public class EntityMapper : IEntityMapper
 
         if (resourcePositions is not null)
         {
-            dest.ResourcePositions = resourcePositions.ToList();
+            dest.ResourcePositions = [.. resourcePositions];
         }
 
         return dest;
@@ -265,7 +267,7 @@ public class EntityMapper : IEntityMapper
             Image = src.Image,
         };
 
-        floorPlan.ResourcePositions = MapTo(src.ResourcePositions, floorPlan).ToList();
+        floorPlan.ResourcePositions = [.. MapTo(src.ResourcePositions, floorPlan)];
 
         return floorPlan;
     }
@@ -327,9 +329,7 @@ public class EntityMapper : IEntityMapper
             Color = src.Color,
         };
 
-    private static IEnumerable<Models.OrganizationTag> MapTo(
-        IEnumerable<OrganizationTag> src,
-        Models.Organization? organization) =>
+    private static IEnumerable<Models.OrganizationTag> MapTo(IEnumerable<OrganizationTag> src, Models.Organization? organization) =>
         src.Select(item => MapTo(item, organization));
 
     private IEnumerable<Models.Resource> MapTo(IEnumerable<Resource> src, Models.Location location) =>
@@ -351,12 +351,10 @@ public class EntityMapper : IEntityMapper
             Offering = src.Offering,
             Type = src.Type.ToOrganizationType(),
             IsOwnershipVerified = src.IsOwnershipVerified,
-            Tags = MapTo(src.Tags).ToList(),
+            Tags = [.. MapTo(src.Tags)],
         };
 
-    private static IEnumerable<DailyDeskCountRecording> MapTo(
-        IEnumerable<Database.Entities.DailyDeskCountRecording> src,
-        Models.Location location) =>
+    private static IEnumerable<DailyDeskCountRecording> MapTo(IEnumerable<Database.Entities.DailyDeskCountRecording> src, Models.Location location) =>
         src.Select(item => MapTo(item, location));
 
     private static DailyDeskCountRecording MapTo(Database.Entities.DailyDeskCountRecording src, Models.Location location) =>

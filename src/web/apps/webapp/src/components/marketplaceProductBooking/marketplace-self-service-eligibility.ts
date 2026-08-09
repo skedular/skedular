@@ -8,6 +8,19 @@ export const canRequestMarketplaceBookingCancellation = ({ bookingStartsAt, isCa
   return new Date(bookingStartsAt).getTime() > now.getTime();
 };
 
+export const canRequestMarketplaceBookingModification = ({
+  bookingStartsAt,
+  isCancelled,
+  paymentStatusType,
+  now,
+}: {
+  bookingStartsAt?: string | null;
+  isCancelled: boolean;
+  paymentStatusType?: MarketplacePaymentStatusType | null;
+  now: Date;
+}) =>
+  !isCancelled && (paymentStatusType === 'CONFIRMED' || paymentStatusType === 'NO_PAYMENT_REQUIRED') && !!bookingStartsAt && new Date(bookingStartsAt).getTime() > now.getTime();
+
 export const shouldEnterRefundLifecycle = ({ hasConfirmedPayment, isCancellationAccepted }: { hasConfirmedPayment: boolean; isCancellationAccepted: boolean }) =>
   hasConfirmedPayment && isCancellationAccepted;
 

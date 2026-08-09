@@ -25,7 +25,8 @@ public class OrganizationArrearsBillingPlannerService(IOrganizationArrearsCharge
         OrganizationBillingCycle billingCycle,
         IReadOnlyList<Models.Booking> bookings,
         IReadOnlyList<string>? excludedSegmentKeys = null) =>
-        bookings
+    [
+        .. bookings
             .SelectMany(item => organizationArrearsChargeSegmentService.BuildChargeSegments(item, billingCycle))
             // Workflow state keeps segment keys that were already invoiced so retries/manual reruns
             // do not emit duplicate invoices for the same earned usage slice.
@@ -42,17 +43,18 @@ public class OrganizationArrearsBillingPlannerService(IOrganizationArrearsCharge
                 group.Key.CustomerId,
                 group.Key.Currency,
                 billingPeriod,
-                group
-                    .OrderBy(item => item.EarnedAt)
-                    .Select(item => new ArrearsInvoiceDraftLine(
-                        item.SegmentKey,
-                        item.BookingId,
-                        item.ServicePeriod,
-                        item.EarnedAt,
-                        item.Amount,
-                        item.Description))
-                    .ToList()))
-            .ToList();
+                [
+                    .. group
+                        .OrderBy(item => item.EarnedAt)
+                        .Select(item => new ArrearsInvoiceDraftLine(
+                            item.SegmentKey,
+                            item.BookingId,
+                            item.ServicePeriod,
+                            item.EarnedAt,
+                            item.Amount,
+                            item.Description)),
+                ])),
+    ];
 
     public ArrearsInvoiceDraft? BuildInitialRecurringInvoiceDraft(
         RecurringBooking recurringBooking,

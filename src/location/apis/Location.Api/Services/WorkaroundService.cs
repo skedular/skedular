@@ -43,7 +43,7 @@ public class WorkaroundService(
     public async Task RepublishAllLocationsAsync(CancellationToken cancellationToken)
     {
         var locations = await repositoryFactory.LocationRepository.GetAllUntrackedAsync(false, cancellationToken);
-        await locationPublisher.PublishLocationsAsync(locations.Select(entityMapper.MapTo).ToList(), cancellationToken);
+        await locationPublisher.PublishLocationsAsync([.. locations.Select(entityMapper.MapTo)], cancellationToken);
     }
 
     public async Task RegenerateAllDailyAnalyticsAsync(CancellationToken cancellationToken)

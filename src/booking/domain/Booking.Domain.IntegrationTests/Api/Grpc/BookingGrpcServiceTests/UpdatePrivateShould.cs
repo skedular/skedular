@@ -13,8 +13,7 @@ namespace Booking.Domain.IntegrationTests.Api.Grpc.BookingGrpcServiceTests;
 public class UpdatePrivateShould(
     BookingService.BookingServiceClient bookingServiceClient,
     IRepositoryFactory repositoryFactory,
-    BookingGrpcConfig bookingConfiguration,
-    TimeProvider timeProvider)
+    BookingGrpcConfig bookingConfiguration)
 {
     [Theory]
     [AutoFakeItEasyData]
@@ -26,7 +25,7 @@ public class UpdatePrivateShould(
         string updatedNotes,
         CancellationToken cancellationToken)
     {
-        var from = timeProvider.GetUtcNow().AddDays(1);
+        var from = new DateTimeOffset(2026, 8, 20, 10, 0, 0, TimeSpan.Zero);
         var until = from.AddHours(1);
         await SeedPrivateBookingAsync(bookingId, customerId, identityId, originalNotes, from, until, cancellationToken);
 

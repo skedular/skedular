@@ -84,7 +84,7 @@ public class BookPrivateRecurringResources
 
             _state = _state with
             {
-                UpdateQueue = _state.UpdateQueue.Skip(1).ToList(),
+                UpdateQueue = [.. _state.UpdateQueue.Skip(1)],
             };
 
             await Workflow.WaitConditionAsync(() => _state.UpdateQueue.Any() || _state.RecurringBookingDeleted, TimeSpan.FromDays(1));
@@ -98,7 +98,7 @@ public class BookPrivateRecurringResources
 
         _state = _state with
         {
-            UpdateQueue = _state.UpdateQueue.Append(true).ToList(),
+            UpdateQueue = [.. _state.UpdateQueue, true],
         };
 
         return Task.CompletedTask;

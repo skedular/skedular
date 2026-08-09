@@ -236,7 +236,7 @@ public class OrganizationSubscriber(
         }
 
         repositoryFactory.OrganizationMemberRepository.RemoveRange(itemsToRemove);
-        existingOrganization.OrganizationMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingOrganization.OrganizationMembers = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         return existingOrganization;
     }
@@ -264,7 +264,7 @@ public class OrganizationSubscriber(
             .ToList();
 
         repositoryFactory.OrganizationTagRepository.RemoveRange(itemsToRemove);
-        existingOrganization.Tags = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        existingOrganization.Tags = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         return existingOrganization;
     }

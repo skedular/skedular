@@ -59,7 +59,7 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
         int numberOfResourcesToBook,
         CancellationToken cancellationToken)
     {
-        var availableResources = await GetAvailableResourcesAsync(from, until, productVersion.OrganizationTags.ToList(), cancellationToken);
+        var availableResources = await GetAvailableResourcesAsync(from, until, [.. productVersion.OrganizationTags], cancellationToken);
         if (availableResources.Count < numberOfResourcesToBook)
         {
             throw new NoResourceAvailable();
@@ -67,7 +67,7 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
 
         if (customer is null)
         {
-            return availableResources.Take(numberOfResourcesToBook).ToList();
+            return [.. availableResources.Take(numberOfResourcesToBook)];
         }
 
         var customerPreferredResourceIds = customer.PreferredResources.Select(item => item.Id).ToList();
@@ -122,7 +122,7 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
         var selectedResourceIds = resources.Select(item => item.Id).ToList();
         var unselectedResources = availableResources.Where(item => !selectedResourceIds.Contains(item.Id)).ToList();
 
-        return resources.Concat(unselectedResources.Take(numberOfResourcesToBook - resources.Count)).ToList();
+        return [.. resources, .. unselectedResources.Take(numberOfResourcesToBook - resources.Count)];
     }
 
     /// <summary>
@@ -145,7 +145,8 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
             from,
             until,
             [],
-            organizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id).ToList(),
+            [.. organizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id)],
+            [],
             [],
             cancellationToken);
 }

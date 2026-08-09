@@ -54,7 +54,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken)
     {
-        var resources = await organizationBankAccountService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var resources = await organizationBankAccountService.DeleteAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new OrganizationBankAccountsPayload
         {
             ClientMutationId = input.ClientMutationId,

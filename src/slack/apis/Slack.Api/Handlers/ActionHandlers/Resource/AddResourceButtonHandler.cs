@@ -139,12 +139,15 @@ public class AddResourceButtonHandler(
                 Element = new StaticMultiSelectMenu
                 {
                     ActionId = CustomTagActionTypes.CustomTags,
-                    Options = customTagConnection.Edges.Select(item => item.Node).Select(item => new Option
-                    {
-                        Text = item.Name.ToOptionText(),
-                        Value = item.Id,
-                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
-                    }).ToList(),
+                    Options =
+                    [
+                        .. customTagConnection.Edges.Select(item => item.Node).Select(item => new Option
+                        {
+                            Text = item.Name.ToOptionText(),
+                            Value = item.Id,
+                            Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
+                        }),
+                    ],
                 },
                 Optional = true,
             });
@@ -160,12 +163,15 @@ public class AddResourceButtonHandler(
                 Element = new StaticMultiSelectMenu
                 {
                     ActionId = ZoneActionTypes.Zones,
-                    Options = zoneConnection.Edges.Select(item => item.Node).Select(item => new Option
-                    {
-                        Text = item.Name.ToOptionText(),
-                        Value = item.Id,
-                        Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
-                    }).ToList(),
+                    Options =
+                    [
+                        .. zoneConnection.Edges.Select(item => item.Node).Select(item => new Option
+                        {
+                            Text = item.Name.ToOptionText(),
+                            Value = item.Id,
+                            Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText(),
+                        }),
+                    ],
                 },
                 Optional = true,
             });
@@ -360,10 +366,13 @@ public class AddResourceButtonHandler(
             {
                 if (block is StaticMultiSelectValue value)
                 {
-                    resource.CustomTags = value.SelectedOptions.Select(item => new OrganizationCustomTag
-                    {
-                        Id = item.Value,
-                    }).ToList();
+                    resource.CustomTags =
+                    [
+                        .. value.SelectedOptions.Select(item => new OrganizationCustomTag
+                        {
+                            Id = item.Value,
+                        }),
+                    ];
                 }
                 else
                 {
@@ -382,10 +391,13 @@ public class AddResourceButtonHandler(
             {
                 if (block is StaticMultiSelectValue value)
                 {
-                    resource.Zones = value.SelectedOptions.Select(item => new OrganizationZone
-                    {
-                        Id = item.Value,
-                    }).ToList();
+                    resource.Zones =
+                    [
+                        .. value.SelectedOptions.Select(item => new OrganizationZone
+                        {
+                            Id = item.Value,
+                        }),
+                    ];
                 }
                 else
                 {

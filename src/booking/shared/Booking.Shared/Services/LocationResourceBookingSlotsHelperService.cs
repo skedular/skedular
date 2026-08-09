@@ -52,16 +52,18 @@ public class LocationResourceBookingSlotsHelperService(IRandomHelper randomHelpe
         var endPeriod = startPeriod.AddDays(14).AddYears(1).AddMonths(2);
         var count = (endPeriod - startPeriod).TotalMinutes / OpeningHoursDetails.BookingSlotSizeInMinutes;
 
-        return Enumerable
-            .Range(0, (int)count)
-            .Select(idx => startPeriod.AddMinutes(idx * OpeningHoursDetails.BookingSlotSizeInMinutes))
-            .Select(start => new ResourceBookingSlot
-            {
-                Id = randomHelper.Generate(),
-                Start = start,
-                Available = true,
-                Resource = resource,
-            })
-            .ToList();
+        return
+        [
+            .. Enumerable
+                .Range(0, (int)count)
+                .Select(idx => startPeriod.AddMinutes(idx * OpeningHoursDetails.BookingSlotSizeInMinutes))
+                .Select(start => new ResourceBookingSlot
+                {
+                    Id = randomHelper.Generate(),
+                    Start = start,
+                    Available = true,
+                    Resource = resource,
+                }),
+        ];
     }
 }

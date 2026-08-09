@@ -1,4 +1,5 @@
 import { CustomerAvatar } from '@/components/avatars';
+import { getOrganizationBookingModificationLink } from '@/components/links';
 import InvoiceDownloadLinks from '@/components/booking/invoice-download-links';
 import RecurringBookingDeleteConfirmationDialog from '@/components/booking/recurring-booking-delete-confirmation-dialog';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
@@ -10,11 +11,13 @@ import type { editMarketplaceBooking_confirmBookingPaymentMutation } from '@/que
 import type { editMarketplaceBooking_deleteMarketplaceBookingMutation } from '@/queries/__generated__/editMarketplaceBooking_deleteMarketplaceBookingMutation.graphql';
 import type { editMarketplaceBooking_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/editMarketplaceBooking_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { editMarketplaceBooking_makeBookingPaymentNotRequiredMutation } from '@/queries/__generated__/editMarketplaceBooking_makeBookingPaymentNotRequiredMutation.graphql';
+import type { editMarketplaceBooking_modifyMarketplaceBookingMutation } from '@/queries/__generated__/editMarketplaceBooking_modifyMarketplaceBookingMutation.graphql';
 import type { editMarketplaceBooking_query$key } from '@/queries/__generated__/editMarketplaceBooking_query.graphql';
 import type { editMarketplaceBooking_rejectBookingPaymentMutation } from '@/queries/__generated__/editMarketplaceBooking_rejectBookingPaymentMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import TextField from '@mui/material/TextField';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import {
   getCustomerFullName,
@@ -26,7 +29,18 @@ import {
   toShortDate,
   toShortTime,
 } from '@skedular/shared';
-import { BodyIconTypography, defaultPadding, PageHeaderPanel, SettingsSectionCard, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
+import {
+  BodyIconTypography,
+  defaultPadding,
+  MarketplaceBookingModificationForm,
+  type MarketplaceBookingModificationFormValues,
+  PageHeaderPanel,
+  SettingsSectionCard,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  SubtitleIconTypography,
+} from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useMemo, useState } from 'react';
@@ -38,11 +52,13 @@ type Props = {
   rootDataRelay: editMarketplaceBooking_query$key;
   rootDataBookingRelay: editMarketplaceBooking_booking_query$key;
   onReloadRequired?: () => void;
+  page?: boolean;
+  organizationCustomDomain?: string;
 };
 
 const canShowMarketplacePaymentActions = (paymentStatusType: string | undefined, isPaymentRequired: boolean | undefined) => !!isPaymentRequired && paymentStatusType === 'PENDING';
 
-const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired }: Props) => {
+const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadRequired, page = false, organizationCustomDomain }: Props) => {
   const rootData = useFragment<editMarketplaceBooking_query$key>(
     graphql`
       fragment editMarketplaceBooking_query on Query {
@@ -73,6 +89,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
       fragment editMarketplaceBooking_booking_query on Query @refetchable(queryName: "editMarketplaceBooking_booking_refetchableFragment") {
         booking(id: $bookingId) {
           id
+          entityFrameworkVersion
           cancellationOverrideReason
           from
           until
@@ -147,6 +164,16 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
               canProcessInXero
               xeroProcessingBlockedReason
             }
+          }
+          marketplaceBookingModifications {
+            id
+            occurredAt
+            actorKind
+            reason
+            originalFrom
+            resultFrom
+            originalResourceNames
+            resultResourceNames
           }
           recurringBooking {
             id
@@ -248,10 +275,39 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
     }
   `);
 
+  const [commitModifyMarketplaceBooking, isModifyMarketplaceBookingInFlight] = useMutation<editMarketplaceBooking_modifyMarketplaceBookingMutation>(graphql`
+    mutation editMarketplaceBooking_modifyMarketplaceBookingMutation($input: ModifyMarketplaceBookingInput!) @raw_response_type {
+      modifyMarketplaceBooking(input: $input) {
+        booking {
+          id
+        }
+        modification {
+          id
+        }
+        eligibilityError {
+          message
+        }
+        availabilityError {
+          message
+        }
+        conflictError {
+          message
+        }
+        accessError {
+          message
+        }
+      }
+    }
+  `);
+
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [pendingRecurringSeriesCancellation, setPendingRecurringSeriesCancellation] = useState(false);
+  const [isModifyDialogOpen, setIsModifyDialogOpen] = useState(page);
+  const [modificationFrom, setModificationFrom] = useState('');
+  const [modificationUntil, setModificationUntil] = useState('');
+  const [modificationReason, setModificationReason] = useState('');
   const allDay = useMemo<boolean>(
     () => isMidnight(rootDataBooking.booking?.from) && isMidnight(rootDataBooking.booking?.until),
     [rootDataBooking.booking?.from, rootDataBooking.booking?.until],
@@ -274,6 +330,77 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
     bookingDetailsInfo += ` on ${toShortDate(booking.from)}`;
     return bookingDetailsInfo;
   }, [rootDataBooking.booking]);
+
+  const handleOpenModifyDialog = () => {
+    const booking = rootDataBooking.booking;
+    if (!booking) {
+      return;
+    }
+
+    if (organizationCustomDomain) {
+      router.push(getOrganizationBookingModificationLink(undefined, organizationCustomDomain, booking.id));
+      return;
+    }
+
+    setModificationFrom(booking.from.slice(0, 16));
+    setModificationUntil(booking.until.slice(0, 16));
+    setModificationReason('');
+    setIsModifyDialogOpen(true);
+  };
+
+  const handleModifyMarketplaceBookingValues = (values?: MarketplaceBookingModificationFormValues) => {
+    const booking = rootDataBooking.booking;
+    const reason = (values?.reason ?? modificationReason.trim()) || null;
+    const proposedFrom = values?.from ?? modificationFrom;
+    const proposedUntil = values?.until ?? modificationUntil;
+    if (!booking || !proposedFrom || !proposedUntil) {
+      return;
+    }
+
+    const from = new Date(proposedFrom);
+    const until = new Date(proposedUntil);
+    if (Number.isNaN(from.valueOf()) || Number.isNaN(until.valueOf()) || until <= from) {
+      themedToast(<NotificationContent content="Enter a valid end date and time after the start." />, errorNotificationOptions);
+      return;
+    }
+
+    commitModifyMarketplaceBooking({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          bookingId: booking.id,
+          expectedVersion: booking.entityFrameworkVersion,
+          from: from.toISOString(),
+          until: until.toISOString(),
+          reason: reason || '',
+          actorKind: 'ORGANIZATION_OPERATOR',
+        },
+      },
+      onCompleted: (data, errors) => {
+        const result = data?.modifyMarketplaceBooking;
+        const modificationError = result?.eligibilityError ?? result?.availabilityError ?? result?.conflictError ?? result?.accessError;
+        if (modificationError) {
+          themedToast(<NotificationContent content={modificationError.message} />, errorNotificationOptions);
+          return;
+        }
+        if (errors?.length) {
+          themedToast(<NotificationContent content={`We couldn't update booking ${getBookingDetailsInfo()}. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+          return;
+        }
+
+        if (page) {
+          router.back();
+          return;
+        }
+        setIsModifyDialogOpen(false);
+        themedToast(<NotificationContent content="Booking updated. The customer has been notified." />);
+        onReloadRequired?.();
+      },
+      onError: (error) => {
+        themedToast(<NotificationContent content={`We couldn't update booking ${getBookingDetailsInfo()}. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
+      },
+    });
+  };
 
   const handleRemoveBookingClick = () => {
     const booking = rootDataBooking.booking;
@@ -521,6 +648,24 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
   }
 
   const booking = rootDataBooking.booking;
+  if (page) {
+    return (
+      <MarketplaceBookingModificationForm
+        initialFrom={booking.from}
+        initialUntil={booking.until}
+        currentResourceIds={[]}
+        currentResources={[]}
+        currentLocationId={null}
+        locations={[]}
+        resources={[]}
+        canSelectResources={false}
+        maximumResourceCount={0}
+        isSubmitting={isModifyMarketplaceBookingInFlight}
+        onSubmit={handleModifyMarketplaceBookingValues}
+        onCancel={() => router.back()}
+      />
+    );
+  }
   const pageTitle = booking.involvedCustomers.length > 0 ? `Edit Booking - ${getCustomerFullName(booking.involvedCustomers[0])}` : 'Edit Booking';
   const recurringBooking = booking.recurringBooking;
   const recurringSeriesLabel = recurringBooking ? `${recurringBooking.frequency.name} recurring booking` : null;
@@ -533,6 +678,10 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
     rootData.organizationBookingPermissions.canModifyPaymentMethod &&
     canShowMarketplacePaymentActions(booking.marketplaceBooking?.paymentStatus.type, booking.marketplaceBooking?.isPaymentRequired);
   const canManageRefund = rootData.organizationBookingPermissions.canModifyPaymentMethod && !!booking.marketplaceBooking?.refund;
+  const canModifyBooking =
+    !!booking.marketplaceBooking &&
+    (booking.marketplaceBooking.paymentStatus.type === 'CONFIRMED' || booking.marketplaceBooking.paymentStatus.type === 'NO_PAYMENT_REQUIRED') &&
+    new Date(booking.from) > new Date();
   const paymentStatusColor =
     booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED' ? 'success' : booking.marketplaceBooking?.paymentStatus.type === 'PENDING' ? 'warning' : 'default';
   const primaryCustomer = booking.involvedCustomers[0];
@@ -600,6 +749,37 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
                 </StackColumn>
               </StackColumn>
             </SettingsSectionCard>
+
+            <SettingsSectionCard title="Modify Booking" description="Change this booking's date or time. Your reason is recorded and sent to the customer.">
+              {canModifyBooking ? (
+                <Button variant="contained" onClick={handleOpenModifyDialog} sx={{ alignSelf: 'flex-start' }}>
+                  Modify Booking
+                </Button>
+              ) : (
+                <BodyIconTypography label="This booking is not eligible to be modified." sx={{ opacity: 0.78 }} />
+              )}
+            </SettingsSectionCard>
+
+            <SettingsSectionCard title="Change History" description="Recorded schedule changes for this booking." sx={{ order: 99 }}>
+              {booking.marketplaceBookingModifications.length > 0 ? (
+                booking.marketplaceBookingModifications.map((modification) => (
+                  <StackColumn key={modification.id} spacing={0.25} sx={{ mb: 1.5 }}>
+                    <BodyIconTypography label={`${toShortDate(modification.originalFrom)} → ${toShortDate(modification.resultFrom)}`} />
+                    <SmallIconTypography
+                      label={`${toShortDate(modification.occurredAt)} · ${modification.actorKind === 'ORGANIZATION_OPERATOR' ? 'Organization administrator' : 'Customer'}`}
+                      sx={{ opacity: 0.72 }}
+                    />
+                    {modification.reason ? <SmallIconTypography label={modification.reason} sx={{ opacity: 0.82 }} /> : null}
+                    <SmallIconTypography
+                      label={`Resources: ${modification.originalResourceNames.join(', ') || 'None'} → ${modification.resultResourceNames.join(', ') || 'None'}`}
+                      sx={{ opacity: 0.82 }}
+                    />
+                  </StackColumn>
+                ))
+              ) : (
+                <BodyIconTypography label="No booking changes have been recorded." sx={{ opacity: 0.78 }} />
+              )}
+            </SettingsSectionCard>
           </StackColumn>
 
           <StackColumn spacing={2} sx={{ minWidth: 0 }}>
@@ -666,6 +846,47 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
         onConfirm={handleConfirmRecurringSeriesCancellationClick}
         onCancel={handleCancelRecurringSeriesCancellationClick}
       />
+
+      {isModifyDialogOpen ? (
+        <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto', px: { xs: 1, sm: 2, md: 3 }, pb: 4 }}>
+          <SettingsSectionCard title="Schedule" description="Pick the date and time for this booking.">
+            <StackColumn spacing={2} sx={{ pt: 1 }}>
+              <TextField
+                label="Start"
+                type="datetime-local"
+                value={modificationFrom}
+                onChange={(event) => setModificationFrom(event.target.value)}
+                slotProps={{ inputLabel: { shrink: true } }}
+                required
+              />
+              <TextField
+                label="End"
+                type="datetime-local"
+                value={modificationUntil}
+                onChange={(event) => setModificationUntil(event.target.value)}
+                slotProps={{ inputLabel: { shrink: true } }}
+                required
+              />
+              <TextField
+                label="Reason for change"
+                value={modificationReason}
+                onChange={(event) => setModificationReason(event.target.value)}
+                helperText="This reason is recorded in the booking history and included in the customer notification."
+                multiline
+                minRows={3}
+                required
+              />
+              <BodyIconTypography label="Host bookings reserve the whole place; individual resources cannot be changed here." sx={{ opacity: 0.78 }} />
+            </StackColumn>
+            <StackRow spacing={1} sx={{ justifyContent: 'flex-end' }}>
+              <Button onClick={() => setIsModifyDialogOpen(false)}>Cancel</Button>
+              <Button variant="contained" onClick={() => handleModifyMarketplaceBookingValues()} disabled={!modificationReason.trim() || isModifyMarketplaceBookingInFlight}>
+                Save Changes
+              </Button>
+            </StackRow>
+          </SettingsSectionCard>
+        </Box>
+      ) : null}
     </Box>
   );
 };

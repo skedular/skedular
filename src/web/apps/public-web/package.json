@@ -17,19 +17,19 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "astro": "^7.1.6",
+    "astro": "^7.2.0",
     "logrocket": "^12.1.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@testing-library/dom": "^10.4.1",
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.2.0",
     "axe-core": "^4.13.0",
     "jsdom": "^30.0.1",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^6.0.3",
     "vitest": "^4.1.10",
-    "wrangler": "^4.119.0"
+    "wrangler": "^4.120.0"
   }
 }

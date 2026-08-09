@@ -62,6 +62,7 @@ public class ResourceService(IRepositoryFactory repositoryFactory) : IResourceSe
             resourceIds,
             tagIds,
             [],
+            [],
             cancellationToken);
 
         return availableResources.Count != resourceIds.Count || !availableResources.All(item => resourceIds.Contains(item.Id))

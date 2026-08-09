@@ -22,7 +22,7 @@ relatedArticleIds:
   - shared-teams
   - shared-products
   - shared-subscriptions
-updatedAt: 2026-08-02
+updatedAt: 2026-08-07
 ---
 
 ## Overview
@@ -76,6 +76,14 @@ Before a booking is confirmed, Skedular checks the selected resources and their 
 Cancellation ends the booking's future resource entitlement according to the applicable product and organization rules. It is separate from any refund or accounting decision. Use the relevant product documentation for cancellation windows and refund behavior.
 
 The customer-facing experience shows **Cancel** only when the booking can be cancelled by the current actor. When cancellation is unavailable, the booking details show the reason instead of presenting an action that cannot succeed. An owner or administrator with the required permission may be able to override a product cancellation restriction; an override requires a short cancellation reason for the organization's audit history.
+
+## Modify a Marketplace Booking
+
+An eligible customer can change the date and time of their future marketplace Booking from its details. An authorized organization owner or administrator can make the same change for that customer. The Booking must be confirmed or marked as payment not required, and the change must be completed before its start time. This is separate from cancellation: a Product cancellation cutoff does not decide whether an eligible Booking can be changed.
+
+Skedular checks the proposed time and any replacement Resources again before saving. A change keeps the original Product, Price, quantity, payment, invoice, refund, and cancellation terms; it does not create a new purchase. If the proposed result is unavailable or no longer eligible, the original Booking remains unchanged and Skedular explains why. Operator changes require a reason, notify the customer, and appear in the Booking history.
+
+In Skedular Spaces, an eligible Booking can also use replacement Resources that the purchased Product can fulfill. In Skedular Host, the change is date and time only because the place's underlying Resource is managed automatically. A recurring Subscription Booking has additional current-cycle rules; see [Subscriptions](/docs/shared/marketplace/subscriptions).
 
 ## Product Differences
 

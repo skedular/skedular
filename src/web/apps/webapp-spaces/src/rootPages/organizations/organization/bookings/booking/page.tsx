@@ -56,9 +56,10 @@ type Props = {
   queryReference: PreloadedQuery<pageOrganizationBooking_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationCustomDomain: string;
+  forceModify?: boolean;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, forceModify = false }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
   const searchParams = useSearchParams();
   const shouldPay = useMemo(() => {
@@ -83,7 +84,13 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
       )}
       {rootData.booking.channel.channel === 'MARKETPLACE' && !shouldPay && (
-        <EditMarketplaceBooking rootDataRelay={rootData} rootDataBookingRelay={rootData} onReloadRequired={onReloadRequired} />
+        <EditMarketplaceBooking
+          rootDataRelay={rootData}
+          rootDataBookingRelay={rootData}
+          onReloadRequired={onReloadRequired}
+          page={forceModify}
+          organizationCustomDomain={organizationCustomDomain}
+        />
       )}
       {rootData.booking.channel.channel === 'PRIVATE' &&
         (showRecurringPrivateBookingEditor ? (
@@ -102,7 +109,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
 
 const MemoRootPage = memo(RootPage);
 
-const RootPageWithRelay = () => {
+const RootPageWithRelay = ({ forceModify = false }: { forceModify?: boolean }) => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationBooking_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -159,7 +166,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} forceModify={forceModify} />
     </ErrorBoundary>
   );
 };

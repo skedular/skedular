@@ -362,7 +362,7 @@ public class ZonesPage(
             cancellationToken), zoneComponents.GetZoneCardsAsync(
             workspace,
             workspaceMember,
-            zoneConnection.Edges.Select(item => item.Node).ToList(),
+            [.. zoneConnection.Edges.Select(item => item.Node)],
             commonPageContext.PageContext,
             cancellationToken));
 
@@ -380,7 +380,7 @@ public class ZonesPage(
             new HomeViewDefinition
             {
                 CallbackId = ZonesCallback,
-                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
+                Blocks = [.. blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1)],
                 PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
@@ -419,7 +419,7 @@ public class ZonesPage(
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addZoneButton).Concat(feedbackButton).ToList(),
+                Elements = [.. homeAndBackButtons, .. addZoneButton, .. feedbackButton],
             },
         ];
     }

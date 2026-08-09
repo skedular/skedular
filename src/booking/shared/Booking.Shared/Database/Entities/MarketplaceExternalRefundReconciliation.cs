@@ -20,7 +20,11 @@ public class MarketplaceExternalRefundReconciliation : EntityBase
     public int RetryCount { get; set; }
     public DateTimeOffset? NextRetryAt { get; set; }
     public string? ResolutionReason { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? ResolutionActorCustomerId { get; set; }
+    public virtual Customer? ResolutionActorCustomer { get; set; }
+
     public string? ResolutionCorrelationId { get; set; }
 }
 
@@ -31,18 +35,18 @@ public class MarketplaceExternalRefundReconciliationConfiguration
     {
         builder.ConfigureEntityBase();
 
-        builder.Property(item => item.OrganizationId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
         builder.Property(item => item.StripeAccountId).HasMaxLength(Constants.MaxRefundStripeAccountIdLength);
-        builder.Property(item => item.Provider).HasMaxLength(Constants.MaxRefundProviderLength).IsRequired();
-        builder.Property(item => item.ExternalRefundId).HasMaxLength(Constants.MaxRefundExternalIdLength).IsRequired();
+        builder.Property(item => item.Provider).HasMaxLength(Constants.MaxRefundProviderLength);
+        builder.Property(item => item.ExternalRefundId).HasMaxLength(Constants.MaxRefundExternalIdLength);
         builder.Property(item => item.Amount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(item => item.Status)
             .HasMaxLength(Constants.MaxAccountingStatusLength)
-            .HasDefaultValue(MarketplaceExternalRefundReconciliationStatusConstants.Open).IsRequired();
+            .HasDefaultValue(MarketplaceExternalRefundReconciliationStatusConstants.Open);
         builder.Property(item => item.ResolutionReason).HasMaxLength(Constants.MaxRefundResolutionReasonLength);
-        builder.Property(item => item.ResolutionActorCustomerId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
         builder.Property(item => item.ResolutionCorrelationId).HasMaxLength(Constants.MaxRefundCorrelationIdLength);
+
+        builder.HasOne(item => item.ResolutionActorCustomer).WithMany().HasForeignKey(item => item.ResolutionActorCustomerId);
 
         builder.HasIndex(item => new
         {

@@ -163,7 +163,9 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 JoinOrganizationInvitationOrderField.CreatedAt => KeysetPaginationField<JoinInvitation>.Create(
                     nameof(JoinInvitation.CreatedAt),
@@ -175,7 +177,7 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            })
-            .ToList();
+            }),
+        ];
     }
 }

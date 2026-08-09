@@ -167,18 +167,19 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
+            EntityFrameworkVersion = src.EntityFrameworkVersion,
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
             Category = src.Category.ToBookingCategory(),
             Channel = src.Channel.ToBookingChannel(),
-            Schedules = src.Schedules.ToList(),
-            ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
-            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
-            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
-            InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
-            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
-            InvolvedResources = MapTo(src.InvolvedResources).ToList(),
+            Schedules = [.. src.Schedules],
+            ResourceBookingSlots = [.. MapTo(src.ResourceBookingSlots)],
+            InvolvedCustomers = [.. MapTo(src.InvolvedCustomers)],
+            InvolvedOrganizations = [.. MapTo(src.InvolvedOrganizations)],
+            InvolvedLocations = [.. MapTo(src.InvolvedLocations)],
+            InvolvedTeams = [.. MapTo(src.InvolvedTeams)],
+            InvolvedResources = [.. MapTo(src.InvolvedResources)],
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
@@ -220,16 +221,16 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Interval = src.Interval,
             ByMonthDay = src.ByMonthDay,
             BySetPosition = src.BySetPosition,
-            ByWeekDays = src.ByWeekDays.Select(item => item.ToDayOfWeek()).ToList(),
+            ByWeekDays = [.. src.ByWeekDays.Select(item => item.ToDayOfWeek())],
             EndType = src.EndType.ToRecurringBookingEndType(),
             StartDate = src.StartDate,
             EndDate = src.EndDate,
             OccurrenceCount = src.OccurrenceCount,
-            SkippedDates = src.SkippedDates.ToList(),
-            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
-            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
-            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
-            RequestedResources = MapTo(src.RequestedResources).ToList(),
+            SkippedDates = [.. src.SkippedDates],
+            InvolvedCustomers = [.. MapTo(src.InvolvedCustomers)],
+            InvolvedOrganizations = [.. MapTo(src.InvolvedOrganizations)],
+            InvolvedTeams = [.. MapTo(src.InvolvedTeams)],
+            RequestedResources = [.. MapTo(src.RequestedResources)],
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
@@ -256,16 +257,16 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
             CancellationPolicyOverridden = src.CancellationPolicyOverridden,
             CancellationOverrideReason = src.CancellationOverrideReason,
-            WeeklySelectedDays = src.WeeklySelectedDays.Select(item => item.ToDayOfWeek()).ToList(),
+            WeeklySelectedDays = [.. src.WeeklySelectedDays.Select(item => item.ToDayOfWeek())],
             MarketplaceBooking = marketplaceBooking,
-            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
-            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
-            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
-            RequestedResources = MapTo(src.RequestedResources).ToList(),
+            InvolvedCustomers = [.. MapTo(src.InvolvedCustomers)],
+            InvolvedOrganizations = [.. MapTo(src.InvolvedOrganizations)],
+            InvolvedTeams = [.. MapTo(src.InvolvedTeams)],
+            RequestedResources = [.. MapTo(src.RequestedResources)],
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            RecurringBookings = src.RecurringBookings.Select(MapToRecurringBookingWithoutSubscription).ToList(),
+            RecurringBookings = [.. src.RecurringBookings.Select(MapToRecurringBookingWithoutSubscription)],
         };
 
         var currentBillingWindowProjection = subscription.ResolveCurrentBillingWindowPaymentProjection(timeProvider.GetUtcNow());
@@ -293,17 +294,19 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Category = src.Category.ToBookingCategory(),
             Channel = src.Channel.ToBookingChannel(),
             Schedules = [new BookingSchedule(from, until)],
-            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
-            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
-            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
-            Resources = src.RequestedResources
-                .Select(item => new ResourceCustomersPair(
-                    new Models.Resource
-                    {
-                        Id = item.Id,
-                    },
-                    MapTo(src.InvolvedCustomers).ToList()))
-                .ToList(),
+            InvolvedCustomers = [.. MapTo(src.InvolvedCustomers)],
+            InvolvedOrganizations = [.. MapTo(src.InvolvedOrganizations)],
+            InvolvedTeams = [.. MapTo(src.InvolvedTeams)],
+            Resources =
+            [
+                .. src.RequestedResources
+                    .Select(item => new ResourceCustomersPair(
+                        new Models.Resource
+                        {
+                            Id = item.Id,
+                        },
+                        [.. MapTo(src.InvolvedCustomers)])),
+            ],
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
         };
     }
@@ -326,19 +329,21 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Category = src.Category.ToBookingCategory(),
             Channel = src.Channel.ToBookingChannel(),
             Schedules = [new BookingSchedule(from, until)],
-            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
-            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
-            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            InvolvedCustomers = [.. MapTo(src.InvolvedCustomers)],
+            InvolvedOrganizations = [.. MapTo(src.InvolvedOrganizations)],
+            InvolvedTeams = [.. MapTo(src.InvolvedTeams)],
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             Resources = src.RequestedResources.Count != 0
-                ? src.RequestedResources
-                    .Select(item => new ResourceCustomersPair(
-                        new Models.Resource
-                        {
-                            Id = item.Id,
-                        },
-                        MapTo(src.InvolvedCustomers).ToList()))
-                    .ToList()
+                ?
+                [
+                    .. src.RequestedResources
+                        .Select(item => new ResourceCustomersPair(
+                            new Models.Resource
+                            {
+                                Id = item.Id,
+                            },
+                            [.. MapTo(src.InvolvedCustomers)])),
+                ]
                 : booking.Resources,
             MarketplaceBooking = MapTo(marketplaceBooking),
         };
@@ -376,7 +381,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
 
         booking.From = src.From;
         booking.Until = src.Until;
-        booking.Schedules = src.Schedules.ToList();
+        booking.Schedules = [.. src.Schedules];
 
         return booking;
     }
@@ -401,7 +406,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
         {
             dest.From = src.From;
             dest.Until = src.Until;
-            dest.Schedules = src.Schedules.ToList();
+            dest.Schedules = [.. src.Schedules];
         }
 
         dest.Notes = src.Notes;
@@ -409,15 +414,17 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
         // Resources can stay tracked across consecutive marketplace occurrences. A filtered
         // include may therefore contain slots loaded for another occurrence; only associate
         // slots in this booking's own time window.
-        dest.ResourceBookingSlots = resources
-            .SelectMany(item => item.ResourceBookingSlots)
-            .Where(slot => slot.Start >= src.From && slot.Start < src.Until)
-            .ToList();
-        dest.InvolvedCustomers = involvedCustomers.ToList();
-        dest.InvolvedOrganizations = involvedOrganizations.ToList();
-        dest.InvolvedLocations = involvedLocations.ToList();
-        dest.InvolvedTeams = involvedTeams.ToList();
-        dest.InvolvedResources = resources.ToList();
+        dest.ResourceBookingSlots =
+        [
+            .. resources
+                .SelectMany(item => item.ResourceBookingSlots)
+                .Where(slot => slot.Start >= src.From && slot.Start < src.Until),
+        ];
+        dest.InvolvedCustomers = [.. involvedCustomers];
+        dest.InvolvedOrganizations = [.. involvedOrganizations];
+        dest.InvolvedLocations = [.. involvedLocations];
+        dest.InvolvedTeams = [.. involvedTeams];
+        dest.InvolvedResources = [.. resources];
 
         if (createdByCustomer is not null)
         {
@@ -482,16 +489,16 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
         dest.Interval = src.Interval;
         dest.ByMonthDay = src.ByMonthDay;
         dest.BySetPosition = src.BySetPosition;
-        dest.ByWeekDays = src.ByWeekDays.Select(item => item.ToDayOfWeek()).ToList();
+        dest.ByWeekDays = [.. src.ByWeekDays.Select(item => item.ToDayOfWeek())];
         dest.EndType = src.EndType.ToRecurringBookingEndType();
         dest.StartDate = src.StartDate;
         dest.EndDate = src.EndDate;
         dest.OccurrenceCount = src.OccurrenceCount;
-        dest.SkippedDates = src.SkippedDates.ToList();
-        dest.InvolvedCustomers = involvedCustomers.ToList();
-        dest.InvolvedOrganizations = involvedOrganizations.ToList();
-        dest.InvolvedTeams = involvedTeams.ToList();
-        dest.RequestedResources = requestedResources.ToList();
+        dest.SkippedDates = [.. src.SkippedDates];
+        dest.InvolvedCustomers = [.. involvedCustomers];
+        dest.InvolvedOrganizations = [.. involvedOrganizations];
+        dest.InvolvedTeams = [.. involvedTeams];
+        dest.RequestedResources = [.. requestedResources];
         dest.CreatedByCustomer = createdByCustomer;
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;
@@ -590,7 +597,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             PricingOptions = src.PricingOptions.ToSafeCollection(),
             Product = MapTo(src.Product)!,
-            OrganizationTags = MapTo(src.OrganizationTags).ToList(),
+            OrganizationTags = [.. MapTo(src.OrganizationTags)],
         };
 
     private static Product? MapTo(Database.Entities.Product? src) =>
@@ -619,9 +626,9 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Status = src.Status.ToMarketplaceBookingSubscriptionStatus(),
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
-            WeeklySelectedDays = src.WeeklySelectedDays.Select(item => item.ToDayOfWeek()).ToList(),
+            WeeklySelectedDays = [.. src.WeeklySelectedDays.Select(item => item.ToDayOfWeek())],
             MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
-            RequestedResources = MapTo(src.RequestedResources).ToList(),
+            RequestedResources = [.. MapTo(src.RequestedResources)],
         };
 
     private RecurringBooking MapToRecurringBookingWithoutSubscription(Database.Entities.RecurringBooking src) =>
@@ -639,16 +646,16 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Interval = src.Interval,
             ByMonthDay = src.ByMonthDay,
             BySetPosition = src.BySetPosition,
-            ByWeekDays = src.ByWeekDays.Select(item => item.ToDayOfWeek()).ToList(),
+            ByWeekDays = [.. src.ByWeekDays.Select(item => item.ToDayOfWeek())],
             EndType = src.EndType.ToRecurringBookingEndType(),
             StartDate = src.StartDate,
             EndDate = src.EndDate,
             OccurrenceCount = src.OccurrenceCount,
-            SkippedDates = src.SkippedDates.ToList(),
-            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
-            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
-            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
-            RequestedResources = MapTo(src.RequestedResources).ToList(),
+            SkippedDates = [.. src.SkippedDates],
+            InvolvedCustomers = [.. MapTo(src.InvolvedCustomers)],
+            InvolvedOrganizations = [.. MapTo(src.InvolvedOrganizations)],
+            InvolvedTeams = [.. MapTo(src.InvolvedTeams)],
+            RequestedResources = [.. MapTo(src.RequestedResources)],
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
@@ -713,7 +720,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
         dest.InvoiceUrl = src.InvoiceUrl;
         dest.InvoiceNumber = src.InvoiceNumber;
         dest.CheckoutReturnUrl = src.CheckoutReturnUrl;
-        dest.InvoiceEmailList = src.InvoiceEmailList.ToList();
+        dest.InvoiceEmailList = [.. src.InvoiceEmailList];
         dest.BillingMode = src.BillingMode.ToProductPricingBillingMode();
         dest.PaymentExpiry = src.PaymentExpiry;
         return dest;
@@ -741,11 +748,11 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
         dest.CancelAtPeriodEnd = src.CancelAtPeriodEnd;
         dest.CancellationPolicyOverridden = src.CancellationPolicyOverridden;
         dest.CancellationOverrideReason = src.CancellationOverrideReason;
-        dest.WeeklySelectedDays = src.WeeklySelectedDays.Select(item => item.ToDayOfWeek()).ToList();
-        dest.InvolvedCustomers = involvedCustomers.ToList();
-        dest.InvolvedOrganizations = involvedOrganizations.ToList();
-        dest.InvolvedTeams = involvedTeams.ToList();
-        dest.RequestedResources = requestedResources.ToList();
+        dest.WeeklySelectedDays = [.. src.WeeklySelectedDays.Select(item => item.ToDayOfWeek())];
+        dest.InvolvedCustomers = [.. involvedCustomers];
+        dest.InvolvedOrganizations = [.. involvedOrganizations];
+        dest.InvolvedTeams = [.. involvedTeams];
+        dest.RequestedResources = [.. requestedResources];
         dest.CreatedByCustomer = createdByCustomer;
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;
@@ -776,7 +783,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             ModifiedAt = src.ModifiedAt,
             Available = src.Available,
             Start = src.Start,
-            Customers = MapTo(src.Customers).ToList(),
+            Customers = [.. MapTo(src.Customers)],
             Resource = MapTo(src.Resource),
         };
 
@@ -809,7 +816,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
                 Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList(),
+                Identities = [.. MapTo(src.Identities)],
             };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Database.Entities.Identity> src) => src.Select(MapTo);
@@ -872,7 +879,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
                 Name = src.Name.ToSafeString(),
                 Timezone = src.Timezone,
                 Type = src.Type.ToLocationType(),
-                OrganizationTags = MapTo(src.OrganizationTags).ToList(),
+                OrganizationTags = [.. MapTo(src.OrganizationTags)],
             };
 
     private static IEnumerable<Models.Team> MapTo(IEnumerable<Team> src) => src.Select(MapTo)!;
@@ -904,7 +911,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             Color = src.Color,
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationTags = MapTo(src.OrganizationTags).ToList(),
+            OrganizationTags = [.. MapTo(src.OrganizationTags)],
         };
 
     private static MarketplaceBooking? ResolveBookingMarketplaceBooking(Database.Entities.Booking booking) =>

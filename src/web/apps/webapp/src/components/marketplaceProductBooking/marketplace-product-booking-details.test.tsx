@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getFailureHeadline, hasRebookAction, isAvailabilityConflictFailure, type MarketplaceBookingFailureSummary } from './marketplace-booking-failure-eligibility';
-import { canRequestMarketplaceBookingCancellation, shouldEnterRefundLifecycle } from './marketplace-self-service-eligibility';
+import { canRequestMarketplaceBookingCancellation, canRequestMarketplaceBookingModification, shouldEnterRefundLifecycle } from './marketplace-self-service-eligibility';
 
 describe('MarketplaceProductBookingDetails action eligibility', () => {
   it('exposes cancellation only for future non-cancelled bookings', () => {
@@ -13,6 +13,15 @@ describe('MarketplaceProductBookingDetails action eligibility', () => {
   it('keeps refund handling behind confirmed payment and accepted cancellation', () => {
     expect(shouldEnterRefundLifecycle({ hasConfirmedPayment: true, isCancellationAccepted: true })).toBe(true);
     expect(shouldEnterRefundLifecycle({ hasConfirmedPayment: false, isCancellationAccepted: true })).toBe(false);
+  });
+
+  it('exposes modification only for a future confirmed or no-payment-required booking', () => {
+    const now = new Date('2026-02-01T00:00:00.000Z');
+
+    expect(canRequestMarketplaceBookingModification({ bookingStartsAt: '2026-02-02T00:00:00.000Z', isCancelled: false, paymentStatusType: 'CONFIRMED', now })).toBe(true);
+    expect(canRequestMarketplaceBookingModification({ bookingStartsAt: '2026-02-02T00:00:00.000Z', isCancelled: false, paymentStatusType: 'NO_PAYMENT_REQUIRED', now })).toBe(true);
+    expect(canRequestMarketplaceBookingModification({ bookingStartsAt: '2026-02-02T00:00:00.000Z', isCancelled: false, paymentStatusType: 'PENDING', now })).toBe(false);
+    expect(canRequestMarketplaceBookingModification({ bookingStartsAt: '2026-02-01T00:00:00.000Z', isCancelled: false, paymentStatusType: 'CONFIRMED', now })).toBe(false);
   });
 });
 describe('MarketplaceProductBookingDetails failure presentation', () => {

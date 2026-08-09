@@ -9,9 +9,7 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class MarketplaceBookingFailureDelivery : EntityBase
 {
-    public string MarketplaceBookingFailureId { get; set; }
     public string RecipientKey { get; set; }
-    public string? RecipientCustomerId { get; set; }
     public string? RecipientEmail { get; set; }
     public string Audience { get; set; }
     public string Channel { get; set; }
@@ -20,7 +18,14 @@ public class MarketplaceBookingFailureDelivery : EntityBase
     public DateTimeOffset? LastAttemptAt { get; set; }
     public DateTimeOffset? SentAt { get; set; }
     public string? LastError { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string MarketplaceBookingFailureId { get; set; }
     public virtual MarketplaceBookingFailure MarketplaceBookingFailure { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? RecipientCustomerId { get; set; }
+    public virtual Customer? RecipientCustomer { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -29,8 +34,7 @@ public class MarketplaceBookingFailureDeliveryConfiguration : IEntityTypeConfigu
     public void Configure(EntityTypeBuilder<MarketplaceBookingFailureDelivery> builder)
     {
         builder.ConfigureEntityBase();
-        builder.Property(item => item.RecipientKey).HasMaxLength(Constants.MaxAccountingExternalIdLength);
-        builder.Property(item => item.RecipientCustomerId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.RecipientKey).HasMaxLength(Constants.MaxRecipientKeyLength);
         builder.Property(item => item.RecipientEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.Audience).HasMaxLength(Constants.MaxAccountingStatusLength);
         builder.Property(item => item.Channel).HasMaxLength(Constants.MaxAccountingStatusLength);
@@ -40,6 +44,7 @@ public class MarketplaceBookingFailureDeliveryConfiguration : IEntityTypeConfigu
         builder.HasOne(item => item.MarketplaceBookingFailure)
             .WithMany(item => item.Deliveries)
             .HasForeignKey(item => item.MarketplaceBookingFailureId);
+        builder.HasOne(item => item.RecipientCustomer).WithMany().HasForeignKey(item => item.RecipientCustomerId);
 
         builder.HasIndex(item => new
         {

@@ -5,7 +5,7 @@ import OperatorCancelBookingButton from '@/components/booking/operator-cancel-bo
 import { CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, PaymentStatusIcon, PdfIcon } from '@/components/icons';
-import { getOrganizationBookingBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
+import { getOrganizationBookingBaseLink, getOrganizationBookingModificationLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
@@ -410,11 +410,24 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
   const visibleViewDetailsLabel = canEditRecurringSeries ? 'View occurrence details' : 'View details';
   const visibleRemoveBookingLabel =
     recurringOccurrenceActionLabel ?? (!recurringBooking ? (bookingDetails.channel.channel === 'MARKETPLACE' ? 'Cancel booking' : 'Remove booking') : null);
+  const canModifyMarketplaceBooking =
+    rootData.organizationBookingPermissions.canModifyPaymentMethod &&
+    bookingDetails.channel.channel === 'MARKETPLACE' &&
+    !!bookingDetails.marketplaceBooking &&
+    (bookingDetails.marketplaceBooking.paymentStatus.type === 'CONFIRMED' || bookingDetails.marketplaceBooking.paymentStatus.type === 'NO_PAYMENT_REQUIRED') &&
+    new Date(bookingDetails.from) > new Date();
 
   const moreActionsOption: MoreActionsMenuItemType[] = [];
 
   if (canEditRecurringSeries) {
     moreActionsOption.push(moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditRecurringBooking]);
+  }
+
+  if (canModifyMarketplaceBooking) {
+    moreActionsOption.push({
+      ...moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking],
+      label: 'Modify booking',
+    });
   }
 
   if (recurringBooking && recurringSeriesActionLabel) {
@@ -450,7 +463,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        router.push(getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.id));
+        router.push(getOrganizationBookingModificationLink(integratedPlatform, organizationCustomDomain, bookingDetails.id));
         break;
 
       case MoreActionsMenuOptionType.EditRecurringBooking:

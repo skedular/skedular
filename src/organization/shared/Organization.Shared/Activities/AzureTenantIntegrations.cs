@@ -63,7 +63,7 @@ public class AzureTenantIntegrations(
             .ToList();
 
         repositoryFactory.AzureTenantMemberRepository.RemoveRange(itemsToRemove);
-        tenant.AzureTenantMembers = addedItems.Concat(updatedItems).Concat(itemsToRemove).ToList();
+        tenant.AzureTenantMembers = [.. addedItems, .. updatedItems, .. itemsToRemove];
 
         await SyncCustomersAndOrganizationMembersAsync(tenant, cancellationToken);
 

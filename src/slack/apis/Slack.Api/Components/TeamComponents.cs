@@ -64,7 +64,7 @@ public class TeamComponents(IOrganizationPermissionsService organizationPermissi
             blocks.Add(new DividerBlock());
         }
 
-        return blocks.SkipLast(1).ToList();
+        return [.. blocks.SkipLast(1)];
     }
 
     private async Task<List<Block>> GetTeamCardAsync(WorkspaceMember workspaceMember, Team team, CancellationToken cancellationToken)

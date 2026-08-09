@@ -77,6 +77,7 @@ public static class Extensions
                 .AddScoped<IMarketplacePartialBookingResolutionService, MarketplacePartialBookingResolutionService>()
                 .AddSingleton<IMarketplaceRefundOwnershipService, MarketplaceRefundOwnershipService>()
                 .AddScoped<IMarketplaceBookingFailureNotificationService, MarketplaceBookingFailureNotificationService>()
+                .AddScoped<IMarketplaceBookingModificationNotificationService, MarketplaceBookingModificationNotificationService>()
                 .AddScoped<IStripeProductPricingService, StripeProductPricingService>()
                 .AddScoped<IStripeCustomerService, StripeCustomerService>()
                 .AddScoped<IXeroWebhookService, XeroWebhookService>()

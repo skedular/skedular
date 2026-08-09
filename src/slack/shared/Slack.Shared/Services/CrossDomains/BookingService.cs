@@ -119,7 +119,7 @@ public class BookingService(
             cancellationToken: cancellationToken);
         var edges = connection.Edges.Select(item => new BookingEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList();
 
-        Cache(edges.Select(item => item.Node).ToList());
+        Cache([.. edges.Select(item => item.Node)]);
 
         var enrichedEdges = new List<BookingEdge>();
         foreach (var item in edges)
@@ -315,7 +315,7 @@ public class BookingService(
             cancellationToken: cancellationToken);
         var edges = connection.Edges.Select(item => new BookingEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList();
 
-        Cache(edges.Select(item => item.Node).ToList());
+        Cache([.. edges.Select(item => item.Node)]);
 
         var enrichedEdges = new List<BookingEdge>();
         foreach (var item in edges)
@@ -410,25 +410,35 @@ public class BookingService(
                 .Distinct()
                 .Select(item => teamService.AdminGetAsync(item, cancellationToken)));
 
-        booking.Resources = booking.Resources
-            .Select(item => resources.FirstOrDefault(resource => resource.Id == item.Id) ?? item)
-            .ToList();
+        booking.Resources =
+        [
+            .. booking.Resources
+                .Select(item => resources.FirstOrDefault(resource => resource.Id == item.Id) ?? item),
+        ];
 
-        booking.InvolvedCustomers = booking.InvolvedCustomers
-            .Select(item => customers.FirstOrDefault(resource => resource.Id == item.Id) ?? item)
-            .ToList();
+        booking.InvolvedCustomers =
+        [
+            .. booking.InvolvedCustomers
+                .Select(item => customers.FirstOrDefault(resource => resource.Id == item.Id) ?? item),
+        ];
 
-        booking.InvolvedOrganizations = booking.InvolvedOrganizations
-            .Select(item => organizations.FirstOrDefault(resource => resource.Id == item.Id) ?? item)
-            .ToList();
+        booking.InvolvedOrganizations =
+        [
+            .. booking.InvolvedOrganizations
+                .Select(item => organizations.FirstOrDefault(resource => resource.Id == item.Id) ?? item),
+        ];
 
-        booking.InvolvedLocations = booking.InvolvedLocations
-            .Select(item => locations.FirstOrDefault(resource => resource.Id == item.Id) ?? item)
-            .ToList();
+        booking.InvolvedLocations =
+        [
+            .. booking.InvolvedLocations
+                .Select(item => locations.FirstOrDefault(resource => resource.Id == item.Id) ?? item),
+        ];
 
-        booking.InvolvedTeams = booking.InvolvedTeams
-            .Select(item => teams.FirstOrDefault(resource => resource.Id == item.Id) ?? item)
-            .ToList();
+        booking.InvolvedTeams =
+        [
+            .. booking.InvolvedTeams
+                .Select(item => teams.FirstOrDefault(resource => resource.Id == item.Id) ?? item),
+        ];
 
         return booking;
     }
@@ -465,25 +475,35 @@ public class BookingService(
                 .Distinct()
                 .Select(item => teamService.GetAsync(workspaceMemberId, item, cancellationToken)));
 
-        booking.Resources = booking.Resources
-            .Select(item => resources.FirstOrDefault(resource => resource.Id == item.Id) ?? item)
-            .ToList();
+        booking.Resources =
+        [
+            .. booking.Resources
+                .Select(item => resources.FirstOrDefault(resource => resource.Id == item.Id) ?? item),
+        ];
 
-        booking.InvolvedCustomers = booking.InvolvedCustomers
-            .Select(item => customers.FirstOrDefault(resource => resource.Id == item.Id) ?? item)
-            .ToList();
+        booking.InvolvedCustomers =
+        [
+            .. booking.InvolvedCustomers
+                .Select(item => customers.FirstOrDefault(resource => resource.Id == item.Id) ?? item),
+        ];
 
-        booking.InvolvedOrganizations = booking.InvolvedOrganizations
-            .Select(item => organizations.FirstOrDefault(resource => resource.Id == item.Id) ?? item)
-            .ToList();
+        booking.InvolvedOrganizations =
+        [
+            .. booking.InvolvedOrganizations
+                .Select(item => organizations.FirstOrDefault(resource => resource.Id == item.Id) ?? item),
+        ];
 
-        booking.InvolvedLocations = booking.InvolvedLocations
-            .Select(item => locations.FirstOrDefault(resource => resource.Id == item.Id) ?? item)
-            .ToList();
+        booking.InvolvedLocations =
+        [
+            .. booking.InvolvedLocations
+                .Select(item => locations.FirstOrDefault(resource => resource.Id == item.Id) ?? item),
+        ];
 
-        booking.InvolvedTeams = booking.InvolvedTeams
-            .Select(item => teams.FirstOrDefault(resource => resource.Id == item.Id) ?? item)
-            .ToList();
+        booking.InvolvedTeams =
+        [
+            .. booking.InvolvedTeams
+                .Select(item => teams.FirstOrDefault(resource => resource.Id == item.Id) ?? item),
+        ];
 
         return booking;
     }

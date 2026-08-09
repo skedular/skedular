@@ -177,10 +177,10 @@ public class OrganizationTagService(
                         HasPreviousPage = connection.PageInfo.HasPreviousPage,
                     },
                     TotalCount = connection.TotalCount,
-                    Edges = connection.Edges.Select(item => new OrganizationTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList(),
+                    Edges = [.. connection.Edges.Select(item => new OrganizationTagEdge(grpcMapper.MapTo(item.Node), item.Cursor))],
                 };
 
-                Cache(result.Edges.Select(item => item.Node).ToList());
+                Cache([.. result.Edges.Select(item => item.Node)]);
 
                 return result;
             },
@@ -231,10 +231,10 @@ public class OrganizationTagService(
                 HasPreviousPage = connection.PageInfo.HasPreviousPage,
             },
             TotalCount = connection.TotalCount,
-            Edges = connection.Edges.Select(item => new OrganizationTagEdge(grpcMapper.MapTo(item.Node), item.Cursor)).ToList(),
+            Edges = [.. connection.Edges.Select(item => new OrganizationTagEdge(grpcMapper.MapTo(item.Node), item.Cursor))],
         };
 
-        Cache(result.Edges.Select(item => item.Node).ToList());
+        Cache([.. result.Edges.Select(item => item.Node)]);
 
         return result;
     }

@@ -66,6 +66,7 @@ public class MarketplaceEventResourceServiceShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([firstResource, secondResource]);
 
@@ -131,6 +132,7 @@ public class MarketplaceEventResourceServiceShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([firstResource]);
 
@@ -200,6 +202,7 @@ public class MarketplaceEventResourceServiceShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
+                Array.Empty<string>(),
                 cancellationToken))
             .Returns([firstResource, secondResource]);
 

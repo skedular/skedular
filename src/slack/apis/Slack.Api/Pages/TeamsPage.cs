@@ -344,16 +344,19 @@ public class TeamsPage(
         var teams = connection.Edges.Select(item => item.Node).ToList();
         var teamIds = teams.Select(item => item.Id).ToList();
         var teamsWithChannel = await repositoryFactory.TeamRepository.GetActiveByIdsAsync(teamIds, cancellationToken);
-        teams = teams.Select(item =>
-        {
-            var matchedTeam = teamsWithChannel.FirstOrDefault(replicatedTeam => replicatedTeam.Id == item.Id);
-            if (matchedTeam is not null)
+        teams =
+        [
+            .. teams.Select(item =>
             {
-                item.DailyUpdateChannel = entityMapper.MapTo(matchedTeam.DailyUpdateChannel);
-            }
+                var matchedTeam = teamsWithChannel.FirstOrDefault(replicatedTeam => replicatedTeam.Id == item.Id);
+                if (matchedTeam is not null)
+                {
+                    item.DailyUpdateChannel = entityMapper.MapTo(matchedTeam.DailyUpdateChannel);
+                }
 
-            return item;
-        }).ToList();
+                return item;
+            }),
+        ];
 
         var asyncBlocks = await Task.WhenAll(
             GetToolbarAsync(workspace, workspaceMember, commonPageContext.PageContext, cancellationToken),
@@ -373,7 +376,7 @@ public class TeamsPage(
             new HomeViewDefinition
             {
                 CallbackId = TeamsCallback,
-                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
+                Blocks = [.. blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1)],
                 PrivateMetadata = commonPageContext.Serialize(),
             },
             hash,
@@ -410,7 +413,7 @@ public class TeamsPage(
         [
             new ActionsBlock
             {
-                Elements = new List<IActionElement>().Concat(homeAndBackButtons).Concat(addTeamButton).Concat(feedbackButton).ToList(),
+                Elements = [.. homeAndBackButtons, .. addTeamButton, .. feedbackButton],
             },
         ];
     }
@@ -596,11 +599,14 @@ public class TeamsPage(
             Element = new ExternalMultiSelectMenu
             {
                 ActionId = OptionLoaderKeys.OrganizationMemberAndCustomerPairKey,
-                InitialOptions = team.TeamMembers.Where(item => item.OrganizationMember is not null).Select(item => new Option
-                {
-                    Text = item.Customer.DisplayableName.ToOptionText(),
-                    Value = $"{item.OrganizationMember!.Id}{Global.OptionLoaderValueSeparator}{item.Customer.Id}",
-                }).ToList(),
+                InitialOptions =
+                [
+                    .. team.TeamMembers.Where(item => item.OrganizationMember is not null).Select(item => new Option
+                    {
+                        Text = item.Customer.DisplayableName.ToOptionText(),
+                        Value = $"{item.OrganizationMember!.Id}{Global.OptionLoaderValueSeparator}{item.Customer.Id}",
+                    }),
+                ],
                 MinQueryLength = 0,
             },
             Optional = false,

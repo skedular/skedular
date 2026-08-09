@@ -50,7 +50,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         IProductService productService,
         CancellationToken cancellationToken)
     {
-        var products = await productService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var products = await productService.DeleteAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new ProductsPayload
         {
             ClientMutationId = input.ClientMutationId,
@@ -65,7 +65,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         IProductService productService,
         CancellationToken cancellationToken)
     {
-        var products = await productService.ActivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var products = await productService.ActivateAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new ProductsPayload
         {
             ClientMutationId = input.ClientMutationId,
@@ -80,7 +80,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         IProductService productService,
         CancellationToken cancellationToken)
     {
-        var products = await productService.DeactivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
+        var products = await productService.DeactivateAsync([.. input.Ids.RemoveInvalidIds()], cancellationToken);
         return new ProductsPayload
         {
             ClientMutationId = input.ClientMutationId,

@@ -19,7 +19,7 @@ public class ContentEnricherService : IContentEnricherService
 
         AddMatches(emailRegex);
 
-        return matched.ToList();
+        return [.. matched];
 
         void AddMatches(Regex regex)
         {
@@ -45,7 +45,7 @@ public class ContentEnricherService : IContentEnricherService
         AddMatches(wwwRegex);
         AddMatches(bareDomainRegex);
 
-        return matched.ToList();
+        return [.. matched];
 
         void AddMatches(Regex regex)
         {

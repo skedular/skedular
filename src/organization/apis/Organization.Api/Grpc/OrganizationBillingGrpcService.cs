@@ -38,20 +38,22 @@ public class OrganizationBillingGrpcService(
                 null,
                 request.Where.NameContains,
                 request.Where.OnboardingCompleted),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    StripeConnectAccountOrderField.Name => OrganizationStripeConnectAccountOrderField.Name,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        StripeConnectAccountOrderField.Name => OrganizationStripeConnectAccountOrderField.Name,
+                        _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                            $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
+                    };
 
-                return new OrganizationStripeConnectAccountOrder(direction, field);
-            }).ToList(),
+                    return new OrganizationStripeConnectAccountOrder(direction, field);
+                }),
+            ],
             true,
             context.CancellationToken);
 
@@ -78,20 +80,22 @@ public class OrganizationBillingGrpcService(
         var (paginatedInfo, edges, totalCount) = await organizationBankAccountService.GetPaginatedAccountsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new OrganizationBankAccountSearchCriteria(request.Where.OrganizationId, null, request.Where.NameContains),
-            request.OrderBy.Select(item =>
-            {
-                var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
-                    ? OrderDirection.Ascending
-                    : OrderDirection.Descending;
-                var field = item.Field switch
+            [
+                .. request.OrderBy.Select(item =>
                 {
-                    BankAccountOrderField.Name => OrganizationBankAccountOrderField.Name,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
-                        $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
-                };
+                    var direction = item.Direction == global::Api.Shared.Grpc.Skedular.Organization.Core.V1.OrderDirection.Ascending
+                        ? OrderDirection.Ascending
+                        : OrderDirection.Descending;
+                    var field = item.Field switch
+                    {
+                        BankAccountOrderField.Name => OrganizationBankAccountOrderField.Name,
+                        _ => throw new ArgumentOutOfRangeException(nameof(item.Field), item.Field,
+                            $"Unexpected value for {nameof(item.Field)}: {item.Field}. Update enum mapping or caller input."),
+                    };
 
-                return new OrganizationBankAccountOrder(direction, field);
-            }).ToList(),
+                    return new OrganizationBankAccountOrder(direction, field);
+                }),
+            ],
             true,
             context.CancellationToken);
 

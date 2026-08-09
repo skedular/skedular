@@ -91,7 +91,7 @@ public static class PaginationExtensions
         var hasExtraItem = items.Count > requestedCount;
         if (hasExtraItem)
         {
-            items = items.Take(requestedCount).ToList();
+            items = [.. items.Take(requestedCount)];
         }
 
         if (isBackward)
@@ -324,11 +324,11 @@ public static class PaginationExtensions
     {
         if (fields.Any(field => field.CursorKey == nameof(EntityBase.Id)))
         {
-            return fields.ToList();
+            return [.. fields];
         }
 
         var direction = fields.LastOrDefault()?.Direction ?? OrderDirection.Ascending;
-        return fields.Append(KeysetPaginationField<T>.Create(nameof(EntityBase.Id), idSelector, direction)).ToList();
+        return [.. fields, KeysetPaginationField<T>.Create(nameof(EntityBase.Id), idSelector, direction)];
     }
 
     private static Expression CreateTypedConstant(Expression member, object? value)

@@ -1,0 +1,17 @@
+SKEDULAR
+Booking update
+
+Hello {{RECIPIENT_NAME}},
+
+A customer booking was updated in Skedular.
+
+Previous time: {{ORIGINAL_WINDOW}}
+New time: {{RESULT_WINDOW}}
+Reason: {{REASON}}
+Previous resources: {{ORIGINAL_RESOURCES}}
+New resources: {{RESULT_RESOURCES}}
+
+Please review this booking in Skedular and contact the customer if needed.
+
+---
+Powered by Skedular

@@ -67,22 +67,24 @@ public class PrivateBookingService(
         }
 
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
-            booking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                .Select(item => item.Id)
-                .Distinct()
-                .ToList(),
-            booking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
-                .Select(item => item.CustomDomain!)
-                .Distinct()
-                .ToList(),
+            [
+                .. booking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                    .Select(item => item.Id)
+                    .Distinct(),
+            ],
+            [
+                .. booking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                    .Select(item => item.CustomDomain!)
+                    .Distinct(),
+            ],
             customer.Id,
             false,
             cancellationToken);
 
         var teams = await teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
-            booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
+            [.. booking.InvolvedTeams.Select(item => item.Id).Distinct()],
             customer.Id,
             false,
             cancellationToken);
@@ -164,15 +166,17 @@ public class PrivateBookingService(
         }
 
         var teamIds = existingBooking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
-        if (teamIds.Count != 0)
+        if (teamIds.Count == 0)
         {
-            var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-            foreach (var team in teams)
+            return await sharedPrivateBookingService.DeleteAsync(existingBooking, customer, true, cancellationToken);
+        }
+
+        var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
+        foreach (var team in teams)
+        {
+            if (!await teamAuthorizationService.CanDeleteBookingAsync(team, customer.Id, cancellationToken))
             {
-                if (!await teamAuthorizationService.CanDeleteBookingAsync(team, customer.Id, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                throw new UnauthorizedAccessException();
             }
         }
 
@@ -247,21 +251,23 @@ public class PrivateBookingService(
         }
 
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
-            booking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                .Select(item => item.Id)
-                .Distinct()
-                .ToList(),
-            booking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
-                .Select(item => item.CustomDomain!)
-                .Distinct()
-                .ToList(),
+            [
+                .. booking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                    .Select(item => item.Id)
+                    .Distinct(),
+            ],
+            [
+                .. booking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                    .Select(item => item.CustomDomain!)
+                    .Distinct(),
+            ],
             callingCustomer.Id,
             true,
             cancellationToken);
         var teams = await teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
-            booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
+            [.. booking.InvolvedTeams.Select(item => item.Id).Distinct()],
             callingCustomer.Id,
             true,
             cancellationToken);

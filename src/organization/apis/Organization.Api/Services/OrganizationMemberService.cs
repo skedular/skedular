@@ -69,11 +69,12 @@ public class OrganizationMemberService(
 
         return (
             paginatedInfo,
-            graphQlMapper.MapTo(
+            [
+                .. graphQlMapper.MapTo(
                     edges,
                     graphQlMapper.MapTo(organization,
-                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)))
-                .ToList(),
+                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))),
+            ],
             totalCount);
     }
 
@@ -154,7 +155,7 @@ public class OrganizationMemberService(
         }
 
         // Exclude calling customer from the list
-        organizationMembers = organizationMembers.Where(item => item.Customer.Id != customer.Id).ToList();
+        organizationMembers = [.. organizationMembers.Where(item => item.Customer.Id != customer.Id)];
 
         if (organizationMembers.Count == 0)
         {
@@ -198,20 +199,22 @@ public class OrganizationMemberService(
         await transaction.CommitAsync(cancellationToken);
 
         await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
-            organizationMembers.Select(item => item.CustomerId).ToList(),
+            [.. organizationMembers.Select(item => item.CustomerId)],
             cancellationToken);
 
-        return organizationMembers
-            .Select(item =>
-            {
-                var matchedOrganization = organizations.Single(organization => organization.Id == item.Organization.Id);
-                return graphQlMapper.MapTo(
-                    item,
-                    graphQlMapper.MapTo(
-                        matchedOrganization,
-                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(matchedOrganization.Id)));
-            })
-            .ToList();
+        return
+        [
+            .. organizationMembers
+                .Select(item =>
+                {
+                    var matchedOrganization = organizations.Single(organization => organization.Id == item.Organization.Id);
+                    return graphQlMapper.MapTo(
+                        item,
+                        graphQlMapper.MapTo(
+                            matchedOrganization,
+                            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(matchedOrganization.Id)));
+                }),
+        ];
     }
 
     public async Task<IReadOnlyList<OrganizationMember>> RemoveAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken)
@@ -227,7 +230,7 @@ public class OrganizationMemberService(
         }
 
         // Exclude calling customer from the list
-        organizationMembers = organizationMembers.Where(item => item.Customer.Id != customer.Id).ToList();
+        organizationMembers = [.. organizationMembers.Where(item => item.Customer.Id != customer.Id)];
         if (organizationMembers.Count == 0)
         {
             return [];
@@ -258,7 +261,7 @@ public class OrganizationMemberService(
             organizations.Select(item =>
             {
                 var mapped = graphQlMapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id));
-                mapped.OrganizationMembers = mapped.OrganizationMembers.Where(organizationMember => organizationMember.DeletedAt is null).ToList();
+                mapped.OrganizationMembers = [.. mapped.OrganizationMembers.Where(organizationMember => organizationMember.DeletedAt is null)];
 
                 return mapped;
             }),
@@ -268,18 +271,21 @@ public class OrganizationMemberService(
         await transaction.CommitAsync(cancellationToken);
 
         await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
-            organizationMembers.Select(item => item.CustomerId).ToList(),
+            [.. organizationMembers.Select(item => item.CustomerId)],
             cancellationToken);
 
-        return organizationMembers.Select(item =>
-        {
-            var matchedOrganization = organizations.Single(organization => organization.Id == item.Organization.Id);
-            return graphQlMapper.MapTo(
-                item,
-                graphQlMapper.MapTo(
-                    matchedOrganization,
-                    organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(matchedOrganization.Id)));
-        }).ToList();
+        return
+        [
+            .. organizationMembers.Select(item =>
+            {
+                var matchedOrganization = organizations.Single(organization => organization.Id == item.Organization.Id);
+                return graphQlMapper.MapTo(
+                    item,
+                    graphQlMapper.MapTo(
+                        matchedOrganization,
+                        organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(matchedOrganization.Id)));
+            }),
+        ];
     }
 
     public async Task<Shared.Models.Organization> AdminAddMemberAsync(

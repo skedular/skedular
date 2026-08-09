@@ -69,7 +69,7 @@ public sealed class MarketplacePartialBookingResolutionService(
 
         if (decision is MarketplaceBookingFailureResolutionDecisionConstants.Declined or MarketplaceBookingFailureResolutionDecisionConstants.Expired)
         {
-            var created = await repositoryFactory.BookingRepository.GetByIdsMinimalAsync(failure.CreatedOccurrenceIds.ToList(), cancellationToken);
+            var created = await repositoryFactory.BookingRepository.GetByIdsMinimalAsync([.. failure.CreatedOccurrenceIds], cancellationToken);
             foreach (var occurrence in created)
             {
                 repositoryFactory.BookingRepository.Remove(occurrence);

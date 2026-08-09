@@ -24,7 +24,7 @@ public class RandomHelper(ILogger<RandomHelper> logger) : IRandomHelper
     public IReadOnlyList<Guid> GenerateManyGuids(int count)
     {
         logger.LogDebug("Generating multiple version 7 GUIDs. Count={Count}", count);
-        return Enumerable.Range(0, count).Select(_ => GenerateGuid()).ToList();
+        return [.. Enumerable.Range(0, count).Select(_ => GenerateGuid())];
     }
 
     public string Generate()
@@ -36,7 +36,7 @@ public class RandomHelper(ILogger<RandomHelper> logger) : IRandomHelper
     public IReadOnlyList<string> GenerateMany(int count)
     {
         logger.LogDebug("Generating multiple string identifiers. Count={Count}", count);
-        return GenerateManyGuids(count).Select(item => item.ToString()).ToList();
+        return [.. GenerateManyGuids(count).Select(item => item.ToString())];
     }
 
     public string GenerateAlphanumericNumeric(int size = 21) =>
@@ -45,5 +45,5 @@ public class RandomHelper(ILogger<RandomHelper> logger) : IRandomHelper
         $"{Nanoid.Generate("abcdefghijklmnopqrstuvwxyz", 1)}{Nanoid.Generate("0123456789abcdefghijklmnopqrstuvwxyz", size - 1)}";
 
     public IReadOnlyList<string> GenerateManyGenerateAlphanumericNumeric(int count, int size = 21) =>
-        Enumerable.Range(0, count).Select(_ => GenerateAlphanumericNumeric(size)).ToList();
+        [.. Enumerable.Range(0, count).Select(_ => GenerateAlphanumericNumeric(size))];
 }

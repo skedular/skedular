@@ -145,7 +145,9 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
             ];
         }
 
-        return orderByFields.Select(orderField => orderField.Field switch
+        return
+        [
+            .. orderByFields.Select(orderField => orderField.Field switch
             {
                 OrganizationStripeConnectAccountOrderField.Name => KeysetPaginationField<OrganizationStripeConnectAccount>.Create(
                     nameof(OrganizationStripeConnectAccount.Name),
@@ -153,7 +155,7 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
                     orderField.Direction),
                 _ => throw new ArgumentOutOfRangeException(null,
                     "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            })
-            .ToList();
+            }),
+        ];
     }
 }
