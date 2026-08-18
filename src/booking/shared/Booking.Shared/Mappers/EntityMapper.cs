@@ -1,8 +1,12 @@
+using System.Text.Json;
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
+using Booking.Shared.Models.Entitlements;
 using Enterprise.Shared;
 using Enterprise.Shared.Time;
 using Stripe;
+using CreditLedgerEntry = Booking.Shared.Database.Entities.CreditLedgerEntry;
+using Entitlement = Booking.Shared.Database.Entities.Entitlement;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
@@ -13,11 +17,15 @@ using Resource = Booking.Shared.Database.Entities.Resource;
 using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 using StripeProduct = Booking.Shared.Database.Entities.StripeProduct;
 using Team = Booking.Shared.Database.Entities.Team;
+using MarketplaceExternalRefundReconciliation = Booking.Shared.Database.Entities.MarketplaceExternalRefundReconciliation;
 
 namespace Booking.Shared.Mappers;
 
 public interface IEntityMapper
 {
+    EntitlementModel MapTo(Entitlement src);
+    CreditLedgerEntryModel MapTo(CreditLedgerEntry src);
+    EntitlementPurchase MapTo(Database.Entities.EntitlementPurchase src);
     ProductCreateOptions MapTo(ProductPricing pricing, ProductVersion productVersion);
     PriceCreateOptions MapTo(ProductPricing pricing, StripeProduct stripeProduct);
     CustomerCreateOptions MapToCustomerCreateOption(Organization src);
@@ -99,10 +107,139 @@ public interface IEntityMapper
         ProductVersion productVersion);
 
     Models.MarketplaceBooking? MapTo(MarketplaceBooking? src);
+    MarketplaceExternalRefundReconciliationModel MapTo(MarketplaceExternalRefundReconciliation src);
 }
 
-public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
+public interface IEntitlementModelMapper
 {
+    EntitlementModel Map(Entitlement source);
+    CreditLedgerEntryModel Map(CreditLedgerEntry source);
+}
+
+public interface IEntitlementPurchaseModelMapper
+{
+    EntitlementPurchase Map(Database.Entities.EntitlementPurchase source);
+}
+
+public class EntityMapper(TimeProvider timeProvider) : IEntityMapper, IEntitlementModelMapper, IEntitlementPurchaseModelMapper
+{
+    EntitlementModel IEntitlementModelMapper.Map(Entitlement source) => MapTo(source);
+    CreditLedgerEntryModel IEntitlementModelMapper.Map(CreditLedgerEntry source) => MapTo(source);
+    EntitlementPurchase IEntitlementPurchaseModelMapper.Map(Database.Entities.EntitlementPurchase source) => MapTo(source);
+
+    public EntitlementModel MapTo(Entitlement src) => new()
+    {
+        Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        ModifiedAt = src.ModifiedAt,
+        CustomerId = src.CustomerId,
+        OrganizationId = src.OrganizationId,
+        OrganizationCustomDomain = src.Organization.CustomDomain ?? string.Empty,
+        PurchaseReference = src.PurchaseReference,
+        PricingId = src.PricingId,
+        ProductId = src.EntitlementPurchase?.ProductVersion?.ProductId ?? string.Empty,
+        ProductVersionId = src.EntitlementPurchase?.ProductVersionId ?? string.Empty,
+        GrantedQuantity = src.GrantedQuantity,
+        ActivatesAt = src.ActivatesAt,
+        ExpiresAt = src.ExpiresAt,
+        Status = src.Status,
+        AutoRenew = src.AutoRenew,
+        CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+        NextRenewalAt = src.NextRenewalAt,
+        RenewalFailureReason = src.RenewalFailureReason,
+        NetPurchaseAmount = src.NetPurchaseAmount,
+        Currency = src.Currency,
+        ProductPricing = src.EntitlementPurchase?.ProductPricing ??
+                         src.EntitlementPurchase?.ProductVersion?.PricingOptions?.SingleOrDefault(item => item.Id == src.PricingId),
+        Refund = src.RefundLinks.SingleOrDefault() is { } refund
+            ? new EntitlementRefundModel
+            {
+                Id = refund.MarketplaceRefundId,
+                Amount = refund.RefundAmount,
+                UnusedCreditQuantity = refund.UnusedCreditQuantity,
+                Status = refund.MarketplaceRefund.Status.ToMarketplaceRefundStatus(),
+                PaymentRefundStatus = refund.MarketplaceRefund.PaymentRefundStatus,
+            }
+            : null,
+        LedgerEntries = src.LedgerEntries.Select(MapTo).ToList(),
+        LinkedBookingIds = src.LedgerEntries.Where(item => item.BookingId is not null).Select(item => item.BookingId!).Distinct().ToList(),
+    };
+
+    public CreditLedgerEntryModel MapTo(CreditLedgerEntry src) => new()
+    {
+        Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        ModifiedAt = src.ModifiedAt,
+        EntitlementId = src.EntitlementId,
+        BookingId = src.BookingId,
+        Quantity = src.Quantity,
+        TransactionType = CreditLedgerTransactionTypeExtensions.FromPersistedValue(src.TransactionType),
+        ReferenceKey = src.ReferenceKey,
+        ActorOrSource = src.ActorOrSource,
+        MetadataJson = src.Metadata is null ? null : JsonSerializer.Serialize(src.Metadata),
+    };
+
+    public EntitlementPurchase MapTo(Database.Entities.EntitlementPurchase src) => new()
+    {
+        Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        ModifiedAt = src.ModifiedAt,
+        PaymentStatus = src.PaymentStatus,
+        LifecycleState = src.PaymentStatus switch
+        {
+            PaymentStatusConstants.Pending => EntitlementPurchaseLifecycleState.Pending,
+            PaymentStatusConstants.Confirmed => EntitlementPurchaseLifecycleState.Completed,
+            PaymentStatusConstants.Rejected => EntitlementPurchaseLifecycleState.Rejected,
+            PaymentStatusConstants.Expired => EntitlementPurchaseLifecycleState.Expired,
+            _ => EntitlementPurchaseLifecycleState.Pending,
+        },
+        PaymentMethod = src.PaymentMethod,
+        AutoRenew = src.AutoRenew,
+        PaymentConfirmedAt = src.PaymentConfirmedAt,
+        PaymentExpiry = src.PaymentExpiry,
+        ServiceStartAt = src.ServiceStartAt,
+        Amount = src.Amount,
+        Currency = src.Currency,
+        ProductPricing = src.ProductPricing,
+        CustomerId = src.CustomerId,
+        OrganizationId = src.OrganizationId,
+        ProductVersionId = src.ProductVersionId,
+        EntitlementId = src.EntitlementId,
+        RenewalOfPurchaseId = src.RenewalOfPurchaseId,
+        RenewalReference = src.RenewalReference,
+        FailureReason = src.FailureReason,
+        CheckoutReturnUrl = src.CheckoutReturnUrl,
+        InvoiceNumber = src.InvoiceNumber,
+        InvoiceUrl = src.InvoiceUrl,
+        PaymentInstructions = src.PaymentInstructions,
+        StripeCheckoutSessionId = src.StripeCheckoutSessionId,
+        StripeCheckoutUrl = src.StripeCheckoutUrl,
+        StripePaymentIntentId = src.StripePaymentIntentId,
+        StripeAccountId = src.StripeAccountId,
+        InvoiceEmailList = [.. src.InvoiceEmailList],
+    };
+
+    public MarketplaceExternalRefundReconciliationModel MapTo(MarketplaceExternalRefundReconciliation src) => new()
+    {
+        Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        ModifiedAt = src.ModifiedAt,
+        OrganizationId = src.OrganizationId,
+        StripeAccountId = src.StripeAccountId,
+        Provider = src.Provider.ToMarketplaceExternalRefundReconciliationProvider(),
+        ExternalRefundId = src.ExternalRefundId,
+        Amount = src.Amount,
+        Currency = src.Currency.ToNullableCurrency(),
+        Status = src.Status.ToMarketplaceExternalRefundReconciliationStatus(),
+        FirstSeenAt = src.FirstSeenAt,
+        LastSeenAt = src.LastSeenAt,
+        RetryCount = src.RetryCount,
+        NextRetryAt = src.NextRetryAt,
+        ResolutionReason = src.ResolutionReason,
+        ResolutionActorCustomerId = src.ResolutionActorCustomerId,
+        ResolutionCorrelationId = src.ResolutionCorrelationId,
+    };
+
     public ProductCreateOptions MapTo(ProductPricing pricing, ProductVersion productVersion) =>
         new()
         {
@@ -168,6 +305,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             EntityFrameworkVersion = src.EntityFrameworkVersion,
+            ConsumingCreditLedgerEntryId = src.ConsumingCreditLedgerEntryId,
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
@@ -550,6 +688,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
             : new Models.MarketplaceBooking
             {
                 Id = src.Id,
+                EntitlementId = src.EntitlementId,
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
@@ -700,6 +839,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper
         StripeCheckoutSession? stripeCheckoutSession)
     {
         dest.Id = src.Id;
+        dest.EntitlementId = src.EntitlementId;
         dest.PaymentStatus = src.PaymentStatus.ToPaymentStatus();
         dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.Quantity = src.Quantity;

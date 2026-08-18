@@ -89,7 +89,7 @@ describe("documentation catalog", () => {
   });
 
   it("maps every reviewed Markdown source to an owned documentation concept", () => {
-    expect(documentationSourceMap).toHaveLength(18);
+    expect(documentationSourceMap).toHaveLength(19);
     expect(validateDocumentationSourceMap()).toEqual([]);
     expect(
       documentationSourceMap.every((source) => source.articleIds.length > 0),

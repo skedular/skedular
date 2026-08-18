@@ -82,8 +82,8 @@ public static class BookingExtensions
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion)
-            .ThenInclude(query => query!.Product)
-            .ThenInclude(query => query!.Organization)
+            .ThenInclude(query => query.Product)
+            .ThenInclude(query => query.Organization)
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession)
@@ -97,8 +97,8 @@ public static class BookingExtensions
             .ThenInclude(query => query!.PaidByOrganization)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion)
-            .ThenInclude(query => query!.Product)
-            .ThenInclude(query => query!.Organization)
+            .ThenInclude(query => query.Product)
+            .ThenInclude(query => query.Organization)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
 
@@ -133,8 +133,8 @@ public static class BookingExtensions
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion)
-            .ThenInclude(query => query!.Product)
-            .ThenInclude(query => query!.Organization)
+            .ThenInclude(query => query.Product)
+            .ThenInclude(query => query.Organization)
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession)
@@ -146,8 +146,8 @@ public static class BookingExtensions
             .ThenInclude(query => query!.PaidByOrganization)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion)
-            .ThenInclude(query => query!.Product)
-            .ThenInclude(query => query!.Organization)
+            .ThenInclude(query => query.Product)
+            .ThenInclude(query => query.Organization)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
 
@@ -213,6 +213,12 @@ public static class BookingExtensions
             {
                 originalQuery = originalQuery.Where(item =>
                     item.RecurringBooking != null && searchCriteria.RecurringBookingIds.Contains(item.RecurringBooking.Id));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.EntitlementId))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.MarketplaceBooking != null && item.MarketplaceBooking.EntitlementId == searchCriteria.EntitlementId);
             }
 
             if (searchCriteria.Category is not null)

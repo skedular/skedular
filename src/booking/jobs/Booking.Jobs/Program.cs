@@ -67,6 +67,8 @@ public class Program
             .AddWorkflow<PayRecurringBookingViaCard>()
             .AddWorkflow<RunOrganizationArrearsBilling>()
             .AddWorkflow<RolloverSpacesBookingUsage>()
+            .AddWorkflow<ExpireEntitlements>()
+            .AddWorkflow<PrepareEntitlementRenewal>()
             .AddWorkflow<MaintainAccountingInvoiceState>()
             .AddWorkflow<MaintainOrganizationArrearsInvoiceAccountingState>()
             .AddWorkflow<NotifyMarketplaceBookingFailure>()
@@ -84,9 +86,12 @@ public class Program
             .AddScopedActivities<OrganizationArrearsBillingIntegrations>()
             .AddScopedActivities<PrivateRecurringBookingIntegrations>()
             .AddScopedActivities<SpacesBookingUsageRolloverIntegrations>()
+            .AddScopedActivities<EntitlementExpiryIntegrations>()
+            .AddScopedActivities<EntitlementRenewalIntegrations>()
             .AddScopedActivities<StripeIntegrations>();
 
         services.AddHostedService<SpacesBookingUsageRolloverWorkflowHostedService>();
+        services.AddHostedService<EntitlementExpiryWorkflowHostedService>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

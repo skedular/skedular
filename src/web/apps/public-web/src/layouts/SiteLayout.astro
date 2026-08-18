@@ -13,20 +13,39 @@ interface Props {
   description: string;
   canonicalPath: string;
   robots?: string;
-  structuredDataType?: "Organization" | "Product" | "FAQPage" | "BreadcrumbList" | "Article" | "BlogPosting";
+  structuredDataType?:
+    | "Organization"
+    | "Product"
+    | "FAQPage"
+    | "BreadcrumbList"
+    | "Article"
+    | "BlogPosting";
+  structuredDataName?: string;
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
   breadcrumbs?: Array<{ name: string; path: string }>;
   bodyClass?: string;
 }
 
-const { title, description, canonicalPath, robots, structuredDataType = "Organization", structuredData, breadcrumbs = [], bodyClass } = Astro.props;
+const {
+  title,
+  description,
+  canonicalPath,
+  robots,
+  structuredDataType = "Organization",
+  structuredDataName,
+  structuredData,
+  breadcrumbs = [],
+  bodyClass,
+} = Astro.props;
 
 const demoCta = ctas.find((cta) => cta.id === "book-demo");
 const loginCta = ctas.find((cta) => cta.id === "login");
 const becomeHostCta = ctas.find((cta) => cta.id === "become-host");
 const demoUrl = getPublicDestinationUrl("PUBLIC_SKEDULAR_DEMO_URL");
 const loginUrl = getPublicDestinationUrl("PUBLIC_SKEDULAR_SIGNUP_URL");
-const becomeHostUrl = getPublicDestinationUrl("PUBLIC_SKEDULAR_BECOME_HOST_URL");
+const becomeHostUrl = getPublicDestinationUrl(
+  "PUBLIC_SKEDULAR_BECOME_HOST_URL",
+);
 const productLinks = [
   {
     label: "Skedular Teams",
@@ -41,7 +60,8 @@ const productLinks = [
   {
     label: "Skedular Host",
     path: routeFamilies.host,
-    description: "For individuals renting a place without coworking administration",
+    description:
+      "For individuals renting a place without coworking administration",
   },
 ];
 const resourceLinks = [
@@ -53,23 +73,35 @@ const resourceLinks = [
   {
     label: "Blog",
     path: routeFamilies.blog,
-    description: "Workspace planning, booking, operations, payments, and product guidance",
+    description:
+      "Workspace planning, booking, operations, payments, and product guidance",
   },
 ];
 const footerResourceLinks = [
-  { label: "Documentation", path: routeFamilies.documentation, description: "Product guides for Teams, Spaces, and Host" },
+  {
+    label: "Documentation",
+    path: routeFamilies.documentation,
+    description: "Product guides for Teams, Spaces, and Host",
+  },
   ...resourceLinks,
 ];
 const mainLinks = [
   { label: "About", path: routeFamilies.company },
   { label: "Pricing", path: routeFamilies.pricing },
 ];
-const isDocumentationPath = Astro.url.pathname === routeFamilies.documentation || Astro.url.pathname.startsWith(`${routeFamilies.documentation}/`);
+const isDocumentationPath =
+  Astro.url.pathname === routeFamilies.documentation ||
+  Astro.url.pathname.startsWith(`${routeFamilies.documentation}/`);
 // Legal links only (exclude Compare which is a tool/resource)
-const legalLinks = utilityRoutes.filter((r) => r.id !== "compare").map((r) => ({ label: r.label, path: r.path }));
+const legalLinks = utilityRoutes
+  .filter((r) => r.id !== "compare")
+  .map((r) => ({ label: r.label, path: r.path }));
 const integrationLinks = [
   { label: "Slack", path: "https://slack.com/" },
-  { label: "Microsoft Teams", path: "https://www.microsoft.com/en-us/microsoft-teams/download-app" },
+  {
+    label: "Microsoft Teams",
+    path: "https://www.microsoft.com/en-us/microsoft-teams/download-app",
+  },
 ];
 const socialLinks = [
   {
@@ -93,12 +125,17 @@ const socialLinks = [
 <!doctype html>
 <html lang="en">
   <head>
-    <SeoHead title={title} description={description} canonicalPath={canonicalPath} robots={robots} />
+    <SeoHead
+      title={title}
+      description={description}
+      canonicalPath={canonicalPath}
+      robots={robots}
+    />
     <GoogleAnalytics />
     <LogRocket />
     <StructuredData
       type={structuredDataType}
-      name={title}
+      name={structuredDataName ?? title}
       description={description}
       path={canonicalPath}
       breadcrumbs={breadcrumbs}
@@ -110,7 +147,12 @@ const socialLinks = [
       <div class="container header-inner">
         <div class="header-left">
           <a class="brand-link" href="/" aria-label="Skedular home">
-            <img src="/images/skedular-logo-inverse.svg" alt="Skedular" width="156" height="33" />
+            <img
+              src="/images/skedular-logo-inverse.svg"
+              alt="Skedular"
+              width="156"
+              height="33"
+            />
           </a>
           <nav class="primary-nav" aria-label="Primary navigation">
             <details class="nav-menu">
@@ -139,14 +181,21 @@ const socialLinks = [
                 }
               </div>
             </details>
-            <a class:list={{ "is-active": isDocumentationPath }} href={routeFamilies.documentation}>Documentation</a>
+            <a
+              class:list={{ "is-active": isDocumentationPath }}
+              href={routeFamilies.documentation}>Documentation</a
+            >
             {mainLinks.map((item) => <a href={item.path}>{item.label}</a>)}
           </nav>
         </div>
         <div class="header-actions">
           {
             becomeHostCta && (
-              <a class="text-link" href={becomeHostUrl} data-cta-id={becomeHostCta.id}>
+              <a
+                class="text-link"
+                href={becomeHostUrl}
+                data-cta-id={becomeHostCta.id}
+              >
                 {becomeHostCta.label}
               </a>
             )
@@ -160,7 +209,11 @@ const socialLinks = [
           }
           {
             demoCta && (
-              <a class="button button-small" href={demoUrl} data-cta-id={demoCta.id}>
+              <a
+                class="button button-small"
+                href={demoUrl}
+                data-cta-id={demoCta.id}
+              >
                 {demoCta.label}
               </a>
             )
@@ -178,10 +231,17 @@ const socialLinks = [
             </div>
             <div>
               <strong>Resources</strong>
-              {resourceLinks.map((item) => <a href={item.path}>{item.label}</a>)}
+              {
+                resourceLinks.map((item) => (
+                  <a href={item.path}>{item.label}</a>
+                ))
+              }
             </div>
             <div>
-              <a class:list={{ "is-active": isDocumentationPath }} href={routeFamilies.documentation}>Documentation</a>
+              <a
+                class:list={{ "is-active": isDocumentationPath }}
+                href={routeFamilies.documentation}>Documentation</a
+              >
             </div>
             <div>
               <strong>Company</strong>
@@ -190,14 +250,22 @@ const socialLinks = [
             <div class="mobile-nav-actions">
               {
                 becomeHostCta && (
-                  <a class="text-link" href={becomeHostUrl} data-cta-id={becomeHostCta.id}>
+                  <a
+                    class="text-link"
+                    href={becomeHostUrl}
+                    data-cta-id={becomeHostCta.id}
+                  >
                     {becomeHostCta.label}
                   </a>
                 )
               }
               {
                 loginCta && (
-                  <a class="text-link" href={loginUrl} data-cta-id={loginCta.id}>
+                  <a
+                    class="text-link"
+                    href={loginUrl}
+                    data-cta-id={loginCta.id}
+                  >
                     {loginCta.label}
                   </a>
                 )
@@ -222,7 +290,12 @@ const socialLinks = [
     <footer class="site-footer">
       <div class="container footer-grid">
         <div class="footer-brand">
-          <img src="/images/skedular-logo-inverse.svg" alt="Skedular" width="132" height="28" />
+          <img
+            src="/images/skedular-logo-inverse.svg"
+            alt="Skedular"
+            width="132"
+            height="28"
+          />
           <p>Find, book, manage, and monetize workspace</p>
           <a href="mailto:support@getskedular.com">support@getskedular.com</a>
         </div>
@@ -241,7 +314,11 @@ const socialLinks = [
 
         <nav class="footer-column" aria-label="Resources">
           <h2>Resources</h2>
-          {footerResourceLinks.map((item) => <a href={item.path}>{item.label}</a>)}
+          {
+            footerResourceLinks.map((item) => (
+              <a href={item.path}>{item.label}</a>
+            ))
+          }
         </nav>
 
         <nav class="footer-column" aria-label="Company">
@@ -260,7 +337,13 @@ const socialLinks = [
         <nav class="footer-social" aria-label="Social and community links">
           {
             socialLinks.map((item) => (
-              <a class="footer-social-button" href={item.path} aria-label={item.label} title={item.label} set:html={item.icon} />
+              <a
+                class="footer-social-button"
+                href={item.path}
+                aria-label={item.label}
+                title={item.label}
+                set:html={item.icon}
+              />
             ))
           }
         </nav>
@@ -268,7 +351,9 @@ const socialLinks = [
     </footer>
 
     <script>
-      const navMenus = Array.from(document.querySelectorAll<HTMLDetailsElement>(".primary-nav .nav-menu"));
+      const navMenus = Array.from(
+        document.querySelectorAll<HTMLDetailsElement>(".primary-nav .nav-menu"),
+      );
 
       navMenus.forEach((menu) => {
         menu.addEventListener("toggle", () => {

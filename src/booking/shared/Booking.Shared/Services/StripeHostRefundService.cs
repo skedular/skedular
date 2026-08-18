@@ -2,9 +2,11 @@ using System.Diagnostics;
 using System.Net;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Microsoft.Extensions.Logging;
 using Stripe;
+using StripeCheckoutSessionEntity = Booking.Shared.Database.Entities.StripeCheckoutSession;
 using MarketplaceRefundEntityTypeConstants = Booking.Shared.Models.MarketplaceRefundEntityTypeConstants;
 using MarketplaceRefundStatusConstants = Booking.Shared.Models.MarketplaceRefundStatusConstants;
 using MarketplaceExternalRefundReconciliationStatusConstants = Booking.Shared.Models.MarketplaceExternalRefundReconciliationStatusConstants;
@@ -48,7 +50,7 @@ public class StripeHostRefundService(
     public async Task<MarketplaceRefund> ProcessAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
     {
         var stopwatch = Stopwatch.StartNew();
-        logger?.LogInformation(
+        logger.LogInformation(
             "Starting Stripe refund processing for refund {RefundId}, amount {RefundAmount}, currency {Currency}, retry count {RetryCount}",
             refund.Id, refund.RefundAmount, refund.Currency, refund.RetryCount);
         var context = GetPersistedStripeContext(refund);
@@ -121,12 +123,14 @@ public class StripeHostRefundService(
                         GetStripeRefundIdempotencyKey(refund, reverseTransfer, refundApplicationFee, isInitialProviderRequest),
                         cancellationToken,
                         refund.StripeAccountId);
-                    refund.StripeRefundPath = reverseTransfer ? "TransferReversal" : "PlatformFunded";
+                    refund.StripeRefundPath = reverseTransfer
+                        ? MarketplaceStripeRefundPathConstants.TransferReversal
+                        : MarketplaceStripeRefundPathConstants.PlatformFunded;
                     break;
                 }
                 catch (StripeException exception) when (refundApplicationFee && IsApplicationFeeUnavailable(exception))
                 {
-                    logger?.LogInformation(
+                    logger.LogInformation(
                         "Stripe charge has no application fee for refund {RefundId}; retrying without application-fee reversal",
                         refund.Id);
                     refundApplicationFee = false;
@@ -134,7 +138,7 @@ public class StripeHostRefundService(
                 }
                 catch (StripeException exception) when (reverseTransfer && IsTransferReversalUnavailable(exception))
                 {
-                    logger?.LogWarning(exception,
+                    logger.LogWarning(exception,
                         "Stripe transfer reversal unavailable for refund {RefundId}; retrying with platform funds",
                         refund.Id);
                     reverseTransfer = false;
@@ -142,7 +146,7 @@ public class StripeHostRefundService(
                 }
             }
 
-            refund.PaymentProvider = "STRIPE";
+            refund.PaymentProvider = MarketplaceExternalRefundReconciliationProviderConstants.Stripe;
             refund.ExternalPaymentRefundId = stripeRefund.Id;
             refund.StripeRefundPathSelectedAt = timeProvider.GetUtcNow();
             refund.PaymentRefundStatus = MapStripeStatus(stripeRefund.Status);
@@ -151,20 +155,20 @@ public class StripeHostRefundService(
         }
         catch (Exception exception) when (exception is StripeException or InvalidOperationException or ArgumentException)
         {
-            refund.PaymentProvider = "STRIPE";
+            refund.PaymentProvider = MarketplaceExternalRefundReconciliationProviderConstants.Stripe;
             refund.PaymentRefundStatus = providerSubmissionStarted && IsAmbiguousProviderOutcome(exception)
                 ? MarketplaceRefundStatusConstants.ProviderPending
                 : MarketplaceRefundStatusConstants.Failed;
             refund.PaymentRefundLastError = exception.Message;
             refund.Status = refund.PaymentRefundStatus;
             refund.LastError = exception.Message;
-            logger?.LogError(exception, "Stripe refund processing failed for refund {RefundId} after {DurationMs} ms, retry count {RetryCount}",
+            logger.LogError(exception, "Stripe refund processing failed for refund {RefundId} after {DurationMs} ms, retry count {RetryCount}",
                 refund.Id, stopwatch.ElapsedMilliseconds, refund.RetryCount);
         }
 
         refund.PaymentRefundLastProcessedAt = timeProvider.GetUtcNow();
         refund.LastProcessedAt = refund.PaymentRefundLastProcessedAt;
-        logger?.LogInformation(
+        logger.LogInformation(
             "Completed Stripe refund processing for refund {RefundId} with status {Status}, provider refund {ExternalPaymentRefundId}, duration {DurationMs} ms, retry count {RetryCount}",
             refund.Id, refund.Status, refund.ExternalPaymentRefundId, stopwatch.ElapsedMilliseconds, refund.RetryCount);
         return repositoryFactory.MarketplaceRefundRepository.Update(refund);
@@ -185,7 +189,8 @@ public class StripeHostRefundService(
         if (refund is null)
         {
             var externalReconciliation = await repositoryFactory.MarketplaceRefundRepository
-                .GetExternalReconciliationAsync("STRIPE", stripeRefund.Id, null, cancellationToken);
+                .GetExternalReconciliationAsync(MarketplaceExternalRefundReconciliationProviderConstants.Stripe, stripeRefund.Id, null,
+                    cancellationToken);
             if (externalReconciliation is null)
             {
                 var organizationId = await ResolveOrganizationIdAsync(stripeAccountId, cancellationToken);
@@ -194,7 +199,7 @@ public class StripeHostRefundService(
                     {
                         OrganizationId = organizationId,
                         StripeAccountId = stripeAccountId,
-                        Provider = "STRIPE",
+                        Provider = MarketplaceExternalRefundReconciliationProviderConstants.Stripe,
                         ExternalRefundId = stripeRefund.Id,
                         Amount = stripeRefund.Amount / 100m,
                         Currency = stripeRefund.Currency,
@@ -214,10 +219,20 @@ public class StripeHostRefundService(
 
         var mappedStatus = MapStripeStatus(stripeRefund.Status);
         var pathIsUnknown = string.IsNullOrWhiteSpace(refund.StripeRefundPath);
+        if (pathIsUnknown && string.Equals(refund.StripeChargeType, "Direct", StringComparison.OrdinalIgnoreCase))
+        {
+            // Direct charges are refunded from the connected account and never use
+            // transfer reversal. A webhook can race the local refund save, so derive
+            // this deterministic path from the persisted charge context.
+            refund.StripeRefundPath = MarketplaceStripeRefundPathConstants.PlatformFunded;
+            refund.StripeRefundPathSelectedAt ??= timeProvider.GetUtcNow();
+            pathIsUnknown = false;
+        }
+
         var nextStatus = pathIsUnknown && mappedStatus == MarketplaceRefundStatusConstants.Completed
             ? MarketplaceRefundStatusConstants.ReconciliationRequired
             : mappedStatus;
-        logger?.LogInformation(
+        logger.LogInformation(
             "Received Stripe refund reconciliation for provider refund {ExternalPaymentRefundId}, mapped status {Status}, failure reason {FailureReason}",
             stripeRefund.Id, nextStatus, stripeRefund.FailureReason);
         if (refund.PaymentRefundStatus == nextStatus)
@@ -235,7 +250,7 @@ public class StripeHostRefundService(
             return null;
         }
 
-        refund.PaymentProvider = "STRIPE";
+        refund.PaymentProvider = MarketplaceExternalRefundReconciliationProviderConstants.Stripe;
         refund.ExternalPaymentRefundId ??= stripeRefund.Id;
         if (pathIsUnknown)
         {
@@ -293,7 +308,7 @@ public class StripeHostRefundService(
             refund.PostPayoutRefund);
     }
 
-    private static void PersistStripeContext(MarketplaceRefund refund, StripeCheckoutSession checkout)
+    private static void PersistStripeContext(MarketplaceRefund refund, StripeCheckoutSessionEntity checkout)
     {
         refund.StripeAccountId = string.Equals(checkout.ChargeType, "Direct", StringComparison.OrdinalIgnoreCase)
             ? checkout.StripeAccountId
@@ -349,7 +364,7 @@ public class StripeHostRefundService(
          (int)stripeException.HttpStatusCode >= 500 ||
          stripeException.HttpStatusCode is HttpStatusCode.RequestTimeout or HttpStatusCode.TooManyRequests);
 
-    private async Task<StripeCheckoutSession?> ResolveStripeCheckoutSessionAsync(
+    private async Task<StripeCheckoutSessionEntity?> ResolveStripeCheckoutSessionAsync(
         MarketplaceRefund refund,
         CancellationToken cancellationToken)
     {
@@ -359,7 +374,8 @@ public class StripeHostRefundService(
         // Checkout session from subscription dates when a Stripe source allocation exists.
         var stripeSource = refund.PaymentAllocations.FirstOrDefault(item =>
             item.IsSourcePayment &&
-            string.Equals(item.SourcePaymentProvider, "STRIPE", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(item.SourcePaymentProvider, MarketplaceExternalRefundReconciliationProviderConstants.Stripe,
+                StringComparison.OrdinalIgnoreCase) &&
             !string.IsNullOrWhiteSpace(item.SourcePaymentReference));
         if (stripeSource is not null)
         {

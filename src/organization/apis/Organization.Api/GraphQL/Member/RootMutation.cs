@@ -33,7 +33,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         return new OrganizationMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId,
-            Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray(),
+            Members = [.. organizationMembers.Select(graphQlMapper.MapTo)],
         };
     }
 
@@ -48,7 +48,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         return new OrganizationMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId,
-            Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray(),
+            Members = [.. organizationMembers.Select(graphQlMapper.MapTo)],
         };
     }
 

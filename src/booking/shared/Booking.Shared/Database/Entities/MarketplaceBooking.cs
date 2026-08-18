@@ -31,6 +31,10 @@ public class MarketplaceBooking : EntityBase
     public string BillingMode { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? EntitlementId { get; set; }
+    public virtual Entitlement? Entitlement { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? BookingId { get; set; }
     public virtual Booking? Booking { get; set; }
 
@@ -93,6 +97,11 @@ public class MarketplaceBookingConfiguration : IEntityTypeConfiguration<Marketpl
             .WithOne(item => item.MarketplaceBooking)
             .HasForeignKey<MarketplaceBooking>(item => item.MarketplaceBookingSubscriptionId);
 
+        builder
+            .HasOne(item => item.Entitlement)
+            .WithMany(item => item.MarketplaceBookings)
+            .HasForeignKey(item => item.EntitlementId);
+
         builder.HasOne(item => item.ProductVersion).WithMany(item => item.MarketplaceBookings);
         builder.HasOne(item => item.PaidByCustomer).WithMany(item => item.PaidMarketplaceBookings);
         builder.HasOne(item => item.PaidByOrganization).WithMany(item => item.PaidMarketplaceBookings);
@@ -108,5 +117,6 @@ public class MarketplaceBookingConfiguration : IEntityTypeConfiguration<Marketpl
         builder.HasIndex(item => item.TotalAmount);
         builder.HasIndex(item => item.Currency);
         builder.HasIndex(item => item.BillingMode);
+        builder.HasIndex(item => item.EntitlementId);
     }
 }

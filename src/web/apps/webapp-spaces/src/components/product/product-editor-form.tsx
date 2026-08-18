@@ -28,6 +28,7 @@ import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
 import {
   BodyIconTypography,
   defaultButtonStyle,
@@ -247,6 +248,31 @@ const ProductEditorForm = ({
         <FormFieldLabel label="Price">
           <TextField name={`pricingOptions[${index}].price`} required />
         </FormFieldLabel>
+      </SettingsSectionCard>
+
+      <SettingsSectionCard title="Credit entitlement" description="Offer prepaid credits with a product-level expiry and refund policy.">
+        <StackColumn spacing={2}>
+          <FormFieldLabel label="Fulfillment type">
+            <TextField select fullWidth name={`pricingOptions[${index}].fulfillmentType`}>
+              <MenuItem sx={{ minHeight: 48, fontSize: 'inherit' }} value="RESERVATION">
+                Reservation
+              </MenuItem>
+              <MenuItem sx={{ minHeight: 48, fontSize: 'inherit' }} value="ENTITLEMENT">
+                Credit entitlement
+              </MenuItem>
+            </TextField>
+          </FormFieldLabel>
+          {pricingOption.fulfillmentType === 'ENTITLEMENT' ? (
+            <StackRow sx={{ gap: 2, flexWrap: 'wrap' }}>
+              <FormFieldLabel label="Credit quantity">
+                <TextField name={`pricingOptions[${index}].entitlementCreditQuantity`} />
+              </FormFieldLabel>
+              <FormFieldLabel label="Validity (days)">
+                <TextField name={`pricingOptions[${index}].entitlementValidityDays`} />
+              </FormFieldLabel>
+            </StackRow>
+          ) : null}
+        </StackColumn>
       </SettingsSectionCard>
 
       <SettingsSectionCard title="Booking Rules" description="Define how much of the product is reserved each time this offer is purchased.">

@@ -27,6 +27,7 @@ public static class Extensions
         public IServiceCollection AddMappers() =>
             services
                 .AddSingleton<IGraphQlMapper, GraphQlMapper>()
+                .AddSingleton<IEntitlementPurchaseGraphQlMapper, EntitlementPurchaseGraphQlMapper>()
                 .AddSingleton<IGrpcMapper, GrpcMapper>();
 
         public IServiceCollection AddServices() =>
@@ -36,6 +37,9 @@ public static class Extensions
                 .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
                 .AddScoped<IPricingEntitlementEvaluator, PricingEntitlementEvaluator>()
                 .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
+                .AddScoped<IEntitlementReadService, EntitlementReadService>()
+                .AddScoped<IEntitlementPurchaseReadService, EntitlementPurchaseReadService>()
+                .AddScoped<IEntitlementPurchasePaymentService, EntitlementPurchasePaymentService>()
                 .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
                 .AddScoped<IBookingPaymentService, BookingPaymentService>()
                 .AddScoped<IRecurringBookingPaymentService, RecurringBookingPaymentService>()

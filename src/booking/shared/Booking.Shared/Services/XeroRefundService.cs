@@ -111,7 +111,7 @@ public class XeroRefundService(
     public async Task<MarketplaceRefund> ProcessAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
     {
         var stopwatch = Stopwatch.StartNew();
-        logger?.LogInformation(
+        logger.LogInformation(
             "Starting Xero refund processing for refund {RefundId}, amount {RefundAmount}, currency {Currency}, retry count {RetryCount}", refund.Id,
             refund.RefundAmount, refund.Currency, refund.RetryCount);
         try
@@ -124,7 +124,7 @@ public class XeroRefundService(
             var resolution = await ResolveInvoiceTargetAsync(refund, cancellationToken);
             if (resolution.InvoiceTarget is null)
             {
-                logger?.LogWarning("Xero refund processing blocked for refund {RefundId}: {Reason}", refund.Id, resolution.ErrorMessage);
+                logger.LogWarning("Xero refund processing blocked for refund {RefundId}: {Reason}", refund.Id, resolution.ErrorMessage);
                 return MarkFailed(refund, resolution.ErrorMessage ?? "The original Xero invoice could not be resolved for this refund.");
             }
 
@@ -296,14 +296,14 @@ public class XeroRefundService(
             refund.LastProcessedAt = timeProvider.GetUtcNow();
             refund.LastError = null;
 
-            logger?.LogInformation(
+            logger.LogInformation(
                 "Completed Xero refund processing for refund {RefundId} with status {Status}, external refund {ExternalRefundId}, duration {DurationMs} ms, retry count {RetryCount}",
                 refund.Id, refund.Status, refund.ExternalRefundId, stopwatch.ElapsedMilliseconds, refund.RetryCount);
             return repositoryFactory.MarketplaceRefundRepository.Update(refund);
         }
         catch (Exception exception)
         {
-            logger?.LogError(exception, "Xero refund processing failed for refund {RefundId}", refund.Id);
+            logger.LogError(exception, "Xero refund processing failed for refund {RefundId}", refund.Id);
             return MarkFailed(refund, ToUserFacingError(exception));
         }
     }
@@ -396,9 +396,11 @@ public class XeroRefundService(
             MarketplaceRefundEntityTypeConstants.MarketplaceBooking => await ResolveOneTimeBookingInvoiceTargetAsync(refund, cancellationToken),
             MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription => await ResolveSubscriptionInvoiceTargetAsync(refund,
                 cancellationToken),
+            MarketplaceRefundEntityTypeConstants.EntitlementPurchase => await ResolveEntitlementPurchaseInvoiceTargetAsync(refund,
+                cancellationToken),
             _ => new XeroRefundInvoiceTargetResolution(
                 null,
-                "Xero refund processing currently supports only marketplace bookings and subscription billing windows."),
+                "Xero refund processing does not support this marketplace purchase type."),
         };
 
     private async Task<XeroRefundInvoiceTargetResolution> ResolveOneTimeBookingInvoiceTargetAsync(MarketplaceRefund refund,
@@ -412,6 +414,27 @@ public class XeroRefundService(
         if (accountingInvoiceExportLink is null || string.IsNullOrWhiteSpace(accountingInvoiceExportLink.ExternalInvoiceId))
         {
             return new XeroRefundInvoiceTargetResolution(null, "The original Xero invoice link could not be found for this refund.");
+        }
+
+        return new XeroRefundInvoiceTargetResolution(
+            new XeroRefundInvoiceTarget(
+                accountingInvoiceExportLink.LocalEntityId,
+                accountingInvoiceExportLink.ExternalInvoiceId,
+                accountingInvoiceExportLink.ExternalInvoiceNumber),
+            null);
+    }
+
+    private async Task<XeroRefundInvoiceTargetResolution> ResolveEntitlementPurchaseInvoiceTargetAsync(MarketplaceRefund refund,
+        CancellationToken cancellationToken)
+    {
+        var accountingInvoiceExportLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
+            AccountingProviderConstants.Xero,
+            AccountingEntityTypeConstants.EntitlementPurchase,
+            refund.LocalEntityId,
+            cancellationToken);
+        if (accountingInvoiceExportLink is null || string.IsNullOrWhiteSpace(accountingInvoiceExportLink.ExternalInvoiceId))
+        {
+            return new XeroRefundInvoiceTargetResolution(null, "The original Xero entitlement invoice link could not be found for this refund.");
         }
 
         return new XeroRefundInvoiceTargetResolution(
@@ -656,9 +679,12 @@ public class XeroRefundService(
             : $"{ResolveRefundSubjectLabel(refund)} refund for invoice {invoiceTarget.ExternalInvoiceNumber}";
 
     private static string ResolveRefundSubjectLabel(MarketplaceRefund refund) =>
-        refund.LocalEntityType == MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription
-            ? "Marketplace subscription"
-            : "Marketplace booking";
+        refund.LocalEntityType switch
+        {
+            MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription => "Marketplace subscription",
+            MarketplaceRefundEntityTypeConstants.EntitlementPurchase => "Entitlement purchase",
+            _ => "Marketplace booking",
+        };
 
     private static CurrencyCode ResolveCurrencyCode(MarketplaceRefund refund, XeroInvoice originalInvoice)
     {

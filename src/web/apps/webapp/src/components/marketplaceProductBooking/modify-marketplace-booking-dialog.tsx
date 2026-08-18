@@ -362,7 +362,16 @@ const ModifyMarketplaceBookingDialog = ({
 
   if (page) {
     return (
-      <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto', px: { xs: 1, sm: 2, md: 3 }, pt: { xs: 2, md: 3 }, pb: 4 }}>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: 1200,
+          mx: 'auto',
+          px: { xs: 1, sm: 2, md: 3 },
+          pt: { xs: 2, md: 3 },
+          pb: 4,
+        }}
+      >
         <SettingsSectionCard title="Schedule" description="Pick the date and time for this booking.">
           {formContent}
         </SettingsSectionCard>
@@ -378,7 +387,7 @@ const ModifyMarketplaceBookingDialog = ({
   );
 };
 
-const SmallResourceSelectionHelp = ({ maximumResourceCount }: { maximumResourceCount: number }) => (
+export const SmallResourceSelectionHelp = ({ maximumResourceCount }: { maximumResourceCount: number }) => (
   <BodyIconTypography
     label={`Select up to ${maximumResourceCount} eligible resource${maximumResourceCount === 1 ? '' : 's'}. Availability is checked again when you confirm.`}
     sx={{ opacity: 0.75 }}

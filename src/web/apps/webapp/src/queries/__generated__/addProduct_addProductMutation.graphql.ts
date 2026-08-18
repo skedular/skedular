@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e5e680bfbc62cab3dcea9dd963139d87>>
+ * @generated SignedSource<<48c77f9e7caf1821234b4bc96ce68d43>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,7 @@ export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
+export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 export type AddProductInput = {
   clientMutationId?: string | null | undefined;
@@ -49,6 +50,9 @@ export type ProductPricingInput = {
   bookingCadence: ProductPricingCadence;
   cancellationPolicyType: ProductPricingCancellationPolicyType;
   cancellationRefundRules: ReadonlyArray<ProductPricingCancellationRefundRuleInput>;
+  entitlementCreditQuantity?: number | null | undefined;
+  entitlementValidityDays?: number | null | undefined;
+  fulfillmentType?: ProductPricingFulfillmentType;
   id: string;
   index: number;
   isTaxInclusive: boolean;

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
@@ -11,6 +12,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
+using Microsoft.Extensions.Logging;
 using Stripe;
 using Stripe.Checkout;
 using Temporalio.Activities;
@@ -34,6 +36,10 @@ public record UpsertRecurringBookingProductAndPricingInput(string RecurringBooki
 
 public record CreateCheckoutSessionAsyncResponse(string PaymentStatus);
 
+public record CreateEntitlementCheckoutSessionAsyncInput(string PurchaseId, string StripeConnectAccountId, string StripeCustomerId);
+
+public record CreateEntitlementCheckoutSessionAsyncResponse(string CheckoutUrl, string PaymentStatus);
+
 public record UpsertBookingRelatedStripeCustomerResponse(string StripeCustomerId);
 
 public record UpsertProductAndPricingResponse(string StripeConnectAccountId);
@@ -50,7 +56,8 @@ public class StripeIntegrations(
     IEntityMapper entityMapper,
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
-    IHostStripeApplicationFeeService hostStripeApplicationFeeService)
+    IHostStripeApplicationFeeService hostStripeApplicationFeeService,
+    ILogger<StripeIntegrations> logger)
 {
     [Activity]
     public async Task<UpsertProductAndPricingResponse?> UpsertProductAndPricingAsync(UpsertProductAndPricingInput args)
@@ -229,9 +236,14 @@ public class StripeIntegrations(
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
 
+        var stripeProduct = productVersion.StripeProducts.FirstOrDefault(item => item.ProductPricingId == marketplaceBooking.ProductPricing.Id) ??
+                            throw new InvalidOperationException(
+                                $"Stripe product is not configured for pricing {marketplaceBooking.ProductPricing.Id}.");
+        ArgumentNullException.ThrowIfNull(stripeProduct.StripePrice);
+
         var lineItems = booking.Schedules.Select(schedule => new SessionLineItemOptions
         {
-            Price = productVersion.StripeProducts.First().StripePrice!.StripePriceId,
+            Price = stripeProduct.StripePrice.StripePriceId,
             Quantity = marketplaceBooking.ProductPricing.BookingCadence switch
             {
                 ProductPricingCadence.OneTime => marketplaceBooking.Quantity,
@@ -337,6 +349,77 @@ public class StripeIntegrations(
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
 
         return new CreateCheckoutSessionAsyncResponse(marketplaceBooking.PaymentStatus);
+    }
+
+    [Activity]
+    public async Task<CreateEntitlementCheckoutSessionAsyncResponse?> CreateEntitlementCheckoutSessionAsync(
+        CreateEntitlementCheckoutSessionAsyncInput args)
+    {
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var purchase = await repositoryFactory.EntitlementPurchaseRepository.GetByIdAsync(args.PurchaseId, cancellationToken);
+        if (purchase is null || purchase.PaymentStatus != PaymentStatusConstants.Pending)
+        {
+            return null;
+        }
+
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(purchase.ProductVersionId, cancellationToken) ??
+                             throw new ProductVersionNotFound();
+        var stripeProduct = productVersion.StripeProducts.FirstOrDefault(item => item.ProductPricingId == purchase.ProductPricing.Id) ??
+                            throw new InvalidOperationException($"Stripe product is not configured for pricing {purchase.ProductPricing.Id}.");
+        ArgumentNullException.ThrowIfNull(stripeProduct.StripePrice);
+
+        var checkoutReturnUrl = purchase.CheckoutReturnUrl ?? applicationConfiguration.WebAppBaseDomain.ToString();
+        var session = await sessionCreateService.CreateAsync(
+            new SessionCreateOptions
+            {
+                Customer = args.StripeCustomerId,
+                LineItems =
+                [
+                    new SessionLineItemOptions
+                    {
+                        Price = stripeProduct.StripePrice.StripePriceId,
+                        Quantity = 1,
+                    },
+                ],
+                Mode = "payment",
+                UiMode = "hosted_page",
+                PaymentMethodTypes = ["card"],
+                ClientReferenceId = purchase.Id,
+                Metadata = new Dictionary<string, string>
+                {
+                    ["purchase_id"] = purchase.Id,
+                    ["pricing_id"] = purchase.ProductPricing.Id,
+                    ["amount"] = purchase.Amount.ToString(CultureInfo.InvariantCulture),
+                    ["currency"] = purchase.Currency,
+                },
+                SuccessUrl = checkoutReturnUrl,
+                CancelUrl = checkoutReturnUrl,
+                AutomaticTax = new SessionAutomaticTaxOptions
+                {
+                    Enabled = true,
+                },
+            },
+            new RequestOptions
+            {
+                IdempotencyKey = purchase.Id,
+                StripeAccount = args.StripeConnectAccountId,
+            },
+            cancellationToken);
+
+        logger.LogInformation(
+            "Created Stripe entitlement checkout session. PurchaseId={PurchaseId}, PricingId={PricingId}, Amount={Amount}, Currency={Currency}, StripeCheckoutSessionId={StripeCheckoutSessionId}",
+            purchase.Id,
+            purchase.ProductPricing.Id,
+            purchase.Amount,
+            purchase.Currency,
+            session.Id);
+
+        return new CreateEntitlementCheckoutSessionAsyncResponse(session.Url, session.PaymentStatus switch
+        {
+            "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
+            "paid" => PaymentStatusConstants.Confirmed,
+            _ => PaymentStatusConstants.Pending,
+        });
     }
 
     [Activity]

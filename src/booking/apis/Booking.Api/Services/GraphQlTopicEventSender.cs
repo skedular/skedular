@@ -29,6 +29,9 @@ public class GraphQlTopicEventSender(
                 await cachedMarketplaceBookingSubscriptionService.RemoveByIdAsync(id, cancellationToken);
 
                 break;
+
+            case Constants.EntitlementPurchaseTopicName:
+                break;
         }
 
         await topicEventSender.SendAsync(topicName, id, cancellationToken);

@@ -5,19 +5,22 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Booking.Shared.Database.Entities;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class MarketplaceRefundPaymentAllocation : EntityBase
 {
-    public string SourcePaymentProvider { get; set; } = null!;
-    public string SourcePaymentReference { get; set; } = null!;
+    public string SourcePaymentProvider { get; set; }
+    public string SourcePaymentReference { get; set; }
     public decimal SourceCapturedAmount { get; set; }
     public decimal AllocatedRefundAmount { get; set; }
     public bool IsSourcePayment { get; set; }
-    public string Currency { get; set; } = null!;
+    public string Currency { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string MarketplaceRefundId { get; set; } = null!;
-    public virtual MarketplaceRefund MarketplaceRefund { get; set; } = null!;
+    public string MarketplaceRefundId { get; set; }
+    public virtual MarketplaceRefund MarketplaceRefund { get; set; }
 }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 public class MarketplaceRefundPaymentAllocationConfiguration : IEntityTypeConfiguration<MarketplaceRefundPaymentAllocation>
 {

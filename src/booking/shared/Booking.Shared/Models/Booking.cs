@@ -8,6 +8,7 @@ public record ResourceCustomersPair(Resource Resource, IReadOnlyList<Customer> C
 public class Booking : ModelBaseWithDeleted
 {
     public uint EntityFrameworkVersion { get; set; }
+    public string? ConsumingCreditLedgerEntryId { get; set; }
     public DateTimeOffset From { get; set; }
     public DateTimeOffset Until { get; set; }
     public string? Notes { get; set; }

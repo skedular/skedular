@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e15ba07c1dca970483e72889c4003c5>>
+ * @generated SignedSource<<d9311b9363f5fc306b1e031212963172>>
  * @lightSyntaxTransform
  */
 
@@ -68,6 +68,7 @@ export type editMarketplaceBooking_booking_query$data = {
       readonly name: string;
     }>;
     readonly marketplaceBooking: {
+      readonly entitlementId: string | null | undefined;
       readonly id: string;
       readonly invoiceUrl: string | null | undefined;
       readonly isPaymentRequired: boolean;
@@ -526,6 +527,13 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "entitlementId",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "isPaymentRequired",
               "storageKey": null
             },
@@ -793,6 +801,6 @@ return {
 };
 })();
 
-(node as any).hash = "84db2829264de89e17eab8ee156b48b5";
+(node as any).hash = "02b11b565a0df89766bb66fdae004215";
 
 export default node;

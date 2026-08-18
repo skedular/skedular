@@ -442,20 +442,12 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
               renderInput={(params) => <TextField {...params} label="Invoice emails" helperText="We'll send invoice updates to these addresses." />}
             />
 
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={selectedPricingOption?.supportsSubscriptionAutoRenewal ? autoRenew : false}
-                  onChange={(event) => setAutoRenew(event.target.checked)}
-                  disabled={!selectedPricingOption?.supportsSubscriptionAutoRenewal}
-                />
-              }
-              label={
-                selectedPricingOption?.supportsSubscriptionAutoRenewal
-                  ? 'Auto-renew this plan using the latest matching pricing option'
-                  : 'Auto-renew is not available for this plan'
-              }
-            />
+            {selectedPricingOption?.supportsSubscriptionAutoRenewal ? (
+              <FormControlLabel
+                control={<Switch checked={autoRenew} onChange={(event) => setAutoRenew(event.target.checked)} />}
+                label="Auto-renew this plan using the latest matching pricing option"
+              />
+            ) : null}
 
             <CustomerTermsAndConditionsPanel
               accepted={hasAcceptedTermsAndConditions}

@@ -11,6 +11,7 @@ public interface IProductVersionRepository : IRepository<ProductVersion>
 {
     Task<ProductVersion> UpsertNakedAsync(string id, Product? product, CancellationToken cancellationToken);
     Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ProductVersion?> GetCurrentByProductIdAsync(string productId, CancellationToken cancellationToken);
     ProductVersion Update(ProductVersion product);
 }
 
@@ -43,6 +44,14 @@ public class ProductVersionRepository(BookingDbContext dbContext, TimeProvider t
         await DbContext.ProductVersion
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ProductVersion?> GetCurrentByProductIdAsync(string productId, CancellationToken cancellationToken) =>
+        await DbContext.ProductVersion
+            .AddDependentObjects()
+            .Where(query => query.ProductId == productId)
+            .OrderByDescending(query => query.ModifiedAt)
+            .ThenByDescending(query => query.CreatedAt)
+            .FirstOrDefaultAsync(cancellationToken);
 
     public ProductVersion Update(ProductVersion product)
     {

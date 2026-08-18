@@ -85,6 +85,11 @@ enum ProductPricingBillingMode {
   ProductPricingBillingMode_InArrears = 2;
 }
 
+enum ProductPricingFulfillmentType {
+  ProductPricingFulfillmentType_Reservation = 0;
+  ProductPricingFulfillmentType_Entitlement = 1;
+}
+
 enum ProductPricingCancellationPolicyType {
   ProductPricingCancellationPolicyType_NotSet                 = 0;
   ProductPricingCancellationPolicyType_NoCancellation         = 1;
@@ -123,6 +128,9 @@ message ProductPricing {
   repeated ProductPricingCancellationRefundRule cancellationRefundRules                        = 18;
   repeated string                                availableDays                                 = 19;
   int32                                          requiredDaysPerWeek                           = 20;
+  ProductPricingFulfillmentType                 fulfillmentType                               = 21;
+  int32                                          entitlementCreditQuantity                      = 22;
+  int32                                          entitlementValidityDays                        = 24;
 }
 
 message ProductPricingCancellationRefundRule {

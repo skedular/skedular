@@ -61,6 +61,17 @@ type Query {
     orderBy: [BookingOrderInput!]
   ): ConnectionOfBookingEdge! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
+  myEntitlements: [EntitlementDetails!]! @cost(weight: "10")
+  entitlement(id: String!): EntitlementDetails @cost(weight: "10")
+  entitlementsByCustomer(customerId: String!): [EntitlementDetails!]!
+    @cost(weight: "10")
+  organizationEntitlements(organizationId: String!): [EntitlementDetails!]!
+    @cost(weight: "10")
+  entitlementPurchase(purchaseId: String!): EntitlementPurchaseDetails
+    @cost(weight: "10")
+  entitlementPurchases: [EntitlementPurchaseDetails!]! @cost(weight: "10")
+  organizationEntitlementPurchases(organizationId: String!): [EntitlementPurchaseDetails!]!
+    @cost(weight: "10")
   marketplaceBookingSubscriptionCancellationModes: [MarketplaceBookingSubscriptionCancellationModeDetails!]!
   marketplaceBookingSubscriptionStatuses: [MarketplaceBookingSubscriptionStatusDetails!]!
   marketplaceBookingPaymentStatuses: [MarketplaceBookingPaymentStatusDetails!]!
@@ -161,6 +172,10 @@ type Mutation {
   resolveUnassignedMarketplaceExternalRefundReconciliation(
     input: ResolveUnassignedMarketplaceExternalRefundReconciliationInput!
   ): MarketplaceExternalRefundReconciliationPayload! @cost(weight: "10")
+  adjustEntitlementCredit(input: AdjustEntitlementCreditInput!): AdjustEntitlementCreditPayload!
+    @cost(weight: "10")
+  consumeEntitlementCredit(input: ConsumeEntitlementCreditInput!): ConsumeEntitlementCreditPayload!
+    @cost(weight: "10")
   acceptPartialMarketplaceBooking(input: ResolvePartialMarketplaceBookingInput!): MarketplaceBookingFailureDetails!
     @cost(weight: "10")
   declinePartialMarketplaceBooking(
@@ -174,12 +189,27 @@ type Mutation {
     @cost(weight: "10")
   addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload!
     @cost(weight: "10")
+  addMarketplaceCreditBookings(input: AddMarketplaceBookingInput!): MarketplaceCreditBookingsPayload!
+    @cost(weight: "10")
   updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload!
     @cost(weight: "10")
   modifyMarketplaceBooking(input: ModifyMarketplaceBookingInput!): ModifyMarketplaceBookingPayload!
     @cost(weight: "10")
   deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload!
     @cost(weight: "10")
+  cancelEntitlement(input: CancelEntitlementInput!): CancelEntitlementPayload!
+    @cost(weight: "10")
+  setEntitlementRenewalPolicy(input: SetEntitlementRenewalPolicyInput!): SetEntitlementRenewalPolicyPayload!
+    @cost(weight: "10")
+  createEntitlementPurchase(input: CreateEntitlementPurchaseInput!): EntitlementPurchasePayload!
+    @cost(weight: "10")
+  confirmEntitlementPurchase(input: ConfirmEntitlementPurchaseInput!): EntitlementPurchasePayload!
+    @cost(weight: "10")
+  rejectEntitlementPurchase(input: RejectEntitlementPurchaseInput!): EntitlementPurchasePayload!
+    @cost(weight: "10")
+  makeEntitlementPurchasePaymentNotRequired(
+    input: MakeEntitlementPurchasePaymentNotRequiredInput!
+  ): EntitlementPurchasePayload! @cost(weight: "10")
   addMarketplaceBookingSubscription(
     input: AddMarketplaceBookingSubscriptionInput!
   ): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
@@ -209,11 +239,18 @@ type Mutation {
 
 type Subscription {
   booking(id: String!): BookingDetails!
+  entitlementPurchase(purchaseId: String!): EntitlementPurchaseDetails!
   marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails!
   resourceAvailability(
     subscriptionKey: String!
     filter: ResourceAvailabilityFilterInput!
   ): ResourceDayViewConnection!
+}
+
+type AdjustEntitlementCreditPayload {
+  clientMutationId: String
+  ledgerEntry: CreditLedgerEntryDetails
+  error: String
 }
 
 type Booking_LocationDetails {
@@ -345,6 +382,12 @@ type BookingWindowDetails {
   notes: String
 }
 
+type CancelEntitlementPayload {
+  clientMutationId: String
+  entitlement: EntitlementDetails
+  error: String
+}
+
 type CancellationErrorDetails {
   code: CancellationErrorCode!
   message: String!
@@ -392,6 +435,21 @@ type ConnectionOfRecurringBookingEdge {
   totalCount: Int!
 }
 
+type ConsumeEntitlementCreditPayload {
+  clientMutationId: String
+  ledgerEntry: CreditLedgerEntryDetails
+  error: String
+}
+
+type CreditLedgerEntryDetails {
+  id: String!
+  bookingId: String
+  quantity: Int!
+  transactionType: CreditLedgerTransactionType!
+  referenceKey: String!
+  createdAt: DateTime!
+}
+
 type CurrencyDetails @shareable {
   type: Currency!
   name: String!
@@ -406,6 +464,83 @@ type DayOfWeekDetails {
   name: String!
 }
 
+type EntitlementDetails {
+  id: String!
+  customerId: String!
+  organizationId: String!
+  organizationCustomDomain: String!
+  purchaseReference: String!
+  pricingId: String!
+  productId: String!
+  grantedQuantity: Int!
+  availableQuantity: Int!
+  activatesAt: DateTime!
+  expiresAt: DateTime!
+  status: EntitlementStatus!
+  autoRenew: Boolean!
+  cancelAtPeriodEnd: Boolean!
+  currency: String!
+  restrictions: EntitlementRestrictionsDetails
+  renewalStatus: EntitlementRenewalStatus!
+  nextRenewalAt: DateTime
+  renewalFailureReason: String
+  paymentAction: String
+  refund: EntitlementRefundDetails
+  ledger: [CreditLedgerEntryDetails!]!
+  linkedBookingIds: [String!]!
+}
+
+type EntitlementPurchaseDetails {
+  productVersion: ProductVersionDetails!
+  customerName: String @cost(weight: "10")
+  entitlement: EntitlementDetails @cost(weight: "10")
+  linkedBookings(after: String, first: Int, before: String, last: Int): ConnectionOfBookingEdge!
+    @cost(weight: "10")
+  id: String!
+  paymentStatus: String!
+  lifecycleState: String!
+  paymentMethod: String!
+  paymentExpiry: DateTime!
+  serviceStartAt: DateTime!
+  amount: Decimal!
+  currency: String!
+  pricingId: String!
+  creditQuantity: Int!
+  validityDays: Int!
+  customerId: String!
+  organizationId: String!
+  entitlementId: String
+  checkoutReturnUrl: String
+  invoiceNumber: String
+  invoiceUrl: String
+  paymentInstructions: String
+  paymentAction: String
+  invoiceEmailList: [String!]!
+}
+
+type EntitlementPurchasePayload {
+  clientMutationId: String
+  purchase: EntitlementPurchaseDetails
+  error: String
+}
+
+type EntitlementRefundDetails {
+  id: String!
+  amount: Decimal!
+  unusedCreditQuantity: Int!
+  status: MarketplaceRefundStatus!
+  paymentRefundStatus: String
+}
+
+type EntitlementRestrictionsDetails {
+  productId: String!
+  productVersionId: String!
+  availableDays: [DayOfWeek!]!
+  minDurationMinutes: Int
+  maxDurationMinutes: Int
+  numberOfResourcesToBook: Int!
+}
+
 type ListingMetadata @shareable {
   about: String
   title: String
@@ -414,12 +549,15 @@ type ListingMetadata @shareable {
 }
 
 type MarketplaceBookingDetails {
+  entitlementPurchaseId: String @cost(weight: "10")
   paidByCustomer: CustomerDetails
   paidByOrganization: OrganizationDetails
   productVersion: ProductVersionDetails!
   refund: MarketplaceRefundDetails @cost(weight: "10")
   failure: MarketplaceBookingFailureDetails @cost(weight: "10")
   quantity: Int!
+  entitlementId: String
+  consumingCreditLedgerEntryId: String
   productPricing: ProductPricing!
   paymentMethod: PaymentMethodTypeDetails!
   totalAmountExcludeTax: Decimal
@@ -536,6 +674,8 @@ type MarketplaceBookingSubscriptionDetails @key(fields: "id") {
     from: DateTime
     until: DateTime
   ): ConnectionOfMarketplaceBookingInstanceEdge! @cost(weight: "10")
+  linkedBookings(after: String, first: Int, before: String, last: Int): ConnectionOfBookingEdge!
+    @cost(weight: "10")
   arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   startedAt: DateTime!
   cancelledAt: DateTime
@@ -573,6 +713,13 @@ type MarketplaceCancellationAvailabilityDetails {
   requiresReason: Boolean!
   isPolicyOverride: Boolean!
   unavailableReason: String
+  isCreditFunded: Boolean!
+  creditOutcome: String
+}
+
+type MarketplaceCreditBookingsPayload {
+  clientMutationId: String
+  bookings: [BookingDetails!]!
 }
 
 type MarketplaceExternalRefundReconciliationDetails {
@@ -614,6 +761,7 @@ type MarketplacePurchaseHistoryDetails {
   bookingFrom: DateTime
   bookingUntil: DateTime
   paymentStatus: PaymentStatus!
+  paymentMethod: String
   productVersionId: String
   productTitle: String
   totalAmount: Decimal
@@ -623,6 +771,10 @@ type MarketplacePurchaseHistoryDetails {
   cancellationReason: String
   refundId: String
   bookingId: String
+  entitlementStatus: String
+  creditQuantity: Int!
+  grantedQuantity: Int!
+  availableQuantity: Int!
   isDeleted: Boolean!
 }
 
@@ -835,6 +987,9 @@ type ProductPricing @shareable {
   cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
   availableDays: [DayOfWeek!]
   requiredDaysPerWeek: Int
+  fulfillmentType: ProductPricingFulfillmentType!
+  entitlementCreditQuantity: Int
+  entitlementValidityDays: Int
 }
 
 type ProductPricingCancellationRefundRule @shareable {
@@ -928,6 +1083,12 @@ type ResourceDetails @key(fields: "id") @shareable {
   id: ID!
 }
 
+type SetEntitlementRenewalPolicyPayload {
+  clientMutationId: String
+  entitlement: EntitlementDetails
+  error: String
+}
+
 type SpacesAccessErrorDetails {
   errorCode: String!
   status: SpacesSubscriptionStatus!
@@ -987,6 +1148,7 @@ input AddMarketplaceBookingInput {
   quantity: Int!
   productVersionId: String!
   pricingId: String!
+  entitlementId: String
   checkoutReturnUrl: String
 }
 
@@ -1048,6 +1210,14 @@ input AddPrivateRecurringBookingInput {
   category: BookingCategory
 }
 
+input AdjustEntitlementCreditInput {
+  clientMutationId: String
+  entitlementId: String!
+  quantity: Int!
+  reason: String!
+  idempotencyKey: String!
+}
+
 input ApproveMarketplaceRefundInput {
   id: String!
   clientMutationId: String
@@ -1106,6 +1276,12 @@ input BookingWhereInput {
   includeFutureBookingsOnly: Boolean
 }
 
+input CancelEntitlementInput {
+  clientMutationId: String
+  entitlementId: String!
+  reason: String!
+}
+
 input CancelMarketplaceRefundInput {
   id: String!
   reason: String!
@@ -1122,9 +1298,33 @@ input ConfirmBookingPaymentInput {
   id: String!
 }
 
+input ConfirmEntitlementPurchaseInput {
+  clientMutationId: String
+  purchaseId: String!
+}
+
 input ConfirmRecurringBookingPaymentInput {
   id: String!
   clientMutationId: String
+}
+
+input ConsumeEntitlementCreditInput {
+  clientMutationId: String
+  bookingId: String!
+  idempotencyKey: String!
+  bookingAt: DateTime!
+}
+
+input CreateEntitlementPurchaseInput {
+  clientMutationId: String
+  organizationId: String!
+  productVersionId: String!
+  pricingId: String!
+  paymentMethod: PaymentMethod!
+  autoRenew: Boolean!
+  serviceStartAt: DateTime!
+  checkoutReturnUrl: String
+  invoiceEmailList: [String!]!
 }
 
 input CreatePartialMarketplaceRefundInput {
@@ -1161,6 +1361,11 @@ input DeletePrivateRecurringBookingInput {
 input MakeBookingPaymentNotRequiredInput {
   clientMutationId: String
   id: String!
+}
+
+input MakeEntitlementPurchasePaymentNotRequiredInput {
+  clientMutationId: String
+  purchaseId: String!
 }
 
 input MakeRecurringBookingPaymentNotRequiredInput {
@@ -1212,6 +1417,7 @@ input MarketplaceRefundWhereInput {
 input ModifyMarketplaceBookingInput {
   clientMutationId: String
   bookingId: String!
+  entitlementId: String
   expectedVersion: Int!
   from: DateTime!
   until: DateTime!
@@ -1261,6 +1467,11 @@ input RecurringBookingWhereInput {
 input RejectBookingPaymentInput {
   clientMutationId: String
   id: String!
+}
+
+input RejectEntitlementPurchaseInput {
+  clientMutationId: String
+  purchaseId: String!
 }
 
 input RejectMarketplaceRefundInput {
@@ -1322,6 +1533,13 @@ input ResourceAvailabilityOrderByInput {
 input RetryMarketplaceRefundInput {
   id: String!
   clientMutationId: String
+}
+
+input SetEntitlementRenewalPolicyInput {
+  clientMutationId: String
+  entitlementId: String!
+  autoRenew: Boolean!
+  cancelAtPeriodEnd: Boolean!
 }
 
 input UpdateMarketplaceBookingInput {
@@ -1414,6 +1632,15 @@ enum CancellationErrorCode {
   INVALID_TERMINAL_STATE
 }
 
+enum CreditLedgerTransactionType {
+  GRANTED
+  CONSUMED
+  RELEASED
+  FORFEITED
+  EXPIRED
+  ADJUSTED
+}
+
 enum Currency {
   NZD
   USD
@@ -1427,6 +1654,21 @@ enum DayOfWeek {
   THURSDAY
   FRIDAY
   SATURDAY
+}
+
+enum EntitlementRenewalStatus {
+  NOT_REQUIRED
+  PENDING
+  CONFIRMED
+  FAILED
+  CANCELLED
+}
+
+enum EntitlementStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CANCELLED
 }
 
 enum MarketplaceBookingModificationActorKind {
@@ -1496,6 +1738,7 @@ enum MarketplacePurchaseRenewalState {
 enum MarketplacePurchaseSourceType {
   BOOKING
   SUBSCRIPTION
+  ENTITLEMENT
 }
 
 enum MarketplaceRefundEventType {
@@ -1518,6 +1761,7 @@ enum MarketplaceRefundKind {
   CANCELLATION
   MODIFICATION
   PARTIAL
+  ENTITLEMENT_EXPIRY
 }
 
 enum MarketplaceRefundStatus {
@@ -1774,6 +2018,11 @@ enum ProductPricingCancellationPolicyType {
   NO_CANCELLATION
   FULL_REFUND_BEFORE_CUTOFF
   TIERED_REFUND
+}
+
+enum ProductPricingFulfillmentType {
+  RESERVATION
+  ENTITLEMENT
 }
 
 enum RecurringBookingEndType {

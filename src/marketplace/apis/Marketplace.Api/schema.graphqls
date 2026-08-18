@@ -23,6 +23,7 @@ type Query {
   currencies: [CurrencyDetails!]!
   defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
   defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  productPricingFulfillmentTypes: [ProductPricingFulfillmentTypeDetails!]!
   productPricingCadences: [ProductPricingCadenceDetails!]!
   productPricingBillingModes: [ProductPricingBillingModeDetails!]!
   paymentMethods: [PaymentMethodTypeDetails!]!
@@ -142,6 +143,9 @@ type ProductPricing @shareable {
   cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
   availableDays: [DayOfWeek!]
   requiredDaysPerWeek: Int
+  fulfillmentType: ProductPricingFulfillmentType!
+  entitlementCreditQuantity: Int
+  entitlementValidityDays: Int
 }
 
 type ProductPricingBillingModeDetails {
@@ -161,6 +165,11 @@ type ProductPricingCancellationRefundRule @shareable {
 
 type ProductPricingCancellationTypeDetails {
   type: ProductPricingCancellationPolicyType!
+  name: String!
+}
+
+type ProductPricingFulfillmentTypeDetails {
+  type: ProductPricingFulfillmentType!
   name: String!
 }
 
@@ -269,6 +278,9 @@ input ProductPricingInput {
   cancellationRefundRules: [ProductPricingCancellationRefundRuleInput!]!
   availableDays: [DayOfWeek!]
   requiredDaysPerWeek: Int
+  fulfillmentType: ProductPricingFulfillmentType! = RESERVATION
+  entitlementCreditQuantity: Int
+  entitlementValidityDays: Int
 }
 
 input ProductWhereInput {
@@ -532,6 +544,11 @@ enum ProductPricingCancellationPolicyType {
   NO_CANCELLATION
   FULL_REFUND_BEFORE_CUTOFF
   TIERED_REFUND
+}
+
+enum ProductPricingFulfillmentType {
+  RESERVATION
+  ENTITLEMENT
 }
 
 enum ProductType {

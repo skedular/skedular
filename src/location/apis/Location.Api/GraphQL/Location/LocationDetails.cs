@@ -184,9 +184,7 @@ public static partial class LocationDetailsType
         descriptor.Ignore(item => item.ProductIds);
     }
 
-    public static OrganizationDetails GetOrganization([Parent] LocationDetails item) =>
-        new(item.OrganizationId, item.OrganizationCustomDomain);
+    public static OrganizationDetails GetOrganization([Parent] LocationDetails item) => new(item.OrganizationId, item.OrganizationCustomDomain);
 
-    public static IEnumerable<ProductDetails> GetProducts([Parent] LocationDetails item) =>
-        item.ProductIds.Select(id => new ProductDetails(id));
+    public static IEnumerable<ProductDetails> GetProducts([Parent] LocationDetails item) => item.ProductIds.Select(id => new ProductDetails(id));
 }

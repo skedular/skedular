@@ -43,13 +43,13 @@ public static class KafkaPartitions
         builder.SetPartitionsAssignedHandler((consumer, list) =>
         {
             TopicPartitionLogHandler(list, "ASSIGNED");
-            OnPartitionsAssigned(consumer, list.ToArray());
+            OnPartitionsAssigned(consumer, [.. list]);
         });
 
         builder.SetPartitionsRevokedHandler((consumer, list) =>
         {
             TopicPartitionOffsetLogHandler(list, "REVOKED");
-            OnPartitionRevoked(consumer, list.ToArray());
+            OnPartitionRevoked(consumer, [.. list]);
         });
     }
 

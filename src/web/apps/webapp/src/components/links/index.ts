@@ -64,10 +64,18 @@ export const getMarketplaceProductBookingLink = (
   productId: string,
   pricingOptionId: string,
   resourceIds?: string[],
+  useCredit?: boolean,
+  entitlementId?: string,
 ) => {
-  const basePath = isCustomDomain ? `products/${productId}/book` : `organizations/${organizationCustomDomain}/products/${productId}/book`;
-  const baseLink = appendQueryParams(basePath, { pricingOptionId, resourceIds });
+  const bookingPath = useCredit ? 'book-with-credits' : 'book';
+  const basePath = isCustomDomain ? `products/${productId}/${bookingPath}` : `organizations/${organizationCustomDomain}/products/${productId}/${bookingPath}`;
+  const baseLink = appendQueryParams(basePath, { pricingOptionId, resourceIds, useCredit: useCredit ? 'true' : undefined, entitlementId });
 
+  return integratedPlatform ? `/${integratedPlatform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
+};
+
+export const getMarketplaceEntitlementBookingLink = (integratedPlatform: string | undefined, entitlementId: string) => {
+  const baseLink = `entitlements/${entitlementId}/book`;
   return integratedPlatform ? `/${integratedPlatform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
 
@@ -113,6 +121,17 @@ export const getMarketplaceSubscriptionDetailsLink = (
   subscriptionId: string,
 ) => {
   const baseLink = isCustomDomain ? `subscriptions/${subscriptionId}` : `organizations/${organizationCustomDomain}/subscriptions/${subscriptionId}`;
+
+  return integratedPlatform ? `/${integratedPlatform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
+};
+
+export const getMarketplaceEntitlementPurchaseDetailsLink = (
+  integratedPlatform: string | undefined,
+  isCustomDomain: boolean,
+  organizationCustomDomain: string,
+  purchaseId: string,
+) => {
+  const baseLink = isCustomDomain ? `entitlements/purchases/${purchaseId}` : `organizations/${organizationCustomDomain}/entitlements/purchases/${purchaseId}`;
 
   return integratedPlatform ? `/${integratedPlatform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };

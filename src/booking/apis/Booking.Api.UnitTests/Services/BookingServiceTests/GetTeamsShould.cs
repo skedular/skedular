@@ -98,5 +98,6 @@ public class GetTeamsShould
             [],
             teamIds,
             [],
-            []);
+            [],
+            null);
 }

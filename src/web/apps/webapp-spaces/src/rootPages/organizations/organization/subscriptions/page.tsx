@@ -1,8 +1,7 @@
-import { getOrganizationBookingBaseLink, getOrganizationRefundBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
+import { DayPicker } from '@/components/datePickers';
+import { getOrganizationBookingBaseLink, getOrganizationEntitlementPurchaseBaseLink, getOrganizationRefundBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
-import { DayPicker } from '@/components/datePickers';
-import { DefaultSelect } from '@/components/styled';
 import {
   isSupportedMarketplaceBookingPaymentStatusForFilter,
   SupportedMarketplaceBookingPaymentStatusForFilter,
@@ -20,6 +19,7 @@ import {
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import { DefaultSelect } from '@/components/styled';
 import {
   buildMarketplacePurchaseQueryVariables,
   formatMarketplacePurchaseDisplay,
@@ -34,9 +34,12 @@ import {
 
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
+import type { pageOrganizationSubscriptions_confirmEntitlementPurchaseMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmEntitlementPurchaseMutation.graphql';
 import type { pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation.graphql';
+import type { pageOrganizationSubscriptions_makeEntitlementPurchasePaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_makeEntitlementPurchasePaymentNotRequiredMutation.graphql';
 import type { pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation.graphql';
+import type { pageOrganizationSubscriptions_rejectEntitlementPurchaseMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_rejectEntitlementPurchaseMutation.graphql';
 import type { pageOrganizationSubscriptions_rootQuery } from '@/queries/__generated__/pageOrganizationSubscriptions_rootQuery.graphql';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
@@ -73,8 +76,8 @@ import {
   SubtitleIconTypography,
   TwoButtonsDialogActions,
 } from '@skedular/ui';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import dayjs from 'dayjs';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form, FormSpy } from 'react-final-form';
@@ -265,8 +268,13 @@ const RootQuery = graphql`
           bookingFrom
           bookingUntil
           paymentStatus
+          paymentMethod
           productVersionId
           productTitle
+          entitlementStatus
+          creditQuantity
+          grantedQuantity
+          availableQuantity
           totalAmount
           currency
           customerId
@@ -328,7 +336,10 @@ type Props = {
   organizationCustomDomain: string;
   onFiltersChange: (statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[], paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[]) => void;
   isLoading: boolean;
-  initialFormValues: { statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[]; paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[] };
+  initialFormValues: {
+    statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[];
+    paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[];
+  };
   onPurchaseAfterChange: (cursor: string | undefined) => void;
   purchaseSourceType: string;
   purchaseLifecycleState: string;
@@ -362,7 +373,10 @@ const RootPage = ({
   purchaseSort,
   onPurchaseSortChange,
 }: Props) => {
-  const prevFiltersRef = useRef({ statuses: initialFormValues.statuses, paymentStatuses: initialFormValues.paymentStatuses });
+  const prevFiltersRef = useRef({
+    statuses: initialFormValues.statuses,
+    paymentStatuses: initialFormValues.paymentStatuses,
+  });
   const rootData = usePreloadedQuery<pageOrganizationSubscriptions_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const { integratedPlatform } = useIntegratedPlatform();
@@ -439,6 +453,69 @@ const RootPage = ({
       }
     }
   `);
+  const [commitConfirmEntitlementPurchase] = useMutation<pageOrganizationSubscriptions_confirmEntitlementPurchaseMutation>(graphql`
+    mutation pageOrganizationSubscriptions_confirmEntitlementPurchaseMutation($input: ConfirmEntitlementPurchaseInput!) {
+      confirmEntitlementPurchase(input: $input) {
+        error
+        purchase {
+          id
+          paymentStatus
+          lifecycleState
+        }
+      }
+    }
+  `);
+  const [commitRejectEntitlementPurchase] = useMutation<pageOrganizationSubscriptions_rejectEntitlementPurchaseMutation>(graphql`
+    mutation pageOrganizationSubscriptions_rejectEntitlementPurchaseMutation($input: RejectEntitlementPurchaseInput!) {
+      rejectEntitlementPurchase(input: $input) {
+        error
+        purchase {
+          id
+          paymentStatus
+          lifecycleState
+        }
+      }
+    }
+  `);
+  const [commitMakeEntitlementPurchasePaymentNotRequired] = useMutation<pageOrganizationSubscriptions_makeEntitlementPurchasePaymentNotRequiredMutation>(graphql`
+    mutation pageOrganizationSubscriptions_makeEntitlementPurchasePaymentNotRequiredMutation($input: MakeEntitlementPurchasePaymentNotRequiredInput!) {
+      makeEntitlementPurchasePaymentNotRequired(input: $input) {
+        error
+        purchase {
+          id
+          paymentStatus
+          lifecycleState
+        }
+      }
+    }
+  `);
+
+  const handleEntitlementPaymentAction = (sourceId: string, action: 'confirm' | 'reject' | 'not-required') => {
+    if (action === 'reject' && !window.confirm('Reject this bank-transfer payment? The entitlement will not be granted.')) return;
+    if (action === 'not-required' && !window.confirm('Mark this purchase as payment not required? This grants the entitlement without collecting payment.')) return;
+    const input = { clientMutationId: uuid(), purchaseId: sourceId };
+    const onCompleted = (response: { error?: string | null }) => {
+      if (response.error) {
+        toast.error(<NotificationContent content={response.error} />);
+      } else {
+        onReloadRequired();
+      }
+    };
+    const onError = (error: Error) => {
+      toast.error(<NotificationContent content={error.message} />, errorNotificationOptions);
+    };
+    if (action === 'confirm') {
+      commitConfirmEntitlementPurchase({ variables: { input }, onCompleted: (response) => onCompleted(response.confirmEntitlementPurchase), onError });
+    } else if (action === 'reject') {
+      commitRejectEntitlementPurchase({ variables: { input }, onCompleted: (response) => onCompleted(response.rejectEntitlementPurchase), onError });
+    } else {
+      commitMakeEntitlementPurchasePaymentNotRequired({
+        variables: { input },
+        onCompleted: (response) => onCompleted(response.makeEntitlementPurchasePaymentNotRequired),
+        onError,
+      });
+    }
+  };
 
   const subscriptions = useMemo(
     () => rootData.marketplaceBookingSubscriptions.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item),
@@ -773,7 +850,10 @@ const RootPage = ({
                     newPaymentStatuses.length !== prev.paymentStatuses.length ||
                     newPaymentStatuses.some((s, i) => s !== prev.paymentStatuses[i])
                   ) {
-                    prevFiltersRef.current = { statuses: newStatuses, paymentStatuses: newPaymentStatuses };
+                    prevFiltersRef.current = {
+                      statuses: newStatuses,
+                      paymentStatuses: newPaymentStatuses,
+                    };
                     onFiltersChange(newStatuses, newPaymentStatuses);
                   }
                 }}
@@ -781,7 +861,11 @@ const RootPage = ({
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { xs: 'minmax(0, 1fr)', sm: 'repeat(2, minmax(0, 1fr))', lg: 'repeat(3, minmax(0, 1fr))' },
+                  gridTemplateColumns: {
+                    xs: 'minmax(0, 1fr)',
+                    sm: 'repeat(2, minmax(0, 1fr))',
+                    lg: 'repeat(3, minmax(0, 1fr))',
+                  },
                   gap: 1,
                   width: '100%',
                   '& .MuiInputBase-root': { width: '100%' },
@@ -833,6 +917,7 @@ const RootPage = ({
                   <MenuItem value="">All types</MenuItem>
                   <MenuItem value="BOOKING">One-time booking</MenuItem>
                   <MenuItem value="SUBSCRIPTION">Subscription</MenuItem>
+                  <MenuItem value="ENTITLEMENT">Credit entitlement</MenuItem>
                 </DefaultSelect>
                 <DefaultSelect
                   displayEmpty
@@ -971,9 +1056,11 @@ const RootPage = ({
                       const destination =
                         node.sourceType === 'SUBSCRIPTION'
                           ? getOrganizationSubscriptionBaseLink(integratedPlatform, organizationCustomDomain, node.sourceId)
-                          : node.bookingId
-                            ? getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, node.bookingId)
-                            : null;
+                          : node.sourceType === 'ENTITLEMENT'
+                            ? getOrganizationEntitlementPurchaseBaseLink(integratedPlatform, organizationCustomDomain, node.sourceId)
+                            : node.bookingId
+                              ? getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, node.bookingId)
+                              : null;
 
                       if (destination) {
                         router.push(destination);
@@ -982,7 +1069,12 @@ const RootPage = ({
                     sx={{
                       cursor: 'pointer',
                       display: viewMode === 'list' ? { xs: 'flex', md: 'grid' } : 'flex',
-                      gridTemplateColumns: viewMode === 'list' ? { md: 'minmax(260px, 1.2fr) minmax(260px, 1.3fr) minmax(160px, 0.6fr)' } : undefined,
+                      gridTemplateColumns:
+                        viewMode === 'list'
+                          ? {
+                              md: 'minmax(260px, 1.2fr) minmax(260px, 1.3fr) minmax(160px, 0.6fr)',
+                            }
+                          : undefined,
                       justifyContent: 'space-between',
                       gap: 2,
                       alignItems: 'center',
@@ -992,11 +1084,20 @@ const RootPage = ({
                       borderColor: 'divider',
                       borderRadius: 2,
                       backgroundColor: viewMode === 'card' ? 'background.paper' : 'transparent',
-                      '&:hover': { backgroundColor: 'action.hover', borderColor: 'primary.main' },
+                      '&:hover': {
+                        backgroundColor: 'action.hover',
+                        borderColor: 'primary.main',
+                      },
                     }}
                   >
                     <StackColumn spacing={0.75} sx={{ minWidth: 0 }}>
-                      <StackRow sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 0.75 }}>
+                      <StackRow
+                        sx={{
+                          alignItems: 'center',
+                          flexWrap: 'wrap',
+                          gap: 0.75,
+                        }}
+                      >
                         <BodyIconTypography label={formatMarketplacePurchaseDisplay(node).product} />
                         <Chip size="small" label={node.sourceTypeName} variant="outlined" />
                         <Chip size="small" label={node.lifecycleStateName} color={node.isDeleted ? 'error' : 'default'} variant="outlined" />
@@ -1010,8 +1111,17 @@ const RootPage = ({
                         }
                         sx={{ opacity: 0.62 }}
                       />
+                      {node.sourceType === 'ENTITLEMENT' ? (
+                        <SmallIconTypography
+                          label={`${node.availableQuantity} of ${node.grantedQuantity} credits available · ${node.entitlementStatus ?? node.lifecycleStateName}`}
+                          sx={{ opacity: 0.72 }}
+                        />
+                      ) : null}
                       {viewMode === 'card' ? (
-                        <SmallIconTypography label={`Open ${node.sourceType === 'SUBSCRIPTION' ? 'subscription' : 'booking'} details`} sx={{ mt: 'auto', color: 'primary.main' }} />
+                        <SmallIconTypography
+                          label={node.sourceType === 'ENTITLEMENT' ? 'Credit entitlement' : `Open ${node.sourceType === 'SUBSCRIPTION' ? 'subscription' : 'booking'} details`}
+                          sx={{ mt: 'auto', color: 'primary.main' }}
+                        />
                       ) : null}
                     </StackColumn>
                     <StackColumn spacing={0.75} sx={{ minWidth: 0 }}>
@@ -1035,14 +1145,34 @@ const RootPage = ({
                           View refund
                         </Button>
                       ) : null}
+                      {node.sourceType === 'ENTITLEMENT' && node.paymentMethod === 'BANK_TRANSFER' && node.paymentStatus === 'PENDING' ? (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }} onClick={(event) => event.stopPropagation()}>
+                          <Button size="small" onClick={() => handleEntitlementPaymentAction(node.sourceId, 'confirm')}>
+                            Confirm
+                          </Button>
+                          <Button size="small" color="error" onClick={() => handleEntitlementPaymentAction(node.sourceId, 'reject')}>
+                            Reject
+                          </Button>
+                          <Button size="small" onClick={() => handleEntitlementPaymentAction(node.sourceId, 'not-required')}>
+                            Waive payment
+                          </Button>
+                        </Box>
+                      ) : null}
                     </StackColumn>
                     <StackColumn
                       spacing={0.5}
-                      sx={{ alignItems: viewMode === 'list' ? { xs: 'flex-end', md: 'flex-start' } : 'flex-end', justifyContent: 'space-between', height: '100%' }}
+                      sx={{
+                        alignItems: viewMode === 'list' ? { xs: 'flex-end', md: 'flex-start' } : 'flex-end',
+                        justifyContent: 'space-between',
+                        height: '100%',
+                      }}
                     >
                       <SmallIconTypography label={`${node.totalAmount ?? 'Amount unavailable'} ${node.currency ?? ''}`} sx={{ opacity: 0.78 }} />
                       {viewMode === 'list' ? (
-                        <SmallIconTypography label={`Open ${node.sourceType === 'SUBSCRIPTION' ? 'subscription' : 'booking'}`} sx={{ color: 'primary.main' }} />
+                        <SmallIconTypography
+                          label={node.sourceType === 'ENTITLEMENT' ? 'Credit entitlement' : `Open ${node.sourceType === 'SUBSCRIPTION' ? 'subscription' : 'booking'}`}
+                          sx={{ color: 'primary.main' }}
+                        />
                       ) : null}
                     </StackColumn>
                   </Box>
@@ -1131,7 +1261,13 @@ const RootPage = ({
                         <CardContent sx={{ p: 2, height: '100%' }}>
                           <StackColumn spacing={2} sx={{ height: '100%' }}>
                             <Box onClick={() => handleOpenSubscriptionClick(subscription.id)} sx={{ ...clickablePanelSx, p: 1 }}>
-                              <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 1 }}>
+                              <StackRow
+                                sx={{
+                                  alignItems: 'flex-start',
+                                  flexWrap: 'wrap',
+                                  gap: 1,
+                                }}
+                              >
                                 <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
                                   <SubtitleIconTypography label={productTitle} />
                                   <SmallIconTypography label={customerLabel} sx={{ opacity: 0.82 }} />
@@ -1218,7 +1354,13 @@ const RootPage = ({
                                               />
                                             </StackColumn>
 
-                                            <StackRow sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                                            <StackRow
+                                              sx={{
+                                                alignItems: 'center',
+                                                flexWrap: 'wrap',
+                                                gap: 1,
+                                              }}
+                                            >
                                               {cycleMarketplaceBooking?.invoiceUrl ? (
                                                 <Button
                                                   variant="text"
@@ -1226,18 +1368,28 @@ const RootPage = ({
                                                   href={cycleMarketplaceBooking.invoiceUrl}
                                                   target="_blank"
                                                   rel="noreferrer"
-                                                  sx={{ textTransform: 'none' }}
+                                                  sx={{
+                                                    textTransform: 'none',
+                                                  }}
                                                 >
-                                                  Download invoice
+                                                  View invoice
                                                 </Button>
                                               ) : null}
 
                                               {cycleMarketplaceBooking?.paymentStatus.type === 'PENDING' ? (
-                                                <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
+                                                <StackRow
+                                                  sx={{
+                                                    flexWrap: 'wrap',
+                                                    gap: 1,
+                                                  }}
+                                                >
                                                   <Button
                                                     variant="contained"
                                                     size="small"
-                                                    sx={{ textTransform: 'none', color: 'white' }}
+                                                    sx={{
+                                                      textTransform: 'none',
+                                                      color: 'white',
+                                                    }}
                                                     onClick={() => handleConfirmRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
                                                   >
                                                     Confirm Payment
@@ -1246,7 +1398,9 @@ const RootPage = ({
                                                     variant="outlined"
                                                     color="error"
                                                     size="small"
-                                                    sx={{ textTransform: 'none' }}
+                                                    sx={{
+                                                      textTransform: 'none',
+                                                    }}
                                                     onClick={() => handleRejectRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
                                                   >
                                                     Reject Payment
@@ -1254,7 +1408,9 @@ const RootPage = ({
                                                   <Button
                                                     variant="text"
                                                     size="small"
-                                                    sx={{ textTransform: 'none' }}
+                                                    sx={{
+                                                      textTransform: 'none',
+                                                    }}
                                                     onClick={() => handleMakeRecurringBookingPaymentNotRequiredClick(recurringBooking.id, cycleLabel)}
                                                   >
                                                     Payment Not Required
@@ -1420,7 +1576,10 @@ const RootPageWithRelay = () => {
   const [purchaseActivityUntil, setPurchaseActivityUntil] = useState(() => searchParams.get('purchaseActivityUntil') ?? '');
   const [purchaseSort, setPurchaseSort] = useState(() => searchParams.get('purchaseSort') ?? 'ACTIVITY_DESC');
   const initialFormValues = useMemo(
-    () => ({ statuses: selectedStatuses, paymentStatuses: selectedPaymentStatuses }),
+    () => ({
+      statuses: selectedStatuses,
+      paymentStatuses: selectedPaymentStatuses,
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
@@ -1469,7 +1628,13 @@ const RootPageWithRelay = () => {
         setPurchaseActivityFrom(activityFrom);
         setPurchaseActivityUntil(activityUntil);
         setPurchaseAfter(undefined);
-        const qs = updateMarketplacePurchaseSearchParams(searchParams.toString(), { sourceType, lifecycleState, paymentStatus, activityFrom, activityUntil });
+        const qs = updateMarketplacePurchaseSearchParams(searchParams.toString(), {
+          sourceType,
+          lifecycleState,
+          paymentStatus,
+          activityFrom,
+          activityUntil,
+        });
         router.replace(qs ? `?${qs}` : pathname);
       });
     },

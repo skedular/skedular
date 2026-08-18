@@ -1,6 +1,7 @@
 'use client';
 
 import ApartmentIcon from '@mui/icons-material/Apartment';
+import { NotificationContent } from '@/components/notification';
 import type { pageHostOnboardingMutation } from '@/queries/__generated__/pageHostOnboardingMutation.graphql';
 import type { pageHostOnboardingQuery } from '@/queries/__generated__/pageHostOnboardingQuery.graphql';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -55,7 +56,7 @@ const OnboardingPage = () => {
   const submit = () => {
     const normalizedName = name.trim();
     if (normalizedName.length < 3) {
-      toast.error('Organization name must be at least three characters long.');
+      toast.error(<NotificationContent content="Organization name must be at least three characters long." />);
       return;
     }
 
@@ -77,13 +78,13 @@ const OnboardingPage = () => {
       },
       onCompleted: (_, errors) => {
         if (errors?.length) {
-          toast.error(`We couldn't create your Host organization. ${getRelayErrorMessage(errors)}`);
+          toast.error(<NotificationContent content={`We couldn't create your Host organization. ${getRelayErrorMessage(errors)}`} />);
           return;
         }
         router.push('/locations/create');
       },
       onError: (error) => {
-        toast.error(`We couldn't create your Host organization. ${error.message}`);
+        toast.error(<NotificationContent content={`We couldn't create your Host organization. ${error.message}`} />);
       },
     });
   };

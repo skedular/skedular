@@ -7,6 +7,7 @@ using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
@@ -50,6 +51,8 @@ public class HandleRecurringBookingInvoiceAsyncShould
         [Frozen]
         ITemporalOutboxService temporalOutboxService,
         [Frozen]
+        IEntitlementPurchasePaymentReconciliationService entitlementPurchaseService,
+        [Frozen]
         IBookingOutboxPublisher bookingOutboxPublisher,
         [Frozen]
         IEntityMapper entityMapper,
@@ -88,6 +91,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             xeroTokenEncryptionService,
             temporalService,
             temporalOutboxService,
+            entitlementPurchaseService,
             bookingOutboxPublisher,
             entityMapper,
             randomHelper,
@@ -234,6 +238,8 @@ public class HandleRecurringBookingInvoiceAsyncShould
         [Frozen]
         ITemporalOutboxService temporalOutboxService,
         [Frozen]
+        IEntitlementPurchasePaymentReconciliationService entitlementPurchaseService,
+        [Frozen]
         IBookingOutboxPublisher bookingOutboxPublisher,
         [Frozen]
         IEntityMapper entityMapper,
@@ -271,6 +277,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             xeroTokenEncryptionService,
             temporalService,
             temporalOutboxService,
+            entitlementPurchaseService,
             bookingOutboxPublisher,
             entityMapper,
             randomHelper,
@@ -395,6 +402,8 @@ public class HandleRecurringBookingInvoiceAsyncShould
         [Frozen]
         ITemporalOutboxService temporalOutboxService,
         [Frozen]
+        IEntitlementPurchasePaymentReconciliationService entitlementPurchaseService,
+        [Frozen]
         IBookingOutboxPublisher bookingOutboxPublisher,
         [Frozen]
         IEntityMapper entityMapper,
@@ -433,6 +442,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             xeroTokenEncryptionService,
             temporalService,
             temporalOutboxService,
+            entitlementPurchaseService,
             bookingOutboxPublisher,
             entityMapper,
             randomHelper,

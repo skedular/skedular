@@ -81,7 +81,8 @@ public class MarketplaceRefundReconciliationService(
                             cancellationToken);
                     }
                 }
-                else if (refund.PaymentProvider == "STRIPE" && !string.IsNullOrWhiteSpace(refund.ExternalPaymentRefundId))
+                else if (refund.PaymentProvider == MarketplaceExternalRefundReconciliationProviderConstants.Stripe &&
+                         !string.IsNullOrWhiteSpace(refund.ExternalPaymentRefundId))
                 {
                     (int matched, int mismatched, int lookupFailed) result = default;
                     await ExecuteWithLeaseRenewalAsync(

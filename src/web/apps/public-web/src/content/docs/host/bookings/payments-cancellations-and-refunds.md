@@ -82,3 +82,7 @@ When reviewing a Booking, check its payment status, invoice link when present, w
 ## Next step
 
 After understanding payments and refunds, continue to [Managing your listing](/docs/host/managing-your-listing) to keep your place information and operational setup current over time.
+
+## Credit entitlement refunds
+
+Unused entitlement credits are refunded only when the product pricing allows it and payment was confirmed. Stripe can settle supported refunds automatically; bank-transfer refunds are manual; Xero creates a credit note while settlement remains manual.

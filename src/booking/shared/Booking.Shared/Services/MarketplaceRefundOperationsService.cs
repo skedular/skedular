@@ -1,6 +1,5 @@
 using System.Diagnostics.Metrics;
-using Api.Shared.Services.Models;
-using Booking.Shared.Database.Entities;
+using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Pagination;
@@ -45,6 +44,7 @@ public interface IMarketplaceRefundOperationsService
 
 public sealed class MarketplaceRefundOperationsService(
     IRepositoryFactory repositoryFactory,
+    IEntityMapper entityMapper,
     ILogger<MarketplaceRefundOperationsService> logger) : IMarketplaceRefundOperationsService
 {
     private const int DefaultExternalRefundPageSize = 50;
@@ -116,7 +116,7 @@ public sealed class MarketplaceRefundOperationsService(
         var normalizedPagination = NormalizeExternalRefundPagination(paginationInputParam);
         var result = await repositoryFactory.MarketplaceRefundRepository.GetExternalReconciliationsAsync(
             organizationId, provider, status, normalizedPagination, cancellationToken);
-        return (result.Item1, [.. result.Item2.Select(edge => (ToModel(edge.Node), edge.Cursor))], result.Item3);
+        return (result.Item1, [.. result.Item2.Select(edge => (entityMapper.MapTo(edge.Node), edge.Cursor))], result.Item3);
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<(MarketplaceExternalRefundReconciliationModel Node, string Cursor)>, int)>
@@ -128,7 +128,7 @@ public sealed class MarketplaceRefundOperationsService(
     {
         var result = await repositoryFactory.MarketplaceRefundRepository.GetUnassignedExternalReconciliationsAsync(
             provider, status, NormalizeExternalRefundPagination(paginationInputParam), cancellationToken);
-        return (result.Item1, [.. result.Item2.Select(edge => (ToModel(edge.Node), edge.Cursor))], result.Item3);
+        return (result.Item1, [.. result.Item2.Select(edge => (entityMapper.MapTo(edge.Node), edge.Cursor))], result.Item3);
     }
 
     public async Task<MarketplaceExternalRefundReconciliationModel> ResolveUnassignedExternalRefundAsync(
@@ -160,7 +160,7 @@ public sealed class MarketplaceRefundOperationsService(
         record.ResolutionCorrelationId = correlationId;
         repositoryFactory.MarketplaceRefundRepository.UpdateExternalReconciliation(record);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        return ToModel(record);
+        return entityMapper.MapTo(record);
     }
 
     public async Task<MarketplaceExternalRefundReconciliationModel> ResolveExternalRefundAsync(
@@ -191,39 +191,21 @@ public sealed class MarketplaceRefundOperationsService(
         logger.LogInformation(
             "External refund reconciliation resolved. Provider={Provider}, ExternalRefundId={ExternalRefundId}, Status={Status}",
             record.Provider, record.ExternalRefundId, record.Status);
-        return ToModel(record);
+        return entityMapper.MapTo(record);
     }
-
-    private static MarketplaceExternalRefundReconciliationModel ToModel(MarketplaceExternalRefundReconciliation src) => new()
-    {
-        Id = src.Id,
-        OrganizationId = src.OrganizationId,
-        StripeAccountId = src.StripeAccountId,
-        Provider = src.Provider.ToMarketplaceExternalRefundReconciliationProvider(),
-        ExternalRefundId = src.ExternalRefundId,
-        Amount = src.Amount,
-        Currency = src.Currency.ToNullableCurrency(),
-        Status = src.Status.ToMarketplaceExternalRefundReconciliationStatus(),
-        FirstSeenAt = src.FirstSeenAt,
-        LastSeenAt = src.LastSeenAt,
-        RetryCount = src.RetryCount,
-        NextRetryAt = src.NextRetryAt,
-        ResolutionReason = src.ResolutionReason,
-        ResolutionActorCustomerId = src.ResolutionActorCustomerId,
-        ResolutionCorrelationId = src.ResolutionCorrelationId,
-    };
 
     private static Measurement<long>[] CreateMeasurements(
         IEnumerable<MarketplaceRefundOperationsMetric> metrics,
         string? status = null) =>
-        metrics
+    [
+        .. metrics
             .Where(item => status is null || item.Status == status)
             .Select(item => new Measurement<long>(
                 item.Count,
                 new KeyValuePair<string, object?>("provider", item.Provider),
                 new KeyValuePair<string, object?>("status", item.Status),
-                new KeyValuePair<string, object?>("organization.id", item.OrganizationId ?? "unknown")))
-            .ToArray();
+                new KeyValuePair<string, object?>("organization.id", item.OrganizationId ?? "unknown"))),
+    ];
 
     private static PaginationInputParam NormalizeExternalRefundPagination(PaginationInputParam paginationInputParam)
     {

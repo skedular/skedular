@@ -39,6 +39,18 @@ public class MarketplaceRefundAutomationService(
             "Refund {RefundId} ({RefundKind}) processing started for {LocalEntityType}/{LocalEntityId} actor={ActorCustomerId}",
             refund.Id, refund.RefundKind, refund.LocalEntityType, refund.LocalEntityId, actorCustomerId);
 
+        // A bank-transfer refund without an accounting invoice is a manual
+        // settlement. It must remain approved until an operator records the
+        // transfer; routing it through Xero would incorrectly fail it when the
+        // organization is not connected to Xero.
+        if (IsBankTransferRefund(refund) && !await xeroRefundService.HasInvoiceTargetAsync(refund, cancellationToken))
+        {
+            logger.LogInformation(
+                "Refund {RefundId} remains approved for manual bank-transfer settlement because no Xero invoice target exists",
+                refund.Id);
+            return refund;
+        }
+
         if (refund.Status != MarketplaceRefundStatusConstants.Processing)
         {
             refund.RetryCount++;
@@ -94,6 +106,14 @@ public class MarketplaceRefundAutomationService(
 
         return await ProcessXeroProjectionAsync(refund, actorCustomerId, cancellationToken);
     }
+
+    private static bool IsBankTransferRefund(MarketplaceRefund refund) =>
+        string.Equals(refund.PaymentProvider, MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer,
+            StringComparison.OrdinalIgnoreCase) ||
+        refund.PaymentAllocations.Any(item =>
+            item.IsSourcePayment &&
+            string.Equals(item.SourcePaymentProvider, MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer,
+                StringComparison.OrdinalIgnoreCase));
 
     private async Task<MarketplaceRefund> ProcessXeroProjectionAsync(
         MarketplaceRefund refund,

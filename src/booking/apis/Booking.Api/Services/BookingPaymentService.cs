@@ -29,7 +29,8 @@ public class BookingPaymentService(
     ITemporalOutboxService temporalOutboxService,
     IEntityMapper entityMapper,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
-    IGraphQlTopicEventSender graphQlTopicEventSender) : IBookingPaymentService
+    IGraphQlTopicEventSender graphQlTopicEventSender,
+    ILogger<BookingPaymentService> logger) : IBookingPaymentService
 {
     public async Task<Shared.Models.Booking> ConfirmPaymentAsync(string id, CancellationToken cancellationToken) =>
         await UpdatePaymentStatusInternalAsync(id, PaymentStatus.Confirmed, false, cancellationToken);
@@ -47,6 +48,12 @@ public class BookingPaymentService(
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        logger.LogInformation(
+            "Updating marketplace booking payment status. BookingId={BookingId}, CustomerId={CustomerId}, PaymentStatus={PaymentStatus}, ReleaseResources={ReleaseResources}",
+            id,
+            customerId,
+            paymentStatus,
+            releaseResources);
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
         var marketplaceBooking = existingBooking.MarketplaceBooking;
         if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace || marketplaceBooking is null)
@@ -110,6 +117,12 @@ public class BookingPaymentService(
         await transaction.CommitAsync(cancellationToken);
 
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+
+        logger.LogInformation(
+            "Updated marketplace booking payment status. BookingId={BookingId}, PaymentStatus={PaymentStatus}, PaymentMethod={PaymentMethod}",
+            booking.Id,
+            paymentStatus,
+            marketplaceBooking.PaymentMethod);
 
         return booking;
     }

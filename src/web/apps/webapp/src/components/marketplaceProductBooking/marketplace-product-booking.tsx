@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
-import { memo, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import MarketplaceProductBookingForm from './marketplace-product-booking-form';
@@ -80,9 +80,19 @@ const MarketplaceProductBooking = ({ queryReference, selectedDate, setSelectedDa
 
 const MemoMarketplaceProductBooking = memo(MarketplaceProductBooking);
 
-const MarketplaceProductBookingWithRelay = () => {
+type MarketplaceProductBookingWithRelayProps = {
+  organizationCustomDomain?: string;
+  productId?: string;
+};
+
+const MarketplaceProductBookingWithRelay = ({
+  organizationCustomDomain: organizationCustomDomainOverride,
+  productId: productIdOverride,
+}: MarketplaceProductBookingWithRelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<marketplaceProductBooking_rootQuery>(RootQuery);
-  const { productId, organizationCustomDomain } = useKnownParams();
+  const { productId: routeProductId, organizationCustomDomain: routeOrganizationCustomDomain } = useKnownParams();
+  const productId = productIdOverride ?? routeProductId;
+  const organizationCustomDomain = organizationCustomDomainOverride ?? routeOrganizationCustomDomain;
   const [selectedDate, setSelectedDate] = useState<Dayjs>(startOfDay());
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('09:00'), toOpeningHoursFromTime('10:00')]);
 
@@ -90,17 +100,21 @@ const MarketplaceProductBookingWithRelay = () => {
     throw new Error('productId and organizationCustomDomain are required');
   }
 
-  useEffect(() => {
+  const reloadQuery = useCallback(() => {
     loadQuery(
       {
         productId,
         organizationCustomDomain,
       },
       {
-        fetchPolicy: 'store-and-network',
+        fetchPolicy: 'network-only',
       },
     );
   }, [loadQuery, organizationCustomDomain, productId]);
+
+  useEffect(() => {
+    reloadQuery();
+  }, [reloadQuery]);
 
   if (!queryReference) {
     return <Loading />;

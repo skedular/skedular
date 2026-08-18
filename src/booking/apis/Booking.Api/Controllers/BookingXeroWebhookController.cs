@@ -41,9 +41,15 @@ public class BookingXeroWebhookController(
 
             if (!xeroWebhookService.IsSignatureValid(json, normalizedXeroSignature))
             {
+                logger.LogWarning(
+                    "Rejected Xero webhook because the signature is invalid. PayloadLength={PayloadLength}, SignatureProvided={SignatureProvided}",
+                    json.Length, !string.IsNullOrWhiteSpace(normalizedXeroSignature));
                 return Unauthorized();
             }
 
+            logger.LogInformation(
+                "Accepted Xero webhook and publishing it for processing. PayloadLength={PayloadLength}",
+                json.Length);
             await bookingInternalPublisher.PublishXeroWebhookEventReceivedAsync(normalizedXeroSignature!, json, cancellationToken);
 
             return Ok();

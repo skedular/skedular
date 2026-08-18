@@ -13,7 +13,7 @@ public class EvaluateActiveUserShould
         var offering = new SharedOffering
         {
             Code = OfferingCode.PayAsYouGoV1,
-            ActiveCustomerIds = Enumerable.Range(0, 50).Select(index => $"customer-{index}").ToArray(),
+            ActiveCustomerIds = [.. Enumerable.Range(0, 50).Select(index => $"customer-{index}")],
         };
 
         var result = sut.EvaluateActiveUser(offering, customerId);
@@ -30,7 +30,7 @@ public class EvaluateActiveUserShould
         {
             Code = OfferingCode.FreeTierV1,
             PurchasedUserCapacity = 10,
-            ActiveCustomerIds = Enumerable.Range(0, 10).Select(index => $"customer-{index}").ToArray(),
+            ActiveCustomerIds = [.. Enumerable.Range(0, 10).Select(index => $"customer-{index}")],
         };
 
         var result = sut.EvaluateActiveUser(offering, customerId);

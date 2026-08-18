@@ -25,7 +25,10 @@ public record ProductPricing(
     IReadOnlyList<ProductPricingCancellationRefundRule> CancellationRefundRules,
     [property: JsonConverter(typeof(DayOfWeekListJsonConverter))]
     IReadOnlyList<DayOfWeek>? AvailableDays = null,
-    int? RequiredDaysPerWeek = null)
+    int? RequiredDaysPerWeek = null,
+    ProductPricingFulfillmentType FulfillmentType = ProductPricingFulfillmentType.Reservation,
+    int? EntitlementCreditQuantity = null,
+    int? EntitlementValidityDays = null)
 {
     public static ProductPricing Empty(string id) =>
         new(

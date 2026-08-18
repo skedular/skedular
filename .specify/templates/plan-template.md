@@ -47,7 +47,9 @@ Answer each gate. If a gate fails, resolve the issue before proceeding.
       If yes, confirm Relay colocation, no hand-edited generated artifacts, typography wrappers used,
       American spelling in user-facing copy, and review/update of corresponding public-web documentation
       for any customer-facing or operator-facing behavior changes. Record why existing documentation remains
-      accurate when no documentation update is needed.
+      accurate when no documentation update is needed. For every mutation, document the Relay store-update
+      strategy: return the rendered fields and stable ID in the payload; use a declarative connection update or
+      targeted refetch for affected lists/counts; never use `window.location.reload()` after mutation success.
 - [ ] **V. Pattern Consistency** — Does this feature introduce a new pattern or deviate from an existing one?
       If yes, a brief justification MUST be documented here before tasks are accepted.
 - [ ] **VI. Logging** — Does this feature add or change behavior?

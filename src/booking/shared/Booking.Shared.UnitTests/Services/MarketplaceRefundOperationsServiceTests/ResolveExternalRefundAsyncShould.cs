@@ -1,4 +1,5 @@
 using Booking.Shared.Database.Entities;
+using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
@@ -18,6 +19,8 @@ public class ResolveExternalRefundAsyncShould
         IMarketplaceRefundRepository marketplaceRefundRepository,
         [Frozen]
         IUnitOfWork unitOfWork,
+        [Frozen]
+        IEntityMapper entityMapper,
         MarketplaceRefundOperationsService sut,
         CancellationToken cancellationToken)
     {
@@ -32,6 +35,11 @@ public class ResolveExternalRefundAsyncShould
         A.CallTo(() => marketplaceRefundRepository.GetExternalReconciliationAsync("STRIPE", "po_1", "org-1", cancellationToken))
             .Returns(record);
         A.CallTo(() => marketplaceRefundRepository.UpdateExternalReconciliation(record)).Returns(record);
+        A.CallTo(() => entityMapper.MapTo(record)).Returns(new MarketplaceExternalRefundReconciliationModel
+        {
+            ExternalRefundId = record.ExternalRefundId,
+            Status = MarketplaceExternalRefundReconciliationStatus.Resolved,
+        });
 
         var result = await sut.ResolveExternalRefundAsync(
             "STRIPE", "po_1", "Resolved", "Matched to provider payout", "org-1", "customer-1", "correlation-1", cancellationToken);

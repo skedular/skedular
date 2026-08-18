@@ -8,20 +8,20 @@ namespace Booking.Shared.Models;
 /// </summary>
 public sealed record ResourceDayView
 {
-    public required string ResourceId { get; init; }
-    public required string ResourceName { get; init; }
-    public required string ResourceType { get; init; } // tag constant string
-    public required string LocationId { get; init; }
-    public required string LocationName { get; init; }
-    public required string? FloorId { get; init; }
-    public required string? FloorName { get; init; }
-    public required string? ZoneId { get; init; }
-    public required string? ZoneName { get; init; }
-    public required DateOnly Date { get; init; }
-    public required ResourceAvailabilityClassification Status { get; init; }
-    public required TimeOnly? OpeningFrom { get; init; } // null = closed all day
-    public required TimeOnly? OpeningUntil { get; init; } // null = closed all day
-    public required int TotalOpeningMinutes { get; init; }
-    public required int BookedMinutes { get; init; }
-    public required IReadOnlyList<BookingWindow> BookingWindows { get; init; }
+    public required string ResourceId { get; set; }
+    public required string ResourceName { get; set; }
+    public required string ResourceType { get; set; } // tag constant string
+    public required string LocationId { get; set; }
+    public required string LocationName { get; set; }
+    public required string? FloorId { get; set; }
+    public required string? FloorName { get; set; }
+    public required string? ZoneId { get; set; }
+    public required string? ZoneName { get; set; }
+    public required DateOnly Date { get; set; }
+    public required ResourceAvailabilityClassification Status { get; set; }
+    public required TimeOnly? OpeningFrom { get; set; } // null = closed all day
+    public required TimeOnly? OpeningUntil { get; set; } // null = closed all day
+    public required int TotalOpeningMinutes { get; set; }
+    public required int BookedMinutes { get; set; }
+    public required IReadOnlyList<BookingWindow> BookingWindows { get; set; }
 }

@@ -25,7 +25,7 @@ public class InjectShould
         // we need to overwrite keys where the message has been previously sent, such as retries
         var destination = new Headers
         {
-            { "my key", "my first value"u8.ToArray() },
+            { "my key", [.. "my first value"u8] },
         };
         functions.Inject(destination, "my key", "my second value");
 

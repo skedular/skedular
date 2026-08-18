@@ -81,11 +81,5 @@ public class CustomProtobufDeserializer<T> : IDeserializer<T> where T : class, I
         return _parser.ParseFrom(data, headerSize, data.Length - headerSize);
     }
 
-    private static bool HasLegacyEmptySchemaHeader(byte[] data) =>
-        data.Length >= KafkaSerialization.HeaderByteCount &&
-        data[0] == KafkaSerialization.MagicByte &&
-        data[1] == 0 &&
-        data[2] == 0 &&
-        data[3] == 0 &&
-        data[4] == 0;
+    private static bool HasLegacyEmptySchemaHeader(byte[] data) => data is [KafkaSerialization.MagicByte, 0, 0, 0, 0, ..];
 }

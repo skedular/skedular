@@ -91,3 +91,7 @@ A Subscription is the longer-running commercial arrangement. Its recurring Booki
 ## Next step
 
 Continue to [Subscriptions](/docs/spaces/bookings/subscriptions) to manage longer-running arrangements and the recurring Booking activity they generate.
+
+## Booking with credits
+
+Customers can use an active entitlement for eligible bookings. The customer view shows the remaining balance and expiry date; cancellation restores or forfeits the consumed credit according to the product policy.

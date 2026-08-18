@@ -61,7 +61,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         return new OrganizationTagsPayload
         {
             ClientMutationId = input.ClientMutationId,
-            OrganizationTags = tags.Select(graphQlMapper.MapTo).ToArray()!,
+            OrganizationTags = [.. tags.Select(graphQlMapper.MapTo)!]!,
         };
     }
 

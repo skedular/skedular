@@ -75,7 +75,7 @@ export const spacesPage: ProductPageContent = {
       {
         title: "Configure products and pricing",
         description:
-          "Create hourly bookings, day passes, memberships, and subscriptions.",
+          "Create hourly bookings, day passes, booking credits, memberships, and subscriptions.",
       },
       {
         title: "Publish inventory",
@@ -131,7 +131,7 @@ export const spacesPage: ProductPageContent = {
         {
           title: "Product management",
           description:
-            "Create products that match real customer demand including hourly bookings, day passes, memberships, subscriptions, and recurring access.",
+            "Create products that match real customer demand, from hourly bookings and day passes to booking credits, memberships, subscriptions, and recurring access.",
           items: [
             "Product catalog",
             "Dynamic product matching",
@@ -169,6 +169,18 @@ export const spacesPage: ProductPageContent = {
           ],
           accent: "sunbeam",
         },
+        {
+          title: "Prepaid booking credits",
+          description:
+            "Let customers pay now and choose an eligible workspace booking later. Credits become available after payment is confirmed, while you keep control of the dates, resources, validity period, and unused-credit refund policy.",
+          items: [
+            "Buy now, schedule later",
+            "Eligible days and resources",
+            "Confirmed payment before use",
+            "Expiry, refunds, and auto-renewal",
+          ],
+          accent: "emerald",
+        },
       ],
     },
   ],
@@ -187,7 +199,7 @@ export const spacesPage: ProductPageContent = {
       {
         title: "Support multiple business models",
         description:
-          "Hourly bookings, day passes, memberships, subscriptions, and recurring bookings.",
+          "Hourly bookings, day passes, prepaid booking credits, memberships, subscriptions, and recurring bookings.",
       },
       {
         title: "Keep your brand",
@@ -284,7 +296,7 @@ export const spacesPage: ProductPageContent = {
   commsIntegration: {
     heading: "Built for workspace commerce",
     description:
-      "Support one-time bookings, recurring subscriptions, memberships, invoicing, tax handling, billing cadences, and payment workflows. Skedular Spaces handles commercial operations so you can focus on running your workspace.",
+      "Support one-time bookings, prepaid booking credits, recurring subscriptions, memberships, invoicing, tax handling, billing cadences, and payment workflows. Skedular Spaces handles commercial operations so you can focus on running your workspace.",
   },
 
   builtFor: {

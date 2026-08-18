@@ -255,6 +255,9 @@ public class RecurringBookingPaymentServiceShould
 
         result.ShouldBe(mappedRecurringBooking);
         recurringBooking.MarketplaceBooking.PaymentStatus.ShouldBe(expectedPaymentStatus.ToPaymentStatus());
+        // Recurring reservation payments remain on the existing booking payment path.
+        // Token grants are created only by standalone entitlement purchase confirmation.
+        A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).MustNotHaveHappened();
         A.CallTo(() => marketplaceBookingRepository.Update(recurringBooking.MarketplaceBooking)).MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
                 recurringBooking.MarketplaceBooking.Id, cancellationToken))

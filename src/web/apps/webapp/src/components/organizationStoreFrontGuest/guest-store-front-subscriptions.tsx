@@ -1,5 +1,5 @@
 import { ArrowLeftIcon, PaymentStatusIcon, QuantityIcon } from '@/components/icons';
-import { getMarketplaceSubscriptionDetailsLink } from '@/components/links';
+import { getMarketplaceEntitlementPurchaseDetailsLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import {
   SupportedMarketplaceBookingSubscriptionCancellationMode,
@@ -8,6 +8,7 @@ import {
 } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
+import MarketplacePurchaseHistorySection from '@/components/marketplacePurchaseHistory/marketplace-purchase-history-section';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { getRelayErrorMessage, RelayError, toRootError, useIntegratedPlatform } from '@skedular/shared';
 
@@ -63,6 +64,40 @@ type PendingCancellationConfirmation = {
 
 const RootQuery = graphql`
   query guestStoreFrontSubscriptions_rootQuery($organizationCustomDomain: String!) {
+    marketplacePurchases(
+      first: 48
+      organizationCustomDomain: $organizationCustomDomain
+      lifecycleStates: [CANCELLED, DELETED, EXPIRED, PAYMENT_FAILED]
+      orderBy: [{ field: ACTIVITY_AT, direction: DESCENDING }]
+    ) {
+      edges {
+        node {
+          id
+          sourceId
+          sourceType
+          sourceTypeName
+          lifecycleStateName
+          renewalStateName
+          activityAt
+          bookingFrom
+          bookingUntil
+          productTitle
+          totalAmount
+          currency
+          bookingId
+          creditQuantity
+          isDeleted
+          paymentStatus
+          refund {
+            status {
+              name
+            }
+            refundAmount
+            currencyToDisplay
+          }
+        }
+      }
+    }
     marketplaceBookingSubscriptionCancellationModes {
       type
       name
@@ -115,6 +150,17 @@ const RootQuery = graphql`
         }
       }
     }
+    entitlementPurchases {
+      id
+      paymentStatus
+      paymentMethod
+      amount
+      currency
+      creditQuantity
+      paymentExpiry
+      invoiceNumber
+      invoiceUrl
+    }
   }
 `;
 
@@ -148,6 +194,7 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
     () => rootData.marketplaceBookingSubscriptions.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item),
     [rootData.marketplaceBookingSubscriptions.edges],
   );
+  const pendingEntitlementPurchases = useMemo(() => rootData.entitlementPurchases.filter((purchase) => purchase.paymentStatus === 'PENDING'), [rootData.entitlementPurchases]);
 
   useEffect(() => {
     logCustomerPurchaseHubLoaded({ logger, customerIdHash: 'current-customer', bookingCount: 0, subscriptionCount: rootData.marketplaceBookingSubscriptions.totalCount });
@@ -265,6 +312,44 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
         </Card>
 
         <Box sx={{ mt: 4 }}>
+          {pendingEntitlementPurchases.length > 0 ? (
+            <Box sx={{ mb: 4 }}>
+              <CaptionIconTypography label="Pending credit purchases" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
+              <LeadIconTypography label="Complete payment for your credits" sx={{ mt: 0.5 }} />
+              <Box sx={{ mt: 2, display: 'grid', gap: 1.5, gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' } }}>
+                {pendingEntitlementPurchases.map((purchase) => (
+                  <Link
+                    key={purchase.id}
+                    component={NextLink}
+                    href={getMarketplaceEntitlementPurchaseDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, purchase.id)}
+                    underline="none"
+                    color="inherit"
+                    sx={{ display: 'block', borderRadius: 3, border: 1, borderColor: 'divider', bgcolor: 'background.paper', '&:hover': { borderColor: 'warning.main' } }}
+                  >
+                    <Box sx={{ p: 2.25 }}>
+                      <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <Box>
+                          <SmallIconTypography label="Credit entitlement" sx={{ opacity: 0.62, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
+                          <SubtitleIconTypography label={`${purchase.creditQuantity} credits`} sx={{ mt: 0.4 }} />
+                        </Box>
+                        <Chip label="Payment pending" color="warning" />
+                      </StackRow>
+                      <StackColumn spacing={0.8} sx={{ mt: 2 }}>
+                        <DetailsRow label="Amount" value={`${purchase.amount} ${purchase.currency}`} />
+                        <DetailsRow label="Payment method" value={purchase.paymentMethod} />
+                        <DetailsRow label="Payment deadline" value={toStoredDateTime(purchase.paymentExpiry)} />
+                        {purchase.invoiceNumber ? <DetailsRow label="Invoice" value={purchase.invoiceNumber} /> : null}
+                      </StackColumn>
+                      <StackRow sx={{ mt: 2, justifyContent: 'space-between' }}>
+                        <BodyIconTypography label="Open payment page" sx={{ color: 'primary.main', fontWeight: 600 }} />
+                        <ChevronRightIcon fontSize="small" />
+                      </StackRow>
+                    </Box>
+                  </Link>
+                ))}
+              </Box>
+            </Box>
+          ) : null}
           <CaptionIconTypography label="Subscriptions" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
           <LeadIconTypography label="Current and past subscriptions" sx={{ mt: 0.5 }} />
 
@@ -396,6 +481,12 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
               </CardContent>
             </Card>
           )}
+          <MarketplacePurchaseHistorySection
+            items={rootData.marketplacePurchases.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item)}
+            integratedPlatform={integratedPlatform}
+            isCustomDomain={isCustomDomain}
+            organizationCustomDomain={organizationCustomDomain}
+          />
         </Box>
       </Container>
 
@@ -425,6 +516,7 @@ const DetailsRow = ({ label, value }: { label: string; value: string }) => (
 );
 
 const toStoredDate = (date?: string | null) => (date ? dayjs.utc(date).format('dddd, Do MMM YYYY') : '');
+const toStoredDateTime = (date?: string | null) => (date ? dayjs.utc(date).format('dddd, Do MMM YYYY, HH:mm') : '');
 
 const MemoGuestStoreFrontSubscriptions = memo(GuestStoreFrontSubscriptions);
 

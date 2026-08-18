@@ -146,7 +146,6 @@ const CreateLocationPage = () => {
 
           const pendingDraft = coordinator.state.pendingProductDraft;
           if (!pendingDraft) {
-            toast.success('Listing setup is ready.');
             router.push(`/locations/${locationId}`);
             return;
           }
@@ -196,7 +195,6 @@ const CreateLocationPage = () => {
             },
             onCompleted: () => {
               coordinator.clearPendingProductDraft();
-              toast.success('Listing is ready.');
               router.push(`/locations/${locationId}`);
             },
             onError: (cause) => {

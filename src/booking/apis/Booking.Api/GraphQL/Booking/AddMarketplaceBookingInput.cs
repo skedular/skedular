@@ -54,6 +54,9 @@ public class AddMarketplaceBookingInput
     [GraphQLName("pricingId")]
     public string PricingId { get; set; } = string.Empty;
 
+    [GraphQLName("entitlementId")]
+    public string? EntitlementId { get; set; }
+
     [GraphQLName("checkoutReturnUrl")]
     public string? CheckoutReturnUrl { get; set; }
 }

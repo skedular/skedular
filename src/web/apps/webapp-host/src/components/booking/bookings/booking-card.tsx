@@ -1,10 +1,26 @@
 import { PaletteModeContext, dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate, useIntegratedPlatform } from '@skedular/shared';
 import { CustomerAvatar } from '@/components/avatars';
 import RecurringBookingDeleteConfirmationDialog from '@/components/booking/recurring-booking-delete-confirmation-dialog';
-import { CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
+import {
+  BodyIconTypography,
+  CaptionIconTypography,
+  DefaultDialogTitle,
+  LeadIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  SubtitleIconTypography,
+  TwoButtonsDialogActions,
+} from '@skedular/ui';
 import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, PaymentStatusIcon, PdfIcon } from '@/components/icons';
-import { getOrganizationBookingBaseLink, getOrganizationBookingModificationLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
+import {
+  getOrganizationBookingBaseLink,
+  getOrganizationBookingModificationLink,
+  getOrganizationEntitlementPurchaseBaseLink,
+  getOrganizationSubscriptionBaseLink,
+} from '@/components/links';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
+import { getCreditOutcomeMessage } from '@/components/marketplaceEntitlement/credit-outcome';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 
@@ -25,9 +41,12 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
@@ -49,6 +68,7 @@ type Props = {
 };
 
 type PendingDeleteAction = 'booking' | 'occurrence' | 'series' | null;
+type PendingCancellationReason = 'booking' | 'series' | null;
 
 const isConfirmedPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'CONFIRMED' || paymentStatusType === 'PAID';
 const isPendingPaymentStatus = (paymentStatusType: string) => paymentStatusType === 'PENDING';
@@ -89,6 +109,10 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     graphql`
       fragment bookingCard_BookingDetails on BookingDetails {
         id
+        cancellationAvailability {
+          isCreditFunded
+          creditOutcome
+        }
         from
         until
         notes
@@ -138,6 +162,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         }
         marketplaceBooking {
           id
+          entitlementPurchaseId
           isPaymentRequired
           paymentStatus {
             type
@@ -339,6 +364,8 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const [pendingDeleteAction, setPendingDeleteAction] = useState<PendingDeleteAction>(null);
+  const [pendingCancellationReason, setPendingCancellationReason] = useState<PendingCancellationReason>(null);
+  const [cancellationReason, setCancellationReason] = useState('');
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const shortDateFormatFrom = toShortDate(bookingDetails.from);
   const refund = bookingDetails.marketplaceBooking?.refund;
@@ -493,7 +520,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     }
   };
 
-  const removeBooking = () => {
+  const removeBooking = (providedCancellationReason?: string) => {
     let bookingDetailsInfo = `for ${getCustomerFullName(bookingDetails.involvedCustomers[0])}`;
     if (bookingDetails.involvedLocations.length > 0) {
       bookingDetailsInfo += ` at the "${bookingDetails.involvedLocations[0]!.name}"`;
@@ -516,8 +543,10 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         },
       });
     } else {
-      const cancellationOverrideReason = window.prompt('Cancellation reason')?.trim();
+      const cancellationOverrideReason = providedCancellationReason?.trim();
       if (!cancellationOverrideReason) {
+        setCancellationReason('');
+        setPendingCancellationReason('booking');
         return;
       }
       commitDeleteMarketplaceBooking({
@@ -544,7 +573,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
     setPendingDeleteAction('series');
   };
 
-  const removeRecurringBooking = () => {
+  const removeRecurringBooking = (providedCancellationReason?: string) => {
     if (!recurringBooking || !recurringSeriesLabel) {
       return;
     }
@@ -558,8 +587,10 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         return;
       }
 
-      const cancellationOverrideReason = window.prompt('Cancellation reason')?.trim();
+      const cancellationOverrideReason = providedCancellationReason?.trim();
       if (!cancellationOverrideReason) {
+        setCancellationReason('');
+        setPendingCancellationReason('series');
         return;
       }
 
@@ -609,6 +640,16 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         themedToast(<NotificationContent content={`We couldn't remove this recurring series. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
       },
     });
+  };
+
+  const confirmCancellationReason = () => {
+    const reason = cancellationReason.trim();
+    if (!reason || !pendingCancellationReason) return;
+    const action = pendingCancellationReason;
+    setPendingCancellationReason(null);
+    setCancellationReason('');
+    if (action === 'booking') removeBooking(reason);
+    else removeRecurringBooking(reason);
   };
 
   const handleJoinClick = () => {
@@ -860,6 +901,15 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
                   Subscription details
                 </Link>
               ) : null}
+              {bookingDetails.marketplaceBooking?.entitlementPurchaseId ? (
+                <Link
+                  component={NextLink}
+                  href={getOrganizationEntitlementPurchaseBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.marketplaceBooking.entitlementPurchaseId)}
+                  underline="hover"
+                >
+                  Entitlement details
+                </Link>
+              ) : null}
               {bookingDetails.marketplaceBooking?.isPaymentRequired ? (
                 <Chip
                   label={bookingDetails.marketplaceBooking.paymentStatus.name}
@@ -921,6 +971,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
             <Box sx={sectionSx}>
               <StackColumn spacing={1}>
                 <SubtitleIconTypography label="Booking details" />
+                {getCreditOutcomeMessage(bookingDetails.cancellationAvailability?.isCreditFunded, bookingDetails.cancellationAvailability?.creditOutcome) ? (
+                  <CaptionIconTypography
+                    label={getCreditOutcomeMessage(bookingDetails.cancellationAvailability?.isCreditFunded, bookingDetails.cancellationAvailability?.creditOutcome)!}
+                  />
+                ) : null}
                 <SmallIconTypography label="This booking reserves the entire place." />
                 {bookingDetails.notes ? <CaptionIconTypography startElement={<NotesIcon />} label={bookingDetails.notes} /> : null}
               </StackColumn>
@@ -943,6 +998,32 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           onCancel={handleCancelRecurringDeleteClick}
         />
       ) : null}
+      <Dialog open={pendingCancellationReason !== null} onClose={() => setPendingCancellationReason(null)} fullWidth maxWidth="sm">
+        <DefaultDialogTitle title={pendingCancellationReason === 'series' ? 'Cancel recurring series' : 'Cancel booking'} />
+        <DialogContent sx={{ marginTop: 2 }}>
+          <StackColumn spacing={1.5}>
+            <BodyIconTypography label="Review the cancellation before confirming this booking action." />
+            <TextField
+              label="Cancellation reason"
+              value={cancellationReason}
+              onChange={(event) => setCancellationReason(event.target.value)}
+              required
+              multiline
+              minRows={2}
+              helperText="Required when the cancellation policy would block this cancellation."
+              fullWidth
+              autoFocus
+            />
+            <TwoButtonsDialogActions
+              primaryLabel={pendingCancellationReason === 'series' ? 'Cancel series' : 'Cancel booking'}
+              primaryDisabled={!cancellationReason.trim()}
+              secondaryLabel="Keep booking"
+              onPrimaryClicked={confirmCancellationReason}
+              onSecondaryClicked={() => setPendingCancellationReason(null)}
+            />
+          </StackColumn>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

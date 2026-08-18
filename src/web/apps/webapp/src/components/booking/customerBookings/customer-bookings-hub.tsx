@@ -1,5 +1,11 @@
 import { ArrowLeftIcon, CalendarIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon, TeamIcon } from '@/components/icons';
-import { getMarketplaceBookingDetailsLink, getMarketplaceSubscriptionDetailsLink, getTeamsOrganizationBookingBaseLink } from '@/components/links';
+import {
+  getMarketplaceBookingDetailsLink,
+  getMarketplaceEntitlementPurchaseDetailsLink,
+  getMarketplaceEntitlementBookingLink,
+  getMarketplaceSubscriptionDetailsLink,
+  getTeamsOrganizationBookingBaseLink,
+} from '@/components/links';
 import { Loading } from '@/components/loading';
 import {
   SupportedMarketplaceBookingSubscriptionCancellationMode,
@@ -8,6 +14,7 @@ import {
 } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
 import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
+import MarketplacePurchaseHistorySection from '@/components/marketplacePurchaseHistory/marketplace-purchase-history-section';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import logger from '@/libs/logging';
 import { logCustomerPurchaseHubLoaded } from '@/libs/logging/aggregate-marketplace-telemetry';
@@ -40,6 +47,7 @@ import {
   TwoButtonsDialogActions,
 } from '@skedular/ui';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
@@ -47,6 +55,9 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
+import useKnownParams from '@/hooks/use-known-params';
+
+dayjs.extend(utc);
 
 const toCustomerSubscriptionCancellationErrorMessage = (message: string) =>
   message.toLowerCase().includes('cancellation') && message.toLowerCase().includes('not allowed')
@@ -60,6 +71,8 @@ type Props = {
 
 type BookingNode = NonNullable<customerBookingsHub_rootQuery['response']['upcomingBookings']['edges'][number]['node']>;
 type SubscriptionNode = NonNullable<customerBookingsHub_rootQuery['response']['marketplaceBookingSubscriptions']['edges'][number]['node']>;
+type EntitlementNode = customerBookingsHub_rootQuery['response']['myEntitlements'][number];
+type EntitlementPurchaseNode = customerBookingsHub_rootQuery['response']['entitlementPurchases'][number];
 
 type PendingCancellationConfirmation = {
   subscriptionId: string;
@@ -68,7 +81,41 @@ type PendingCancellationConfirmation = {
 } | null;
 
 const RootQuery = graphql`
-  query customerBookingsHub_rootQuery($today: DateTime!) {
+  query customerBookingsHub_rootQuery($today: DateTime!, $organizationCustomDomain: String) {
+    marketplacePurchases(
+      first: 48
+      organizationCustomDomain: $organizationCustomDomain
+      lifecycleStates: [CANCELLED, DELETED, EXPIRED, PAYMENT_FAILED]
+      orderBy: [{ field: ACTIVITY_AT, direction: DESCENDING }]
+    ) {
+      edges {
+        node {
+          id
+          sourceId
+          sourceType
+          sourceTypeName
+          lifecycleStateName
+          renewalStateName
+          activityAt
+          bookingFrom
+          bookingUntil
+          productTitle
+          totalAmount
+          currency
+          bookingId
+          creditQuantity
+          isDeleted
+          paymentStatus
+          refund {
+            status {
+              name
+            }
+            refundAmount
+            currencyToDisplay
+          }
+        }
+      }
+    }
     marketplaceBookingFailures {
       id
       category {
@@ -86,6 +133,30 @@ const RootQuery = graphql`
         type
         name
       }
+    }
+    myEntitlements {
+      id
+      purchaseReference
+      pricingId
+      availableQuantity
+      grantedQuantity
+      expiresAt
+      status
+      restrictions {
+        productId
+        productVersionId
+        availableDays
+      }
+    }
+    entitlementPurchases {
+      id
+      paymentStatus
+      paymentMethod
+      amount
+      currency
+      creditQuantity
+      paymentExpiry
+      invoiceNumber
     }
     marketplaceBookingSubscriptionCancellationModes {
       type
@@ -246,6 +317,7 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<customerBookingsHub_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const { integratedPlatform } = useIntegratedPlatform();
+  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
   const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
     useMutation<customerBookingsHub_deleteMarketplaceBookingSubscriptionMutation>(graphql`
@@ -270,7 +342,16 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
   const upcomingBookings = useMemo(() => toNodes(rootData.upcomingBookings.edges), [rootData.upcomingBookings.edges]);
   const recentBookings = useMemo(() => toNodes(rootData.recentBookings.edges), [rootData.recentBookings.edges]);
   const subscriptions = useMemo(() => toNodes(rootData.marketplaceBookingSubscriptions.edges), [rootData.marketplaceBookingSubscriptions.edges]);
-  const totalCount = rootData.upcomingBookings.totalCount + rootData.recentBookings.totalCount + rootData.marketplaceBookingSubscriptions.totalCount;
+  const entitlements = useMemo(
+    () => rootData.myEntitlements.filter((item): item is EntitlementNode => item.status === 'ACTIVE' && item.availableQuantity > 0),
+    [rootData.myEntitlements],
+  );
+  const pendingEntitlementPurchases = useMemo(
+    () => rootData.entitlementPurchases.filter((item): item is EntitlementPurchaseNode => item.paymentStatus === 'PENDING'),
+    [rootData.entitlementPurchases],
+  );
+  const totalCount =
+    rootData.upcomingBookings.totalCount + rootData.recentBookings.totalCount + rootData.marketplaceBookingSubscriptions.totalCount + pendingEntitlementPurchases.length;
   const immediateCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
     const mode = rootData.marketplaceBookingSubscriptionCancellationModes.find((item) => item.type === 'IMMEDIATE');
 
@@ -393,9 +474,9 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
         >
           <CardContent sx={{ p: { xs: 2, sm: 2.5, md: 3.5 } }}>
             <CaptionIconTypography label="My bookings" sx={{ textTransform: 'uppercase', opacity: 0.66 }} />
-            <LeadIconTypography label="Your bookings across Skedular" sx={{ mt: 0.75 }} />
+            <LeadIconTypography label="Your bookings and available credits" sx={{ mt: 0.75 }} />
             <BodyIconTypography
-              label="Review private bookings, marketplace bookings, and marketplace subscriptions from one place. Marketplace bookings stay here for payment and cancellation; private bookings open in the Teams scheduler."
+              label="Review your bookings and subscriptions, or use an available credit to book a date and time. Marketplace bookings stay here for payment and cancellation; private bookings open in the Teams scheduler."
               sx={{ mt: 0.9, opacity: 0.82, maxWidth: 820 }}
             />
 
@@ -403,6 +484,8 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
               <Chip label={`${rootData.upcomingBookings.totalCount} upcoming`} color="primary" variant="outlined" />
               <Chip label={`${rootData.recentBookings.totalCount} recent`} variant="outlined" />
               <Chip label={`${rootData.marketplaceBookingSubscriptions.totalCount} subscriptions`} color="success" variant="outlined" />
+              <Chip label={`${entitlements.length} active credit entitlements`} color="warning" variant="outlined" />
+              {pendingEntitlementPurchases.length > 0 ? <Chip label={`${pendingEntitlementPurchases.length} pending credit purchases`} color="warning" variant="filled" /> : null}
             </StackRow>
           </CardContent>
         </Card>
@@ -424,6 +507,78 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
               ))}
             </CardContent>
           </Card>
+        ) : null}
+
+        {entitlements.length > 0 ? (
+          <Box sx={{ mt: 3, display: 'grid', gap: 1.5, gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(3, minmax(0, 1fr))' } }}>
+            {entitlements.map((entitlement) => {
+              const bookingLink = getMarketplaceEntitlementBookingLink(integratedPlatform, entitlement.id);
+              const detailsLink = getMarketplaceEntitlementPurchaseDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, entitlement.purchaseReference);
+
+              return (
+                <Card key={entitlement.id} sx={{ borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
+                  <CardContent sx={{ p: { xs: 2, sm: 2.5 } }}>
+                    <CaptionIconTypography label="Purchased entitlement" sx={{ textTransform: 'uppercase', opacity: 0.66 }} />
+                    <SubtitleIconTypography label="Booking credits" sx={{ mt: 0.75 }} />
+                    <BodyIconTypography label={`${entitlement.availableQuantity} of ${entitlement.grantedQuantity} credits available`} sx={{ mt: 0.5, fontWeight: 700 }} />
+                    <SmallIconTypography label={`Valid until ${dayjs(entitlement.expiresAt).format('MMM D, YYYY')}`} sx={{ mt: 0.25, opacity: 0.72 }} />
+                    {entitlement.restrictions?.availableDays.length ? (
+                      <SmallIconTypography label={`Available on ${entitlement.restrictions.availableDays.join(', ')}`} sx={{ mt: 0.5, opacity: 0.8 }} />
+                    ) : null}
+                    <StackRow sx={{ mt: 1.5, gap: 1, flexWrap: 'wrap' }}>
+                      <Button component={NextLink} href={detailsLink} variant="outlined" sx={{ textTransform: 'none' }}>
+                        View entitlement
+                      </Button>
+                      {bookingLink ? (
+                        <Button component={NextLink} href={bookingLink} variant="contained" sx={{ textTransform: 'none' }}>
+                          Book with credits
+                        </Button>
+                      ) : null}
+                    </StackRow>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </Box>
+        ) : null}
+
+        {pendingEntitlementPurchases.length > 0 ? (
+          <Box sx={{ mt: 3, minWidth: 0 }}>
+            <CaptionIconTypography label="Pending payments" sx={{ textTransform: 'uppercase', opacity: 0.66 }} />
+            <LeadIconTypography label="Credit purchases awaiting payment" sx={{ mt: 0.5 }} />
+            <Box sx={{ mt: 2, display: 'grid', gap: 1.5, gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(3, minmax(0, 1fr))' } }}>
+              {pendingEntitlementPurchases.map((purchase) => (
+                <Link
+                  key={purchase.id}
+                  component={NextLink}
+                  href={getMarketplaceEntitlementPurchaseDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, purchase.id)}
+                  underline="none"
+                  color="inherit"
+                  sx={cardLinkSx('primary')}
+                >
+                  <Box sx={{ p: { xs: 2, sm: 2.25 }, minWidth: 0 }}>
+                    <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 1 }}>
+                      <Box>
+                        <SmallIconTypography label="Credit entitlement" sx={{ opacity: 0.62, textTransform: 'uppercase' }} />
+                        <SubtitleIconTypography label={`${purchase.creditQuantity} credits`} sx={{ mt: 0.4 }} />
+                      </Box>
+                      <Chip size="small" label="Payment pending" color="warning" />
+                    </StackRow>
+                    <StackColumn spacing={0.8} sx={{ mt: 2 }}>
+                      <DetailsRow label="Amount" value={`${purchase.amount} ${purchase.currency}`} />
+                      <DetailsRow label="Payment method" value={purchase.paymentMethod} />
+                      <DetailsRow label="Payment deadline" value={dayjs.utc(purchase.paymentExpiry).format('D MMM YYYY, HH:mm')} />
+                      {purchase.invoiceNumber ? <DetailsRow label="Invoice" value={purchase.invoiceNumber} /> : null}
+                    </StackColumn>
+                    <StackRow sx={{ mt: 2, justifyContent: 'space-between' }}>
+                      <BodyIconTypography label="Open payment page" sx={{ color: 'primary.main', fontWeight: 600 }} />
+                      <ChevronRightIcon fontSize="small" />
+                    </StackRow>
+                  </Box>
+                </Link>
+              ))}
+            </Box>
+          </Box>
         ) : null}
 
         {totalCount === 0 ? (
@@ -449,6 +604,12 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
           subscriptions={subscriptions}
         />
         <BookingsSection bookings={recentBookings} integratedPlatform={integratedPlatform} label="Already happened" title="Recent bookings" />
+        <MarketplacePurchaseHistorySection
+          items={rootData.marketplacePurchases.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item)}
+          integratedPlatform={integratedPlatform}
+          isCustomDomain={isCustomDomain}
+          organizationCustomDomain={organizationCustomDomain}
+        />
       </Container>
 
       <Dialog open={!!pendingCancellationConfirmation} onClose={handleCancelImmediateCancellationClick}>
@@ -762,17 +923,19 @@ const CustomerBookingsHubWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<customerBookingsHub_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
+  const { organizationCustomDomain } = useKnownParams();
 
   useEffect(() => {
     loadQuery(
       {
         today: dayjs().startOf('day').toISOString(),
+        organizationCustomDomain,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId]);
+  }, [loadQuery, organizationCustomDomain, triggerReloadId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

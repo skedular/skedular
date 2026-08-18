@@ -6,17 +6,22 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Booking.Shared.Database.Entities;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class MarketplaceRefundNotificationDelivery : EntityBase
 {
-    public string MarketplaceRefundId { get; set; } = null!;
-    public string EventType { get; set; } = null!;
-    public string RecipientId { get; set; } = null!;
-    public string Status { get; set; } = null!;
+    public string EventType { get; set; }
+    public string RecipientId { get; set; }
+    public string Status { get; set; }
     public int AttemptCount { get; set; }
     public DateTimeOffset? SentAt { get; set; }
     public string? LastError { get; set; }
-    public virtual MarketplaceRefund MarketplaceRefund { get; set; } = null!;
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string MarketplaceRefundId { get; set; }
+    public virtual MarketplaceRefund MarketplaceRefund { get; set; }
 }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 public class MarketplaceRefundNotificationDeliveryConfiguration
     : IEntityTypeConfiguration<MarketplaceRefundNotificationDelivery>

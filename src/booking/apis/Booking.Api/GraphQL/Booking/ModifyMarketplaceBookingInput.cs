@@ -12,6 +12,9 @@ public sealed class ModifyMarketplaceBookingInput
     [GraphQLName("bookingId")]
     public required string BookingId { get; set; }
 
+    [GraphQLName("entitlementId")]
+    public string? EntitlementId { get; set; }
+
     [GraphQLName("expectedVersion")]
     public required int ExpectedVersion { get; set; }
 

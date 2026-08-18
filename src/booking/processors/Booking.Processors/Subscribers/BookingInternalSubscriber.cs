@@ -2,6 +2,7 @@ using Api.Shared.Clients.Events.Skedular.BookingInternal.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Services.Entitlements;
 using Booking.Shared.Workflows;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL;
@@ -21,16 +22,21 @@ public class BookingInternalSubscriber(
     IXeroWebhookService xeroWebhookService,
     IStripeHostRefundService stripeHostRefundService,
     IStripePayoutReconciliationService payoutReconciliationService,
-    IGraphQlTopicEventSender graphQlTopicEventSender) : IEventSubscriber<Key, Event>
+    IGraphQlTopicEventSender graphQlTopicEventSender,
+    IEntitlementPurchaseService entitlementPurchaseService,
+    ILogger<BookingInternalSubscriber> logger) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
+        logger.LogInformation("Received BookingInternal event. EventType={EventType}", @event.Metadata.Type);
         switch (@event.Metadata.Type)
         {
             case Type.StripeConnectAccountWebhookEventReceived:
                 await HandleStripeConnectAccountWebhookEventReceivedAsync(@event.StripeConnectAccountWebhookEventPayload, cancellationToken);
                 break;
             case Type.XeroWebhookEventReceived:
+                logger.LogInformation("Dispatching Xero webhook event from BookingInternal subscriber. PayloadLength={PayloadLength}",
+                    @event.XeroWebhookEventPayload.Length);
                 await xeroWebhookService.ProcessAsync(@event.XeroWebhookEventPayload, cancellationToken);
                 break;
         }
@@ -219,6 +225,34 @@ public class BookingInternalSubscriber(
             cancellationToken);
         if (stripeCheckoutSession is null)
         {
+            if (!string.IsNullOrWhiteSpace(session.ClientReferenceId))
+            {
+                var purchase = await repositoryFactory.EntitlementPurchaseRepository.GetByIdAsync(
+                    session.ClientReferenceId,
+                    cancellationToken);
+                if (purchase is null || purchase.StripeCheckoutSessionId != session.Id)
+                {
+                    return;
+                }
+
+                await entitlementPurchaseService.UpdateStripePaymentContextAsync(
+                    session.ClientReferenceId,
+                    session.Id,
+                    session.PaymentIntentId,
+                    cancellationToken);
+                await entitlementPurchaseService.UpdatePaymentStatusAsync(
+                    session.ClientReferenceId,
+                    session.PaymentStatus switch
+                    {
+                        "no_payment_required" => PaymentStatus.NoPaymentRequired,
+                        "paid" => PaymentStatus.Confirmed,
+                        "unpaid" => PaymentStatus.Pending,
+                        _ => PaymentStatus.Pending,
+                    },
+                    new DateTimeOffset(session.Created, TimeSpan.Zero),
+                    cancellationToken);
+            }
+
             return;
         }
 
@@ -285,6 +319,15 @@ public class BookingInternalSubscriber(
             await repositoryFactory.StripeCheckoutSessionRepository.GetByStripeCheckoutSessionIdAsync(session.Id, cancellationToken);
         if (stripeCheckoutSession is null)
         {
+            if (!string.IsNullOrWhiteSpace(session.ClientReferenceId))
+            {
+                await entitlementPurchaseService.UpdatePaymentStatusAsync(
+                    session.ClientReferenceId,
+                    PaymentStatus.Expired,
+                    new DateTimeOffset(session.Created, TimeSpan.Zero),
+                    cancellationToken);
+            }
+
             return;
         }
 

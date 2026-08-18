@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bea35af673d057554a0ea614000d1778>>
+ * @generated SignedSource<<0a421fc70556032354c5bb8dd14d7f95>>
  * @lightSyntaxTransform
  */
 
@@ -851,16 +851,42 @@ return {
             "storageKey": null
           }
         ]
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "EntitlementDetails",
+        "kind": "LinkedField",
+        "name": "myEntitlements",
+        "plural": true,
+        "selections": [
+          (v14/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "availableQuantity",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "status",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "946f6c2e724ae8855a5b7486aea8d307",
+    "cacheID": "660f3c1209e0b297bd7b6439557649c3",
     "id": null,
     "metadata": {},
     "name": "guestStoreFront_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFront_rootQuery(\n  $organizationCustomDomain: String!\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n  $includeUpcomingBookings: Boolean!\n  $includeActiveSubscriptions: Boolean!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...guestStoreFrontProducts_query_VqntA\n  ...guestStoreFrontLocationsStrip_query\n  ...guestStoreFrontProductCard_query\n  ...guestStoreFrontFooter_query\n  ...guestStoreFrontActivitySummary_query_2N1lMJ\n}\n\nfragment guestStoreFrontActivitySummary_query_2N1lMJ on Query {\n  bookings(first: 0, where: {organizationCustomDomain: $organizationCustomDomain, fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo, includeMineOnly: true, channel: MARKETPLACE}) @include(if: $includeUpcomingBookings) {\n    totalCount\n  }\n  marketplaceBookingSubscriptions(first: 0, where: {includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, status: ACTIVE}) @include(if: $includeActiveSubscriptions) {\n    totalCount\n  }\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n\nfragment guestStoreFrontLocationsStrip_query on Query {\n  marketplaceLocations(where: {organizationCustomDomain: $organizationCustomDomain}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        timezone\n        floorPlanCount\n        physicalAddress {\n          formattedAddress\n          id\n        }\n        openingHours {\n          weekOpeningHours {\n            monday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            tuesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            wednesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            thursday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            friday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            saturday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            sunday {\n              closed\n              openAllDay\n              from\n              until\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n    availableDays\n  }\n}\n\nfragment guestStoreFrontProductCard_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n\nfragment guestStoreFrontProducts_query_VqntA on Query {\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: false}) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFront_rootQuery(\n  $organizationCustomDomain: String!\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n  $includeUpcomingBookings: Boolean!\n  $includeActiveSubscriptions: Boolean!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...guestStoreFrontProducts_query_VqntA\n  ...guestStoreFrontLocationsStrip_query\n  ...guestStoreFrontProductCard_query\n  ...guestStoreFrontFooter_query\n  ...guestStoreFrontActivitySummary_query_2N1lMJ\n}\n\nfragment guestStoreFrontActivitySummary_query_2N1lMJ on Query {\n  bookings(first: 0, where: {organizationCustomDomain: $organizationCustomDomain, fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo, includeMineOnly: true, channel: MARKETPLACE}) @include(if: $includeUpcomingBookings) {\n    totalCount\n  }\n  marketplaceBookingSubscriptions(first: 0, where: {includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, status: ACTIVE}) @include(if: $includeActiveSubscriptions) {\n    totalCount\n  }\n  myEntitlements {\n    id\n    availableQuantity\n    status\n  }\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n\nfragment guestStoreFrontLocationsStrip_query on Query {\n  marketplaceLocations(where: {organizationCustomDomain: $organizationCustomDomain}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        timezone\n        floorPlanCount\n        physicalAddress {\n          formattedAddress\n          id\n        }\n        openingHours {\n          weekOpeningHours {\n            monday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            tuesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            wednesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            thursday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            friday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            saturday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            sunday {\n              closed\n              openAllDay\n              from\n              until\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n    availableDays\n  }\n}\n\nfragment guestStoreFrontProductCard_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n\nfragment guestStoreFrontProducts_query_VqntA on Query {\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: false}) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n"
   }
 };
 })();

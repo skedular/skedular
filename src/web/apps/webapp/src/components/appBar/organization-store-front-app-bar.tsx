@@ -282,7 +282,10 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
 
           <MenuItem>
             <Link component={NextLink} href={bookingsLink}>
-              <SmallIconTypography startElement={<BookingIcon />} label="Bookings" />
+              <StackColumn>
+                <SmallIconTypography startElement={<BookingIcon />} label="Bookings" />
+                <CaptionIconTypography label="View bookings and use credits" sx={{ ml: 3.5, opacity: 0.7 }} />
+              </StackColumn>
             </Link>
           </MenuItem>
 

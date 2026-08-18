@@ -59,16 +59,16 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useLazyLoadQuery, useMutation, usePreloadedQuery, useQueryLoader, useSubscription } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-
-const toCustomerSubscriptionCancellationErrorMessage = (message: string) =>
-  message.toLowerCase().includes('cancellation') && message.toLowerCase().includes('not allowed')
-    ? 'This subscription cannot be cancelled under the current cancellation policy.'
-    : message;
 import MarketplaceProductBookingDetailsHero from '../marketplaceProductBooking/marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from '../marketplaceProductBooking/marketplace-refund-status-card';
 import { canRequestMarketplaceSubscriptionCancellation } from '../marketplaceProductBooking/marketplace-self-service-eligibility';
 import { getSubscriptionOccurrenceModificationLabel } from './subscription-occurrence-display';
+
+const toCustomerSubscriptionCancellationErrorMessage = (message: string) =>
+  message.toLowerCase().includes('cancellation') && message.toLowerCase().includes('not allowed')
+    ? 'This subscription cannot be cancelled under the current cancellation policy.'
+    : message;
 
 type PendingCancellationConfirmation = {
   type: SupportedMarketplaceBookingSubscriptionCancellationMode;
@@ -878,7 +878,7 @@ const MarketplaceProductSubscriptionDetails = ({
                                   underline="hover"
                                   sx={{ mt: 1.25, display: 'inline-flex' }}
                                 >
-                                  Download invoice
+                                  View invoice
                                 </Link>
                               ) : null}
                             </Box>

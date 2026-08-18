@@ -1,7 +1,9 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
+using Booking.Shared.Models.Entitlements;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,8 @@ using MarketplaceBookingModificationRequest = Booking.Shared.Models.MarketplaceB
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using IdentityEntity = Booking.Shared.Database.Entities.Identity;
 using ProductVersionEntity = Booking.Shared.Database.Entities.ProductVersion;
+using EntitlementEntity = Booking.Shared.Database.Entities.Entitlement;
+using CreditLedgerEntryEntity = Booking.Shared.Database.Entities.CreditLedgerEntry;
 
 namespace Booking.Domain.IntegrationTests.Services;
 
@@ -31,10 +35,10 @@ public class MarketplaceBookingModificationPersistenceShould(
         CancellationToken cancellationToken)
     {
         // Arrange
-        var from = new DateTimeOffset(2026, 8, 10, 9, 0, 0, TimeSpan.Zero);
-        var until = new DateTimeOffset(2026, 8, 10, 10, 0, 0, TimeSpan.Zero);
-        var newFrom = new DateTimeOffset(2026, 8, 11, 9, 0, 0, TimeSpan.Zero);
-        var newUntil = new DateTimeOffset(2026, 8, 11, 10, 0, 0, TimeSpan.Zero);
+        var from = TimeProvider.System.GetUtcNow().AddDays(1);
+        var until = from.AddHours(1);
+        var newFrom = from.AddDays(1);
+        var newUntil = until.AddDays(1);
 
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, true, cancellationToken);
         customer.Identities.Add(new IdentityEntity
@@ -114,8 +118,8 @@ public class MarketplaceBookingModificationPersistenceShould(
         CancellationToken cancellationToken)
     {
         // Arrange
-        var from = new DateTimeOffset(2026, 8, 10, 9, 0, 0, TimeSpan.Zero);
-        var until = new DateTimeOffset(2026, 8, 10, 10, 0, 0, TimeSpan.Zero);
+        var from = TimeProvider.System.GetUtcNow().AddDays(1);
+        var until = from.AddHours(1);
 
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, true, cancellationToken);
         customer.Identities.Add(new IdentityEntity
@@ -201,8 +205,8 @@ public class MarketplaceBookingModificationPersistenceShould(
         CancellationToken cancellationToken)
     {
         // Arrange
-        var from = new DateTimeOffset(2026, 8, 10, 9, 0, 0, TimeSpan.Zero);
-        var until = new DateTimeOffset(2026, 8, 10, 10, 0, 0, TimeSpan.Zero);
+        var from = TimeProvider.System.GetUtcNow().AddDays(1);
+        var until = from.AddHours(1);
         var originalPrice = 100m;
 
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, true, cancellationToken);
@@ -270,6 +274,110 @@ public class MarketplaceBookingModificationPersistenceShould(
         updatedBooking.MarketplaceBooking.ProductPricing.Price.ShouldBe(originalPrice);
         updatedBooking.MarketplaceBooking.Quantity.ShouldBe(1);
         updatedBooking.MarketplaceBooking.PaymentStatus.ShouldBe(PaymentStatusConstants.Confirmed);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Persist_Token_Modification_And_Restore_Credit_On_Cancellation(
+        string bookingId,
+        string customerId,
+        string entitlementId,
+        CancellationToken cancellationToken)
+    {
+        var from = TimeProvider.System.GetUtcNow().AddDays(1);
+        var until = from.AddHours(1);
+        var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, true, cancellationToken);
+        customer.Identities.Add(new IdentityEntity
+        {
+            Id = customerId,
+            Customer = customer,
+        });
+        SetCustomerContext(customerId);
+        var productVersion = await CreateProductVersionAsync($"token-{bookingId}", cancellationToken);
+        var entitlement = repositoryFactory.EntitlementRepository.Add(new EntitlementEntity
+        {
+            Id = entitlementId,
+            CustomerId = customerId,
+            OrganizationId = productVersion.Product.Organization.Id,
+            PurchaseReference = $"purchase-{entitlementId}",
+            PricingId = "token-pricing",
+            GrantedQuantity = 5,
+            ActivatesAt = TimeProvider.System.GetUtcNow().AddDays(-1),
+            ExpiresAt = TimeProvider.System.GetUtcNow().AddDays(30),
+            Status = EntitlementStatus.Active,
+            Currency = CurrencyConstants.Nzd,
+        });
+        repositoryFactory.EntitlementRepository.AddLedgerEntry(new CreditLedgerEntryEntity
+        {
+            Id = $"grant-{entitlementId}",
+            EntitlementId = entitlement.Id,
+            Quantity = 5,
+            TransactionType = CreditLedgerTransactionType.Granted.ToPersistedValue(),
+            ReferenceKey = $"grant-{entitlementId}",
+            CreatedAt = TimeProvider.System.GetUtcNow().AddDays(-1),
+        });
+        repositoryFactory.EntitlementRepository.AddLedgerEntry(new CreditLedgerEntryEntity
+        {
+            Id = $"consume-{bookingId}",
+            EntitlementId = entitlement.Id,
+            BookingId = bookingId,
+            Quantity = 1,
+            TransactionType = CreditLedgerTransactionType.Consumed.ToPersistedValue(),
+            ReferenceKey = $"booking:{bookingId}",
+            CreatedAt = TimeProvider.System.GetUtcNow(),
+        });
+        var booking = repositoryFactory.BookingRepository.Add(new BookingEntity
+        {
+            Id = bookingId,
+            Channel = BookingChannelConstants.Marketplace,
+            EntityFrameworkVersion = 1,
+            From = from,
+            Until = until,
+            Category = BookingCategory.WorkingFromCoworkingSpace.ToBookingCategory(),
+            Schedules = [],
+            MarketplaceBooking = new MarketplaceBookingEntity
+            {
+                Id = bookingId,
+                EntitlementId = entitlementId,
+                PaymentStatus = PaymentStatusConstants.Confirmed,
+                ProductVersion = productVersion,
+                ProductPricing = ProductPricing.Empty("token-pricing") with
+                {
+                    FulfillmentType = ProductPricingFulfillmentType.Entitlement,
+                    EntitlementCreditQuantity = 1,
+                    PurchaseCadence = ProductPricingCadence.OneTime,
+                    BookingCadence = ProductPricingCadence.OneTime,
+                    NumberOfResourcesToBook = 0,
+                },
+                Quantity = 1,
+                PaymentMethod = PaymentMethod.Card.ToPaymentMethod(),
+                BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
+            },
+            InvolvedCustomers = [customer],
+        });
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await using var scope = scopeFactory.CreateAsyncScope();
+        var marketplaceBookingService = scope.ServiceProvider.GetRequiredService<IMarketplaceBookingService>();
+        var cancellationService = scope.ServiceProvider.GetRequiredService<IEntitlementCancellationService>();
+        var request = new MarketplaceBookingModificationRequest(
+            bookingId,
+            booking.EntityFrameworkVersion,
+            from.AddDays(1),
+            until.AddDays(1),
+            null,
+            "Token booking time change",
+            customerId,
+            MarketplaceBookingModificationActorKind.Customer);
+
+        var modification = await marketplaceBookingService.ModifyAsync(request, cancellationToken);
+        modification.Succeeded.ShouldBeTrue(modification.Error?.Message ?? "Token modification failed without an error.");
+
+        var restored = await cancellationService.CancelBookingAsync(bookingId, true, "Customer cancelled token booking", cancellationToken);
+        restored.ShouldNotBeNull();
+        restored!.TransactionType.ShouldBe(CreditLedgerTransactionType.Released);
+        (await scope.ServiceProvider.GetRequiredService<IRepositoryFactory>().MarketplaceBookingModificationRepository
+            .GetByBookingIdAsync(bookingId, cancellationToken)).ShouldHaveSingleItem();
     }
 
     private async Task<ProductVersionEntity> CreateProductVersionAsync(string key, CancellationToken cancellationToken)

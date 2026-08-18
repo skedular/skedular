@@ -56,6 +56,7 @@ public static class Extensions
                 .AddSingleton<IUpdatable<Price, PriceUpdateOptions>, PriceService>()
                 .AddSingleton<IRetrievable<Price, PriceGetOptions>, PriceService>()
                 .AddSingleton<ICreatable<Session, SessionCreateOptions>, SessionService>()
+                .AddSingleton<SessionService>()
                 .AddSingleton<IListable<Session, SessionListOptions>, SessionService>()
                 .AddSingleton<IListable<BalanceTransaction, BalanceTransactionListOptions>, BalanceTransactionService>()
                 .AddSingleton<BalanceTransactionService>()

@@ -15,7 +15,9 @@ import { memo } from 'react';
 
 const RootPage = () => {
   const { user, loading } = useAuth();
-  if (loading) return <Loading />;
+  if (loading) {
+    return <Loading />;
+  }
 
   if (user) {
     return (

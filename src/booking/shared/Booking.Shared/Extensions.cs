@@ -9,6 +9,7 @@ using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
+using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +29,10 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedMappers() =>
             services
-                .AddSingleton<IEntityMapper, EntityMapper>()
+                .AddSingleton<EntityMapper>()
+                .AddSingleton<IEntityMapper>(sp => sp.GetRequiredService<EntityMapper>())
+                .AddSingleton<IEntitlementModelMapper>(sp => sp.GetRequiredService<EntityMapper>())
+                .AddSingleton<IEntitlementPurchaseModelMapper>(sp => sp.GetRequiredService<EntityMapper>())
                 .AddSingleton<IEventMapper, EventMapper>();
 
         public IServiceCollection AddDomainSharedServices() =>
@@ -63,6 +67,15 @@ public static class Extensions
                 .AddScoped<IMarketplaceRefundEventService, MarketplaceRefundEventService>()
                 .AddScoped<IMarketplaceRefundTransitionService, MarketplaceRefundTransitionService>()
                 .AddScoped<IMarketplaceRefundService, MarketplaceRefundService>()
+                .AddScoped<IEntitlementService, EntitlementService>()
+                .AddScoped<IEntitlementPurchaseService, EntitlementPurchaseService>()
+                .AddScoped<IEntitlementPurchaseCheckoutService, EntitlementPurchaseCheckoutService>()
+                .AddScoped<IEntitlementPurchaseBankTransferService, EntitlementPurchaseBankTransferService>()
+                .AddScoped<IEntitlementPurchasePaymentCancellationService, EntitlementPurchasePaymentCancellationService>()
+                .AddScoped<IEntitlementPurchasePaymentReconciliationService, EntitlementPurchasePaymentReconciliationService>()
+                .AddScoped<IEntitlementInvoiceService, EntitlementInvoiceService>()
+                .AddScoped<IEntitlementRenewalService, EntitlementRenewalService>()
+                .AddScoped<IEntitlementAdjustmentService, EntitlementAdjustmentService>()
                 .AddScoped<IHostCommissionService, HostCommissionService>()
                 .AddScoped<IHostStripeApplicationFeeService, HostStripeApplicationFeeService>()
                 .AddScoped<IStripeHostRefundService, StripeHostRefundService>()
@@ -94,6 +107,11 @@ public static class Extensions
                 .AddScoped<ISpacesBookingUsageRolloverService, SpacesBookingUsageRolloverService>()
                 .AddScoped<IMarketplaceBookingSubscriptionService, MarketplaceBookingSubscriptionService>()
                 .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>()
+                .AddScoped<ICreditLedgerService, CreditLedgerService>()
+                .AddScoped<IEntitlementEligibilityService, EntitlementEligibilityService>()
+                .AddScoped<IEntitlementBookingService, EntitlementBookingService>()
+                .AddScoped<IEntitlementCancellationService, EntitlementCancellationService>()
+                .AddScoped<IEntitlementExpiryService, EntitlementExpiryService>()
                 .AddScoped<ISkedularInvoiceService, SkedularInvoiceService>()
                 .AddScoped<IXeroInvoiceService, XeroInvoiceService>()
                 .AddScoped<IXeroRefundService, XeroRefundService>()
@@ -121,6 +139,7 @@ public static class Extensions
                 .AddScoped<IMarketplaceBookingSubscriptionRepository, MarketplaceBookingSubscriptionRepository>()
                 .AddScoped<IMarketplaceRefundEventRepository, MarketplaceRefundEventRepository>()
                 .AddScoped<IMarketplaceRefundRepository, MarketplaceRefundRepository>()
+                .AddScoped<IEntitlementRepository, EntitlementRepository>()
                 .AddScoped<IMarketplaceBookingFailureRepository, MarketplaceBookingFailureRepository>()
                 .AddScoped<IMarketplaceBookingFailureEventRepository, MarketplaceBookingFailureEventRepository>()
                 .AddScoped<IMarketplaceBookingFailureDeliveryRepository, MarketplaceBookingFailureDeliveryRepository>()

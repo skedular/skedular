@@ -1,5 +1,6 @@
 import { Loading } from '@/components/loading';
 import { MarketplaceLocations } from '@/components/location/marketplaceLocations';
+import CustomerEntitlementsStrip from '@/components/marketplaceEntitlement/customer-entitlements-strip';
 import { NoOrganizationRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
 import logger from '@/libs/logging';
 import { logAggregateMarketplaceDiscoveryStarted } from '@/libs/logging/aggregate-marketplace-telemetry';
@@ -25,6 +26,7 @@ const RootQuery = graphql`
   ) {
     ...marketplaceLocations_query
     ...marketplaceLocations_locations_query
+    ...customerEntitlementsStrip_query
   }
 `;
 
@@ -35,6 +37,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   if (user) {
     return (
       <NoOrganizationRootShell>
+        <CustomerEntitlementsStrip queryReference={rootData} />
         <MarketplaceLocations rootDataRelay={rootData} rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
       </NoOrganizationRootShell>
     );

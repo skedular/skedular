@@ -67,35 +67,41 @@ public class MarketplacePurchaseHistoryService(
                 ? MarketplacePurchaseLifecycleState.Deleted
                 : row.SourceType == MarketplacePurchaseSourceType.Subscription
                     ? GetSubscriptionLifecycle(row, logger)
-                    : MarketplacePurchaseLifecycleState.Active;
+                    : row.SourceType == MarketplacePurchaseSourceType.Entitlement
+                        ? GetEntitlementLifecycle(row)
+                        : MarketplacePurchaseLifecycleState.Active;
             var bookingId = row.SourceType == MarketplacePurchaseSourceType.Booking
                 ? await marketplaceBookingService.GetBookingIdAsync(row.Id, cancellationToken)
                 : null;
+            var paymentMethod = row.SourceType == MarketplacePurchaseSourceType.Entitlement
+                ? (await repositoryFactory.EntitlementPurchaseRepository.GetByIdAsync(row.Id, cancellationToken))?.PaymentMethod
+                : null;
 
             entries.Add(new Edge<MarketplacePurchaseHistoryEntry>(new MarketplacePurchaseHistoryEntry(
-                row.Id,
-                row.SourceType,
-                lifecycle,
-                row.SourceType == MarketplacePurchaseSourceType.Subscription && row.AutoRenew && !row.CancelAtPeriodEnd
-                    ? MarketplacePurchaseRenewalState.Renews
-                    : row.SourceType == MarketplacePurchaseSourceType.Subscription
-                        ? MarketplacePurchaseRenewalState.DoesNotRenew
-                        : MarketplacePurchaseRenewalState.NotApplicable,
-                row.PurchasedAt,
-                row.ActivityAt,
-                row.BookingFrom,
-                row.BookingUntil,
-                payment,
-                row.ProductVersionId,
-                row.ProductTitle,
-                row.TotalAmount,
-                row.Currency is null ? null : Enum.TryParse<Currency>(row.Currency, true, out var currency) ? currency : null,
-                row.CustomerId,
-                row.IsDeleted,
-                row.IsDeleted ? row.DeletedByCustomerId : null,
-                row.CancellationReason,
-                row.RefundId,
-                bookingId), edge.Cursor));
+                    row.Id,
+                    row.SourceType,
+                    lifecycle,
+                    row.SourceType == MarketplacePurchaseSourceType.Subscription && row.AutoRenew && !row.CancelAtPeriodEnd
+                        ? MarketplacePurchaseRenewalState.Renews
+                        : row.SourceType == MarketplacePurchaseSourceType.Subscription
+                            ? MarketplacePurchaseRenewalState.DoesNotRenew
+                            : MarketplacePurchaseRenewalState.NotApplicable,
+                    row.PurchasedAt,
+                    row.ActivityAt,
+                    row.BookingFrom,
+                    row.BookingUntil,
+                    payment,
+                    row.ProductVersionId,
+                    row.ProductTitle,
+                    row.TotalAmount,
+                    row.Currency is null ? null : Enum.TryParse<Currency>(row.Currency, true, out var currency) ? currency : null,
+                    row.CustomerId,
+                    row.IsDeleted,
+                    row.IsDeleted ? row.DeletedByCustomerId : null,
+                    row.CancellationReason,
+                    row.RefundId,
+                    bookingId, null, null, row.EntitlementStatus, row.CreditQuantity, row.GrantedQuantity, row.AvailableQuantity, paymentMethod),
+                edge.Cursor));
         }
 
         return (paginatedInfo, entries, totalCount);
@@ -136,4 +142,16 @@ public class MarketplacePurchaseHistoryService(
             _ => MarketplacePurchaseLifecycleState.Pending,
         };
     }
+
+    private static MarketplacePurchaseLifecycleState GetEntitlementLifecycle(MarketplacePurchaseHistoryRow row) =>
+        row.PaymentStatus.ToPaymentStatus() switch
+        {
+            PaymentStatus.Rejected => MarketplacePurchaseLifecycleState.PaymentFailed,
+            PaymentStatus.Expired => MarketplacePurchaseLifecycleState.Expired,
+            PaymentStatus.Pending => MarketplacePurchaseLifecycleState.Pending,
+            PaymentStatus.Confirmed when row.EntitlementStatus == "Active" => MarketplacePurchaseLifecycleState.Active,
+            _ when row.EntitlementStatus == "Cancelled" => MarketplacePurchaseLifecycleState.Cancelled,
+            _ when row.EntitlementStatus == "Expired" => MarketplacePurchaseLifecycleState.Expired,
+            _ => MarketplacePurchaseLifecycleState.Pending,
+        };
 }

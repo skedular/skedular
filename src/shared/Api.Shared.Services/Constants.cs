@@ -123,6 +123,8 @@ public static class Constants
     public const int MaxProductPricingCadenceLength = 100;
     public const int MaxProductPricingBillingModeLength = 32;
     public const int MaxMarketplaceBookingSubscriptionStatusLength = 32;
+    public const int MaxCreditLedgerActorOrSourceLength = 256;
+    public const int MaxCreditLedgerTransactionTypeLength = 32;
 
     public const int MaxFloorPlanNameLength = 100;
 
@@ -192,6 +194,7 @@ public static class AccountingEntityTypeConstants
     public const string Customer = "Customer";
     public const string MarketplaceBooking = "MarketplaceBooking";
     public const string RecurringBooking = "RecurringBooking";
+    public const string EntitlementPurchase = "EntitlementPurchase";
     public const string OrganizationArrearsInvoice = "OrganizationArrearsInvoice";
 }
 

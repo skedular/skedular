@@ -7,12 +7,14 @@ public static class MarketplacePurchaseHistorySourceTypeConstants
 {
     public const string MarketplaceBooking = "MarketplaceBooking";
     public const string MarketplaceBookingSubscription = "MarketplaceBookingSubscription";
+    public const string EntitlementPurchase = "EntitlementPurchase";
 }
 
 public enum MarketplacePurchaseSourceType
 {
     Booking,
     Subscription,
+    Entitlement,
 }
 
 public enum MarketplacePurchaseLifecycleState
@@ -79,7 +81,11 @@ public sealed record MarketplacePurchaseHistoryRow(
     bool AutoRenew,
     bool CancelAtPeriodEnd,
     bool IsDeleted,
-    string? RefundId = null);
+    string? RefundId = null,
+    string? EntitlementStatus = null,
+    int CreditQuantity = 0,
+    int GrantedQuantity = 0,
+    int AvailableQuantity = 0);
 
 public sealed record MarketplacePurchaseHistoryEntry(
     string Id,
@@ -102,12 +108,18 @@ public sealed record MarketplacePurchaseHistoryEntry(
     string? RefundId = null,
     string? BookingId = null,
     MarketplaceBooking? MarketplaceBooking = null,
-    MarketplaceBookingSubscription? MarketplaceBookingSubscription = null)
+    MarketplaceBookingSubscription? MarketplaceBookingSubscription = null,
+    string? EntitlementStatus = null,
+    int CreditQuantity = 0,
+    int GrantedQuantity = 0,
+    int AvailableQuantity = 0,
+    string? PaymentMethod = null)
 {
     public string SourceTypeName => SourceType switch
     {
         MarketplacePurchaseSourceType.Booking => "One-time booking",
         MarketplacePurchaseSourceType.Subscription => "Subscription",
+        MarketplacePurchaseSourceType.Entitlement => "Credit entitlement",
         _ => "Marketplace purchase",
     };
 

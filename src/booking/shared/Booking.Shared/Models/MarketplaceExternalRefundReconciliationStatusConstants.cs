@@ -56,7 +56,7 @@ public static class MarketplaceExternalRefundReconciliationProviderExtensions
     public static string ToMarketplaceExternalRefundReconciliationProviderValue(this MarketplaceExternalRefundReconciliationProvider value) =>
         value switch
         {
-            MarketplaceExternalRefundReconciliationProvider.Stripe => "STRIPE",
+            MarketplaceExternalRefundReconciliationProvider.Stripe => MarketplaceExternalRefundReconciliationProviderConstants.Stripe,
             MarketplaceExternalRefundReconciliationProvider.StripePayout => MarketplaceExternalRefundReconciliationProviderConstants.StripePayout,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown external refund reconciliation provider."),
         };
@@ -64,7 +64,7 @@ public static class MarketplaceExternalRefundReconciliationProviderExtensions
     public static MarketplaceExternalRefundReconciliationProvider ToMarketplaceExternalRefundReconciliationProvider(this string value) =>
         value switch
         {
-            "STRIPE" => MarketplaceExternalRefundReconciliationProvider.Stripe,
+            MarketplaceExternalRefundReconciliationProviderConstants.Stripe => MarketplaceExternalRefundReconciliationProvider.Stripe,
             MarketplaceExternalRefundReconciliationProviderConstants.StripePayout => MarketplaceExternalRefundReconciliationProvider.StripePayout,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown external refund reconciliation provider."),
         };

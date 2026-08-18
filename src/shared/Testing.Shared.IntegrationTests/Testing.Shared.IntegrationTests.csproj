@@ -30,12 +30,12 @@
         <PackageReference Include="PactNet" Version="5.0.1"/>
 
         <!-- Test Framework -->
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1"/>
-        <PackageReference Include="Xunit.DependencyInjection" Version="11.3.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0"/>
+        <PackageReference Include="Xunit.DependencyInjection" Version="11.3.1"/>
         <PackageReference Include="Xunit.DependencyInjection.Logging" Version="11.0.0"/>
 
         <!-- Test Containers -->
-        <PackageReference Include="Testcontainers" Version="4.13.0"/>
+        <PackageReference Include="Testcontainers" Version="4.14.0"/>
 
         <PackageReference Include="Polly" Version="8.7.0"/>
 

@@ -19,7 +19,10 @@
     <ItemGroup>
         <!-- Test Framework (xUnit) -->
         <PackageReference Include="xunit.v3" Version="3.2.2"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
 
         <!-- Test Fixtures (AutoFixture) -->
         <PackageReference Include="AutoFixture" Version="5.0.0-rc.1"/>
@@ -37,8 +40,8 @@
         <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.1.0"/>
 
         <!-- Entity Framework Core (In-Memory Testing) -->
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.10"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.11"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.11"/>
         <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3"/>
 
         <!-- Analyzers -->

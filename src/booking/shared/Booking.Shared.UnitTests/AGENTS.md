@@ -46,3 +46,11 @@ If you change recurring in-arrears logic, the minimum useful unit coverage shoul
     - billing-period and invoice-export decision logic
 - Do not try to prove real Xero API delivery or end-to-end webhook ingress here. Those are system or manual integration
   concerns.
+
+## Unit-test construction
+
+- Prefer `[Theory]` plus `AutoFakeItEasyData`.
+- Inject constructor dependencies, then `sut`, then generated scenario inputs through method parameters.
+- Avoid in-test `A.Fake<T>()` when auto-data can provide the dependency; configure only required calls.
+- Required collaborators are non-null by contract. Do not pass null loggers, transaction builders, repository factories,
+  mappers, or services, or weaken production code with `?.` to accommodate tests.

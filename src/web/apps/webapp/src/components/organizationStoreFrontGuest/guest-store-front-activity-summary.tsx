@@ -43,6 +43,11 @@ const GuestStoreFrontActivitySummary = ({ rootDataRelay }: Props) => {
           @include(if: $includeActiveSubscriptions) {
           totalCount
         }
+        myEntitlements {
+          id
+          availableQuantity
+          status
+        }
       }
     `,
     rootDataRelay,
@@ -50,15 +55,16 @@ const GuestStoreFrontActivitySummary = ({ rootDataRelay }: Props) => {
   const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
 
-  if (!rootData.bookings && !rootData.marketplaceBookingSubscriptions) {
+  if (!rootData.bookings && !rootData.marketplaceBookingSubscriptions && rootData.myEntitlements.length === 0) {
     return null;
   }
 
   const bookingCount = rootData.bookings?.totalCount ?? 0;
   const subscriptionCount = rootData.marketplaceBookingSubscriptions?.totalCount ?? 0;
+  const entitlementCount = rootData.myEntitlements.filter((item) => item.status === 'ACTIVE' && item.availableQuantity > 0).length;
   const activityLabel = `${bookingCount} ${bookingCount === 1 ? 'booking' : 'bookings'} this week · ${subscriptionCount} active ${
     subscriptionCount === 1 ? 'subscription' : 'subscriptions'
-  }`;
+  } · ${entitlementCount} credit ${entitlementCount === 1 ? 'entitlement' : 'entitlements'}`;
 
   return (
     <Paper
@@ -77,7 +83,7 @@ const GuestStoreFrontActivitySummary = ({ rootDataRelay }: Props) => {
             <SubtitleIconTypography label={activityLabel} />
             {bookingCount + subscriptionCount === 0 ? <Chip size="small" variant="outlined" label="Nothing active" /> : <Chip size="small" color="primary" label="Signed in" />}
           </StackRow>
-          <BodyIconTypography label="Quick links to your bookings and subscriptions for this marketplace." sx={{ mt: 0.5, opacity: 0.72 }} />
+          <BodyIconTypography label="View your bookings and subscriptions, or use available credits to book a date and time." sx={{ mt: 0.5, opacity: 0.72 }} />
         </Box>
 
         <StackRow spacing={1} sx={{ flexWrap: 'nowrap' }}>
@@ -88,7 +94,7 @@ const GuestStoreFrontActivitySummary = ({ rootDataRelay }: Props) => {
             endIcon={<ChevronRightIcon fontSize="small" />}
             sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
           >
-            Bookings
+            Bookings & credits
           </Button>
           <Button
             component={NextLink}

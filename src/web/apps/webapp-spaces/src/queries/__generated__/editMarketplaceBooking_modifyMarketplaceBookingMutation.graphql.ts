@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e8d618bc699e298e8270e48b3794f6f4>>
+ * @generated SignedSource<<26e6c77ee81c6340eb33cfc59876758c>>
  * @lightSyntaxTransform
  */
 
@@ -13,6 +13,7 @@ export type ModifyMarketplaceBookingInput = {
   actorKind: MarketplaceBookingModificationActorKind;
   bookingId: string;
   clientMutationId?: string | null | undefined;
+  entitlementId?: string | null | undefined;
   expectedVersion: number;
   from: any;
   reason: string;

@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Booking;
+using Booking.Api.GraphQL.Entitlement;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
 using Booking.Api.GraphQL.MarketplacePurchaseHistory;
 using Booking.Api.GraphQL.Payment;
@@ -9,6 +10,7 @@ using Booking.Api.Services;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Models;
+using Booking.Shared.Models.Entitlements;
 using Enterprise.Shared;
 using Enterprise.Shared.Sanitization;
 using HotChocolate.Types.Pagination;
@@ -28,6 +30,7 @@ using RecurringBooking = Booking.Shared.Models.RecurringBooking;
 using Resource = Booking.Shared.Models.Resource;
 using StripeCheckoutSession = Booking.Shared.Models.StripeCheckoutSession;
 using Team = Booking.Shared.Models.Team;
+using EntitlementEntity = Booking.Shared.Database.Entities.Entitlement;
 
 namespace Booking.Api.Mappers;
 
@@ -45,6 +48,11 @@ public interface IGraphQlMapper
     RecurringBookingDetails? MapTo(RecurringBooking? src);
     MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src);
     MarketplacePurchaseHistoryDetails MapTo(MarketplacePurchaseHistoryEntry src);
+    EntitlementDetails MapTo(EntitlementEntity src);
+    EntitlementDetails MapTo(EntitlementModel src);
+    EntitlementRefundDetails MapTo(EntitlementRefundLink src);
+    CreditLedgerEntryDetails MapTo(CreditLedgerEntry src);
+    CreditLedgerEntryDetails MapTo(CreditLedgerEntryModel src);
     Shared.Models.Booking MapTo(AddPrivateBookingInput src);
     RecurringBooking MapTo(AddPrivateRecurringBookingInput src);
     RecurringBooking MapTo(UpdatePrivateRecurringBookingInput src);
@@ -67,6 +75,120 @@ public interface IGraphQlMapper
 
 public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 {
+    public EntitlementDetails MapTo(EntitlementModel src) => new()
+    {
+        Id = src.Id,
+        CustomerId = src.CustomerId,
+        OrganizationId = src.OrganizationId,
+        OrganizationCustomDomain = src.OrganizationCustomDomain,
+        PurchaseReference = src.PurchaseReference,
+        PricingId = src.PricingId,
+        ProductId = src.ProductId,
+        GrantedQuantity = src.GrantedQuantity,
+        AvailableQuantity = src.GrantedQuantity + src.LedgerEntries
+            .Where(item => item.TransactionType is CreditLedgerTransactionType.Released or CreditLedgerTransactionType.Adjusted)
+            .Sum(item => item.Quantity) - src.LedgerEntries
+            .Where(item => item.TransactionType is CreditLedgerTransactionType.Consumed or CreditLedgerTransactionType.Forfeited
+                or CreditLedgerTransactionType.Expired)
+            .Sum(item => item.Quantity),
+        ActivatesAt = src.ActivatesAt,
+        ExpiresAt = src.ExpiresAt,
+        Status = src.Status,
+        AutoRenew = src.AutoRenew,
+        CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+        Currency = src.Currency,
+        Restrictions = src.ProductPricing is { } pricing ? MapToRestrictions(pricing, src.ProductId, src.ProductVersionId) : null,
+        RenewalStatus = src.RenewalFailureReason is not null ? EntitlementRenewalStatus.Failed :
+            src.CancelAtPeriodEnd ? EntitlementRenewalStatus.Cancelled :
+            src.AutoRenew ? EntitlementRenewalStatus.Pending : EntitlementRenewalStatus.NotRequired,
+        NextRenewalAt = src.NextRenewalAt,
+        RenewalFailureReason = src.RenewalFailureReason,
+        PaymentAction = src.LifecycleState == EntitlementStatus.Pending ? "CONFIRM_PAYMENT" : null,
+        Refund = src.Refund is null
+            ? null
+            : new EntitlementRefundDetails
+            {
+                Id = src.Refund.Id,
+                Amount = src.Refund.Amount,
+                UnusedCreditQuantity = src.Refund.UnusedCreditQuantity,
+                Status = src.Refund.Status,
+                PaymentRefundStatus = src.Refund.PaymentRefundStatus,
+            },
+        Ledger = src.LedgerEntries.OrderByDescending(item => item.CreatedAt).Select(MapTo).ToList(),
+        LinkedBookingIds = src.LinkedBookingIds,
+    };
+
+    public EntitlementDetails MapTo(EntitlementEntity src) => new()
+    {
+        Id = src.Id,
+        CustomerId = src.CustomerId,
+        OrganizationId = src.OrganizationId,
+        OrganizationCustomDomain = src.Organization.CustomDomain ?? string.Empty,
+        PurchaseReference = src.PurchaseReference,
+        PricingId = src.PricingId,
+        ProductId = src.EntitlementPurchase?.ProductVersion?.ProductId ?? string.Empty,
+        GrantedQuantity = src.GrantedQuantity,
+        AvailableQuantity = src.GrantedQuantity +
+                            src.LedgerEntries
+                                .Where(item => item.TransactionType == CreditLedgerTransactionType.Released.ToPersistedValue() ||
+                                               item.TransactionType == CreditLedgerTransactionType.Adjusted.ToPersistedValue())
+                                .Sum(item => item.Quantity) -
+                            src.LedgerEntries.Where(item => item.TransactionType == CreditLedgerTransactionType.Consumed.ToPersistedValue() ||
+                                                            item.TransactionType == CreditLedgerTransactionType.Forfeited.ToPersistedValue() ||
+                                                            item.TransactionType == CreditLedgerTransactionType.Expired.ToPersistedValue())
+                                .Sum(item => item.Quantity),
+        ActivatesAt = src.ActivatesAt,
+        ExpiresAt = src.ExpiresAt,
+        Status = src.Status,
+        AutoRenew = src.AutoRenew,
+        CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+        Currency = src.Currency,
+        Restrictions = src.EntitlementPurchase is { } purchase && GetPricing(src) is { } pricing
+            ? MapToRestrictions(pricing, purchase.ProductVersion?.ProductId ?? string.Empty, purchase.ProductVersionId)
+            : null,
+        RenewalStatus = src.RenewalFailureReason is not null ? EntitlementRenewalStatus.Failed :
+            src.CancelAtPeriodEnd ? EntitlementRenewalStatus.Cancelled :
+            src.AutoRenew ? EntitlementRenewalStatus.Pending : EntitlementRenewalStatus.NotRequired,
+        NextRenewalAt = src.NextRenewalAt,
+        RenewalFailureReason = src.RenewalFailureReason,
+        Refund = src.RefundLinks.SingleOrDefault() is { } refund ? MapTo(refund) : null,
+        Ledger = src.LedgerEntries.OrderByDescending(item => item.CreatedAt).Select(MapTo).ToList(),
+        LinkedBookingIds = src.MarketplaceBookings
+            .Where(item => item.BookingId is not null)
+            .Select(item => item.BookingId!)
+            .Distinct()
+            .ToList(),
+    };
+
+    public EntitlementRefundDetails MapTo(EntitlementRefundLink src) => new()
+    {
+        Id = src.MarketplaceRefundId,
+        Amount = src.RefundAmount,
+        UnusedCreditQuantity = src.UnusedCreditQuantity,
+        Status = src.MarketplaceRefund.Status.ToMarketplaceRefundStatus(),
+        PaymentRefundStatus = src.MarketplaceRefund.PaymentRefundStatus,
+    };
+
+    public CreditLedgerEntryDetails MapTo(CreditLedgerEntry src) => new()
+    {
+        Id = src.Id,
+        BookingId = src.BookingId,
+        Quantity = src.Quantity,
+        TransactionType = CreditLedgerTransactionTypeExtensions.FromPersistedValue(src.TransactionType),
+        ReferenceKey = src.ReferenceKey,
+        CreatedAt = src.CreatedAt,
+    };
+
+    public CreditLedgerEntryDetails MapTo(CreditLedgerEntryModel src) => new()
+    {
+        Id = src.Id,
+        BookingId = src.BookingId,
+        Quantity = src.Quantity,
+        TransactionType = src.TransactionType,
+        ReferenceKey = src.ReferenceKey,
+        CreatedAt = src.CreatedAt,
+    };
+
     public MarketplacePurchaseHistoryDetails MapTo(MarketplacePurchaseHistoryEntry src) => new()
     {
         Id = $"marketplace-purchase-history:{src.SourceType}:{src.Id}",
@@ -82,6 +204,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         BookingFrom = src.BookingFrom,
         BookingUntil = src.BookingUntil,
         PaymentStatus = src.PaymentStatus,
+        PaymentMethod = src.PaymentMethod,
         ProductVersionId = src.ProductVersionId,
         ProductTitle = src.ProductTitle,
         TotalAmount = src.TotalAmount,
@@ -91,6 +214,10 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         CancellationReason = src.CancellationReason,
         RefundId = src.RefundId,
         BookingId = src.BookingId,
+        EntitlementStatus = src.EntitlementStatus,
+        CreditQuantity = src.CreditQuantity,
+        GrantedQuantity = src.GrantedQuantity,
+        AvailableQuantity = src.AvailableQuantity,
         IsDeleted = src.IsDeleted,
     };
 
@@ -817,6 +944,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 PaymentMethod = src.PaymentMethod,
                 InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
                 ProductPricing = ProductPricing.Empty(src.PricingId),
+                EntitlementId = src.EntitlementId,
                 CheckoutReturnUrl = src.CheckoutReturnUrl,
             },
         };
@@ -942,6 +1070,20 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 },
         });
 
+    private static ProductPricing? GetPricing(EntitlementEntity source) =>
+        source.EntitlementPurchase?.ProductPricing ??
+        source.EntitlementPurchase?.ProductVersion?.PricingOptions?.SingleOrDefault(item => item.Id == source.PricingId);
+
+    private static EntitlementRestrictionsDetails MapToRestrictions(ProductPricing pricing, string productId, string productVersionId) => new()
+    {
+        ProductId = productId,
+        ProductVersionId = productVersionId,
+        AvailableDays = pricing.AvailableDays ?? [],
+        MinDurationMinutes = pricing.MinDurationMinutes,
+        MaxDurationMinutes = pricing.MaxDurationMinutes,
+        NumberOfResourcesToBook = pricing.NumberOfResourcesToBook,
+    };
+
     private static OrganizationTagDetails MapToOrganizationTagDetails(Shared.Database.Entities.OrganizationTag src) => new()
     {
         Id = src.Id,
@@ -1043,6 +1185,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 PaidByOrganizationUniqueCustomDomain = src.PaidByOrganization?.CustomDomain,
                 Quantity = src.Quantity,
                 ProductVersionId = src.ProductVersion.Id,
+                EntitlementId = src.EntitlementId,
+                ConsumingCreditLedgerEntryId = src.Booking?.ConsumingCreditLedgerEntryId,
                 ProductPricing = src.ProductPricing,
                 BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
                 PaymentExpiry = src.PaymentExpiry,

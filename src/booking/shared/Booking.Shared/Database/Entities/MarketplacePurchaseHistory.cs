@@ -24,6 +24,10 @@ public class MarketplacePurchaseHistory : EntityBase
     public decimal? TotalAmount { get; set; }
     public string? Currency { get; set; }
     public string? SubscriptionStatus { get; set; }
+    public string? EntitlementStatus { get; set; }
+    public int CreditQuantity { get; set; }
+    public int GrantedQuantity { get; set; }
+    public int AvailableQuantity { get; set; }
     public bool AutoRenew { get; set; }
     public bool CancelAtPeriodEnd { get; set; }
     public bool IsDeleted { get; set; }
@@ -37,6 +41,10 @@ public class MarketplacePurchaseHistory : EntityBase
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? MarketplaceBookingSubscriptionId { get; set; }
     public virtual MarketplaceBookingSubscription? MarketplaceBookingSubscription { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? EntitlementPurchaseId { get; set; }
+    public virtual EntitlementPurchase? EntitlementPurchase { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
@@ -73,11 +81,13 @@ public class MarketplacePurchaseHistoryConfiguration : IEntityTypeConfiguration<
         builder.Property(item => item.TotalAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(item => item.SubscriptionStatus).HasMaxLength(Constants.MaxMarketplaceBookingSubscriptionStatusLength);
+        builder.Property(item => item.EntitlementStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
         builder.Property(item => item.CancellationReason).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.LatestRefundStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
 
         builder.HasOne(item => item.MarketplaceBooking).WithMany().HasForeignKey(item => item.MarketplaceBookingId);
         builder.HasOne(item => item.MarketplaceBookingSubscription).WithMany().HasForeignKey(item => item.MarketplaceBookingSubscriptionId);
+        builder.HasOne(item => item.EntitlementPurchase).WithMany().HasForeignKey(item => item.EntitlementPurchaseId);
         builder.HasOne(item => item.Organization).WithMany().HasForeignKey(item => item.OrganizationId);
         builder.HasOne(item => item.ProductVersion).WithMany().HasForeignKey(item => item.ProductVersionId);
         builder.HasOne(item => item.Customer).WithMany().HasForeignKey(item => item.CustomerId);
@@ -98,6 +108,7 @@ public class MarketplacePurchaseHistoryConfiguration : IEntityTypeConfiguration<
         });
         builder.HasIndex(item => item.MarketplaceBookingId).IsUnique().HasFilter("\"MarketplaceBookingId\" IS NOT NULL");
         builder.HasIndex(item => item.MarketplaceBookingSubscriptionId).IsUnique().HasFilter("\"MarketplaceBookingSubscriptionId\" IS NOT NULL");
+        builder.HasIndex(item => item.EntitlementPurchaseId).IsUnique().HasFilter("\"EntitlementPurchaseId\" IS NOT NULL");
         builder.HasIndex(item => item.ProductVersionId);
         builder.HasIndex(item => item.CustomerId);
         builder.HasIndex(item => item.DeletedByCustomerId);

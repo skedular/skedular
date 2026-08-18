@@ -135,7 +135,7 @@ public class EventMapper : IEventMapper
                 Code = organizationAfterState.Offering.Code.ToOfferingCode(),
                 Start = organizationAfterState.Offering.Start.ToDateTimeOffset(),
                 End = organizationAfterState.Offering.End.ToDateTimeOffset(),
-                ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray(),
+                ActiveCustomerIds = [.. organizationAfterState.Offering.ActiveCustomerIds],
                 SpacesTrialStartedAt = organizationAfterState.Offering.SpacesTrialStartedAt?.ToDateTimeOffset(),
                 SpacesTrialEndsAt = organizationAfterState.Offering.SpacesTrialEndsAt?.ToDateTimeOffset(),
                 SpacesProductEnabled = organizationAfterState.Offering.SpacesProductEnabled,

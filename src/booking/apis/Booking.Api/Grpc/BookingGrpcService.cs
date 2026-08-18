@@ -73,7 +73,8 @@ public class BookingGrpcService(
                 request.Where.LocationIds,
                 request.Where.TeamIds,
                 request.Where.CustomerIds,
-                []),
+                [],
+                null),
             [
                 .. request.OrderBy.Select(item =>
                 {
@@ -140,7 +141,8 @@ public class BookingGrpcService(
                 request.Where.LocationIds,
                 request.Where.TeamIds,
                 request.Where.CustomerIds,
-                []),
+                [],
+                null),
             [
                 .. request.OrderBy.Select(item =>
                 {

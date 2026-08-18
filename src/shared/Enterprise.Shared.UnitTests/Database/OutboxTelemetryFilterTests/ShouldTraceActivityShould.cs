@@ -5,6 +5,7 @@ using KafkaTelemetryKeys = Enterprise.Shared.Outbox.Kafka.TelemetryKeys;
 
 namespace Enterprise.Shared.UnitTests.Database.OutboxTelemetryFilterTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class ShouldTraceActivityShould
 {
     private const string NpgsqlActivitySourceName = "Npgsql";

@@ -59,6 +59,9 @@ type PricingOptionForm = {
   acceptedPaymentMethods: string[];
   availableDays: string[];
   requiredDaysPerWeek: string;
+  fulfillmentType: string;
+  entitlementCreditQuantity: string;
+  entitlementValidityDays: string;
 };
 
 type CancellationRefundRuleForm = {
@@ -191,6 +194,9 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   acceptedPaymentMethods: [],
   availableDays: [],
   requiredDaysPerWeek: '',
+  fulfillmentType: 'RESERVATION',
+  entitlementCreditQuantity: '',
+  entitlementValidityDays: '',
 });
 
 const isSubscriptionCadence = (cadence?: string | null) =>
@@ -434,6 +440,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             }
           }
           pricingOptions {
+            id
             index
             listingMetadata {
               title
@@ -458,6 +465,9 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             maxAllowedResourcesLockTimePaidViaBankTransfer
             billingMode
             acceptedPaymentMethods
+            fulfillmentType
+            entitlementCreditQuantity
+            entitlementValidityDays
           }
         }
         productPricingCadences {
@@ -615,11 +625,14 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             pricingOptions:
               rootData.product.pricingOptions.length > 0
                 ? rootData.product.pricingOptions.map((pricingOption) => ({
-                    id: uuid(),
+                    id: pricingOption.id,
                     title: pricingOption.listingMetadata.title ?? null,
                     subTitle: pricingOption.listingMetadata.subTitle ?? null,
                     cadence: pricingOption.purchaseCadence,
                     price: pricingOption.price.toString(),
+                    fulfillmentType: (pricingOption as unknown as { fulfillmentType?: string }).fulfillmentType ?? 'RESERVATION',
+                    entitlementCreditQuantity: (pricingOption as unknown as { entitlementCreditQuantity?: number }).entitlementCreditQuantity?.toString() ?? '',
+                    entitlementValidityDays: (pricingOption as unknown as { entitlementValidityDays?: number }).entitlementValidityDays?.toString() ?? '',
                     supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
                     numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
                     minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',
@@ -706,6 +719,11 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             purchaseCadence: pricingOption.cadence as ProductPricingCadence,
             bookingCadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
+            fulfillmentType: pricingOption.fulfillmentType as never,
+            entitlementCreditQuantity:
+              pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,
+            entitlementValidityDays:
+              pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
             availableDays: pricingOption.availableDays,
             requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
             supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
@@ -768,6 +786,11 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               purchaseCadence: pricingOption.cadence as ProductPricingCadence,
               bookingCadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
+              fulfillmentType: pricingOption.fulfillmentType as never,
+              entitlementCreditQuantity:
+                pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,
+              entitlementValidityDays:
+                pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
               availableDays: pricingOption.availableDays,
               requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
               supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
@@ -823,6 +846,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         <Form
           onSubmit={() => undefined}
           initialValues={initialProductValues}
+          initialValuesEqual={() => true}
           validate={validateProductDetails}
           render={({ handleSubmit, values, form, errors }) => {
             debounceSetTitle(values!.title);

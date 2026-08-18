@@ -3,6 +3,7 @@ using Booking.Shared.Services;
 
 namespace Booking.Shared.UnitTests.Services.CancellationDecisionServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class ResolveCustomerDecisionShould
 {
     [Theory]

@@ -5,6 +5,7 @@ using static Testing.Shared.Assertions.LogAssertions;
 
 namespace Booking.Shared.UnitTests.Services.HostCommissionServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class CalculateShould
 {
     [Theory]

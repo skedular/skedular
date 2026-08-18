@@ -125,7 +125,7 @@ public class EventMapper : IEventMapper
                 EntitlementReasonCode = string.IsNullOrWhiteSpace(organizationAfterState.Offering.EntitlementReasonCode)
                     ? null
                     : organizationAfterState.Offering.EntitlementReasonCode,
-                ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray(),
+                ActiveCustomerIds = [.. organizationAfterState.Offering.ActiveCustomerIds],
             },
             Type = organizationAfterState.Type switch
             {

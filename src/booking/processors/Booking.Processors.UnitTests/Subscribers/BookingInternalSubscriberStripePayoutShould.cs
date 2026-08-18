@@ -1,7 +1,9 @@
+using Api.Shared.Services.Models;
 using Booking.Processors.Subscribers;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
 using Stripe;
@@ -16,6 +18,101 @@ namespace Booking.Processors.UnitTests.Subscribers;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class BookingInternalSubscriberStripePayoutShould
 {
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Correlate_Entitlement_Purchase_Checkout_Webhook(
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IEntitlementPurchaseRepository purchaseRepository,
+        [Frozen]
+        IEntitlementPurchaseService entitlementPurchaseService,
+        [Frozen]
+        EventContext eventContext,
+        BookingInternalSubscriber sut,
+        CancellationToken cancellationToken)
+    {
+        A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
+        A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
+        A.CallTo(() => checkoutRepository.GetByStripeCheckoutSessionIdAsync("cs_purchase", cancellationToken)).Returns((StripeCheckoutSession?)null);
+        A.CallTo(() => purchaseRepository.GetByIdAsync("purchase_1", cancellationToken)).Returns(new EntitlementPurchase
+        {
+            Id = "purchase_1",
+            StripeCheckoutSessionId = "cs_purchase",
+        });
+        var payload =
+            "{\"id\":\"evt_purchase\",\"created\":1785232800,\"type\":\"checkout.session.completed\",\"data\":{\"object\":{\"id\":\"cs_purchase\",\"object\":\"checkout.session\",\"client_reference_id\":\"purchase_1\",\"payment_status\":\"paid\",\"payment_intent\":\"pi_purchase\"}}}";
+        var @event = new BookingInternalEvent
+        {
+            Metadata = new BookingInternalMetadata
+            {
+                Type = BookingInternalType.StripeConnectAccountWebhookEventReceived,
+            },
+            StripeConnectAccountWebhookEventPayload = payload,
+        };
+
+        await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
+
+        A.CallTo(() => entitlementPurchaseService.UpdatePaymentStatusAsync(
+                "purchase_1",
+                PaymentStatus.Confirmed,
+                A<DateTimeOffset>._,
+                cancellationToken))
+            .MustHaveHappenedOnceExactly();
+        A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository.GetByStripeCheckoutSessionIdAsync(
+                "cs_purchase",
+                cancellationToken))
+            .MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Ignore_Entitlement_Purchase_Webhook_For_A_Different_Checkout_Session(
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IStripeCheckoutSessionRepository checkoutRepository,
+        [Frozen]
+        IEntitlementPurchaseRepository purchaseRepository,
+        [Frozen]
+        IEntitlementPurchaseService entitlementPurchaseService,
+        [Frozen]
+        EventContext eventContext,
+        BookingInternalSubscriber sut,
+        CancellationToken cancellationToken)
+    {
+        A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
+        A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
+        A.CallTo(() => checkoutRepository.GetByStripeCheckoutSessionIdAsync("cs_unrelated", cancellationToken))
+            .Returns((StripeCheckoutSession?)null);
+        A.CallTo(() => purchaseRepository.GetByIdAsync("purchase_1", cancellationToken)).Returns(new EntitlementPurchase
+        {
+            Id = "purchase_1",
+            StripeCheckoutSessionId = "cs_purchase",
+        });
+        var payload =
+            "{\"id\":\"evt_purchase\",\"created\":1785232800,\"type\":\"checkout.session.completed\",\"data\":{\"object\":{\"id\":\"cs_unrelated\",\"object\":\"checkout.session\",\"client_reference_id\":\"purchase_1\",\"payment_status\":\"paid\",\"payment_intent\":\"pi_unrelated\"}}}";
+        var @event = new BookingInternalEvent
+        {
+            Metadata = new BookingInternalMetadata
+            {
+                Type = BookingInternalType.StripeConnectAccountWebhookEventReceived,
+            },
+            StripeConnectAccountWebhookEventPayload = payload,
+        };
+
+        await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
+
+        A.CallTo(() => entitlementPurchaseService.UpdatePaymentStatusAsync(
+                A<string>._,
+                A<PaymentStatus>._,
+                A<DateTimeOffset>._,
+                cancellationToken))
+            .MustNotHaveHappened();
+    }
+
     [Theory]
     [AutoFakeItEasyData]
     public async Task Consume_Serialized_Charge_Webhook(

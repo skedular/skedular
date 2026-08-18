@@ -63,7 +63,9 @@ public class EntityMapper : IEntityMapper
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             Type = src.Type.ToProductType(),
-            Currency = src.Currency.ToCurrency(),
+            Currency = string.IsNullOrWhiteSpace(src.Currency)
+                ? Currency.Nzd
+                : src.Currency.ToCurrency(),
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = [.. MapTo(src.OrganizationTags)],

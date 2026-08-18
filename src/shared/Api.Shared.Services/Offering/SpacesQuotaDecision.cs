@@ -18,8 +18,8 @@ public record SpacesQuotaDecision(
     DateTimeOffset CurrentPeriodStartUtc,
     DateTimeOffset CurrentPeriodEndUtc)
 {
-    public IReadOnlyList<SpacesQuotaUpgradePlan> UpgradePlans { get; init; } = [];
-    public SpacesAccessDecision? AccessDecision { get; init; }
+    public IReadOnlyList<SpacesQuotaUpgradePlan> UpgradePlans { get; set; } = [];
+    public SpacesAccessDecision? AccessDecision { get; set; }
 
     public int TotalAttemptedInstanceCount => AttemptedCurrentPeriodCount + ExcludedOutOfPeriodCount;
 }

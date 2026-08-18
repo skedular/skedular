@@ -6,8 +6,8 @@ namespace Location.Api.GraphQL.Location;
 public class HostListingProductReadyDetails
 {
     [GraphQLName("locationId")]
-    public string LocationId { get; init; } = string.Empty;
+    public string LocationId { get; set; } = string.Empty;
 
     [GraphQLName("product")]
-    public HostListingProductReadyProductDetails? Product { get; init; }
+    public HostListingProductReadyProductDetails? Product { get; set; }
 }

@@ -9,8 +9,10 @@ import { deskSharingWithSkedularTheFutureOfFlexibleWorkspacesArticle } from "./b
 import { unityhubBecomesSkedularArticle } from "./blog-post-unityhub-becomes-skedular";
 import { unifiedHostExperienceArticle } from "./blog-post-unified-host-experience";
 import { reliableBookingsHonestRefundsArticle } from "./blog-post-reliable-bookings-honest-refunds";
+import { creditBasedBookingEntitlementsArticle } from "./blog-post-credit-based-booking-entitlements";
 
 export const resourceArticles: ResourceArticle[] = [
+  creditBasedBookingEntitlementsArticle,
   reliableBookingsHonestRefundsArticle,
   unifiedHostExperienceArticle,
   skedularEvolutionArticle,

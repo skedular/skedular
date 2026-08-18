@@ -59,6 +59,8 @@ export const getOrganizationRefundBaseLink = (integratedPlatform: string | undef
   `${getOrganizationRefundsBaseLink(integratedPlatform, id)}/${refundId}`;
 export const getOrganizationSubscriptionBaseLink = (integratedPlatform: string | undefined, id: string, subscriptionId: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/purchases/${subscriptionId}`;
+export const getOrganizationEntitlementPurchaseBaseLink = (integratedPlatform: string | undefined, id: string, purchaseId: string) =>
+  `${getOrganizationBaseLink(integratedPlatform, id)}/purchases/entitlements/${purchaseId}`;
 export const getOrganizationUsersBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/users`;
 export const getOrganizationPaymentsBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/payments`;
 export const getOrganizationUserProfileBaseLink = (integratedPlatform: string | undefined, id: string, customerId: string) =>

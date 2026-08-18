@@ -20,6 +20,10 @@ public class Booking : EntityBaseWithDeleted
     public bool CancellationPolicyOverridden { get; set; }
     public string? CancellationOverrideReason { get; set; }
 
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? ConsumingCreditLedgerEntryId { get; set; }
+    public virtual CreditLedgerEntry? ConsumingCreditLedgerEntry { get; set; }
+
     public virtual MarketplaceBooking? MarketplaceBooking { get; set; }
     public virtual ICollection<OrganizationArrearsInvoiceLine> OrganizationArrearsInvoiceLines { get; set; } = [];
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
@@ -58,6 +62,8 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasOne(item => item.LastModifiedByCustomer).WithMany(item => item.LastModifiedBookings);
         builder.HasOne(item => item.DeletedByCustomer).WithMany(item => item.DeletedBookings);
         builder.HasOne(item => item.RecurringBooking).WithMany(item => item.Bookings);
+        builder.HasOne(item => item.ConsumingCreditLedgerEntry).WithOne(item => item.ConsumingBooking)
+            .HasForeignKey<Booking>(item => item.ConsumingCreditLedgerEntryId);
 
         builder.HasIndex(item => item.From);
         builder.HasIndex(item => item.Until);

@@ -97,6 +97,83 @@ public class MarketplaceBookingSubscriptionDetails : Node
         };
     }
 
+    [GraphQLName("linkedBookings")]
+    [UseResolverScope]
+    public async Task<Connection<BookingEdge>> GetLinkedBookingsAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        [Service]
+        IBookingService bookingService,
+        [Service]
+        IGraphQlMapper graphQlMapper,
+        CancellationToken cancellationToken)
+    {
+        var organization = InvolvedOrganizationIds.FirstOrDefault();
+        var recurringBookingIds = RecurringBookings
+            .Select(item => item.Id)
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Distinct()
+            .ToArray();
+
+        if (recurringBookingIds.Length == 0)
+        {
+            return new Connection<BookingEdge>
+            {
+                Edges = [],
+                TotalCount = 0,
+                PageInfo = new PageInfo
+                {
+                    HasPreviousPage = false,
+                    HasNextPage = false,
+                },
+            };
+        }
+
+        var (paginatedInfo, entries, totalCount) = await bookingService.GetPaginatedBookingsAsync(
+            new PaginationInputParam(after, first, before, last),
+            new BookingSearchCriteria(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                [],
+                null,
+                null,
+                organization.Id,
+                organization.CustomDomain,
+                [],
+                [],
+                [],
+                recurringBookingIds,
+                null),
+            [new BookingOrder(OrderDirection.Ascending, BookingOrderField.From)],
+            false,
+            cancellationToken);
+
+        return new Connection<BookingEdge>
+        {
+            Edges = entries.Select(graphQlMapper.MapTo),
+            TotalCount = totalCount,
+            PageInfo = new PageInfo
+            {
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                HasNextPage = paginatedInfo.HasNextPage,
+                StartCursor = paginatedInfo.StartCursor,
+                EndCursor = paginatedInfo.EndCursor,
+            },
+        };
+    }
+
     // Kept as a non-GraphQL compatibility helper for callers that construct this
     // details object directly. The GraphQL field above always uses the repository.
     [GraphQLIgnore]

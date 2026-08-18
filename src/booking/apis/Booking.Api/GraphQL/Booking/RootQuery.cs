@@ -222,7 +222,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 where.LocationIds.ToSafeCollection(),
                 where.TeamIds.ToSafeCollection(),
                 where.CustomerIds.ToSafeCollection(),
-                where.RecurringBookingIds.ToSafeCollection()),
+                where.RecurringBookingIds.ToSafeCollection(),
+                null),
             [.. orderBy.ToSafeCollection().Select(item => new BookingOrder(item.Direction, item.Field))],
             false,
             cancellationToken);

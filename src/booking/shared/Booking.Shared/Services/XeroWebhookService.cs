@@ -61,14 +61,20 @@ public class XeroWebhookService(
 
     public async Task ProcessAsync(string payloadJson, CancellationToken cancellationToken)
     {
+        logger.LogInformation("Processing Xero webhook payload. PayloadLength={PayloadLength}", payloadJson.Length);
         var syncTargets = await GetSyncTargetsAsync(payloadJson, cancellationToken);
+        logger.LogInformation("Resolved Xero webhook sync targets. SyncTargetCount={SyncTargetCount}", syncTargets.Count);
         if (syncTargets.Count == 0)
         {
+            logger.LogWarning("Xero webhook produced no sync targets.");
             return;
         }
 
         foreach (var syncTarget in syncTargets)
         {
+            logger.LogInformation(
+                "Dispatching Xero webhook sync target. OrganizationId={OrganizationId}, LocalEntityType={LocalEntityType}, LocalEntityId={LocalEntityId}, ExternalInvoiceIdHint={ExternalInvoiceIdHint}",
+                syncTarget.OrganizationId, syncTarget.LocalEntityType, syncTarget.LocalEntityId, syncTarget.ExternalInvoiceIdHint);
             switch (syncTarget.LocalEntityType)
             {
                 case AccountingEntityTypeConstants.OrganizationArrearsInvoice:
@@ -101,6 +107,7 @@ public class XeroWebhookService(
         }
 
         var eventElements = eventsElement.EnumerateArray().ToList();
+        logger.LogInformation("Xero webhook contains events. EventCount={EventCount}", eventElements.Count);
         var externalInvoiceIds = eventElements
             .Select(eventElement => IsInvoiceEvent(eventElement) ? GetOptionalString(eventElement, "resourceId") : null)
             .Where(externalInvoiceId => !string.IsNullOrWhiteSpace(externalInvoiceId))
@@ -115,6 +122,9 @@ public class XeroWebhookService(
             AccountingProviderConstants.Xero,
             externalInvoiceIds,
             cancellationToken);
+        logger.LogInformation(
+            "Loaded accounting records for Xero webhook events. ExternalInvoiceIdCount={ExternalInvoiceIdCount}, LinkCount={LinkCount}, InvoiceInstanceCount={InvoiceInstanceCount}",
+            externalInvoiceIds.Count, invoiceLinks.Count, invoiceInstances.Count);
         var invoiceLinkLookup = invoiceLinks
             .Where(invoiceLink => !string.IsNullOrWhiteSpace(invoiceLink.ExternalInvoiceId))
             .ToDictionary(invoiceLink => invoiceLink.ExternalInvoiceId!, StringComparer.Ordinal);
@@ -135,6 +145,7 @@ public class XeroWebhookService(
             var tenantId = GetOptionalString(eventElement, "tenantId");
             if (string.IsNullOrWhiteSpace(externalInvoiceId))
             {
+                logger.LogWarning("Skipping Xero invoice webhook event without resource ID.");
                 continue;
             }
 
@@ -149,13 +160,23 @@ public class XeroWebhookService(
                     accountingInvoiceLink = await TryResolveRepeatingInvoiceLinkAsync(externalInvoiceId, tenantId, cancellationToken);
                     if (accountingInvoiceLink is null)
                     {
+                        logger.LogWarning(
+                            "Could not resolve accounting link for Xero webhook invoice. ExternalInvoiceId={ExternalInvoiceId}, TenantId={TenantId}",
+                            externalInvoiceId, tenantId);
                         continue;
                     }
                 }
             }
 
+            logger.LogInformation(
+                "Resolved Xero webhook invoice to accounting link. ExternalInvoiceId={ExternalInvoiceId}, TenantId={TenantId}, AccountingLinkId={AccountingLinkId}, LocalEntityType={LocalEntityType}, LocalEntityId={LocalEntityId}",
+                externalInvoiceId, tenantId, accountingInvoiceLink.Id, accountingInvoiceLink.LocalEntityType, accountingInvoiceLink.LocalEntityId);
+
             if (!await MatchesTenantAsync(accountingInvoiceLink.OrganizationId, tenantId, tenantCache, cancellationToken))
             {
+                logger.LogWarning(
+                    "Skipping Xero webhook event because tenant does not match accounting link organization. ExternalInvoiceId={ExternalInvoiceId}, TenantId={TenantId}, OrganizationId={OrganizationId}",
+                    externalInvoiceId, tenantId, accountingInvoiceLink.OrganizationId);
                 continue;
             }
 

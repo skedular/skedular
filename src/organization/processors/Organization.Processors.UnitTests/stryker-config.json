@@ -25,9 +25,7 @@
       "!Startup.cs",
       "!Program.cs",
       "!**/*.g.cs",
-      "!**/*Migrations/*",
-      "!**/Repositories/*",
-      "!**/Database/*"
+      "!**/*Migrations/*"
     ]
   }
 }

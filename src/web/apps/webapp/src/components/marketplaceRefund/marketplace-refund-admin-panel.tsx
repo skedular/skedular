@@ -271,7 +271,7 @@ const MarketplaceRefundAdminPanel = ({ refund }: Props) => {
             </Button>
           </>
         ) : null}
-        {status === 'REQUESTED' || status === 'UNDER_REVIEW' || status === 'APPROVED' ? (
+        {status === 'REQUESTED' || status === 'UNDER_REVIEW' ? (
           <Button
             size="small"
             color="warning"

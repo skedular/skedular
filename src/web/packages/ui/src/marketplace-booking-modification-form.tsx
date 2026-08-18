@@ -7,16 +7,16 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import type { DateRange } from '@mui/x-date-pickers-pro/models';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { type Dayjs } from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
+import TwoButtonsDialogActions from './commons/two-buttons-dialog-actions';
 import SettingsSectionCard from './settings-section-card';
 import StackColumn from './stack-column';
 import StackRow from './stack-row';
 import { BodyIconTypography } from './typography';
-import TwoButtonsDialogActions from './commons/two-buttons-dialog-actions';
 
 export type MarketplaceBookingResourceOption = { id: string; name: string; available: boolean };
 export type MarketplaceBookingLocationOption = { id: string; name: string };

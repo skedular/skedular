@@ -266,7 +266,8 @@ public class BookingServiceShould
             [],
             [],
             customerIds,
-            []);
+            [],
+            null);
 
     private static Organization CreateOrganization(string id, string type, string customerId, string role) =>
         new()

@@ -5,6 +5,7 @@ namespace Booking.Shared.Models;
 
 public class MarketplaceBooking : ModelBase
 {
+    public string? EntitlementId { get; set; }
     public PaymentStatus PaymentStatus { get; set; }
     public bool IsPaymentRequired { get; set; }
     public int Quantity { get; set; }

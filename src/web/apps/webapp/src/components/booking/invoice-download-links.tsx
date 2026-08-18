@@ -1,6 +1,6 @@
-import { BodyIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { PdfIcon } from '@/components/icons';
 import Link from '@mui/material/Link';
+import { BodyIconTypography, SmallIconTypography, StackColumn } from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { memo } from 'react';
@@ -20,7 +20,7 @@ type Props = {
   size?: 'body' | 'small';
 };
 
-const InvoiceDownloadLinks = ({ emptyLabel, invoices, legacyInvoiceUrl, linkLabel = 'Download Invoice', size = 'small' }: Props) => {
+const InvoiceDownloadLinks = ({ emptyLabel, invoices, legacyInvoiceUrl, linkLabel = 'View invoice', size = 'small' }: Props) => {
   const validInvoices = invoices.filter((item) => !!item.invoiceUrl);
 
   if (validInvoices.length === 0) {

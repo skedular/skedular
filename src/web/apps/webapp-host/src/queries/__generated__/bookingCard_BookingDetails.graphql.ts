@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2712a88112496bb214615909ec64071b>>
+ * @generated SignedSource<<02ddb4d8b9857705e135345175bb3b96>>
  * @lightSyntaxTransform
  */
 
@@ -32,6 +32,10 @@ export type bookingCard_BookingDetails$data = {
       }>;
     };
   }>;
+  readonly cancellationAvailability: {
+    readonly creditOutcome: string | null | undefined;
+    readonly isCreditFunded: boolean;
+  };
   readonly category: {
     readonly category: BookingCategory;
     readonly name: string;
@@ -62,6 +66,7 @@ export type bookingCard_BookingDetails$data = {
     readonly name: string;
   }>;
   readonly marketplaceBooking: {
+    readonly entitlementPurchaseId: string | null | undefined;
     readonly id: string;
     readonly invoiceUrl: string | null | undefined;
     readonly isPaymentRequired: boolean;
@@ -159,6 +164,31 @@ return {
   "name": "bookingCard_BookingDetails",
   "selections": [
     (v0/*:: as any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "MarketplaceCancellationAvailabilityDetails",
+      "kind": "LinkedField",
+      "name": "cancellationAvailability",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isCreditFunded",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "creditOutcome",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -359,6 +389,13 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "entitlementPurchaseId",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "isPaymentRequired",
           "storageKey": null
         },
@@ -545,6 +582,6 @@ return {
 };
 })();
 
-(node as any).hash = "66dec22a599ae3e91e37983937f63b8c";
+(node as any).hash = "9622201ac5ff6910afd9966dc79e2c88";
 
 export default node;

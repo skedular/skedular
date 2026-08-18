@@ -4,9 +4,11 @@ using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
+using Booking.Shared.Models.Entitlements;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
+using Booking.Shared.Services.Entitlements;
 using Booking.Shared.Workflows;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
@@ -144,6 +146,8 @@ public class MarketplaceBookingService(
     IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
     IMarketplaceBookingFailureService marketplaceBookingFailureService,
     IMarketplaceBookingFailureNotificationService marketplaceBookingFailureNotificationService,
+    IEntitlementBookingService entitlementBookingService,
+    IEntitlementCancellationService entitlementCancellationService,
     ILogger<MarketplaceBookingService> logger) : IMarketplaceBookingService
 {
     public async Task<MarketplaceBookingModificationResult> ModifyAsync(
@@ -220,6 +224,20 @@ public class MarketplaceBookingService(
                 "The purchased product is no longer available for booking changes.");
         }
 
+        if (marketplaceBooking.EntitlementId is { } entitlementId)
+        {
+            var entitlement = await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlementId, cancellationToken);
+            if (entitlement is null ||
+                entitlement.Status != EntitlementStatus.Active ||
+                entitlement.PricingId != marketplaceBooking.ProductPricing.Id ||
+                request.From < entitlement.ActivatesAt ||
+                request.Until > entitlement.ExpiresAt)
+            {
+                return ModificationError(MarketplaceBookingModificationErrorCode.NotEligible,
+                    "The requested date is outside the credit entitlement validity window.");
+            }
+        }
+
         var resourceIds = (request.ResourceIds ?? [.. existingBooking.InvolvedResources.Select(resource => resource.Id)])
             .Where(id => !string.IsNullOrWhiteSpace(id)).Distinct().ToList();
         var maxResourceCount = ResolveRequestedResourceCount(productVersion.Type == ProductTypeConstants.Event, marketplaceBooking);
@@ -250,7 +268,8 @@ public class MarketplaceBookingService(
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(resourceIds, true, cancellationToken);
         var productTagIds = productVersion.OrganizationTags.Where(tag => tag.Type == OrganizationTagTypeConstants.Product).Select(tag => tag.Id)
             .ToHashSet();
-        if (resources.Count != resourceIds.Count || resources.Any(resource => resource.OrganizationTags.All(tag => !productTagIds.Contains(tag.Id))))
+        if (resources.Count != resourceIds.Count ||
+            resources.Any(resource => resource.OrganizationTags.All(tag => !productTagIds.Contains(tag.Id))))
         {
             return ModificationError(MarketplaceBookingModificationErrorCode.InvalidResourceSelection,
                 "Every selected resource must be eligible for the purchased product.");
@@ -519,6 +538,14 @@ public class MarketplaceBookingService(
             {
                 BookingCadence = marketplaceBooking.ProductPricing.BookingCadence,
             };
+
+        if (marketplaceBooking.ProductPricing.FulfillmentType == ProductPricingFulfillmentType.Entitlement &&
+            marketplaceBooking.EntitlementId is null)
+        {
+            throw new InvalidOperationException(
+                "Token-based pricing must be purchased through the entitlement purchase flow and cannot be added as a booking.");
+        }
+
         // Stripe checkout is created asynchronously in Temporal, so we persist the exact
         // storefront page that should receive the user again after success or cancellation.
         marketplaceBooking.CheckoutReturnUrl = NormalizeCheckoutReturnUrl(marketplaceBooking.CheckoutReturnUrl);
@@ -548,6 +575,9 @@ public class MarketplaceBookingService(
         }
 
         var isEventProduct = productVersion.Type == ProductTypeConstants.Event;
+        // An entitlement fulfillment pricing without an entitlement reference is the
+        // deferred-credit purchase itself. Once an entitlement is selected, this is a
+        // normal resource booking whose credit is the payment instrument.
         NormalizeEventQuantity(isEventProduct, marketplaceBooking);
         var requestedResourceCount = ResolveRequestedResourceCount(isEventProduct, marketplaceBooking);
         IReadOnlyList<Resource> resources = [];
@@ -566,10 +596,12 @@ public class MarketplaceBookingService(
         }
 
         marketplaceBooking.Id = randomHelper.Generate();
-        marketplaceBooking.IsPaymentRequired = recurringBooking is null;
-        marketplaceBooking.PaymentStatus = recurringBooking is null ? PaymentStatus.Pending : PaymentStatus.NotSet;
+        var isCreditBooking = marketplaceBooking.EntitlementId is not null;
+        marketplaceBooking.IsPaymentRequired = !isCreditBooking && recurringBooking is null;
+        marketplaceBooking.PaymentStatus =
+            isCreditBooking ? PaymentStatus.Confirmed : recurringBooking is null ? PaymentStatus.Pending : PaymentStatus.NotSet;
 
-        if (!marketplaceBooking.ProductPricing.AcceptedPaymentMethods.Contains(marketplaceBooking.PaymentMethod))
+        if (!isCreditBooking && !marketplaceBooking.ProductPricing.AcceptedPaymentMethods.Contains(marketplaceBooking.PaymentMethod))
         {
             throw new BookingPaymentMethodNotAccepted();
         }
@@ -730,13 +762,13 @@ public class MarketplaceBookingService(
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
-        if (recurringBooking is null)
+        if (recurringBooking is null && !isCreditBooking)
         {
             await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingAsync(
                 bookingEntity, null, cancellationToken);
         }
 
-        if (recurringBooking is null)
+        if (recurringBooking is null && !isCreditBooking)
         {
             if (marketplaceBooking.BillingMode == ProductPricingBillingMode.InArrears)
             {
@@ -777,6 +809,22 @@ public class MarketplaceBookingService(
         try
         {
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            if (isCreditBooking)
+            {
+                var entitlementCustomerId = marketplaceBooking.EntitlementId is { } entitlementId
+                    ? (await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlementId, cancellationToken))?.CustomerId
+                      ?? throw new EntitlementCreditUnavailable()
+                    : customer.Id;
+                await entitlementBookingService.ConsumeAsync(
+                    entitlementCustomerId,
+                    booking.Id,
+                    marketplaceBooking.EntitlementId,
+                    $"marketplace-booking:{booking.Id}",
+                    booking.From,
+                    true,
+                    cancellationToken);
+            }
+
             if (ownsTransaction)
             {
                 await transaction!.CommitAsync(cancellationToken);
@@ -1114,7 +1162,8 @@ public class MarketplaceBookingService(
             }
         }
 
-        var refund = createRefund
+        var isCreditFunded = !string.IsNullOrWhiteSpace(marketplaceBooking.EntitlementId);
+        var refund = createRefund && !isCreditFunded
             ? await marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken,
                 ignoreCancellationPolicy)
             : null;
@@ -1123,6 +1172,21 @@ public class MarketplaceBookingService(
         await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingAsync(
             existingBooking, refund, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(marketplaceBooking.EntitlementId))
+        {
+            var creditRestoreQuote = marketplaceRefundPolicyService.GetQuote(
+                marketplaceBooking.ProductPricing,
+                existingBooking.From,
+                timeProvider.GetUtcNow());
+            await entitlementCancellationService.CancelBookingAsync(
+                deletedBooking.Id,
+                creditRestoreQuote.CanCancel,
+                cancellationOverrideReason ?? "Marketplace booking cancelled.",
+                true,
+                cancellationToken);
+        }
+
         await transaction.CommitAsync(cancellationToken);
 
         await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);

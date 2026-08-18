@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<09a11adb36a275190981ed186c1d4b9d>>
+ * @generated SignedSource<<1efccfd94d1ee2f68d70422556317ff6>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,7 @@ export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
+export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type locationPricingEditQuery$variables = {
   locationId: string;
 };
@@ -45,6 +46,9 @@ export type locationPricingEditQuery$data = {
           readonly minutesBefore: number;
           readonly refundPercentage: number;
         }>;
+        readonly entitlementCreditQuantity: number | null | undefined;
+        readonly entitlementValidityDays: number | null | undefined;
+        readonly fulfillmentType: ProductPricingFulfillmentType;
         readonly id: string;
         readonly isTaxInclusive: boolean;
         readonly listingMetadata: {
@@ -315,6 +319,27 @@ v3 = [
               {
                 "alias": null,
                 "args": null,
+                "kind": "ScalarField",
+                "name": "fulfillmentType",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "entitlementCreditQuantity",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "entitlementValidityDays",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": "ListingMetadata",
                 "kind": "LinkedField",
                 "name": "listingMetadata",
@@ -359,16 +384,16 @@ return {
     "selections": (v3/*:: as any*/)
   },
   "params": {
-    "cacheID": "cd67ec12a20d63b1f91fb9249348f449",
+    "cacheID": "907bd0cab33fd679398eba1d306a7a71",
     "id": null,
     "metadata": {},
     "name": "locationPricingEditQuery",
     "operationKind": "query",
-    "text": "query locationPricingEditQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    id\n    canModify\n    products {\n      id\n      currency {\n        type\n      }\n      listingMetadata {\n        title\n        about\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      pricingOptions {\n        id\n        price\n        bookingCadence\n        billingMode\n        acceptedPaymentMethods\n        availableDays\n        requiredDaysPerWeek\n        minDurationMinutes\n        maxDurationMinutes\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n        }\n        isTaxInclusive\n        supportsSubscriptionAutoRenewal\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        listingMetadata {\n          title\n          subTitle\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query locationPricingEditQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    id\n    canModify\n    products {\n      id\n      currency {\n        type\n      }\n      listingMetadata {\n        title\n        about\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      pricingOptions {\n        id\n        price\n        bookingCadence\n        billingMode\n        acceptedPaymentMethods\n        availableDays\n        requiredDaysPerWeek\n        minDurationMinutes\n        maxDurationMinutes\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n        }\n        isTaxInclusive\n        supportsSubscriptionAutoRenewal\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        fulfillmentType\n        entitlementCreditQuantity\n        entitlementValidityDays\n        listingMetadata {\n          title\n          subTitle\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7130b7e9d7fd987a80695d4fbaf71c74";
+(node as any).hash = "0e833576c6720cbb53f77909bd38be88";
 
 export default node;

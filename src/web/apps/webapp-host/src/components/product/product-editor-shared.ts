@@ -18,6 +18,9 @@ export type PricingOptionForm = {
   title: string | null;
   subTitle: string | null;
   cadence: string;
+  fulfillmentType: string;
+  entitlementCreditQuantity: string;
+  entitlementValidityDays: string;
   price: string;
   numberOfResourcesToBook: string;
   minDurationMinutes: string;
@@ -90,6 +93,9 @@ export const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCar
   title: null,
   subTitle: null,
   cadence: 'ONE_TIME',
+  fulfillmentType: 'RESERVATION',
+  entitlementCreditQuantity: '',
+  entitlementValidityDays: '',
   price: '',
   numberOfResourcesToBook: '1',
   minDurationMinutes: '',

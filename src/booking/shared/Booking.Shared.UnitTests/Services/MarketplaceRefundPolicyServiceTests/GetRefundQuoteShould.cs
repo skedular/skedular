@@ -86,6 +86,47 @@ public class GetRefundQuoteShould
         result.ShouldBe(new MarketplaceRefundQuote(false, false, 0, null));
     }
 
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Apply_A_Rule_At_The_Exact_Cutoff(MarketplaceRefundPolicyService sut)
+    {
+        var referenceTime = new DateTimeOffset(2026, 4, 10, 12, 0, 0, TimeSpan.Zero);
+        var result = sut.GetQuote(
+            CreatePricing(ProductPricingCancellationPolicyType.TieredRefund,
+                [new ProductPricingCancellationRefundRule(60, 75)]),
+            referenceTime,
+            referenceTime.AddMinutes(-60));
+
+        result.ShouldBe(new MarketplaceRefundQuote(true, true, 75, 60));
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Select_The_Most_Generous_Applicable_Longer_Window(MarketplaceRefundPolicyService sut)
+    {
+        var referenceTime = new DateTimeOffset(2026, 4, 10, 12, 0, 0, TimeSpan.Zero);
+        var result = sut.GetQuote(
+            CreatePricing(ProductPricingCancellationPolicyType.TieredRefund,
+                [new ProductPricingCancellationRefundRule(60, 50), new ProductPricingCancellationRefundRule(180, 100)]),
+            referenceTime,
+            referenceTime.AddMinutes(-240));
+
+        result.RefundPercentage.ShouldBe(100);
+        result.AppliedRuleMinutesBefore.ShouldBe(180);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Clamp_Refund_Percentage_To_The_Valid_Monetary_Range(MarketplaceRefundPolicyService sut)
+    {
+        var referenceTime = new DateTimeOffset(2026, 4, 10, 12, 0, 0, TimeSpan.Zero);
+        var pricing = CreatePricing(ProductPricingCancellationPolicyType.TieredRefund,
+            [new ProductPricingCancellationRefundRule(0, 150)]);
+
+        sut.GetQuote(pricing, referenceTime, referenceTime)
+            .RefundPercentage.ShouldBe(100);
+    }
+
     private static ProductPricing CreatePricing(
         ProductPricingCancellationPolicyType cancellationPolicyType,
         IReadOnlyList<ProductPricingCancellationRefundRule> cancellationRefundRules) =>

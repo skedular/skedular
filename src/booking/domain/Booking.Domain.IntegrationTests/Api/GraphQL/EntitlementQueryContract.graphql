@@ -1,0 +1,26 @@
+query EntitlementQueryContract {
+    __type(name: "EntitlementDetails") {
+        fields {
+            name
+        }
+    }
+    purchaseDetails: __type(name: "EntitlementPurchaseDetails") {
+        fields {
+            name
+        }
+    }
+    ledgerDetails: __type(name: "CreditLedgerEntryDetails") {
+        fields {
+            name
+        }
+    }
+    mutationType: __type(name: "Mutation") {
+        fields {
+            name
+            args {
+                name
+                type { name kind inputFields { name } ofType { name kind } }
+            }
+        }
+    }
+}

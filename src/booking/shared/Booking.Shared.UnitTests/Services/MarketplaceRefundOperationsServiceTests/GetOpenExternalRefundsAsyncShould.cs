@@ -1,4 +1,6 @@
 using Booking.Shared.Database.Entities;
+using Booking.Shared.Mappers;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Pagination;
@@ -16,6 +18,8 @@ public class GetOpenExternalRefundsAsyncShould
         IRepositoryFactory repositoryFactory,
         [Frozen]
         IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IEntityMapper entityMapper,
         MarketplaceRefundOperationsService sut,
         CancellationToken cancellationToken)
     {
@@ -34,6 +38,10 @@ public class GetOpenExternalRefundsAsyncShould
         A.CallTo(() => marketplaceRefundRepository.GetExternalReconciliationsAsync(
                 "org-1", "STRIPE", "Open", pagination, cancellationToken))
             .Returns((new PaginatedInfo(false, false, "cursor", "cursor"), edges, records.Length));
+        A.CallTo(() => entityMapper.MapTo(records[0])).Returns(new MarketplaceExternalRefundReconciliationModel
+        {
+            ExternalRefundId = records[0].ExternalRefundId,
+        });
 
         var result = await sut.GetExternalRefundsAsync("org-1", "STRIPE", "Open", pagination, cancellationToken);
 

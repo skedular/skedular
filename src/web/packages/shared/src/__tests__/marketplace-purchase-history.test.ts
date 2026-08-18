@@ -16,6 +16,12 @@ describe('marketplace purchase history query state', () => {
     });
   });
 
+  it('includes deleted retained purchases in the default view', () => {
+    expect(buildMarketplacePurchaseQueryVariables({})).toMatchObject({
+      purchaseLifecycleStates: ['ACTIVE', 'CANCELLED', 'DELETED', 'EXPIRED', 'PAYMENT_FAILED', 'PENDING'],
+    });
+  });
+
   it('maps ascending booking sorts deterministically', () => {
     expect(toMarketplacePurchaseOrder('BOOKING_UNTIL_ASC')).toEqual({ field: 'BOOKING_UNTIL', direction: 'ASCENDING' });
   });

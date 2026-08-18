@@ -23,7 +23,7 @@
 
     <ItemGroup>
         <!-- Test Framework -->
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0"/>
 
         <!-- Code Coverage -->
         <PackageReference Include="coverlet.collector" Version="10.0.1">

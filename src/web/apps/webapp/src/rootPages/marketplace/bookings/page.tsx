@@ -1,9 +1,10 @@
 'use client';
 
 import { CustomerBookingsHub } from '@/components/booking/myBookings';
-import { Loading } from '@/components/loading';
 import { getSignInLink } from '@/components/links';
-import { NoOrganizationRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
+import { Loading } from '@/components/loading';
+import { NoOrganizationRootShell, OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
+import useKnownParams from '@/hooks/use-known-params';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -15,37 +16,48 @@ import { memo } from 'react';
 
 const RootPage = () => {
   const { user, loading } = useAuth();
-  if (loading) return <Loading />;
+  const { isCustomDomain } = useKnownParams();
+  if (loading) {
+    return <Loading />;
+  }
 
   if (user) {
-    return (
+    return isCustomDomain ? (
+      <OrganizationStoreFrontRootShell>
+        <CustomerBookingsHub />
+      </OrganizationStoreFrontRootShell>
+    ) : (
       <NoOrganizationRootShell>
         <CustomerBookingsHub />
       </NoOrganizationRootShell>
     );
   }
 
-  return (
-    <UnauthenticatedRootShell>
-      <Container maxWidth="md" sx={{ py: { xs: 6, md: 8 } }}>
-        <Card
-          sx={{
-            borderRadius: 4,
-            border: 1,
-            borderColor: 'divider',
-            boxShadow: 'none',
-          }}
-        >
-          <CardContent sx={{ p: { xs: 3, md: 4 } }}>
-            <LeadIconTypography label="Sign in to see your bookings" />
-            <BodyIconTypography label="Sign in to view your bookings, payment details, and invoices." sx={{ mt: 1, opacity: 0.82 }} />
-            <Button component={Link} href={getSignInLink()} variant="contained" sx={{ mt: 2, textTransform: 'none' }}>
-              Sign in
-            </Button>
-          </CardContent>
-        </Card>
-      </Container>
-    </UnauthenticatedRootShell>
+  const content = (
+    <Container maxWidth="md" sx={{ py: { xs: 6, md: 8 } }}>
+      <Card
+        sx={{
+          borderRadius: 4,
+          border: 1,
+          borderColor: 'divider',
+          boxShadow: 'none',
+        }}
+      >
+        <CardContent sx={{ p: { xs: 3, md: 4 } }}>
+          <LeadIconTypography label="Sign in to see your bookings" />
+          <BodyIconTypography label="Sign in to view your bookings, payment details, and invoices." sx={{ mt: 1, opacity: 0.82 }} />
+          <Button component={Link} href={getSignInLink()} variant="contained" sx={{ mt: 2, textTransform: 'none' }}>
+            Sign in
+          </Button>
+        </CardContent>
+      </Card>
+    </Container>
+  );
+
+  return isCustomDomain ? (
+    <UnauthenticatedOrganizationStoreFrontRootShell>{content}</UnauthenticatedOrganizationStoreFrontRootShell>
+  ) : (
+    <UnauthenticatedRootShell>{content}</UnauthenticatedRootShell>
   );
 };
 

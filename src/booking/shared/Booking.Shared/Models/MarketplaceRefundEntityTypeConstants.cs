@@ -4,12 +4,14 @@ public enum MarketplaceRefundEntityType
 {
     MarketplaceBooking,
     MarketplaceBookingSubscription,
+    EntitlementPurchase,
 }
 
 public static class MarketplaceRefundEntityTypeConstants
 {
     public const string MarketplaceBooking = "MarketplaceBooking";
     public const string MarketplaceBookingSubscription = "MarketplaceBookingSubscription";
+    public const string EntitlementPurchase = "EntitlementPurchase";
 }
 
 public static class MarketplaceRefundEntityTypeExtensions
@@ -19,6 +21,7 @@ public static class MarketplaceRefundEntityTypeExtensions
         {
             MarketplaceRefundEntityType.MarketplaceBooking => MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
             MarketplaceRefundEntityType.MarketplaceBookingSubscription => MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
+            MarketplaceRefundEntityType.EntitlementPurchase => MarketplaceRefundEntityTypeConstants.EntitlementPurchase,
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown marketplace refund entity type."),
         };
 
@@ -27,6 +30,7 @@ public static class MarketplaceRefundEntityTypeExtensions
         {
             MarketplaceRefundEntityTypeConstants.MarketplaceBooking => MarketplaceRefundEntityType.MarketplaceBooking,
             MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription => MarketplaceRefundEntityType.MarketplaceBookingSubscription,
+            MarketplaceRefundEntityTypeConstants.EntitlementPurchase => MarketplaceRefundEntityType.EntitlementPurchase,
             _ => MarketplaceRefundEntityType.MarketplaceBooking,
         };
 }

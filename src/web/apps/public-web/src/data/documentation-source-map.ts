@@ -64,6 +64,15 @@ export const documentationSourceMap: DocumentationSourceEntry[] = [
     articleIds: ["teams-private-bookings", "spaces-bookings", "host-bookings"],
   },
   {
+    id: "credit-entitlements",
+    sourcePath: "doc-resources/credit-entitlements.md",
+    concept: "Credit-based booking entitlements",
+    scope: "shared",
+    summary:
+      "Prepaid booking credits with Stripe card or manually confirmed bank-transfer payment, confirmed-only grants, configurable validity, expiry, unused-credit refund handling, and unchanged reservation-based and recurring booking behavior.",
+    articleIds: ["spaces-credit-entitlements", "host-credit-entitlements"],
+  },
+  {
     id: "floor-plans",
     sourcePath: "doc-resources/floor-paln.md",
     concept: "Floor plans",

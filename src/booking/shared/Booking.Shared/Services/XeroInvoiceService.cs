@@ -9,6 +9,7 @@ using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services.Entitlements;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
@@ -45,6 +46,11 @@ public enum RecurringInvoiceHandlingDisposition
 
 public interface IXeroInvoiceService
 {
+    Task<bool> TryHandleEntitlementPurchaseInvoiceAsync(
+        string organizationId,
+        EntitlementPurchase purchase,
+        CancellationToken cancellationToken);
+
     Task<bool> TryHandleMarketplaceBookingInvoiceAsync(
         string organizationId,
         Database.Entities.Booking booking,
@@ -75,6 +81,7 @@ public class XeroInvoiceService(
     IXeroTokenEncryptionService xeroTokenEncryptionService,
     ITemporalService temporalService,
     ITemporalOutboxService temporalOutboxService,
+    IEntitlementPurchasePaymentReconciliationService entitlementPurchasePaymentReconciliationService,
     IBookingOutboxPublisher bookingOutboxPublisher,
     IEntityMapper entityMapper,
     IRandomHelper randomHelper,
@@ -85,6 +92,140 @@ public class XeroInvoiceService(
     TimeProvider timeProvider,
     ILogger<XeroInvoiceService> logger) : IXeroInvoiceService
 {
+    public async Task<bool> TryHandleEntitlementPurchaseInvoiceAsync(
+        string organizationId,
+        EntitlementPurchase purchase,
+        CancellationToken cancellationToken)
+    {
+        logger.LogInformation(
+            "Starting entitlement Xero invoice export. OrganizationId={OrganizationId}, PurchaseId={PurchaseId}, PaymentStatus={PaymentStatus}, PaymentMethod={PaymentMethod}, InvoiceNumber={InvoiceNumber}",
+            organizationId, purchase.Id, purchase.PaymentStatus, purchase.PaymentMethod, purchase.InvoiceNumber);
+        var xeroConnection = await GetOrganizationXeroConnectionAsync(organizationId, cancellationToken);
+        logger.LogInformation(
+            "Entitlement Xero connection resolved. OrganizationId={OrganizationId}, ConnectionReady={ConnectionReady}, BillingMode={BillingMode}, AutoReconcilePayments={AutoReconcilePayments}, SendInvoicesViaXero={SendInvoicesViaXero}",
+            organizationId, IsXeroConnectionReady(xeroConnection), xeroConnection?.BillingMode, xeroConnection?.AutoReconcilePayments,
+            xeroConnection?.SendInvoicesViaXero);
+        if (!IsXeroManagedForStandardInvoicing(xeroConnection))
+        {
+            logger.LogInformation("Skipping entitlement Xero invoice export because Xero standard invoicing is not enabled. PurchaseId={PurchaseId}",
+                purchase.Id);
+            return false;
+        }
+
+        var productVersion = purchase.ProductVersion;
+        ArgumentNullException.ThrowIfNull(productVersion);
+        var customer = purchase.Customer;
+        ArgumentNullException.ThrowIfNull(customer);
+
+        var accountingInvoiceLink = await UpsertPendingAccountingInvoiceExportLinkAsync(
+            organizationId,
+            AccountingEntityTypeConstants.EntitlementPurchase,
+            purchase.Id,
+            cancellationToken);
+        var (accessToken, refreshedConnection) = await EnsureValidAccessTokenAsync(organizationId, xeroConnection!, cancellationToken);
+        var contact = await UpsertXeroContactAsync(organizationId, customer, refreshedConnection, accessToken, cancellationToken);
+        var organization = await GetOrganizationAsync(organizationId, cancellationToken);
+        var invoiceDate = timeProvider.GetUtcNow();
+        var dueDate = invoicePaymentTermsService.GetDueDate(invoiceDate, organization.BillingDetails?.InvoiceDueInDays);
+        var accountingApi = xeroSdkClientFactory.CreateAccountingApi();
+        var invoiceRequest = new XeroInvoice
+        {
+            Type = XeroInvoice.TypeEnum.ACCREC,
+            Status = refreshedConnection.SendInvoicesViaXero ? XeroInvoice.StatusEnum.AUTHORISED : XeroInvoice.StatusEnum.DRAFT,
+            LineAmountTypes = purchase.ProductPricing.IsTaxInclusive ? LineAmountTypes.Inclusive : LineAmountTypes.Exclusive,
+            Contact = contact,
+            InvoiceNumber = purchase.InvoiceNumber,
+            Reference = BuildReference(purchase.InvoiceNumber ?? string.Empty, refreshedConnection),
+            Date = invoiceDate.UtcDateTime.Date,
+            DueDate = dueDate.UtcDateTime.Date,
+            LineItems =
+            [
+                new LineItem
+                {
+                    Description = BookingInvoiceService.BuildEntitlementInvoiceLineDescription(
+                        productVersion,
+                        purchase.ProductPricing,
+                        purchase.ServiceStartAt),
+                    Quantity = 1,
+                    UnitAmount = purchase.Amount,
+                    AccountCode = refreshedConnection.DefaultSalesAccountCode,
+                },
+            ],
+        };
+
+        var invoiceResponse = await accountingApi.CreateInvoicesAsync(
+            accessToken,
+            refreshedConnection.TenantId,
+            new Invoices
+            {
+                _Invoices = [invoiceRequest],
+            },
+            null,
+            null,
+            accountingInvoiceLink.Id,
+            cancellationToken: cancellationToken);
+        var exportedInvoice = invoiceResponse?._Invoices?.FirstOrDefault() ?? throw new XeroInvoiceExportFailedException();
+        logger.LogInformation(
+            "Entitlement Xero invoice created. PurchaseId={PurchaseId}, AccountingLinkId={AccountingLinkId}, ExternalInvoiceId={ExternalInvoiceId}, ExternalInvoiceNumber={ExternalInvoiceNumber}, ExternalStatus={ExternalStatus}",
+            purchase.Id, accountingInvoiceLink.Id, exportedInvoice.InvoiceID, exportedInvoice.InvoiceNumber, exportedInvoice.Status);
+        await ApplyXeroInvoiceSyncAsync(
+            organizationId,
+            accountingInvoiceLink,
+            exportedInvoice,
+            refreshedConnection,
+            cancellationToken);
+        var externalInvoiceUrl = accountingInvoiceLink.ExternalInvoiceUrl;
+        logger.LogInformation(
+            "Entitlement accounting invoice link synchronized. PurchaseId={PurchaseId}, AccountingLinkId={AccountingLinkId}, ExternalInvoiceId={ExternalInvoiceId}, ExternalStatus={ExternalStatus}, ExternalInvoiceNumber={ExternalInvoiceNumber}",
+            purchase.Id, accountingInvoiceLink.Id, accountingInvoiceLink.ExternalInvoiceId, accountingInvoiceLink.ExternalStatus,
+            accountingInvoiceLink.ExternalInvoiceNumber);
+
+        purchase.InvoiceNumber = exportedInvoice.InvoiceNumber ?? purchase.InvoiceNumber;
+        purchase.InvoiceUrl = externalInvoiceUrl;
+        repositoryFactory.EntitlementPurchaseRepository.Update(purchase);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await ProcessAccountingPaymentEventsAsync(
+            accountingInvoiceLink,
+            accountingInvoiceLink.ExternalInvoiceId,
+            string.Equals(GetAccountingStatus(exportedInvoice), AccountingStatusConstants.Paid, StringComparison.Ordinal),
+            cancellationToken);
+        logger.LogInformation(
+            "Entitlement initial Xero payment reconciliation processed. PurchaseId={PurchaseId}, ExternalInvoiceId={ExternalInvoiceId}, IsPaid={IsPaid}",
+            purchase.Id, accountingInvoiceLink.ExternalInvoiceId,
+            string.Equals(GetAccountingStatus(exportedInvoice), AccountingStatusConstants.Paid, StringComparison.Ordinal));
+
+        if (refreshedConnection.AutoReconcilePayments &&
+            !string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId) &&
+            accountingInvoiceLink.ExternalStatus is not AccountingStatusConstants.Paid)
+        {
+            await temporalService.StartWorkflowMaintainAccountingInvoiceStateAsync(
+                new MaintainAccountingInvoiceStateInput(
+                    organizationId,
+                    AccountingEntityTypeConstants.EntitlementPurchase,
+                    purchase.Id),
+                cancellationToken);
+            logger.LogInformation(
+                "Started entitlement Xero payment reconciliation workflow. OrganizationId={OrganizationId}, PurchaseId={PurchaseId}, ExternalInvoiceId={ExternalInvoiceId}",
+                organizationId, purchase.Id, accountingInvoiceLink.ExternalInvoiceId);
+        }
+        else
+        {
+            logger.LogWarning(
+                "Entitlement Xero payment reconciliation workflow was not started. OrganizationId={OrganizationId}, PurchaseId={PurchaseId}, AutoReconcilePayments={AutoReconcilePayments}, ExternalInvoiceId={ExternalInvoiceId}, ExternalStatus={ExternalStatus}",
+                organizationId, purchase.Id, refreshedConnection.AutoReconcilePayments, accountingInvoiceLink.ExternalInvoiceId,
+                accountingInvoiceLink.ExternalStatus);
+        }
+
+        if (refreshedConnection.SendInvoicesViaXero && exportedInvoice.InvoiceID.HasValue)
+        {
+            await TryEmailInvoiceAsync(accountingApi, accessToken, refreshedConnection, exportedInvoice.InvoiceID.Value, accountingInvoiceLink,
+                cancellationToken);
+        }
+
+        return true;
+    }
+
     public async Task<bool> TryHandleMarketplaceBookingInvoiceAsync(
         string organizationId,
         Database.Entities.Booking booking,
@@ -189,6 +330,9 @@ public class XeroInvoiceService(
         SyncAccountingInvoiceStateInput input,
         CancellationToken cancellationToken)
     {
+        logger.LogInformation(
+            "Starting Xero invoice state sync. OrganizationId={OrganizationId}, LocalEntityType={LocalEntityType}, LocalEntityId={LocalEntityId}, ExternalInvoiceIdHint={ExternalInvoiceIdHint}",
+            input.OrganizationId, input.LocalEntityType, input.LocalEntityId, input.ExternalInvoiceIdHint);
         var accountingInvoiceLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
             AccountingProviderConstants.Xero,
             input.LocalEntityType,
@@ -201,12 +345,28 @@ public class XeroInvoiceService(
                 or AccountingStatusConstants.Failed
                 or AccountingStatusConstants.Cancelled)
         {
+            logger.LogWarning(
+                "Skipping Xero invoice state sync because accounting link is missing or terminal. OrganizationId={OrganizationId}, LocalEntityType={LocalEntityType}, LocalEntityId={LocalEntityId}, LinkFound={LinkFound}, ExternalInvoiceId={ExternalInvoiceId}, ExternalStatus={ExternalStatus}",
+                input.OrganizationId, input.LocalEntityType, input.LocalEntityId, accountingInvoiceLink is not null,
+                accountingInvoiceLink?.ExternalInvoiceId, accountingInvoiceLink?.ExternalStatus);
+            if (accountingInvoiceLink?.ExternalStatus == AccountingStatusConstants.Paid &&
+                accountingInvoiceLink.LocalEntityType == AccountingEntityTypeConstants.EntitlementPurchase)
+            {
+                logger.LogInformation(
+                    "Retrying paid entitlement confirmation from terminal accounting link. AccountingLinkId={AccountingLinkId}, PurchaseId={PurchaseId}",
+                    accountingInvoiceLink.Id, accountingInvoiceLink.LocalEntityId);
+                await ConfirmAccountingInvoicePaymentAsync(accountingInvoiceLink, cancellationToken);
+            }
+
             return new SyncAccountingInvoiceStateResult(true, null);
         }
 
         var xeroConnection = await GetOrganizationXeroConnectionAsync(input.OrganizationId, cancellationToken);
         if (xeroConnection is null || !xeroConnection.IsActive)
         {
+            logger.LogError(
+                "Cannot sync Xero invoice because the organization connection is unavailable or inactive. OrganizationId={OrganizationId}, LocalEntityType={LocalEntityType}, LocalEntityId={LocalEntityId}, ConnectionFound={ConnectionFound}, IsActive={IsActive}",
+                input.OrganizationId, input.LocalEntityType, input.LocalEntityId, xeroConnection is not null, xeroConnection?.IsActive);
             accountingInvoiceLink.ExternalStatus = AccountingStatusConstants.Failed;
             accountingInvoiceLink.LastError = xeroConnection?.LastError ?? "Xero connection is not active.";
             repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
@@ -257,12 +417,19 @@ public class XeroInvoiceService(
         }
 
         var isConcreteInvoicePaid = string.Equals(GetAccountingStatus(invoice), AccountingStatusConstants.Paid, StringComparison.Ordinal);
+        logger.LogInformation(
+            "Loaded Xero invoice during state sync. OrganizationId={OrganizationId}, LocalEntityType={LocalEntityType}, LocalEntityId={LocalEntityId}, ExternalInvoiceId={ExternalInvoiceId}, XeroStatus={XeroStatus}, IsPaid={IsPaid}, PaymentCount={PaymentCount}",
+            input.OrganizationId, input.LocalEntityType, input.LocalEntityId, invoiceIdToLoad, invoice.Status, isConcreteInvoicePaid,
+            invoice.Payments?.Count ?? 0);
 
         await ProcessAccountingPaymentEventsAsync(
             accountingInvoiceLink,
             invoiceIdToLoad,
             isConcreteInvoicePaid,
             cancellationToken);
+        logger.LogInformation(
+            "Completed Xero payment event processing during invoice sync. OrganizationId={OrganizationId}, LocalEntityType={LocalEntityType}, LocalEntityId={LocalEntityId}, ExternalInvoiceId={ExternalInvoiceId}, IsPaid={IsPaid}",
+            input.OrganizationId, input.LocalEntityType, input.LocalEntityId, invoiceIdToLoad, isConcreteInvoicePaid);
         await PropagateInvoiceReferencesAsync(
             accountingInvoiceLink.LocalEntityType,
             accountingInvoiceLink.LocalEntityId,
@@ -482,7 +649,7 @@ public class XeroInvoiceService(
             null,
             null,
             $"{accountingInvoiceLink.Id}:initial-standard",
-            cancellationToken);
+            cancellationToken: cancellationToken);
         var exportedInvoice = invoiceResponse?._Invoices?.FirstOrDefault() ?? throw new XeroInvoiceExportFailedException();
         var externalInvoiceUrl = await GetOnlineInvoiceUrlAsync(organizationId, xeroConnection, exportedInvoice, cancellationToken);
 
@@ -824,7 +991,7 @@ public class XeroInvoiceService(
             null,
             null,
             accountingInvoiceLink.Id,
-            cancellationToken);
+            cancellationToken: cancellationToken);
         var exportedInvoice = invoiceResponse?._Invoices?.FirstOrDefault() ?? throw new XeroInvoiceExportFailedException();
 
         logger.LogInformation(
@@ -924,7 +1091,10 @@ public class XeroInvoiceService(
 
         if (booking is not null)
         {
-            return $"{fallbackTitle}{Environment.NewLine}{BookingInvoiceService.FormatInvoicePeriod(booking.From, booking.Until)}";
+            return BookingInvoiceService.BuildBookingInvoiceLineDescription(
+                productVersion,
+                marketplaceBooking.ProductPricing,
+                BookingInvoiceService.FormatInvoicePeriod(booking.From, booking.Until));
         }
 
         if (recurringBooking is not null)
@@ -934,10 +1104,11 @@ public class XeroInvoiceService(
                 marketplaceBooking,
                 productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());
             var (displayStart, displayEnd) = BookingInvoiceService.ResolveRecurringInvoiceDisplayPeriod(recurringBooking, billingDefinition);
-            return
-                $"{fallbackTitle}{Environment.NewLine}" +
+            return BookingInvoiceService.BuildBookingInvoiceLineDescription(
+                productVersion,
+                marketplaceBooking.ProductPricing,
                 $"{marketplaceBooking.ProductPricing.PurchaseCadence.ToProductPricingCadenceName()} pass{Environment.NewLine}" +
-                $"{displayStart.ToShortDate()} - {displayEnd.ToShortDate()}";
+                $"{displayStart.ToShortDate()} - {displayEnd.ToShortDate()}");
         }
 
         return fallbackTitle;
@@ -1135,9 +1306,15 @@ public class XeroInvoiceService(
         }
         catch (Exception exception)
         {
-            accountingInvoiceLink.LastError = exception.Message;
-            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            // Email delivery is best effort. The invoice export and the payment
+            // workflow must not fail because reconciliation updated the same link
+            // after the invoice was exported. Persisting LastError here can use a
+            // stale concurrency token and turn a harmless email failure into a
+            // checkout failure, so keep the failure in the log instead.
+            logger.LogWarning(
+                exception,
+                "Could not email Xero invoice {InvoiceId}. Invoice export remains successful and email delivery will require follow-up.",
+                invoiceId);
         }
     }
 
@@ -1225,6 +1402,9 @@ public class XeroInvoiceService(
     {
         if (string.IsNullOrWhiteSpace(externalInvoiceId))
         {
+            logger.LogWarning(
+                "Cannot process Xero payment events because external invoice ID is missing. AccountingLinkId={AccountingLinkId}, LocalEntityType={LocalEntityType}, LocalEntityId={LocalEntityId}",
+                accountingInvoiceLink.Id, accountingInvoiceLink.LocalEntityType, accountingInvoiceLink.LocalEntityId);
             return;
         }
 
@@ -1235,6 +1415,9 @@ public class XeroInvoiceService(
             cancellationToken);
         if (unprocessedEvents.Count == 0)
         {
+            logger.LogInformation(
+                "No unprocessed Xero payment events found. AccountingLinkId={AccountingLinkId}, ExternalInvoiceId={ExternalInvoiceId}, IsInvoicePaid={IsInvoicePaid}",
+                accountingInvoiceLink.Id, externalInvoiceId, isInvoicePaid);
             if (isInvoicePaid)
             {
                 await ConfirmAccountingInvoicePaymentAsync(accountingInvoiceLink, cancellationToken);
@@ -1245,6 +1428,10 @@ public class XeroInvoiceService(
 
         if (isInvoicePaid)
         {
+            logger.LogInformation(
+                "Confirming accounting payment from paid Xero invoice. AccountingLinkId={AccountingLinkId}, LocalEntityType={LocalEntityType}, LocalEntityId={LocalEntityId}, ExternalInvoiceId={ExternalInvoiceId}, UnprocessedEventCount={UnprocessedEventCount}",
+                accountingInvoiceLink.Id, accountingInvoiceLink.LocalEntityType, accountingInvoiceLink.LocalEntityId, externalInvoiceId,
+                unprocessedEvents.Count);
             await ConfirmAccountingInvoicePaymentAsync(accountingInvoiceLink, cancellationToken);
         }
 
@@ -1259,6 +1446,9 @@ public class XeroInvoiceService(
 
     private async Task ConfirmAccountingInvoicePaymentAsync(AccountingInvoiceExportLink accountingInvoiceLink, CancellationToken cancellationToken)
     {
+        logger.LogInformation(
+            "Routing paid Xero invoice to local payment confirmation. AccountingLinkId={AccountingLinkId}, LocalEntityType={LocalEntityType}, LocalEntityId={LocalEntityId}",
+            accountingInvoiceLink.Id, accountingInvoiceLink.LocalEntityType, accountingInvoiceLink.LocalEntityId);
         switch (accountingInvoiceLink.LocalEntityType)
         {
             case AccountingEntityTypeConstants.MarketplaceBooking:
@@ -1267,7 +1457,25 @@ public class XeroInvoiceService(
             case AccountingEntityTypeConstants.RecurringBooking:
                 await ConfirmRecurringBookingPaymentAsync(accountingInvoiceLink.LocalEntityId, cancellationToken);
                 break;
+            case AccountingEntityTypeConstants.EntitlementPurchase:
+                await ConfirmEntitlementPurchasePaymentAsync(accountingInvoiceLink.LocalEntityId, cancellationToken);
+                break;
         }
+    }
+
+    private async Task ConfirmEntitlementPurchasePaymentAsync(string purchaseId, CancellationToken cancellationToken)
+    {
+        var purchase = await repositoryFactory.EntitlementPurchaseRepository.GetByIdAsync(purchaseId, cancellationToken);
+        if (purchase is null)
+        {
+            logger.LogWarning("Xero payment reconciliation could not find entitlement purchase {PurchaseId}", purchaseId);
+            return;
+        }
+
+        await entitlementPurchasePaymentReconciliationService.ConfirmAsync(
+            purchaseId,
+            timeProvider.GetUtcNow(),
+            cancellationToken);
     }
 
     private async Task ConfirmMarketplaceBookingPaymentAsync(string marketplaceBookingId, CancellationToken cancellationToken)
@@ -1394,6 +1602,21 @@ public class XeroInvoiceService(
         AccountingInvoiceExportLink accountingInvoiceLink,
         CancellationToken cancellationToken)
     {
+        if (localEntityType == AccountingEntityTypeConstants.EntitlementPurchase)
+        {
+            var purchase = await repositoryFactory.EntitlementPurchaseRepository.GetByIdAsync(localEntityId, cancellationToken);
+            if (purchase is null)
+            {
+                return;
+            }
+
+            purchase.InvoiceNumber = accountingInvoiceLink.ExternalInvoiceNumber ?? purchase.InvoiceNumber;
+            purchase.InvoiceUrl = accountingInvoiceLink.ExternalInvoiceUrl ?? purchase.InvoiceUrl;
+            repositoryFactory.EntitlementPurchaseRepository.Update(purchase);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            return;
+        }
+
         if (localEntityType == AccountingEntityTypeConstants.MarketplaceBooking)
         {
             var marketplaceBooking = await repositoryFactory.MarketplaceBookingRepository.GetByIdAsync(localEntityId, cancellationToken);

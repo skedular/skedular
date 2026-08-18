@@ -98,5 +98,6 @@ public class GetLocationsShould
             locationIds,
             teamIds,
             [],
-            []);
+            [],
+            null);
 }

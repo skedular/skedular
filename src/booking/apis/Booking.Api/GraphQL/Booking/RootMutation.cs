@@ -7,15 +7,86 @@ using Booking.Shared.Models;
 using Booking.Shared.Services.Cache;
 using HotChocolate;
 using HotChocolate.Types;
+using EntitlementAdjustmentService = Booking.Shared.Services.Entitlements.IEntitlementAdjustmentService;
 using MarketplaceBookingFailureService = Booking.Shared.Services.IMarketplaceBookingFailureService;
 using MarketplaceBookingAvailabilityConflict = Booking.Shared.Services.MarketplaceBookingAvailabilityConflict;
 using SpacesSubscriptionStatus = Api.Shared.Services.Offering.SpacesSubscriptionStatus;
+using EntitlementInput = Booking.Api.GraphQL.Entitlement.ConsumeEntitlementCreditInput;
+using EntitlementPayload = Booking.Api.GraphQL.Entitlement.ConsumeEntitlementCreditPayload;
+using EntitlementBookingService = Booking.Shared.Services.Entitlements.IEntitlementBookingService;
+using AdjustEntitlementInput = Booking.Api.GraphQL.Entitlement.AdjustEntitlementCreditInput;
+using AdjustEntitlementPayload = Booking.Api.GraphQL.Entitlement.AdjustEntitlementCreditPayload;
 
 namespace Booking.Api.GraphQL.Booking;
 
 [MutationType]
 public class RootMutation(IGraphQlMapper graphQlMapper)
 {
+    [UseResolverScope]
+    public async Task<AdjustEntitlementPayload> AdjustEntitlementCreditAsync(
+        AdjustEntitlementInput input,
+        [Service]
+        ICachedCustomerService cachedCustomerService,
+        [Service]
+        IEntitlementReadService entitlementReadService,
+        [Service]
+        EntitlementAdjustmentService adjustmentService,
+        CancellationToken cancellationToken)
+    {
+        var actorCustomerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var entitlement = await entitlementReadService.GetAuthorizedForAdjustmentAsync(
+            input.EntitlementId, actorCustomerId, cancellationToken);
+
+        try
+        {
+            var entry = await adjustmentService.AdjustAsync(input.EntitlementId, input.Quantity, actorCustomerId, input.Reason,
+                input.IdempotencyKey, cancellationToken);
+            return new AdjustEntitlementPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                LedgerEntry = graphQlMapper.MapTo(entry),
+            };
+        }
+        catch (InvalidOperationException exception)
+        {
+            return new AdjustEntitlementPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                Error = exception.Message,
+            };
+        }
+    }
+
+    [UseResolverScope]
+    public async Task<EntitlementPayload> ConsumeEntitlementCreditAsync(
+        EntitlementInput input,
+        [Service]
+        ICachedCustomerService cachedCustomerService,
+        [Service]
+        EntitlementBookingService entitlementBookingService,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            var entry = await entitlementBookingService.ConsumeAsync(customerId, input.BookingId, input.IdempotencyKey, input.BookingAt,
+                cancellationToken);
+            return new EntitlementPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                LedgerEntry = graphQlMapper.MapTo(entry),
+            };
+        }
+        catch (InvalidOperationException exception)
+        {
+            return new EntitlementPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                Error = exception.Message,
+            };
+        }
+    }
+
     [UseResolverScope]
     public async Task<MarketplaceBookingFailureDetails> AcceptPartialMarketplaceBookingAsync(
         ResolvePartialMarketplaceBookingInput input,
@@ -26,7 +97,10 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-        var result = await failureService.ResolvePartialAsync(input.Id, MarketplaceBookingFailureResolutionDecisionConstants.Accepted, customerId,
+        var result = await failureService.ResolvePartialAsync(
+            input.Id,
+            MarketplaceBookingFailureResolutionDecisionConstants.Accepted,
+            customerId,
             cancellationToken);
         return graphQlMapper.MapTo(result);
     }
@@ -41,7 +115,10 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-        var result = await failureService.ResolvePartialAsync(input.Id, MarketplaceBookingFailureResolutionDecisionConstants.Declined, customerId,
+        var result = await failureService.ResolvePartialAsync(
+            input.Id,
+            MarketplaceBookingFailureResolutionDecisionConstants.Declined,
+            customerId,
             cancellationToken);
         return graphQlMapper.MapTo(result);
     }
@@ -159,6 +236,27 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
     }
 
     [UseResolverScope]
+    public async Task<MarketplaceCreditBookingsPayload> AddMarketplaceCreditBookingsAsync(
+        AddMarketplaceBookingInput input,
+        [Service]
+        IMarketplaceBookingService marketplaceBookingService,
+        CancellationToken cancellationToken)
+    {
+        if (input.EntitlementId is null)
+        {
+            throw new InvalidOperationException("An entitlement is required for credit bookings.");
+        }
+
+        var bookings = await marketplaceBookingService.AddCreditBookingsAsync(
+            graphQlMapper.MapTo(input), input.Quantity, cancellationToken);
+        return new MarketplaceCreditBookingsPayload
+        {
+            ClientMutationId = input.ClientMutationId,
+            Bookings = [.. bookings.Select(graphQlMapper.MapTo)],
+        };
+    }
+
+    [UseResolverScope]
     public async Task<BookingPayload> UpdateMarketplaceBookingAsync(
         UpdateMarketplaceBookingInput input,
         [Service]
@@ -205,7 +303,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             }
 
             var result = await marketplaceBookingModificationService.ModifyAsync(graphQlMapper.MapTo(input), cancellationToken);
-            return ToModifyMarketplaceBookingPayload(input.ClientMutationId, result, graphQlMapper);
+            return ToModifyMarketplaceBookingPayload(input.ClientMutationId, result);
         }
         catch (SpacesAccessDenied exception)
         {
@@ -326,10 +424,9 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             },
         };
 
-    private static ModifyMarketplaceBookingPayload ToModifyMarketplaceBookingPayload(
+    private ModifyMarketplaceBookingPayload ToModifyMarketplaceBookingPayload(
         string? clientMutationId,
-        MarketplaceBookingModificationResult result,
-        IGraphQlMapper graphQlMapper)
+        MarketplaceBookingModificationResult result)
     {
         var payload = new ModifyMarketplaceBookingPayload
         {

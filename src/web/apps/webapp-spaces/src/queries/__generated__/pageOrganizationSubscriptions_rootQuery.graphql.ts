@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a624f339dcbf7177d038b8c4d1bb6543>>
+ * @generated SignedSource<<fb8ba417ed8b30eb16d54d1746db213b>>
  * @lightSyntaxTransform
  */
 
@@ -15,7 +15,7 @@ export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXP
 export type MarketplacePurchaseHistoryOrderField = "ACTIVITY_AT" | "BOOKING_FROM" | "BOOKING_UNTIL" | "PURCHASED_AT" | "%future added value";
 export type MarketplacePurchaseLifecycleState = "ACTIVE" | "CANCELLED" | "DELETED" | "EXPIRED" | "PAYMENT_FAILED" | "PENDING" | "%future added value";
 export type MarketplacePurchaseRenewalState = "DOES_NOT_RENEW" | "NOT_APPLICABLE" | "RENEWS" | "%future added value";
-export type MarketplacePurchaseSourceType = "BOOKING" | "SUBSCRIPTION" | "%future added value";
+export type MarketplacePurchaseSourceType = "BOOKING" | "ENTITLEMENT" | "SUBSCRIPTION" | "%future added value";
 export type MarketplaceRefundEventType = "ACCOUNTING_PROJECTED" | "ACCOUNTING_PROJECTION_REQUIRED" | "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "SENT_TO_XERO" | "UNDER_REVIEW" | "%future added value";
 export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
 export type OrderDirection = "ASCENDING" | "DESCENDING" | "%future added value";
@@ -143,17 +143,22 @@ export type pageOrganizationSubscriptions_rootQuery$data = {
       readonly cursor: string;
       readonly node: {
         readonly activityAt: any;
+        readonly availableQuantity: number;
         readonly bookingFrom: any | null | undefined;
         readonly bookingId: string | null | undefined;
         readonly bookingUntil: any | null | undefined;
         readonly cancellationReason: string | null | undefined;
+        readonly creditQuantity: number;
         readonly currency: Currency | null | undefined;
         readonly customerId: string | null | undefined;
         readonly deletedByCustomerId: string | null | undefined;
+        readonly entitlementStatus: string | null | undefined;
+        readonly grantedQuantity: number;
         readonly id: string;
         readonly isDeleted: boolean;
         readonly lifecycleState: MarketplacePurchaseLifecycleState;
         readonly lifecycleStateName: string;
+        readonly paymentMethod: string | null | undefined;
         readonly paymentStatus: PaymentStatus;
         readonly productTitle: string | null | undefined;
         readonly productVersionId: string | null | undefined;
@@ -917,6 +922,13 @@ v43 = {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "paymentMethod",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "productVersionId",
               "storageKey": null
             },
@@ -925,6 +937,34 @@ v43 = {
               "args": null,
               "kind": "ScalarField",
               "name": "productTitle",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "entitlementStatus",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "creditQuantity",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "grantedQuantity",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "availableQuantity",
               "storageKey": null
             },
             {
@@ -1287,16 +1327,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9d8e251c54779adcaf13d4a59927acc8",
+    "cacheID": "e2804cfc60b304b50cd7360274f32ca2",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationSubscriptions_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationSubscriptions_rootQuery(\n  $organizationCustomDomain: String!\n  $statuses: [MarketplaceBookingSubscriptionStatus!]\n  $paymentStatuses: [PaymentStatus!]\n  $purchaseAfter: String\n  $purchaseFirst: Int\n  $purchaseSourceTypes: [MarketplacePurchaseSourceType!]\n  $purchaseLifecycleStates: [MarketplacePurchaseLifecycleState!]\n  $purchasePaymentStatuses: [PaymentStatus!]\n  $purchaseActivityFrom: DateTime\n  $purchaseActivityUntil: DateTime\n  $purchaseOrderBy: [MarketplacePurchaseHistoryOrderInput!]\n) {\n  ...multipleChoicesMarketplaceBookingSubscriptionStatuses_query\n  ...multipleChoicesMarketplaceBookingPaymentStatuses_query\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  organizationBookingPermissions(organizationCustomDomain: $organizationCustomDomain) {\n    canViewBookings\n    canModifyPaymentMethod\n  }\n  marketplaceBookingSubscriptions(first: 50, where: {organizationCustomDomain: $organizationCustomDomain, statuses: $statuses, paymentStatuses: $paymentStatuses}, orderBy: [{field: NEXT_RENEWAL_AT, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        cancellationPolicyOverridden\n        cancellationOverrideReason\n        startedAt\n        nextRenewalAt\n        autoRenew\n        cancelAtPeriodEnd\n        refund {\n          id\n          currency {\n            type\n            name\n          }\n          status {\n            type\n            name\n          }\n          requestedAt\n          lastProcessedAt\n          refundAmount\n          refundPercentage\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          requestedByCustomerName\n          canProcessInXero\n          xeroProcessingBlockedReason\n          events {\n            id\n            eventType {\n              type\n              name\n            }\n            occurredAt\n            refundAmount\n            currencyToDisplay\n            reason\n            lastError\n            externalRefundNumber\n            actorName\n          }\n        }\n        status {\n          type\n          name\n        }\n        involvedCustomers {\n          id\n          name\n          givenName\n          middleName\n          familyName\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          paymentMethod {\n            type\n            name\n          }\n          productVersion {\n            listingMetadata {\n              title\n            }\n            id\n          }\n          id\n        }\n        recurringBookings {\n          id\n          startDate\n          endDate\n          marketplaceBooking {\n            id\n            quantity\n            invoiceUrl\n            paymentStatus {\n              type\n              name\n            }\n            paymentMethod {\n              type\n              name\n            }\n          }\n        }\n      }\n    }\n  }\n  marketplacePurchases(after: $purchaseAfter, first: $purchaseFirst, organizationCustomDomain: $organizationCustomDomain, sourceTypes: $purchaseSourceTypes, lifecycleStates: $purchaseLifecycleStates, paymentStatuses: $purchasePaymentStatuses, activityFrom: $purchaseActivityFrom, activityUntil: $purchaseActivityUntil, orderBy: $purchaseOrderBy) {\n    totalCount\n    pageInfo {\n      hasNextPage\n      hasPreviousPage\n      startCursor\n      endCursor\n    }\n    edges {\n      cursor\n      node {\n        id\n        sourceId\n        sourceType\n        sourceTypeName\n        lifecycleState\n        lifecycleStateName\n        renewalState\n        renewalStateName\n        purchasedAt\n        activityAt\n        bookingFrom\n        bookingUntil\n        paymentStatus\n        productVersionId\n        productTitle\n        totalAmount\n        currency\n        customerId\n        deletedByCustomerId\n        cancellationReason\n        refundId\n        bookingId\n        refund {\n          id\n          status {\n            name\n          }\n          requestedAt\n          lastProcessedAt\n          refundAmount\n          events {\n            id\n            occurredAt\n            eventType {\n              name\n            }\n          }\n        }\n        isDeleted\n      }\n    }\n  }\n}\n\nfragment multipleChoicesMarketplaceBookingPaymentStatuses_query on Query {\n  marketplaceBookingPaymentStatuses {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesMarketplaceBookingSubscriptionStatuses_query on Query {\n  marketplaceBookingSubscriptionStatuses {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationSubscriptions_rootQuery(\n  $organizationCustomDomain: String!\n  $statuses: [MarketplaceBookingSubscriptionStatus!]\n  $paymentStatuses: [PaymentStatus!]\n  $purchaseAfter: String\n  $purchaseFirst: Int\n  $purchaseSourceTypes: [MarketplacePurchaseSourceType!]\n  $purchaseLifecycleStates: [MarketplacePurchaseLifecycleState!]\n  $purchasePaymentStatuses: [PaymentStatus!]\n  $purchaseActivityFrom: DateTime\n  $purchaseActivityUntil: DateTime\n  $purchaseOrderBy: [MarketplacePurchaseHistoryOrderInput!]\n) {\n  ...multipleChoicesMarketplaceBookingSubscriptionStatuses_query\n  ...multipleChoicesMarketplaceBookingPaymentStatuses_query\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  organizationBookingPermissions(organizationCustomDomain: $organizationCustomDomain) {\n    canViewBookings\n    canModifyPaymentMethod\n  }\n  marketplaceBookingSubscriptions(first: 50, where: {organizationCustomDomain: $organizationCustomDomain, statuses: $statuses, paymentStatuses: $paymentStatuses}, orderBy: [{field: NEXT_RENEWAL_AT, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        cancellationPolicyOverridden\n        cancellationOverrideReason\n        startedAt\n        nextRenewalAt\n        autoRenew\n        cancelAtPeriodEnd\n        refund {\n          id\n          currency {\n            type\n            name\n          }\n          status {\n            type\n            name\n          }\n          requestedAt\n          lastProcessedAt\n          refundAmount\n          refundPercentage\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          requestedByCustomerName\n          canProcessInXero\n          xeroProcessingBlockedReason\n          events {\n            id\n            eventType {\n              type\n              name\n            }\n            occurredAt\n            refundAmount\n            currencyToDisplay\n            reason\n            lastError\n            externalRefundNumber\n            actorName\n          }\n        }\n        status {\n          type\n          name\n        }\n        involvedCustomers {\n          id\n          name\n          givenName\n          middleName\n          familyName\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          paymentMethod {\n            type\n            name\n          }\n          productVersion {\n            listingMetadata {\n              title\n            }\n            id\n          }\n          id\n        }\n        recurringBookings {\n          id\n          startDate\n          endDate\n          marketplaceBooking {\n            id\n            quantity\n            invoiceUrl\n            paymentStatus {\n              type\n              name\n            }\n            paymentMethod {\n              type\n              name\n            }\n          }\n        }\n      }\n    }\n  }\n  marketplacePurchases(after: $purchaseAfter, first: $purchaseFirst, organizationCustomDomain: $organizationCustomDomain, sourceTypes: $purchaseSourceTypes, lifecycleStates: $purchaseLifecycleStates, paymentStatuses: $purchasePaymentStatuses, activityFrom: $purchaseActivityFrom, activityUntil: $purchaseActivityUntil, orderBy: $purchaseOrderBy) {\n    totalCount\n    pageInfo {\n      hasNextPage\n      hasPreviousPage\n      startCursor\n      endCursor\n    }\n    edges {\n      cursor\n      node {\n        id\n        sourceId\n        sourceType\n        sourceTypeName\n        lifecycleState\n        lifecycleStateName\n        renewalState\n        renewalStateName\n        purchasedAt\n        activityAt\n        bookingFrom\n        bookingUntil\n        paymentStatus\n        paymentMethod\n        productVersionId\n        productTitle\n        entitlementStatus\n        creditQuantity\n        grantedQuantity\n        availableQuantity\n        totalAmount\n        currency\n        customerId\n        deletedByCustomerId\n        cancellationReason\n        refundId\n        bookingId\n        refund {\n          id\n          status {\n            name\n          }\n          requestedAt\n          lastProcessedAt\n          refundAmount\n          events {\n            id\n            occurredAt\n            eventType {\n              name\n            }\n          }\n        }\n        isDeleted\n      }\n    }\n  }\n}\n\nfragment multipleChoicesMarketplaceBookingPaymentStatuses_query on Query {\n  marketplaceBookingPaymentStatuses {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesMarketplaceBookingSubscriptionStatuses_query on Query {\n  marketplaceBookingSubscriptionStatuses {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f0a6300fb1c98058286e0184e3947982";
+(node as any).hash = "16be047f2054a541a1e386c8fb188d10";
 
 export default node;

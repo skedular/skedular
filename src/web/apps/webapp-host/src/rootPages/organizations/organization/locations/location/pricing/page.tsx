@@ -1,6 +1,7 @@
 'use client';
 
 import { getOrganizationLocationBaseLink } from '@/components/links';
+import { NotificationContent } from '@/components/notification';
 import { RootShell } from '@/components/rootShell';
 import { useHostListingCoordinator } from '@/components/unified-listing-form';
 import type { CancellationRefundRuleForm, PricingOptionForm } from '@/components/unified-listing-form/HostListingProductSettings';
@@ -37,6 +38,9 @@ const defaultPricingOption = (): PricingOptionForm => ({
   supportsSubscriptionAutoRenewal: false,
   maxAllowedResourcesLockTimePaidViaCard: '15',
   maxAllowedResourcesLockTimePaidViaBankTransfer: '0',
+  fulfillmentType: 'RESERVATION',
+  entitlementCreditQuantity: '',
+  entitlementValidityDays: '',
 });
 
 type FormValues = {
@@ -72,6 +76,9 @@ const buildInitialValues = (data: QueryData): FormValues => {
     supportsSubscriptionAutoRenewal: Boolean(opt.supportsSubscriptionAutoRenewal),
     maxAllowedResourcesLockTimePaidViaCard: opt.maxAllowedResourcesLockTimePaidViaCard != null ? String(opt.maxAllowedResourcesLockTimePaidViaCard) : '15',
     maxAllowedResourcesLockTimePaidViaBankTransfer: opt.maxAllowedResourcesLockTimePaidViaBankTransfer != null ? String(opt.maxAllowedResourcesLockTimePaidViaBankTransfer) : '0',
+    fulfillmentType: opt.fulfillmentType ?? 'RESERVATION',
+    entitlementCreditQuantity: opt.entitlementCreditQuantity != null ? String(opt.entitlementCreditQuantity) : '',
+    entitlementValidityDays: opt.entitlementValidityDays != null ? String(opt.entitlementValidityDays) : '',
   }));
 
   return {
@@ -135,6 +142,9 @@ const PricingPage = () => {
               supportsSubscriptionAutoRenewal
               maxAllowedResourcesLockTimePaidViaCard
               maxAllowedResourcesLockTimePaidViaBankTransfer
+              fulfillmentType
+              entitlementCreditQuantity
+              entitlementValidityDays
               listingMetadata {
                 title
                 subTitle
@@ -172,7 +182,11 @@ const PricingPage = () => {
   const isInitialMountRef = useRef(true);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    // The mutation response and the query subscription can arrive out of order.
+    // Do not overwrite a locally saved edit with a stale query snapshot.
+    if (JSON.stringify(initialValues) !== JSON.stringify(lastSavedRef.current)) {
+      return;
+    }
     setValues(initialValues);
     lastSavedRef.current = initialValues;
   }, [initialValues]);
@@ -240,6 +254,13 @@ const PricingPage = () => {
             }
           : opt,
       ),
+    }));
+  };
+
+  const onChangeFulfillmentType = (index: number, value: string) => {
+    setValues((current) => ({
+      ...current,
+      pricingOptions: current.pricingOptions.map((opt, i) => (i === index ? { ...opt, fulfillmentType: value } : opt)),
     }));
   };
 
@@ -362,6 +383,9 @@ const PricingPage = () => {
                 cancellationRefundRules: opt.cancellationRefundRules
                   .filter((r) => r.minutesBefore.trim() && r.refundPercentage.trim())
                   .map((r) => ({ minutesBefore: Number(r.minutesBefore), refundPercentage: Number(r.refundPercentage) })),
+                fulfillmentType: opt.fulfillmentType,
+                entitlementCreditQuantity: opt.fulfillmentType === 'ENTITLEMENT' && opt.entitlementCreditQuantity.trim() ? Number(opt.entitlementCreditQuantity) : null,
+                entitlementValidityDays: opt.fulfillmentType === 'ENTITLEMENT' && opt.entitlementValidityDays.trim() ? Number(opt.entitlementValidityDays) : null,
               })),
             },
           },
@@ -398,7 +422,7 @@ const PricingPage = () => {
       })
       .catch((err) => {
         setSaveStatus('error');
-        toast.error(err instanceof Error ? err.message : 'Auto-save failed.');
+        toast.error(<NotificationContent content={err instanceof Error ? err.message : 'Auto-save failed.'} />);
       });
   }, [canModify, productReady, executeSaveProduct]);
 
@@ -446,6 +470,7 @@ const PricingPage = () => {
             values={values}
             onChange={onChange}
             onChangePricingOption={onChangePricingOption}
+            onChangeFulfillmentType={onChangeFulfillmentType}
             onTogglePricingOption={onTogglePricingOption}
             onChangePaymentMethods={onChangePaymentMethods}
             onChangeAvailableDays={onChangeAvailableDays}

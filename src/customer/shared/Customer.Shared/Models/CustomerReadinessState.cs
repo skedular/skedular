@@ -15,8 +15,8 @@ public class CustomerReadinessState
             Domains.MsTeams,
         };
 
-    public required string CustomerId { get; init; }
-    public IReadOnlyList<string> ProvisionedDomains { get; init; } = [];
+    public required string CustomerId { get; set; }
+    public IReadOnlyList<string> ProvisionedDomains { get; set; } = [];
     public bool IsReadyEverywhere => RequiredDomains.All(ProvisionedDomains.Contains);
 
     public static class Domains

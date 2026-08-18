@@ -257,7 +257,7 @@ public class ProcessAsyncShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Mark_Failed_When_Refund_Is_Not_For_A_One_Time_Marketplace_Booking(
+    public async Task Mark_Failed_When_Refund_Is_For_An_Unsupported_Purchase_Type(
         [Frozen]
         IRepositoryFactory repositoryFactory,
         [Frozen]
@@ -290,7 +290,7 @@ public class ProcessAsyncShould
 
         result.Status.ShouldBe(MarketplaceRefundStatusConstants.Failed);
         result.LastError.ShouldNotBeNull();
-        result.LastError.ShouldContain("supports only marketplace bookings and subscription billing windows");
+        result.LastError.ShouldContain("does not support this marketplace purchase type");
     }
 
     [Theory]
@@ -341,6 +341,133 @@ public class ProcessAsyncShould
         result.Status.ShouldBe(MarketplaceRefundStatusConstants.Failed);
         result.LastError.ShouldNotBeNull();
         result.LastError.ShouldContain("original Xero invoice link");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Complete_Entitlement_Refund_When_Xero_Credit_Note_Is_Created(
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceRefundRepository marketplaceRefundRepository,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        [Frozen]
+        AccountingApi accountingApi,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        ILogger<XeroRefundService> logger,
+        CancellationToken cancellationToken)
+    {
+        organizationConfiguration.ApiKey = "api-key";
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-entitlement-1",
+            Status = MarketplaceRefundStatusConstants.Processing,
+            OrganizationId = "org-1",
+            LocalEntityType = MarketplaceRefundEntityTypeConstants.EntitlementPurchase,
+            LocalEntityId = "purchase-1",
+            RefundAmount = 25m,
+            Currency = "NZD",
+            RequestedAt = new DateTimeOffset(2026, 4, 7, 10, 0, 0, TimeSpan.Zero),
+        };
+        var invoiceLink = new AccountingInvoiceExportLink
+        {
+            Id = "link-entitlement-1",
+            OrganizationId = "org-1",
+            Provider = AccountingProviderConstants.Xero,
+            LocalEntityType = AccountingEntityTypeConstants.EntitlementPurchase,
+            LocalEntityId = "purchase-1",
+            ExternalInvoiceId = "4dded1af-9766-4b33-8d51-c11f509c466f",
+            ExternalInvoiceNumber = "SKD-000066",
+        };
+        var xeroConnection = new XeroConnection
+        {
+            Id = "xero-1",
+            TenantId = "tenant-1",
+            IsActive = true,
+            AccessTokenEncrypted = "encrypted-access",
+            AccessTokenExpiresAt = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow().AddMinutes(30)),
+        };
+        var sut = new TestableXeroRefundService(
+            organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
+            repositoryFactory,
+            xeroSdkClientFactory,
+            xeroTokenEncryptionService,
+            TimeProvider.System,
+            logger)
+        {
+            InvoiceResponse = new Invoices
+            {
+                _Invoices =
+                [
+                    CreateInvoice(
+                        Guid.Parse(invoiceLink.ExternalInvoiceId),
+                        0m,
+                        [
+                            new Payment
+                            {
+                                Account = new Account
+                                {
+                                    Code = "090",
+                                },
+                                Code = "090",
+                            },
+                        ],
+                        [
+                            new LineItem
+                            {
+                                AccountCode = "200",
+                                TaxType = "OUTPUT2",
+                            },
+                        ]),
+                ],
+            },
+            CreditNoteResponse = new CreditNotes
+            {
+                _CreditNotes =
+                [
+                    new CreditNote
+                    {
+                        CreditNoteID = Guid.Parse("eb8e81fe-ebfb-47c6-9d0c-0fdc40d4eb0f"),
+                        CreditNoteNumber = "CN-ENT-001",
+                    },
+                ],
+            },
+        };
+
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
+        A.CallTo(() => repositoryFactory.MarketplaceRefundRepository).Returns(marketplaceRefundRepository);
+        A.CallTo(() => accountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
+                AccountingProviderConstants.Xero,
+                AccountingEntityTypeConstants.EntitlementPurchase,
+                "purchase-1",
+                cancellationToken))
+            .Returns(invoiceLink);
+        A.CallTo(() => marketplaceRefundRepository.Update(refund)).Returns(refund);
+        A.CallTo(() => callInvoker.AsyncUnaryCall(
+                A<Method<Admin_GetXeroConnectionInput, XeroConnection>>._,
+                A<string?>._,
+                A<CallOptions>._,
+                A<Admin_GetXeroConnectionInput>.That.Matches(input => input.OrganizationId == "org-1")))
+            .Returns(CreateResponse(xeroConnection));
+        A.CallTo(() => xeroTokenEncryptionService.Decrypt("encrypted-access")).Returns("access-token");
+        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(accountingApi);
+
+        var result = await sut.ProcessAsync(refund, cancellationToken);
+
+        result.Status.ShouldBe(MarketplaceRefundStatusConstants.Completed);
+        result.ExternalRefundNumber.ShouldBe("CN-ENT-001");
+        sut.CapturedCreditNotes.ShouldNotBeNull();
+        sut.CapturedPayment.ShouldNotBeNull();
+        sut.CapturedPayment!.Amount.ShouldBe(25m);
     }
 
     [Theory]
@@ -1093,11 +1220,11 @@ public class ProcessAsyncShould
             timeProvider,
             logger)
     {
-        public Invoices? InvoiceResponse { get; init; }
-        public CreditNotes? CreditNoteResponse { get; init; }
-        public CreditNotes? CreditNoteByIdResponse { get; init; }
-        public Payments? PaymentResponse { get; init; }
-        public Payments? HistoricalPaymentResponse { get; init; }
+        public Invoices? InvoiceResponse { get; set; }
+        public CreditNotes? CreditNoteResponse { get; set; }
+        public CreditNotes? CreditNoteByIdResponse { get; set; }
+        public Payments? PaymentResponse { get; set; }
+        public Payments? HistoricalPaymentResponse { get; set; }
         public bool CreditNoteByIdRequested { get; private set; }
         public bool HistoricalPaymentLookupRequested { get; private set; }
         public CreditNotes? CapturedCreditNotes { get; private set; }

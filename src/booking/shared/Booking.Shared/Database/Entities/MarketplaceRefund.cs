@@ -31,8 +31,8 @@ public class MarketplaceRefund : EntityBase
     public string? PaymentRefundStatus { get; set; }
     public DateTimeOffset? PaymentRefundLastProcessedAt { get; set; }
     public string? PaymentRefundLastError { get; set; }
-    public string RefundKind { get; set; } = null!;
-    public string IdempotencyKey { get; set; } = null!;
+    public string RefundKind { get; set; }
+    public string IdempotencyKey { get; set; }
     public string? PolicySnapshotJson { get; set; }
     public string? CalculationResultJson { get; set; }
     public string? TimezoneId { get; set; }

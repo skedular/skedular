@@ -27,7 +27,8 @@ public class RecurringBookingPaymentService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITemporalOutboxService temporalOutboxService,
     IEntityMapper sharedEntityMapper,
-    IGraphQlTopicEventSender graphQlTopicEventSender) : IRecurringBookingPaymentService
+    IGraphQlTopicEventSender graphQlTopicEventSender,
+    ILogger<RecurringBookingPaymentService> logger) : IRecurringBookingPaymentService
 {
     public Task<RecurringBooking> ConfirmPaymentAsync(string id, CancellationToken cancellationToken) =>
         UpdatePaymentStatusInternalAsync(id, PaymentStatus.Confirmed, cancellationToken);
@@ -44,6 +45,11 @@ public class RecurringBookingPaymentService(
         CancellationToken cancellationToken)
     {
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        logger.LogInformation(
+            "Updating recurring marketplace booking payment status. RecurringBookingId={RecurringBookingId}, CustomerId={CustomerId}, PaymentStatus={PaymentStatus}",
+            id,
+            customerId,
+            paymentStatus);
         var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(id, cancellationToken) ??
                                throw new RecurringBookingNotFound();
         if (recurringBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace || recurringBooking.MarketplaceBooking is null)
@@ -95,6 +101,13 @@ public class RecurringBookingPaymentService(
         {
             await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
         }
+
+        logger.LogInformation(
+            "Updated recurring marketplace booking payment status. RecurringBookingId={RecurringBookingId}, PaymentStatus={PaymentStatus}, PaymentMethod={PaymentMethod}, RelatedBookingCount={RelatedBookingCount}",
+            recurringBooking.Id,
+            paymentStatus,
+            recurringBooking.MarketplaceBooking.PaymentMethod,
+            relatedBookings.Count);
 
         return sharedEntityMapper.MapTo(recurringBooking);
     }

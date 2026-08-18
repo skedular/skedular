@@ -4,15 +4,15 @@ namespace Booking.Shared.Models;
 
 public sealed record ResourceAvailabilityResourceRow
 {
-    public required string Id { get; init; }
-    public required string Name { get; init; }
-    public required bool Inactive { get; init; }
-    public required string LocationId { get; init; }
-    public required string LocationName { get; init; }
-    public required string OrganizationType { get; init; }
-    public required OpeningHours? OpeningHours { get; init; }
-    public required string? ZoneId { get; init; }
-    public required string? ZoneName { get; init; }
-    public required string ResourceType { get; init; }
-    public required IReadOnlyList<ResourceBookingWindowRow> BookingWindows { get; init; }
+    public required string Id { get; set; }
+    public required string Name { get; set; }
+    public required bool Inactive { get; set; }
+    public required string LocationId { get; set; }
+    public required string LocationName { get; set; }
+    public required string OrganizationType { get; set; }
+    public required OpeningHours? OpeningHours { get; set; }
+    public required string? ZoneId { get; set; }
+    public required string? ZoneName { get; set; }
+    public required string ResourceType { get; set; }
+    public required IReadOnlyList<ResourceBookingWindowRow> BookingWindows { get; set; }
 }

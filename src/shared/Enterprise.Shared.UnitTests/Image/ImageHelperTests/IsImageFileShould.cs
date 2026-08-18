@@ -22,7 +22,7 @@ public class IsImageFileShould
     [AutoFakeItEasyData]
     public void Return_false_for_non_image_stream(ImageHelper sut)
     {
-        using var stream = new MemoryStream("not an image"u8.ToArray());
+        using var stream = new MemoryStream([.. "not an image"u8]);
 
         var result = sut.IsImageFile(stream);
 
@@ -47,7 +47,7 @@ public class IsImageFileShould
     [AutoFakeItEasyData]
     public void Return_false_for_non_image_on_get_dimensions(ImageHelper sut)
     {
-        using var stream = new MemoryStream("not an image"u8.ToArray());
+        using var stream = new MemoryStream([.. "not an image"u8]);
 
         var (isImage, width, height) = sut.GetImageWidthHeight(stream);
 

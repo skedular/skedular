@@ -157,9 +157,10 @@ public class MarketplaceRefundAdminService(
         ArgumentException.ThrowIfNullOrWhiteSpace(reason);
         var refund = await GetAuthorizedRefundAsync(id, cancellationToken);
         if (refund.ExternalRefundId is not null || refund.ExternalPaymentRefundId is not null ||
-            refund.Status is MarketplaceRefundStatusConstants.ProviderPending or MarketplaceRefundStatusConstants.Processing)
+            refund.Status is MarketplaceRefundStatusConstants.Approved or MarketplaceRefundStatusConstants.ProviderPending
+                or MarketplaceRefundStatusConstants.Processing)
         {
-            throw new InvalidOperationException("A refund cannot be cancelled after provider submission.");
+            throw new InvalidOperationException("A refund cannot be cancelled after approval or provider submission.");
         }
 
         refund.CancellationReason = reason;
@@ -246,6 +247,8 @@ public class MarketplaceRefundAdminService(
     private static MarketplaceRefundReadModel ToModel(MarketplaceRefund src) => new()
     {
         Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        ModifiedAt = src.ModifiedAt,
         LocalEntityType = src.LocalEntityType.ToMarketplaceRefundEntityType(),
         LocalEntityId = src.LocalEntityId,
         Status = src.Status.ToMarketplaceRefundStatus(),
@@ -382,7 +385,8 @@ public class MarketplaceRefundAdminService(
     private static bool IsBankTransferRefund(MarketplaceRefund refund) =>
         refund.PaymentAllocations.Any(item =>
             item.IsSourcePayment &&
-            string.Equals(item.SourcePaymentProvider, "BANK_TRANSFER", StringComparison.OrdinalIgnoreCase));
+            string.Equals(item.SourcePaymentProvider, MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer,
+                StringComparison.OrdinalIgnoreCase));
 
     private static void EnsureBankTransferRefund(MarketplaceRefund refund)
     {

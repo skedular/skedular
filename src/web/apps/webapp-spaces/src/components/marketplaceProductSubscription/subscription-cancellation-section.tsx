@@ -1,10 +1,10 @@
-import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import type { SupportedMarketplaceBookingSubscriptionCancellationModeDetails } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { alpha } from '@mui/material/styles';
 import type { SxProps, Theme } from '@mui/system';
+import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 
 const cancellationButtonSx: SxProps<Theme> = {
   borderColor: (theme) => alpha(theme.palette.mode === 'dark' ? theme.palette.info.light : theme.palette.info.main, 0.45),
@@ -66,7 +66,7 @@ const SubscriptionCancellationSection = ({
               aria-label="Cancel subscription now instead"
               sx={cancellationButtonSx}
             >
-              Cancel now instead
+              Cancel now
             </Button>
           ) : undefined
         }

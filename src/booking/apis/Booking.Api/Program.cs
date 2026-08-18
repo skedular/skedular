@@ -42,6 +42,7 @@ public class Program
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
+            .AddRepositories()
             .AddRepositoryFactory()
             .AddPublishers()
             .AddOutboxPublishers()

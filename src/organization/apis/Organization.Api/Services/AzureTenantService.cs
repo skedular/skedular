@@ -48,7 +48,7 @@ public class AzureTenantService(
         "Teamwork.Migrate.All", // Send chatMessage in Channel
     ];
 
-    private static readonly string[] s_allPermissions = s_userProfilePermissions.Concat(s_teamPermissions).Concat(s_channelPermissions).ToArray();
+    private static readonly string[] s_allPermissions = [.. s_userProfilePermissions, .. s_teamPermissions, .. s_channelPermissions];
 
     public async Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken)
     {

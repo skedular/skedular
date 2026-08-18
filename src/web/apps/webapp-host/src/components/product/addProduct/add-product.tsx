@@ -67,6 +67,9 @@ type PricingOptionForm = {
   title: string | null;
   subTitle: string | null;
   cadence: string;
+  fulfillmentType: string;
+  entitlementCreditQuantity: string;
+  entitlementValidityDays: string;
   price: string;
   numberOfResourcesToBook: string;
   minDurationMinutes: string;
@@ -105,6 +108,9 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   title: null,
   subTitle: null,
   cadence: 'ONE_TIME',
+  fulfillmentType: 'RESERVATION',
+  entitlementCreditQuantity: '',
+  entitlementValidityDays: '',
   price: '',
   numberOfResourcesToBook: '1',
   minDurationMinutes: '',
@@ -453,6 +459,11 @@ const AddProduct = (props: Props) => {
             availableDays: pricingOption.availableDays,
             requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
             supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
+            fulfillmentType: pricingOption.fulfillmentType as never,
+            entitlementCreditQuantity:
+              pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,
+            entitlementValidityDays:
+              pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
             numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
             minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
             maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
@@ -518,6 +529,11 @@ const AddProduct = (props: Props) => {
               availableDays: pricingOption.availableDays,
               requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
               supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
+              fulfillmentType: pricingOption.fulfillmentType as never,
+              entitlementCreditQuantity:
+                pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,
+              entitlementValidityDays:
+                pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
               numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
               minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
               maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,

@@ -473,7 +473,7 @@ public class OrganizationArrearsBillingIntegrations(
             null,
             null,
             accountingInvoiceLink.Id,
-            cancellationToken);
+            cancellationToken: cancellationToken);
         var exportedInvoice = invoiceResponse?._Invoices?.FirstOrDefault() ??
                               throw new XeroInvoiceExportFailedException();
 

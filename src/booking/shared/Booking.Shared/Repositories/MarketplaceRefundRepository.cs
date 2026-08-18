@@ -73,6 +73,10 @@ public interface IMarketplaceRefundRepository : IRepository<MarketplaceRefund>
         IReadOnlyList<string>? statuses,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyDictionary<string, string>> GetCustomerNamesByRefundsAsync(
+        IReadOnlyList<MarketplaceRefund> refunds,
+        CancellationToken cancellationToken);
+
     Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceRefund>>, int)> GetPaginatedByOrganizationIdAsync(
         string organizationId,
         IReadOnlyList<string>? statuses,
@@ -127,6 +131,58 @@ public interface IMarketplaceRefundRepository : IRepository<MarketplaceRefund>
 public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, MarketplaceRefund>(dbContext, timeProvider), IMarketplaceRefundRepository
 {
+    public async Task<IReadOnlyDictionary<string, string>> GetCustomerNamesByRefundsAsync(
+        IReadOnlyList<MarketplaceRefund> refunds,
+        CancellationToken cancellationToken)
+    {
+        var names = new Dictionary<string, string>();
+        var bookingIds = refunds.Where(item => item.LocalEntityType == MarketplaceRefundEntityTypeConstants.MarketplaceBooking)
+            .Select(item => item.LocalEntityId).Distinct().ToList();
+        var subscriptionIds = refunds.Where(item => item.LocalEntityType == MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription)
+            .Select(item => item.LocalEntityId).Distinct().ToList();
+        var purchaseIds = refunds.Where(item => item.LocalEntityType == MarketplaceRefundEntityTypeConstants.EntitlementPurchase)
+            .Select(item => item.LocalEntityId).Distinct().ToList();
+
+        if (bookingIds.Count > 0)
+        {
+            var customers = await DbContext.MarketplaceBooking.AsNoTracking().Where(item => bookingIds.Contains(item.Id))
+                .Select(item => new CustomerNameParts(item.Id, item.PaidByCustomer == null ? null : item.PaidByCustomer.Name,
+                    item.PaidByCustomer == null ? null : item.PaidByCustomer.GivenName,
+                    item.PaidByCustomer == null ? null : item.PaidByCustomer.MiddleName,
+                    item.PaidByCustomer == null ? null : item.PaidByCustomer.FamilyName)).ToListAsync(cancellationToken);
+            AddNames(names, MarketplaceRefundEntityTypeConstants.MarketplaceBooking, customers);
+        }
+
+        if (subscriptionIds.Count > 0)
+        {
+            var customers = await DbContext.MarketplaceBookingSubscription.AsNoTracking().Where(item => subscriptionIds.Contains(item.Id))
+                .Select(item => new CustomerNameParts(item.Id,
+                    item.MarketplaceBooking == null || item.MarketplaceBooking.PaidByCustomer == null
+                        ? null
+                        : item.MarketplaceBooking.PaidByCustomer.Name,
+                    item.MarketplaceBooking == null || item.MarketplaceBooking.PaidByCustomer == null
+                        ? null
+                        : item.MarketplaceBooking.PaidByCustomer.GivenName,
+                    item.MarketplaceBooking == null || item.MarketplaceBooking.PaidByCustomer == null
+                        ? null
+                        : item.MarketplaceBooking.PaidByCustomer.MiddleName,
+                    item.MarketplaceBooking == null || item.MarketplaceBooking.PaidByCustomer == null
+                        ? null
+                        : item.MarketplaceBooking.PaidByCustomer.FamilyName)).ToListAsync(cancellationToken);
+            AddNames(names, MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription, customers);
+        }
+
+        if (purchaseIds.Count > 0)
+        {
+            var customers = await DbContext.EntitlementPurchase.AsNoTracking().Where(item => purchaseIds.Contains(item.Id))
+                .Select(item => new CustomerNameParts(item.Id, item.Customer.Name, item.Customer.GivenName,
+                    item.Customer.MiddleName, item.Customer.FamilyName)).ToListAsync(cancellationToken);
+            AddNames(names, MarketplaceRefundEntityTypeConstants.EntitlementPurchase, customers);
+        }
+
+        return names;
+    }
+
     public MarketplaceRefund Add(MarketplaceRefund marketplaceRefund)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(marketplaceRefund.IdempotencyKey);
@@ -529,4 +585,19 @@ public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvide
         delivery.CreatedAt = TimeProvider.GetUtcNow();
         return DbContext.MarketplaceRefundNotificationDelivery.Add(delivery).Entity;
     }
+
+    private static void AddNames(IDictionary<string, string> names, string entityType, IEnumerable<CustomerNameParts> customers)
+    {
+        foreach (var customer in customers)
+        {
+            var displayName = customer.Name ?? string.Join(" ", new[] { customer.GivenName, customer.MiddleName, customer.FamilyName }
+                .Where(item => !string.IsNullOrWhiteSpace(item))).Trim();
+            if (!string.IsNullOrWhiteSpace(displayName))
+            {
+                names[$"{entityType}:{customer.Id}"] = displayName;
+            }
+        }
+    }
+
+    private sealed record CustomerNameParts(string Id, string? Name, string? GivenName, string? MiddleName, string? FamilyName);
 }

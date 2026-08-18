@@ -9,6 +9,7 @@ import Slider from '@mui/material/Slider';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { BodyIconTypography, StackColumn, TwoButtonsDialogActions } from '@skedular/ui';
+import { NotificationContent } from '../notification';
 import React, { memo, useRef, useState } from 'react';
 import ReactCrop, { centerCrop, Crop, makeAspectCrop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -177,7 +178,7 @@ const ImageFileUploaderWithCropper = ({ onUpload, helperText }: Props) => {
       await onUpload(file);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      toast.error(`Failed to upload image file. Error: ${errorMessage}.`);
+      toast.error(<NotificationContent content={`Failed to upload image file. Error: ${errorMessage}.`} />);
     }
   };
 

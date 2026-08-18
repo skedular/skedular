@@ -10,7 +10,7 @@ using HotChocolate.Types;
 namespace Booking.Api.GraphQL.MarketplacePurchaseHistory;
 
 [QueryType]
-public sealed class RootQuery
+public sealed class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> logger)
 {
     [GraphQLName("marketplacePurchases")]
     [UseResolverScope]
@@ -32,17 +32,13 @@ public sealed class RootQuery
         MarketplacePurchaseHistoryOrderInput[]? orderBy,
         [Service]
         IMarketplacePurchaseHistoryService service,
-        [Service]
-        IGraphQlMapper graphQlMapper,
-        CancellationToken cancellationToken,
-        [Service]
-        ILogger<RootQuery>? logger = null)
+        CancellationToken cancellationToken)
     {
         var definedSources = Enum.GetValues<MarketplacePurchaseSourceType>();
         var unknownSources = sourceTypes?.Where(item => !definedSources.Contains(item)).ToList() ?? [];
         if (unknownSources.Count > 0)
         {
-            logger?.LogWarning("MarketplacePurchasesAsync received {Count} unrecognised source type value(s): {Values}", unknownSources.Count,
+            logger.LogWarning("MarketplacePurchasesAsync received {Count} unrecognised source type value(s): {Values}", unknownSources.Count,
                 string.Join(", ", unknownSources));
         }
 
@@ -50,7 +46,7 @@ public sealed class RootQuery
         var unknownLifecycleStates = lifecycleStates?.Where(item => !definedLifecycleStates.Contains(item)).ToList() ?? [];
         if (unknownLifecycleStates.Count > 0)
         {
-            logger?.LogWarning("MarketplacePurchasesAsync received {Count} unrecognised lifecycle state value(s): {Values}",
+            logger.LogWarning("MarketplacePurchasesAsync received {Count} unrecognised lifecycle state value(s): {Values}",
                 unknownLifecycleStates.Count, string.Join(", ", unknownLifecycleStates));
         }
 

@@ -35,6 +35,6 @@ public class BuildSeekPredicateShould
 
     private sealed class TestEntity : EntityBase
     {
-        public DateTimeOffset UploadedAt { get; init; }
+        public DateTimeOffset UploadedAt { get; set; }
     }
 }

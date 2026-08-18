@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9219b37201f58bede8bb7ddc56ed9a41>>
+ * @generated SignedSource<<cdec568f23bd2ab1077e747ce45ac159>>
  * @lightSyntaxTransform
  */
 
@@ -8,6 +8,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type EntitlementStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PENDING" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type guestStoreFrontActivitySummary_query$data = {
   readonly bookings?: {
@@ -16,6 +17,11 @@ export type guestStoreFrontActivitySummary_query$data = {
   readonly marketplaceBookingSubscriptions?: {
     readonly totalCount: number;
   };
+  readonly myEntitlements: ReadonlyArray<{
+    readonly availableQuantity: number;
+    readonly id: string;
+    readonly status: EntitlementStatus;
+  }>;
   readonly " $fragmentType": "guestStoreFrontActivitySummary_query";
 };
 export type guestStoreFrontActivitySummary_query$key = {
@@ -153,6 +159,38 @@ return {
           "storageKey": null
         }
       ]
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "EntitlementDetails",
+      "kind": "LinkedField",
+      "name": "myEntitlements",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "availableQuantity",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "status",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -160,6 +198,6 @@ return {
 };
 })();
 
-(node as any).hash = "d1408baabadd294a60da7d5c89b13c1b";
+(node as any).hash = "298cc9136e97572f664fc657e51562b7";
 
 export default node;

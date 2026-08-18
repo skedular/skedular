@@ -3,6 +3,7 @@ using Booking.Shared.Services;
 
 namespace Booking.Shared.UnitTests.Services.HostStripeApplicationFeeServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class GetAmountInMinorUnitsShould
 {
     [Theory]

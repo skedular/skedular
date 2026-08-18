@@ -1,6 +1,6 @@
 export type MarketplacePurchaseSort = 'ACTIVITY_DESC' | 'PURCHASED_DESC' | 'BOOKING_FROM_ASC' | 'BOOKING_UNTIL_ASC';
 export type MarketplacePurchaseLifecycleState = 'ACTIVE' | 'CANCELLED' | 'DELETED' | 'EXPIRED' | 'PAYMENT_FAILED' | 'PENDING' | '%future added value';
-export type MarketplacePurchaseSourceType = 'BOOKING' | 'SUBSCRIPTION' | '%future added value';
+export type MarketplacePurchaseSourceType = 'BOOKING' | 'ENTITLEMENT' | 'SUBSCRIPTION' | '%future added value';
 export type MarketplacePurchasePaymentStatus = 'CONFIRMED' | 'PENDING' | 'REJECTED' | 'EXPIRED' | 'NOT_SET' | '%future added value';
 export type MarketplacePurchaseOrder = MarketplacePurchaseQueryVariables['purchaseOrderBy'][number];
 
@@ -14,6 +14,8 @@ export type MarketplacePurchaseQueryVariables = {
   purchaseActivityUntil?: string;
   purchaseOrderBy: [{ field: 'ACTIVITY_AT' | 'PURCHASED_AT' | 'BOOKING_FROM' | 'BOOKING_UNTIL'; direction: 'ASCENDING' | 'DESCENDING' }];
 };
+
+const allMarketplacePurchaseLifecycleStates: MarketplacePurchaseLifecycleState[] = ['ACTIVE', 'CANCELLED', 'DELETED', 'EXPIRED', 'PAYMENT_FAILED', 'PENDING'];
 
 export const toMarketplacePurchaseOrder = (sort: string): MarketplacePurchaseOrder => {
   const normalized = (['ACTIVITY_DESC', 'PURCHASED_DESC', 'BOOKING_FROM_ASC', 'BOOKING_UNTIL_ASC'] as const).includes(sort as MarketplacePurchaseSort)
@@ -45,7 +47,9 @@ export const buildMarketplacePurchaseQueryVariables = (input: {
   purchaseAfter: input.after,
   purchaseFirst: 50,
   purchaseSourceTypes: input.sourceType ? [input.sourceType as MarketplacePurchaseSourceType] : undefined,
-  purchaseLifecycleStates: input.lifecycleState ? [input.lifecycleState as MarketplacePurchaseLifecycleState] : undefined,
+  // Retained purchases include ordinary cancelled bookings. The backend filters
+  // entitlement-funded child bookings from this same default history view.
+  purchaseLifecycleStates: input.lifecycleState ? [input.lifecycleState as MarketplacePurchaseLifecycleState] : allMarketplacePurchaseLifecycleStates,
   purchasePaymentStatuses: input.paymentStatus ? [input.paymentStatus as MarketplacePurchasePaymentStatus] : undefined,
   purchaseActivityFrom: input.activityFrom ? `${input.activityFrom}T00:00:00.000Z` : undefined,
   purchaseActivityUntil: input.activityUntil ? `${input.activityUntil}T23:59:59.999Z` : undefined,

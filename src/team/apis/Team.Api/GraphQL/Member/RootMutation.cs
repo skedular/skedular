@@ -160,7 +160,7 @@ public class RootMutation(IGraphQlMapper graphQlMapper, ILogger<RootMutation> lo
             return new TeamMembersDetailsPayload
             {
                 ClientMutationId = input.ClientMutationId,
-                Members = organizationMembers.Select(graphQlMapper.MapTo).ToArray(),
+                Members = [.. organizationMembers.Select(graphQlMapper.MapTo)],
             };
         }
         catch (Exception ex)

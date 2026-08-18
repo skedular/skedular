@@ -61,6 +61,8 @@ const RootQuery = graphql`
         requiresReason
         isPolicyOverride
         unavailableReason
+        isCreditFunded
+        creditOutcome
       }
       cancellationPolicyOverridden
       cancellationOverrideReason
@@ -210,6 +212,8 @@ const BookingSubscription = graphql`
         requiresReason
         isPolicyOverride
         unavailableReason
+        isCreditFunded
+        creditOutcome
       }
       cancellationPolicyOverridden
       cancellationOverrideReason
@@ -662,9 +666,11 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                         label={
                           cancellationAvailability?.isPolicyOverride
                             ? 'You have permission to override this product’s cancellation policy. Please provide a reason before cancelling.'
-                            : hasConfirmedPayment
-                              ? 'You can cancel this booking here. If payment has already been recorded, any eligible refund is reviewed separately after cancellation.'
-                              : 'You can cancel this booking here. If payment was never confirmed, cancellation stops the booking without creating a refund.'
+                            : cancellationAvailability?.isCreditFunded && cancellationAvailability.creditOutcome
+                              ? cancellationAvailability.creditOutcome
+                              : hasConfirmedPayment
+                                ? 'You can cancel this booking here. If payment has already been recorded, any eligible refund is reviewed separately after cancellation.'
+                                : 'You can cancel this booking here. If payment was never confirmed, cancellation stops the booking without creating a refund.'
                         }
                         sx={{ mt: 1, opacity: 0.82 }}
                       />
@@ -738,9 +744,11 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
         <DialogContent sx={{ mt: 2 }}>
           <DialogContentText>{`Cancel ${productTitle} now? If this booking is still within its cancellation window, it will be cancelled immediately.`}</DialogContentText>
           <DialogContentText sx={{ mt: 1.5 }}>
-            {hasConfirmedPayment
-              ? 'If payment has already been recorded, any refund still depends on the cancellation policy and may be processed after the cancellation is confirmed.'
-              : 'If payment was never confirmed, this cancellation will not create a refund.'}
+            {cancellationAvailability?.isCreditFunded && cancellationAvailability.creditOutcome
+              ? cancellationAvailability.creditOutcome
+              : hasConfirmedPayment
+                ? 'If payment has already been recorded, any refund still depends on the cancellation policy and may be processed after the cancellation is confirmed.'
+                : 'If payment was never confirmed, this cancellation will not create a refund.'}
           </DialogContentText>
           {cancellationAvailability?.requiresReason ? (
             <TextField

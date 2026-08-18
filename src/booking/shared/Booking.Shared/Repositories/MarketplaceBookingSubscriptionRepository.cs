@@ -54,6 +54,8 @@ public static class MarketplaceBookingSubscriptionExtensions
                 .ThenInclude(query => query.Product)
                 .ThenInclude(query => query.Organization)
                 .Include(query => query.MarketplaceBooking)
+                .ThenInclude(query => query!.PaidByCustomer)
+                .Include(query => query.MarketplaceBooking)
                 .ThenInclude(query => query.ProductVersion)
                 .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
                 .Include(query =>

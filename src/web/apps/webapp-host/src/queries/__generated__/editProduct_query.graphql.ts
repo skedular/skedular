@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9a4efa52a350ca11a69c77320e73f9c5>>
+ * @generated SignedSource<<8fa65a4d279c51ad76371dce80d1f5d6>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,7 @@ export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
+export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editProduct_query$data = {
@@ -63,6 +64,10 @@ export type editProduct_query$data = {
         readonly minutesBefore: number;
         readonly refundPercentage: number;
       }>;
+      readonly entitlementCreditQuantity: number | null | undefined;
+      readonly entitlementValidityDays: number | null | undefined;
+      readonly fulfillmentType: ProductPricingFulfillmentType;
+      readonly id: string;
       readonly index: number;
       readonly isTaxInclusive: boolean;
       readonly listingMetadata: {
@@ -306,6 +311,7 @@ return {
           "name": "pricingOptions",
           "plural": true,
           "selections": [
+            (v0/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -455,6 +461,27 @@ return {
               "kind": "ScalarField",
               "name": "acceptedPaymentMethods",
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "fulfillmentType",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "entitlementCreditQuantity",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "entitlementValidityDays",
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -549,6 +576,6 @@ return {
 };
 })();
 
-(node as any).hash = "380760bcfa28c385178124c91241fb24";
+(node as any).hash = "dcd9be01bd11209913f629ea25b08ff3";
 
 export default node;

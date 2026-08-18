@@ -36,6 +36,9 @@ export type PricingOptionForm = {
   supportsSubscriptionAutoRenewal: boolean;
   maxAllowedResourcesLockTimePaidViaCard: string;
   maxAllowedResourcesLockTimePaidViaBankTransfer: string;
+  fulfillmentType: string;
+  entitlementCreditQuantity: string;
+  entitlementValidityDays: string;
 };
 
 export type HostListingProductSettingsValues = {
@@ -51,6 +54,7 @@ type Props = {
   onChange: (field: keyof Omit<HostListingProductSettingsValues, 'pricingOptions'>) => (event: React.ChangeEvent<HTMLInputElement>) => void;
   onChangePricingOption: (index: number, field: keyof PricingOptionForm) => (event: React.ChangeEvent<HTMLInputElement>) => void;
   onTogglePricingOption: (index: number, field: 'isTaxInclusive' | 'supportsSubscriptionAutoRenewal', value: boolean) => void;
+  onChangeFulfillmentType: (index: number, value: string) => void;
   onChangePaymentMethods: (optionIndex: number, methods: string[]) => void;
   onChangeAvailableDays: (optionIndex: number, availableDays: string[]) => void;
   onSetCancellationPolicy: (optionIndex: number, policy: string) => void;
@@ -100,6 +104,7 @@ const HostListingProductSettings = ({
   values,
   onChange,
   onChangePricingOption,
+  onChangeFulfillmentType,
   onTogglePricingOption,
   onChangePaymentMethods,
   onChangeAvailableDays,
@@ -174,6 +179,36 @@ const HostListingProductSettings = ({
                     </FormFieldLabel>
                   </Grid>
                 </Grid>
+              </StackColumn>
+            </SettingsSectionCard>
+
+            <SettingsSectionCard title="Credit entitlement" description="Offer prepaid credits that customers can use for eligible bookings.">
+              <StackColumn spacing={2}>
+                <FormFieldLabel label="Fulfillment type">
+                  <TextField select fullWidth value={opt.fulfillmentType} onChange={(event) => onChangeFulfillmentType(index, event.target.value)}>
+                    <MenuItem sx={{ minHeight: 48, fontSize: 'inherit' }} value="RESERVATION">
+                      Reservation
+                    </MenuItem>
+                    <MenuItem sx={{ minHeight: 48, fontSize: 'inherit' }} value="ENTITLEMENT">
+                      Credit entitlement
+                    </MenuItem>
+                  </TextField>
+                </FormFieldLabel>
+                {opt.fulfillmentType === 'ENTITLEMENT' ? (
+                  <Grid container spacing={2}>
+                    <Grid size={{ xs: 12, md: 4 }}>
+                      <FormFieldLabel label="Credit quantity">
+                        <TextField fullWidth value={opt.entitlementCreditQuantity} onChange={onChangePricingOption(index, 'entitlementCreditQuantity')} />
+                      </FormFieldLabel>
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 4 }}></Grid>
+                    <Grid size={{ xs: 12, md: 4 }}>
+                      <FormFieldLabel label="Validity (days)">
+                        <TextField fullWidth value={opt.entitlementValidityDays} onChange={onChangePricingOption(index, 'entitlementValidityDays')} />
+                      </FormFieldLabel>
+                    </Grid>
+                  </Grid>
+                ) : null}
               </StackColumn>
             </SettingsSectionCard>
 

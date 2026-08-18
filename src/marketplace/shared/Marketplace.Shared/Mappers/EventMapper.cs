@@ -94,6 +94,11 @@ public class EventMapper : IEventMapper
             CancellationPolicyType = MapTo(src.CancellationPolicyType),
             BillingMode = MapTo(src.BillingMode),
             RequiredDaysPerWeek = src.RequiredDaysPerWeek.ToNullInt(),
+            FulfillmentType = src.FulfillmentType == ProductPricingFulfillmentType.Entitlement
+                ? Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingFulfillmentType.Entitlement
+                : Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingFulfillmentType.Reservation,
+            EntitlementCreditQuantity = src.EntitlementCreditQuantity.ToNullInt(),
+            EntitlementValidityDays = src.EntitlementValidityDays.ToNullInt(),
         };
 
         productPricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));

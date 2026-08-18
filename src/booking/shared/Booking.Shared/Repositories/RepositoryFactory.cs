@@ -34,6 +34,8 @@ public interface IRepositoryFactory
     IOrganizationInvoiceCounterRepository OrganizationInvoiceCounterRepository { get; }
     IOrganizationArrearsInvoiceRepository OrganizationArrearsInvoiceRepository { get; }
     IMarketplaceRefundRepository MarketplaceRefundRepository { get; }
+    IEntitlementRepository EntitlementRepository { get; }
+    IEntitlementPurchaseRepository EntitlementPurchaseRepository { get; }
     IMarketplaceRefundEventRepository MarketplaceRefundEventRepository { get; }
     IMarketplaceBookingFailureRepository MarketplaceBookingFailureRepository { get; }
     IMarketplaceBookingFailureEventRepository MarketplaceBookingFailureEventRepository { get; }
@@ -78,6 +80,8 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         OrganizationInvoiceCounterRepository = new OrganizationInvoiceCounterRepository(_dbContext, timeProvider);
         OrganizationArrearsInvoiceRepository = new OrganizationArrearsInvoiceRepository(_dbContext, timeProvider);
         MarketplaceRefundRepository = new MarketplaceRefundRepository(_dbContext, timeProvider);
+        EntitlementRepository = new EntitlementRepository(_dbContext, timeProvider);
+        EntitlementPurchaseRepository = new EntitlementPurchaseRepository(_dbContext, timeProvider);
         MarketplaceRefundEventRepository = new MarketplaceRefundEventRepository(_dbContext, timeProvider);
         MarketplaceBookingFailureRepository = new MarketplaceBookingFailureRepository(_dbContext, timeProvider);
         MarketplaceBookingFailureEventRepository = new MarketplaceBookingFailureEventRepository(_dbContext, timeProvider);
@@ -117,6 +121,8 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
     public IOrganizationInvoiceCounterRepository OrganizationInvoiceCounterRepository { get; }
     public IOrganizationArrearsInvoiceRepository OrganizationArrearsInvoiceRepository { get; }
     public IMarketplaceRefundRepository MarketplaceRefundRepository { get; }
+    public IEntitlementRepository EntitlementRepository { get; }
+    public IEntitlementPurchaseRepository EntitlementPurchaseRepository { get; }
     public IMarketplaceRefundEventRepository MarketplaceRefundEventRepository { get; }
     public IMarketplaceBookingFailureRepository MarketplaceBookingFailureRepository { get; }
     public IMarketplaceBookingFailureEventRepository MarketplaceBookingFailureEventRepository { get; }

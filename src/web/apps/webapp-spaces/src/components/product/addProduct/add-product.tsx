@@ -81,6 +81,9 @@ type PricingOptionForm = {
   acceptedPaymentMethods: string[];
   availableDays: string[];
   requiredDaysPerWeek: string;
+  fulfillmentType: string;
+  entitlementCreditQuantity: string;
+  entitlementValidityDays: string;
 };
 
 type CancellationRefundRuleForm = {
@@ -118,6 +121,9 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   acceptedPaymentMethods: [],
   availableDays: [],
   requiredDaysPerWeek: '',
+  fulfillmentType: 'RESERVATION',
+  entitlementCreditQuantity: '',
+  entitlementValidityDays: '',
 });
 
 const isSubscriptionCadence = (cadence?: string | null) =>
@@ -449,6 +455,11 @@ const AddProduct = (props: Props) => {
             purchaseCadence: pricingOption.cadence as ProductPricingCadence,
             bookingCadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
+            fulfillmentType: pricingOption.fulfillmentType as never,
+            entitlementCreditQuantity:
+              pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,
+            entitlementValidityDays:
+              pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
             availableDays: pricingOption.availableDays,
             requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
             supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
@@ -514,6 +525,11 @@ const AddProduct = (props: Props) => {
               purchaseCadence: pricingOption.cadence as ProductPricingCadence,
               bookingCadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
+              fulfillmentType: pricingOption.fulfillmentType as never,
+              entitlementCreditQuantity:
+                pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,
+              entitlementValidityDays:
+                pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
               availableDays: pricingOption.availableDays,
               requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
               supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,

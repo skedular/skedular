@@ -51,9 +51,12 @@ export const publicPages: PublicPage[] = [
         path: getDocumentationPath(article),
         title:
           article.product === "spaces" &&
-          ["spaces-bookings", "spaces-faq", "spaces-operations"].includes(
-            article.id,
-          )
+          [
+            "spaces-bookings",
+            "spaces-credit-entitlements",
+            "spaces-faq",
+            "spaces-operations",
+          ].includes(article.id)
             ? `Skedular Spaces ${article.title}`
             : article.id === "teams-best-practices"
               ? "Skedular Teams Best Practices"
@@ -65,7 +68,9 @@ export const publicPages: PublicPage[] = [
                     ? "Skedular Spaces Getting Started"
                     : article.id === "host-operations"
                       ? "Skedular Host Best Practices"
-                      : article.title,
+                      : article.id === "host-credit-entitlements"
+                        ? "Skedular Host Credit-Based Booking Entitlements"
+                        : article.title,
         description:
           article.id === "host-operations"
             ? "Practical guidance for keeping a Skedular Host place accurate, bookable, and easy for renters to understand."

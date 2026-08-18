@@ -2,7 +2,6 @@ using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.MarketplacePurchaseHistory;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
-using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
@@ -12,20 +11,20 @@ namespace Booking.Api.UnitTests.GraphQL.MarketplacePurchaseHistory.RootQueryTest
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class MarketplacePurchasesShould
 {
-    [Fact]
-    public async Task Return_Stable_Cursor_Pages()
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_Stable_Cursor_Pages([Frozen] IGraphQlMapper graphQlMapper, RootQuery sut, CancellationToken cancellationToken)
     {
+        ConfigureMapper(graphQlMapper);
         var service = new StubHistoryService([
             Create("one", TimeProvider.System.GetUtcNow().AddMinutes(-2)),
             Create("two", TimeProvider.System.GetUtcNow().AddMinutes(-1)),
         ]);
-        var query = new RootQuery();
-        var graphQlMapper = new GraphQlMapper(A.Fake<IEntityMapper>());
 
-        var first = await query.MarketplacePurchasesAsync(null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null,
-            service, graphQlMapper, CancellationToken.None);
-        var second = await query.MarketplacePurchasesAsync(first.PageInfo.EndCursor, 1, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, service, graphQlMapper, CancellationToken.None);
+        var first = await sut.MarketplacePurchasesAsync(null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null,
+            service, cancellationToken);
+        var second = await sut.MarketplacePurchasesAsync(first.PageInfo.EndCursor, 1, null, null, null, null, null, null, null, null, null, null,
+            null, null, null, service, cancellationToken);
 
         first.Edges.Single().Node.Id.ShouldBe("marketplace-purchase-history:Booking:one");
         first.Edges.Single().Node.SourceId.ShouldBe("one");
@@ -34,9 +33,11 @@ public class MarketplacePurchasesShould
         second.Edges.Single().Node.SourceId.ShouldBe("two");
     }
 
-    [Fact]
-    public async Task Return_Inactive_History_Evidence()
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_Inactive_History_Evidence([Frozen] IGraphQlMapper graphQlMapper, RootQuery sut, CancellationToken cancellationToken)
     {
+        ConfigureMapper(graphQlMapper);
         var service = new StubHistoryService([
             Create("deleted-booking", TimeProvider.System.GetUtcNow()) with
             {
@@ -46,11 +47,9 @@ public class MarketplacePurchasesShould
                 CancellationReason = "Customer request",
             },
         ]);
-        var query = new RootQuery();
-        var graphQlMapper = new GraphQlMapper(A.Fake<IEntityMapper>());
 
-        var result = await query.MarketplacePurchasesAsync(null, 10, null, null, null, null, null, null, null, null, null, null, null, null, null,
-            service, graphQlMapper, CancellationToken.None);
+        var result = await sut.MarketplacePurchasesAsync(null, 10, null, null, null, null, null, null, null, null, null, null, null, null, null,
+            service, cancellationToken);
 
         result.Edges.Single().Node.IsDeleted.ShouldBeTrue();
         result.Edges.Single().Node.DeletedByCustomerId.ShouldBe("operator-1");
@@ -58,22 +57,23 @@ public class MarketplacePurchasesShould
         result.Edges.Single().Node.LifecycleState.ShouldBe(MarketplacePurchaseLifecycleState.Deleted);
     }
 
-    [Fact]
-    public async Task Forward_Filter_And_Order_Inputs_To_Service()
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Forward_Filter_And_Order_Inputs_To_Service([Frozen] IGraphQlMapper graphQlMapper, RootQuery sut,
+        CancellationToken cancellationToken)
     {
+        ConfigureMapper(graphQlMapper);
         var service = new StubHistoryService([Create("booking-1", TimeProvider.System.GetUtcNow())])
         {
             CaptureInputs = true,
         };
-        var query = new RootQuery();
-        var graphQlMapper = new GraphQlMapper(A.Fake<IEntityMapper>());
         var order = new MarketplacePurchaseHistoryOrderInput
         {
             Field = MarketplacePurchaseHistoryOrderField.BookingUntil,
             Direction = OrderDirection.Ascending,
         };
 
-        await query.MarketplacePurchasesAsync(
+        await sut.MarketplacePurchasesAsync(
             null,
             10,
             null,
@@ -90,8 +90,7 @@ public class MarketplacePurchasesShould
             null,
             [order],
             service,
-            graphQlMapper,
-            CancellationToken.None);
+            cancellationToken);
 
         service.Criteria!.OrganizationCustomDomain.ShouldBe("example.test");
         service.Criteria.CustomerId.ShouldBe("customer-1");
@@ -120,9 +119,29 @@ public class MarketplacePurchasesShould
         null,
         false);
 
+    private static void ConfigureMapper(IGraphQlMapper graphQlMapper) =>
+        A.CallTo(() => graphQlMapper.MapTo(A<MarketplacePurchaseHistoryEntry>._))
+            .ReturnsLazily((MarketplacePurchaseHistoryEntry entry) => new MarketplacePurchaseHistoryDetails
+            {
+                Id = $"marketplace-purchase-history:{entry.SourceType}:{entry.Id}",
+                SourceId = entry.Id,
+                SourceType = entry.SourceType,
+                SourceTypeName = entry.SourceTypeName,
+                LifecycleState = entry.LifecycleState,
+                LifecycleStateName = entry.LifecycleStateName,
+                RenewalState = entry.RenewalState,
+                RenewalStateName = entry.RenewalStateName,
+                PurchasedAt = entry.PurchasedAt,
+                ActivityAt = entry.ActivityAt,
+                PaymentStatus = entry.PaymentStatus,
+                IsDeleted = entry.IsDeleted,
+                DeletedByCustomerId = entry.DeletedByCustomerId,
+                CancellationReason = entry.CancellationReason,
+            });
+
     private sealed class StubHistoryService(IReadOnlyList<MarketplacePurchaseHistoryEntry> entries) : IMarketplacePurchaseHistoryService
     {
-        public bool CaptureInputs { get; init; }
+        public bool CaptureInputs { get; set; }
         public MarketplacePurchaseHistorySearchCriteria? Criteria { get; private set; }
         public IReadOnlyList<MarketplacePurchaseHistoryOrder>? Orders { get; private set; }
 

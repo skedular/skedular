@@ -17,15 +17,9 @@ public enum CancellationActorCategory
     Administrator,
 }
 
-public sealed record CancellationActor(
-    CancellationActorCategory Category,
-    string CustomerId,
-    string? OrganizationId = null);
+public sealed record CancellationActor(CancellationActorCategory Category, string CustomerId, string? OrganizationId = null);
 
-public sealed record CancellationDecision(
-    CancellationActor Actor,
-    bool CanOverridePolicy,
-    string? OverrideReason)
+public sealed record CancellationDecision(CancellationActor Actor, bool CanOverridePolicy, string? OverrideReason)
 {
     public bool HasOverrideReason => !string.IsNullOrWhiteSpace(OverrideReason);
 }

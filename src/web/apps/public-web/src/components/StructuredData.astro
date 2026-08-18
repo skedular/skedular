@@ -1,6 +1,14 @@
 ---
 interface Props {
-  type?: "Organization" | "Product" | "FAQPage" | "BreadcrumbList" | "Article" | "BlogPosting" | "WebSite" | "SoftwareApplication";
+  type?:
+    | "Organization"
+    | "Product"
+    | "FAQPage"
+    | "BreadcrumbList"
+    | "Article"
+    | "BlogPosting"
+    | "WebSite"
+    | "SoftwareApplication";
   name: string;
   description?: string;
   path?: string;
@@ -8,12 +16,29 @@ interface Props {
   graph?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { type = "Organization", name, description, path = "/", breadcrumbs = [], graph: providedGraph } = Astro.props;
+const {
+  type = "Organization",
+  name,
+  description,
+  path = "/",
+  breadcrumbs = [],
+  graph: providedGraph,
+} = Astro.props;
 
-import { defaultSocialImageUrl, getArticleMetadataForPath, getCanonicalUrl, siteUrl } from "../data/seo";
+import {
+  defaultSocialImageUrl,
+  getArticleMetadataForPath,
+  getCanonicalUrl,
+  siteUrl,
+} from "../data/seo";
 
 const article = getArticleMetadataForPath(path);
-const articleMetadata = article as { publishedDate: string; lastModified?: string; featureImage?: string; author?: { name: string } } | null;
+const articleMetadata = article as {
+  publishedDate: string;
+  lastModified?: string;
+  featureImage?: string;
+  author?: { name: string; type?: "Person" | "Organization" };
+} | null;
 const url = getCanonicalUrl(path);
 let graph: any = {};
 
@@ -21,25 +46,29 @@ if (type === "BreadcrumbList") {
   graph = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: breadcrumbs.map((crumb: { name: string; path: string }, index: number) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: crumb.name,
-      item: getCanonicalUrl(crumb.path),
-    })),
+    itemListElement: breadcrumbs.map(
+      (crumb: { name: string; path: string }, index: number) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: crumb.name,
+        item: getCanonicalUrl(crumb.path),
+      }),
+    ),
   };
 } else if (type === "Article" || type === "BlogPosting") {
-  graph = {
-    "@context": "https://schema.org",
+  const articleGraph = {
     "@type": type,
     headline: name,
     description,
     url,
-    image: articleMetadata?.featureImage ? new URL(articleMetadata.featureImage, siteUrl).toString() : defaultSocialImageUrl,
+    image: articleMetadata?.featureImage
+      ? new URL(articleMetadata.featureImage, siteUrl).toString()
+      : defaultSocialImageUrl,
     datePublished: articleMetadata?.publishedDate,
-    dateModified: articleMetadata?.lastModified ?? articleMetadata?.publishedDate,
+    dateModified:
+      articleMetadata?.lastModified ?? articleMetadata?.publishedDate,
     author: {
-      "@type": articleMetadata?.author ? "Person" : "Organization",
+      "@type": articleMetadata?.author?.type ?? "Organization",
       name: articleMetadata?.author?.name ?? "Skedular",
       url: siteUrl,
     },
@@ -50,6 +79,12 @@ if (type === "BreadcrumbList") {
       logo: new URL("/images/skedular-logo-primary.svg", siteUrl).toString(),
     },
   };
+  graph = Array.isArray(providedGraph)
+    ? {
+        "@context": "https://schema.org",
+        "@graph": [articleGraph, ...providedGraph],
+      }
+    : { "@context": "https://schema.org", ...articleGraph };
 } else if (type === "Product") {
   graph = {
     "@context": "https://schema.org",

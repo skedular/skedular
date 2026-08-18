@@ -448,7 +448,7 @@ public class XeroWebhookServiceShould
             timeProvider,
             logger)
     {
-        public Invoices? InvoiceResponse { get; init; }
+        public Invoices? InvoiceResponse { get; set; }
 
         protected override Task<Invoices> GetInvoiceAsync(
             AccountingApi accountingApi,

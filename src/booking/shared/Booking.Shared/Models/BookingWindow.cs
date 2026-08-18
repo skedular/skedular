@@ -8,14 +8,14 @@ namespace Booking.Shared.Models;
 /// </summary>
 public sealed record BookingWindow
 {
-    public required string BookingId { get; init; }
-    public required DateTimeOffset From { get; init; }
-    public required DateTimeOffset Until { get; init; }
-    public required bool IsRecurring { get; init; }
-    public required bool IsCheckedIn { get; init; }
+    public required string BookingId { get; set; }
+    public required DateTimeOffset From { get; set; }
+    public required DateTimeOffset Until { get; set; }
+    public required bool IsRecurring { get; set; }
+    public required bool IsCheckedIn { get; set; }
 
     // Detail fields — null when visibility is restricted by org type + role
-    public required string? BookedByName { get; init; }
-    public required string? BookedByUserId { get; init; }
-    public required string? Notes { get; init; }
+    public required string? BookedByName { get; set; }
+    public required string? BookedByUserId { get; set; }
+    public required string? Notes { get; set; }
 }

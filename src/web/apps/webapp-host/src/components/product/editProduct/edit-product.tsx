@@ -45,6 +45,9 @@ type PricingOptionForm = {
   title: string | null;
   subTitle: string | null;
   cadence: string;
+  fulfillmentType: string;
+  entitlementCreditQuantity: string;
+  entitlementValidityDays: string;
   price: string;
   numberOfResourcesToBook: string;
   minDurationMinutes: string;
@@ -178,6 +181,9 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   title: null,
   subTitle: null,
   cadence: 'ONE_TIME',
+  fulfillmentType: 'RESERVATION',
+  entitlementCreditQuantity: '',
+  entitlementValidityDays: '',
   price: '',
   numberOfResourcesToBook: '1',
   minDurationMinutes: '',
@@ -423,6 +429,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             }
           }
           pricingOptions {
+            id
             index
             listingMetadata {
               title
@@ -447,6 +454,9 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             maxAllowedResourcesLockTimePaidViaBankTransfer
             billingMode
             acceptedPaymentMethods
+            fulfillmentType
+            entitlementCreditQuantity
+            entitlementValidityDays
           }
         }
         productPricingCadences {
@@ -604,10 +614,13 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             pricingOptions:
               rootData.product.pricingOptions.length > 0
                 ? rootData.product.pricingOptions.map((pricingOption) => ({
-                    id: uuid(),
+                    id: pricingOption.id,
                     title: pricingOption.listingMetadata.title ?? null,
                     subTitle: pricingOption.listingMetadata.subTitle ?? null,
                     cadence: pricingOption.purchaseCadence,
+                    fulfillmentType: (pricingOption as unknown as { fulfillmentType?: string }).fulfillmentType ?? 'RESERVATION',
+                    entitlementCreditQuantity: (pricingOption as unknown as { entitlementCreditQuantity?: number | null }).entitlementCreditQuantity?.toString() ?? '',
+                    entitlementValidityDays: (pricingOption as unknown as { entitlementValidityDays?: number | null }).entitlementValidityDays?.toString() ?? '',
                     price: pricingOption.price.toString(),
                     supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
                     numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
@@ -687,6 +700,11 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             availableDays: pricingOption.availableDays,
             requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
             supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
+            fulfillmentType: pricingOption.fulfillmentType as never,
+            entitlementCreditQuantity:
+              pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,
+            entitlementValidityDays:
+              pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
             numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
             minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
             maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
@@ -749,6 +767,11 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               availableDays: pricingOption.availableDays,
               requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
               supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
+              fulfillmentType: pricingOption.fulfillmentType as never,
+              entitlementCreditQuantity:
+                pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,
+              entitlementValidityDays:
+                pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
               numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
               minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
               maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
@@ -801,6 +824,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         <Form
           onSubmit={() => undefined}
           initialValues={initialProductValues}
+          initialValuesEqual={() => true}
           validate={validateProductDetails}
           render={({ handleSubmit, values, form, errors }) => {
             debounceSetTitle(values!.title);

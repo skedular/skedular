@@ -208,6 +208,8 @@ public static partial class BookingDetailsType
             RequiresReason = availability.RequiresReason,
             IsPolicyOverride = availability.IsPolicyOverride,
             UnavailableReason = availability.UnavailableReason,
+            IsCreditFunded = availability.IsCreditFunded,
+            CreditOutcome = availability.CreditOutcome,
         };
     }
 }

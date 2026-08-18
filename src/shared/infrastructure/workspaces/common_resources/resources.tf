@@ -234,6 +234,16 @@ resource "cloudflare_dns_record" "yandex_verification" {
   ttl     = 3600
 }
 
+resource "cloudflare_dns_record" "saas_browser_verification" {
+  count   = local.is_staging ? 0 : 1
+  zone_id = module.common.cloudflare_public_website_zone_id
+  name    = "@"
+  content = "\"saas-browser-verification=eyJhbGciOiJIUzI1NiJ9.eyJzZXJpYWxfaWQiOjE0NTQ3MzUsInVzZXJfaWQiOiJlMmZhM2U3NS0zMDMzLTRjNjMtODVmNC02YTZmNTAzNjZjOTMiLCJleHAiOjE3ODk3MTg5MDl9.cCYyUx7pyp5W5Ry3gQ88EK74gQako7YA5ms24w2_BVM\""
+  type    = "TXT"
+  proxied = false
+  ttl     = 3600
+}
+
 resource "cloudflare_dns_record" "github_public_website" {
   count   = local.is_staging ? 0 : 1
   zone_id = module.common.cloudflare_public_website_zone_id

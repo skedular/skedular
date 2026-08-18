@@ -24,7 +24,8 @@ public record BookingSearchCriteria(
     IReadOnlyList<string> LocationIds,
     IReadOnlyList<string> TeamIds,
     IReadOnlyList<string> CustomerIds,
-    IReadOnlyList<string> RecurringBookingIds);
+    IReadOnlyList<string> RecurringBookingIds,
+    string? EntitlementId);
 
 public record BookingAccessScope(
     IReadOnlyList<string> OrganizationIds,

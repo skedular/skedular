@@ -12,7 +12,7 @@ public class OrganizationSpacesSubscription : ModelBase
     public int? UsageLimit { get; set; }
     public DateTimeOffset? RolloverDate { get; set; }
     public int? CustomCapacity { get; set; }
-    public string CatalogVersion { get; set; } = null!;
+    public string CatalogVersion { get; set; } = string.Empty;
     public OrganizationOfferingPlanStatus Status { get; set; }
     public SpacesSubscriptionStatus SubscriptionStatus { get; set; }
     public SpacesAccessReasonCode AccessReason { get; set; }

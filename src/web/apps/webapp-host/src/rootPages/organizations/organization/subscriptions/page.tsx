@@ -256,6 +256,10 @@ const RootQuery = graphql`
           paymentStatus
           productVersionId
           productTitle
+          entitlementStatus
+          creditQuantity
+          grantedQuantity
+          availableQuantity
           totalAmount
           currency
           customerId
@@ -315,7 +319,10 @@ type Props = {
   organizationCustomDomain: string;
   onFiltersChange: (statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[], paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[]) => void;
   isLoading: boolean;
-  initialFormValues: { statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[]; paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[] };
+  initialFormValues: {
+    statuses: SupportedMarketplaceBookingSubscriptionStatusForFilter[];
+    paymentStatuses: SupportedMarketplaceBookingPaymentStatusForFilter[];
+  };
   onPurchaseAfterChange: (cursor: string | undefined) => void;
   purchaseSourceType: string;
   purchaseLifecycleState: string;
@@ -343,7 +350,10 @@ const RootPage = ({
   purchaseSort,
   onPurchaseSortChange,
 }: Props) => {
-  const prevFiltersRef = useRef({ statuses: initialFormValues.statuses, paymentStatuses: initialFormValues.paymentStatuses });
+  const prevFiltersRef = useRef({
+    statuses: initialFormValues.statuses,
+    paymentStatuses: initialFormValues.paymentStatuses,
+  });
   const rootData = usePreloadedQuery<pageOrganizationSubscriptions_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const { integratedPlatform } = useIntegratedPlatform();
@@ -722,7 +732,10 @@ const RootPage = ({
                     newPaymentStatuses.length !== prev.paymentStatuses.length ||
                     newPaymentStatuses.some((s, i) => s !== prev.paymentStatuses[i])
                   ) {
-                    prevFiltersRef.current = { statuses: newStatuses, paymentStatuses: newPaymentStatuses };
+                    prevFiltersRef.current = {
+                      statuses: newStatuses,
+                      paymentStatuses: newPaymentStatuses,
+                    };
                     onFiltersChange(newStatuses, newPaymentStatuses);
                   }
                 }}
@@ -745,6 +758,7 @@ const RootPage = ({
                   <MenuItem value="">All purchase types</MenuItem>
                   <MenuItem value="BOOKING">One-time booking</MenuItem>
                   <MenuItem value="SUBSCRIPTION">Subscription</MenuItem>
+                  <MenuItem value="ENTITLEMENT">Credit entitlement</MenuItem>
                 </TextField>
                 <TextField
                   select
@@ -794,7 +808,11 @@ const RootPage = ({
               <SubtitleIconTypography label={`All marketplace purchases (${rootData.marketplacePurchases.totalCount})`} />
               <StackColumn
                 spacing={1}
-                sx={{ mt: 1, display: viewMode === 'card' ? 'grid' : 'flex', gridTemplateColumns: viewMode === 'card' ? 'repeat(auto-fit, minmax(280px, 1fr))' : undefined }}
+                sx={{
+                  mt: 1,
+                  display: viewMode === 'card' ? 'grid' : 'flex',
+                  gridTemplateColumns: viewMode === 'card' ? 'repeat(auto-fit, minmax(280px, 1fr))' : undefined,
+                }}
               >
                 {rootData.marketplacePurchases.edges.map(({ node }) => (
                   <Box
@@ -820,6 +838,12 @@ const RootPage = ({
                         label={`${formatMarketplacePurchaseDisplay(node).product} · Customer ${formatMarketplacePurchaseDisplay(node).customer}${node.bookingFrom ? ` · Booking ${new Date(node.bookingFrom).toLocaleString()}–${node.bookingUntil ? new Date(node.bookingUntil).toLocaleString() : 'open'}` : ''}`}
                         sx={{ opacity: 0.62 }}
                       />
+                      {node.sourceType === 'ENTITLEMENT' ? (
+                        <SmallIconTypography
+                          label={`${node.availableQuantity} of ${node.grantedQuantity} credits available · ${node.entitlementStatus ?? node.lifecycleStateName}`}
+                          sx={{ opacity: 0.72 }}
+                        />
+                      ) : null}
                       {formatMarketplacePurchaseInactiveEvidence(node).lifecycle ? (
                         <SmallIconTypography
                           label={`${formatMarketplacePurchaseInactiveEvidence(node).lifecycle}${formatMarketplacePurchaseInactiveEvidence(node).actor ? ` by ${formatMarketplacePurchaseInactiveEvidence(node).actor}` : ''}${formatMarketplacePurchaseInactiveEvidence(node).reason ? ` · Reason: ${formatMarketplacePurchaseInactiveEvidence(node).reason}` : ''}`}
@@ -915,7 +939,13 @@ const RootPage = ({
                       <CardContent sx={{ p: 2, height: '100%' }}>
                         <StackColumn spacing={2} sx={{ height: '100%' }}>
                           <Box onClick={() => handleOpenSubscriptionClick(subscription.id)} sx={{ ...clickablePanelSx, p: 1 }}>
-                            <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'wrap', gap: 1 }}>
+                            <StackRow
+                              sx={{
+                                alignItems: 'flex-start',
+                                flexWrap: 'wrap',
+                                gap: 1,
+                              }}
+                            >
                               <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
                                 <SubtitleIconTypography label={productTitle} />
                                 <SmallIconTypography label={customerLabel} sx={{ opacity: 0.82 }} />
@@ -987,7 +1017,13 @@ const RootPage = ({
                                             />
                                           </StackColumn>
 
-                                          <StackRow sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                                          <StackRow
+                                            sx={{
+                                              alignItems: 'center',
+                                              flexWrap: 'wrap',
+                                              gap: 1,
+                                            }}
+                                          >
                                             {cycleMarketplaceBooking?.invoiceUrl ? (
                                               <Button
                                                 variant="text"
@@ -997,16 +1033,24 @@ const RootPage = ({
                                                 rel="noreferrer"
                                                 sx={{ textTransform: 'none' }}
                                               >
-                                                Download invoice
+                                                View invoice
                                               </Button>
                                             ) : null}
 
                                             {cycleMarketplaceBooking?.paymentStatus.type === 'PENDING' ? (
-                                              <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
+                                              <StackRow
+                                                sx={{
+                                                  flexWrap: 'wrap',
+                                                  gap: 1,
+                                                }}
+                                              >
                                                 <Button
                                                   variant="contained"
                                                   size="small"
-                                                  sx={{ textTransform: 'none', color: 'white' }}
+                                                  sx={{
+                                                    textTransform: 'none',
+                                                    color: 'white',
+                                                  }}
                                                   onClick={() => handleConfirmRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
                                                 >
                                                   Confirm Payment
@@ -1015,7 +1059,9 @@ const RootPage = ({
                                                   variant="outlined"
                                                   color="error"
                                                   size="small"
-                                                  sx={{ textTransform: 'none' }}
+                                                  sx={{
+                                                    textTransform: 'none',
+                                                  }}
                                                   onClick={() => handleRejectRecurringBookingPaymentClick(recurringBooking.id, cycleLabel)}
                                                 >
                                                   Reject Payment
@@ -1023,7 +1069,9 @@ const RootPage = ({
                                                 <Button
                                                   variant="text"
                                                   size="small"
-                                                  sx={{ textTransform: 'none' }}
+                                                  sx={{
+                                                    textTransform: 'none',
+                                                  }}
                                                   onClick={() => handleMakeRecurringBookingPaymentNotRequiredClick(recurringBooking.id, cycleLabel)}
                                                 >
                                                   Payment Not Required
@@ -1175,7 +1223,10 @@ const RootPageWithRelay = () => {
   const [purchaseLifecycleState, setPurchaseLifecycleState] = useState(() => searchParams.get('purchaseLifecycleState') ?? '');
   const [purchaseSort, setPurchaseSort] = useState(() => searchParams.get('purchaseSort') ?? 'ACTIVITY_DESC');
   const initialFormValues = useMemo(
-    () => ({ statuses: selectedStatuses, paymentStatuses: selectedPaymentStatuses }),
+    () => ({
+      statuses: selectedStatuses,
+      paymentStatuses: selectedPaymentStatuses,
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
@@ -1186,7 +1237,12 @@ const RootPageWithRelay = () => {
         organizationCustomDomain,
         statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
         paymentStatuses: selectedPaymentStatuses.length > 0 ? selectedPaymentStatuses : undefined,
-        ...buildMarketplacePurchaseQueryVariables({ after: purchaseAfter, sourceType: purchaseSourceType, lifecycleState: purchaseLifecycleState, sort: purchaseSort }),
+        ...buildMarketplacePurchaseQueryVariables({
+          after: purchaseAfter,
+          sourceType: purchaseSourceType,
+          lifecycleState: purchaseLifecycleState,
+          sort: purchaseSort,
+        }),
       },
       {
         fetchPolicy: 'store-and-network',
@@ -1210,7 +1266,11 @@ const RootPageWithRelay = () => {
     (sort: string) => {
       setPurchaseSort(sort);
       setPurchaseAfter(undefined);
-      const qs = updateMarketplacePurchaseSearchParams(searchParams.toString(), { sourceType: purchaseSourceType, lifecycleState: purchaseLifecycleState, sort });
+      const qs = updateMarketplacePurchaseSearchParams(searchParams.toString(), {
+        sourceType: purchaseSourceType,
+        lifecycleState: purchaseLifecycleState,
+        sort,
+      });
       router.replace(`?${qs}`);
     },
     [purchaseLifecycleState, purchaseSourceType, router, searchParams],

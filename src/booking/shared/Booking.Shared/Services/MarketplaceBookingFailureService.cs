@@ -11,11 +11,12 @@ namespace Booking.Shared.Services;
 
 public interface IMarketplaceBookingFailureService
 {
-    Task<MarketplaceBookingFailureSummary> FinalizeAsync(
-        MarketplaceBookingFailureFinalization finalization,
-        CancellationToken cancellationToken);
+    Task<MarketplaceBookingFailureSummary> FinalizeAsync(MarketplaceBookingFailureFinalization finalization, CancellationToken cancellationToken);
 
-    Task<MarketplaceBookingFailureSummary> ResolvePartialAsync(string failureId, string decision, string? actorCustomerId,
+    Task<MarketplaceBookingFailureSummary> ResolvePartialAsync(
+        string failureId,
+        string decision,
+        string? actorCustomerId,
         CancellationToken cancellationToken);
 }
 
@@ -32,8 +33,7 @@ public class MarketplaceBookingFailureService(
         CancellationToken cancellationToken)
     {
         var failureKey = MarketplaceBookingFailureKey.Create(finalization);
-        var failure = await repositoryFactory.MarketplaceBookingFailureRepository
-            .GetByFailureKeyAsync(failureKey, cancellationToken);
+        var failure = await repositoryFactory.MarketplaceBookingFailureRepository.GetByFailureKeyAsync(failureKey, cancellationToken);
         if (failure is not null)
         {
             logger.LogInformation(
@@ -43,6 +43,7 @@ public class MarketplaceBookingFailureService(
                 failure.Category,
                 failure.Scope,
                 finalization.CorrelationId);
+
             return ToModel(failure);
         }
 
@@ -154,7 +155,10 @@ public class MarketplaceBookingFailureService(
         return ToModel(failure);
     }
 
-    public async Task<MarketplaceBookingFailureSummary> ResolvePartialAsync(string failureId, string decision, string? actorCustomerId,
+    public async Task<MarketplaceBookingFailureSummary> ResolvePartialAsync(
+        string failureId,
+        string decision,
+        string? actorCustomerId,
         CancellationToken cancellationToken) =>
         await partialBookingResolutionService.ResolveAsync(failureId, decision, actorCustomerId, cancellationToken);
 

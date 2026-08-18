@@ -17,6 +17,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
@@ -32,6 +34,7 @@ import {
 } from '@skedular/shared';
 import {
   BodyIconTypography,
+  DefaultDialogTitle,
   defaultPadding,
   MarketplaceBookingModificationForm,
   type MarketplaceBookingModificationFormValues,
@@ -41,6 +44,7 @@ import {
   StackColumn,
   StackRow,
   SubtitleIconTypography,
+  TwoButtonsDialogActions,
 } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
@@ -155,6 +159,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
           }
           marketplaceBooking {
             id
+            entitlementId
             isPaymentRequired
             paymentStatus {
               type
@@ -331,6 +336,8 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [pendingRecurringSeriesCancellation, setPendingRecurringSeriesCancellation] = useState(false);
+  const [pendingCancellationReason, setPendingCancellationReason] = useState<'booking' | 'series' | null>(null);
+  const [cancellationReason, setCancellationReason] = useState('');
   const [isModifyDialogOpen, setIsModifyDialogOpen] = useState(page);
   const [modificationFrom, setModificationFrom] = useState('');
   const [modificationUntil, setModificationUntil] = useState('');
@@ -410,6 +417,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
         input: {
           clientMutationId: uuid(),
           bookingId: booking.id,
+          entitlementId: booking.marketplaceBooking?.entitlementId,
           expectedVersion: booking.entityFrameworkVersion,
           from: from.toISOString(),
           until: until.toISOString(),
@@ -450,11 +458,15 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
       return;
     }
 
+    setCancellationReason('');
+    setPendingCancellationReason('booking');
+  };
+
+  const cancelBooking = (cancellationOverrideReason: string) => {
+    const booking = rootDataBooking.booking;
+    if (!booking) return;
+
     const bookingDetailsInfo = getBookingDetailsInfo();
-    const cancellationOverrideReason = window.prompt('Cancellation reason')?.trim();
-    if (!cancellationOverrideReason) {
-      return;
-    }
     commitDeleteMarketplaceBooking({
       variables: {
         input: {
@@ -491,7 +503,14 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
     setPendingRecurringSeriesCancellation(false);
   };
 
-  const handleConfirmRecurringSeriesCancellationClick = () => {
+  const handleConfirmRecurringSeriesCancellationClick = (providedReason?: string) => {
+    if (!providedReason) {
+      setPendingRecurringSeriesCancellation(false);
+      setCancellationReason('');
+      setPendingCancellationReason('series');
+      return;
+    }
+
     const recurringBooking = rootDataBooking.booking?.recurringBooking;
     if (!recurringBooking) {
       return;
@@ -512,10 +531,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
     if (!booking) {
       return;
     }
-    const cancellationOverrideReason = window.prompt('Cancellation reason')?.trim();
-    if (!cancellationOverrideReason) {
-      return;
-    }
+    const cancellationOverrideReason = providedReason;
 
     commitDeleteMarketplaceBookingSubscription({
       variables: {
@@ -595,6 +611,17 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
         },
       },
     });
+  };
+
+  const confirmCancellationReason = () => {
+    const reason = cancellationReason.trim();
+    if (!reason || !pendingCancellationReason) return;
+
+    const action = pendingCancellationReason;
+    setPendingCancellationReason(null);
+    setCancellationReason('');
+    if (action === 'booking') cancelBooking(reason);
+    else handleConfirmRecurringSeriesCancellationClick(reason);
   };
 
   const handleRejectPaymentClick = () => {
@@ -921,6 +948,12 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
                 </StackColumn>
 
                 <StackColumn spacing={0.4}>
+                  {booking.marketplaceBooking?.entitlementId ? (
+                    <BodyIconTypography
+                      label="Credit-funded booking: this booking uses one customer entitlement credit. Date and resource changes keep the credit consumed; cancellation restores or forfeits it according to the product policy."
+                      sx={{ opacity: 0.78 }}
+                    />
+                  ) : null}
                   <SmallIconTypography label="Payment Status" sx={{ opacity: 0.68, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
                   <StackRow>
                     {booking.marketplaceBooking?.paymentStatus.name ? <Chip label={booking.marketplaceBooking.paymentStatus.name} color={paymentStatusColor} size="small" /> : null}
@@ -951,6 +984,33 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
         onConfirm={handleConfirmRecurringSeriesCancellationClick}
         onCancel={handleCancelRecurringSeriesCancellationClick}
       />
+
+      <Dialog open={pendingCancellationReason !== null} onClose={() => setPendingCancellationReason(null)} fullWidth maxWidth="sm">
+        <DefaultDialogTitle title={pendingCancellationReason === 'series' ? 'Cancel recurring series' : 'Cancel booking'} />
+        <DialogContent sx={{ marginTop: 2 }}>
+          <StackColumn spacing={1.5}>
+            <BodyIconTypography label="Review the cancellation before confirming this booking action." />
+            <TextField
+              label="Cancellation reason"
+              value={cancellationReason}
+              onChange={(event) => setCancellationReason(event.target.value)}
+              required
+              multiline
+              minRows={2}
+              helperText="Required when the cancellation policy would block this cancellation."
+              fullWidth
+              autoFocus
+            />
+            <TwoButtonsDialogActions
+              primaryLabel={pendingCancellationReason === 'series' ? 'Cancel series' : 'Cancel booking'}
+              primaryDisabled={!cancellationReason.trim()}
+              secondaryLabel="Keep booking"
+              onPrimaryClicked={confirmCancellationReason}
+              onSecondaryClicked={() => setPendingCancellationReason(null)}
+            />
+          </StackColumn>
+        </DialogContent>
+      </Dialog>
 
       {isModifyDialogOpen ? (
         <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto', px: { xs: 1, sm: 2, md: 3 }, pb: 4 }}>

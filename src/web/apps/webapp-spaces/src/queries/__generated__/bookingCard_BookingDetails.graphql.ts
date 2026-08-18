@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b16062c92373531b37f07fff1263e73a>>
+ * @generated SignedSource<<279ea680defa7ed5174f98489b57a8ab>>
  * @lightSyntaxTransform
  */
 
@@ -32,6 +32,10 @@ export type bookingCard_BookingDetails$data = {
       }>;
     };
   }>;
+  readonly cancellationAvailability: {
+    readonly creditOutcome: string | null | undefined;
+    readonly isCreditFunded: boolean;
+  };
   readonly cancellationOverrideReason: string | null | undefined;
   readonly cancellationPolicyOverridden: boolean;
   readonly category: {
@@ -64,6 +68,7 @@ export type bookingCard_BookingDetails$data = {
     readonly name: string;
   }>;
   readonly marketplaceBooking: {
+    readonly entitlementPurchaseId: string | null | undefined;
     readonly id: string;
     readonly invoiceUrl: string | null | undefined;
     readonly isPaymentRequired: boolean;
@@ -173,6 +178,31 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "cancellationOverrideReason",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "MarketplaceCancellationAvailabilityDetails",
+      "kind": "LinkedField",
+      "name": "cancellationAvailability",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isCreditFunded",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "creditOutcome",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
@@ -375,6 +405,13 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "entitlementPurchaseId",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "isPaymentRequired",
           "storageKey": null
         },
@@ -561,6 +598,6 @@ return {
 };
 })();
 
-(node as any).hash = "b17dc956a65caa1812a6f2c50b83bcf0";
+(node as any).hash = "e5db05fa44c99607c611e7d9b47585c7";
 
 export default node;

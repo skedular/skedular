@@ -109,20 +109,25 @@ public class MarketplaceRefundReadService(
             .GroupBy(item => item.MarketplaceRefundId)
             .ToDictionary(item => item.Key, item => (IReadOnlyList<MarketplaceRefundEvent>)[.. item]);
         var actorsById = await GetActorsByIdAsync(refunds, refundEvents, cancellationToken);
+        var customerNames = await repositoryFactory.MarketplaceRefundRepository.GetCustomerNamesByRefundsAsync(refunds, cancellationToken);
         var availabilities = new Dictionary<string, XeroRefundProcessingAvailability>(refunds.Count);
         foreach (var refund in refunds)
         {
             availabilities[refund.Id] = await xeroRefundService.GetProcessingAvailabilityAsync(refund, cancellationToken);
         }
 
-        return
-        [
-            .. refunds.Select(refund => MapToDetails(
+        var results = new List<MarketplaceRefundReadModel>(refunds.Count);
+        foreach (var refund in refunds)
+        {
+            results.Add(MapToDetails(
                 refund,
                 refundEventsByRefundId.TryGetValue(refund.Id, out var events) ? events : [],
                 actorsById,
-                availabilities[refund.Id])),
-        ];
+                availabilities[refund.Id],
+                customerNames.GetValueOrDefault($"{refund.LocalEntityType}:{refund.LocalEntityId}")));
+        }
+
+        return results;
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<(MarketplaceRefundReadModel Node, string Cursor)>, int)>
@@ -157,21 +162,27 @@ public class MarketplaceRefundReadService(
             .GroupBy(item => item.MarketplaceRefundId)
             .ToDictionary(item => item.Key, item => (IReadOnlyList<MarketplaceRefundEvent>)[.. item]);
         var actorsById = await GetActorsByIdAsync(refunds, refundEvents, cancellationToken);
+        var customerNames = await repositoryFactory.MarketplaceRefundRepository.GetCustomerNamesByRefundsAsync(refunds, cancellationToken);
         var availabilities = new Dictionary<string, XeroRefundProcessingAvailability>(refunds.Count);
         foreach (var refund in refunds)
         {
             availabilities[refund.Id] = await xeroRefundService.GetProcessingAvailabilityAsync(refund, cancellationToken);
         }
 
-        return (pageInfo, [
-            .. refundEdges.Select(edge => (
+        var results = new List<(MarketplaceRefundReadModel Node, string Cursor)>(refundEdges.Count);
+        foreach (var edge in refundEdges)
+        {
+            results.Add((
                 MapToDetails(
                     edge.Node,
                     refundEventsByRefundId.TryGetValue(edge.Node.Id, out var events) ? events : [],
                     actorsById,
-                    availabilities[edge.Node.Id]),
-                edge.Cursor)),
-        ], totalCount);
+                    availabilities[edge.Node.Id],
+                    customerNames.GetValueOrDefault($"{edge.Node.LocalEntityType}:{edge.Node.LocalEntityId}")),
+                edge.Cursor));
+        }
+
+        return (pageInfo, results, totalCount);
     }
 
     private async Task<MarketplaceRefundReadModel> MapWithAvailabilityAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
@@ -179,7 +190,9 @@ public class MarketplaceRefundReadService(
         var refundEvents = await repositoryFactory.MarketplaceRefundEventRepository.GetByMarketplaceRefundIdAsync(refund.Id, cancellationToken);
         var availability = await xeroRefundService.GetProcessingAvailabilityAsync(refund, cancellationToken);
         var actorsById = await GetActorsByIdAsync([refund], refundEvents, cancellationToken);
-        return MapToDetails(refund, refundEvents, actorsById, availability);
+        var customerNames = await repositoryFactory.MarketplaceRefundRepository.GetCustomerNamesByRefundsAsync([refund], cancellationToken);
+        return MapToDetails(refund, refundEvents, actorsById, availability,
+            customerNames.GetValueOrDefault($"{refund.LocalEntityType}:{refund.LocalEntityId}"));
     }
 
     private async Task<MarketplaceRefundReadModel> MapWithAccessControlAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
@@ -205,7 +218,8 @@ public class MarketplaceRefundReadService(
         MarketplaceRefund refund,
         IReadOnlyList<MarketplaceRefundEvent> refundEvents,
         IReadOnlyDictionary<string, string> actorsById,
-        XeroRefundProcessingAvailability availability)
+        XeroRefundProcessingAvailability availability,
+        string? fallbackCustomerName)
     {
         var result = MapToModel(refund);
         foreach (var refundEvent in refundEvents)
@@ -227,7 +241,7 @@ public class MarketplaceRefundReadService(
         result.RequestedByCustomerName = refund.RequestedByCustomerId is not null &&
                                          actorsById.TryGetValue(refund.RequestedByCustomerId, out var requestedByCustomerName)
             ? requestedByCustomerName
-            : null;
+            : fallbackCustomerName;
         result.CanProcessInXero = availability.CanProcessInXero;
         result.XeroProcessingBlockedReason = availability.BlockedReason;
         return result;
@@ -236,6 +250,8 @@ public class MarketplaceRefundReadService(
     private static MarketplaceRefundReadModel MapToModel(MarketplaceRefund src) => new()
     {
         Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        ModifiedAt = src.ModifiedAt,
         LocalEntityType = src.LocalEntityType.ToMarketplaceRefundEntityType(),
         LocalEntityId = src.LocalEntityId,
         Status = src.Status.ToMarketplaceRefundStatus(),
@@ -303,6 +319,8 @@ public class MarketplaceRefundReadService(
     private static MarketplaceRefundEventModel MapToModel(MarketplaceRefundEvent src) => new()
     {
         Id = src.Id,
+        CreatedAt = src.CreatedAt,
+        ModifiedAt = src.ModifiedAt,
         EventType = src.EventType.ToMarketplaceRefundEventType(),
         OccurredAt = src.OccurredAt,
         RefundAmount = src.RefundAmount,

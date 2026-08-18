@@ -10,7 +10,9 @@ public sealed record MarketplaceCancellationAvailability(
     bool CanCancel,
     bool RequiresReason,
     bool IsPolicyOverride,
-    string? UnavailableReason);
+    string? UnavailableReason,
+    bool IsCreditFunded = false,
+    string? CreditOutcome = null);
 
 public sealed record MarketplaceSubscriptionCancellationAvailability(
     MarketplaceCancellationAvailability Immediate,
@@ -48,6 +50,8 @@ public sealed class MarketplaceCancellationAvailabilityService(
             return Unavailable("This booking has already been cancelled.");
         }
 
+        var isCreditFunded = booking.MarketplaceBooking.EntitlementId is not null;
+
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var productVersion =
             await repositoryFactory.ProductVersionRepository.GetByIdAsync(booking.MarketplaceBooking.ProductVersion.Id, cancellationToken);
@@ -59,7 +63,7 @@ public sealed class MarketplaceCancellationAvailabilityService(
         var quote = marketplaceRefundPolicyService.GetQuote(booking.MarketplaceBooking.ProductPricing, booking.From, timeProvider.GetUtcNow());
         if (quote.CanCancel)
         {
-            return Available();
+            return Available(isCreditFunded);
         }
 
         var canOverride = await organizationAuthorizationService.CanOverrideCancellationPolicyAsync(
@@ -67,7 +71,8 @@ public sealed class MarketplaceCancellationAvailabilityService(
             customerId,
             cancellationToken);
         return canOverride
-            ? new MarketplaceCancellationAvailability(true, true, true, null)
+            ? new MarketplaceCancellationAvailability(true, true, true, null, isCreditFunded,
+                isCreditFunded ? "Credit will be forfeited because the cancellation policy window has closed." : null)
             : Unavailable("This booking cannot be cancelled because its cancellation window has closed or the product does not allow cancellation.");
     }
 
@@ -108,6 +113,8 @@ public sealed class MarketplaceCancellationAvailabilityService(
         return new MarketplaceSubscriptionCancellationAvailability(immediate, atPeriodEnd);
     }
 
-    private static MarketplaceCancellationAvailability Available() => new(true, false, false, null);
+    private static MarketplaceCancellationAvailability Available(bool isCreditFunded = false) =>
+        new(true, false, false, null, isCreditFunded, isCreditFunded ? "The booking credit will be restored when cancellation is completed." : null);
+
     private static MarketplaceCancellationAvailability Unavailable(string reason) => new(false, false, false, reason);
 }

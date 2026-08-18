@@ -41,6 +41,10 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     public DbSet<MarketplaceRefundPaymentAllocation> MarketplaceRefundPaymentAllocation { get; set; }
     public DbSet<MarketplaceExternalRefundReconciliation> MarketplaceExternalRefundReconciliation { get; set; }
     public DbSet<MarketplaceRefundNotificationDelivery> MarketplaceRefundNotificationDelivery { get; set; }
+    public DbSet<Entitlement> Entitlement { get; set; }
+    public DbSet<EntitlementPurchase> EntitlementPurchase { get; set; }
+    public DbSet<CreditLedgerEntry> CreditLedgerEntry { get; set; }
+    public DbSet<EntitlementRefundLink> EntitlementRefundLink { get; set; }
     public DbSet<MarketplaceBookingFailure> MarketplaceBookingFailure { get; set; }
     public DbSet<MarketplaceBookingFailureEvent> MarketplaceBookingFailureEvent { get; set; }
     public DbSet<MarketplaceBookingFailureDelivery> MarketplaceBookingFailureDelivery { get; set; }

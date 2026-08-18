@@ -350,7 +350,7 @@ public class AccountingInvoiceCancellationService(
             },
             null,
             idempotencyKey,
-            cancellationToken);
+            cancellationToken: cancellationToken);
 
     private static bool IsXeroConnectionReady(XeroConnection? xeroConnection) => xeroConnection is { IsActive: true, HasRefreshToken: true } &&
                                                                                  !string.IsNullOrWhiteSpace(xeroConnection.TenantId);

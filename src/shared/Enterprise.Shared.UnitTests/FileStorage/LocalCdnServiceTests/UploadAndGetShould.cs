@@ -71,7 +71,7 @@ public class UploadAndGetShould
                 PublicCdnFileEndpoint = "cdn",
             };
             var sut = new LocalCdnService(config, fileStorageConfig, logger);
-            using var stream = new MemoryStream("data"u8.ToArray());
+            using var stream = new MemoryStream([.. "data"u8]);
 
             var (uri, _) = await sut.UploadAsync(stream, "text/plain", baseName, ".txt", cancellationToken);
 
@@ -137,7 +137,7 @@ public class UploadAndGetShould
             };
             var sut = new LocalCdnService(config, fileStorageConfig, logger);
             var fileName = baseName + ".unknownext123";
-            await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), "x"u8.ToArray(), cancellationToken);
+            await File.WriteAllBytesAsync(Path.Combine(tempDir, fileName), [.. "x"u8], cancellationToken);
 
             var (exists, contentType, _) = await sut.GetAsync(fileName, cancellationToken);
 

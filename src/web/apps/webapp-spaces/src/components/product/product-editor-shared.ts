@@ -33,6 +33,9 @@ export type PricingOptionForm = {
   /** Empty means this price is available every calendar day. */
   availableDays: string[];
   requiredDaysPerWeek: string;
+  fulfillmentType?: string;
+  entitlementCreditQuantity?: string;
+  entitlementValidityDays?: string;
 };
 
 export type CancellationRefundRuleForm = {
@@ -104,6 +107,9 @@ export const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCar
   acceptedPaymentMethods: [],
   availableDays: [],
   requiredDaysPerWeek: '',
+  fulfillmentType: 'RESERVATION',
+  entitlementCreditQuantity: '',
+  entitlementValidityDays: '',
 });
 
 export const isSubscriptionCadence = (cadence?: string | null) =>

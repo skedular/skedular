@@ -53,6 +53,9 @@ type QueryVariables = {
   refundLast?: number | null;
 };
 
+const getRefundTypeLabel = (localEntityType: string) =>
+  localEntityType === 'MarketplaceBookingSubscription' ? 'Subscription' : localEntityType === 'EntitlementPurchase' ? 'Entitlement' : 'Booking';
+
 const RootQuery = graphql`
   query pageOrganizationRefunds_rootQuery(
     $organizationCustomDomain: String!
@@ -225,7 +228,7 @@ const RefundManagement = ({
   const openRefund = (refundId: string) => getOrganizationRefundBaseLink(integratedPlatform, data.organization?.customDomain ?? '', refundId);
   const rows = refunds.map((refund) => ({
     id: refund.id,
-    type: refund.localEntityType === 'MarketplaceBookingSubscription' ? 'Subscription' : 'Booking',
+    type: getRefundTypeLabel(refund.localEntityType),
     customer: refund.requestedByCustomerName ?? 'Customer unavailable',
     amount: `${refund.refundAmount ?? 'Amount unavailable'} ${refund.currencyToDisplay}`,
     status: refund.status.name,
@@ -313,7 +316,7 @@ const RefundManagement = ({
                       <StackColumn spacing={1.5} sx={{ height: '100%' }}>
                         <StackRow sx={{ alignItems: 'flex-start', gap: 1 }}>
                           <StackColumn spacing={0.5}>
-                            <SubtitleIconTypography label={`${refund.localEntityType === 'MarketplaceBookingSubscription' ? 'Subscription' : 'Booking'} refund`} />
+                            <SubtitleIconTypography label={`${getRefundTypeLabel(refund.localEntityType)} refund`} />
                             <SmallIconTypography label={refund.requestedByCustomerName ?? 'Customer unavailable'} sx={{ opacity: 0.72 }} />
                           </StackColumn>
                           <PushToRight />

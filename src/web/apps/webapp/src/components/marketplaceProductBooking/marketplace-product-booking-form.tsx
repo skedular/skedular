@@ -1,25 +1,30 @@
-import { getMarketplaceProductBookingDetailsLink, getMarketplaceProductLink, getSignInLink } from '@/components/links';
+import { getMarketplaceEntitlementPurchaseDetailsLink, getMarketplaceProductBookingDetailsLink, getMarketplaceProductLink, getSignInLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
 import { getAvailableDaysGuidance, isDateAvailableForPrice } from '@/components/marketplaceProduct/available-days';
+import MarketplaceProductBookingPaymentPanel from '@/components/marketplaceProductBooking/marketplace-product-booking-payment-panel';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import useKnownParams from '@/hooks/use-known-params';
 import type {
   BookingCategory,
   marketplaceProductBookingForm_addMarketplaceBookingMutation,
   PaymentMethod,
 } from '@/queries/__generated__/marketplaceProductBookingForm_addMarketplaceBookingMutation.graphql';
+import type { marketplaceProductBookingForm_createEntitlementPurchaseMutation } from '@/queries/__generated__/marketplaceProductBookingForm_createEntitlementPurchaseMutation.graphql';
 import type { marketplaceProductBookingForm_query$key } from '@/queries/__generated__/marketplaceProductBookingForm_query.graphql';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import MenuItem from '@mui/material/MenuItem';
+import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import type { DateRange } from '@mui/x-date-pickers-pro/models';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { formatPriceForDisplay, getRelayErrorMessage, toOpeningHoursFromTime, toShortDate, useIntegratedPlatform } from '@skedular/shared';
+import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toOpeningHoursFromTime, toShortDate, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -27,9 +32,8 @@ import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import MarketplaceProductBookingSummary from './marketplace-product-booking-summary';
-import useKnownParams from '@/hooks/use-known-params';
 import { getFormFailureToastMessage } from './marketplace-booking-failure-eligibility';
+import MarketplaceProductBookingSummary from './marketplace-product-booking-summary';
 
 type Props = {
   bookingAvailable: boolean;
@@ -110,6 +114,27 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
           id
           emails
         }
+        entitlementPurchases {
+          id
+          paymentStatus
+          paymentMethod
+          paymentExpiry
+          amount
+          currency
+          paymentAction
+          invoiceNumber
+          invoiceUrl
+          paymentInstructions
+          linkedBookings(first: 1) {
+            edges {
+              node {
+                marketplaceBooking {
+                  invoiceUrl
+                }
+              }
+            }
+          }
+        }
         currencies {
           type
           name
@@ -131,6 +156,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
             name
           }
           organization {
+            uniqueId
             customerFacingTermsAndConditionsUrl
           }
           listingMetadata {
@@ -162,6 +188,8 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
             billingMode
             acceptedPaymentMethods
             availableDays
+            fulfillmentType
+            supportsSubscriptionAutoRenewal
           }
         }
       }
@@ -214,7 +242,21 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
     }
   `);
 
+  const [commitCreateEntitlementPurchase, isEntitlementPurchaseInFlight] = useMutation<marketplaceProductBookingForm_createEntitlementPurchaseMutation>(graphql`
+    mutation marketplaceProductBookingForm_createEntitlementPurchaseMutation($input: CreateEntitlementPurchaseInput!) {
+      createEntitlementPurchase(input: $input) {
+        error
+        purchase {
+          id
+          paymentAction
+          paymentInstructions
+        }
+      }
+    }
+  `);
+
   const router = useRouter();
+  const [entitlementStartDate, setEntitlementStartDate] = useState(() => startOfDay());
   const searchParams = useSearchParams();
   const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
@@ -237,6 +279,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
   const [selectedPricingId, setSelectedPricingId] = useState(initialPricingOptionId ?? '');
   const [quantity, setQuantity] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | ''>('');
+  const [autoRenew, setAutoRenew] = useState(true);
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>(() => [...(rootData.me?.emails ?? [])]);
   const [availableResourcesCount, setAvailableResourcesCount] = useState<number | null>(null);
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
@@ -261,6 +304,8 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
     [bookingPricingOptions, effectiveSelectedPricingId],
   );
   const isEventProduct = rootData.product?.type.type === 'EVENT';
+  const isEntitlementPricing = selectedPricingOption?.fulfillmentType === 'ENTITLEMENT';
+  const isPurchasingEntitlement = isEntitlementPricing;
   const isInArrearsBilling = selectedPricingOption?.billingMode === 'IN_ARREARS';
 
   useEffect(() => {
@@ -298,10 +343,10 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
     () =>
       bookingPricingOptions.map((option) => ({
         id: option.id,
-        label: rootData.productPricingCadences.find((item) => item.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
-        description: option.listingMetadata.title ?? option.listingMetadata.subTitle ?? '',
+        label: option.listingMetadata.title ?? option.listingMetadata.subTitle ?? 'Pricing option',
+        description: option.listingMetadata.title ? (option.listingMetadata.subTitle ?? '') : '',
       })),
-    [bookingPricingOptions, rootData.productPricingCadences],
+    [bookingPricingOptions],
   );
 
   const dateRangeValidation = useMemo(() => {
@@ -491,6 +536,57 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
       return;
     }
 
+    const submittedPaymentMethod = isInArrearsBilling ? (availablePaymentMethods[0]?.type ?? '') : effectivePaymentMethod;
+
+    if (!submittedPaymentMethod) {
+      toast.error(<NotificationContent content="Select a payment method to continue." />);
+      return;
+    }
+
+    if (isPurchasingEntitlement) {
+      if (!rootData.product.organization.uniqueId) {
+        toast.error(<NotificationContent content="This entitlement offering is currently unavailable." />);
+        return;
+      }
+
+      commitCreateEntitlementPurchase({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            organizationId: rootData.product.organization.uniqueId,
+            productVersionId: rootData.product.latestProductVersionId,
+            pricingId: selectedPricingOption.id,
+            autoRenew: isPurchasingEntitlement && selectedPricingOption.supportsSubscriptionAutoRenewal ? autoRenew : false,
+            paymentMethod: submittedPaymentMethod as PaymentMethod,
+            serviceStartAt: entitlementStartDate.utc().startOf('day').toISOString(),
+            checkoutReturnUrl: new URL(
+              getMarketplaceEntitlementPurchaseDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, '__PURCHASE_ID__'),
+              window.location.origin,
+            ).toString(),
+            invoiceEmailList,
+          },
+        },
+        onCompleted: (response, errors) => {
+          if (errors?.length) {
+            toast(<NotificationContent content={`We couldn't start this entitlement purchase. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+            return;
+          }
+
+          const purchase = response.createEntitlementPurchase?.purchase;
+          if (response.createEntitlementPurchase?.error || !purchase) {
+            toast(<NotificationContent content={response.createEntitlementPurchase?.error ?? "We couldn't start this entitlement purchase."} />, errorNotificationOptions);
+            return;
+          }
+
+          router.push(getMarketplaceEntitlementPurchaseDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, purchase.id));
+        },
+        onError: (error) => {
+          toast(<NotificationContent content={`We couldn't start this entitlement purchase. ${getRelayErrorMessage(error)}`} />, errorNotificationOptions);
+        },
+      });
+      return;
+    }
+
     if (!dateRangeValidation.valid) {
       toast.error(<NotificationContent content={dateRangeValidation.errorMessage} />);
       return;
@@ -508,13 +604,6 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
 
     if (!hasEnoughResourcesAvailable) {
       toast.error(<NotificationContent content="No matching resources are available for the selected date and time." />);
-      return;
-    }
-
-    const submittedPaymentMethod = isInArrearsBilling ? (availablePaymentMethods[0]?.type ?? '') : effectivePaymentMethod;
-
-    if (!submittedPaymentMethod) {
-      toast.error(<NotificationContent content="Select a payment method to continue." />);
       return;
     }
 
@@ -542,6 +631,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
           quantity: effectiveQuantity,
           productVersionId: product.latestProductVersionId,
           pricingId: selectedPricingOption.id,
+          entitlementId: null,
           checkoutReturnUrl: new URL(
             getMarketplaceProductBookingDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, id),
             window.location.origin,
@@ -647,25 +737,45 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
               ))}
             </TextField>
 
-            <DatePicker
-              label="Booking date"
-              value={selectedDate}
-              onChange={(value) => value && onDateChange(value)}
-              shouldDisableDate={(date) => !isDateAvailableForPrice(date, selectedPricingOption?.availableDays)}
-              slotProps={{ textField: { helperText: getAvailableDaysGuidance(selectedPricingOption?.availableDays) } }}
-            />
+            {isEntitlementPricing ? (
+              <Alert severity="info" sx={{ borderRadius: 3 }}>
+                {getAvailableDaysGuidance(selectedPricingOption?.availableDays)}
+              </Alert>
+            ) : null}
 
-            <TimeRangePicker
-              minutesStep={rootData.bookingSlotSizeInMinutes}
-              value={timeRange}
-              onChange={(value) => {
-                if (value[0] && value[1]) {
-                  onTimeRangeChange(value);
-                }
-              }}
-            />
+            {isPurchasingEntitlement ? (
+              <DatePicker
+                label="Entitlement start date"
+                value={entitlementStartDate}
+                onChange={(value) => value && setEntitlementStartDate(value)}
+                shouldDisableDate={(date) => date.isBefore(startOfDay(), 'day')}
+                slotProps={{ textField: { helperText: 'Credits become available after payment; this date is used for the service period and invoice.' } }}
+              />
+            ) : null}
 
-            {!isEventProduct && (
+            {!isPurchasingEntitlement ? (
+              <DatePicker
+                label="Booking date"
+                value={selectedDate}
+                onChange={(value) => value && onDateChange(value)}
+                shouldDisableDate={(date) => !isDateAvailableForPrice(date, selectedPricingOption?.availableDays)}
+                slotProps={{ textField: { helperText: getAvailableDaysGuidance(selectedPricingOption?.availableDays) } }}
+              />
+            ) : null}
+
+            {!isPurchasingEntitlement ? (
+              <TimeRangePicker
+                minutesStep={rootData.bookingSlotSizeInMinutes}
+                value={timeRange}
+                onChange={(value) => {
+                  if (value[0] && value[1]) {
+                    onTimeRangeChange(value);
+                  }
+                }}
+              />
+            ) : null}
+
+            {!isPurchasingEntitlement && !isEventProduct && (
               <TextField
                 label="Quantity"
                 type="number"
@@ -678,8 +788,8 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
               />
             )}
 
-            {dateRangeValidation.errorMessage ? <Alert severity="warning">{dateRangeValidation.errorMessage}</Alert> : null}
-            {!dateRangeValidation.errorMessage && availabilityMessage ? (
+            {!isPurchasingEntitlement && dateRangeValidation.errorMessage ? <Alert severity="warning">{dateRangeValidation.errorMessage}</Alert> : null}
+            {!isPurchasingEntitlement && !dateRangeValidation.errorMessage && availabilityMessage ? (
               <Alert severity={availabilityErrorMessage ? 'warning' : hasEnoughResourcesAvailable ? 'success' : 'error'}>{availabilityMessage}</Alert>
             ) : null}
 
@@ -696,6 +806,10 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
                 This pricing option is invoiced in arrears. You will receive an invoice in line with the organization&apos;s billing cycle, so there is nothing to choose here yet.
               </Alert>
             )}
+
+            {isPurchasingEntitlement && selectedPricingOption?.supportsSubscriptionAutoRenewal ? (
+              <FormControlLabel control={<Switch checked={autoRenew} onChange={(event) => setAutoRenew(event.target.checked)} />} label="Automatically renew this credit package" />
+            ) : null}
 
             <TextField
               label="Invoice emails"
@@ -717,7 +831,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
               termsAndConditionsUrl={rootData.product.organization.customerFacingTermsAndConditionsUrl}
             />
 
-            {!bookingAvailable ? <Alert severity="info">{bookingAvailabilityMessage}</Alert> : null}
+            {!isPurchasingEntitlement && !bookingAvailable ? <Alert severity="info">{bookingAvailabilityMessage}</Alert> : null}
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.25, justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
               <Box>
                 <SubtitleIconTypography label={rootData.product.listingMetadata.title ?? ''} />
@@ -732,16 +846,17 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
                   onClick={handleSubmit}
                   disabled={
                     isInFlight ||
-                    !bookingAvailable ||
+                    isEntitlementPurchaseInFlight ||
+                    (!isPurchasingEntitlement && !bookingAvailable) ||
                     !selectedPricingOption ||
-                    isCheckingAvailability ||
-                    !dateRangeValidation.valid ||
-                    !hasEnoughResourcesAvailable ||
+                    (!isPurchasingEntitlement && isCheckingAvailability) ||
+                    (!isPurchasingEntitlement && !dateRangeValidation.valid) ||
+                    (!isPurchasingEntitlement && !hasEnoughResourcesAvailable) ||
                     (!!rootData.me?.id && !!rootData.product.organization.customerFacingTermsAndConditionsUrl && !hasAcceptedTermsAndConditions)
                   }
                   sx={{ textTransform: 'none' }}
                 >
-                  {rootData.me ? 'Book now' : 'Sign in to continue'}
+                  {rootData.me ? (isPurchasingEntitlement ? 'Purchase credits' : 'Book now') : 'Sign in to continue'}
                 </Button>
               </StackRow>
             </Box>
@@ -749,18 +864,38 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
         </CardContent>
       </Card>
 
-      <MarketplaceProductBookingSummary
-        amountLabel={totalLabel}
-        cancellationPolicyType={selectedPricingOption?.cancellationPolicyType}
-        cancellationRefundRules={selectedPricingOption?.cancellationRefundRules}
-        dateLabel={toShortDate(selectedDate.toISOString())}
-        durationLabel={selectedPricingOption?.purchaseCadence === 'HALF_DAY' ? 'Half-day access' : durationLabel}
-        paymentLabel={paymentLabel}
-        productType={rootData.product.type.type}
-        quantity={effectiveQuantity}
-        taxLabel={selectedPricingOption?.isTaxInclusive ? 'Tax included' : 'Tax added at invoice'}
-        title={selectedPricingOption?.listingMetadata.title ?? rootData.product.listingMetadata.title ?? ''}
-      />
+      <StackColumn spacing={2}>
+        {rootData.entitlementPurchases
+          .filter((purchase) => purchase.paymentStatus === 'PENDING')
+          .map((purchase) => (
+            <MarketplaceProductBookingPaymentPanel
+              key={purchase.id}
+              checkoutUrl={purchase.paymentMethod === 'CARD' ? (purchase.paymentAction ?? null) : null}
+              ctaLabel="Pay now"
+              entityLabel="credit purchase"
+              invoiceNumber={purchase.invoiceNumber}
+              invoiceUrl={purchase.invoiceUrl ?? purchase.linkedBookings.edges[0]?.node.marketplaceBooking?.invoiceUrl ?? null}
+              isPaymentRequired
+              paymentExpiry={purchase.paymentExpiry}
+              paymentInstructions={purchase.paymentInstructions}
+              paymentMethodType={purchase.paymentMethod}
+              paymentStatusLabel={purchase.paymentStatus}
+              paymentStatusType={purchase.paymentStatus}
+            />
+          ))}
+        <MarketplaceProductBookingSummary
+          amountLabel={totalLabel}
+          cancellationPolicyType={selectedPricingOption?.cancellationPolicyType}
+          cancellationRefundRules={selectedPricingOption?.cancellationRefundRules}
+          dateLabel={toShortDate(selectedDate.toISOString())}
+          durationLabel={selectedPricingOption?.purchaseCadence === 'HALF_DAY' ? 'Half-day access' : durationLabel}
+          paymentLabel={paymentLabel}
+          productType={rootData.product.type.type}
+          quantity={effectiveQuantity}
+          taxLabel={selectedPricingOption?.isTaxInclusive ? 'Tax included' : 'Tax added at invoice'}
+          title={selectedPricingOption?.listingMetadata.title ?? rootData.product.listingMetadata.title ?? ''}
+        />
+      </StackColumn>
     </Box>
   );
 };

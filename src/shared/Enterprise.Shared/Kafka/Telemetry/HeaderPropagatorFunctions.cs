@@ -27,9 +27,11 @@ public class
     public IEnumerable<string> Extract(Headers location, string contextFieldName)
     {
         logger.LogDebug("Extracting propagation header. HeaderName={HeaderName}", contextFieldName);
-        return location
-            .Where(header => header.Key == contextFieldName)
-            .Select(header => Encoding.UTF8.GetString(header.GetValueBytes()))
-            .ToArray();
+        return
+        [
+            .. location
+                .Where(header => header.Key == contextFieldName)
+                .Select(header => Encoding.UTF8.GetString(header.GetValueBytes())),
+        ];
     }
 }

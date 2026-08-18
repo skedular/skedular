@@ -17,3 +17,12 @@ This file applies to `booking/apis/Booking.Api.UnitTests`.
 
 - Keep tests fast and infrastructure-free.
 - If a test requires real infrastructure (database, Kafka, Temporal), move it to the domain integration test project.
+
+## Unit-test construction
+
+- Prefer `[Theory]` plus `AutoFakeItEasyData`.
+- Inject constructor dependencies, the SUT, and scenario values through parameters, with dependencies before the SUT and
+  values after it.
+- Avoid in-method `A.Fake<T>()` when auto-data can provide the dependency; configure only required calls.
+- Required services, loggers, transaction builders, mappers, and repository factories are never nullable. Do not pass
+  null or add null-conditional production code to make tests work.

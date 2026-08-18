@@ -4,4 +4,5 @@ public static class Constants
 {
     public const string BookingTopicName = "Booking";
     public const string MarketplaceBookingSubscriptionTopicName = "MarketplaceBookingSubscription";
+    public const string EntitlementPurchaseTopicName = "EntitlementPurchase";
 }

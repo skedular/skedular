@@ -57,3 +57,7 @@ Before sharing the listing, review the renter-facing flow. Confirm that the avai
 ## Next step
 
 Once pricing, availability, booking rules, and cancellation terms are configured, continue to [Bookings and renters](/docs/host/bookings-and-renters) to learn how to view and manage the bookings renters make.
+
+## Credit entitlements
+
+Hosts can offer prepaid booking credits with a product-level validity period and explicit unused-credit refund choice. The policy is captured when the customer purchases the pricing option.

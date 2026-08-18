@@ -187,7 +187,7 @@ public class EventMapper : IEventMapper
             },
         }));
 
-        organization.FeatureImages.AddRange(MapTo(src.FeatureImages.ToArray()));
+        organization.FeatureImages.AddRange(MapTo([.. src.FeatureImages]));
 
         return organization;
     }
@@ -262,8 +262,7 @@ public class EventMapper : IEventMapper
         return listingMetadata;
     }
 
-    private static CdnImageFile[] MapTo(Models_CdnImageFile[] src) =>
-        src.Select(MapTo).ToArray();
+    private static CdnImageFile[] MapTo(Models_CdnImageFile[] src) => [.. src.Select(MapTo)];
 
     private static CdnImageFile MapTo(Models_CdnImageFile src) =>
         new()

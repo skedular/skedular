@@ -105,12 +105,13 @@ export const hostPage: ProductPageContent = {
         {
           title: "Flexible pricing",
           description:
-            "Match the way people rent your place with multiple clear purchase options.",
+            "Match the way people rent your place with clear purchase options, including booking credits for customers who want to schedule later.",
           items: [
             "Hourly pricing",
             "Half-day and daily pricing",
             "Weekly and monthly pricing",
             "Longer-term pricing",
+            "Prepaid booking credits",
             "Tax-inclusive options",
           ],
           accent: "aqua",
@@ -140,6 +141,18 @@ export const hostPage: ProductPageContent = {
             "Performance insights",
           ],
           accent: "sunbeam",
+        },
+        {
+          title: "Prepaid booking credits",
+          description:
+            "Give customers the flexibility to buy now and choose an eligible date later. Credits become available after payment is confirmed, and you set the allowed days, validity period, and unused-credit refund policy.",
+          items: [
+            "Buy now, schedule later",
+            "Eligible booking days",
+            "Confirmed payment before use",
+            "Expiry, refunds, and auto-renewal",
+          ],
+          accent: "emerald",
         },
       ],
     },
@@ -184,6 +197,7 @@ export const hostPage: ProductPageContent = {
     withSkedular: [
       "One place-first listing",
       "Flexible pricing tiers",
+      "Prepaid booking credits",
       "Card payments",
       "Connected payouts",
       "Booking administration",
@@ -241,6 +255,7 @@ export const hostPage: ProductPageContent = {
     keyCapabilities: [
       "Automatic booking setup",
       "Flexible pricing",
+      "Prepaid booking credits",
       "Card payments",
       "Stripe Connect payouts",
       "Cancellation and refund policies",

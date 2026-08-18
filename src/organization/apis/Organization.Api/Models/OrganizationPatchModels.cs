@@ -41,9 +41,9 @@ public record OrganizationPatchRequest(
     ListingMetadata? MarketplaceListingMetadata = null,
     OrganizationPhysicalAddress? PhysicalAddress = null)
 {
-    public IReadOnlyList<string> RefundNotificationEmails { get; init; } = RefundNotificationEmails ?? [];
-    public IReadOnlyList<string> IndustrySubCategoryIds { get; init; } = IndustrySubCategoryIds ?? [];
-    public IReadOnlyList<CdnImageFile> FeatureImages { get; init; } = FeatureImages ?? [];
+    public IReadOnlyList<string> RefundNotificationEmails { get; set; } = RefundNotificationEmails ?? [];
+    public IReadOnlyList<string> IndustrySubCategoryIds { get; set; } = IndustrySubCategoryIds ?? [];
+    public IReadOnlyList<CdnImageFile> FeatureImages { get; set; } = FeatureImages ?? [];
 }
 
 public record OrganizationPatchResult(Shared.Models.Organization Organization);

@@ -199,7 +199,12 @@ export interface ResourceArticle {
   contentStatus: ContentStatus;
   claimReviewStatus: ReviewStatus;
   lastModified?: string;
-  author?: { name: string; role: string; description: string };
+  author?: {
+    name: string;
+    role: string;
+    description: string;
+    type?: "Person" | "Organization";
+  };
   featureImage?: string;
   featureImageAlt?: string;
   body: string[];
@@ -210,6 +215,7 @@ export interface ResourceArticle {
     listType?: "ul" | "ol";
   }>;
   faq?: Array<{ question: string; answer: string }>;
+  finalTakeaway?: string;
   cta?: {
     heading: string;
     body: string;

@@ -13,10 +13,10 @@ namespace Skedularctl.Services;
 public class McpToolGenerateServiceOptions
 {
     [Option('i', "input-file", Required = true, HelpText = "Path to the input C# source file that needs to be enriched.")]
-    public string InputFilePath { get; init; } = string.Empty;
+    public string InputFilePath { get; set; } = string.Empty;
 
     [Option('o', "output-file", Required = true, HelpText = "Path to the generated C# file containing MCP annotations.")]
-    public string OutputFilePath { get; init; } = string.Empty;
+    public string OutputFilePath { get; set; } = string.Empty;
 }
 
 public interface IMcpToolGenerateService

@@ -44,6 +44,18 @@ public interface IMarketplaceRefundService
         CustomerEntity? requestedByCustomer,
         CancellationToken cancellationToken);
 
+    Task<MarketplaceRefund?> CreateEntitlementExpiryRefundAsync(
+        Entitlement entitlement,
+        EntitlementPurchase purchase,
+        int unusedCreditQuantity,
+        CancellationToken cancellationToken);
+
+    Task<MarketplaceRefund?> CreateEntitlementCancellationRefundAsync(
+        Entitlement entitlement,
+        EntitlementPurchase purchase,
+        int unusedCreditQuantity,
+        CancellationToken cancellationToken);
+
     Task<bool> HasConfirmedPaymentAsync(
         MarketplaceRefund refund,
         CancellationToken cancellationToken);
@@ -203,6 +215,32 @@ public class MarketplaceRefundService(
         return refund;
     }
 
+    public async Task<MarketplaceRefund?> CreateEntitlementExpiryRefundAsync(
+        Entitlement entitlement,
+        EntitlementPurchase purchase,
+        int unusedCreditQuantity,
+        CancellationToken cancellationToken) =>
+        await CreateEntitlementUnusedCreditRefundAsync(
+            entitlement,
+            purchase,
+            unusedCreditQuantity,
+            MarketplaceRefundKindConstants.EntitlementExpiry,
+            entitlement.ExpiresAt,
+            cancellationToken);
+
+    public async Task<MarketplaceRefund?> CreateEntitlementCancellationRefundAsync(
+        Entitlement entitlement,
+        EntitlementPurchase purchase,
+        int unusedCreditQuantity,
+        CancellationToken cancellationToken) =>
+        await CreateEntitlementUnusedCreditRefundAsync(
+            entitlement,
+            purchase,
+            unusedCreditQuantity,
+            MarketplaceRefundKindConstants.Cancellation,
+            timeProvider.GetUtcNow(),
+            cancellationToken);
+
     public async Task<bool> HasConfirmedPaymentAsync(
         MarketplaceRefund refund,
         CancellationToken cancellationToken)
@@ -261,6 +299,77 @@ public class MarketplaceRefundService(
             default:
                 return false;
         }
+    }
+
+    private async Task<MarketplaceRefund?> CreateEntitlementUnusedCreditRefundAsync(
+        Entitlement entitlement,
+        EntitlementPurchase purchase,
+        int unusedCreditQuantity,
+        string refundKind,
+        DateTimeOffset referenceTime,
+        CancellationToken cancellationToken)
+    {
+        if (purchase.PaymentStatus != PaymentStatusConstants.Confirmed ||
+            unusedCreditQuantity <= 0 ||
+            entitlement.GrantedQuantity <= 0)
+        {
+            return null;
+        }
+
+        var idempotencyKey = $"entitlement-{refundKind.ToLowerInvariant()}:{purchase.Id}:{entitlement.Id}";
+        var existing = await repositoryFactory.MarketplaceRefundRepository.GetByIdempotencyKeyAsync(idempotencyKey, cancellationToken);
+        if (existing is not null)
+        {
+            return existing;
+        }
+
+        var amount = decimal.Round(
+            entitlement.NetPurchaseAmount * unusedCreditQuantity / entitlement.GrantedQuantity,
+            4,
+            MidpointRounding.AwayFromZero);
+        if (amount <= 0)
+        {
+            return null;
+        }
+
+        var status = purchase.PaymentMethod == PaymentMethod.BankTransfer.ToPaymentMethod()
+            ? MarketplaceRefundStatusConstants.UnderReview
+            : MarketplaceRefundStatusConstants.Requested;
+        var now = timeProvider.GetUtcNow();
+        var refund = repositoryFactory.MarketplaceRefundRepository.Add(new MarketplaceRefund
+        {
+            Id = randomHelper.Generate(),
+            IdempotencyKey = idempotencyKey,
+            OrganizationId = entitlement.OrganizationId,
+            LocalEntityType = MarketplaceRefundEntityTypeConstants.EntitlementPurchase,
+            LocalEntityId = purchase.Id,
+            RefundKind = refundKind,
+            Status = status,
+            RequestedAt = now,
+            ReferenceTime = referenceTime,
+            RefundPercentage = (int)Math.Round((decimal)unusedCreditQuantity / entitlement.GrantedQuantity * 100m,
+                MidpointRounding.AwayFromZero),
+            BaseAmount = entitlement.NetPurchaseAmount,
+            RefundAmount = amount,
+            Currency = entitlement.Currency,
+            PaymentProvider = purchase.PaymentMethod == PaymentMethod.Card.ToPaymentMethod()
+                ? MarketplaceExternalRefundReconciliationProviderConstants.Stripe
+                : MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer,
+            StripePaymentIntentId = purchase.StripePaymentIntentId,
+            StripeAccountId = purchase.StripeAccountId,
+            StripeChargeType = purchase.PaymentMethod == PaymentMethod.Card.ToPaymentMethod() ? "Direct" : null,
+        });
+        marketplaceRefundEventService.Add(refund, MapInitialEventType(status), null, now);
+        if (status == MarketplaceRefundStatusConstants.Requested)
+        {
+            temporalOutboxService.StartWorkflowProcessMarketplaceRefund(
+                new ProcessMarketplaceRefundInput(refund.Id, null), repositoryFactory.UnitOfWork);
+        }
+
+        logger.LogInformation(
+            "Created entitlement unused-credit refund {RefundId} for purchase {PurchaseId}; kind={RefundKind}, unused credits={UnusedCreditQuantity}, amount={RefundAmount}, status={RefundStatus}",
+            refund.Id, purchase.Id, refundKind, unusedCreditQuantity, amount, status);
+        return refund;
     }
 
     private async Task<MarketplaceRefund?> UpsertRefundAsync(
@@ -344,6 +453,19 @@ public class MarketplaceRefundService(
                     CalculationResultJson = BuildCalculationResultJson(policySnapshot, preview, timezoneId),
                     TimezoneId = timezoneId,
                     RequestedByCustomerId = requestedByCustomer?.Id,
+                    // Snapshot the payment provider and Stripe charge context while the
+                    // concrete recurring booking is still available. Subscription
+                    // templates do not carry payment details, and cancellation cleanup
+                    // can remove the recurring booking before refund processing runs.
+                    PaymentProvider = string.Equals(marketplaceBooking.PaymentMethod,
+                        MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer, StringComparison.OrdinalIgnoreCase)
+                        ? MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer
+                        : MarketplaceExternalRefundReconciliationProviderConstants.Stripe,
+                    StripePaymentIntentId = marketplaceBooking.StripeCheckoutSession?.PaymentIntentId,
+                    StripeChargeId = marketplaceBooking.StripeCheckoutSession?.ChargeId,
+                    StripeTransferId = marketplaceBooking.StripeCheckoutSession?.TransferId,
+                    StripeAccountId = marketplaceBooking.StripeCheckoutSession?.StripeAccountId,
+                    StripeChargeType = marketplaceBooking.StripeCheckoutSession?.ChargeType,
                 });
             await AddPaymentAllocationIfAvailableAsync(refund, marketplaceBooking, cancellationToken);
             marketplaceRefundEventService.Add(
@@ -495,7 +617,8 @@ public class MarketplaceRefundService(
         timezoneIds.FirstOrDefault(item => !string.IsNullOrWhiteSpace(item)) ?? TimeZoneInfo.Utc.Id;
 
     private static string ResolveInitialStatus(MarketplaceBookingEntity marketplaceBooking) =>
-        string.Equals(marketplaceBooking.PaymentMethod, "BANK_TRANSFER", StringComparison.OrdinalIgnoreCase)
+        string.Equals(marketplaceBooking.PaymentMethod, MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer,
+            StringComparison.OrdinalIgnoreCase)
             ? MarketplaceRefundStatusConstants.UnderReview
             : MarketplaceRefundStatusConstants.Requested;
 
@@ -512,9 +635,10 @@ public class MarketplaceRefundService(
         // Determine source payment reference — prefer Stripe session ID, fall back to booking ID
         var reference = marketplaceBooking.StripeCheckoutSession?.StripeCheckoutSessionId
                         ?? marketplaceBooking.Id;
-        var provider = string.Equals(marketplaceBooking.PaymentMethod, "BANK_TRANSFER", StringComparison.OrdinalIgnoreCase)
-            ? "BANK_TRANSFER"
-            : "STRIPE";
+        var provider = string.Equals(marketplaceBooking.PaymentMethod, MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer,
+            StringComparison.OrdinalIgnoreCase)
+            ? MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer
+            : MarketplaceExternalRefundReconciliationProviderConstants.Stripe;
         // Manual bank-transfer confirmation records the payment status, but generated
         // recurring marketplace bookings may not carry copied monetary totals. Use the same
         // canonical amount resolver as the refund preview so the allocation is not created
@@ -537,7 +661,7 @@ public class MarketplaceRefundService(
                 Currency = refund.Currency ?? marketplaceBooking.Currency ?? "NZD",
             });
         }
-        else if (provider != "BANK_TRANSFER" && source.SourceCapturedAmount != capturedAmount)
+        else if (provider != MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer && source.SourceCapturedAmount != capturedAmount)
         {
             throw new InvalidOperationException("The captured source-payment amount does not match the existing allocation record.");
         }
@@ -547,7 +671,7 @@ public class MarketplaceRefundService(
         // not be blocked by a stale or incomplete local allocation row. The source row remains
         // available for the operator workflow; automatic balance enforcement stays enabled for
         // provider-backed refunds such as Stripe.
-        if (provider == "BANK_TRANSFER")
+        if (provider == MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer)
         {
             return;
         }

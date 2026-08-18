@@ -70,3 +70,7 @@ When pricing changes, Spaces creates a new Product version for future purchases.
 ## Next step
 
 Once the Product and its Prices are ready, continue to [Bookings](/docs/spaces/bookings) to manage the reservations customers create through those Products.
+
+## Credit-based pricing
+
+An entitlement pricing option can grant prepaid booking credits. Configure the credit quantity, unit, validity period, and whether unused credits are refundable on that pricing option.

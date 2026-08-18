@@ -1,106 +1,105 @@
 using Api.Shared.Services.Models;
+using Enterprise.Shared.Models;
 
 namespace Booking.Shared.Models;
 
 public sealed class MarketplaceRefundPreviewModel
 {
-    public MarketplaceRefundEntityType LocalEntityType { get; init; }
-    public string LocalEntityId { get; init; } = string.Empty;
-    public DateTimeOffset RequestedAt { get; init; }
-    public DateTimeOffset ReferenceTime { get; init; }
-    public bool IsRefundable { get; init; }
-    public int RefundPercentage { get; init; }
-    public int? AppliedRuleMinutesBefore { get; init; }
-    public decimal? BaseAmount { get; init; }
-    public decimal? RefundAmount { get; init; }
-    public Currency? Currency { get; init; }
+    public MarketplaceRefundEntityType LocalEntityType { get; set; }
+    public string LocalEntityId { get; set; } = string.Empty;
+    public DateTimeOffset RequestedAt { get; set; }
+    public DateTimeOffset ReferenceTime { get; set; }
+    public bool IsRefundable { get; set; }
+    public int RefundPercentage { get; set; }
+    public int? AppliedRuleMinutesBefore { get; set; }
+    public decimal? BaseAmount { get; set; }
+    public decimal? RefundAmount { get; set; }
+    public Currency? Currency { get; set; }
 }
 
-public sealed class MarketplaceRefundReadModel
+public sealed class MarketplaceRefundReadModel : ModelBase
 {
-    public string Id { get; init; } = string.Empty;
-    public MarketplaceRefundEntityType LocalEntityType { get; init; }
-    public string LocalEntityId { get; init; } = string.Empty;
-    public MarketplaceRefundStatus Status { get; init; }
-    public DateTimeOffset RequestedAt { get; init; }
-    public DateTimeOffset ReferenceTime { get; init; }
-    public int RefundPercentage { get; init; }
-    public int? AppliedRuleMinutesBefore { get; init; }
-    public decimal? BaseAmount { get; init; }
-    public decimal? RefundAmount { get; init; }
-    public Currency? Currency { get; init; }
-    public string? Reason { get; init; }
-    public string? AccountingProvider { get; init; }
-    public string? ExternalRefundId { get; init; }
-    public string? ExternalRefundNumber { get; init; }
-    public DateTimeOffset? LastProcessedAt { get; init; }
+    public MarketplaceRefundEntityType LocalEntityType { get; set; }
+    public string LocalEntityId { get; set; } = string.Empty;
+    public MarketplaceRefundStatus Status { get; set; }
+    public DateTimeOffset RequestedAt { get; set; }
+    public DateTimeOffset ReferenceTime { get; set; }
+    public int RefundPercentage { get; set; }
+    public int? AppliedRuleMinutesBefore { get; set; }
+    public decimal? BaseAmount { get; set; }
+    public decimal? RefundAmount { get; set; }
+    public Currency? Currency { get; set; }
+    public string? Reason { get; set; }
+    public string? AccountingProvider { get; set; }
+    public string? ExternalRefundId { get; set; }
+    public string? ExternalRefundNumber { get; set; }
+    public DateTimeOffset? LastProcessedAt { get; set; }
     public string? LastError { get; set; }
-    public string? PaymentProvider { get; init; }
-    public string? ExternalPaymentRefundId { get; init; }
-    public string? PaymentRefundStatus { get; init; }
-    public DateTimeOffset? PaymentRefundLastProcessedAt { get; init; }
-    public string? PaymentRefundLastError { get; init; }
+    public string? PaymentProvider { get; set; }
+    public string? ExternalPaymentRefundId { get; set; }
+    public string? PaymentRefundStatus { get; set; }
+    public DateTimeOffset? PaymentRefundLastProcessedAt { get; set; }
+    public string? PaymentRefundLastError { get; set; }
     public bool CanProcessInXero { get; set; }
     public IReadOnlyList<MarketplaceRefundEventModel> Events { get; set; } = [];
-    public string? RequestedByCustomerId { get; init; }
+    public string? RequestedByCustomerId { get; set; }
     public string? RequestedByCustomerName { get; set; }
     public string? XeroProcessingBlockedReason { get; set; }
-    public MarketplaceRefundKind RefundKind { get; init; }
-    public string IdempotencyKey { get; init; } = string.Empty;
-    public string? PolicySnapshotJson { get; init; }
-    public string? CalculationResultJson { get; init; }
-    public string? TimezoneId { get; init; }
-    public int RetryCount { get; init; }
-    public DateTimeOffset? ApprovedAt { get; init; }
-    public string? ApprovedByCustomerId { get; init; }
-    public DateTimeOffset? RejectedAt { get; init; }
-    public string? RejectedByCustomerId { get; init; }
-    public string? RejectionReason { get; init; }
-    public DateTimeOffset? CancelledAt { get; init; }
-    public string? CancellationReason { get; init; }
-    public string? BankTransferReference { get; init; }
-    public DateTimeOffset? BankTransferSentAt { get; init; }
-    public DateTimeOffset? ReconciledAt { get; init; }
-    public MarketplaceExternalRefundReconciliationStatus? ReconciliationStatus { get; init; }
-    public MarketplaceRefundStatus? LastNotificationStatus { get; init; }
-    public bool PostPayoutRefund { get; init; }
-    public string? StripeRefundPath { get; init; }
-    public string? StripeAccountId { get; init; }
-    public string? StripeChargeType { get; init; }
-    public string? StripeTransferId { get; init; }
-    public string? StripeChargeId { get; init; }
-    public string? StripePaymentIntentId { get; init; }
-    public DateTimeOffset? StripeRefundPathSelectedAt { get; init; }
-    public string? ReconciliationLeaseOwner { get; init; }
-    public DateTimeOffset? ReconciliationLeaseExpiresAt { get; init; }
-    public DateTimeOffset? ReconciliationLeaseRenewedAt { get; init; }
-    public IReadOnlyList<MarketplaceRefundPaymentAllocationModel> PaymentAllocations { get; init; } = [];
+    public MarketplaceRefundKind RefundKind { get; set; }
+    public string IdempotencyKey { get; set; } = string.Empty;
+    public string? PolicySnapshotJson { get; set; }
+    public string? CalculationResultJson { get; set; }
+    public string? TimezoneId { get; set; }
+    public int RetryCount { get; set; }
+    public DateTimeOffset? ApprovedAt { get; set; }
+    public string? ApprovedByCustomerId { get; set; }
+    public DateTimeOffset? RejectedAt { get; set; }
+    public string? RejectedByCustomerId { get; set; }
+    public string? RejectionReason { get; set; }
+    public DateTimeOffset? CancelledAt { get; set; }
+    public string? CancellationReason { get; set; }
+    public string? BankTransferReference { get; set; }
+    public DateTimeOffset? BankTransferSentAt { get; set; }
+    public DateTimeOffset? ReconciledAt { get; set; }
+    public MarketplaceExternalRefundReconciliationStatus? ReconciliationStatus { get; set; }
+    public MarketplaceRefundStatus? LastNotificationStatus { get; set; }
+    public bool PostPayoutRefund { get; set; }
+    public string? StripeRefundPath { get; set; }
+    public string? StripeAccountId { get; set; }
+    public string? StripeChargeType { get; set; }
+    public string? StripeTransferId { get; set; }
+    public string? StripeChargeId { get; set; }
+    public string? StripePaymentIntentId { get; set; }
+    public DateTimeOffset? StripeRefundPathSelectedAt { get; set; }
+    public string? ReconciliationLeaseOwner { get; set; }
+    public DateTimeOffset? ReconciliationLeaseExpiresAt { get; set; }
+    public DateTimeOffset? ReconciliationLeaseRenewedAt { get; set; }
+    public IReadOnlyList<MarketplaceRefundPaymentAllocationModel> PaymentAllocations { get; set; } = [];
 }
 
-public sealed class MarketplaceRefundEventModel
+public sealed class MarketplaceRefundEventModel : ModelBase
 {
-    public string Id { get; init; } = string.Empty;
-    public MarketplaceRefundEventType EventType { get; init; }
-    public DateTimeOffset OccurredAt { get; init; }
-    public decimal? RefundAmount { get; init; }
-    public Currency? Currency { get; init; }
-    public string? Reason { get; init; }
-    public string? AccountingProvider { get; init; }
-    public string? ExternalRefundId { get; init; }
-    public string? ExternalRefundNumber { get; init; }
-    public string? LastError { get; init; }
-    public string? ActorCustomerId { get; init; }
+    public MarketplaceRefundEventType EventType { get; set; }
+    public DateTimeOffset OccurredAt { get; set; }
+    public decimal? RefundAmount { get; set; }
+    public Currency? Currency { get; set; }
+    public string? Reason { get; set; }
+    public string? AccountingProvider { get; set; }
+    public string? ExternalRefundId { get; set; }
+    public string? ExternalRefundNumber { get; set; }
+    public string? LastError { get; set; }
+    public string? ActorCustomerId { get; set; }
     public string? ActorName { get; set; }
-    public MarketplaceRefundStatus? PreviousStatus { get; init; }
-    public MarketplaceRefundStatus? NewStatus { get; init; }
-    public string? CorrelationId { get; init; }
+    public MarketplaceRefundStatus? PreviousStatus { get; set; }
+    public MarketplaceRefundStatus? NewStatus { get; set; }
+    public string? CorrelationId { get; set; }
 }
 
 public sealed class MarketplaceRefundPaymentAllocationModel
 {
-    public string SourcePaymentProvider { get; init; } = string.Empty;
-    public string SourcePaymentReference { get; init; } = string.Empty;
-    public decimal SourcePaymentAmount { get; init; }
-    public decimal AllocatedRefundAmount { get; init; }
-    public Currency Currency { get; init; }
+    public string SourcePaymentProvider { get; set; } = string.Empty;
+    public string SourcePaymentReference { get; set; } = string.Empty;
+    public decimal SourcePaymentAmount { get; set; }
+    public decimal AllocatedRefundAmount { get; set; }
+    public Currency Currency { get; set; }
 }

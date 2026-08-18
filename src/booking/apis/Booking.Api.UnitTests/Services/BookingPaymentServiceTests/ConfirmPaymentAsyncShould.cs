@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
@@ -63,18 +64,32 @@ public class ConfirmPaymentAsyncShould
     {
         var marketplaceBooking = new MarketplaceBookingEntity
         {
+            Id = bookingId,
             ProductVersion = new ProductVersionEntity
             {
                 Id = "product-version-1",
             },
             PaymentMethod = PaymentMethod.BankTransfer.ToPaymentMethod(),
             PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
+            ProductPricing = ProductPricing.Empty("entitlement-pricing") with
+            {
+                FulfillmentType = ProductPricingFulfillmentType.Entitlement,
+                EntitlementCreditQuantity = 2,
+                EntitlementValidityDays = 30,
+            },
         };
         var existingBooking = new BookingEntity
         {
             Id = bookingId,
             Channel = BookingChannel.Marketplace.ToBookingChannel(),
             MarketplaceBooking = marketplaceBooking,
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = customerId,
+                },
+            ],
         };
         var productVersion = new ProductVersionEntity
         {
@@ -132,5 +147,8 @@ public class ConfirmPaymentAsyncShould
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, bookingId, cancellationToken))
             .MustHaveHappenedOnceExactly();
+
+        // Entitlement grants belong to the standalone purchase flow, never to a booking payment transition.
+        A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).MustNotHaveHappened();
     }
 }

@@ -3,6 +3,7 @@ using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
+using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
@@ -26,6 +27,8 @@ namespace Booking.Shared.Services;
 /// </summary>
 public interface IBookingInvoiceService
 {
+    Task<IDocument?> GenerateEntitlementInvoiceAsync(string purchaseId, CancellationToken cancellationToken);
+
     /// <summary>
     ///     Generates an invoice document for the specified booking.
     /// </summary>
@@ -51,6 +54,21 @@ public class BookingInvoiceService(
     IEntityMapper entityMapper,
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService) : IBookingInvoiceService
 {
+    public async Task<IDocument?> GenerateEntitlementInvoiceAsync(string purchaseId, CancellationToken cancellationToken)
+    {
+        var purchase = await repositoryFactory.EntitlementPurchaseRepository.GetByIdAsync(purchaseId, cancellationToken);
+        if (purchase is null)
+        {
+            return null;
+        }
+
+        var productVersion = purchase.ProductVersion;
+        ArgumentNullException.ThrowIfNull(productVersion);
+        var (organization, bankAccount) = await GetOrganizationAndBankAccountAsync(purchase.OrganizationId, cancellationToken);
+        var dueDate = invoicePaymentTermsService.GetDueDate(purchase.CreatedAt, organization.BillingDetails?.InvoiceDueInDays);
+        return new EntitlementInvoiceDocument(purchase, bankAccount, organization, productVersion, dueDate);
+    }
+
     public async Task<IDocument?> GenerateInvoiceAsync(string bookingId, CancellationToken cancellationToken)
     {
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);
@@ -139,6 +157,38 @@ public class BookingInvoiceService(
         return isDateOnlyRange
             ? $"{from.ToShortDate()} - {until.ToShortDate()}"
             : $"{from.ToShortDate()} {from.ToShortTime()} - {until.ToShortDate()} {until.ToShortTime()}";
+    }
+
+    public static string BuildBookingInvoiceLineDescription(
+        ProductVersion productVersion,
+        ProductPricing pricing,
+        string details)
+    {
+        var title = productVersion.ListingMetadata?.Title ?? $"Marketplace {productVersion.Type} booking";
+        var description = $"{title}{Environment.NewLine}{details}";
+
+        return pricing.FulfillmentType == ProductPricingFulfillmentType.Entitlement &&
+               pricing.EntitlementCreditQuantity is > 0
+            ? $"{description}{Environment.NewLine}Credits included: {pricing.EntitlementCreditQuantity.Value}"
+            : description;
+    }
+
+    public static string BuildEntitlementInvoiceLineDescription(
+        ProductVersion productVersion,
+        ProductPricing pricing,
+        DateTimeOffset serviceStartAt)
+    {
+        var productTitle = productVersion.ListingMetadata?.Title ?? "Entitlement credits";
+        var pricingOptionName = pricing.ListingMetadata?.Title;
+        var description = string.IsNullOrWhiteSpace(pricingOptionName)
+            ? productTitle
+            : $"{productTitle}{Environment.NewLine}Pricing option: {pricingOptionName}";
+        description +=
+            $"{Environment.NewLine}Validity: {serviceStartAt:yyyy-MM-dd} to {serviceStartAt.AddDays(pricing.EntitlementValidityDays ?? 0):yyyy-MM-dd}";
+
+        return pricing.EntitlementCreditQuantity is > 0
+            ? $"{description}{Environment.NewLine}Credits included: {pricing.EntitlementCreditQuantity.Value}"
+            : description;
     }
 
     private async Task<(Organization Organization, BankAccount BankAccount)> GetOrganizationAndBankAccountAsync(
@@ -366,8 +416,16 @@ public class BookingInvoiceService(
         protected override decimal GetTaxRatePercentage() => booking.MarketplaceBooking?.TaxRatePercentage ?? 0;
         protected override decimal GetTotalAmount() => booking.MarketplaceBooking?.TotalAmount ?? 0;
 
-        protected override string GetDescription() =>
-            $"{ProductVersion.ListingMetadata?.Title}{Environment.NewLine}{FormatInvoicePeriod(booking.From, booking.Until)}";
+        protected override string GetDescription()
+        {
+            var marketplaceBooking = booking.MarketplaceBooking;
+            ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+            return BuildBookingInvoiceLineDescription(
+                ProductVersion,
+                marketplaceBooking.ProductPricing,
+                FormatInvoicePeriod(booking.From, booking.Until));
+        }
 
         protected override decimal GetQuantity()
         {
@@ -436,6 +494,40 @@ public class BookingInvoiceService(
         }
     }
 
+    private sealed class EntitlementInvoiceDocument(
+        EntitlementPurchase purchase,
+        BankAccount bankAccount,
+        Organization organization,
+        ProductVersion productVersion,
+        DateTimeOffset dueDate)
+        : InvoiceDocumentBase(bankAccount, organization, productVersion, dueDate)
+    {
+        protected override DateTimeOffset GetInvoiceDate() => purchase.CreatedAt;
+        protected override string? GetInvoiceNumber() => purchase.InvoiceNumber;
+
+        protected override string GetDescription() =>
+            BuildEntitlementInvoiceLineDescription(ProductVersion, purchase.ProductPricing, purchase.ServiceStartAt);
+
+        protected override decimal GetQuantity() => 1;
+        protected override decimal GetLineAmount() => purchase.Amount;
+        protected override string GetUnitPriceLabel() => purchase.Amount.ToRoundedPrice();
+        protected override string GetPaymentMethod() => purchase.PaymentMethod;
+        protected override decimal GetTotalAmount() => purchase.Amount;
+
+        protected override decimal GetTaxRatePercentage() =>
+            Organization.TaxDetails is { IsRegistered: true } taxDetails ? Convert.ToDecimal(taxDetails.TaxRatePercentage) : 0m;
+
+        protected override decimal GetTotalAmountExcludeTax() =>
+            purchase.ProductPricing.IsTaxInclusive
+                ? purchase.Amount / (1m + GetTaxRatePercentage() / 100m)
+                : purchase.Amount;
+
+        protected override decimal GetTaxAmount() =>
+            purchase.ProductPricing.IsTaxInclusive
+                ? purchase.Amount - GetTotalAmountExcludeTax()
+                : GetTotalAmountExcludeTax() * GetTaxRatePercentage() / 100m;
+    }
+
     private class RecurringInvoiceDocument(
         RecurringBooking recurringBooking,
         BankAccount bankAccount,
@@ -465,10 +557,11 @@ public class BookingInvoiceService(
             ArgumentNullException.ThrowIfNull(marketplaceBooking);
             var (displayStart, displayEnd) = ResolveRecurringInvoiceDisplayPeriod(recurringBooking, billingDefinition);
 
-            return
-                $"{ProductVersion.ListingMetadata?.Title}{Environment.NewLine}" +
+            return BuildBookingInvoiceLineDescription(
+                ProductVersion,
+                marketplaceBooking.ProductPricing,
                 $"{marketplaceBooking.ProductPricing.PurchaseCadence.ToProductPricingCadenceName()} pass{Environment.NewLine}" +
-                $"{displayStart.ToShortDate()} - {displayEnd.ToShortDate()}";
+                $"{displayStart.ToShortDate()} - {displayEnd.ToShortDate()}");
         }
 
         protected override decimal GetQuantity() => recurringBooking.MarketplaceBooking?.Quantity ?? 0;
@@ -484,20 +577,15 @@ public class BookingInvoiceService(
             var quantity = marketplaceBooking.Quantity;
             var unitPrice = quantity > 0 ? subtotal / quantity : subtotal;
 
-            if (initialArrearsLine is not null)
-            {
-                var billingCycleLabel = marketplaceBooking.ProductVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle() switch
+            return initialArrearsLine is not null
+                ? $"{unitPrice.ToRoundedPrice()} {marketplaceBooking.ProductVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle() switch
                 {
                     OrganizationBillingCycle.Weekly => "weekly",
                     OrganizationBillingCycle.Fortnightly => "fortnightly",
                     OrganizationBillingCycle.Monthly => "monthly",
                     _ => marketplaceBooking.ProductPricing.PurchaseCadence.ToInvoicePriceUnitName(),
-                };
-
-                return $"{unitPrice.ToRoundedPrice()} {billingCycleLabel}";
-            }
-
-            return $"{unitPrice.ToRoundedPrice()} {billingDefinition.Cadence.ToInvoicePriceUnitName()}";
+                }}"
+                : $"{unitPrice.ToRoundedPrice()} {billingDefinition.Cadence.ToInvoicePriceUnitName()}";
         }
 
         private (decimal TotalAmountExcludeTax, decimal TaxAmount, decimal TaxRatePercentage, decimal TotalAmount) CalculateRecurringAmounts()

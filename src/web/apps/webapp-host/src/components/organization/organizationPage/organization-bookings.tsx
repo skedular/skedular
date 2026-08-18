@@ -6,6 +6,8 @@ import { WeekRangePicker } from '@/components/datePickers';
 import { Loading } from '@/components/loading';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { OrganizationUserSelector } from '@/components/organization/organizationUserSelector';
+import OperatorMarketplaceBookingDialog from '@/components/booking/operator-marketplace-booking-dialog';
+import Button from '@mui/material/Button';
 
 import type { organizationBookings_rootQuery } from '@/queries/__generated__/organizationBookings_rootQuery.graphql';
 import Box from '@mui/system/Box';
@@ -27,6 +29,7 @@ type Props = {
 const RootQuery = graphql`
   query organizationBookings_rootQuery(
     $organizationCustomDomain: String!
+    $customerId: String!
     $locationIds: [String!]!
     $customerIds: [String!]!
     $bookingsSearchCriteriaFrom: DateTime!
@@ -38,6 +41,30 @@ const RootQuery = graphql`
     organization(customDomain: $organizationCustomDomain) {
       id
       name
+    }
+    products(where: { organizationCustomDomains: [$organizationCustomDomain], includeInactive: false }) {
+      edges {
+        node {
+          id
+          latestProductVersionId
+          listingMetadata {
+            title
+          }
+          pricingOptions {
+            id
+            listingMetadata {
+              title
+            }
+            fulfillmentType
+          }
+        }
+      }
+    }
+    entitlementsByCustomer(customerId: $customerId) {
+      id
+      pricingId
+      availableQuantity
+      expiresAt
     }
     marketplaceBookingSubscriptionCancellationModes {
       type
@@ -75,6 +102,7 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
   const [endWeek, setEndWeek] = useState(endOfWeek(defaultStartWeek).add(-1, 'milliseconds'));
   const [customerIds, setCustomerIds] = useState<string[]>(customerId ? [customerId] : []);
   const [locationIds, setLocationIds] = useState<string[]>(locationId ? [locationId] : []);
+  const [operatorDialogOpen, setOperatorDialogOpen] = useState(false);
 
   const handleWeehChanged = (date: Dayjs) => {
     setStartWeek(date);
@@ -114,11 +142,35 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
               <OrganizationUserSelector rootDataOrganizationMembersRelay={rootData} onChange={handlCustomerChanged} defaultValue={customerId} />
               <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} defaultValue={locationId} />
               <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
+              {customerId && (
+                <Button variant="contained" onClick={() => setOperatorDialogOpen(true)}>
+                  Marketplace booking
+                </Button>
+              )}
             </GridContainer>
           }
           hasTopInset={false}
           actions={null}
         />
+        {customerId && (
+          <OperatorMarketplaceBookingDialog
+            open={operatorDialogOpen}
+            organizationCustomDomain={organizationCustomDomain}
+            customerId={customerId}
+            products={rootData.products.edges.map(({ node: product }) => ({
+              id: product.id,
+              latestProductVersionId: product.latestProductVersionId,
+              title: product.listingMetadata?.title,
+              pricingOptions: product.pricingOptions.map((pricing) => ({ id: pricing.id, title: pricing.listingMetadata?.title, fulfillmentType: pricing.fulfillmentType })),
+            }))}
+            entitlements={rootData.entitlementsByCustomer}
+            onClose={() => setOperatorDialogOpen(false)}
+            onCompleted={() => {
+              setOperatorDialogOpen(false);
+              onReloadRequired();
+            }}
+          />
+        )}
       </StackColumn>
     </Box>
   );
@@ -148,6 +200,7 @@ const ModernOrganizationWithRelay = ({ organizationCustomDomain }: RelayProps) =
     loadQuery(
       {
         organizationCustomDomain,
+        customerId: customerId ?? '',
         bookingsSearchCriteriaFrom,
         bookingsSearchCriteriaTo,
         locationIds: locationId ? [locationId] : [],

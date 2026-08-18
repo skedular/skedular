@@ -61,7 +61,7 @@ public class RecordDashboardMetricsAsyncShould
                 measurements[instrument.Name] = values;
             }
 
-            values.Add((measurement, tags.ToArray()));
+            values.Add((measurement, [.. tags]));
         });
         listener.Start();
 

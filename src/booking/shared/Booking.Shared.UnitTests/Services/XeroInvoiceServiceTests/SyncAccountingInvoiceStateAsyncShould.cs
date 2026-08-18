@@ -8,6 +8,7 @@ using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Services.Entitlements;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
@@ -60,6 +61,8 @@ public class SyncAccountingInvoiceStateAsyncShould
         [Frozen]
         ITemporalOutboxService temporalOutboxService,
         [Frozen]
+        IEntitlementPurchasePaymentReconciliationService entitlementPurchaseService,
+        [Frozen]
         IBookingOutboxPublisher bookingOutboxPublisher,
         [Frozen]
         IEntityMapper entityMapper,
@@ -102,6 +105,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             xeroTokenEncryptionService,
             temporalService,
             temporalOutboxService,
+            entitlementPurchaseService,
             bookingOutboxPublisher,
             entityMapper,
             randomHelper,
@@ -223,6 +227,8 @@ public class SyncAccountingInvoiceStateAsyncShould
         [Frozen]
         ITemporalOutboxService temporalOutboxService,
         [Frozen]
+        IEntitlementPurchasePaymentReconciliationService entitlementPurchaseService,
+        [Frozen]
         CallInvoker callInvoker,
         [Frozen]
         IXeroSdkClientFactory xeroSdkClientFactory,
@@ -295,6 +301,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             xeroTokenEncryptionService,
             temporalService,
             temporalOutboxService,
+            entitlementPurchaseService,
             bookingOutboxPublisher,
             entityMapper,
             randomHelper,
@@ -415,6 +422,7 @@ public class SyncAccountingInvoiceStateAsyncShould
         IXeroTokenEncryptionService xeroTokenEncryptionService,
         ITemporalService temporalService,
         ITemporalOutboxService temporalOutboxService,
+        IEntitlementPurchasePaymentReconciliationService entitlementPurchaseService,
         IBookingOutboxPublisher bookingOutboxPublisher,
         IEntityMapper entityMapper,
         IRandomHelper randomHelper,
@@ -435,6 +443,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             xeroTokenEncryptionService,
             temporalService,
             temporalOutboxService,
+            entitlementPurchaseService,
             bookingOutboxPublisher,
             entityMapper,
             randomHelper,
@@ -445,7 +454,7 @@ public class SyncAccountingInvoiceStateAsyncShould
             timeProvider,
             logger)
     {
-        public Invoices? InvoiceResponse { get; init; }
+        public Invoices? InvoiceResponse { get; set; }
 
         protected override Task<Invoices> GetInvoiceAsync(
             AccountingApi accountingApi,

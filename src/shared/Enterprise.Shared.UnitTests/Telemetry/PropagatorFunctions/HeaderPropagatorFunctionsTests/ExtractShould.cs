@@ -12,7 +12,7 @@ public class ExtractShould
     {
         var destination = new Headers
         {
-            { "my key", "my value"u8.ToArray() },
+            { "my key", [.. "my value"u8] },
         };
         var extract = functions.Extract(destination, "my key");
         extract.Single().ShouldBe("my value");
@@ -24,7 +24,7 @@ public class ExtractShould
     {
         var destination = new Headers
         {
-            { "my key", "my value"u8.ToArray() },
+            { "my key", [.. "my value"u8] },
         };
         var extract = functions.Extract(destination, "a different key").ToList();
         extract.ShouldBeEmpty();
@@ -36,9 +36,9 @@ public class ExtractShould
     {
         var destination = new Headers
         {
-            { "my key", "one"u8.ToArray() },
-            { "my key", "two"u8.ToArray() },
-            { "my key", "three"u8.ToArray() },
+            { "my key", [.. "one"u8] },
+            { "my key", [.. "two"u8] },
+            { "my key", [.. "three"u8] },
         };
         var extract = functions.Extract(destination, "my key").ToArray();
         extract.Length.ShouldBe(3);

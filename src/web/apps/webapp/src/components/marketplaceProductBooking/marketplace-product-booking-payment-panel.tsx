@@ -1,12 +1,15 @@
 import InvoiceDownloadLinks, { type InvoiceLinkItem } from '@/components/booking/invoice-download-links';
-import { BodyIconTypography, CaptionIconTypography, SubtitleIconTypography } from '@skedular/ui';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
+import { BodyIconTypography, CaptionIconTypography, SubtitleIconTypography } from '@skedular/ui';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { memo, useEffect, useState } from 'react';
+
+dayjs.extend(utc);
 
 type Props = {
   checkoutUrl: string | null;
@@ -14,8 +17,10 @@ type Props = {
   entityLabel?: string;
   invoices?: readonly InvoiceLinkItem[];
   invoiceUrl: string | null;
+  invoiceNumber?: string | null;
   isPaymentRequired: boolean;
   pendingStatusMessage?: string;
+  paymentInstructions?: string | null;
   paymentExpiry: string | null;
   paymentMethodType?: string | null;
   paymentStatusLabel: string;
@@ -30,6 +35,7 @@ const MarketplaceProductBookingPaymentPanel = ({
   invoiceUrl,
   isPaymentRequired,
   pendingStatusMessage,
+  paymentInstructions,
   paymentExpiry,
   paymentMethodType,
   paymentStatusLabel,
@@ -80,6 +86,7 @@ const MarketplaceProductBookingPaymentPanel = ({
         {isPaymentRequired && paymentStatusType === 'PENDING' ? (
           <BodyIconTypography label={`Time left to pay: ${timeLeftToPay ?? 'Expired'}`} sx={{ mt: 1, color: 'error.main' }} />
         ) : null}
+        {paymentInstructions ? <BodyIconTypography label={paymentInstructions} sx={{ mt: 1, opacity: 0.82 }} /> : null}
 
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25} sx={{ mt: 2 }}>
           {isWaitingForCheckout ? (

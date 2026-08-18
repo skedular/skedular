@@ -3,6 +3,7 @@ using Booking.Api.GraphQL.Payment;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
+using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
@@ -18,6 +19,12 @@ public class MarketplaceBookingDetails : Node
 
     [GraphQLName("productVersionId")]
     public string ProductVersionId { get; set; } = string.Empty;
+
+    [GraphQLName("entitlementId")]
+    public string? EntitlementId { get; set; }
+
+    [GraphQLName("consumingCreditLedgerEntryId")]
+    public string? ConsumingCreditLedgerEntryId { get; set; }
 
     [GraphQLName("productPricing")]
     public ProductPricing ProductPricing { get; set; } = ProductPricing.Empty(string.Empty);
@@ -112,6 +119,22 @@ public static partial class MarketplaceBookingDetailsType
         descriptor.Ignore(item => item.PaidByOrganizationId);
         descriptor.Ignore(item => item.PaidByOrganizationUniqueCustomDomain);
         descriptor.Ignore(item => item.ProductVersionId);
+    }
+
+    public static async Task<string?> GetEntitlementPurchaseId(
+        [Parent]
+        MarketplaceBookingDetails item,
+        [Service]
+        IEntitlementService entitlementService,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(item.EntitlementId))
+        {
+            return null;
+        }
+
+        var entitlement = await entitlementService.GetByIdAsync(item.EntitlementId, cancellationToken);
+        return entitlement?.PurchaseReference;
     }
 
     public static CustomerDetails? GetPaidByCustomer([Parent] MarketplaceBookingDetails item) => string.IsNullOrWhiteSpace(item.PaidByCustomerId)

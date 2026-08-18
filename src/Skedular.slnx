@@ -435,6 +435,15 @@
         <File Path="../scripts/start-dependencies-min.sh"/>
         <File Path="../scripts/start-dependencies.sh"/>
         <File Path="../scripts/update-dotnet-tools.sh"/>
+        <File Path="..\scripts\AGENTS.md"/>
+        <File Path="..\scripts\delete-all-workflow-runs.sh"/>
+        <File Path="..\scripts\run-backend-integration-tests.sh"/>
+        <File Path="..\scripts\run-backend-unit-tests.sh"/>
+        <File Path="..\scripts\update-graphify.sh"/>
+        <File Path="..\scripts\update-web-npm-packages.sh"/>
+        <File Path="..\scripts\validate-three-products.sh"/>
+        <File Path="..\scripts\validate-workspace-layout.sh"/>
+        <File Path="..\scripts\verify-ui-package-versions.sh"/>
 
     </Folder>
     <Folder Name="/shared/">

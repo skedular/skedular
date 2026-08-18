@@ -164,6 +164,12 @@ public class MarketplaceBookingSubscriptionAutoRenewalNotSupported()
 public class ProductPricingBillingModeRequired()
     : Exception("Please choose a billing option for this pricing plan.");
 
+public class EntitlementPricingConfigurationInvalid()
+    : Exception("Entitlement pricing must define a positive credit quantity, unit, and validity period.");
+
+public class EntitlementCreditUnavailable()
+    : Exception("No active booking credits are available for this booking.");
+
 public class OrganizationPhysicalAddressNotFound() : Exception("We couldn't find this organization's address.");
 
 public class LocationPhysicalAddressNotFound() : Exception("We couldn't find this location's address.");

@@ -23,8 +23,7 @@ public static class MarketplaceRefundStateMachine
                 or MarketplaceRefundStatusConstants.Processing or MarketplaceRefundStatusConstants.Cancelled,
             MarketplaceRefundStatusConstants.UnderReview => next is MarketplaceRefundStatusConstants.Approved
                 or MarketplaceRefundStatusConstants.Rejected or MarketplaceRefundStatusConstants.Cancelled,
-            MarketplaceRefundStatusConstants.Approved => next is MarketplaceRefundStatusConstants.Processing
-                or MarketplaceRefundStatusConstants.Cancelled,
+            MarketplaceRefundStatusConstants.Approved => next is MarketplaceRefundStatusConstants.Processing,
             MarketplaceRefundStatusConstants.ProviderPending => next is MarketplaceRefundStatusConstants.Completed
                 or MarketplaceRefundStatusConstants.Failed or MarketplaceRefundStatusConstants.ReconciliationRequired,
             MarketplaceRefundStatusConstants.Processing => next is MarketplaceRefundStatusConstants.Completed

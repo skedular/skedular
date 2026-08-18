@@ -28,8 +28,8 @@ public class RootQuery(IGraphQlMapper graphQlMapper)
                 Name = offering.Currency.ToCurrencyName(),
             },
             FixedPrice = offering.FixedPrice,
-            FeatureSet = graphQlMapper.MapTo(offering).ToArray(),
-            UnderPriceLines = offering.UnderPriceLines.ToArray(),
+            FeatureSet = [.. graphQlMapper.MapTo(offering)],
+            UnderPriceLines = [.. offering.UnderPriceLines],
             Free = matchedOffering.IsFreeOffering(),
             EarlyBird = matchedOffering.IsEarlyBirdOffering(),
         };

@@ -5,6 +5,7 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -475,6 +476,8 @@ public class MarketplaceBookingServiceShould
         [Frozen]
         IMarketplaceRefundService marketplaceRefundService,
         [Frozen]
+        IEntitlementCancellationService entitlementCancellationService,
+        [Frozen]
         IEntityMapper entityMapper,
         [Frozen]
         IUnitOfWork unitOfWork,
@@ -490,6 +493,7 @@ public class MarketplaceBookingServiceShould
             false,
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(45, 100)]);
+        existingBooking.MarketplaceBooking!.EntitlementId = "entitlement-1";
         var deletedBooking = new Shared.Models.Booking
         {
             Id = existingBooking.Id,
@@ -509,8 +513,12 @@ public class MarketplaceBookingServiceShould
 
         result.ShouldBe(deletedBooking);
         A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))
-            .MustHaveHappenedOnceExactly();
+            .MustNotHaveHappened();
         A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => entitlementCancellationService.CancelBookingAsync(existingBooking.Id, false, "Marketplace booking cancelled.",
+                true,
+                cancellationToken))
+            .MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -866,7 +874,7 @@ public class MarketplaceBookingServiceShould
         int quantity = 1,
         uint entityFrameworkVersion = 3)
     {
-        var now = DateTimeOffset.UtcNow;
+        var now = TimeProvider.System.GetUtcNow();
         return new BookingEntity
         {
             Id = id,
@@ -909,7 +917,7 @@ public class MarketplaceBookingServiceShould
         string? parentRecurringBookingId = null,
         bool hasRecurringInstanceOverrides = false)
     {
-        var now = DateTimeOffset.UtcNow;
+        var now = TimeProvider.System.GetUtcNow();
         return new BookingEntity
         {
             Id = id,
@@ -1003,7 +1011,7 @@ public class MarketplaceBookingServiceShould
         string? actorCustomerId = "customer-1",
         MarketplaceBookingModificationActorKind actorKind = MarketplaceBookingModificationActorKind.Customer)
     {
-        var now = DateTimeOffset.UtcNow;
+        var now = TimeProvider.System.GetUtcNow();
         return new MarketplaceBookingModificationRequest(
             bookingId,
             expectedVersion,

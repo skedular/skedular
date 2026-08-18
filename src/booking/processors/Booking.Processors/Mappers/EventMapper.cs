@@ -14,6 +14,7 @@ using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Orga
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
 using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingBillingMode;
+using ProductPricingFulfillmentType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingFulfillmentType;
 using ProductPricingCadence = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence;
 using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
 using Team = Booking.Shared.Models.Team;
@@ -230,7 +231,7 @@ public class EventMapper : IEventMapper
                 EntitlementReasonCode = string.IsNullOrWhiteSpace(organizationAfterState.Offering.EntitlementReasonCode)
                     ? null
                     : organizationAfterState.Offering.EntitlementReasonCode,
-                ActiveCustomerIds = organizationAfterState.Offering.ActiveCustomerIds.ToArray(),
+                ActiveCustomerIds = [.. organizationAfterState.Offering.ActiveCustomerIds],
                 SpacesTrialStartedAt = organizationAfterState.Offering.SpacesTrialStartedAt?.ToDateTimeOffset(),
                 SpacesTrialEndsAt = organizationAfterState.Offering.SpacesTrialEndsAt?.ToDateTimeOffset(),
                 SpacesProductEnabled = organizationAfterState.Offering.SpacesProductEnabled,
@@ -510,6 +511,7 @@ public class EventMapper : IEventMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Name = src.Name;
+        dest.Timezone = src.Timezone;
         dest.Type = src.Type.ToLocationType();
         dest.OpeningHours = src.OpeningHours;
         dest.Organization = organization;
@@ -739,7 +741,12 @@ public class EventMapper : IEventMapper
             MapTo(src.CancellationPolicyType),
             [.. MapTo(src.CancellationRefundRules)],
             [.. src.AvailableDays.Select(item => item.ToDayOfWeek())],
-            src.RequiredDaysPerWeek.FromNullInt());
+            src.RequiredDaysPerWeek.FromNullInt(),
+            src.FulfillmentType == ProductPricingFulfillmentType.Entitlement
+                ? Api.Shared.Services.Models.ProductPricingFulfillmentType.Entitlement
+                : Api.Shared.Services.Models.ProductPricingFulfillmentType.Reservation,
+            src.EntitlementCreditQuantity.FromNullInt(),
+            src.EntitlementValidityDays.FromNullInt());
 
     private static ProductPricingCancellationPolicyType MapTo(
         Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationPolicyType src) =>

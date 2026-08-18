@@ -2,6 +2,14 @@ import { createPricingOption, productSchema, sanitizeWeeklyRequiredDays } from '
 import { describe, expect, it } from 'vitest';
 
 describe('weekly price day-selection editor state', () => {
+  it('initializes reservation fulfillment and empty entitlement settings', () => {
+    expect(createPricingOption(15)).toMatchObject({
+      fulfillmentType: 'RESERVATION',
+      entitlementCreditQuantity: '',
+      entitlementValidityDays: '',
+    });
+  });
+
   it('initializes the exact weekly day count as optional', () => {
     expect(createPricingOption(15).requiredDaysPerWeek).toBe('');
   });

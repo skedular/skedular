@@ -19,6 +19,7 @@ using Enterprise.Shared.Encryption;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
+using Enterprise.Shared.Payment;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Telemetry.PropagatorFunctions;
@@ -73,6 +74,7 @@ public class Startup
         ArgumentNullException.ThrowIfNull(bookingApiClient.BaseAddress);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
+        configuration["Stripe:SecretKey"] = configuration["Stripe:SecretKey"] ?? "sk_test_integration";
         configuration["Kafka:SchemaRegistry:Url"] = schemaRegistryEndpoint;
         services.AddSingleton(
             configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>() ??
@@ -138,6 +140,7 @@ public class Startup
             .AddSharedCrossDomainClients(configuration)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
+            .AddStripe(configuration)
             .AddXeroServices(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()

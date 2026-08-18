@@ -69,6 +69,12 @@ public interface ITemporalService
 
     Task StartWorkflowRolloverSpacesBookingUsageAsync(CancellationToken cancellationToken);
 
+    Task StartWorkflowExpireEntitlementsAsync(CancellationToken cancellationToken);
+
+    Task StartWorkflowPrepareEntitlementRenewalAsync(
+        PrepareEntitlementRenewalInput args,
+        CancellationToken cancellationToken);
+
     /// <summary>
     ///     Updates the organization in-arrears billing workflow configuration.
     /// </summary>
@@ -288,6 +294,38 @@ public class TemporalService(
             new WorkflowOptions
             {
                 Id = workflowIdService.RolloverSpacesBookingUsage(),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdConflictPolicy = WorkflowIdConflictPolicy.UseExisting,
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
+            });
+
+    public async Task StartWorkflowExpireEntitlementsAsync(CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync(
+            (ExpireEntitlements workflow) => workflow.ExecuteAsync(),
+            new WorkflowOptions
+            {
+                Id = workflowIdService.ExpireEntitlements(),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdConflictPolicy = WorkflowIdConflictPolicy.UseExisting,
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
+            });
+
+    public async Task StartWorkflowPrepareEntitlementRenewalAsync(
+        PrepareEntitlementRenewalInput args,
+        CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync(
+            (PrepareEntitlementRenewal workflow) => workflow.ExecuteAsync(args),
+            new WorkflowOptions
+            {
+                Id = workflowIdService.PrepareEntitlementRenewal(args.EntitlementId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdConflictPolicy = WorkflowIdConflictPolicy.UseExisting,

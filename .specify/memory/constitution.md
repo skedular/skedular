@@ -4,6 +4,23 @@ SYNC IMPACT REPORT
 Version change: 2.5.0 → 2.6.0
 
 Modified principles:
+  - IV. Frontend Consistency — added Relay mutation state-synchronization requirements
+
+Added sections: none
+Removed sections: none
+
+Templates reviewed and alignment status:
+  ✅ .specify/templates/plan-template.md — requires the Relay store/connection update strategy
+  ✅ AGENTS.md — provides implementation and regeneration guidance
+
+Deferred TODOs: none
+-->
+<!--
+SYNC IMPACT REPORT
+==================
+Version change: 2.5.0 → 2.6.0
+
+Modified principles:
   - II. Domain Ownership and Architecture Boundaries — API and repository methods MUST place all required
     parameters before CancellationToken; CancellationToken MUST be the final parameter, and trailing optional
     parameters are prohibited unless the contract explicitly requires optionality
@@ -158,6 +175,20 @@ adapter type. If a service needs to expose new data, first create or extend a mo
 then map that model to GraphQL, REST, gRPC, or another API representation at the API boundary. This keeps service
 contracts reusable when a second API layer is added and prevents API-specific dependencies from leaking inward.
 
+#### Transport-to-Service Persistence Boundary
+
+GraphQL resolvers, REST controllers, gRPC transport handlers, and other API/transport-layer adapters MUST NOT inject
+`IRepositoryFactory` or any repository implementation. Transport code may call application/domain services only and
+may map service-owned models into transport payloads. Repository access belongs inside the owning service layer (or a
+lower domain layer), and service methods exposed to transport MUST return models rather than database entities.
+
+**Rationale**: Keeping repository dependencies out of transport prevents persistence concerns from leaking into API
+contracts and ensures authorization, mapping, transactions, and business rules are applied consistently by services.
+
+**Review gate**: Reject new or changed GraphQL/API transport methods that inject `IRepositoryFactory`, query a
+repository directly, or return database entities. Move the query behind an injected service and add a service-level
+model/read method when necessary.
+
 Every newly introduced enum-like model value MUST keep its enum, persisted constants, and conversion/name extensions
 co-located in the owning model file/group. GraphQL choice/detail types may wrap those models, but must not become the
 source of truth. Persisted strings MUST be mapped to model enums through explicit switch-based conversion extensions
@@ -187,6 +218,16 @@ independent deployability, and prevent coupling that accumulates into architectu
 duplicates shared infrastructure logic requires explicit justification before merging.
 
 ### III. Unit-First, Proportionate Testing and Logging Verification
+
+#### Unit-test construction and required collaborators
+
+- Unit tests MUST prefer `[Theory]` with `AutoFakeItEasyData` (or the repository's equivalent auto-data attribute) when generated inputs are suitable.
+- Constructor dependencies and the SUT MUST be injected through test-method parameters: dependencies first, `sut` next, then scenario inputs and expected values.
+- Do not create `A.Fake<T>()` inside a test when auto-data can inject the dependency. Use `A.CallTo` only to configure scenario-specific behavior.
+- Test doubles MUST be supplied through test-method parameters; do not construct or pass nullable service instances, null loggers, or null transaction builders to the SUT.
+- Required collaborators MUST be non-nullable and supplied by dependency injection, including loggers, transaction builders, repository factories, mappers, clocks, and domain services.
+- Production code MUST NOT add nullable collaborators, null-conditional calls such as `logger?.Log...`, null-forgiving workarounds, or fallback branches solely to make tests easier to construct. A logger and transaction builder are always provided.
+- Optional collaborators are allowed only when optionality is part of the domain contract and both states are tested.
 
 Every backend behavior change MUST be tested with unit tests when its behavior can be exercised
 without real infrastructure. Existing unit coverage MUST be reused and extended rather than
@@ -244,6 +285,20 @@ components, route trees, per-product configuration (logger name, analytics tag I
 product-specific Relay queries. Auth entry points (sign-in, callback, account settings,
 notifications) remain in `webapp` and are shared entry points for all products.
 
+#### Relay Mutation State Synchronization
+
+Successful GraphQL mutations MUST update the Relay store through normalized mutation payloads,
+declarative connection updates, or targeted Relay query refetches. Mutation payloads MUST return
+the stable record ID and every field rendered from the changed record. When a mutation changes a
+connection, aggregate, or linked records that the payload does not return, the implementation MUST
+update that connection declaratively or refetch only the affected query. Mutation-success handlers
+MUST NOT call `window.location.reload()` as a cache-invalidation mechanism. A browser reload is
+allowed only for an explicit user-initiated recovery action in the shared error boundary.
+
+**Rationale**: Relay is the client-side source of truth for fetched GraphQL records. Reloading the
+entire document discards application state, masks incomplete mutation contracts, and makes simple
+updates slower and less reliable than an explicit store or query update.
+
 All user-facing and operator-facing copy MUST use American spelling and grammar; technical
 identifiers (API fields, routes, schema names) are exempt. Any change to customer-facing or
 operator-facing behavior MUST include a review of the corresponding public-web documentation.
@@ -264,7 +319,9 @@ utilities inside a product app instead of using `@skedular/shared`, or introduce
 non-American-English copy in user-facing strings MUST be corrected before merging. PRs that
 change customer-facing or operator-facing behavior MUST also include the corresponding
 public-web documentation update or an explicit rationale for why no documentation change is
-required.
+required. PRs that use a mutation-success browser reload, omit rendered mutation fields from the
+payload, or leave an affected connection/count stale without a declarative update or targeted
+refetch MUST be corrected before merging.
 
 ### V. Change Safety and Pattern Consistency
 
@@ -355,4 +412,4 @@ explicit, documented exception is agreed and committed alongside the change.
 
 ---
 
-**Version**: 2.5.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-08-08
+**Version**: 2.6.0 | **Ratified**: 2026-04-14 | **Last Amended**: 2026-08-17

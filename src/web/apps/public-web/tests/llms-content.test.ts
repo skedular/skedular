@@ -51,4 +51,21 @@ describe("machine-readable Spaces pricing", () => {
     expect(summary).toContain("respecting availability rules");
     expect(summary).toContain("## Common Use Cases");
   });
+
+  it("documents booking credits in both machine-readable formats", async () => {
+    const [summary, full] = await Promise.all([
+      getLlms().text(),
+      getLlmsFull().text(),
+    ]);
+
+    expect(summary).toContain("**Booking credits**: Prepaid usage");
+    expect(summary).toContain(
+      "Customers buy a defined number of prepaid credits",
+    );
+    expect(full).toContain("## Booking Credits");
+    expect(full).toContain("does not create a Booking, reserve a resource");
+    expect(full).toContain(
+      "A failed renewal or unavailable compatible pricing does not grant a new cycle",
+    );
+  });
 });
