@@ -1,22 +1,21 @@
 import { getMarketplaceEntitlementBookingLink } from '@/components/links';
-import type { customerEntitlementsStrip_query$key } from '@/queries/__generated__/customerEntitlementsStrip_query.graphql';
+import type { customerEntitlementsStrip_query } from '@/queries/__generated__/customerEntitlementsStrip_query.graphql';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import NextLink from 'next/link';
 import { memo } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { graphql, useLazyLoadQuery } from 'react-relay';
 import dayjs from 'dayjs';
 import { BodyIconTypography, CaptionIconTypography, SmallIconTypography, StackColumn, SubtitleIconTypography } from '@skedular/ui';
 
 type Props = {
-  queryReference: customerEntitlementsStrip_query$key;
   integratedPlatform?: string;
 };
 
 const QueryFragment = graphql`
-  fragment customerEntitlementsStrip_query on Query {
+  query customerEntitlementsStrip_query {
     myEntitlements {
       id
       pricingId
@@ -32,8 +31,8 @@ const QueryFragment = graphql`
   }
 `;
 
-const CustomerEntitlementsStrip = ({ queryReference, integratedPlatform }: Props) => {
-  const data = useFragment(QueryFragment, queryReference);
+const CustomerEntitlementsStrip = ({ integratedPlatform }: Props) => {
+  const data = useLazyLoadQuery<customerEntitlementsStrip_query>(QueryFragment, {}, { fetchPolicy: 'store-and-network' });
   const entitlements = data.myEntitlements.filter((item) => item.status === 'ACTIVE' && item.availableQuantity > 0);
 
   if (entitlements.length === 0) return null;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2da5fd4900c741ad88a3b5ac9663f4bd>>
+ * @generated SignedSource<<befade0f9412a12416773f5c8b13244f>>
  * @lightSyntaxTransform
  */
 
@@ -31,9 +31,6 @@ export type pageHome_rootQuery$variables = {
   userSignedIn: boolean;
 };
 export type pageHome_rootQuery$data = {
-  readonly customerEntitlementsStrip_query?: {
-    readonly " $fragmentSpreads": FragmentRefs<"customerEntitlementsStrip_query">;
-  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"marketplaceLocations_locations_query" | "marketplaceLocations_query">;
 };
 export type pageHome_rootQuery = {
@@ -120,29 +117,6 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "marketplaceLocations_locations_query"
-      },
-      {
-        "condition": "userSignedIn",
-        "kind": "Condition",
-        "passingValue": true,
-        "selections": [
-          {
-            "fragment": {
-              "kind": "InlineFragment",
-              "selections": [
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "customerEntitlementsStrip_query"
-                }
-              ],
-              "type": "Query",
-              "abstractKey": null
-            },
-            "kind": "AliasedInlineFragmentSpread",
-            "name": "customerEntitlementsStrip_query"
-          }
-        ]
       }
     ],
     "type": "Query",
@@ -185,78 +159,6 @@ return {
                 "storageKey": null
               },
               (v4/*:: as any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "EntitlementDetails",
-            "kind": "LinkedField",
-            "name": "myEntitlements",
-            "plural": true,
-            "selections": [
-              (v4/*:: as any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "pricingId",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "availableQuantity",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "grantedQuantity",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "expiresAt",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "status",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "EntitlementRestrictionsDetails",
-                "kind": "LinkedField",
-                "name": "restrictions",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "productId",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "availableDays",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
             ],
             "storageKey": null
           }
@@ -563,16 +465,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9a1994c208400c50040a5dcace747237",
+    "cacheID": "c2396741b0476902dc98500f4e034960",
     "id": null,
     "metadata": {},
     "name": "pageHome_rootQuery",
     "operationKind": "query",
-    "text": "query pageHome_rootQuery(\n  $searchBoundaries: PolygonInput\n  $locationsSortingValues: [LocationOrderInput!]\n  $resourceTypeToFilterWith: OrganizationTagType\n  $userSignedIn: Boolean!\n) {\n  ...marketplaceLocations_query\n  ...marketplaceLocations_locations_query\n  ...customerEntitlementsStrip_query @include(if: $userSignedIn)\n}\n\nfragment customerEntitlementsStrip_query on Query {\n  myEntitlements {\n    id\n    pricingId\n    availableQuantity\n    grantedQuantity\n    expiresAt\n    status\n    restrictions {\n      productId\n      availableDays\n    }\n  }\n}\n\nfragment marketplaceLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  organization {\n    type {\n      type\n      name\n    }\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  extraMetadata {\n    areaRange {\n      fromInSqm\n      toInSqm\n    }\n    peopleCapacity {\n      from\n      to\n    }\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n\nfragment marketplaceLocationCard_query on Query {\n  me @include(if: $userSignedIn) {\n    favouriteLocations {\n      id\n    }\n    id\n  }\n}\n\nfragment marketplaceLocations_locations_query on Query {\n  marketplaceLocations(where: {searchBoundaries: $searchBoundaries, resourceType: $resourceTypeToFilterWith}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        organization {\n          type {\n            type\n          }\n          id\n        }\n        ...marketplaceLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment marketplaceLocations_query on Query {\n  ...marketplaceLocationCard_query\n}\n"
+    "text": "query pageHome_rootQuery(\n  $searchBoundaries: PolygonInput\n  $locationsSortingValues: [LocationOrderInput!]\n  $resourceTypeToFilterWith: OrganizationTagType\n  $userSignedIn: Boolean!\n) {\n  ...marketplaceLocations_query\n  ...marketplaceLocations_locations_query\n}\n\nfragment marketplaceLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  organization {\n    type {\n      type\n      name\n    }\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  extraMetadata {\n    areaRange {\n      fromInSqm\n      toInSqm\n    }\n    peopleCapacity {\n      from\n      to\n    }\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n\nfragment marketplaceLocationCard_query on Query {\n  me @include(if: $userSignedIn) {\n    favouriteLocations {\n      id\n    }\n    id\n  }\n}\n\nfragment marketplaceLocations_locations_query on Query {\n  marketplaceLocations(where: {searchBoundaries: $searchBoundaries, resourceType: $resourceTypeToFilterWith}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        organization {\n          type {\n            type\n          }\n          id\n        }\n        ...marketplaceLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment marketplaceLocations_query on Query {\n  ...marketplaceLocationCard_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0d545f8920c3bcb949ac3e24c78e00a4";
+(node as any).hash = "e73b1eb6d0d82fa11163d13f2580ca05";
 
 export default node;
