@@ -37,7 +37,7 @@ services:
     volumes:
       - skedular_redis_data:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -71,7 +71,7 @@ services:
       - skedular_kafka1_data:/var/lib/redpanda/data
     healthcheck:
       test:
-        [ "CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1" ]
+        ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1"]
       interval: 15s
       timeout: 3s
       retries: 5
@@ -79,17 +79,17 @@ services:
     networks:
       - skedular_network
 
-  aspire-dashboard:
-    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
-    restart: unless-stopped
-    environment:
-      Dashboard__Frontend__AuthMode: "BrowserToken"
-      Dashboard__Frontend__BrowserToken: "${ASPIRE_DASHBOARD_TOKEN}"
-      Logging__LogLevel__Aspire.Dashboard.Otlp.Storage: "Error"
-    ports:
-      - "18888:18888"
-    networks:
-      - skedular_network
+  # aspire-dashboard:
+  #   image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     Dashboard__Frontend__AuthMode: "BrowserToken"
+  #     Dashboard__Frontend__BrowserToken: "${ASPIRE_DASHBOARD_TOKEN}"
+  #     Logging__LogLevel__Aspire.Dashboard.Otlp.Storage: "Error"
+  #   ports:
+  #     - "18888:18888"
+  #   networks:
+  #     - skedular_network
 
   kowl:
     image: redpandadata/console:latest
@@ -198,7 +198,7 @@ services:
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -320,7 +320,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -343,8 +343,8 @@ services:
       Graphql__AllowErrorHandlingModeOverride: false
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
+          "CMD-SHELL",
+          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
           http://localhost:10000/health/readiness || exit 1 && curl -f
           http://localhost:10200/health/readiness || exit 1 && curl -f
           http://localhost:10300/health/readiness || exit 1 && curl -f
@@ -353,7 +353,7 @@ services:
           http://localhost:10700/health/readiness || exit 1 && curl -f
           http://localhost:10900/health/readiness || exit 1 && curl -f
           http://localhost:11000/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -443,7 +443,7 @@ services:
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__BookingInvoiceEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -462,8 +462,8 @@ services:
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:10030/health/readiness || exit 1 && curl
+          "CMD-SHELL",
+          "curl -f http://localhost:10030/health/readiness || exit 1 && curl
           -f http://localhost:10230/health/readiness || exit 1 && curl -f
           http://localhost:10330/health/readiness || exit 1 && curl -f
           http://localhost:10530/health/readiness || exit 1 && curl -f
@@ -471,7 +471,7 @@ services:
           http://localhost:10730/health/readiness || exit 1 && curl -f
           http://localhost:10930/health/readiness || exit 1 && curl -f
           http://localhost:11030/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -561,7 +561,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -580,8 +580,8 @@ services:
       Stripe__OAuthClientId: ${STAGING_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:10020/health/readiness || exit 1 && curl
+          "CMD-SHELL",
+          "curl -f http://localhost:10020/health/readiness || exit 1 && curl
           -f http://localhost:10220/health/readiness || exit 1 && curl -f
           http://localhost:10320/health/readiness || exit 1 && curl -f
           http://localhost:10520/health/readiness || exit 1 && curl -f
@@ -589,7 +589,7 @@ services:
           http://localhost:10720/health/readiness || exit 1 && curl -f
           http://localhost:10920/health/readiness || exit 1 && curl -f
           http://localhost:11020/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -646,7 +646,7 @@ services:
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -768,7 +768,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -791,8 +791,8 @@ services:
       Graphql__AllowErrorHandlingModeOverride: false
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
+          "CMD-SHELL",
+          "curl -f http://localhost:9000/health/readiness || exit 1 && curl -f
           http://localhost:10000/health/readiness || exit 1 && curl -f
           http://localhost:10200/health/readiness || exit 1 && curl -f
           http://localhost:10300/health/readiness || exit 1 && curl -f
@@ -801,7 +801,7 @@ services:
           http://localhost:10700/health/readiness || exit 1  && curl -f
           http://localhost:10900/health/readiness || exit 1 && curl -f
           http://localhost:11000/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -891,7 +891,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -910,8 +910,8 @@ services:
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:10030/health/readiness || exit 1 && curl
+          "CMD-SHELL",
+          "curl -f http://localhost:10030/health/readiness || exit 1 && curl
           -f http://localhost:10230/health/readiness || exit 1 && curl -f
           http://localhost:10330/health/readiness || exit 1 && curl -f
           http://localhost:10530/health/readiness || exit 1 && curl -f
@@ -919,7 +919,7 @@ services:
           http://localhost:10730/health/readiness || exit 1 && curl -f
           http://localhost:10930/health/readiness || exit 1 && curl -f
           http://localhost:11030/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -1009,7 +1009,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -1028,8 +1028,8 @@ services:
       Stripe__OAuthClientId: ${PRODUCTION_SKEDULAR_STRIPE_OAUTH_CLIENT_ID}
     healthcheck:
       test: [
-        "CMD-SHELL",
-        "curl -f http://localhost:10020/health/readiness || exit 1 && curl
+          "CMD-SHELL",
+          "curl -f http://localhost:10020/health/readiness || exit 1 && curl
           -f http://localhost:10220/health/readiness || exit 1 && curl -f
           http://localhost:10320/health/readiness || exit 1 && curl -f
           http://localhost:10520/health/readiness || exit 1 && curl -f
@@ -1037,7 +1037,7 @@ services:
           http://localhost:10720/health/readiness || exit 1 && curl -f
           http://localhost:10920/health/readiness || exit 1 && curl -f
           http://localhost:11020/health/readiness || exit 1",
-      ]
+        ]
       interval: 30s
       timeout: 5s
       retries: 100

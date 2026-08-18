@@ -8,7 +8,7 @@ GOFILES = $(shell find . -type f -name '*.go' -not -path "*/mock/*.go" -not -pat
 DC = docker compose -p unityhubio -f docker-compose-production.yml --env-file .env
 
 # Service groups
-DEP_SERVICES     = dozzle postgres18 redis redisinsight kafka1 kowl aspire-dashboard temporal temporal-admin-tools temporal-ui
+DEP_SERVICES     = dozzle postgres18 redis redisinsight kafka1 kowl temporal temporal-admin-tools temporal-ui
 STAGING_SERVICES = staging-infra-provision staging-processors-01 staging-jobs-01 staging-apis-01
 PROD_SERVICES    = prod-infra-provision prod-processors-01 prod-jobs-01 prod-apis-01
 
