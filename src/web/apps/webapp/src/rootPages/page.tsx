@@ -26,7 +26,7 @@ const RootQuery = graphql`
   ) {
     ...marketplaceLocations_query
     ...marketplaceLocations_locations_query
-    ...customerEntitlementsStrip_query
+    ...customerEntitlementsStrip_query @include(if: $userSignedIn) @alias
   }
 `;
 
@@ -37,7 +37,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   if (user) {
     return (
       <NoOrganizationRootShell>
-        <CustomerEntitlementsStrip queryReference={rootData} />
+        <CustomerEntitlementsStrip queryReference={rootData.customerEntitlementsStrip_query!} />
         <MarketplaceLocations rootDataRelay={rootData} rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
       </NoOrganizationRootShell>
     );
