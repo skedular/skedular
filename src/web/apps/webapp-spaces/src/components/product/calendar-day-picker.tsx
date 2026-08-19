@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, FieldHelp, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 
 const calendarDays = [
   ['MONDAY', 'Mon'],
@@ -23,7 +23,13 @@ const CalendarDayPicker = ({ availableDays, onChange }: Props) => {
 
   return (
     <StackColumn spacing={1}>
-      <BodyIconTypography label="Available calendar days" />
+      <StackRow sx={{ alignItems: 'center', gap: 0.25 }}>
+        <BodyIconTypography label="Available calendar days" />
+        <FieldHelp label="Available calendar days">
+          Select the weekdays when this offer can be booked. Leave every day unselected to make the offer available every day. For weekly offers, required days per week are chosen
+          from this set.
+        </FieldHelp>
+      </StackRow>
       <SmallIconTypography label="Leave all days unselected to make this price available every day." />
       <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
         {calendarDays.map(([day, label]) => (

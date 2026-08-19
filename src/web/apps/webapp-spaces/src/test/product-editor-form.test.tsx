@@ -11,14 +11,29 @@ vi.mock('@/components/icons', () => ({ DeleteIcon: () => <span data-testid="dele
 vi.mock('@skedular/ui', () => ({
   // component stubs
   BodyIconTypography: ({ label }: { label: string }) => <div>{label}</div>,
-  DurationInput: ({ label, value }: { label: string; value?: string }) => (
+  FieldHelp: ({ label, children }: { label: string; children: ReactNode }) => (
+    <button type="button" aria-label={`Help for ${label}`}>
+      {children}
+    </button>
+  ),
+  DurationInput: ({ label, value, help }: { label: string; value?: string; help?: ReactNode }) => (
     <div>
       {label}: {value}
+      {help ? (
+        <button type="button" aria-label={`Help for ${label}`}>
+          {help}
+        </button>
+      ) : null}
     </div>
   ),
-  FormFieldLabel: ({ label, children }: { label?: string; children: ReactNode }) => (
+  FormFieldLabel: ({ label, children, help, helpLabel }: { label?: string; children: ReactNode; help?: ReactNode; helpLabel?: string }) => (
     <div>
       {label ? <div>{label}</div> : null}
+      {help ? (
+        <button type="button" aria-label={`Help for ${helpLabel ?? label ?? 'Field'}`}>
+          {help}
+        </button>
+      ) : null}
       {children}
     </div>
   ),
@@ -74,7 +89,16 @@ vi.mock('@skedular/ui', () => ({
 }));
 
 vi.mock('@/components/listingMetadata', () => ({
-  ListingMetadata: () => <div>Listing metadata</div>,
+  ListingMetadata: ({ helpTexts }: { helpTexts?: Partial<Record<string, ReactNode>> }) => (
+    <div>
+      Listing metadata
+      {Object.entries(helpTexts ?? {}).map(([field, help]) => (
+        <button key={field} type="button" aria-label={`Help for ${field}`}>
+          {help}
+        </button>
+      ))}
+    </div>
+  ),
 }));
 
 vi.mock('@/components/organization', () => ({
@@ -157,7 +181,7 @@ const baseProps = {
 describe('ProductEditorForm', () => {
   it('shows the modern basics presentation and customer preview', async () => {
     const user = userEvent.setup();
-    const featureImage = { original: { url: 'https://example.test/cover.png' }, thumbnail: { url: 'https://example.test/thumb.png' } };
+    const featureImage = { id: 'cover-image', original: { url: 'https://example.test/cover.png' }, thumbnail: { url: 'https://example.test/thumb.png' } };
 
     render(<ProductEditorForm {...baseProps} mode="edit" featureImages={[featureImage]} primaryFeatureImage={featureImage} />);
 
@@ -177,8 +201,8 @@ describe('ProductEditorForm', () => {
     const onUploadCompleted = vi.fn();
     const onRemoveFeatureImage = vi.fn();
     const onSetPrimaryFeatureImage = vi.fn();
-    const firstImage = { original: { url: 'https://example.test/one.png' }, thumbnail: { url: 'https://example.test/one-thumb.png' } };
-    const secondImage = { original: { url: 'https://example.test/two.png' }, thumbnail: { url: 'https://example.test/two-thumb.png' } };
+    const firstImage = { id: 'first-image', original: { url: 'https://example.test/one.png' }, thumbnail: { url: 'https://example.test/one-thumb.png' } };
+    const secondImage = { id: 'second-image', original: { url: 'https://example.test/two.png' }, thumbnail: { url: 'https://example.test/two-thumb.png' } };
 
     render(
       <ProductEditorForm
@@ -269,11 +293,26 @@ describe('ProductEditorForm', () => {
     await user.click(screen.getByRole('button', { name: /Payments/ }));
     expect(screen.getByRole('button', { name: /Payments/ })).toHaveAttribute('aria-expanded', 'true');
 
-    await user.click(screen.getByRole('button', { name: /Cancellation/ }));
-    expect(screen.getByRole('button', { name: /Cancellation/ })).toHaveAttribute('aria-expanded', 'true');
+    await user.click(screen.getByRole('button', { name: /Cancellation No refunds/ }));
+    expect(screen.getAllByRole('button', { name: /Cancellation/ }).find((button) => button.hasAttribute('aria-expanded'))).toHaveAttribute('aria-expanded', 'true');
 
     await user.click(screen.getByRole('button', { name: /Advanced/ }));
     expect(screen.getByRole('button', { name: /Advanced/ })).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('provides field guidance for product relationships and offer rules', async () => {
+    const user = userEvent.setup();
+
+    render(<ProductEditorForm {...baseProps} mode="edit" />);
+
+    await user.click(screen.getByRole('button', { name: /Classification/ }));
+    await user.click(screen.getByRole('button', { name: 'Help for Product type' }));
+    expect(screen.getByText(/matching resources and bookings behave/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Offers' }));
+    await user.click(screen.getByRole('button', { name: /Fulfillment/ }));
+    await user.click(screen.getByRole('button', { name: 'Help for Cadence' }));
+    expect(screen.getByRole('button', { name: 'Help for Cadence' })).toBeInTheDocument();
   });
 
   it('uses review and create as the final add-product step and only shows submit there', async () => {

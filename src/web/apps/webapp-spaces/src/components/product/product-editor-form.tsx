@@ -11,7 +11,7 @@ import {
 } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import CalendarDayPicker from '@/components/product/calendar-day-picker';
-import { DurationInput } from '@skedular/ui';
+import { DurationInput, FieldHelp } from '@skedular/ui';
 import {
   createCancellationRefundRule,
   createPricingOption,
@@ -349,9 +349,20 @@ const ProductEditorForm = ({
         expanded={expandedOfferSection === 'offer-basics'}
         onChange={() => setExpandedOfferSection(expandedOfferSection === 'offer-basics' ? '' : 'offer-basics')}
       >
-        <ListingMetadata fields={['title', 'subTitle']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
+        <ListingMetadata
+          fields={['title', 'subTitle']}
+          namePrefix={`pricingOptions[${index}]`}
+          requiredFields={requiredFields}
+          helpTexts={{
+            title: 'The customer-facing name for this purchase option. Use it to make the difference between offers obvious.',
+            subTitle: 'A short explanation of who this offer is for. Offer-specific details belong here rather than in the product title.',
+          }}
+        />
 
-        <FormFieldLabel label="Price">
+        <FormFieldLabel
+          label="Price"
+          help="The amount charged for one purchase of this offer. Currency comes from Basics, while billing mode controls when the amount is collected."
+        >
           <TextField name={`pricingOptions[${index}].price`} required />
         </FormFieldLabel>
       </EditorSection>
@@ -368,7 +379,10 @@ const ProductEditorForm = ({
         onChange={() => setExpandedOfferSection(expandedOfferSection === 'fulfillment' ? '' : 'fulfillment')}
       >
         <StackColumn spacing={2}>
-          <FormFieldLabel label="Fulfillment type">
+          <FormFieldLabel
+            label="Fulfillment type"
+            help="Reservation offers book time or resources. Entitlement offers grant credits customers can use later. This choice controls which fields appear below."
+          >
             <TextField
               select
               fullWidth
@@ -389,16 +403,22 @@ const ProductEditorForm = ({
           </FormFieldLabel>
           {pricingOption.fulfillmentType === 'ENTITLEMENT' ? (
             <StackRow sx={{ gap: 2, flexWrap: 'wrap' }}>
-              <FormFieldLabel label="Credit quantity">
+              <FormFieldLabel
+                label="Credit quantity"
+                help="How many credits this purchase grants. Customers spend these credits against eligible bookings until they are used or expire."
+              >
                 <TextField name={`pricingOptions[${index}].entitlementCreditQuantity`} />
               </FormFieldLabel>
-              <FormFieldLabel label="Validity (days)">
+              <FormFieldLabel label="Validity (days)" help="How long entitlement credits remain usable after purchase. Leave it empty when credits should not expire.">
                 <TextField name={`pricingOptions[${index}].entitlementValidityDays`} />
               </FormFieldLabel>
             </StackRow>
           ) : (
             <StackColumn spacing={0.75}>
-              <FormFieldLabel label="Cadence">
+              <FormFieldLabel
+                label="Cadence"
+                help="One Time charges once. A repeating cadence describes when a recurring purchase renews. Booking cadence controls the resource schedule separately; auto-renewal is configured in Payments."
+              >
                 <SingleChoiceProductPricingCadence rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].cadence`} required />
               </FormFieldLabel>
               <SmallIconTypography label="Choose One time for a single purchase, or a repeating cadence such as Monthly. Auto-renewal is configured separately in Payments." />
@@ -416,7 +436,10 @@ const ProductEditorForm = ({
           onChange={() => setExpandedOfferSection(expandedOfferSection === 'booking-rules' ? '' : 'booking-rules')}
         >
           <CalendarDayPicker availableDays={pricingOption.availableDays} onChange={(availableDays) => changeNestedField(`pricingOptions[${index}].availableDays`, availableDays)} />
-          <FormFieldLabel label="Number of Resources to Book">
+          <FormFieldLabel
+            label="Number of Resources to Book"
+            help="How many matching resources are reserved for each booking. Increasing this can reduce availability because every booking consumes this many resources."
+          >
             <TextField
               name={`pricingOptions[${index}].numberOfResourcesToBook`}
               required
@@ -427,19 +450,24 @@ const ProductEditorForm = ({
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
             <DurationInput
               label="Minimum booking duration"
+              help="The shortest time a customer can book for this offer. It must not exceed the maximum duration and is saved in minutes even when entered as hours."
               value={pricingOption.minDurationMinutes}
               onChange={(value) => changeNestedField(`pricingOptions[${index}].minDurationMinutes`, value)}
               required
             />
             <DurationInput
               label="Maximum booking duration"
+              help="The longest time a customer can book for this offer. It works with the minimum duration to define the allowed booking range and is saved in minutes."
               value={pricingOption.maxDurationMinutes}
               onChange={(value) => changeNestedField(`pricingOptions[${index}].maxDurationMinutes`, value)}
               required
             />
           </Box>
           {pricingOption.cadence === 'WEEKLY' ? (
-            <FormFieldLabel label="Required selected days per week">
+            <FormFieldLabel
+              label="Required selected days per week"
+              help="For weekly offers, this requires customers to book a specific number of the selected weekdays. The calendar days above define the choices."
+            >
               <TextField
                 name={`pricingOptions[${index}].requiredDaysPerWeek`}
                 type="text"
@@ -461,20 +489,29 @@ const ProductEditorForm = ({
         onChange={() => setExpandedOfferSection(expandedOfferSection === 'payments' ? '' : 'payments')}
       >
         <StackRow sx={{ gap: 3, flexWrap: 'wrap' }}>
-          <FormFieldLabel>
+          <FormFieldLabel
+            helpLabel="Price includes tax"
+            help="This controls whether the displayed price includes tax. It changes how the amount is presented and calculated for customers."
+          >
             <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Price includes tax', value: 'isTaxInclusive' }} />
           </FormFieldLabel>
           {!isEventProduct ? (
-            <FormFieldLabel>
+            <FormFieldLabel
+              helpLabel="Auto-renew subscription"
+              help="When enabled, eligible recurring purchases renew automatically according to the purchase cadence. It is independent from the booking cadence."
+            >
               <Switches name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`} data={{ label: 'Auto-renew subscription', value: 'supportsSubscriptionAutoRenewal' }} />
             </FormFieldLabel>
           ) : null}
         </StackRow>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
-          <FormFieldLabel label="Accepted payment methods">
+          <FormFieldLabel label="Accepted payment methods" help="Choose how customers may pay this offer. The selected methods also affect the resource lock windows in Advanced.">
             <MultipleChoicesPaymentMethodTypes rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].acceptedPaymentMethods`} required />
           </FormFieldLabel>
-          <FormFieldLabel label="Billing mode">
+          <FormFieldLabel
+            label="Billing mode"
+            help="Upfront collects payment before service. In Arrears allows booking first and settles payment afterward. This is separate from purchase cadence."
+          >
             <SingleChoiceProductPricingBillingMode rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].billingMode`} required />
           </FormFieldLabel>
         </Box>
@@ -487,6 +524,13 @@ const ProductEditorForm = ({
         expanded={expandedOfferSection === 'cancellation'}
         onChange={() => setExpandedOfferSection(expandedOfferSection === 'cancellation' ? '' : 'cancellation')}
       >
+        <StackRow sx={{ alignItems: 'center', gap: 0.25 }}>
+          <BodyIconTypography label="Cancellation policy" />
+          <FieldHelp label="Cancellation policy">
+            Choose how much customers receive back when they cancel. The selected policy determines whether you configure one cutoff or multiple refund timing rules. Refund timing
+            is measured before the booking or renewal, while the refund percentage controls the amount returned.
+          </FieldHelp>
+        </StackRow>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 1.25 }}>
           {[
             { type: 'NO_CANCELLATION', label: 'No refunds', description: 'All purchases are final.' },
@@ -573,11 +617,15 @@ const ProductEditorForm = ({
                     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 2 }}>
                       <DurationInput
                         label="Refund timing before booking or renewal"
+                        help="How early the customer must cancel to receive this refund percentage. Multiple rules create a timeline from the latest cutoff to the earliest."
                         value={rule.minutesBefore}
                         onChange={(value) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`, value)}
                         required
                       />
-                      <FormFieldLabel label="Refund percentage">
+                      <FormFieldLabel
+                        label="Refund percentage"
+                        help="The percentage of the purchase price refunded when the customer cancels within this timing window. Rules are evaluated from the cancellation policy."
+                      >
                         <TextField name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].refundPercentage`} helperText="0–100%" />
                       </FormFieldLabel>
                     </Box>
@@ -616,11 +664,15 @@ const ProductEditorForm = ({
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
           <DurationInput
             label="Card payment lock window"
+            help="How long resources remain held while a card payment is pending. It protects the booking without holding availability indefinitely."
             value={pricingOption.maxAllowedResourcesLockTimePaidViaCard}
             onChange={(value) => changeNestedField(`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`, value)}
             required
           />
-          <FormFieldLabel label="Bank transfer lock window (days)">
+          <FormFieldLabel
+            label="Bank transfer lock window (days)"
+            help="How long resources remain held while a bank-transfer payment is pending. It protects the booking without holding availability indefinitely."
+          >
             <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} required />
           </FormFieldLabel>
         </Box>
@@ -758,13 +810,25 @@ const ProductEditorForm = ({
                 <LeadIconTypography label="Customer-facing details" />
                 <SmallIconTypography label="Use concise language customers can scan before choosing an offer." />
               </StackColumn>
-              <FormFieldLabel label="Title" required={requiredFields.title}>
+              <FormFieldLabel
+                label="Title"
+                help="The product name customers see before choosing an offer. Keep it broad enough to describe the product, not a specific price or cadence."
+                required={requiredFields.title}
+              >
                 <TextField name="title" required={requiredFields.title} placeholder="For example, Premium Meeting Room" />
               </FormFieldLabel>
-              <FormFieldLabel label="Subtitle" required={requiredFields.subTitle}>
+              <FormFieldLabel
+                label="Subtitle"
+                help="A short supporting statement that explains the product at a glance. Offer-specific differences belong in the Offers tab."
+                required={requiredFields.subTitle}
+              >
                 <TextField name="subTitle" required={requiredFields.subTitle} multiline rows={2} placeholder="A short reason to choose this product" />
               </FormFieldLabel>
-              <FormFieldLabel label="Included features" required={requiredFields.includedFeatures}>
+              <FormFieldLabel
+                label="Included features"
+                help="List what customers receive with the product. Booking quantity, duration, and availability are configured on each offer."
+                required={requiredFields.includedFeatures}
+              >
                 <TextField
                   name="includedFeatures"
                   required={requiredFields.includedFeatures}
@@ -786,10 +850,13 @@ const ProductEditorForm = ({
           onChange={() => setExpandedBasicsSection(expandedBasicsSection === 'classification' ? '' : 'classification')}
         >
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 2 }}>
-            <FormFieldLabel label="Product type">
+            <FormFieldLabel
+              label="Product type"
+              help="The product type determines how matching resources and bookings behave. Choose it before configuring offers because event products have different booking rules."
+            >
               <SingleChoiceProductType rootDataRelay={rootDataRelay as never} name="type" required={requiredFields.type} />
             </FormFieldLabel>
-            <FormFieldLabel label="Currency">
+            <FormFieldLabel label="Currency" help="The currency used by every offer on this product. Prices are entered per offer, but they all use this product-level currency.">
               <SingleChoiceCurrency rootDataRelay={rootDataRelay as never} name="currency" required={requiredFields.currency} />
             </FormFieldLabel>
           </Box>
@@ -800,7 +867,10 @@ const ProductEditorForm = ({
             </Box>
           ) : null}
 
-          <FormFieldLabel label="Product tags">
+          <FormFieldLabel
+            label="Product tags"
+            help="Tags determine which resources can match this product. A booking can only use resources that satisfy the product's matching tags."
+          >
             <MultipleChoicesProductTags
               rootDataRelay={rootDataRelay as never}
               name="productTagIds"
@@ -809,7 +879,10 @@ const ProductEditorForm = ({
             />
           </FormFieldLabel>
 
-          <FormFieldLabel label="Amenities">
+          <FormFieldLabel
+            label="Amenities"
+            help="Amenities describe what the product provides to customers. They explain the product but do not determine resource matching like tags do."
+          >
             <MultipleChoicesAmenities rootDataRelay={rootDataRelay as never} name="amenityIds" required={requiredFields.amenityIds} />
           </FormFieldLabel>
         </EditorSection>

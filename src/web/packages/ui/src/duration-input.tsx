@@ -5,6 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
+import FieldHelp from './commons/field-help';
 import BodyIconTypography from './typography/body-icon-typography';
 import SmallIconTypography from './typography/small-icon-typography';
 import StackColumn from './stack-column';
@@ -15,6 +16,7 @@ export type DurationInputProps = {
   onChange: (value: string) => void;
   disabled?: boolean;
   required?: boolean;
+  help?: string;
 };
 
 type DurationUnit = 'minutes' | 'hours';
@@ -30,7 +32,7 @@ const formatHours = (value: string) => {
         .replace(/(\.\d*[1-9])0+$/, '$1');
 };
 
-const DurationInput = ({ label, value = '', onChange, disabled, required }: DurationInputProps) => {
+const DurationInput = ({ label, value = '', onChange, disabled, required, help }: DurationInputProps) => {
   const [unit, setUnit] = useState<DurationUnit>('hours');
   const safeValue = value ?? '';
   const displayValue = unit === 'hours' ? formatHours(safeValue) : safeValue;
@@ -39,7 +41,10 @@ const DurationInput = ({ label, value = '', onChange, disabled, required }: Dura
 
   return (
     <StackColumn spacing={1}>
-      <BodyIconTypography label={required ? `${label} *` : label} />
+      <StackColumn spacing={0.5} sx={{ flexDirection: 'row', alignItems: 'center' }}>
+        <BodyIconTypography label={required ? `${label} *` : label} />
+        {help ? <FieldHelp label={label}>{help}</FieldHelp> : null}
+      </StackColumn>
       <TextField
         value={displayValue}
         type="number"

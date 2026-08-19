@@ -51,6 +51,7 @@ const getNestedValue = (value: Record<string, unknown> | undefined, path: string
 
 type Props = {
   fields?: ListingMetadataFieldName[];
+  helpTexts?: Partial<Record<ListingMetadataFieldName, ReactNode>>;
   helperTexts?: Partial<Record<ListingMetadataFieldName, ReactNode>>;
   labels?: Partial<Record<ListingMetadataFieldName, string>>;
   namePrefix?: string;
@@ -60,7 +61,7 @@ type Props = {
   textFieldProps?: Partial<Record<ListingMetadataFieldName, ComponentProps<typeof TextField>>>;
 };
 
-const ListingMetadata = ({ fields = listingMetadataFieldNames, helperTexts, labels, namePrefix, onChange, onFieldBlur, requiredFields, textFieldProps }: Props) => {
+const ListingMetadata = ({ fields = listingMetadataFieldNames, helpTexts, helperTexts, labels, namePrefix, onChange, onFieldBlur, requiredFields, textFieldProps }: Props) => {
   const visibleFields = useMemo(() => new Set(fields), [fields]);
   const resolvedLabels = { ...listingMetadataFieldLabels, ...labels };
 
@@ -83,7 +84,7 @@ const ListingMetadata = ({ fields = listingMetadataFieldNames, helperTexts, labe
       ) : null}
 
       {visibleFields.has('about') ? (
-        <FormFieldLabel label={resolvedLabels.about} required={requiredFields?.about}>
+        <FormFieldLabel label={resolvedLabels.about} help={helpTexts?.about} required={requiredFields?.about}>
           <TextField
             name={getListingMetadataFieldName('about', namePrefix)}
             required={requiredFields?.about}
@@ -97,7 +98,7 @@ const ListingMetadata = ({ fields = listingMetadataFieldNames, helperTexts, labe
       ) : null}
 
       {visibleFields.has('title') ? (
-        <FormFieldLabel label={resolvedLabels.title} required={requiredFields?.title}>
+        <FormFieldLabel label={resolvedLabels.title} help={helpTexts?.title} required={requiredFields?.title}>
           <TextField
             name={getListingMetadataFieldName('title', namePrefix)}
             required={requiredFields?.title}
@@ -110,7 +111,7 @@ const ListingMetadata = ({ fields = listingMetadataFieldNames, helperTexts, labe
       ) : null}
 
       {visibleFields.has('subTitle') ? (
-        <FormFieldLabel label={resolvedLabels.subTitle} required={requiredFields?.subTitle}>
+        <FormFieldLabel label={resolvedLabels.subTitle} help={helpTexts?.subTitle} required={requiredFields?.subTitle}>
           <TextField
             name={getListingMetadataFieldName('subTitle', namePrefix)}
             required={requiredFields?.subTitle}
@@ -123,7 +124,7 @@ const ListingMetadata = ({ fields = listingMetadataFieldNames, helperTexts, labe
       ) : null}
 
       {visibleFields.has('includedFeatures') ? (
-        <FormFieldLabel label={resolvedLabels.includedFeatures} required={requiredFields?.includedFeatures}>
+        <FormFieldLabel label={resolvedLabels.includedFeatures} help={helpTexts?.includedFeatures} required={requiredFields?.includedFeatures}>
           <TextField
             name={getListingMetadataFieldName('includedFeatures', namePrefix)}
             required={requiredFields?.includedFeatures}
