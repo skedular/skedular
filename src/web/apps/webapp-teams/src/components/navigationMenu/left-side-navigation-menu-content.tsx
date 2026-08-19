@@ -132,6 +132,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationAnalyticsPath = organizationAnalyticsSetupBaseLink.split('?')[0];
   const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, rootData.organization.customDomain!);
 
@@ -331,13 +332,13 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             <ListItem disablePadding>
               <Link component={NextLink} href={organizationAnalyticsSetupBaseLink}>
                 <ListItemButton
-                  selected={pathName.startsWith(organizationAnalyticsSetupBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAnalyticsSetupBaseLink)) }}
+                  selected={pathName.startsWith(organizationAnalyticsPath)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAnalyticsPath)) }}
                 >
                   {collapsed && (
                     <BodyIconTypography
                       startElement={!hideIcons && <AnalyticsIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationAnalyticsSetupBaseLink) && paletteMode === 'dark'}
+                      invertDefaultColor={pathName.startsWith(organizationAnalyticsPath) && paletteMode === 'dark'}
                     />
                   )}
                   {!collapsed && (
@@ -345,7 +346,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                       label="Analytics"
                       startElement={!hideIcons && <AnalyticsIcon color="inherit" />}
                       spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationAnalyticsSetupBaseLink) && paletteMode === 'dark'}
+                      invertDefaultColor={pathName.startsWith(organizationAnalyticsPath) && paletteMode === 'dark'}
                     />
                   )}
                 </ListItemButton>
