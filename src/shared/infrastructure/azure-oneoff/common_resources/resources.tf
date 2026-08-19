@@ -29,26 +29,26 @@ locals {
 resource "azuread_application_federated_identity_credential" "github_oidc_main" {
   application_id = azuread_application_registration.github_oidc.id
   display_name   = "${var.environment}-unityhubio-unityhubio-main"
-  description    = "Deployments for ${module.common.github_repository} for environment ${var.environment} and main branch"
+  description    = "Deployments for ${module.common.github_repository_unityhubio} for environment ${var.environment} and main branch"
   audiences      = [local.default_audience_name]
   issuer         = local.github_issuer_url
-  subject        = "repo:${module.common.github_repository}:ref:refs/heads/main"
+  subject        = "repo:${module.common.github_repository_unityhubio}:ref:refs/heads/main"
 }
 
 resource "azuread_application_federated_identity_credential" "github_oidc_pullrequest" {
   application_id = azuread_application_registration.github_oidc.id
   display_name   = "${var.environment}-unityhubio-unityhubio-pullrequest"
-  description    = "Deployments for ${module.common.github_repository} for environment ${var.environment} and pullrequest"
+  description    = "Deployments for ${module.common.github_repository_unityhubio} for environment ${var.environment} and pullrequest"
   audiences      = [local.default_audience_name]
   issuer         = local.github_issuer_url
-  subject        = "repo:${module.common.github_repository}:pull_request"
+  subject        = "repo:${module.common.github_repository_unityhubio}:pull_request"
 }
 
 resource "azuread_application_federated_identity_credential" "github_oidc_environment" {
   application_id = azuread_application_registration.github_oidc.id
   display_name   = "${var.environment}-unityhubio-unityhubio-environment"
-  description    = "Deployments for ${module.common.github_repository} for environment ${var.environment} and environment"
+  description    = "Deployments for ${module.common.github_repository_unityhubio} for environment ${var.environment} and environment"
   audiences      = [local.default_audience_name]
   issuer         = local.github_issuer_url
-  subject        = "repo:${module.common.github_repository}:environment:${var.environment}"
+  subject        = "repo:${module.common.github_repository_unityhubio}:environment:${var.environment}"
 }

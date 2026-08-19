@@ -130,7 +130,7 @@ output "gcp_project_id" {
   value = "unityhub-${var.environment}"
 }
 
-output "github_repository" {
+output "github_repository_unityhubio" {
   value = "unityhubio/unityhubio"
 }
 

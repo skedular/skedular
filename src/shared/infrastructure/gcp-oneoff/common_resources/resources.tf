@@ -35,7 +35,7 @@ resource "google_service_account" "github_actions" {
 resource "google_service_account_iam_member" "workload_identity_user" {
   service_account_id = google_service_account.github_actions.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_action_pool.name}/attribute.repository/${module.common.github_repository}"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_action_pool.name}/attribute.repository/${module.common.github_repository_unityhubio}"
 }
 
 resource "aws_ssm_parameter" "workload_identity_provider" {
