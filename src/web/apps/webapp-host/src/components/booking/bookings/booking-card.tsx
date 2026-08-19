@@ -13,12 +13,7 @@ import {
   TwoButtonsDialogActions,
 } from '@skedular/ui';
 import { CalendarIcon, EllipseMenuIcon, JoinIcon, NotesIcon, PaymentStatusIcon, PdfIcon } from '@/components/icons';
-import {
-  getOrganizationBookingBaseLink,
-  getOrganizationBookingModificationLink,
-  getOrganizationEntitlementPurchaseBaseLink,
-  getOrganizationSubscriptionBaseLink,
-} from '@/components/links';
+import { getOrganizationBookingBaseLink, getOrganizationBookingModificationLink } from '@/components/links';
 import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { getCreditOutcomeMessage } from '@/components/marketplaceEntitlement/credit-outcome';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -891,24 +886,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
                 <Tooltip title={`${recurringSeriesLabel}. ${recurringSeriesDateLabel ?? ''}`.trim()}>
                   <Chip label="Recurring" size="small" variant="outlined" />
                 </Tooltip>
-              ) : null}
-              {recurringBooking && recurringMarketplaceSubscriptionIds[recurringBooking.id] ? (
-                <Link
-                  component={NextLink}
-                  href={getOrganizationSubscriptionBaseLink(integratedPlatform, organizationCustomDomain, recurringMarketplaceSubscriptionIds[recurringBooking.id])}
-                  underline="hover"
-                >
-                  Subscription details
-                </Link>
-              ) : null}
-              {bookingDetails.marketplaceBooking?.entitlementPurchaseId ? (
-                <Link
-                  component={NextLink}
-                  href={getOrganizationEntitlementPurchaseBaseLink(integratedPlatform, organizationCustomDomain, bookingDetails.marketplaceBooking.entitlementPurchaseId)}
-                  underline="hover"
-                >
-                  Entitlement details
-                </Link>
               ) : null}
               {bookingDetails.marketplaceBooking?.isPaymentRequired ? (
                 <Chip

@@ -1,12 +1,9 @@
-import { AnalyticsIcon, BillingAndPaymentIcon, BillingIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, RefundIcon, SettingsIcon } from '@/components/icons';
+import { AnalyticsIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon } from '@/components/icons';
 import {
   getOrganizationAdminBaseLink,
   getOrganizationAnalyticsBaseLink,
   getOrganizationBaseLink,
   getOrganizationLocationsBaseLink,
-  getOrganizationPaymentsBaseLink,
-  getOrganizationRefundsBaseLink,
-  getOrganizationSubscriptionsBaseLink,
   getOrganizationUsersBaseLink,
 } from '@/components/links';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
@@ -130,9 +127,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationBaseLink = getOrganizationBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatform, rootData.organization.customDomain!);
-  const organizationPaymentsBaseLink = getOrganizationPaymentsBaseLink(integratedPlatform, rootData.organization.customDomain!);
-  const organizationRefundsBaseLink = getOrganizationRefundsBaseLink(integratedPlatform, rootData.organization.customDomain!);
-  const organizationSubscriptionsBaseLink = getOrganizationSubscriptionsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, rootData.organization.customDomain!);
 
@@ -162,29 +156,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             onClick={handleExpandClicked}
           >
             <Image src={logoUrl} width={width} height={height} unoptimized alt="Skedular" />
-          </ListItem>
-
-          <ListItem disablePadding>
-            <Link component={NextLink} href={organizationSubscriptionsBaseLink}>
-              <ListItemButton
-                selected={pathName.startsWith(organizationSubscriptionsBaseLink)}
-                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationSubscriptionsBaseLink)) }}
-              >
-                {collapsed ? (
-                  <BodyIconTypography
-                    startElement={!hideIcons && <BillingIcon color="inherit" />}
-                    invertDefaultColor={pathName.startsWith(organizationSubscriptionsBaseLink) && paletteMode === 'dark'}
-                  />
-                ) : (
-                  <BodyIconTypography
-                    label="Purchases"
-                    startElement={!hideIcons && <BillingIcon color="inherit" />}
-                    spacing={3}
-                    invertDefaultColor={pathName.startsWith(organizationSubscriptionsBaseLink) && paletteMode === 'dark'}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
           </ListItem>
 
           <ListItem disablePadding>
@@ -252,54 +223,6 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
               </ListItemButton>
             </Link>
           </ListItem>
-
-          <ListItem disablePadding>
-            <Link component={NextLink} href={organizationPaymentsBaseLink}>
-              <ListItemButton
-                selected={pathName.startsWith(organizationPaymentsBaseLink)}
-                sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationPaymentsBaseLink)) }}
-              >
-                {collapsed ? (
-                  <BodyIconTypography
-                    startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
-                    invertDefaultColor={pathName.startsWith(organizationPaymentsBaseLink) && paletteMode === 'dark'}
-                  />
-                ) : (
-                  <BodyIconTypography
-                    label="Payments"
-                    startElement={!hideIcons && <BillingAndPaymentIcon color="inherit" />}
-                    spacing={3}
-                    invertDefaultColor={pathName.startsWith(organizationPaymentsBaseLink) && paletteMode === 'dark'}
-                  />
-                )}
-              </ListItemButton>
-            </Link>
-          </ListItem>
-
-          {rootData.organization.canModify && (
-            <ListItem disablePadding>
-              <Link component={NextLink} href={organizationRefundsBaseLink}>
-                <ListItemButton
-                  selected={pathName.startsWith(organizationRefundsBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationRefundsBaseLink)) }}
-                >
-                  {collapsed ? (
-                    <BodyIconTypography
-                      startElement={!hideIcons && <RefundIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationRefundsBaseLink) && paletteMode === 'dark'}
-                    />
-                  ) : (
-                    <BodyIconTypography
-                      label="Refunds"
-                      startElement={!hideIcons && <RefundIcon color="inherit" />}
-                      spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationRefundsBaseLink) && paletteMode === 'dark'}
-                    />
-                  )}
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          )}
 
           {rootData.organization.canModify && (
             <ListItem disablePadding>

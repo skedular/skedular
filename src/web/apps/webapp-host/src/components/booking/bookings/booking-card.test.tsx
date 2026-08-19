@@ -89,7 +89,6 @@ vi.mock(import('@skedular/shared'), async (importOriginal) => {
 
 vi.mock('@/components/links', () => ({
   getOrganizationBookingBaseLink: () => '/bookings/booking-1',
-  getOrganizationSubscriptionBaseLink: () => '/subscriptions/subscription-1',
 }));
 
 vi.mock('@/components/moreActionsMenu', () => ({
@@ -222,19 +221,5 @@ describe('BookingCard', () => {
     expect(lastMenuOptions.map((item) => item.label)).toContain('Remove recurring series');
     expect(lastMenuOptions.map((item) => item.label)).not.toContain('View occurrence details');
     expect(lastMenuOptions.map((item) => item.label)).not.toContain('Remove this occurrence');
-  });
-
-  it('shows the parent subscription link for generated recurring bookings', () => {
-    render(
-      <BookingCard
-        rootDataRelay={{} as never}
-        bookingDetailsRelay={{} as never}
-        organizationCustomDomain="acme"
-        connectionIds={[]}
-        canJoinBooking
-        recurringMarketplaceSubscriptionIds={{ 'recurring-booking-1': 'subscription-1' }}
-      />,
-    );
-    expect(screen.getByRole('link', { name: 'Subscription details' })).toHaveAttribute('href', '/subscriptions/subscription-1');
   });
 });
