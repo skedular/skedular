@@ -12,6 +12,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import type { SelectChangeEvent } from '@mui/material/Select';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import { DurationInput } from '@/components/product/duration-input';
 import { BodyIconTypography, FormFieldLabel, LeadIconTypography, SettingsSectionCard, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 
 export type CancellationRefundRuleForm = {
@@ -240,14 +241,20 @@ const HostListingProductSettings = ({
               </StackColumn>
               <Grid container spacing={2}>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <FormFieldLabel label="Minimum duration (minutes)">
-                    <TextField fullWidth value={opt.minDurationMinutes} onChange={onChangePricingOption(index, 'minDurationMinutes')} />
-                  </FormFieldLabel>
+                  <DurationInput
+                    label="Minimum booking duration"
+                    value={opt.minDurationMinutes}
+                    onChange={(value) => onChangePricingOption(index, 'minDurationMinutes')({ target: { value } } as React.ChangeEvent<HTMLInputElement>)}
+                    required
+                  />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <FormFieldLabel label="Maximum duration (minutes)">
-                    <TextField fullWidth value={opt.maxDurationMinutes} onChange={onChangePricingOption(index, 'maxDurationMinutes')} />
-                  </FormFieldLabel>
+                  <DurationInput
+                    label="Maximum booking duration"
+                    value={opt.maxDurationMinutes}
+                    onChange={(value) => onChangePricingOption(index, 'maxDurationMinutes')({ target: { value } } as React.ChangeEvent<HTMLInputElement>)}
+                    required
+                  />
                 </Grid>
               </Grid>
               {opt.cadence === 'WEEKLY' ? (
@@ -371,14 +378,12 @@ const HostListingProductSettings = ({
                       <StackColumn spacing={1.5}>
                         <LeadIconTypography label="Full Refund Window" />
                         <SmallIconTypography label="Customers receive a full refund if they cancel at least this many minutes before the booking." />
-                        <FormFieldLabel label="Minutes before booking">
-                          <TextField
-                            fullWidth
-                            value={opt.cancellationRefundRules[0]?.minutesBefore ?? ''}
-                            onChange={(e) => onChangeCancellationRule(index, 0, 'minutesBefore', e.target.value)}
-                            helperText="Example: 1440 = 1 day before."
-                          />
-                        </FormFieldLabel>
+                        <DurationInput
+                          label="Full refund cutoff before booking"
+                          value={opt.cancellationRefundRules[0]?.minutesBefore ?? ''}
+                          onChange={(value) => onChangeCancellationRule(index, 0, 'minutesBefore', value)}
+                          required
+                        />
                       </StackColumn>
                     </CardContent>
                   </Card>
@@ -401,14 +406,12 @@ const HostListingProductSettings = ({
                             </StackRow>
                             <Grid container spacing={2}>
                               <Grid size={{ xs: 12, md: 6 }}>
-                                <FormFieldLabel label="Minutes before">
-                                  <TextField
-                                    fullWidth
-                                    value={rule.minutesBefore}
-                                    onChange={(e) => onChangeCancellationRule(index, ruleIndex, 'minutesBefore', e.target.value)}
-                                    helperText="How far in advance this rule applies."
-                                  />
-                                </FormFieldLabel>
+                                <DurationInput
+                                  label="Refund timing before booking"
+                                  value={rule.minutesBefore}
+                                  onChange={(value) => onChangeCancellationRule(index, ruleIndex, 'minutesBefore', value)}
+                                  required
+                                />
                               </Grid>
                               <Grid size={{ xs: 12, md: 6 }}>
                                 <FormFieldLabel label="Refund %">
@@ -437,14 +440,12 @@ const HostListingProductSettings = ({
             <SettingsSectionCard title="Advanced" description="Payment lock window settings control how long a booking slot is reserved while payment is being processed.">
               <Grid container spacing={2}>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <FormFieldLabel label="Card payment lock window (minutes)">
-                    <TextField
-                      fullWidth
-                      value={opt.maxAllowedResourcesLockTimePaidViaCard}
-                      onChange={onChangePricingOption(index, 'maxAllowedResourcesLockTimePaidViaCard')}
-                      helperText="How long the slot is reserved while a card payment is in progress."
-                    />
-                  </FormFieldLabel>
+                  <DurationInput
+                    label="Card payment lock window"
+                    value={opt.maxAllowedResourcesLockTimePaidViaCard}
+                    onChange={(value) => onChangePricingOption(index, 'maxAllowedResourcesLockTimePaidViaCard')({ target: { value } } as React.ChangeEvent<HTMLInputElement>)}
+                    required
+                  />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
                   <FormFieldLabel label="Bank transfer lock window (days)">

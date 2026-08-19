@@ -1,6 +1,7 @@
 'use client';
 
 import Typography from '@/components/commons/Typography';
+import { DurationField } from '@/components/product/duration-input';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { SectionIconTypography } from '@skedular/ui';
@@ -64,8 +65,8 @@ const PricingSection = ({ disabled = false }: PricingSectionProps) => (
 
         {/* Duration Settings */}
         <Stack direction="row" spacing={2}>
-          <TextField name="pricingOptions.0.minDurationMinutes" label="Minimum Duration (minutes)" placeholder="e.g., 60" type="number" disabled={disabled} fullWidth />
-          <TextField name="pricingOptions.0.maxDurationMinutes" label="Maximum Duration (minutes)" placeholder="e.g., 480" type="number" disabled={disabled} fullWidth />
+          <DurationField name="pricingOptions.0.minDurationMinutes" label="Minimum booking duration" required />
+          <DurationField name="pricingOptions.0.maxDurationMinutes" label="Maximum booking duration" required />
         </Stack>
       </Stack>
     </Stack>

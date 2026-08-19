@@ -12,6 +12,7 @@ import {
 } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import CalendarDayPicker from '@/components/product/calendar-day-picker';
+import { DurationInput } from '@skedular/ui';
 import {
   createCancellationRefundRule,
   createPricingOption,
@@ -302,12 +303,18 @@ const ProductEditorForm = ({
               helperText={isEventProduct ? 'Ignored for event products. The full matching resource set will be booked.' : undefined}
             />
           </FormFieldLabel>
-          <FormFieldLabel label="Minimum Duration (minutes)">
-            <TextField name={`pricingOptions[${index}].minDurationMinutes`} required />
-          </FormFieldLabel>
-          <FormFieldLabel label="Maximum Duration (minutes)">
-            <TextField name={`pricingOptions[${index}].maxDurationMinutes`} required />
-          </FormFieldLabel>
+          <DurationInput
+            label="Minimum booking duration"
+            value={pricingOption.minDurationMinutes}
+            onChange={(value) => changeNestedField(`pricingOptions[${index}].minDurationMinutes`, value)}
+            required
+          />
+          <DurationInput
+            label="Maximum booking duration"
+            value={pricingOption.maxDurationMinutes}
+            onChange={(value) => changeNestedField(`pricingOptions[${index}].maxDurationMinutes`, value)}
+            required
+          />
           {pricingOption.cadence === 'WEEKLY' ? (
             <FormFieldLabel label="Required selected days per week">
               <TextField
@@ -413,12 +420,12 @@ const ProductEditorForm = ({
               <StackColumn spacing={1.5}>
                 <LeadIconTypography label="Full Refund Window" />
                 <SmallIconTypography label="If the customer cancels before this cutoff, they receive the full refund. After that point, no refund is offered." />
-                <FormFieldLabel label="Full Refund Cutoff (minutes before booking or renewal)">
-                  <TextField
-                    name={`pricingOptions[${index}].cancellationRefundRules[0].minutesBefore`}
-                    helperText="Example: 1440 means customers can cancel up to one day before."
-                  />
-                </FormFieldLabel>
+                <DurationInput
+                  label="Full refund cutoff before booking or renewal"
+                  value={pricingOption.cancellationRefundRules[0]?.minutesBefore ?? ''}
+                  onChange={(value) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[0].minutesBefore`, value)}
+                  required
+                />
               </StackColumn>
             </CardContent>
           </Card>
@@ -453,12 +460,12 @@ const ProductEditorForm = ({
                         </Button>
                       ) : null}
                     </StackRow>
-                    <FormFieldLabel label="Minutes Before">
-                      <TextField
-                        name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`}
-                        helperText="How long before the booking or renewal this rule still applies."
-                      />
-                    </FormFieldLabel>
+                    <DurationInput
+                      label="Refund timing before booking or renewal"
+                      value={rule.minutesBefore}
+                      onChange={(value) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`, value)}
+                      required
+                    />
                     <FormFieldLabel label="Refund Percentage">
                       <TextField
                         name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].refundPercentage`}
@@ -491,9 +498,12 @@ const ProductEditorForm = ({
       </SettingsSectionCard>
 
       <SettingsSectionCard title="Advanced" description="Keep the operational lock windows here so the commercial setup stays readable.">
-        <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Card (minutes)">
-          <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`} required />
-        </FormFieldLabel>
+        <DurationInput
+          label="Maximum resource lock duration paid via card"
+          value={pricingOption.maxAllowedResourcesLockTimePaidViaCard}
+          onChange={(value) => changeNestedField(`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`, value)}
+          required
+        />
         <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Bank Transfer (days)">
           <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} required />
         </FormFieldLabel>

@@ -7,6 +7,11 @@ import { describe, expect, it, vi } from 'vitest';
 vi.mock('@skedular/ui', () => ({
   // component stubs
   BodyIconTypography: ({ label }: { label: string }) => <div>{label}</div>,
+  DurationInput: ({ label, value }: { label: string; value?: string }) => (
+    <div>
+      {label}: {value}
+    </div>
+  ),
   FormFieldLabel: ({ label, children }: { label?: string; children: ReactNode }) => (
     <div>
       {label ? <div>{label}</div> : null}

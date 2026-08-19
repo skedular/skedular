@@ -16,6 +16,8 @@ export { default as SettingsSectionCard } from './settings-section-card';
 export { default as SetupFeatureCard } from './setup-feature-card';
 export { default as SetupSplitLayout } from './setup-split-layout';
 export { default as StackColumn } from './stack-column';
+export { default as DurationInput } from './duration-input';
+export type { DurationInputProps } from './duration-input';
 export { default as StackRow } from './stack-row';
 export { default as StickyReviewRail } from './sticky-review-rail';
 export * from './theme/index';
