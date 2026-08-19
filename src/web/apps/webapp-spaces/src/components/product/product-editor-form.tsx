@@ -241,19 +241,31 @@ const ProductEditorForm = ({
       <SettingsSectionCard title="Offer Basics" description="Set the label customers will understand first, then set cadence and price.">
         <ListingMetadata fields={['title', 'subTitle']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
 
-        <FormFieldLabel label="Cadence">
-          <SingleChoiceProductPricingCadence rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].cadence`} required />
-        </FormFieldLabel>
-
         <FormFieldLabel label="Price">
           <TextField name={`pricingOptions[${index}].price`} required />
         </FormFieldLabel>
       </SettingsSectionCard>
 
-      <SettingsSectionCard title="Credit entitlement" description="Offer prepaid credits with a product-level expiry and refund policy.">
+      <SettingsSectionCard
+        title="Fulfillment"
+        description={
+          pricingOption.fulfillmentType === 'ENTITLEMENT'
+            ? 'Credit entitlements are purchased once and provide credits customers can use later.'
+            : 'Reservations are purchased against a booking cadence and reserve resources or time.'
+        }
+      >
         <StackColumn spacing={2}>
           <FormFieldLabel label="Fulfillment type">
-            <TextField select fullWidth name={`pricingOptions[${index}].fulfillmentType`}>
+            <TextField
+              select
+              fullWidth
+              name={`pricingOptions[${index}].fulfillmentType`}
+              fieldProps={{
+                onChange: (event: { target: { value: string } }) => {
+                  if (event.target.value === 'ENTITLEMENT') form.change(`pricingOptions[${index}].cadence`, 'ONE_TIME');
+                },
+              }}
+            >
               <MenuItem sx={{ minHeight: 48, fontSize: 'inherit' }} value="RESERVATION">
                 Reservation
               </MenuItem>
@@ -271,39 +283,45 @@ const ProductEditorForm = ({
                 <TextField name={`pricingOptions[${index}].entitlementValidityDays`} />
               </FormFieldLabel>
             </StackRow>
-          ) : null}
+          ) : (
+            <FormFieldLabel label="Cadence">
+              <SingleChoiceProductPricingCadence rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].cadence`} required />
+            </FormFieldLabel>
+          )}
         </StackColumn>
       </SettingsSectionCard>
 
-      <SettingsSectionCard title="Booking Rules" description="Define how much of the product is reserved each time this offer is purchased.">
-        <CalendarDayPicker availableDays={pricingOption.availableDays} onChange={(availableDays) => changeNestedField(`pricingOptions[${index}].availableDays`, availableDays)} />
-        <FormFieldLabel label="Number of Resources to Book">
-          <TextField
-            name={`pricingOptions[${index}].numberOfResourcesToBook`}
-            required
-            disabled={isEventProduct}
-            helperText={isEventProduct ? 'Ignored for event products. The full matching resource set will be booked.' : undefined}
-          />
-        </FormFieldLabel>
-        <FormFieldLabel label="Minimum Duration (minutes)">
-          <TextField name={`pricingOptions[${index}].minDurationMinutes`} required />
-        </FormFieldLabel>
-        <FormFieldLabel label="Maximum Duration (minutes)">
-          <TextField name={`pricingOptions[${index}].maxDurationMinutes`} required />
-        </FormFieldLabel>
-        {pricingOption.cadence === 'WEEKLY' ? (
-          <FormFieldLabel label="Required selected days per week">
+      {pricingOption.fulfillmentType === 'RESERVATION' ? (
+        <SettingsSectionCard title="Booking Rules" description="Define how much of the product is reserved each time this offer is purchased.">
+          <CalendarDayPicker availableDays={pricingOption.availableDays} onChange={(availableDays) => changeNestedField(`pricingOptions[${index}].availableDays`, availableDays)} />
+          <FormFieldLabel label="Number of Resources to Book">
             <TextField
-              name={`pricingOptions[${index}].requiredDaysPerWeek`}
-              type="text"
-              slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
-              fieldProps={{ parse: sanitizeWeeklyRequiredDays }}
-              helperText={`Leave empty for unrestricted weekly booking; choose 1 to ${pricingOption.availableDays.length || 7}.`}
+              name={`pricingOptions[${index}].numberOfResourcesToBook`}
+              required
+              disabled={isEventProduct}
+              helperText={isEventProduct ? 'Ignored for event products. The full matching resource set will be booked.' : undefined}
             />
           </FormFieldLabel>
-        ) : null}
-        {pricingOption.cadence === 'WEEKLY' ? <SmallIconTypography label="Leave this field empty to keep the existing unrestricted weekly booking behavior." /> : null}
-      </SettingsSectionCard>
+          <FormFieldLabel label="Minimum Duration (minutes)">
+            <TextField name={`pricingOptions[${index}].minDurationMinutes`} required />
+          </FormFieldLabel>
+          <FormFieldLabel label="Maximum Duration (minutes)">
+            <TextField name={`pricingOptions[${index}].maxDurationMinutes`} required />
+          </FormFieldLabel>
+          {pricingOption.cadence === 'WEEKLY' ? (
+            <FormFieldLabel label="Required selected days per week">
+              <TextField
+                name={`pricingOptions[${index}].requiredDaysPerWeek`}
+                type="text"
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
+                fieldProps={{ parse: sanitizeWeeklyRequiredDays }}
+                helperText={`Leave empty for unrestricted weekly booking; choose 1 to ${pricingOption.availableDays.length || 7}.`}
+              />
+            </FormFieldLabel>
+          ) : null}
+          {pricingOption.cadence === 'WEEKLY' ? <SmallIconTypography label="Leave this field empty to keep the existing unrestricted weekly booking behavior." /> : null}
+        </SettingsSectionCard>
+      ) : null}
 
       <SettingsSectionCard title="Payments" description="Describe how this offer is paid for and which payment paths you support.">
         <FormFieldLabel>

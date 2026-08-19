@@ -1,9 +1,8 @@
-import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { EllipseMenuIcon, ProductIcon } from '@/components/icons';
-import { getOrganizationProductBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 
 import { emerald, flame } from '@skedular/ui';
 
@@ -17,24 +16,20 @@ import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
-import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import Image from 'next/image';
 
 type Props = {
   rootDataRelay: productCard_query$key;
   productDetailsRelay: productCard_ProductDetails$key;
-  organizationCustomDomain: string;
   connectionIds: string[];
 };
 
-const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDomain, connectionIds }: Props) => {
+const ProductCard = ({ rootDataRelay, productDetailsRelay, connectionIds }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment productCard_query on Query {
@@ -121,20 +116,14 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
     }
   `);
 
-  const { integratedPlatform } = useIntegratedPlatform();
   const paletteMode = useContext(PaletteModeContext);
-  const router = useRouter();
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   let moreActionsOption: MoreActionsMenuItemType[] = [];
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
-  const editLink = getOrganizationProductBaseLink(integratedPlatform, organizationCustomDomain, productDetails.id);
 
   if (rootData.organization?.canModify) {
-    moreActionsOption = moreActionsOption.concat(
-      moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditProduct],
-      moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteProduct],
-    );
+    moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteProduct]);
 
     if (productDetails.inactive) {
       moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ActivateProduct]);
@@ -151,10 +140,6 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
     setMoreActionsAnchorEl(null);
 
     switch (id) {
-      case MoreActionsMenuOptionType.EditProduct:
-        router.push(editLink);
-        break;
-
       case MoreActionsMenuOptionType.DeleteProduct:
         handleRemoveProductClick();
         break;
@@ -307,9 +292,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
               </Box>
 
               <StackColumn spacing={0.75} sx={{ minWidth: 0, flexGrow: 1 }}>
-                <Link component={NextLink} href={editLink} underline="none" color="inherit">
-                  <LeadIconTypography label={productDetails.listingMetadata.title} />
-                </Link>
+                <LeadIconTypography label={productDetails.listingMetadata.title} />
               </StackColumn>
 
               <StackRow sx={{ gap: 0.5, flexWrap: 'nowrap' }}>

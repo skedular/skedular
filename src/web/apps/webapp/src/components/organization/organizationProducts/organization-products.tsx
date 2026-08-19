@@ -1,7 +1,6 @@
 import { Loading } from '@/components/loading';
-import NewProductButton from '@/components/product/addProduct/new-product-button';
-import { RelayError, toRootError } from '@skedular/shared';
 import type { organizationProducts_rootQuery } from '@/queries/__generated__/organizationProducts_rootQuery.graphql';
+import { RelayError, toRootError } from '@skedular/shared';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -12,7 +11,6 @@ import ProductCard from './product-card';
 type Props = {
   queryReference: PreloadedQuery<organizationProducts_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationCustomDomain: string;
 };
 
 const RootQuery = graphql`
@@ -34,7 +32,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationProducts = ({ queryReference, organizationCustomDomain }: Props) => {
+const OrganizationProducts = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<organizationProducts_rootQuery>(RootQuery, queryReference);
   const connectionIds = useMemo(() => [rootData.products.__id], [rootData.products]);
   const products = useMemo(() => rootData.products.edges.map((edge) => edge.node), [rootData.products]);
@@ -44,9 +42,9 @@ const OrganizationProducts = ({ queryReference, organizationCustomDomain }: Prop
   }
 
   return (
-    <OrganizationProductsPageShell actions={<NewProductButton organizationCustomDomain={organizationCustomDomain} />} isEmpty={products.length === 0}>
+    <OrganizationProductsPageShell isEmpty={products.length === 0}>
       {products.map((product) => (
-        <ProductCard key={product.id} rootDataRelay={rootData} productDetailsRelay={product} organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} />
+        <ProductCard key={product.id} rootDataRelay={rootData} productDetailsRelay={product} connectionIds={connectionIds} />
       ))}
     </OrganizationProductsPageShell>
   );
@@ -92,7 +90,7 @@ const OrganizationProductsWithRelay = ({ organizationCustomDomain }: RelayProps)
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoOrganizationProducts queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
+      <MemoOrganizationProducts queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
 };
