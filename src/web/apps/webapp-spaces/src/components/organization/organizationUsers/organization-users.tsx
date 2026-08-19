@@ -18,7 +18,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 import { BodyIconTypography, defaultPadding, PageHeaderPanel, SettingsSectionCard, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
@@ -159,7 +159,8 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const router = useRouter();
-  const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
+  const searchParams = useSearchParams();
+  const peopleNameSearchText = searchParams.get('search') ?? '';
   const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
@@ -214,10 +215,15 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
   );
 
   const handleSearchTextChange = (str: string) => {
-    setPeopleNameSearchText(str);
-
-    handleRefetchOrganizationUsers(str);
+    const params = new URLSearchParams(window.location.search);
+    if (str) params.set('search', str);
+    else params.delete('search');
+    router.push(`?${params.toString()}`);
   };
+
+  useEffect(() => {
+    handleRefetchOrganizationUsers(peopleNameSearchText);
+  }, [handleRefetchOrganizationUsers, peopleNameSearchText]);
 
   const handleSelectedUsersChanged = (memberId: string) => {
     setSelectedMemberIds((current) => (current.includes(memberId) ? current.filter((id) => id !== memberId) : current.concat(memberId)));
@@ -514,7 +520,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
             >
               <StackColumn spacing={2}>
                 <StackRow sx={{ gap: 1, flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Search size="small" placeholder="Search for users" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
+                  <Search key={peopleNameSearchText} size="small" placeholder="Search for users" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
                 </StackRow>
 
                 <OrganizationUserManagementList

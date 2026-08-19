@@ -57,6 +57,7 @@ public class DailyResourceAvailabilitySnapshotRepository(LocationDbContext dbCon
         string? resourceType,
         CancellationToken cancellationToken) =>
         await DbContext.DailyResourceAvailabilitySnapshot
+            .Include(s => s.Location)
             .Include(s => s.Resource)
             .ThenInclude(r => r.OrganizationTags)
             .Where(item => !item.DeletedAt.HasValue && item.LocationId == locationId && item.Date >= from && item.Date <= until &&
@@ -72,6 +73,7 @@ public class DailyResourceAvailabilitySnapshotRepository(LocationDbContext dbCon
         string? resourceType,
         CancellationToken cancellationToken) =>
         await DbContext.DailyResourceAvailabilitySnapshot
+            .Include(s => s.Location)
             .Include(s => s.Resource)
             .ThenInclude(r => r.OrganizationTags)
             .Where(item => !item.DeletedAt.HasValue && locationIds.Contains(item.LocationId) && item.Date >= from && item.Date <= until &&

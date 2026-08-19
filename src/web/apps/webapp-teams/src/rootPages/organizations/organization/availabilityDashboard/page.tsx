@@ -6,7 +6,8 @@ import { Loading } from '@/components/loading';
 import { RootShell } from '@/components/rootShell';
 import type { pageAvailabilityDashboardQuery, ResourceAvailabilityClassification } from '@/queries/__generated__/pageAvailabilityDashboardQuery.graphql';
 import { useKnownParams } from '@skedular/shared';
-import { memo, Suspense, useCallback, useEffect, useState, useTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { memo, Suspense, useCallback, useEffect, useMemo, useTransition } from 'react';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
 // Hardcoded ordering — no sort controls in the UI.
@@ -65,12 +66,17 @@ type ShellProps = { organizationCustomDomain: string };
 const AvailabilityDashboardPageShell = ({ organizationCustomDomain }: ShellProps) => {
   const [queryReference, loadQuery] = useQueryLoader<pageAvailabilityDashboardQuery>(RootQuery);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [filters, setFilters] = useState<AvailabilityFilters>({
-    date: getTodayString(),
-    locationIds: [],
-    statuses: [],
-  });
+  const filters = useMemo<AvailabilityFilters>(
+    () => ({
+      date: searchParams.get('date') ?? getTodayString(),
+      locationIds: searchParams.get('locationIds')?.split(',').filter(Boolean) ?? [],
+      statuses: searchParams.get('statuses')?.split(',').filter(Boolean) ?? [],
+    }),
+    [searchParams],
+  );
 
   const buildQueryVars = useCallback(
     (f: AvailabilityFilters) => ({
@@ -87,21 +93,22 @@ const AvailabilityDashboardPageShell = ({ organizationCustomDomain }: ShellProps
     [organizationCustomDomain],
   );
 
-  // Initial load — suspends via Suspense boundary.
+  // URL parameters are the source of truth so refresh and browser navigation restore the dashboard.
   useEffect(() => {
     loadQuery(buildQueryVars(filters), { fetchPolicy: 'store-and-network' });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [buildQueryVars, filters, loadQuery]);
 
   const handleFiltersChange = useCallback(
     (newFilters: AvailabilityFilters) => {
-      setFilters(newFilters);
-      // startTransition keeps the old content visible while fetching — no re-mount.
-      startTransition(() => {
-        loadQuery(buildQueryVars(newFilters), { fetchPolicy: 'network-only' });
-      });
+      const params = new URLSearchParams(window.location.search);
+      params.set('date', newFilters.date);
+      if (newFilters.locationIds?.length) params.set('locationIds', newFilters.locationIds.join(','));
+      else params.delete('locationIds');
+      if (newFilters.statuses?.length) params.set('statuses', newFilters.statuses.join(','));
+      else params.delete('statuses');
+      router.push(`?${params.toString()}`);
     },
-    [buildQueryVars, loadQuery, startTransition],
+    [router],
   );
 
   const handleRefresh = useCallback(() => {

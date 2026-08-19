@@ -12,6 +12,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/system/Box';
 
 import { BodyIconTypography, GridContainer, StackColumn, StackRow } from '@skedular/ui';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, startTransition, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
@@ -51,6 +52,19 @@ const RootQuery = graphql`
 
 const OrganizationLocations = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<organizationLocations_rootQuery>(RootQuery, queryReference);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const customTagId = searchParams.get('customTagId');
+  const zoneId = searchParams.get('zoneId');
+  const customTagIds = useMemo(() => (customTagId ? [customTagId] : []), [customTagId]);
+  const zoneIds = useMemo(() => (zoneId ? [zoneId] : []), [zoneId]);
+  const hasParam = (name: string, fallback = false) => searchParams.get(name) === 'true' || (searchParams.get(name) === null && fallback);
+  const locationNotContactedYet = hasParam('locationNotContactedYet');
+  const filterThoseWithoutCoordites = hasParam('withoutCoordinates', organizationCustomDomain === 'skedularpubliclocations');
+  const filterThoseWithCoordites = hasParam('withCoordinates');
+  const filterThoseWithEmails = hasParam('withEmails');
+  const filterThoseWithPhones = hasParam('withPhones');
+  const phoneStartWith = searchParams.get('phoneStartsWith') ?? '';
   const [rootDataRefetchable, refetch] = useRefetchableFragment<
     organizationLocations_locations_availableOrganizationResources_refetchableFragment,
     organizationLocations_locations_availableOrganizationResources_query$key
@@ -99,16 +113,16 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
     rootData,
   );
 
-  const [customTagIds, setCustomTagIds] = useState<string[]>([]);
-  const [zoneIds, setZoneIds] = useState<string[]>([]);
   const [defaultDate] = useState(startOfDay());
   const connectionIds = useMemo(() => [rootDataRefetchable.locations.__id], [rootDataRefetchable.locations]);
-  const [filterThoseWithoutCoordites, setFilterThoseWithoutCoordites] = useState(organizationCustomDomain === 'skedularpubliclocations');
-  const [filterThoseWithCoordites, setFilterThoseWithCoordites] = useState(false);
-  const [filterThoseWithEmails, setFilterThoseWithEmails] = useState(false);
-  const [filterThoseWithPhones, setFilterThoseWithPhones] = useState(false);
-  const [locationNotContactedYet, setLocationNotContactedYet] = useState(false);
-  const [phoneStartWith, setPhoneStartWith] = useState('');
+  const updateFilterUrl = (updates: Record<string, string | boolean | undefined>) => {
+    const params = new URLSearchParams(window.location.search);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === true || (typeof value === 'string' && value)) params.set(key, String(value));
+      else params.delete(key);
+    });
+    router.push(`?${params.toString()}`);
+  };
 
   const locations = useMemo(
     () =>
@@ -151,35 +165,35 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
   useEffect(() => handleRefetch(customTagIds, zoneIds, locationNotContactedYet), [handleRefetch, customTagIds, zoneIds, locationNotContactedYet]);
 
   const handleCustomTagChanged = (id?: string) => {
-    setCustomTagIds(id ? [id] : []);
+    updateFilterUrl({ customTagId: id });
   };
 
   const handleZoneTypeChanged = (id?: string) => {
-    setZoneIds(id ? [id] : []);
+    updateFilterUrl({ zoneId: id });
   };
 
   const handleFilterThoseWithoutCoorditesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterThoseWithoutCoordites(event.target.checked);
+    updateFilterUrl({ withoutCoordinates: event.target.checked });
   };
 
   const handleFilterThoseWithCoorditesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterThoseWithCoordites(event.target.checked);
+    updateFilterUrl({ withCoordinates: event.target.checked });
   };
 
   const handleFilterThoseWithEmailsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterThoseWithEmails(event.target.checked);
+    updateFilterUrl({ withEmails: event.target.checked });
   };
 
   const handleFilterThoseWithPhonesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFilterThoseWithPhones(event.target.checked);
+    updateFilterUrl({ withPhones: event.target.checked });
   };
 
   const handleLocationNotContactedYetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLocationNotContactedYet(event.target.checked);
+    updateFilterUrl({ locationNotContactedYet: event.target.checked });
   };
 
   const handlePhoneFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneStartWith(event.target.value);
+    updateFilterUrl({ phoneStartsWith: event.target.value });
   };
 
   if (!rootDataRefetchable.locations || !rootDataRefetchable.availableResources || !rootData.organization) {
@@ -191,29 +205,29 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
   const pageToolbar = (
     <StackColumn spacing={1.5}>
       <GridContainer spacing={1} sx={{ alignItems: 'center' }}>
-        <ZoneSelector rootDataRelay={rootData} onChange={handleZoneTypeChanged} />
-        <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
+        <ZoneSelector key={`zone-${zoneId ?? 'all'}`} rootDataRelay={rootData} onChange={handleZoneTypeChanged} defaultValue={zoneId} />
+        <CustomTagSelector key={`tag-${customTagId ?? 'all'}`} rootDataRelay={rootData} onChange={handleCustomTagChanged} defaultValue={customTagId} />
       </GridContainer>
 
       {organizationCustomDomain === 'skedularpubliclocations' && (
         <StackRow sx={{ gap: 1.5, flexWrap: 'wrap', alignItems: 'center' }}>
           <BodyIconTypography label="Filter those without address" />
-          <Switch defaultChecked={filterThoseWithoutCoordites} onChange={handleFilterThoseWithoutCoorditesChange} />
+          <Switch checked={filterThoseWithoutCoordites} onChange={handleFilterThoseWithoutCoorditesChange} />
 
           <BodyIconTypography label="Filter those with address" />
-          <Switch defaultChecked={filterThoseWithCoordites} onChange={handleFilterThoseWithCoorditesChange} />
+          <Switch checked={filterThoseWithCoordites} onChange={handleFilterThoseWithCoorditesChange} />
 
           <BodyIconTypography label="Filter those with emails" />
-          <Switch defaultChecked={filterThoseWithEmails} onChange={handleFilterThoseWithEmailsChange} />
+          <Switch checked={filterThoseWithEmails} onChange={handleFilterThoseWithEmailsChange} />
 
           <BodyIconTypography label="Filter those with phones" />
-          <Switch defaultChecked={filterThoseWithPhones} onChange={handleFilterThoseWithPhonesChange} />
+          <Switch checked={filterThoseWithPhones} onChange={handleFilterThoseWithPhonesChange} />
 
           <BodyIconTypography label="Filter those not contacted yet" />
-          <Switch defaultChecked={locationNotContactedYet} onChange={handleLocationNotContactedYetChange} />
+          <Switch checked={locationNotContactedYet} onChange={handleLocationNotContactedYetChange} />
 
           <BodyIconTypography label="Phone starts with" />
-          <TextField defaultValue={phoneStartWith} onChange={handlePhoneFilterChange} />
+          <TextField value={phoneStartWith} onChange={handlePhoneFilterChange} />
         </StackRow>
       )}
     </StackColumn>

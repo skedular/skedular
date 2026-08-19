@@ -583,7 +583,7 @@ const OrganizationMarketplaceSetup = ({
     router.replace(nextSearch ? `${pathname}?${nextSearch}` : pathname);
   }, [pathname, router, searchParams]);
 
-  const [productTagNameSearchText, setProductTagNameSearchText] = useState<string>('');
+  const productTagNameSearchText = searchParams.get('productTagSearch') ?? '';
   const [selectedProductTagIds, setSelectedProductTagIds] = useState<string[]>([]);
   const [selectedProductTagId, setSelectedProductTagId] = useState<null | string>(null);
   const [productTagMoreActionsAnchorEl, setProductTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
@@ -708,10 +708,15 @@ const OrganizationMarketplaceSetup = ({
   }, []);
 
   const handleProductTagsSearchTextChange = (str: string) => {
-    setProductTagNameSearchText(str);
-
-    handleRefetchProductTags(str);
+    const params = new URLSearchParams(window.location.search);
+    if (str) params.set('productTagSearch', str);
+    else params.delete('productTagSearch');
+    router.push(`?${params.toString()}`);
   };
+
+  useEffect(() => {
+    handleRefetchProductTags(productTagNameSearchText);
+  }, [handleRefetchProductTags, productTagNameSearchText]);
 
   const handleSelectedProductTagsChanged = (productTagId: string) => {
     setSelectedProductTagIds((current) => (current.includes(productTagId) ? current.filter((id) => id !== productTagId) : current.concat(productTagId)));

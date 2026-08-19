@@ -32,8 +32,9 @@ import { getOrganizationRefundBaseLink, getOrganizationSubscriptionBaseLink } fr
 import { ListGridToggle } from '@/components/listGridToggle';
 import Grid from '@mui/material/Grid';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { memo, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import dayjs from 'dayjs';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -190,6 +191,7 @@ const RefundManagement = ({
   const data = usePreloadedQuery<pageOrganizationRefunds_rootQuery>(RootQuery, queryReference);
   const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [commitResolveExternal] = useMutation<pageOrganizationRefunds_resolveMarketplaceExternalRefundReconciliationMutation>(graphql`
     mutation pageOrganizationRefunds_resolveMarketplaceExternalRefundReconciliationMutation($input: ResolveMarketplaceExternalRefundReconciliationInput!) {
       resolveMarketplaceExternalRefundReconciliation(input: $input) {
@@ -203,10 +205,15 @@ const RefundManagement = ({
     }
   `);
   const [resolved, setResolved] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [fromDate, setFromDate] = useState(() => startOfDay().subtract(1, 'month'));
-  const [toDate, setToDate] = useState(() => startOfDay());
+  const viewMode = searchParams.get('view') === 'grid' ? 'grid' : 'list';
+  const statusFilter = searchParams.get('status') ?? 'All';
+  const fromDate = useMemo(() => dayjs(searchParams.get('from') ?? startOfDay().subtract(1, 'month').format('YYYY-MM-DD')), [searchParams]);
+  const toDate = useMemo(() => dayjs(searchParams.get('to') ?? startOfDay().format('YYYY-MM-DD')), [searchParams]);
+  const updateFilterUrl = (updates: Record<string, string | undefined>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    Object.entries(updates).forEach(([key, value]) => (value ? params.set(key, value) : params.delete(key)));
+    router.push(`?${params.toString()}`);
+  };
   useEffect(() => {
     setVariables({
       ...variables,
@@ -268,7 +275,7 @@ const RefundManagement = ({
                   displayEmpty
                   size="small"
                   value={statusFilter}
-                  onChange={(event) => setStatusFilter(event.target.value as string)}
+                  onChange={(event) => updateFilterUrl({ status: event.target.value === 'All' ? undefined : (event.target.value as string) })}
                   renderValue={() => (
                     <StackRow>
                       <LeadIconTypography label="Status" />
@@ -286,11 +293,11 @@ const RefundManagement = ({
                     </MenuItem>
                   ))}
                 </DefaultSelect>
-                <DayPicker label="From" value={fromDate} onDateChanged={setFromDate} />
-                <DayPicker label="To" value={toDate} onDateChanged={setToDate} />
+                <DayPicker label="From" value={fromDate} onDateChanged={(date) => updateFilterUrl({ from: date.format('YYYY-MM-DD') })} />
+                <DayPicker label="To" value={toDate} onDateChanged={(date) => updateFilterUrl({ to: date.format('YYYY-MM-DD') })} />
               </GridContainer>
             }
-            actions={<ListGridToggle defaultValue="list" onChange={setViewMode} />}
+            actions={<ListGridToggle defaultValue={viewMode} onChange={(view) => updateFilterUrl({ view })} />}
           />
           {refunds.length === 0 ? (
             <Box sx={{ ...surfaceSx, px: 3, py: 4 }}>

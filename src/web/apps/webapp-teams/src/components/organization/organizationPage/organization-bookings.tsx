@@ -12,8 +12,8 @@ import Box from '@mui/system/Box';
 
 import { GridContainer, StackColumn } from '@skedular/ui';
 import { Dayjs } from 'dayjs';
-import { useSearchParams } from 'next/navigation';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
 
@@ -69,28 +69,42 @@ const RootQuery = graphql`
 
 const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCustomDomain, customerId, locationId, teamId, defaultStartWeek }: Props) => {
   const rootData = usePreloadedQuery<organizationBookings_rootQuery>(RootQuery, queryReference);
+  const router = useRouter();
   const [today] = useState(startOfDay());
-  const [startWeek, setStartWeek] = useState(defaultStartWeek);
-  const [endWeek, setEndWeek] = useState(endOfWeek(defaultStartWeek).add(-1, 'milliseconds'));
-  const [customerIds, setCustomerIds] = useState<string[]>(customerId ? [customerId] : []);
-  const [locationIds, setLocationIds] = useState<string[]>(locationId ? [locationId] : []);
-  const [teamIds, setTeamIds] = useState<string[]>(teamId ? [teamId] : []);
+  const startWeek = defaultStartWeek;
+  const endWeek = endOfWeek(defaultStartWeek).add(-1, 'milliseconds');
+  const customerIds = customerId ? [customerId] : [];
+  const locationIds = locationId ? [locationId] : [];
+  const teamIds = teamId ? [teamId] : [];
+
+  const updateFilterUrl = (updates: { customerId?: string; locationId?: string; teamId?: string; weekStart?: string }) => {
+    const params = new URLSearchParams(window.location.search);
+
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+
+    router.push(`?${params.toString()}`);
+  };
 
   const handleWeehChanged = (date: Dayjs) => {
-    setStartWeek(date);
-    setEndWeek(endOfWeek(date).add(-1, 'milliseconds'));
+    updateFilterUrl({ weekStart: date.format('YYYY-MM-DD') });
   };
 
   const handlCustomerChanged = (id?: string) => {
-    setCustomerIds(id ? [id] : []);
+    updateFilterUrl({ customerId: id });
   };
 
   const handlLocationChanged = (id?: string) => {
-    setLocationIds(id ? [id] : []);
+    updateFilterUrl({ locationId: id });
   };
 
   const handlTeamChanged = (id?: string) => {
-    setTeamIds(id ? [id] : []);
+    updateFilterUrl({ teamId: id });
   };
 
   if (!rootData.myTeams || !rootData.myLocations) {
@@ -115,10 +129,10 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationCu
           customerIds={customerIds}
           toolbar={
             <GridContainer spacing={1}>
-              <OrganizationUserSelector rootDataOrganizationMembersRelay={rootData} onChange={handlCustomerChanged} defaultValue={customerId} />
-              <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} defaultValue={locationId} />
-              <TeamSelector rootDataRelay={rootData} onChange={handlTeamChanged} defaultValue={teamId} />
-              <WeekRangePicker defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
+              <OrganizationUserSelector key={`user-${customerId ?? 'all'}`} rootDataOrganizationMembersRelay={rootData} onChange={handlCustomerChanged} defaultValue={customerId} />
+              <LocationSelector key={`location-${locationId ?? 'all'}`} rootDataRelay={rootData} onChange={handlLocationChanged} defaultValue={locationId} />
+              <TeamSelector key={`team-${teamId ?? 'all'}`} rootDataRelay={rootData} onChange={handlTeamChanged} defaultValue={teamId} />
+              <WeekRangePicker key={startWeek.format('YYYY-MM-DD')} defaultStartWeek={startWeek} onWeekChanged={handleWeehChanged} />
             </GridContainer>
           }
           actions={<NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />}
@@ -141,15 +155,17 @@ const ModernOrganizationWithRelay = ({ organizationCustomDomain }: RelayProps) =
   const [queryReference, loadQuery] = useQueryLoader<organizationBookings_rootQuery>(RootQuery);
   const [triggerReload, setTriggerReload] = useState(0);
   const [, startTransition] = useTransition();
-  const [startWeek] = useState(startOfWeek());
+  const defaultWeek = useMemo(() => startOfWeek(), []);
   const searchParams = useSearchParams();
   const customerId = searchParams.get('customerId');
   const locationId = searchParams.get('locationId');
   const teamId = searchParams.get('teamId');
+  const weekStart = searchParams.get('weekStart');
+  const parsedWeekStart = useMemo(() => (weekStart ? startOfWeek(weekStart) : defaultWeek), [defaultWeek, weekStart]);
 
   useEffect(() => {
-    const bookingsSearchCriteriaFrom = startWeek.toISOString();
-    const bookingsSearchCriteriaTo = endOfWeek(startWeek).add(-1, 'milliseconds').toISOString();
+    const bookingsSearchCriteriaFrom = parsedWeekStart.toISOString();
+    const bookingsSearchCriteriaTo = endOfWeek(parsedWeekStart).add(-1, 'milliseconds').toISOString();
 
     loadQuery(
       {
@@ -176,7 +192,7 @@ const ModernOrganizationWithRelay = ({ organizationCustomDomain }: RelayProps) =
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReload, startWeek, organizationCustomDomain, locationId, teamId, customerId]);
+  }, [loadQuery, triggerReload, parsedWeekStart, organizationCustomDomain, locationId, teamId, customerId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -197,7 +213,7 @@ const ModernOrganizationWithRelay = ({ organizationCustomDomain }: RelayProps) =
         customerId={customerId}
         locationId={locationId}
         teamId={teamId}
-        defaultStartWeek={startWeek}
+        defaultStartWeek={parsedWeekStart}
       />
     </ErrorBoundary>
   );

@@ -32,6 +32,7 @@ type Props = {
 type InnerProps = {
   organizationCustomDomain: string;
   onSearchTextChange: (value: string) => void;
+  searchText: string;
   queryReference: PreloadedQuery<organizationAdminZonesSectionQuery>;
 };
 
@@ -59,7 +60,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSearchTextChange, queryReference }: InnerProps) => {
+const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSearchTextChange, searchText, queryReference }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminZonesSectionQuery>(RootQuery, queryReference);
   const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
@@ -293,7 +294,7 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
         >
           <StackColumn spacing={2}>
             <StackRow sx={{ justifyContent: 'flex-end' }}>
-              <Search size="small" placeholder="Search for zones" defaultValue="" onChange={onSearchTextChange} />
+              <Search size="small" placeholder="Search for zones" defaultValue={searchText} onChange={onSearchTextChange} />
             </StackRow>
 
             {selectedZoneIds.length > 0 && (
@@ -342,8 +343,16 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
 
 const OrganizationAdminZonesSection = ({ organizationCustomDomain }: Props) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationAdminZonesSectionQuery>(RootQuery);
-  const [zoneNameSearchText, setZoneNameSearchText] = useState('');
   const [reloadKey] = useState(uuid());
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const zoneNameSearchText = searchParams.get('zoneSearch') ?? '';
+  const setZoneNameSearchText = (value: string) => {
+    const params = new URLSearchParams(window.location.search);
+    if (value) params.set('zoneSearch', value);
+    else params.delete('zoneSearch');
+    router.push(`?${params.toString()}`);
+  };
 
   useEffect(() => {
     loadQuery(
@@ -363,9 +372,9 @@ const OrganizationAdminZonesSection = ({ organizationCustomDomain }: Props) => {
 
   return (
     <OrganizationAdminZonesSectionContent
-      key={`${reloadKey}-${zoneNameSearchText}`}
       organizationCustomDomain={organizationCustomDomain}
       onSearchTextChange={setZoneNameSearchText}
+      searchText={zoneNameSearchText}
       queryReference={queryReference}
     />
   );

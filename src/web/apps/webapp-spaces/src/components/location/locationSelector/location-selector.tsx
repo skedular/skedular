@@ -37,7 +37,8 @@ const LocationSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
   );
 
   const allItems = useMemo(() => rootData.locations.edges.map(({ node }) => node), [rootData.locations]);
-  const [id, setId] = useState<string>(defaultValue ?? allId);
+  const [id, setId] = useState<string>(allId);
+  const selectedId = defaultValue && allItems.some((item) => item.id === defaultValue) ? defaultValue : allItems.some((item) => item.id === id) || id === allId ? id : allId;
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;
@@ -48,9 +49,10 @@ const LocationSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
 
   return (
     <DefaultSelect
-      value={id}
+      value={selectedId}
       onChange={handleChanged}
       size="small"
+      MenuProps={{ disablePortal: true }}
       renderValue={(selectedId) => {
         const selectedItem = allItems.find((item) => item.id === selectedId);
         if (selectedItem) {

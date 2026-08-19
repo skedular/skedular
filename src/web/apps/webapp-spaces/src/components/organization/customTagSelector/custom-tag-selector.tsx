@@ -11,11 +11,12 @@ import { graphql, useFragment } from 'react-relay';
 type Props = {
   rootDataRelay: customTagSelector_allCustomTags_query$key;
   onChange: (id?: string) => void;
+  defaultValue?: string | null;
 };
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
 
-const CustomTagSelector = ({ rootDataRelay, onChange }: Props) => {
+const CustomTagSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
   const rootData = useFragment<customTagSelector_allCustomTags_query$key>(
     graphql`
       fragment customTagSelector_allCustomTags_query on Query {
@@ -38,7 +39,7 @@ const CustomTagSelector = ({ rootDataRelay, onChange }: Props) => {
   );
 
   const allItems = useMemo(() => (rootData.organization ? rootData.organization.customTags.edges.map(({ node }) => node) : []), [rootData.organization]);
-  const [id, setId] = useState<string>(allId);
+  const [id, setId] = useState<string>(defaultValue ?? allId);
 
   const handleChanged = (event: SelectChangeEvent<unknown>) => {
     const id = event.target.value as string;

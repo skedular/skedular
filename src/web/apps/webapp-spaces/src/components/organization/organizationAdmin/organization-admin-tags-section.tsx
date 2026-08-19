@@ -32,6 +32,7 @@ type Props = {
 type InnerProps = {
   organizationCustomDomain: string;
   onSearchTextChange: (value: string) => void;
+  searchText: string;
   queryReference: PreloadedQuery<organizationAdminTagsSectionQuery>;
 };
 
@@ -59,7 +60,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearchTextChange, queryReference }: InnerProps) => {
+const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearchTextChange, searchText, queryReference }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminTagsSectionQuery>(RootQuery, queryReference);
   const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
@@ -291,7 +292,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
         >
           <StackColumn spacing={2}>
             <StackRow sx={{ justifyContent: 'flex-end' }}>
-              <Search size="small" placeholder="Search for tags" defaultValue="" onChange={onSearchTextChange} />
+              <Search size="small" placeholder="Search for tags" defaultValue={searchText} onChange={onSearchTextChange} />
             </StackRow>
 
             {selectedCustomTagIds.length > 0 && (
@@ -345,8 +346,16 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
 
 const OrganizationAdminTagsSection = ({ organizationCustomDomain }: Props) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationAdminTagsSectionQuery>(RootQuery);
-  const [customTagNameSearchText, setCustomTagNameSearchText] = useState('');
   const [reloadKey] = useState(uuid());
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const customTagNameSearchText = searchParams.get('tagSearch') ?? '';
+  const setCustomTagNameSearchText = (value: string) => {
+    const params = new URLSearchParams(window.location.search);
+    if (value) params.set('tagSearch', value);
+    else params.delete('tagSearch');
+    router.push(`?${params.toString()}`);
+  };
 
   useEffect(() => {
     loadQuery(
@@ -366,9 +375,9 @@ const OrganizationAdminTagsSection = ({ organizationCustomDomain }: Props) => {
 
   return (
     <OrganizationAdminTagsSectionContent
-      key={`${reloadKey}-${customTagNameSearchText}`}
       organizationCustomDomain={organizationCustomDomain}
       onSearchTextChange={setCustomTagNameSearchText}
+      searchText={customTagNameSearchText}
       queryReference={queryReference}
     />
   );

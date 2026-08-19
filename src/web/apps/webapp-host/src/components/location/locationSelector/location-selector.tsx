@@ -51,6 +51,7 @@ const LocationSelector = ({ rootDataRelay, onChange, defaultValue }: Props) => {
       value={id}
       onChange={handleChanged}
       size="small"
+      MenuProps={{ disablePortal: true }}
       renderValue={(selectedId) => {
         const selectedItem = allItems.find((item) => item.id === selectedId);
         if (selectedItem) {

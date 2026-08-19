@@ -21,7 +21,7 @@ import {
   StackColumn,
   StackRow,
 } from '@skedular/ui';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import OrganizationAnalyticsSectionNav, { OrganizationAnalyticsSection } from './organization-analytics-section-nav';
@@ -63,9 +63,12 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationCu
   );
 
   useIntegratedPlatform();
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const activeSection = getActiveSection(searchParams.get('section'));
-  const [locationIds, setLocationIds] = useState<string[]>([]);
+  const locationId = searchParams.get('locationId');
+  const locationIds = useMemo(() => (locationId ? [locationId] : []), [locationId]);
   const [stickyTop, setStickyTop] = useState(0);
   const locations = useMemo(() => (rootData.locations ? rootData.locations.edges.map((edge) => edge.node) : []), [rootData.locations]);
   const locationsToDisplay = useMemo(() => (locationIds.length > 0 ? locations.filter((item) => locationIds.includes(item.id)) : locations), [locationIds, locations]);
@@ -84,7 +87,11 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationCu
   }, []);
 
   const handlLocationChanged = (id?: string) => {
-    setLocationIds(id ? [id] : []);
+    const params = new URLSearchParams(searchParams.toString());
+    if (id) params.set('locationId', id);
+    else params.delete('locationId');
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   };
 
   return (
@@ -150,7 +157,7 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationCu
             <SettingsSectionCard title="Location Insights" description="Filter locations and compare booking and resource-occupancy trends for each site.">
               <StackColumn spacing={2}>
                 <StackRow sx={{ justifyContent: 'flex-start' }}>
-                  <LocationSelector rootDataRelay={rootData} onChange={handlLocationChanged} />
+                  <LocationSelector key={`location-${locationId ?? 'all'}`} rootDataRelay={rootData} onChange={handlLocationChanged} defaultValue={locationId} />
                 </StackRow>
 
                 {locationsToDisplay.length > 0 ? (

@@ -6,6 +6,7 @@ import type { organizationTeams_rootQuery } from '@/queries/__generated__/organi
 import type { organizationTeams_teams_query$key } from '@/queries/__generated__/organizationTeams_teams_query.graphql';
 import type { organizationTeams_teams_refetchableFragment } from '@/queries/__generated__/organizationTeams_teams_refetchableFragment.graphql';
 import Box from '@mui/system/Box';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, startTransition, useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
@@ -36,6 +37,9 @@ const RootQuery = graphql`
 
 const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<organizationTeams_rootQuery>(RootQuery, queryReference);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const locationId = searchParams.get('locationId');
   const [rootDataRefetchable, refetch] = useRefetchableFragment<organizationTeams_teams_refetchableFragment, organizationTeams_teams_query$key>(
     graphql`
       fragment organizationTeams_teams_query on Query
@@ -80,7 +84,7 @@ const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
     rootData,
   );
 
-  const [locationIds, setLocationIds] = useState<string[]>([]);
+  const locationIds = useMemo(() => (locationId ? [locationId] : []), [locationId]);
   const connectionIds = useMemo(() => [rootDataRefetchable.teams.__id], [rootDataRefetchable.teams]);
   const teams = useMemo(() => rootDataRefetchable.teams.edges.map((edge) => edge.node), [rootDataRefetchable.teams]);
 
@@ -103,7 +107,10 @@ const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
   useEffect(() => handleRefetch(locationIds), [handleRefetch, locationIds]);
 
   const handleLocationChanged = (id?: string) => {
-    setLocationIds(id ? [id] : []);
+    const params = new URLSearchParams(window.location.search);
+    if (id) params.set('locationId', id);
+    else params.delete('locationId');
+    router.push(`?${params.toString()}`);
   };
 
   if (!rootDataRefetchable.teams) {
@@ -111,7 +118,7 @@ const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
   }
 
   const pageActions = <NewTeamButton organizationCustomDomain={organizationCustomDomain} />;
-  const pageToolbar = <LocationSelector rootDataRelay={rootData} onChange={handleLocationChanged} />;
+  const pageToolbar = <LocationSelector key={`location-${locationId ?? 'all'}`} rootDataRelay={rootData} onChange={handleLocationChanged} defaultValue={locationId} />;
 
   return (
     <OrganizationTeamsPageShell actions={pageActions} toolbar={pageToolbar} isEmpty={teams.length === 0}>
@@ -153,11 +160,14 @@ const TeamsWithRelay = ({ organizationCustomDomain }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationTeams_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+  const locationId = searchParams.get('locationId');
 
   useEffect(() => {
     loadQuery(
       {
         organizationCustomDomain,
+        primaryLocationIds: locationId ? [locationId] : [],
         teamsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -175,7 +185,7 @@ const TeamsWithRelay = ({ organizationCustomDomain }: RelayProps) => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain, locationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
