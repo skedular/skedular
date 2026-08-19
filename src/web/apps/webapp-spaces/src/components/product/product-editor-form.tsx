@@ -7,7 +7,6 @@ import {
   SingleChoiceCurrency,
   SingleChoiceProductPricingBillingMode,
   SingleChoiceProductPricingCadence,
-  SingleChoiceProductPricingCancellationType,
   SingleChoiceProductType,
 } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
@@ -23,13 +22,22 @@ import {
 } from '@/components/product/product-editor-shared';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import Box from '@mui/material/Box';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import {
   BodyIconTypography,
   defaultButtonStyle,
@@ -48,7 +56,9 @@ import {
 } from '@skedular/ui';
 import { Switches, TextField } from 'mui-rff';
 import { memo, useEffect, useMemo, useState } from 'react';
+import type { PropsWithChildren } from 'react';
 import Image from 'next/image';
+import { v7 as uuid } from 'uuid';
 
 type Props = {
   mode: 'add' | 'edit';
@@ -80,6 +90,59 @@ type ProductEditorStep = {
   id: (typeof baseSteps)[number]['id'];
   title: string;
   subtitle: string;
+};
+
+type EditorSectionProps = {
+  title: string;
+  description: string;
+  summary: string;
+  expanded: boolean;
+  onChange: () => void;
+};
+
+const EditorSection = ({ title, description, summary, expanded, onChange, children }: PropsWithChildren<EditorSectionProps>) => (
+  <Accordion
+    disableGutters
+    elevation={0}
+    expanded={expanded}
+    onChange={onChange}
+    sx={{
+      border: 1,
+      borderColor: 'divider',
+      borderRadius: '16px !important',
+      overflow: 'hidden',
+      backgroundColor: 'background.paper',
+      '&::before': { display: 'none' },
+    }}
+  >
+    <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />} sx={{ px: 2.5, py: 0.75, minHeight: 72, '& .MuiAccordionSummary-content': { my: 1 } }}>
+      <StackColumn spacing={0.35} sx={{ minWidth: 0 }}>
+        <LeadIconTypography label={title} />
+        <SmallIconTypography label={expanded ? description : summary} />
+      </StackColumn>
+    </AccordionSummary>
+    <AccordionDetails sx={{ borderTop: 1, borderColor: 'divider', p: { xs: 2, sm: 2.5 } }}>
+      <StackColumn spacing={2}>{children}</StackColumn>
+    </AccordionDetails>
+  </Accordion>
+);
+
+const formatDurationSummary = (minutesValue: string) => {
+  const minutes = Number(minutesValue);
+  if (!minutesValue || !Number.isFinite(minutes)) return 'Not set';
+  if (minutes % 60 === 0) return `${minutes / 60}h`;
+  return `${minutes}m`;
+};
+
+const formatOfferPrice = (price: string, currency: string) => {
+  const numericPrice = Number(price);
+  if (!price || !Number.isFinite(numericPrice)) return 'Price not set';
+
+  try {
+    return new Intl.NumberFormat('en', { style: 'currency', currency, maximumFractionDigits: 2 }).format(numericPrice);
+  } catch {
+    return `${currency || ''} ${numericPrice.toLocaleString('en')}`.trim();
+  }
 };
 
 const prettifyEnum = (value?: string | null) =>
@@ -176,8 +239,14 @@ const ProductEditorForm = ({
   paletteMode,
 }: Props) => {
   const [activeStep, setActiveStep] = useState<ProductEditorStep['id']>('basics');
+  const [expandedBasicsSection, setExpandedBasicsSection] = useState('presentation');
   const [expandedOfferId, setExpandedOfferId] = useState<string | false>(values.pricingOptions[0]?.id ?? false);
+  const [expandedOfferSection, setExpandedOfferSection] = useState('offer-basics');
+  const [offerActionsAnchor, setOfferActionsAnchor] = useState<HTMLElement | null>(null);
+  const [offerActionsIndex, setOfferActionsIndex] = useState<number | null>(null);
   const isEventProduct = isEventType(values?.type);
+  const previewImage = primaryFeatureImage ?? featureImages[0] ?? null;
+  const previewImageUrl = previewImage?.thumbnail?.url ?? previewImage?.original?.url ?? '';
   const validationItems = useMemo(() => Array.from(new Set(summarizeErrors(errors))).slice(0, 8), [errors]);
   const pricingOptions = values?.pricingOptions ?? [];
   const activeOfferIndex = Math.max(
@@ -223,6 +292,40 @@ const ProductEditorForm = ({
     const nextPricingOptions = [...(values?.pricingOptions ?? []), nextOffer];
     form.change('pricingOptions', nextPricingOptions);
     setExpandedOfferId(nextOffer.id);
+    setExpandedOfferSection('offer-basics');
+  };
+
+  const closeOfferActions = () => {
+    setOfferActionsAnchor(null);
+    setOfferActionsIndex(null);
+  };
+
+  const duplicateOffer = () => {
+    if (offerActionsIndex === null) return;
+    const source = pricingOptions[offerActionsIndex];
+    if (!source) return;
+
+    const duplicate = {
+      ...source,
+      id: uuid(),
+      title: source.title ? `${source.title} copy` : null,
+      acceptedPaymentMethods: [...source.acceptedPaymentMethods],
+      availableDays: [...source.availableDays],
+      cancellationRefundRules: source.cancellationRefundRules.map((rule) => ({ ...rule })),
+    };
+    const nextPricingOptions = [...pricingOptions, duplicate];
+    form.change('pricingOptions', nextPricingOptions);
+    setExpandedOfferId(duplicate.id);
+    setExpandedOfferSection('offer-basics');
+    closeOfferActions();
+  };
+
+  const removeOffer = () => {
+    if (offerActionsIndex === null || pricingOptions.length <= 1) return;
+    const nextPricingOptions = pricingOptions.filter((_, index) => index !== offerActionsIndex);
+    form.change('pricingOptions', nextPricingOptions);
+    setExpandedOfferId(nextPricingOptions[0]?.id ?? false);
+    closeOfferActions();
   };
 
   const handleCreateClick = () => {
@@ -239,21 +342,30 @@ const ProductEditorForm = ({
 
   const renderOfferEditor = (pricingOption: PricingOptionForm, index: number) => (
     <StackColumn spacing={2}>
-      <SettingsSectionCard title="Offer Basics" description="Set the label customers will understand first, then set cadence and price.">
+      <EditorSection
+        title="Offer basics"
+        description="Set the customer-facing name and price."
+        summary={`${pricingOption.title?.trim() || 'Untitled offer'} · ${pricingOption.price || 'No price'}`}
+        expanded={expandedOfferSection === 'offer-basics'}
+        onChange={() => setExpandedOfferSection(expandedOfferSection === 'offer-basics' ? '' : 'offer-basics')}
+      >
         <ListingMetadata fields={['title', 'subTitle']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
 
         <FormFieldLabel label="Price">
           <TextField name={`pricingOptions[${index}].price`} required />
         </FormFieldLabel>
-      </SettingsSectionCard>
+      </EditorSection>
 
-      <SettingsSectionCard
+      <EditorSection
         title="Fulfillment"
         description={
           pricingOption.fulfillmentType === 'ENTITLEMENT'
             ? 'Credit entitlements are purchased once and provide credits customers can use later.'
             : 'Reservations are purchased against a booking cadence and reserve resources or time.'
         }
+        summary={`${prettifyEnum(pricingOption.fulfillmentType)} · ${prettifyEnum(pricingOption.cadence)}`}
+        expanded={expandedOfferSection === 'fulfillment'}
+        onChange={() => setExpandedOfferSection(expandedOfferSection === 'fulfillment' ? '' : 'fulfillment')}
       >
         <StackColumn spacing={2}>
           <FormFieldLabel label="Fulfillment type">
@@ -285,15 +397,24 @@ const ProductEditorForm = ({
               </FormFieldLabel>
             </StackRow>
           ) : (
-            <FormFieldLabel label="Cadence">
-              <SingleChoiceProductPricingCadence rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].cadence`} required />
-            </FormFieldLabel>
+            <StackColumn spacing={0.75}>
+              <FormFieldLabel label="Cadence">
+                <SingleChoiceProductPricingCadence rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].cadence`} required />
+              </FormFieldLabel>
+              <SmallIconTypography label="Choose One time for a single purchase, or a repeating cadence such as Monthly. Auto-renewal is configured separately in Payments." />
+            </StackColumn>
           )}
         </StackColumn>
-      </SettingsSectionCard>
+      </EditorSection>
 
       {pricingOption.fulfillmentType === 'RESERVATION' ? (
-        <SettingsSectionCard title="Booking Rules" description="Define how much of the product is reserved each time this offer is purchased.">
+        <EditorSection
+          title="Booking rules"
+          description="Define availability, quantity, and booking duration."
+          summary={`${pricingOption.availableDays.length || 7} days · ${pricingOption.numberOfResourcesToBook || 1} resource${pricingOption.numberOfResourcesToBook === '1' ? '' : 's'} · ${formatDurationSummary(pricingOption.minDurationMinutes)}–${formatDurationSummary(pricingOption.maxDurationMinutes)}`}
+          expanded={expandedOfferSection === 'booking-rules'}
+          onChange={() => setExpandedOfferSection(expandedOfferSection === 'booking-rules' ? '' : 'booking-rules')}
+        >
           <CalendarDayPicker availableDays={pricingOption.availableDays} onChange={(availableDays) => changeNestedField(`pricingOptions[${index}].availableDays`, availableDays)} />
           <FormFieldLabel label="Number of Resources to Book">
             <TextField
@@ -303,18 +424,20 @@ const ProductEditorForm = ({
               helperText={isEventProduct ? 'Ignored for event products. The full matching resource set will be booked.' : undefined}
             />
           </FormFieldLabel>
-          <DurationInput
-            label="Minimum booking duration"
-            value={pricingOption.minDurationMinutes}
-            onChange={(value) => changeNestedField(`pricingOptions[${index}].minDurationMinutes`, value)}
-            required
-          />
-          <DurationInput
-            label="Maximum booking duration"
-            value={pricingOption.maxDurationMinutes}
-            onChange={(value) => changeNestedField(`pricingOptions[${index}].maxDurationMinutes`, value)}
-            required
-          />
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+            <DurationInput
+              label="Minimum booking duration"
+              value={pricingOption.minDurationMinutes}
+              onChange={(value) => changeNestedField(`pricingOptions[${index}].minDurationMinutes`, value)}
+              required
+            />
+            <DurationInput
+              label="Maximum booking duration"
+              value={pricingOption.maxDurationMinutes}
+              onChange={(value) => changeNestedField(`pricingOptions[${index}].maxDurationMinutes`, value)}
+              required
+            />
+          </Box>
           {pricingOption.cadence === 'WEEKLY' ? (
             <FormFieldLabel label="Required selected days per week">
               <TextField
@@ -327,45 +450,48 @@ const ProductEditorForm = ({
             </FormFieldLabel>
           ) : null}
           {pricingOption.cadence === 'WEEKLY' ? <SmallIconTypography label="Leave this field empty to keep the existing unrestricted weekly booking behavior." /> : null}
-        </SettingsSectionCard>
+        </EditorSection>
       ) : null}
 
-      <SettingsSectionCard title="Payments" description="Describe how this offer is paid for and which payment paths you support.">
-        <FormFieldLabel>
-          <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Is price tax inclusive?', value: 'isTaxInclusive' }} />
-        </FormFieldLabel>
-        {!isEventProduct ? (
+      <EditorSection
+        title="Payments"
+        description="Choose billing behavior and accepted payment methods."
+        summary={`${pricingOption.acceptedPaymentMethods.length || 0} payment method${pricingOption.acceptedPaymentMethods.length === 1 ? '' : 's'} · ${prettifyEnum(pricingOption.billingMode)}`}
+        expanded={expandedOfferSection === 'payments'}
+        onChange={() => setExpandedOfferSection(expandedOfferSection === 'payments' ? '' : 'payments')}
+      >
+        <StackRow sx={{ gap: 3, flexWrap: 'wrap' }}>
           <FormFieldLabel>
-            <Switches
-              name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`}
-              data={{ label: 'Supports subscription auto renewal?', value: 'supportsSubscriptionAutoRenewal' }}
-            />
+            <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Price includes tax', value: 'isTaxInclusive' }} />
           </FormFieldLabel>
-        ) : null}
-        <FormFieldLabel label="Accepted Payment Methods">
-          <MultipleChoicesPaymentMethodTypes rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].acceptedPaymentMethods`} required />
-        </FormFieldLabel>
-        <FormFieldLabel label="Billing Mode">
-          <SingleChoiceProductPricingBillingMode rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].billingMode`} required />
-        </FormFieldLabel>
-      </SettingsSectionCard>
+          {!isEventProduct ? (
+            <FormFieldLabel>
+              <Switches name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`} data={{ label: 'Auto-renew subscription', value: 'supportsSubscriptionAutoRenewal' }} />
+            </FormFieldLabel>
+          ) : null}
+        </StackRow>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+          <FormFieldLabel label="Accepted payment methods">
+            <MultipleChoicesPaymentMethodTypes rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].acceptedPaymentMethods`} required />
+          </FormFieldLabel>
+          <FormFieldLabel label="Billing mode">
+            <SingleChoiceProductPricingBillingMode rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].billingMode`} required />
+          </FormFieldLabel>
+        </Box>
+      </EditorSection>
 
-      <SettingsSectionCard title="Cancellation" description="Set the customer-facing refund policy separately from the purchase price.">
-        <Card variant="outlined" sx={{ borderRadius: 2, backgroundColor: 'action.hover' }}>
-          <CardContent>
-            <StackColumn spacing={1}>
-              <LeadIconTypography label="Policy Summary" />
-              <BodyIconTypography label={getCancellationPolicyDescription(pricingOption.cancellationPolicyType)} />
-              <SmallIconTypography label={getCancellationPolicyPreview(pricingOption)} />
-            </StackColumn>
-          </CardContent>
-        </Card>
-
-        <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
+      <EditorSection
+        title="Cancellation"
+        description="Choose the refund policy customers will see."
+        summary={getCancellationPolicyPreview(pricingOption)}
+        expanded={expandedOfferSection === 'cancellation'}
+        onChange={() => setExpandedOfferSection(expandedOfferSection === 'cancellation' ? '' : 'cancellation')}
+      >
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 1.25 }}>
           {[
-            { type: 'NO_CANCELLATION', label: 'No Refunds' },
-            { type: 'FULL_REFUND_BEFORE_CUTOFF', label: 'Full Refund Before Cutoff' },
-            { type: 'TIERED_REFUND', label: 'Tiered Refunds' },
+            { type: 'NO_CANCELLATION', label: 'No refunds', description: 'All purchases are final.' },
+            { type: 'FULL_REFUND_BEFORE_CUTOFF', label: 'Full refund', description: 'Refund before one cutoff.' },
+            { type: 'TIERED_REFUND', label: 'Tiered refunds', description: 'Refund varies by notice.' },
           ].map((policy) => (
             <Button
               key={policy.type}
@@ -386,34 +512,18 @@ const ProductEditorForm = ({
                   changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, [createCancellationRefundRule('100')]);
                 }
               }}
-              sx={{ textTransform: 'none' }}
+              sx={{ textTransform: 'none', justifyContent: 'flex-start', textAlign: 'left', borderRadius: 2.5, px: 1.5, py: 1.25 }}
             >
-              {policy.label}
+              <StackColumn spacing={0.25}>
+                <BodyIconTypography label={policy.label} />
+                <SmallIconTypography label={policy.description} />
+              </StackColumn>
             </Button>
           ))}
-        </StackRow>
-
-        <FormFieldLabel label="Cancellation Policy">
-          <SingleChoiceProductPricingCancellationType
-            rootDataRelay={rootDataRelay as never}
-            name={`pricingOptions[${index}].cancellationPolicyType`}
-            required
-            fieldProps={{
-              onChange: (event: { target: { value: string } }) => {
-                const nextPolicy = event.target.value;
-                changeNestedField(`pricingOptions[${index}].cancellationPolicyType`, nextPolicy);
-
-                if (nextPolicy === 'NO_CANCELLATION') {
-                  changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, []);
-                } else if (nextPolicy === 'FULL_REFUND_BEFORE_CUTOFF' && (pricingOption.cancellationRefundRules?.length ?? 0) === 0) {
-                  changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, [createCancellationRefundRule('100')]);
-                } else if (nextPolicy === 'TIERED_REFUND' && (pricingOption.cancellationRefundRules?.length ?? 0) === 0) {
-                  changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, [createCancellationRefundRule('100')]);
-                }
-              },
-            }}
-          />
-        </FormFieldLabel>
+        </Box>
+        <Box sx={{ borderRadius: 2, backgroundColor: 'action.hover', px: 1.5, py: 1.25 }}>
+          <SmallIconTypography label={getCancellationPolicyDescription(pricingOption.cancellationPolicyType)} />
+        </Box>
         {pricingOption.cancellationPolicyType === 'FULL_REFUND_BEFORE_CUTOFF' ? (
           <Card variant="outlined" sx={{ borderRadius: 2 }}>
             <CardContent>
@@ -460,18 +570,17 @@ const ProductEditorForm = ({
                         </Button>
                       ) : null}
                     </StackRow>
-                    <DurationInput
-                      label="Refund timing before booking or renewal"
-                      value={rule.minutesBefore}
-                      onChange={(value) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`, value)}
-                      required
-                    />
-                    <FormFieldLabel label="Refund Percentage">
-                      <TextField
-                        name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].refundPercentage`}
-                        helperText="The refund percentage customers receive within this timing window."
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 2 }}>
+                      <DurationInput
+                        label="Refund timing before booking or renewal"
+                        value={rule.minutesBefore}
+                        onChange={(value) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`, value)}
+                        required
                       />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Refund percentage">
+                        <TextField name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].refundPercentage`} helperText="0–100%" />
+                      </FormFieldLabel>
+                    </Box>
                     <SmallIconTypography
                       label={
                         rule.minutesBefore?.trim() && rule.refundPercentage?.trim()
@@ -495,187 +604,323 @@ const ProductEditorForm = ({
             </StackRow>
           </StackColumn>
         ) : null}
-      </SettingsSectionCard>
+      </EditorSection>
 
-      <SettingsSectionCard title="Advanced" description="Keep the operational lock windows here so the commercial setup stays readable.">
-        <DurationInput
-          label="Maximum resource lock duration paid via card"
-          value={pricingOption.maxAllowedResourcesLockTimePaidViaCard}
-          onChange={(value) => changeNestedField(`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`, value)}
-          required
-        />
-        <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Bank Transfer (days)">
-          <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} required />
-        </FormFieldLabel>
-      </SettingsSectionCard>
+      <EditorSection
+        title="Advanced"
+        description="Set how long resources remain reserved while payment completes."
+        summary={`Card ${formatDurationSummary(pricingOption.maxAllowedResourcesLockTimePaidViaCard)} · Bank transfer ${pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer || 'not set'} days`}
+        expanded={expandedOfferSection === 'advanced'}
+        onChange={() => setExpandedOfferSection(expandedOfferSection === 'advanced' ? '' : 'advanced')}
+      >
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+          <DurationInput
+            label="Card payment lock window"
+            value={pricingOption.maxAllowedResourcesLockTimePaidViaCard}
+            onChange={(value) => changeNestedField(`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`, value)}
+            required
+          />
+          <FormFieldLabel label="Bank transfer lock window (days)">
+            <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} required />
+          </FormFieldLabel>
+        </Box>
+      </EditorSection>
     </StackColumn>
   );
 
-  const renderBasics = () => (
-    <StackColumn spacing={2}>
-      <SettingsSectionCard title="Product Media" description="Set the visual identity first. The cover image anchors the whole product.">
-        <FormFieldLabel label="Feature Images">
-          <StackColumn>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                gap: 2,
-              }}
-            >
-              {featureImages.map((image, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    position: 'relative',
-                    borderRadius: 2,
-                    overflow: 'hidden',
-                    border: 1,
-                    borderColor: 'divider',
-                    backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                    minHeight: 140,
-                  }}
-                >
-                  <Image width={800} height={600} unoptimized alt="" src={image.original?.url ?? image.thumbnail?.url ?? ''} style={{ width: '100%', height: 'auto' }} />
-                  <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                    <IconButton size="small" aria-label="Remove feature image" onClick={() => onRemoveFeatureImage(image)}>
+  const renderBasics = () => {
+    const coverImage = primaryFeatureImage ?? featureImages[0] ?? null;
+    const coverImageUrl = coverImage?.original?.url ?? coverImage?.thumbnail?.url ?? '';
+
+    return (
+      <StackColumn spacing={2}>
+        <StackColumn spacing={0.5} sx={{ px: { xs: 0, sm: 1 } }}>
+          <SectionIconTypography label="Product basics" />
+          <SmallIconTypography label="Shape how this product looks to customers, then add the details that control where it appears." />
+        </StackColumn>
+
+        <EditorSection
+          title="Product presentation"
+          description="Pair a strong cover image with clear customer-facing copy."
+          summary={`${values.title?.trim() || 'Untitled product'} · ${featureImages.length} image${featureImages.length === 1 ? '' : 's'}`}
+          expanded={expandedBasicsSection === 'presentation'}
+          onChange={() => setExpandedBasicsSection(expandedBasicsSection === 'presentation' ? '' : 'presentation')}
+        >
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(280px, 0.9fr) minmax(0, 1.1fr)' }, gap: { xs: 2.5, md: 3 }, alignItems: 'start' }}>
+            <StackColumn spacing={1.5}>
+              <StackColumn spacing={0.25}>
+                <LeadIconTypography label="Cover and gallery" />
+                <SmallIconTypography label="Use a bright, landscape image that helps customers recognize the space quickly." />
+              </StackColumn>
+
+              <Box
+                sx={{
+                  position: 'relative',
+                  aspectRatio: '16 / 9',
+                  overflow: 'hidden',
+                  border: 1,
+                  borderColor: coverImageUrl ? 'divider' : 'transparent',
+                  borderRadius: 3,
+                  backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.100',
+                  backgroundImage: coverImageUrl ? undefined : 'linear-gradient(135deg, rgba(104, 211, 126, 0.18), rgba(104, 211, 126, 0.04))',
+                }}
+              >
+                {coverImageUrl ? (
+                  <>
+                    <Image fill unoptimized alt="Product cover" src={coverImageUrl} sizes="(max-width: 900px) 100vw, 40vw" style={{ objectFit: 'cover' }} />
+                    <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.58))' }} />
+                    <Chip size="small" color="success" label="Cover image" sx={{ position: 'absolute', left: 12, bottom: 12 }} />
+                    <IconButton
+                      size="small"
+                      aria-label="Remove cover image"
+                      onClick={() => coverImage && onRemoveFeatureImage(coverImage)}
+                      sx={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 10,
+                        color: 'common.white',
+                        backgroundColor: 'rgba(0,0,0,0.48)',
+                        '&:hover': { backgroundColor: 'rgba(0,0,0,0.68)' },
+                      }}
+                    >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
-                  </StackRow>
-                  <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                    {primaryFeatureImage?.original?.url === image.original?.url ? (
-                      <Chip size="small" color="success" label="Cover image" />
-                    ) : (
-                      <Button variant="contained" size="small" onClick={() => onSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                        Make cover
-                      </Button>
-                    )}
-                  </StackRow>
+                  </>
+                ) : (
+                  <StackColumn spacing={0.75} sx={{ position: 'absolute', inset: 0, alignItems: 'center', justifyContent: 'center', textAlign: 'center', px: 3 }}>
+                    <AddPhotoAlternateRoundedIcon color="success" sx={{ fontSize: 42 }} />
+                    <LeadIconTypography label="Add a cover image" />
+                    <SmallIconTypography label="Landscape images work best." />
+                  </StackColumn>
+                )}
+              </Box>
+
+              {featureImages.length > 1 ? (
+                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(92px, 1fr))', gap: 1 }}>
+                  {featureImages.map((image, index) => {
+                    const imageUrl = image.thumbnail?.url ?? image.original?.url ?? '';
+                    const isCover = coverImage?.original?.url === image.original?.url;
+                    if (!imageUrl) return null;
+
+                    return (
+                      <Box
+                        key={image.original?.url ?? image.thumbnail?.url ?? index}
+                        component="button"
+                        type="button"
+                        aria-label={isCover ? 'Current cover image' : 'Make image the cover'}
+                        onClick={() => onSetPrimaryFeatureImage(image)}
+                        sx={{
+                          position: 'relative',
+                          aspectRatio: '4 / 3',
+                          overflow: 'hidden',
+                          borderRadius: 2,
+                          border: 2,
+                          borderColor: isCover ? 'success.main' : 'divider',
+                          p: 0,
+                          cursor: 'pointer',
+                          backgroundColor: 'background.paper',
+                        }}
+                      >
+                        <Image fill unoptimized alt="" src={imageUrl} sizes="120px" style={{ objectFit: 'cover' }} />
+                        {isCover ? (
+                          <CheckCircleRoundedIcon color="success" sx={{ position: 'absolute', top: 5, right: 5, backgroundColor: 'background.paper', borderRadius: '50%' }} />
+                        ) : null}
+                      </Box>
+                    );
+                  })}
                 </Box>
-              ))}
+              ) : null}
+
+              <Box
+                sx={{
+                  position: 'relative',
+                  overflow: 'hidden',
+                  border: 1,
+                  borderStyle: 'dashed',
+                  borderColor: 'success.main',
+                  borderRadius: 2.5,
+                  p: 2,
+                  backgroundColor: 'action.hover',
+                  '& .MuiFormControl-root': { position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, zIndex: 1 },
+                  '& .MuiInput-root, & input': { width: '100%', height: '100%', cursor: 'pointer' },
+                }}
+              >
+                <StackRow sx={{ alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                  <AddPhotoAlternateRoundedIcon color="success" />
+                  <BodyIconTypography label={featureImages.length === 0 ? 'Choose a cover image' : 'Add another image'} />
+                </StackRow>
+                <ImageFileUploaderWithCropper onUploadCompleted={onUploadCompleted} />
+              </Box>
+            </StackColumn>
+
+            <StackColumn spacing={2}>
+              <StackColumn spacing={0.25}>
+                <LeadIconTypography label="Customer-facing details" />
+                <SmallIconTypography label="Use concise language customers can scan before choosing an offer." />
+              </StackColumn>
+              <FormFieldLabel label="Title" required={requiredFields.title}>
+                <TextField name="title" required={requiredFields.title} placeholder="For example, Premium Meeting Room" />
+              </FormFieldLabel>
+              <FormFieldLabel label="Subtitle" required={requiredFields.subTitle}>
+                <TextField name="subTitle" required={requiredFields.subTitle} multiline rows={2} placeholder="A short reason to choose this product" />
+              </FormFieldLabel>
+              <FormFieldLabel label="Included features" required={requiredFields.includedFeatures}>
+                <TextField
+                  name="includedFeatures"
+                  required={requiredFields.includedFeatures}
+                  multiline
+                  rows={4}
+                  placeholder="Describe the equipment, services, or access included"
+                  helperText="Keep this easy to scan. Separate longer lists with commas or line breaks."
+                />
+              </FormFieldLabel>
+            </StackColumn>
+          </Box>
+        </EditorSection>
+
+        <EditorSection
+          title="Classification"
+          description="Control how this product behaves and where customers discover it."
+          summary={`${prettifyEnum(values.type)} · ${values.currency || 'No currency'} · ${values.productTagIds.length} tag${values.productTagIds.length === 1 ? '' : 's'}`}
+          expanded={expandedBasicsSection === 'classification'}
+          onChange={() => setExpandedBasicsSection(expandedBasicsSection === 'classification' ? '' : 'classification')}
+        >
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 2 }}>
+            <FormFieldLabel label="Product type">
+              <SingleChoiceProductType rootDataRelay={rootDataRelay as never} name="type" required={requiredFields.type} />
+            </FormFieldLabel>
+            <FormFieldLabel label="Currency">
+              <SingleChoiceCurrency rootDataRelay={rootDataRelay as never} name="currency" required={requiredFields.currency} />
+            </FormFieldLabel>
+          </Box>
+
+          {isEventProduct ? (
+            <Box sx={{ borderRadius: 2, backgroundColor: 'action.hover', p: 1.5 }}>
+              <BodyIconTypography label="Event products support explicit-time bookings only. Recurring plan cadences are unavailable, and the full matching tagged resource set is reserved." />
             </Box>
-            <ImageFileUploaderWithCropper onUploadCompleted={onUploadCompleted} />
-          </StackColumn>
-        </FormFieldLabel>
-      </SettingsSectionCard>
+          ) : null}
 
-      <SettingsSectionCard title="Customer-Facing Details" description="Write the product name, subtitle, and included features the way customers will read them.">
-        <ListingMetadata fields={['title', 'subTitle', 'includedFeatures']} requiredFields={requiredFields} />
-      </SettingsSectionCard>
+          <FormFieldLabel label="Product tags">
+            <MultipleChoicesProductTags
+              rootDataRelay={rootDataRelay as never}
+              name="productTagIds"
+              required={requiredFields.productTagIds}
+              organizationCustomDomain={organizationCustomDomain}
+            />
+          </FormFieldLabel>
 
-      <SettingsSectionCard title="Classification" description="Choose the product type, currency, tags, and amenities that control how this product behaves.">
-        <FormFieldLabel label="Type">
-          <SingleChoiceProductType rootDataRelay={rootDataRelay as never} name="type" required={requiredFields.type} />
-        </FormFieldLabel>
-        {isEventProduct ? (
-          <BodyIconTypography
-            label="Event products support explicit-time bookings only. Recurring plan cadences are not allowed, and the full matching tagged resource set will be reserved."
-            sx={{ opacity: 0.78 }}
-          />
-        ) : null}
-
-        <FormFieldLabel label="Currency">
-          <SingleChoiceCurrency rootDataRelay={rootDataRelay as never} name="currency" required={requiredFields.currency} />
-        </FormFieldLabel>
-
-        <FormFieldLabel label="Product Tags">
-          <MultipleChoicesProductTags
-            rootDataRelay={rootDataRelay as never}
-            name="productTagIds"
-            required={requiredFields.productTagIds}
-            organizationCustomDomain={organizationCustomDomain}
-          />
-        </FormFieldLabel>
-
-        <FormFieldLabel label="Amenities">
-          <MultipleChoicesAmenities rootDataRelay={rootDataRelay as never} name="amenityIds" required={requiredFields.amenityIds} />
-        </FormFieldLabel>
-      </SettingsSectionCard>
-    </StackColumn>
-  );
+          <FormFieldLabel label="Amenities">
+            <MultipleChoicesAmenities rootDataRelay={rootDataRelay as never} name="amenityIds" required={requiredFields.amenityIds} />
+          </FormFieldLabel>
+        </EditorSection>
+      </StackColumn>
+    );
+  };
 
   const renderOffers = () => (
     <StackColumn spacing={2}>
-      <SettingsSectionCard
-        title="Offer Setup"
-        description="Choose or create one offer at a time. This page is slower on purpose so the pricing, payments, and cancellation rules stay readable."
-      >
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '320px minmax(0, 1fr)' }, gap: 2 }}>
-          <Card variant="outlined" sx={{ borderRadius: 2 }}>
-            <CardContent>
-              <StackColumn spacing={1.5}>
-                <StackColumn spacing={0.5}>
-                  <LeadIconTypography label="Offer List" />
-                  <SmallIconTypography label="Select one offer to edit. Add new ones only when the commercial model is genuinely different." />
-                </StackColumn>
-                <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
-                  <Button variant="outlined" onClick={() => addOffer('ONE_TIME')}>
-                    Add One-Time Offer
-                  </Button>
-                  {!isEventProduct ? (
-                    <Button variant="outlined" onClick={() => addOffer('MONTHLY')}>
-                      Add Recurring Offer
-                    </Button>
-                  ) : null}
-                </StackRow>
+      <StackColumn spacing={0.5} sx={{ px: { xs: 0, sm: 1 } }}>
+        <SectionIconTypography label="Offers" />
+        <SmallIconTypography label="Configure one commercial offer at a time. Add another only when the price, cadence, or booking rules are genuinely different." />
+      </StackColumn>
 
-                {pricingOptions.map((pricingOption, index) => (
-                  <Button
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '250px minmax(0, 1fr)' }, alignItems: 'start', gap: { xs: 2, lg: 3 } }}>
+        <Card variant="outlined" sx={{ borderRadius: 3, position: { lg: 'sticky' }, top: { lg: 24 }, boxShadow: 'none', backgroundColor: 'background.paper' }}>
+          <CardContent sx={{ p: 1.5 }}>
+            <StackColumn spacing={1.25}>
+              <StackRow sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                <LeadIconTypography label="Offers" />
+                <Chip size="small" label={`${pricingOptions.length}`} />
+              </StackRow>
+              <SmallIconTypography label="Manage the purchase options available for this product." />
+              <Button fullWidth variant="outlined" startIcon={<AddRoundedIcon />} onClick={() => addOffer('ONE_TIME')} sx={{ textTransform: 'none' }}>
+                Add offer
+              </Button>
+
+              {pricingOptions.map((pricingOption, index) => {
+                const selected = expandedOfferId === pricingOption.id;
+                return (
+                  <Box
                     key={pricingOption.id}
-                    variant={expandedOfferId === pricingOption.id ? 'contained' : 'outlined'}
-                    onClick={() => setExpandedOfferId(pricingOption.id)}
-                    sx={{ justifyContent: 'space-between', textTransform: 'none', px: 1.5, py: 1.25 }}
+                    sx={{
+                      position: 'relative',
+                      border: 1,
+                      borderLeft: 3,
+                      borderColor: selected ? 'success.main' : 'divider',
+                      borderRadius: 2.5,
+                      overflow: 'hidden',
+                      backgroundColor: selected ? 'action.selected' : 'transparent',
+                    }}
                   >
-                    <Box sx={{ textAlign: 'left' }}>
-                      <OfferSummary pricingOption={pricingOption} index={index} />
-                    </Box>
-                    <Chip size="small" label={prettifyEnum(pricingOption.cadence)} />
-                  </Button>
-                ))}
-              </StackColumn>
-            </CardContent>
-          </Card>
-
-          <StackColumn spacing={2}>
-            {activeOffer ? (
-              <>
-                <Card variant="outlined" sx={{ borderRadius: 2, backgroundColor: 'action.hover' }}>
-                  <CardContent>
-                    <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
-                      <StackColumn spacing={0.5}>
-                        <LeadIconTypography label={activeOffer.title?.trim() || `Offer ${activeOfferIndex + 1}`} />
-                        <SmallIconTypography label="Work through this offer section by section. The pricing logic is isolated here from the rest of the product." />
+                    <Button
+                      variant="text"
+                      fullWidth
+                      onClick={() => {
+                        setExpandedOfferId(pricingOption.id);
+                        setExpandedOfferSection('offer-basics');
+                      }}
+                      sx={{ display: 'block', textAlign: 'left', textTransform: 'none', color: 'text.primary', borderRadius: 0, px: 1.25, py: 1.25, pr: 4.5 }}
+                    >
+                      <StackColumn spacing={0.75}>
+                        <StackRow sx={{ alignItems: 'center', gap: 0.75 }}>
+                          {selected ? <CheckCircleRoundedIcon color="success" fontSize="small" /> : null}
+                          <LeadIconTypography label={pricingOption.title?.trim() || `Offer ${index + 1}`} />
+                        </StackRow>
+                        <BodyIconTypography label={formatOfferPrice(pricingOption.price, values.currency)} />
+                        <StackRow sx={{ gap: 0.5, flexWrap: 'wrap' }}>
+                          <Chip size="small" label={prettifyEnum(pricingOption.cadence)} />
+                          <Chip size="small" label={`${pricingOption.numberOfResourcesToBook || 1} resource${pricingOption.numberOfResourcesToBook === '1' ? '' : 's'}`} />
+                        </StackRow>
+                        <SmallIconTypography label={prettifyEnum(pricingOption.billingMode)} />
                       </StackColumn>
-                      {pricingOptions.length > 1 ? (
-                        <Button
-                          color="error"
-                          onClick={() => {
-                            const nextPricingOptions = pricingOptions.filter((_, itemIndex) => itemIndex !== activeOfferIndex);
-                            form.change('pricingOptions', nextPricingOptions);
-                            setExpandedOfferId(nextPricingOptions[0]?.id ?? false);
-                          }}
-                        >
-                          Remove Offer
-                        </Button>
-                      ) : null}
-                    </StackRow>
-                  </CardContent>
-                </Card>
-                {renderOfferEditor(activeOffer, activeOfferIndex)}
-              </>
-            ) : (
-              <Card variant="outlined" sx={{ borderRadius: 2 }}>
-                <CardContent>
-                  <StackColumn spacing={1}>
-                    <LeadIconTypography label="No Offer Selected" />
-                    <SmallIconTypography label="Create or select an offer from the left before editing pricing details." />
-                  </StackColumn>
-                </CardContent>
-              </Card>
-            )}
-          </StackColumn>
-        </Box>
-      </SettingsSectionCard>
+                    </Button>
+                    <IconButton
+                      size="small"
+                      aria-label={`Actions for ${pricingOption.title?.trim() || `offer ${index + 1}`}`}
+                      onClick={(event) => {
+                        setOfferActionsAnchor(event.currentTarget);
+                        setOfferActionsIndex(index);
+                      }}
+                      sx={{ position: 'absolute', top: 6, right: 4 }}
+                    >
+                      <MoreVertRoundedIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                );
+              })}
+              <Menu anchorEl={offerActionsAnchor} open={Boolean(offerActionsAnchor)} onClose={closeOfferActions}>
+                <MenuItem onClick={duplicateOffer}>Duplicate offer</MenuItem>
+                <MenuItem disabled={pricingOptions.length <= 1} onClick={removeOffer} sx={{ color: 'error.main' }}>
+                  Remove offer
+                </MenuItem>
+              </Menu>
+            </StackColumn>
+          </CardContent>
+        </Card>
+
+        <StackColumn spacing={2} sx={{ minWidth: 0 }}>
+          {activeOffer ? (
+            <>
+              <Box sx={{ px: { xs: 0, sm: 1 }, py: 0.5 }}>
+                <StackColumn spacing={0.25}>
+                  <LeadIconTypography label={activeOffer.title?.trim() || `Offer ${activeOfferIndex + 1}`} />
+                  <SmallIconTypography label="Edit the commercial details below. Changes stay focused on this offer." />
+                </StackColumn>
+              </Box>
+              {renderOfferEditor(activeOffer, activeOfferIndex)}
+            </>
+          ) : (
+            <Card variant="outlined" sx={{ borderRadius: 3, boxShadow: 'none' }}>
+              <CardContent>
+                <StackColumn spacing={1}>
+                  <LeadIconTypography label="No offer selected" />
+                  <SmallIconTypography label="Create or select an offer before editing its details." />
+                </StackColumn>
+              </CardContent>
+            </Card>
+          )}
+        </StackColumn>
+      </Box>
 
       {typeof errors === 'object' && errors !== null && 'pricingOptions' in errors && typeof errors.pricingOptions === 'string' ? (
         <BodyIconTypography label={errors.pricingOptions} sx={{ color: 'error.main' }} />
@@ -715,16 +960,14 @@ const ProductEditorForm = ({
   return (
     <FormStackColumn onSubmit={onSubmit}>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
-        <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
-          <PageHeaderPanel eyebrow="Product setup" title={pageTitle} description={pageDescription}>
-            <SmallIconTypography
-              label={mode === 'add' ? 'Basics first, then offers, then a final check before saving.' : 'Update the product in smaller sections instead of one long form.'}
-            />
-          </PageHeaderPanel>
+        <StackColumn sx={{ width: '100%', maxWidth: 1480, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
+          <PageHeaderPanel eyebrow="Product setup" title={pageTitle} description={pageDescription} />
 
-          <GuidedEditorProgress steps={steps} activeStepId={activeStep} onStepChange={(stepId) => setActiveStep(stepId as ProductEditorStep['id'])} variant="compact" />
+          <Box sx={{ position: 'sticky', top: 12, zIndex: 10 }}>
+            <GuidedEditorProgress steps={steps} activeStepId={activeStep} onStepChange={(stepId) => setActiveStep(stepId as ProductEditorStep['id'])} variant="compact" />
+          </Box>
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 2 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 3, '@media (min-width: 1536px)': { gridTemplateColumns: 'minmax(0, 1fr) 288px' } }}>
             <StackColumn>
               <Box sx={{ display: activeStep !== 'basics' ? 'none' : undefined }}>{renderBasics()}</Box>
               <Box sx={{ display: activeStep !== 'offers' ? 'none' : undefined }}>{renderOffers()}</Box>
@@ -742,27 +985,48 @@ const ProductEditorForm = ({
             </StackColumn>
 
             <StickyReviewRail
-              title="Review rail"
-              description="Keep the product story and validation visible while editing longer sections."
+              title={activeStep === 'basics' ? 'Product preview' : 'Review rail'}
+              description={activeStep === 'basics' ? 'See the customer-facing identity take shape as you edit.' : 'A compact snapshot of the offer you are shaping.'}
               top={24}
-              sx={{ pl: { xs: 0, xl: 0 }, pr: 0, pt: 0 }}
+              sx={{ display: 'none', '@media (min-width: 1536px)': { display: 'block' }, pl: 0, pr: 0, pt: 0 }}
             >
-              <SettingsSectionCard title="Summary" description="A compact view of the product you are shaping.">
+              <SettingsSectionCard
+                title={activeStep === 'basics' ? 'Customer preview' : 'Summary'}
+                description={activeStep === 'basics' ? 'The essential details customers use to recognize this product.' : 'A compact view of the product you are shaping.'}
+              >
                 <StackColumn spacing={1.5}>
+                  {activeStep === 'basics' && previewImageUrl ? (
+                    <Box sx={{ position: 'relative', overflow: 'hidden', aspectRatio: '16 / 9', borderRadius: 2.5, backgroundColor: 'action.hover' }}>
+                      <Image fill unoptimized alt="Product preview" src={previewImageUrl} sizes="288px" style={{ objectFit: 'cover' }} />
+                    </Box>
+                  ) : null}
                   <LeadIconTypography label={values.title?.trim() || 'Untitled product'} />
-                  <SmallIconTypography label={values.subTitle?.trim() || 'Add a subtitle so people understand the offer quickly.'} />
+                  <SmallIconTypography label={values.subTitle?.trim() || 'Add a subtitle so customers understand the product quickly.'} />
                   <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
                     <Chip size="small" label={prettifyEnum(values.type)} />
                     <Chip size="small" label={values.currency || 'No currency'} />
                     <Chip size="small" label={`${featureImages.length} image${featureImages.length === 1 ? '' : 's'}`} />
                   </StackRow>
-                  <Divider />
-                  <BodyIconTypography label={`Offers: ${values.pricingOptions.length}`} />
-                  {values.pricingOptions.map((pricingOption, index) => (
-                    <Box key={pricingOption.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
-                      <OfferSummary pricingOption={pricingOption} index={index} />
-                    </Box>
-                  ))}
+                  {activeStep === 'basics' ? (
+                    <>
+                      <Divider />
+                      <BodyIconTypography label={values.includedFeatures?.trim() || 'Add the included features customers should know about.'} />
+                      <StackRow sx={{ gap: 0.75, flexWrap: 'wrap' }}>
+                        <Chip size="small" label={`${values.productTagIds.length} tag${values.productTagIds.length === 1 ? '' : 's'}`} />
+                        <Chip size="small" label={`${values.amenityIds.length} amenit${values.amenityIds.length === 1 ? 'y' : 'ies'}`} />
+                      </StackRow>
+                    </>
+                  ) : (
+                    <>
+                      <Divider />
+                      <BodyIconTypography label={`Offers: ${values.pricingOptions.length}`} />
+                      {values.pricingOptions.map((pricingOption, index) => (
+                        <Box key={pricingOption.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
+                          <OfferSummary pricingOption={pricingOption} index={index} />
+                        </Box>
+                      ))}
+                    </>
+                  )}
                 </StackColumn>
               </SettingsSectionCard>
 
