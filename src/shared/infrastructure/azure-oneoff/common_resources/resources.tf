@@ -52,3 +52,31 @@ resource "azuread_application_federated_identity_credential" "github_oidc_enviro
   issuer         = local.github_issuer_url
   subject        = "repo:${module.common.github_repository_unityhubio}:environment:${var.environment}"
 }
+
+# Migration to new org/repo: kept in parallel alongside the unityhubio_unityhubio credentials above.
+resource "azuread_application_federated_identity_credential" "github_oidc_skedular_main" {
+  application_id = azuread_application_registration.github_oidc.id
+  display_name   = "${var.environment}-skedular-skedular-main"
+  description    = "Deployments for ${module.common.github_repository_skedular} for environment ${var.environment} and main branch"
+  audiences      = [local.default_audience_name]
+  issuer         = local.github_issuer_url
+  subject        = "repo:${module.common.github_repository_skedular}:ref:refs/heads/main"
+}
+
+resource "azuread_application_federated_identity_credential" "github_oidc_skedular_pullrequest" {
+  application_id = azuread_application_registration.github_oidc.id
+  display_name   = "${var.environment}-skedular-skedular-pullrequest"
+  description    = "Deployments for ${module.common.github_repository_skedular} for environment ${var.environment} and pullrequest"
+  audiences      = [local.default_audience_name]
+  issuer         = local.github_issuer_url
+  subject        = "repo:${module.common.github_repository_skedular}:pull_request"
+}
+
+resource "azuread_application_federated_identity_credential" "github_oidc_skedular_environment" {
+  application_id = azuread_application_registration.github_oidc.id
+  display_name   = "${var.environment}-skedular-skedular-environment"
+  description    = "Deployments for ${module.common.github_repository_skedular} for environment ${var.environment} and environment"
+  audiences      = [local.default_audience_name]
+  issuer         = local.github_issuer_url
+  subject        = "repo:${module.common.github_repository_skedular}:environment:${var.environment}"
+}

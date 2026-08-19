@@ -134,6 +134,10 @@ output "github_repository_unityhubio" {
   value = "unityhubio/unityhubio"
 }
 
+output "github_repository_skedular" {
+  value = "skedular/skedular"
+}
+
 output "aws_cognito_identity_provider_cognito_provider_name" {
   value = "COGNITO"
 }
@@ -156,6 +160,10 @@ output "parameter_store_name_aws_github_actions_assume_role_arn" {
 
 output "parameter_store_name_aws_github_actions_unityhubio_unityhubioassume_role_arn" {
   value = "github_actions_unityhubio_unityhubio_assume_role_arn"
+}
+
+output "parameter_store_name_aws_github_actions_skedular_skedular_assume_role_arn" {
+  value = "github_actions_skedular_skedular_assume_role_arn"
 }
 
 output "logrocket_webapp_app_id" {

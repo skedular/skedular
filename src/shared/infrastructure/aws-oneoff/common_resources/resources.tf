@@ -65,3 +65,44 @@ resource "aws_ssm_parameter" "github_actions_unityhubio_unityhubio_service_accou
   value = aws_iam_role.github_actions_unityhubio_unityhubio_oidc_assume_role.arn
   tags  = local.tags
 }
+
+# Migration to new org/repo: kept in parallel alongside the unityhubio_unityhubio resources above.
+data "aws_iam_policy_document" "github_skedular_skedular_allow" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.github_actions.arn]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "${aws_iam_openid_connect_provider.github_actions.url}:sub"
+      values   = ["repo:${module.common.github_repository_skedular}:*"]
+
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+
+    }
+  }
+}
+
+resource "aws_iam_role" "github_actions_skedular_skedular_oidc_assume_role" {
+  name               = "github_actions_skedular_skedular_oidc_assume_role"
+  assume_role_policy = data.aws_iam_policy_document.github_skedular_skedular_allow.json
+}
+
+resource "aws_iam_role_policy_attachment" "github_actions_skedular_skedular_role_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+  role       = aws_iam_role.github_actions_skedular_skedular_oidc_assume_role.name
+}
+
+resource "aws_ssm_parameter" "github_actions_skedular_skedular_service_account" {
+  name  = module.common.parameter_store_name_aws_github_actions_skedular_skedular_assume_role_arn
+  type  = "String"
+  value = aws_iam_role.github_actions_skedular_skedular_oidc_assume_role.arn
+  tags  = local.tags
+}

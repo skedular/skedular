@@ -38,6 +38,13 @@ resource "google_service_account_iam_member" "workload_identity_user" {
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_action_pool.name}/attribute.repository/${module.common.github_repository_unityhubio}"
 }
 
+# Migration to new org/repo: kept in parallel alongside the unityhubio/unityhubio binding above.
+resource "google_service_account_iam_member" "workload_identity_user_skedular" {
+  service_account_id = google_service_account.github_actions.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_action_pool.name}/attribute.repository/${module.common.github_repository_skedular}"
+}
+
 resource "aws_ssm_parameter" "workload_identity_provider" {
   name  = module.common.parameter_store_name_gcp_github_actions_workload_identity_provider
   type  = "String"
