@@ -21,7 +21,7 @@ vi.mock('./my-bookings-page-shell', () => ({
   default: ({ children }: React.PropsWithChildren) => <div>{children}</div>,
 }));
 
-const makeBooking = (id: string, hasMarketplace: boolean) => ({
+const makeBooking = (id: string) => ({
   id,
   from: '2026-04-12T09:00:00.000Z',
   until: '2026-04-12T11:00:00.000Z',
@@ -31,18 +31,17 @@ const makeBooking = (id: string, hasMarketplace: boolean) => ({
   involvedLocations: [{ uniqueId: 'loc-1', name: 'Office' }],
   involvedTeams: [],
   bookingResources: [],
-  marketplaceBooking: hasMarketplace ? { __typename: 'MarketplaceBookingDetails' } : null,
 });
 
 describe('MyBookings', () => {
-  it('renders private bookings and excludes marketplace bookings', () => {
+  it('renders bookings returned by the server-side private channel filter', () => {
     useFragmentMock.mockReturnValue({ me: { id: 'user-1' } });
     useRefetchableFragmentMock.mockReturnValue([
       {
         bookings: {
           __id: 'connection-1',
           totalCount: 2,
-          edges: [{ node: makeBooking('private-booking-1', false) }, { node: makeBooking('marketplace-booking-1', true) }],
+          edges: [{ node: makeBooking('private-booking-1') }],
         },
       },
       refetchMock,
@@ -61,6 +60,5 @@ describe('MyBookings', () => {
     );
 
     expect(screen.getByText('private-booking-1')).toBeInTheDocument();
-    expect(screen.queryByText('marketplace-booking-1')).not.toBeInTheDocument();
   });
 });

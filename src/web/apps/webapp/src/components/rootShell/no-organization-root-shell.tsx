@@ -1,9 +1,9 @@
 import { NoOrganizationAppBar } from '@/components/appBar';
 import { SignOutIcon } from '@/components/icons';
-import { getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
+import { getSignOutReturnToLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { Observability } from '@/components/observability';
-import { RelayError, toRootError, useIntegratedPlatform } from '@skedular/shared';
+import { RelayError, toRootError } from '@skedular/shared';
 
 import type { noOrganizationRootShell_rootQuery } from '@/queries/__generated__/noOrganizationRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -12,7 +12,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { SmallHeadingIconTypography } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import { usePathname, useRouter } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -28,7 +27,6 @@ const RootQuery = graphql`
   query noOrganizationRootShell_rootQuery {
     me {
       id
-      isOnboardingDone
     }
     customerReadinessSynced
     ...noOrganizationAppBar_query
@@ -40,13 +38,8 @@ const maxRetryAttemptsToReload = 20;
 
 const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<noOrganizationRootShell_rootQuery>(RootQuery, queryReference);
-  const { integratedPlatform } = useIntegratedPlatform();
-  const router = useRouter();
-  const pathName = usePathname();
   const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
-  const rootLink = getRootLink(integratedPlatform);
-  const welcomeLink = getWelcomeLink(integratedPlatform);
   const areCustomerRecordsSync = !!rootData?.customerReadinessSynced;
 
   useEffect(() => {
@@ -63,12 +56,6 @@ const NoOrganizationRootShell = ({ queryReference, children, onReloadRequired }:
       clearInterval(intervalId);
     };
   }, [rootData.me, reloadCount, onReloadRequired, areCustomerRecordsSync]);
-
-  useEffect(() => {
-    if (pathName === rootLink && !rootData.me.isOnboardingDone) {
-      router.push(welcomeLink);
-    }
-  }, [rootData.me.isOnboardingDone, welcomeLink, pathName, rootLink, router]);
 
   const handleSignOutClick = async () => {
     await signOut({ returnTo: getSignOutReturnToLink() });

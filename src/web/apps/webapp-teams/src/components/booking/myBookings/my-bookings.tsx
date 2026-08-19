@@ -54,6 +54,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
             organizationCustomDomain: $organizationCustomDomain
             locationIds: $locationIds
             teamIds: $teamIds
+            channel: PRIVATE
             fromGte: $bookingsSearchCriteriaFrom
             fromLte: $bookingsSearchCriteriaTo
           }
@@ -103,9 +104,6 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
                   }
                 }
               }
-              marketplaceBooking {
-                __typename
-              }
               ...myBookingCard_BookingDetails
             }
           }
@@ -117,13 +115,12 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
 
   const bookings = useMemo(() => rootDataRefetchable.bookings.edges.map((edge) => edge.node), [rootDataRefetchable.bookings]);
   const connectionIds = useMemo(() => [rootDataRefetchable.bookings.__id], [rootDataRefetchable.bookings]);
-  const privateBookings = useMemo(() => bookings.filter((booking) => !booking.marketplaceBooking), [bookings]);
-  const myBookings = useMemo(() => privateBookings.filter((booking) => booking.involvedCustomers.some((item) => item.id === rootData.me?.id)), [privateBookings, rootData.me?.id]);
+  const myBookings = useMemo(() => bookings.filter((booking) => booking.involvedCustomers.some((item) => item.id === rootData.me?.id)), [bookings, rootData.me?.id]);
 
   const convertDateToKey = (date: Dayjs) => dayjs(date).format('YYYY-MM-DD');
 
   const groupedBookingsByFromDate = useMemo(() => {
-    return privateBookings.reduce(
+    return bookings.reduce(
       (acc, booking) => {
         const key = convertDateToKey(booking.from);
 
@@ -135,9 +132,9 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
 
         return acc;
       },
-      {} as Record<string, typeof privateBookings>,
+      {} as Record<string, typeof bookings>,
     );
-  }, [privateBookings]);
+  }, [bookings]);
 
   const handleRefetch = useCallback(
     (from: Dayjs, to: Dayjs, locationIds: string[], teamIds: string[]) => {

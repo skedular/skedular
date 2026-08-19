@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1bfb029138d8d03f939b88f2036f202f>>
+ * @generated SignedSource<<8cf63c959932c11f233db4a6d5ab942f>>
  * @lightSyntaxTransform
  */
 
@@ -53,9 +53,6 @@ export type myBookings_bookings_query$data = {
           readonly id: string;
           readonly name: string;
         }>;
-        readonly marketplaceBooking: {
-          readonly __typename: "MarketplaceBookingDetails";
-        } | null | undefined;
         readonly notes: string | null | undefined;
         readonly until: any;
         readonly " $fragmentSpreads": FragmentRefs<"myBookingCard_BookingDetails">;
@@ -101,14 +98,7 @@ v4 = [
   (v1/*:: as any*/),
   (v2/*:: as any*/),
   (v3/*:: as any*/)
-],
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -182,6 +172,11 @@ return {
         },
         {
           "fields": [
+            {
+              "kind": "Literal",
+              "name": "channel",
+              "value": "PRIVATE"
+            },
             {
               "kind": "Variable",
               "name": "fromGte",
@@ -399,23 +394,17 @@ return {
                   "storageKey": null
                 },
                 {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "MarketplaceBookingDetails",
-                  "kind": "LinkedField",
-                  "name": "marketplaceBooking",
-                  "plural": false,
-                  "selections": [
-                    (v5/*:: as any*/)
-                  ],
-                  "storageKey": null
-                },
-                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "myBookingCard_BookingDetails"
                 },
-                (v5/*:: as any*/)
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
               ],
               "storageKey": null
             },
@@ -475,6 +464,6 @@ return {
 };
 })();
 
-(node as any).hash = "b13f0906480f883c6e9dadea8206c249";
+(node as any).hash = "09f0d502fee21ac1866bef982a5fac13";
 
 export default node;

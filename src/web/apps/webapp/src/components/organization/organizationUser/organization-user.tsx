@@ -456,84 +456,90 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
 
   const isItMe = customer.id === rootData.me?.id;
 
-  const renderProfileSection = () => (
-    <Box sx={{ p: defaultPadding }}>
-      <Form
-        onSubmit={() => undefined}
-        initialValues={initialProfileValues}
-        validate={validateProfileDetails}
-        render={({ handleSubmit, values }) => {
-          const formValues = values as ProfileDetailsDetails;
-          const changedFields = draftProfileValues.current ? getChangedProfileFields(draftProfileValues.current, formValues) : [];
-          if (isItMe && changedFields.length > 0) {
-            draftProfileValues.current = formValues;
-            debouncedCommitProfilePatch(changedFields, formValues);
-          }
+  const renderProfileSection = () => {
+    if (!initialProfileValues) {
+      return null;
+    }
 
-          return (
-            <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
-              <StackColumn spacing={2}>
-                <StackColumn spacing={0.5}>
-                  <LeadIconTypography label="Profile" />
-                  <SmallIconTypography label="Manage the identity, contact details, and visibility settings for this user." />
+    return (
+      <Box sx={{ p: defaultPadding }}>
+        <Form
+          onSubmit={() => undefined}
+          initialValues={initialProfileValues}
+          validate={validateProfileDetails}
+          render={({ handleSubmit, values }) => {
+            const formValues = values as ProfileDetailsDetails;
+            const changedFields = draftProfileValues.current ? getChangedProfileFields(draftProfileValues.current, formValues) : [];
+            if (isItMe && changedFields.length > 0) {
+              draftProfileValues.current = formValues;
+              debouncedCommitProfilePatch(changedFields, formValues);
+            }
+
+            return (
+              <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+                <StackColumn spacing={2}>
+                  <StackColumn spacing={0.5}>
+                    <LeadIconTypography label="Profile" />
+                    <SmallIconTypography label="Manage the identity, contact details, and visibility settings for this user." />
+                  </StackColumn>
+
+                  <Divider />
+
+                  <FormFieldLabel label="Designation">
+                    {isItMe && <TextField name="designation" required={requiredProfileDetailsFields.designation} />}
+                    {!isItMe && <SmallIconTypography label={customer.designation} />}
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Title">
+                    {isItMe && <TextField name="title" required={requiredProfileDetailsFields.title} />}
+                    {!isItMe && <SmallIconTypography label={customer.title} />}
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Name">
+                    {isItMe && <TextField name="name" required={requiredProfileDetailsFields.name} />}
+                    {!isItMe && <SmallIconTypography label={customer.name} />}
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Given Name">
+                    {isItMe && <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />}
+                    {!isItMe && <SmallIconTypography label={customer.givenName} />}
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Middle Name">
+                    {isItMe && <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />}
+                    {!isItMe && <SmallIconTypography label={customer.middleName} />}
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Family Name">
+                    {isItMe && <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />}
+                    {!isItMe && <SmallIconTypography label={customer.familyName} />}
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Timezone">
+                    {isItMe && <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />}
+                    {!isItMe && <SmallIconTypography label={customer.timezone} />}
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Phone Number">
+                    {isItMe && <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />}
+                    {!isItMe && <SmallIconTypography label={customer.phoneNumber} />}
+                  </FormFieldLabel>
+
+                  <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
+                    <SingleChoiceUserPersonalInformationVisibility
+                      rootDataRelay={rootData}
+                      name="personalInformationVisibility"
+                      required={requiredProfileDetailsFields.personalInformationVisibility}
+                    />
+                  </FormFieldLabel>
                 </StackColumn>
-
-                <Divider />
-
-                <FormFieldLabel label="Designation">
-                  {isItMe && <TextField name="designation" required={requiredProfileDetailsFields.designation} />}
-                  {!isItMe && <SmallIconTypography label={customer.designation} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Title">
-                  {isItMe && <TextField name="title" required={requiredProfileDetailsFields.title} />}
-                  {!isItMe && <SmallIconTypography label={customer.title} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Name">
-                  {isItMe && <TextField name="name" required={requiredProfileDetailsFields.name} />}
-                  {!isItMe && <SmallIconTypography label={customer.name} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Given Name">
-                  {isItMe && <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />}
-                  {!isItMe && <SmallIconTypography label={customer.givenName} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Middle Name">
-                  {isItMe && <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />}
-                  {!isItMe && <SmallIconTypography label={customer.middleName} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Family Name">
-                  {isItMe && <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />}
-                  {!isItMe && <SmallIconTypography label={customer.familyName} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Timezone">
-                  {isItMe && <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />}
-                  {!isItMe && <SmallIconTypography label={customer.timezone} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Phone Number">
-                  {isItMe && <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />}
-                  {!isItMe && <SmallIconTypography label={customer.phoneNumber} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
-                  <SingleChoiceUserPersonalInformationVisibility
-                    rootDataRelay={rootData}
-                    name="personalInformationVisibility"
-                    required={requiredProfileDetailsFields.personalInformationVisibility}
-                  />
-                </FormFieldLabel>
-              </StackColumn>
-            </FormStackColumn>
-          );
-        }}
-      />
-    </Box>
-  );
+              </FormStackColumn>
+            );
+          }}
+        />
+      </Box>
+    );
+  };
 
   const renderTeamsSection = () => (
     <Box sx={{ p: defaultPadding }}>

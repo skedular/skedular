@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dffd10c541f65cda93aaa308f82f52d2>>
+ * @generated SignedSource<<611887d36696ca0bfd541f543ca03213>>
  * @lightSyntaxTransform
  */
 
@@ -14,7 +14,6 @@ export type noOrganizationRootShell_rootQuery$data = {
   readonly customerReadinessSynced: boolean;
   readonly me: {
     readonly id: string;
-    readonly isOnboardingDone: boolean;
   };
   readonly " $fragmentSpreads": FragmentRefs<"noOrganizationAppBar_query" | "observability_query">;
 };
@@ -32,13 +31,6 @@ var v0 = {
   "storageKey": null
 },
 v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isOnboardingDone",
-  "storageKey": null
-},
-v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -60,12 +52,11 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v0/*:: as any*/),
-          (v1/*:: as any*/)
+          (v0/*:: as any*/)
         ],
         "storageKey": null
       },
-      (v2/*:: as any*/),
+      (v1/*:: as any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -95,7 +86,6 @@ return {
         "plural": false,
         "selections": [
           (v0/*:: as any*/),
-          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -155,7 +145,7 @@ return {
         ],
         "storageKey": null
       },
-      (v2/*:: as any*/),
+      (v1/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -173,16 +163,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1484175e6fc17d73842f998173016220",
+    "cacheID": "0f4443b09c5b943167691193cc23213a",
     "id": null,
     "metadata": {},
     "name": "noOrganizationRootShell_rootQuery",
     "operationKind": "query",
-    "text": "query noOrganizationRootShell_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  customerReadinessSynced\n  ...noOrganizationAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment noOrganizationAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...newFeedbackDialog_query\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
+    "text": "query noOrganizationRootShell_rootQuery {\n  me {\n    id\n  }\n  customerReadinessSynced\n  ...noOrganizationAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment noOrganizationAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...newFeedbackDialog_query\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d7bba4fcf3029593bb2fbb06e7c53d94";
+(node as any).hash = "318080bed4373b7719432696a2decd54";
 
 export default node;
