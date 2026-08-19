@@ -72,7 +72,7 @@ Similar structure to webapp-teams `/msteams/*` routes but includes marketplace-s
 | `/organizations/[customDomain]/admin/zones/[zoneId]/edit`                             | admin             | —                             |
 | `/organizations/[customDomain]/admin/zones/add`                                       | admin             | —                             |
 | `/organizations/[customDomain]/analytics`                                             | admin             | —                             |
-| `/organizations/[customDomain]/availability-dashboard`                                | admin             | Dashboard charts              |
+| `/organizations/[customDomain]/availability`                                          | admin             | Dashboard charts              |
 | `/organizations/[customDomain]/bank-accounts/[id]`                                    | admin             | Payment                       |
 | `/organizations/[customDomain]/bank-accounts/add`                                     | admin             | —                             |
 | `/organizations/[customDomain]/bookings`                                              | yes               | —                             |
@@ -149,7 +149,7 @@ See `lazy-load-candidates.md`. Spaces-specific opportunities:
 
 - `react-svg-credit-card-payment-icons` (521K) — same barrel issue as all apps
 - `@azure/msal-browser` + `@azure/msal-common` (123K) — only needed for `/msteams/*` routes
-- Analytics routes (`/analytics`, `/availability-dashboard`) use chart components — verify `@mui/x-charts` is lazy-loaded
+- Analytics routes (`/analytics`, `/availability`) use chart components — verify `@mui/x-charts` is lazy-loaded
 
 ### 4. Client Bundle Size (app-code)
 

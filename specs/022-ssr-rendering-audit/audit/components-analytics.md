@@ -25,12 +25,12 @@ See also `components-org-admin.md`.
 
 `@mui/x-charts` is used in the availability dashboard for resource utilization visualizations. Key observations:
 
-| Aspect                 | Finding                                                                                            |
-| ---------------------- | -------------------------------------------------------------------------------------------------- |
-| Bundle presence        | `@mui/x-charts` present in bundle; size TBD from tree-shaking                                      |
-| `'use client'` needed? | **Yes** — animation, tooltip, legend interaction all require client                                |
-| Route scope            | `/organizations/[customDomain]/analytics` + `/organizations/[customDomain]/availability-dashboard` |
-| All apps?              | webapp-teams + webapp-spaces (not webapp)                                                          |
+| Aspect                 | Finding                                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------------------- |
+| Bundle presence        | `@mui/x-charts` present in bundle; size TBD from tree-shaking                            |
+| `'use client'` needed? | **Yes** — animation, tooltip, legend interaction all require client                      |
+| Route scope            | `/organizations/[customDomain]/analytics` + `/organizations/[customDomain]/availability` |
+| All apps?              | webapp-teams + webapp-spaces (not webapp)                                                |
 
 **Assessment**: Chart components correctly use `'use client'`. The optimization opportunity is to ensure the chart's parent shell (header, date picker, summary cards) doesn't NEED to be client-side just because a chart inside it is.
 

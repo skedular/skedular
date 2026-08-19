@@ -82,7 +82,7 @@ Mirrors webapp-spaces non-msteams routes. All `'use client'`.
 | `/organizations/[organizationCustomDomain]/admin/zones/[zoneId]/edit`                             | admin | no         | —                 |
 | `/organizations/[organizationCustomDomain]/admin/zones/add`                                       | admin | no         | —                 |
 | `/organizations/[organizationCustomDomain]/analytics`                                             | admin | no         | —                 |
-| `/organizations/[organizationCustomDomain]/availability-dashboard`                                | admin | no         | Dashboard charts  |
+| `/organizations/[organizationCustomDomain]/availability`                                          | admin | no         | Dashboard charts  |
 | `/organizations/[organizationCustomDomain]/bookings`                                              | yes   | no         | —                 |
 | `/organizations/[organizationCustomDomain]/bookings/[bookingId]`                                  | yes   | no         | —                 |
 | `/organizations/[organizationCustomDomain]/bookings/add`                                          | admin | no         | —                 |
