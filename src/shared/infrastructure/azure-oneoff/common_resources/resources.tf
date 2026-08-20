@@ -60,7 +60,7 @@ resource "azuread_application_federated_identity_credential" "github_oidc_skedul
   description    = "Deployments for ${module.common.github_repository_skedular} for environment ${var.environment} and main branch"
   audiences      = [local.default_audience_name]
   issuer         = local.github_issuer_url
-  subject        = "repo:${module.common.github_repository_skedular}:ref:refs/heads/main"
+  subject        = "repo:${module.common.github_repository_skedular_oidc_subject}:ref:refs/heads/main"
 }
 
 resource "azuread_application_federated_identity_credential" "github_oidc_skedular_pullrequest" {
@@ -69,7 +69,7 @@ resource "azuread_application_federated_identity_credential" "github_oidc_skedul
   description    = "Deployments for ${module.common.github_repository_skedular} for environment ${var.environment} and pullrequest"
   audiences      = [local.default_audience_name]
   issuer         = local.github_issuer_url
-  subject        = "repo:${module.common.github_repository_skedular}:pull_request"
+  subject        = "repo:${module.common.github_repository_skedular_oidc_subject}:pull_request"
 }
 
 resource "azuread_application_federated_identity_credential" "github_oidc_skedular_environment" {
@@ -78,5 +78,5 @@ resource "azuread_application_federated_identity_credential" "github_oidc_skedul
   description    = "Deployments for ${module.common.github_repository_skedular} for environment ${var.environment} and environment"
   audiences      = [local.default_audience_name]
   issuer         = local.github_issuer_url
-  subject        = "repo:${module.common.github_repository_skedular}:environment:${var.environment}"
+  subject        = "repo:${module.common.github_repository_skedular_oidc_subject}:environment:${var.environment}"
 }
