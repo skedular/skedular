@@ -138,6 +138,12 @@ output "github_repository_skedular" {
   value = "skedular/skedular"
 }
 
+# GitHub uses immutable OIDC subject claims for repositories that are migrated
+# or transferred. Keep these IDs separate from the display names above.
+output "github_repository_skedular_oidc_subject" {
+  value = "skedular@184706951/skedular@1340001743"
+}
+
 output "aws_cognito_identity_provider_cognito_provider_name" {
   value = "COGNITO"
 }

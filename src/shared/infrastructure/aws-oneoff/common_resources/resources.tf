@@ -78,7 +78,7 @@ data "aws_iam_policy_document" "github_skedular_skedular_allow" {
     condition {
       test     = "StringLike"
       variable = "${aws_iam_openid_connect_provider.github_actions.url}:sub"
-      values   = ["repo:${module.common.github_repository_skedular}:*"]
+      values   = ["repo:${module.common.github_repository_skedular_oidc_subject}:*"]
 
     }
     condition {
