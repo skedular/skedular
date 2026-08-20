@@ -1031,16 +1031,18 @@ const ProductEditorForm = ({
   );
 
   return (
-    <FormStackColumn onSubmit={onSubmit}>
+    <FormStackColumn onSubmit={onSubmit} sx={{ pt: { xs: 2, md: 3 } }}>
       <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
-        <StackColumn sx={{ width: '100%', maxWidth: 1480, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
+        <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
           <PageHeaderPanel eyebrow="Product setup" title={pageTitle} description={pageDescription} />
 
           <Box sx={{ position: 'sticky', top: 12, zIndex: 10 }}>
             <GuidedEditorProgress steps={steps} activeStepId={activeStep} onStepChange={(stepId) => setActiveStep(stepId as ProductEditorStep['id'])} variant="compact" />
           </Box>
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 3, '@media (min-width: 1536px)': { gridTemplateColumns: 'minmax(0, 1fr) 288px' } }}>
+          <Box
+            sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: { xs: 2, lg: 3 }, '@media (min-width: 1200px)': { gridTemplateColumns: 'minmax(0, 1fr) 288px' } }}
+          >
             <StackColumn>
               <Box sx={{ display: activeStep !== 'basics' ? 'none' : undefined }}>{renderBasics()}</Box>
               <Box sx={{ display: activeStep !== 'offers' ? 'none' : undefined }}>{renderOffers()}</Box>
@@ -1061,7 +1063,7 @@ const ProductEditorForm = ({
               title={activeStep === 'basics' ? 'Product preview' : 'Review rail'}
               description={activeStep === 'basics' ? 'See the customer-facing identity take shape as you edit.' : 'A compact snapshot of the offer you are shaping.'}
               top={24}
-              sx={{ display: 'none', '@media (min-width: 1536px)': { display: 'block' }, pl: 0, pr: 0, pt: 0 }}
+              sx={{ display: 'none', '@media (min-width: 1200px)': { display: 'block' }, pl: 0, pr: 0, pt: 0 }}
             >
               <SettingsSectionCard
                 title={activeStep === 'basics' ? 'Customer preview' : 'Summary'}
