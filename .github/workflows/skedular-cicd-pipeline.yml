@@ -482,7 +482,7 @@ jobs:
                   dockerRegistry: ghcr.io
                   dockerRegistryUsername: ${{ github.actor }}
                   dockerRegistryPassword: ${{ secrets.GITHUB_TOKEN }}
-                  dockerNamespace: unityhubio
+                  dockerNamespace: skedular
                   dockerRepository: ${{ matrix.repository }}
                   pushDockerImage: ${{ matrix.kind == 'all-in-one' }}
                   scanForSecurityVulnerabilities: ${{ matrix.kind != 'docs-event-catalog' }}

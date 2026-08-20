@@ -34,13 +34,13 @@ Out of scope for the first release:
 
 The current booking system already separates invoice generation from payment orchestration:
 
-- Marketplace booking creation starts different Temporal workflows based on billing mode and payment method in [MarketplaceBookingService.cs](/Users/morteza/projects/github.com/unityhubio/unityhubio/booking/shared/Booking.Shared/Services/MarketplaceBookingService.cs).
-- Internal invoice PDF generation and email sending lives in [InvoiceIntegrations.cs](/Users/morteza/projects/github.com/unityhubio/unityhubio/booking/shared/Booking.Shared/Activities/InvoiceIntegrations.cs).
+- Marketplace booking creation starts different Temporal workflows based on billing mode and payment method in [MarketplaceBookingService.cs](/Users/morteza/projects/github.com/skedular/skedular/booking/shared/Booking.Shared/Services/MarketplaceBookingService.cs).
+- Internal invoice PDF generation and email sending lives in [InvoiceIntegrations.cs](/Users/morteza/projects/github.com/skedular/skedular/booking/shared/Booking.Shared/Activities/InvoiceIntegrations.cs).
 - Recurring payment workflows wait for payment status signals in:
-  - [PayRecurringBookingViaBankTransfer.cs](/Users/morteza/projects/github.com/unityhubio/unityhubio/booking/shared/Booking.Shared/Workflows/PayRecurringBookingViaBankTransfer.cs)
-  - [PayRecurringBookingViaCard.cs](/Users/morteza/projects/github.com/unityhubio/unityhubio/booking/shared/Booking.Shared/Workflows/PayRecurringBookingViaCard.cs)
-- Manual or external payment confirmation already maps to internal signals in [RecurringBookingPaymentService.cs](/Users/morteza/projects/github.com/unityhubio/unityhubio/booking/apis/Booking.Api/Services/RecurringBookingPaymentService.cs).
-- Organization arrears invoices already exist as a distinct concept in [OrganizationArrearsInvoice.cs](/Users/morteza/projects/github.com/unityhubio/unityhubio/booking/shared/Booking.Shared/Database/Entities/OrganizationArrearsInvoice.cs).
+  - [PayRecurringBookingViaBankTransfer.cs](/Users/morteza/projects/github.com/skedular/skedular/booking/shared/Booking.Shared/Workflows/PayRecurringBookingViaBankTransfer.cs)
+  - [PayRecurringBookingViaCard.cs](/Users/morteza/projects/github.com/skedular/skedular/booking/shared/Booking.Shared/Workflows/PayRecurringBookingViaCard.cs)
+- Manual or external payment confirmation already maps to internal signals in [RecurringBookingPaymentService.cs](/Users/morteza/projects/github.com/skedular/skedular/booking/apis/Booking.Api/Services/RecurringBookingPaymentService.cs).
+- Organization arrears invoices already exist as a distinct concept in [OrganizationArrearsInvoice.cs](/Users/morteza/projects/github.com/skedular/skedular/booking/shared/Booking.Shared/Database/Entities/OrganizationArrearsInvoice.cs).
 
 This is a good fit for Xero because the existing workflows already have the right seams.
 

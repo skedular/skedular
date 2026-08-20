@@ -124,7 +124,7 @@ As a maintainer, I want the pipeline to clearly show why each segment ran or ski
 
 ## Assumptions
 
-- The target repository for this feature is `unityhubio`; `dsst` is a reference workspace only.
+- The target repository for this feature is `skedular`; `dsst` is a reference workspace only.
 - The DSST pipeline is used as a behavioral model for single-file CI orchestration, change detection, conditional jobs, docs-only skipping, manual full runs, and umbrella status checks.
 - Skedular CD behavior is sourced from the existing Skedular workflows and must run after the relevant CI checks succeed.
 - DSST package versioning and tag-driven publish behavior are intentionally out of scope for this feature.

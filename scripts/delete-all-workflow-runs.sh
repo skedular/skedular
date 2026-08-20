@@ -2,7 +2,7 @@
 
 set -e
 
-REPO="unityhubio/unityhubio"
+REPO="skedular/skedular"
 
 echo "Deleting all GitHub Actions workflow runs for ${REPO}..."
 

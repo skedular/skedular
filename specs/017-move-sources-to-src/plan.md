@@ -79,7 +79,7 @@ specs/017-move-sources-to-src/
 ### Repository Layout After Move
 
 ```text
-unityhubio/                            ← repo root (unchanged)
+skedular/                            ← repo root (unchanged)
 ├── .agents/
 ├── .config/
 ├── .github/

@@ -1,7 +1,7 @@
 # Booking Runtime Flows
 
 This document is the visual companion
-to [booking-domain-architecture.md](/Users/morteza/projects/github.com/unityhubio/unityhubio/booking/domain/docs/architecture/booking-domain-architecture.md).
+to [booking-domain-architecture.md](/Users/morteza/projects/github.com/skedular/skedular/booking/domain/docs/architecture/booking-domain-architecture.md).
 
 It is intentionally diagram-first and focuses on how the booking domain behaves at runtime.
 

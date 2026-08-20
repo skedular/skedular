@@ -1,4 +1,4 @@
-# unityhubio Development Guidelines
+# skedular Development Guidelines
 
 Auto-generated from all feature plans. Last updated: 2026-06-04
 
@@ -69,6 +69,8 @@ C# on .NET 10: Follow standard conventions
 <!-- MANUAL ADDITIONS END -->
 
 <!-- SPECKIT START -->
+
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
+
 <!-- SPECKIT END -->

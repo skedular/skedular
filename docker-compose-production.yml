@@ -149,7 +149,7 @@ services:
       - skedular_network
 
   staging-infra-provision:
-    image: ghcr.io/unityhubio/allinfra:latest
+    image: ghcr.io/skedular/allinfra:latest
     restart: on-failure
     depends_on:
       kafka1:
@@ -206,7 +206,7 @@ services:
       - skedular_network
 
   staging-apis-01:
-    image: ghcr.io/unityhubio/allapis:latest
+    image: ghcr.io/skedular/allapis:latest
     restart: unless-stopped
     depends_on:
       redis:
@@ -361,7 +361,7 @@ services:
       - skedular_network
 
   staging-processors-01:
-    image: ghcr.io/unityhubio/allprocessors:latest
+    image: ghcr.io/skedular/allprocessors:latest
     restart: unless-stopped
     depends_on:
       staging-jobs-01:
@@ -479,7 +479,7 @@ services:
       - skedular_network
 
   staging-jobs-01:
-    image: ghcr.io/unityhubio/alljobs:latest
+    image: ghcr.io/skedular/alljobs:latest
     restart: unless-stopped
     depends_on:
       staging-apis-01:
@@ -597,7 +597,7 @@ services:
       - skedular_network
 
   prod-infra-provision:
-    image: ghcr.io/unityhubio/allinfra:latest
+    image: ghcr.io/skedular/allinfra:latest
     restart: on-failure
     depends_on:
       kafka1:
@@ -654,7 +654,7 @@ services:
       - skedular_network
 
   prod-apis-01:
-    image: ghcr.io/unityhubio/allapis:latest
+    image: ghcr.io/skedular/allapis:latest
     restart: unless-stopped
     depends_on:
       redis:
@@ -809,7 +809,7 @@ services:
       - skedular_network
 
   prod-processors-01:
-    image: ghcr.io/unityhubio/allprocessors:latest
+    image: ghcr.io/skedular/allprocessors:latest
     restart: unless-stopped
     depends_on:
       prod-jobs-01:
@@ -927,7 +927,7 @@ services:
       - skedular_network
 
   prod-jobs-01:
-    image: ghcr.io/unityhubio/alljobs:latest
+    image: ghcr.io/skedular/alljobs:latest
     restart: unless-stopped
     depends_on:
       prod-apis-01:

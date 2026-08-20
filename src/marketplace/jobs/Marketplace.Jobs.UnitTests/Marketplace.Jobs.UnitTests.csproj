@@ -3,7 +3,7 @@
         <Author>Skedular Team</Author>
         <Copyright>© Skedular 2026. All rights reserved.</Copyright>
         <Company>Skedular Ltd</Company>
-        <RepositoryUrl>https://github.com/unityhubio/unityhubio</RepositoryUrl>
+        <RepositoryUrl>https://github.com/skedular/skedular</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <TargetFramework>net10.0</TargetFramework>
         <LangVersion>14</LangVersion>
