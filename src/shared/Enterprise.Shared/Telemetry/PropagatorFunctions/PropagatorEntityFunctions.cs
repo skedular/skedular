@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
+using System.Text.Json.Nodes;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Telemetry.PropagatorFunctions;
 
@@ -21,47 +21,47 @@ public class PropagatorEntityFunctions(ILogger<PropagatorEntityFunctions> logger
         string contextFieldName,
         string contextFieldValue)
     {
-        JObject context;
+        JsonObject context;
 
         try
         {
             context = string.IsNullOrEmpty(destination.TraceContext)
-                ? new JObject()
-                : JObject.Parse(destination.TraceContext);
+                ? new JsonObject()
+                : JsonNode.Parse(destination.TraceContext)?.AsObject() ?? new JsonObject();
         }
-        catch (JsonReaderException readerException)
+        catch (JsonException readerException)
         {
             logger.LogWarning(readerException, "Failed to parse trace context on Inject `{Context}`",
                 destination.TraceContext);
 
             // reset context
-            context = new JObject();
+            context = new JsonObject();
         }
 
         context[contextFieldName] = contextFieldValue;
-        destination.TraceContext = context.ToString(Formatting.None);
+        destination.TraceContext = context.ToJsonString();
     }
 
     public IEnumerable<string> Extract(IPropagatorEntity location, string contextFieldName)
     {
         if (string.IsNullOrEmpty(location.TraceContext))
         {
-            return Enumerable.Empty<string>();
+            return [];
         }
 
         try
         {
-            var jObject = JObject.Parse(location.TraceContext);
-            var token = jObject[contextFieldName];
+            var jsonObject = JsonNode.Parse(location.TraceContext)?.AsObject();
+            var token = jsonObject?[contextFieldName];
 
-            return token is null ? Enumerable.Empty<string>() : new[] { token.ToString() };
+            return token is null ? [] : [token.ToString()];
         }
-        catch (JsonReaderException readerException)
+        catch (JsonException readerException)
         {
             logger.LogWarning(readerException, "Failed to parse trace context on Extract `{Context}`",
                 location.TraceContext);
 
-            return Enumerable.Empty<string>();
+            return [];
         }
     }
 }
