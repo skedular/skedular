@@ -17,6 +17,7 @@ export type DurationInputProps = {
   disabled?: boolean;
   required?: boolean;
   help?: string;
+  hideLabel?: boolean;
 };
 
 type DurationUnit = 'minutes' | 'hours';
@@ -32,7 +33,7 @@ const formatHours = (value: string) => {
         .replace(/(\.\d*[1-9])0+$/, '$1');
 };
 
-const DurationInput = ({ label, value = '', onChange, disabled, required, help }: DurationInputProps) => {
+const DurationInput = ({ label, value = '', onChange, disabled, required, help, hideLabel = false }: DurationInputProps) => {
   const [unit, setUnit] = useState<DurationUnit>('hours');
   const safeValue = value ?? '';
   const displayValue = unit === 'hours' ? formatHours(safeValue) : safeValue;
@@ -41,10 +42,12 @@ const DurationInput = ({ label, value = '', onChange, disabled, required, help }
 
   return (
     <StackColumn spacing={1}>
-      <StackColumn spacing={0.5} sx={{ flexDirection: 'row', alignItems: 'center' }}>
-        <BodyIconTypography label={required ? `${label} *` : label} />
-        {help ? <FieldHelp label={label}>{help}</FieldHelp> : null}
-      </StackColumn>
+      {!hideLabel ? (
+        <StackColumn spacing={0.5} sx={{ flexDirection: 'row', alignItems: 'center' }}>
+          <BodyIconTypography label={required ? `${label} *` : label} />
+          {help ? <FieldHelp label={label}>{help}</FieldHelp> : null}
+        </StackColumn>
+      ) : null}
       <TextField
         value={displayValue}
         type="number"

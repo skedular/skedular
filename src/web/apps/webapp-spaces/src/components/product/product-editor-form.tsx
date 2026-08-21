@@ -615,19 +615,30 @@ const ProductEditorForm = ({
                       ) : null}
                     </StackRow>
                     <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr' }, gap: 2 }}>
-                      <DurationInput
-                        label="Refund timing before booking or renewal"
-                        help="How early the customer must cancel to receive this refund percentage. Multiple rules create a timeline from the latest cutoff to the earliest."
-                        value={rule.minutesBefore}
-                        onChange={(value) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`, value)}
-                        required
-                      />
-                      <FormFieldLabel
-                        label="Refund percentage"
-                        help="The percentage of the purchase price refunded when the customer cancels within this timing window. Rules are evaluated from the cancellation policy."
-                      >
+                      <Box>
+                        <StackRow sx={{ minHeight: { md: 48 }, alignItems: 'flex-start', flexWrap: 'nowrap', gap: 0.25, mb: 1 }}>
+                          <BodyIconTypography label="Refund timing before booking" />
+                          <FieldHelp label="Refund timing before booking">
+                            How early the customer must cancel to receive this refund percentage. This timing also applies before a renewal.
+                          </FieldHelp>
+                        </StackRow>
+                        <DurationInput
+                          label="Refund timing before booking"
+                          value={rule.minutesBefore}
+                          onChange={(value) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`, value)}
+                          required
+                          hideLabel
+                        />
+                      </Box>
+                      <Box>
+                        <StackRow sx={{ minHeight: { md: 48 }, alignItems: 'flex-start', flexWrap: 'nowrap', gap: 0.25, mb: 1 }}>
+                          <BodyIconTypography label="Refund percentage" />
+                          <FieldHelp label="Refund percentage">
+                            The percentage of the purchase price refunded when the customer cancels within this timing window. Rules are evaluated from the cancellation policy.
+                          </FieldHelp>
+                        </StackRow>
                         <TextField name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].refundPercentage`} helperText="0–100%" />
-                      </FormFieldLabel>
+                      </Box>
                     </Box>
                     <SmallIconTypography
                       label={
@@ -662,19 +673,30 @@ const ProductEditorForm = ({
         onChange={() => setExpandedOfferSection(expandedOfferSection === 'advanced' ? '' : 'advanced')}
       >
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
-          <DurationInput
-            label="Card payment lock window"
-            help="How long resources remain held while a card payment is pending. It protects the booking without holding availability indefinitely."
-            value={pricingOption.maxAllowedResourcesLockTimePaidViaCard}
-            onChange={(value) => changeNestedField(`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`, value)}
-            required
-          />
-          <FormFieldLabel
-            label="Bank transfer lock window (days)"
-            help="How long resources remain held while a bank-transfer payment is pending. It protects the booking without holding availability indefinitely."
-          >
+          <Box>
+            <StackRow sx={{ minHeight: { md: 48 }, alignItems: 'flex-start', flexWrap: 'nowrap', gap: 0.25, mb: 1 }}>
+              <BodyIconTypography label="Card payment lock window *" />
+              <FieldHelp label="Card payment lock window">
+                How long resources remain held while a card payment is pending. It protects the booking without holding availability indefinitely.
+              </FieldHelp>
+            </StackRow>
+            <DurationInput
+              label="Card payment lock window"
+              value={pricingOption.maxAllowedResourcesLockTimePaidViaCard}
+              onChange={(value) => changeNestedField(`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`, value)}
+              required
+              hideLabel
+            />
+          </Box>
+          <Box>
+            <StackRow sx={{ minHeight: { md: 48 }, alignItems: 'flex-start', flexWrap: 'nowrap', gap: 0.25, mb: 1 }}>
+              <BodyIconTypography label="Bank transfer lock window (days)" />
+              <FieldHelp label="Bank transfer lock window">
+                How long resources remain held while a bank-transfer payment is pending. It protects the booking without holding availability indefinitely.
+              </FieldHelp>
+            </StackRow>
             <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} required />
-          </FormFieldLabel>
+          </Box>
         </Box>
       </EditorSection>
     </StackColumn>
