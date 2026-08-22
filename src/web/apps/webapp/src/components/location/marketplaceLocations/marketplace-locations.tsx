@@ -2,7 +2,6 @@ import logger from '@/libs/logging';
 import { logAggregateMarketplaceDiscoveryCompleted } from '@/libs/logging/aggregate-marketplace-telemetry';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
 import type { marketplaceLocations_locations_refetchableFragment, OrganizationTagType } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
-import type { marketplaceLocations_query$key } from '@/queries/__generated__/marketplaceLocations_query.graphql';
 import '@/styles/leaflet/leaflet.css';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -17,7 +16,7 @@ import { memo, startTransition, useCallback, useEffect, useMemo, useRef, useStat
 import { useMap, useMapEvents } from 'react-leaflet';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.Default.css';
-import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
+import { graphql, useRefetchableFragment } from 'react-relay';
 import MarketplaceLocationCard from './marketplace-location-card';
 
 let L: typeof import('leaflet');
@@ -45,8 +44,8 @@ const getToolbarHeight = (theme: Theme) => {
 };
 
 type Props = {
-  rootDataRelay: marketplaceLocations_query$key;
   rootDataLocationsRelay: marketplaceLocations_locations_query$key;
+  favouriteLocationIds?: ReadonlySet<string>;
   onReloadRequired: () => void;
 };
 
@@ -128,16 +127,7 @@ const MapCenterTracker = ({
   return null;
 };
 
-const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadRequired }: Props) => {
-  const rootData = useFragment(
-    graphql`
-      fragment marketplaceLocations_query on Query {
-        ...marketplaceLocationCard_query
-      }
-    `,
-    rootDataRelay,
-  );
-
+const MarketplaceLocations = ({ rootDataLocationsRelay, favouriteLocationIds, onReloadRequired }: Props) => {
   const [rootDataLocationsRefetchable, refetchLocations] = useRefetchableFragment<marketplaceLocations_locations_refetchableFragment, marketplaceLocations_locations_query$key>(
     graphql`
       fragment marketplaceLocations_locations_query on Query
@@ -389,7 +379,7 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
             }}
           >
             <MarketplaceLocationCard
-              rootDataRelay={rootData}
+              favouriteLocationIds={favouriteLocationIds}
               locationDetailsRelay={selectedLocation}
               onReloadRequired={onReloadRequired}
               onClose={() => setSelectedLocationId(null)}
@@ -432,7 +422,7 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
             }}
           >
             <MarketplaceLocationCard
-              rootDataRelay={rootData}
+              favouriteLocationIds={favouriteLocationIds}
               locationDetailsRelay={selectedLocation}
               onReloadRequired={onReloadRequired}
               onClose={() => setSelectedLocationId(null)}
@@ -469,7 +459,7 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
             >
               {paginatedLocations.map((item) => (
                 <Box key={item.id} sx={{ minWidth: 0, height: '100%' }}>
-                  <MarketplaceLocationCard rootDataRelay={rootData} locationDetailsRelay={item} onReloadRequired={onReloadRequired} equalHeight />
+                  <MarketplaceLocationCard favouriteLocationIds={favouriteLocationIds} locationDetailsRelay={item} onReloadRequired={onReloadRequired} equalHeight />
                 </Box>
               ))}
             </Box>

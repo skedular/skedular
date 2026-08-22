@@ -104,7 +104,7 @@ describe('MarketplaceLocationCard', () => {
   });
 
   it('renders the compact marketplace location card with the fallback icon when no feature image exists', () => {
-    render(<MarketplaceLocationCard rootDataRelay={{} as never} locationDetailsRelay={{} as never} onReloadRequired={vi.fn()} />);
+    render(<MarketplaceLocationCard locationDetailsRelay={{} as never} onReloadRequired={vi.fn()} />);
 
     expect(screen.getByText('Harbour Workspace')).toBeInTheDocument();
     expect(screen.getByText('10 Main St, Auckland')).toBeInTheDocument();
@@ -114,7 +114,7 @@ describe('MarketplaceLocationCard', () => {
   });
 
   it('uses the aggregate marketplace location link as the purchase entry point', () => {
-    render(<MarketplaceLocationCard rootDataRelay={{} as never} locationDetailsRelay={{} as never} onReloadRequired={vi.fn()} />);
+    render(<MarketplaceLocationCard locationDetailsRelay={{} as never} onReloadRequired={vi.fn()} />);
 
     expect(screen.getByRole('link')).toHaveAttribute('href', '/marketplace/locations/location-1');
   });
@@ -128,7 +128,7 @@ describe('MarketplaceLocationCard', () => {
       return partialLocationFragmentData;
     });
 
-    render(<MarketplaceLocationCard rootDataRelay={{} as never} locationDetailsRelay={{} as never} onReloadRequired={vi.fn()} />);
+    render(<MarketplaceLocationCard locationDetailsRelay={{} as never} onReloadRequired={vi.fn()} />);
 
     expect(screen.getByText('Harbour Workspace')).toBeInTheDocument();
     expect(screen.getByText('location-icon')).toBeInTheDocument();

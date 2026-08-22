@@ -5,6 +5,7 @@ import { NoOrganizationRootShell, UnauthenticatedRootShell } from '@/components/
 import logger from '@/libs/logging';
 import { logAggregateMarketplaceDiscoveryStarted } from '@/libs/logging/aggregate-marketplace-telemetry';
 import type { pageHome_rootQuery } from '@/queries/__generated__/pageHome_rootQuery.graphql';
+import type { pageHome_favouriteLocationsQuery } from '@/queries/__generated__/pageHome_favouriteLocationsQuery.graphql';
 import { RelayError, toRootError } from '@skedular/shared';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -14,22 +15,27 @@ import { v7 as uuid } from 'uuid';
 
 type Props = {
   queryReference: PreloadedQuery<pageHome_rootQuery, Record<string, unknown>>;
+  favouriteLocationsQueryReference: PreloadedQuery<pageHome_favouriteLocationsQuery, Record<string, unknown>> | null | undefined;
   onReloadRequired: () => void;
 };
 
 const RootQuery = graphql`
-  query pageHome_rootQuery(
-    $searchBoundaries: PolygonInput
-    $locationsSortingValues: [LocationOrderInput!]
-    $resourceTypeToFilterWith: OrganizationTagType
-    $userSignedIn: Boolean!
-  ) {
-    ...marketplaceLocations_query
+  query pageHome_rootQuery($searchBoundaries: PolygonInput, $locationsSortingValues: [LocationOrderInput!], $resourceTypeToFilterWith: OrganizationTagType) {
     ...marketplaceLocations_locations_query
   }
 `;
 
-const RootPage = ({ queryReference, onReloadRequired }: Props) => {
+const FavouriteLocationsQuery = graphql`
+  query pageHome_favouriteLocationsQuery {
+    me {
+      favouriteLocations {
+        id
+      }
+    }
+  }
+`;
+
+const RootPage = ({ queryReference, favouriteLocationsQueryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<pageHome_rootQuery>(RootQuery, queryReference);
   const { user } = useAuth();
 
@@ -37,22 +43,41 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
     return (
       <NoOrganizationRootShell>
         <CustomerEntitlementsStrip />
-        <MarketplaceLocations rootDataRelay={rootData} rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
+        {favouriteLocationsQueryReference ? (
+          <AuthenticatedMarketplaceLocations rootData={rootData} favouriteLocationsQueryReference={favouriteLocationsQueryReference} onReloadRequired={onReloadRequired} />
+        ) : (
+          <Loading />
+        )}
       </NoOrganizationRootShell>
     );
   }
 
   return (
     <UnauthenticatedRootShell>
-      <MarketplaceLocations rootDataRelay={rootData} rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
+      <MarketplaceLocations rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
     </UnauthenticatedRootShell>
   );
+};
+
+const AuthenticatedMarketplaceLocations = ({
+  rootData,
+  favouriteLocationsQueryReference,
+  onReloadRequired,
+}: {
+  rootData: pageHome_rootQuery['response'];
+  favouriteLocationsQueryReference: PreloadedQuery<pageHome_favouriteLocationsQuery, Record<string, unknown>>;
+  onReloadRequired: () => void;
+}) => {
+  const favouriteLocationsData = usePreloadedQuery<pageHome_favouriteLocationsQuery>(FavouriteLocationsQuery, favouriteLocationsQueryReference);
+  const favouriteLocationIds = new Set(favouriteLocationsData.me?.favouriteLocations.map((location) => location.id) ?? []);
+  return <MarketplaceLocations rootDataLocationsRelay={rootData} favouriteLocationIds={favouriteLocationIds} onReloadRequired={onReloadRequired} />;
 };
 
 const MemoRootPage = memo(RootPage);
 
 const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageHome_rootQuery>(RootQuery);
+  const [favouriteLocationsQueryReference, loadFavouriteLocationsQuery, disposeFavouriteLocationsQuery] = useQueryLoader<pageHome_favouriteLocationsQuery>(FavouriteLocationsQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const { user, loading } = useAuth();
@@ -67,13 +92,17 @@ const RootPageWithRelay = () => {
             field: 'NAME',
           },
         ],
-        userSignedIn: !loading && !!user,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, loading, user]);
+    if (user) {
+      loadFavouriteLocationsQuery({}, { fetchPolicy: 'store-and-network' });
+    } else {
+      disposeFavouriteLocationsQuery();
+    }
+  }, [disposeFavouriteLocationsQuery, loadFavouriteLocationsQuery, loadQuery, triggerReloadId, loading, user]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -87,7 +116,11 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+      {favouriteLocationsQueryReference ? (
+        <MemoRootPage queryReference={queryReference} favouriteLocationsQueryReference={favouriteLocationsQueryReference} onReloadRequired={handleReloadRequired} />
+      ) : (
+        <Loading />
+      )}
     </ErrorBoundary>
   );
 };

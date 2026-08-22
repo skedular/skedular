@@ -8,7 +8,6 @@ import { emerald } from '@skedular/ui';
 
 import type { marketplaceLocationCard_addCustomerFavouriteLocationMutation } from '@/queries/__generated__/marketplaceLocationCard_addCustomerFavouriteLocationMutation.graphql';
 import type { marketplaceLocationCard_LocationDetails$key } from '@/queries/__generated__/marketplaceLocationCard_LocationDetails.graphql';
-import type { marketplaceLocationCard_query$key } from '@/queries/__generated__/marketplaceLocationCard_query.graphql';
 import type { marketplaceLocationCard_removeCustomerFavouriteLocationMutation } from '@/queries/__generated__/marketplaceLocationCard_removeCustomerFavouriteLocationMutation.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -29,7 +28,7 @@ import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 
 type Props = {
-  rootDataRelay: marketplaceLocationCard_query$key;
+  favouriteLocationIds?: ReadonlySet<string>;
   locationDetailsRelay: marketplaceLocationCard_LocationDetails$key;
   onReloadRequired: () => void;
   onClose?: () => void;
@@ -113,20 +112,7 @@ const closeOverlayIconButtonSx: SxProps<Theme> = {
   },
 };
 
-const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose, fullWidthPopup, equalHeight }: Props) => {
-  const rootData = useFragment(
-    graphql`
-      fragment marketplaceLocationCard_query on Query {
-        me @include(if: $userSignedIn) {
-          favouriteLocations {
-            id
-          }
-        }
-      }
-    `,
-    rootDataRelay,
-  );
-
+const MarketplaceLocationCard = ({ favouriteLocationIds = new Set<string>(), locationDetailsRelay, onClose, fullWidthPopup, equalHeight }: Props) => {
   const locationDetails = useFragment(
     graphql`
       fragment marketplaceLocationCard_LocationDetails on LocationDetails {
@@ -200,7 +186,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose,
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const { user, loading } = useAuth();
-  const isFavoured = useMemo(() => rootData.me?.favouriteLocations.some((item) => item.id === locationDetails.id), [locationDetails.id, rootData.me?.favouriteLocations]);
+  const isFavoured = useMemo(() => favouriteLocationIds.has(locationDetails.id), [favouriteLocationIds, locationDetails.id]);
   const shareUrl = useMemo(
     () => `${typeof window !== 'undefined' ? window.location.origin : ''}${getMarketplaceLocationLink(integratedPlatform, locationDetails.id)}`,
     [integratedPlatform, locationDetails.id],

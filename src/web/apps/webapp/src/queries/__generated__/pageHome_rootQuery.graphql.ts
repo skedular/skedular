@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<befade0f9412a12416773f5c8b13244f>>
+ * @generated SignedSource<<e19682555f8d7e17867a3e456ac64a76>>
  * @lightSyntaxTransform
  */
 
@@ -28,10 +28,9 @@ export type pageHome_rootQuery$variables = {
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
   resourceTypeToFilterWith?: OrganizationTagType | null | undefined;
   searchBoundaries?: PolygonInput | null | undefined;
-  userSignedIn: boolean;
 };
 export type pageHome_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"marketplaceLocations_locations_query" | "marketplaceLocations_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"marketplaceLocations_locations_query">;
 };
 export type pageHome_rootQuery = {
   response: pageHome_rootQuery$data;
@@ -54,19 +53,7 @@ v2 = {
   "kind": "LocalArgument",
   "name": "searchBoundaries"
 },
-v3 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "userSignedIn"
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v5 = [
+v3 = [
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -89,7 +76,14 @@ v5 = [
     "name": "where"
   }
 ],
-v6 = {
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -101,18 +95,12 @@ return {
     "argumentDefinitions": [
       (v0/*:: as any*/),
       (v1/*:: as any*/),
-      (v2/*:: as any*/),
-      (v3/*:: as any*/)
+      (v2/*:: as any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
     "name": "pageHome_rootQuery",
     "selections": [
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "marketplaceLocations_query"
-      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -127,46 +115,14 @@ return {
     "argumentDefinitions": [
       (v2/*:: as any*/),
       (v0/*:: as any*/),
-      (v1/*:: as any*/),
-      (v3/*:: as any*/)
+      (v1/*:: as any*/)
     ],
     "kind": "Operation",
     "name": "pageHome_rootQuery",
     "selections": [
       {
-        "condition": "userSignedIn",
-        "kind": "Condition",
-        "passingValue": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CustomerDetails",
-            "kind": "LinkedField",
-            "name": "me",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "LocationDetails",
-                "kind": "LinkedField",
-                "name": "favouriteLocations",
-                "plural": true,
-                "selections": [
-                  (v4/*:: as any*/)
-                ],
-                "storageKey": null
-              },
-              (v4/*:: as any*/)
-            ],
-            "storageKey": null
-          }
-        ]
-      },
-      {
         "alias": null,
-        "args": (v5/*:: as any*/),
+        "args": (v3/*:: as any*/),
         "concreteType": "ConnectionOfLocationEdge",
         "kind": "LinkedField",
         "name": "marketplaceLocations",
@@ -196,7 +152,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v4/*:: as any*/),
-                  (v6/*:: as any*/),
+                  (v5/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -253,7 +209,7 @@ return {
                             "name": "type",
                             "storageKey": null
                           },
-                          (v6/*:: as any*/)
+                          (v5/*:: as any*/)
                         ],
                         "storageKey": null
                       },
@@ -452,7 +408,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v5/*:: as any*/),
+        "args": (v3/*:: as any*/),
         "filters": [
           "where",
           "orderBy"
@@ -465,16 +421,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c2396741b0476902dc98500f4e034960",
+    "cacheID": "36eb727bad62e1746216dcdc78c427da",
     "id": null,
     "metadata": {},
     "name": "pageHome_rootQuery",
     "operationKind": "query",
-    "text": "query pageHome_rootQuery(\n  $searchBoundaries: PolygonInput\n  $locationsSortingValues: [LocationOrderInput!]\n  $resourceTypeToFilterWith: OrganizationTagType\n  $userSignedIn: Boolean!\n) {\n  ...marketplaceLocations_query\n  ...marketplaceLocations_locations_query\n}\n\nfragment marketplaceLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  organization {\n    type {\n      type\n      name\n    }\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  extraMetadata {\n    areaRange {\n      fromInSqm\n      toInSqm\n    }\n    peopleCapacity {\n      from\n      to\n    }\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n\nfragment marketplaceLocationCard_query on Query {\n  me @include(if: $userSignedIn) {\n    favouriteLocations {\n      id\n    }\n    id\n  }\n}\n\nfragment marketplaceLocations_locations_query on Query {\n  marketplaceLocations(where: {searchBoundaries: $searchBoundaries, resourceType: $resourceTypeToFilterWith}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        organization {\n          type {\n            type\n          }\n          id\n        }\n        ...marketplaceLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment marketplaceLocations_query on Query {\n  ...marketplaceLocationCard_query\n}\n"
+    "text": "query pageHome_rootQuery(\n  $searchBoundaries: PolygonInput\n  $locationsSortingValues: [LocationOrderInput!]\n  $resourceTypeToFilterWith: OrganizationTagType\n) {\n  ...marketplaceLocations_locations_query\n}\n\nfragment marketplaceLocationCard_LocationDetails on LocationDetails {\n  id\n  name\n  organization {\n    type {\n      type\n      name\n    }\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  extraMetadata {\n    areaRange {\n      fromInSqm\n      toInSqm\n    }\n    peopleCapacity {\n      from\n      to\n    }\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n}\n\nfragment marketplaceLocations_locations_query on Query {\n  marketplaceLocations(where: {searchBoundaries: $searchBoundaries, resourceType: $resourceTypeToFilterWith}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        physicalAddress {\n          longitude\n          latitude\n          id\n        }\n        organization {\n          type {\n            type\n          }\n          id\n        }\n        ...marketplaceLocationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e73b1eb6d0d82fa11163d13f2580ca05";
+(node as any).hash = "51109f374245452ca5f858c546a8241f";
 
 export default node;
