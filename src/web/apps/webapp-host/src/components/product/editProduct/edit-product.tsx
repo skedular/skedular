@@ -481,6 +481,10 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         bookingSlotSizeInMinutes
         defaultMaxAllowedResourcesLockTimePaidViaCard
         defaultMaxAllowedResourcesLockTimePaidViaBankTransfer
+        durationDisplayUnits {
+          type
+          name
+        }
         ...multipleChoicesProductTags_query
         ...singleChoiceCurrency_query
         ...multipleChoicesPaymentMethodTypes_query
@@ -535,6 +539,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             }
           }
           pricingOptions {
+            id
             index
             listingMetadata {
               title
@@ -781,6 +786,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             amenities: [],
             featureImages: finalFeatureImages,
             pricingOptions: normalizedPricingOptions.map((pricingOption, index) => ({
+              id: pricingOption.id,
               index,
               listingMetadata: {
                 title: pricingOption.title ?? '',

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d1bf5e4f58a6c7257d3c7ed0c3d8999a>>
+ * @generated SignedSource<<baf75b6df2be623807e760f1b8fe3f0a>>
  * @lightSyntaxTransform
  */
 
@@ -121,6 +121,7 @@ export type editProduct_updateProductMutation$data = {
           readonly minutesBefore: number;
           readonly refundPercentage: number;
         }>;
+        readonly id: string;
         readonly index: number;
         readonly isTaxInclusive: boolean;
         readonly listingMetadata: {
@@ -194,6 +195,7 @@ export type editProduct_updateProductMutation$rawResponse = {
           readonly minutesBefore: number;
           readonly refundPercentage: number;
         }>;
+        readonly id: string;
         readonly index: number;
         readonly isTaxInclusive: boolean;
         readonly listingMetadata: {
@@ -442,6 +444,7 @@ v8 = [
             "name": "pricingOptions",
             "plural": true,
             "selections": [
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -648,16 +651,16 @@ return {
     "selections": (v8/*:: as any*/)
   },
   "params": {
-    "cacheID": "e36ae7d928ad235ad56e1080fae0e51e",
+    "cacheID": "b7e33ca32b7bc9e8c01a792b69bfec89",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        availableDays\n        requiredDaysPerWeek\n        numberOfResourcesToBook\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          displayUnit\n          refundPercentage\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        id\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        availableDays\n        requiredDaysPerWeek\n        numberOfResourcesToBook\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          displayUnit\n          refundPercentage\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ff82f79c1f9c60714281270e979b3070";
+(node as any).hash = "45a1b00d0c64ff910ba35a470ce0a172";
 
 export default node;

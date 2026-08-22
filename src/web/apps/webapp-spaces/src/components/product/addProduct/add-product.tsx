@@ -32,6 +32,10 @@ const RootQuery = graphql`
     bookingSlotSizeInMinutes
     defaultMaxAllowedResourcesLockTimePaidViaCard
     defaultMaxAllowedResourcesLockTimePaidViaBankTransfer
+    durationDisplayUnits {
+      type
+      name
+    }
     currencies {
       type
       name

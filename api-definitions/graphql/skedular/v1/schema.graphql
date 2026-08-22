@@ -128,6 +128,8 @@ type Query
     @fusion__field(schema: MARKETPLACE_API)
   deskResourceType: OrganizationTagType!
     @fusion__field(schema: ORGANIZATION_API)
+  durationDisplayUnits: [DurationDisplayUnitDetails!]!
+    @fusion__field(schema: MARKETPLACE_API)
   emailsToIgnoreObservability: [String!]!
     @fusion__field(schema: ORGANIZATION_API)
   emailsToShowLatestCapabilities: [String!]!
@@ -2089,6 +2091,11 @@ type DayOfWeekDetails @fusion__type(schema: BOOKING_API) {
 type DesksOccupancyPercentage @fusion__type(schema: LOCATION_API) {
   date: DateTime! @fusion__field(schema: LOCATION_API)
   percentage: Float! @fusion__field(schema: LOCATION_API)
+}
+
+type DurationDisplayUnitDetails @fusion__type(schema: MARKETPLACE_API) {
+  name: String! @fusion__field(schema: MARKETPLACE_API)
+  type: DurationDisplayUnit! @fusion__field(schema: MARKETPLACE_API)
 }
 
 type EntitlementDetails @fusion__type(schema: BOOKING_API) {

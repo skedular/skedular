@@ -3,10 +3,10 @@ import { Field } from 'react-final-form';
 
 export const DurationInput = (props: DurationInputProps) => <SharedDurationInput {...props} />;
 
-export const DurationField = ({ name, unitName, ...props }: { name: string; unitName?: string } & Omit<DurationInputProps, 'value' | 'onChange' | 'unit' | 'onUnitChange'>) => (
+export const DurationField = ({ name, unitName, ...props }: { name: string; unitName: string } & Omit<DurationInputProps, 'value' | 'onChange' | 'unit' | 'onUnitChange'>) => (
   <Field<string> name={name}>
     {({ input }) => (
-      <Field<DurationUnit | null> name={unitName ?? name.replace(/Minutes$/, 'DisplayUnit')} subscription={{ value: true }}>
+      <Field<DurationUnit | null> name={unitName} subscription={{ value: true }}>
         {({ input: unitInput }) => (
           <SharedDurationInput
             {...props}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2de826707d8fd395cfc50f6e9760e6cf>>
+ * @generated SignedSource<<a6c537bfdbceb33b90734596eaff0e1e>>
  * @lightSyntaxTransform
  */
 
@@ -26,6 +26,10 @@ export type editProduct_query$data = {
   }>;
   readonly defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number;
   readonly defaultMaxAllowedResourcesLockTimePaidViaCard: number;
+  readonly durationDisplayUnits: ReadonlyArray<{
+    readonly name: string;
+    readonly type: DurationDisplayUnit;
+  }>;
   readonly product: {
     readonly amenities: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -577,6 +581,16 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "DurationDisplayUnitDetails",
+      "kind": "LinkedField",
+      "name": "durationDisplayUnits",
+      "plural": true,
+      "selections": (v4/*:: as any*/),
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "multipleChoicesProductTags_query"
@@ -617,6 +631,6 @@ return {
 };
 })();
 
-(node as any).hash = "c80617468461b134ff216931cc8ca776";
+(node as any).hash = "867ec27cac290b73ae436d739c75bf8f";
 
 export default node;

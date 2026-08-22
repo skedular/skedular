@@ -22,6 +22,10 @@ public class ToDurationDisplayUnitShould
         ((string?)null).ToDurationDisplayUnit().ShouldBe(DurationDisplayUnit.Hours);
 
     [Fact]
+    public void Throw_When_String_Is_Empty() =>
+        Should.Throw<ArgumentOutOfRangeException>(() => string.Empty.ToDurationDisplayUnit());
+
+    [Fact]
     public void Throw_When_String_Constant_Is_Unsupported() =>
         Should.Throw<ArgumentOutOfRangeException>(() => "UNSUPPORTED".ToDurationDisplayUnit());
 }

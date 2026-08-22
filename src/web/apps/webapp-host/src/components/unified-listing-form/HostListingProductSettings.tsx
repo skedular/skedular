@@ -395,6 +395,8 @@ const HostListingProductSettings = ({
                           label="Full refund cutoff before booking"
                           value={opt.cancellationRefundRules[0]?.minutesBefore ?? ''}
                           onChange={(value) => onChangeCancellationRule(index, 0, 'minutesBefore', value)}
+                          unit={opt.cancellationRefundRules[0]?.displayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+                          onUnitChange={(unit) => onChangeCancellationRule(index, 0, 'displayUnit', unit.toUpperCase())}
                           required
                         />
                       </StackColumn>
@@ -423,6 +425,8 @@ const HostListingProductSettings = ({
                                   label="Refund timing before booking"
                                   value={rule.minutesBefore}
                                   onChange={(value) => onChangeCancellationRule(index, ruleIndex, 'minutesBefore', value)}
+                                  unit={rule.displayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+                                  onUnitChange={(unit) => onChangeCancellationRule(index, ruleIndex, 'displayUnit', unit.toUpperCase())}
                                   required
                                 />
                               </Grid>
