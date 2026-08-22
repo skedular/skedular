@@ -71,7 +71,7 @@ type PricingOptionForm = {
 type CancellationRefundRuleForm = {
   minutesBefore: string;
   refundPercentage: string;
-  displayUnit?: 'MINUTES' | 'HOURS' | null;
+  displayUnit?: string | null;
 };
 const productAutosaveDebounceTimeout = 1000;
 
@@ -149,15 +149,21 @@ const cancellationRefundRuleSchema = object({
 const createCancellationRefundRule = (refundPercentage = '100'): CancellationRefundRuleForm => ({
   minutesBefore: '',
   refundPercentage,
+  displayUnit: null,
 });
 
 const normalizeCancellationRefundRules = (
   cancellationPolicyType: string,
-  cancellationRefundRules: readonly { readonly minutesBefore: string | number; readonly refundPercentage: string | number }[] | CancellationRefundRuleForm[] | null | undefined,
+  cancellationRefundRules:
+    | readonly { readonly minutesBefore: string | number; readonly refundPercentage: string | number; readonly displayUnit?: string | null }[]
+    | CancellationRefundRuleForm[]
+    | null
+    | undefined,
 ): CancellationRefundRuleForm[] => {
   const rules = (cancellationRefundRules ?? []).map((rule) => ({
     minutesBefore: rule.minutesBefore.toString(),
     refundPercentage: rule.refundPercentage.toString(),
+    displayUnit: rule.displayUnit ?? null,
   }));
 
   if (cancellationPolicyType === 'NO_CANCELLATION') {
@@ -169,6 +175,7 @@ const normalizeCancellationRefundRules = (
       {
         minutesBefore: rules[0]?.minutesBefore?.toString() ?? '',
         refundPercentage: '100',
+        displayUnit: rules[0]?.displayUnit ?? null,
       },
     ];
   }

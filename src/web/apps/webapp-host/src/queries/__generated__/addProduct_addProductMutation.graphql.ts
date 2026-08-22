@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<820d171652c7566dbf7b887c00d7be80>>
+ * @generated SignedSource<<4970ffca20769bbb50ecbb3048d83b71>>
  * @lightSyntaxTransform
  */
 
@@ -117,6 +117,7 @@ export type addProduct_addProductMutation$data = {
         readonly bookingCadence: ProductPricingCadence;
         readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
         readonly cancellationRefundRules: ReadonlyArray<{
+          readonly displayUnit: DurationDisplayUnit | null | undefined;
           readonly minutesBefore: number;
           readonly refundPercentage: number;
         }>;
@@ -127,8 +128,12 @@ export type addProduct_addProductMutation$data = {
           readonly title: string | null | undefined;
         };
         readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+        readonly maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
+        readonly maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit | null | undefined;
+        readonly maxDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationMinutes: number | null | undefined;
+        readonly minDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
@@ -184,6 +189,7 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly bookingCadence: ProductPricingCadence;
         readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
         readonly cancellationRefundRules: ReadonlyArray<{
+          readonly displayUnit: DurationDisplayUnit | null | undefined;
           readonly minutesBefore: number;
           readonly refundPercentage: number;
         }>;
@@ -194,8 +200,12 @@ export type addProduct_addProductMutation$rawResponse = {
           readonly title: string | null | undefined;
         };
         readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+        readonly maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
+        readonly maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit | null | undefined;
+        readonly maxDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationMinutes: number | null | undefined;
+        readonly minDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
@@ -496,7 +506,21 @@ v8 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "minDurationDisplayUnit",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "maxDurationMinutes",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "maxDurationDisplayUnit",
                 "storageKey": null
               },
               {
@@ -527,6 +551,13 @@ v8 = [
                     "kind": "ScalarField",
                     "name": "refundPercentage",
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "displayUnit",
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -549,7 +580,21 @@ v8 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "maxAllowedResourcesLockTimePaidViaCardDisplayUnit",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "maxAllowedResourcesLockTimePaidViaBankTransfer",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit",
                 "storageKey": null
               },
               {
@@ -594,16 +639,16 @@ return {
     "selections": (v8/*:: as any*/)
   },
   "params": {
-    "cacheID": "9f69833eeb4f141b57c8fdc93322a162",
+    "cacheID": "ea256082f05d2a0cbafdfdd1039864cb",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        billingMode\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n          displayUnit\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        billingMode\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "db2cc2648210dcceb0029406c5a947d3";
+(node as any).hash = "b6710e6934b31c993c5c8a487d425dda";
 
 export default node;

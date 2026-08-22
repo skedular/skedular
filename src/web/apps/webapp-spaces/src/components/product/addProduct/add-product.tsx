@@ -389,15 +389,20 @@ const AddProduct = (props: Props) => {
             price
             numberOfResourcesToBook
             minDurationMinutes
+            minDurationDisplayUnit
             maxDurationMinutes
+            maxDurationDisplayUnit
             cancellationPolicyType
             cancellationRefundRules {
               minutesBefore
               refundPercentage
+              displayUnit
             }
             isTaxInclusive
             maxAllowedResourcesLockTimePaidViaCard
+            maxAllowedResourcesLockTimePaidViaCardDisplayUnit
             maxAllowedResourcesLockTimePaidViaBankTransfer
+            maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit
             billingMode
             acceptedPaymentMethods
           }
