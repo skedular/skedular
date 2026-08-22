@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1efccfd94d1ee2f68d70422556317ff6>>
+ * @generated SignedSource<<ad4e309a4c2789b1b3c1034a20101ec6>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
+export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
@@ -43,6 +44,7 @@ export type locationPricingEditQuery$data = {
         readonly bookingCadence: ProductPricingCadence;
         readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
         readonly cancellationRefundRules: ReadonlyArray<{
+          readonly displayUnit: DurationDisplayUnit | null | undefined;
           readonly minutesBefore: number;
           readonly refundPercentage: number;
         }>;
@@ -56,8 +58,12 @@ export type locationPricingEditQuery$data = {
           readonly title: string | null | undefined;
         };
         readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+        readonly maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
+        readonly maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit | null | undefined;
+        readonly maxDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationMinutes: number | null | undefined;
+        readonly minDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
         readonly price: any;
         readonly requiredDaysPerWeek: number | null | undefined;
@@ -253,7 +259,21 @@ v3 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "minDurationDisplayUnit",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "maxDurationMinutes",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "maxDurationDisplayUnit",
                 "storageKey": null
               },
               {
@@ -276,6 +296,13 @@ v3 = [
                     "args": null,
                     "kind": "ScalarField",
                     "name": "minutesBefore",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "displayUnit",
                     "storageKey": null
                   },
                   {
@@ -313,7 +340,21 @@ v3 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "maxAllowedResourcesLockTimePaidViaCardDisplayUnit",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "maxAllowedResourcesLockTimePaidViaBankTransfer",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit",
                 "storageKey": null
               },
               {
@@ -384,16 +425,16 @@ return {
     "selections": (v3/*:: as any*/)
   },
   "params": {
-    "cacheID": "907bd0cab33fd679398eba1d306a7a71",
+    "cacheID": "67816b425b181a3e06cc010f8c0912bd",
     "id": null,
     "metadata": {},
     "name": "locationPricingEditQuery",
     "operationKind": "query",
-    "text": "query locationPricingEditQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    id\n    canModify\n    products {\n      id\n      currency {\n        type\n      }\n      listingMetadata {\n        title\n        about\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      pricingOptions {\n        id\n        price\n        bookingCadence\n        billingMode\n        acceptedPaymentMethods\n        availableDays\n        requiredDaysPerWeek\n        minDurationMinutes\n        maxDurationMinutes\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n        }\n        isTaxInclusive\n        supportsSubscriptionAutoRenewal\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        fulfillmentType\n        entitlementCreditQuantity\n        entitlementValidityDays\n        listingMetadata {\n          title\n          subTitle\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query locationPricingEditQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    id\n    canModify\n    products {\n      id\n      currency {\n        type\n      }\n      listingMetadata {\n        title\n        about\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      pricingOptions {\n        id\n        price\n        bookingCadence\n        billingMode\n        acceptedPaymentMethods\n        availableDays\n        requiredDaysPerWeek\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          displayUnit\n          refundPercentage\n        }\n        isTaxInclusive\n        supportsSubscriptionAutoRenewal\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        fulfillmentType\n        entitlementCreditQuantity\n        entitlementValidityDays\n        listingMetadata {\n          title\n          subTitle\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0e833576c6720cbb53f77909bd38be88";
+(node as any).hash = "a1f6a0370c87401ffb71eb3520b17cd5";
 
 export default node;

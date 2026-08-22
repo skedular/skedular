@@ -990,11 +990,16 @@ type ProductPricing @shareable {
   fulfillmentType: ProductPricingFulfillmentType!
   entitlementCreditQuantity: Int
   entitlementValidityDays: Int
+  minDurationDisplayUnit: DurationDisplayUnit
+  maxDurationDisplayUnit: DurationDisplayUnit
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit
 }
 
 type ProductPricingCancellationRefundRule @shareable {
   minutesBefore: Int!
   refundPercentage: Int!
+  displayUnit: DurationDisplayUnit
 }
 
 type ProductVersionDetails @key(fields: "id") {
@@ -1654,6 +1659,11 @@ enum DayOfWeek {
   THURSDAY
   FRIDAY
   SATURDAY
+}
+
+enum DurationDisplayUnit {
+  MINUTES
+  HOURS
 }
 
 enum EntitlementRenewalStatus {

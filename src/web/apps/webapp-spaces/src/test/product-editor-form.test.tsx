@@ -5,6 +5,13 @@ import type { ReactNode } from 'react';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
+const replaceMock = vi.fn();
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/organizations/test/products/test',
+  useRouter: () => ({ replace: replaceMock }),
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 vi.mock('next/image', () => ({ default: (props: React.ComponentProps<'img'>) => React.createElement('img', { ...props, alt: props.alt ?? '' }) }));
 vi.mock('@/components/icons', () => ({ DeleteIcon: () => <span data-testid="delete-icon" /> }));
 
@@ -159,6 +166,10 @@ const baseProps = {
         supportsSubscriptionAutoRenewal: false,
         maxAllowedResourcesLockTimePaidViaCard: '60',
         maxAllowedResourcesLockTimePaidViaBankTransfer: '1',
+        minDurationDisplayUnit: null,
+        maxDurationDisplayUnit: null,
+        maxAllowedResourcesLockTimePaidViaCardDisplayUnit: null,
+        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: null,
         billingMode: 'UPFRONT',
         acceptedPaymentMethods: ['CARD'],
         availableDays: [],
@@ -179,6 +190,17 @@ const baseProps = {
 };
 
 describe('ProductEditorForm', () => {
+  it('keeps duration fields canonical while carrying optional display units', () => {
+    const option = baseProps.values.pricingOptions[0];
+
+    expect(option.minDurationMinutes).toBe('60');
+    expect(option.maxDurationMinutes).toBe('480');
+    expect(option.minDurationDisplayUnit ?? null).toBeNull();
+    expect(option.maxDurationDisplayUnit ?? null).toBeNull();
+    expect(option.maxAllowedResourcesLockTimePaidViaCardDisplayUnit ?? null).toBeNull();
+    expect(option.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit ?? null).toBeNull();
+  });
+
   it('shows the modern basics presentation and customer preview', async () => {
     const user = userEvent.setup();
     const featureImage = { id: 'cover-image', original: { url: 'https://example.test/cover.png' }, thumbnail: { url: 'https://example.test/thumb.png' } };

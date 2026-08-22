@@ -87,4 +87,22 @@ describe('DurationInput', () => {
     expect(screen.getByRole('spinbutton')).toBeDisabled();
     expect(screen.getByRole('switch', { name: 'Duration unit' })).toBeDisabled();
   });
+
+  it('restores the initial minutes display unit without changing the canonical value', () => {
+    render(<DurationInput label="Duration" value="5" initialUnit="minutes" onChange={vi.fn()} />);
+
+    expect(screen.getByRole('spinbutton')).toHaveValue(5);
+    expect(screen.getByRole('switch', { name: 'Duration unit' })).not.toBeChecked();
+  });
+
+  it('supports a controlled display unit and reports unit changes separately', async () => {
+    const user = userEvent.setup();
+    const onUnitChange = vi.fn();
+
+    render(<DurationInput label="Duration" value="5" unit="hours" onUnitChange={onUnitChange} onChange={vi.fn()} />);
+
+    expect(screen.getByRole('spinbutton')).toHaveValue(0.08);
+    await user.click(screen.getByRole('switch', { name: 'Duration unit' }));
+    expect(onUnitChange).toHaveBeenCalledWith('minutes');
+  });
 });

@@ -22,7 +22,7 @@
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.15.0"/>
         <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.15.0"/>
         <!-- Required by Confluent's protobuf serdes for descriptor/reflection types such as FileDescriptorSet. -->
-        <PackageReference Include="protobuf-net.Reflection" Version="3.3.21"/>
+        <PackageReference Include="protobuf-net.Reflection" Version="3.4.14"/>
 
         <!-- Database / PostgreSQL -->
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
@@ -35,11 +35,11 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.11"/>
 
         <!-- AWS -->
-        <PackageReference Include="AWSSDK.S3" Version="4.0.102.2"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.100.9"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.102.3"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.100.10"/>
 
         <!-- gRPC / Protobuf -->
-        <PackageReference Include="Google.Protobuf" Version="3.35.1"/>
+        <PackageReference Include="Google.Protobuf" Version="3.36.0"/>
         <PackageReference Include="Grpc.AspNetCore" Version="2.83.0"/>
         <PackageReference Include="Grpc.Net.Client" Version="2.83.0"/>
 
@@ -67,7 +67,7 @@
         <!-- Caching / Redis -->
         <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.9.0"/>
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.11"/>
-        <PackageReference Include="StackExchange.Redis" Version="3.1.13"/>
+        <PackageReference Include="StackExchange.Redis" Version="3.1.31"/>
 
         <!-- Dependency Injection -->
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.11"/>
@@ -86,16 +86,16 @@
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.14.2"/>
 
         <!-- OpenTelemetry -->
-        <PackageReference Include="OpenTelemetry.Api" Version="1.17.0"/>
-        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.17.0"/>
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.17.0"/>
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.17.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.17.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.17.0-beta.1"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.17.0-beta.1"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.17.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.17.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.17.0"/>
+        <PackageReference Include="OpenTelemetry.Api" Version="1.18.0"/>
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.18.0"/>
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.18.0"/>
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.18.0"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.18.0"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.18.0-beta.1"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.18.0-beta.1"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.18.0"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.18.0"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.18.0"/>
 
         <!-- Serilog / Logging -->
         <PackageReference Include="Serilog" Version="4.4.0"/>
@@ -115,7 +115,7 @@
         <PackageReference Include="Temporalio.Extensions.Hosting" Version="1.18.0"/>
 
         <!-- Authentication / Security -->
-        <PackageReference Include="Google.Apis.Auth" Version="1.75.0"/>
+        <PackageReference Include="Google.Apis.Auth" Version="1.76.0"/>
         <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.11"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0"/>
         <PackageReference Include="WorkOS.net" Version="6.2.0"/>

@@ -21,7 +21,7 @@
 
     <ItemGroup>
         <!-- Aspire / Test Hosting -->
-        <PackageReference Include="Aspire.Hosting.Testing" Version="13.5.0"/>
+        <PackageReference Include="Aspire.Hosting.Testing" Version="13.5.2"/>
 
         <!-- gRPC -->
         <PackageReference Include="Grpc.Net.Client" Version="2.83.0"/>
@@ -31,7 +31,7 @@
 
         <!-- Test Framework -->
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0"/>
-        <PackageReference Include="Xunit.DependencyInjection" Version="11.3.1"/>
+        <PackageReference Include="Xunit.DependencyInjection" Version="11.3.2"/>
         <PackageReference Include="Xunit.DependencyInjection.Logging" Version="11.0.0"/>
 
         <!-- Test Containers -->

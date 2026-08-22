@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0e04e0843ace13fb11df9ea964a73a30>>
+ * @generated SignedSource<<3baa25a1aa69798d323021c7cf1d8550>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type Currency = "NZD" | "USD" | "%future added value";
+export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
 export type OrderDirection = "ASCENDING" | "DESCENDING" | "%future added value";
 export type OrganizationTagOrderField = "DESCRIPTION" | "NAME" | "TYPE" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
@@ -29,6 +30,10 @@ export type addProduct_rootQuery$data = {
   }>;
   readonly defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number;
   readonly defaultMaxAllowedResourcesLockTimePaidViaCard: number;
+  readonly durationDisplayUnits: ReadonlyArray<{
+    readonly name: string;
+    readonly type: DurationDisplayUnit;
+  }>;
   readonly paymentMethods: ReadonlyArray<{
     readonly name: string;
     readonly type: PaymentMethod;
@@ -92,6 +97,16 @@ v6 = [
 v7 = {
   "alias": null,
   "args": null,
+  "concreteType": "DurationDisplayUnitDetails",
+  "kind": "LinkedField",
+  "name": "durationDisplayUnits",
+  "plural": true,
+  "selections": (v6/*:: as any*/),
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
   "concreteType": "CurrencyDetails",
   "kind": "LinkedField",
   "name": "currencies",
@@ -99,7 +114,7 @@ v7 = {
   "selections": (v6/*:: as any*/),
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentMethodTypeDetails",
@@ -109,21 +124,21 @@ v8 = {
   "selections": (v6/*:: as any*/),
   "storageKey": null
 },
-v9 = [
+v10 = [
   {
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "multipleChoicesProductTagsSortingValues"
   }
 ],
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -145,6 +160,7 @@ return {
       (v4/*:: as any*/),
       (v7/*:: as any*/),
       (v8/*:: as any*/),
+      (v9/*:: as any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -203,6 +219,7 @@ return {
       (v4/*:: as any*/),
       (v7/*:: as any*/),
       (v8/*:: as any*/),
+      (v9/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -229,7 +246,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v9/*:: as any*/),
+            "args": (v10/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "productTags",
@@ -258,9 +275,9 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v10/*:: as any*/),
-                      (v5/*:: as any*/),
                       (v11/*:: as any*/),
+                      (v5/*:: as any*/),
+                      (v12/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -323,7 +340,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v9/*:: as any*/),
+            "args": (v10/*:: as any*/),
             "filters": [
               "orderBy"
             ],
@@ -332,7 +349,7 @@ return {
             "kind": "LinkedHandle",
             "name": "productTags"
           },
-          (v10/*:: as any*/),
+          (v11/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -341,9 +358,9 @@ return {
             "name": "amenities",
             "plural": true,
             "selections": [
-              (v10/*:: as any*/),
+              (v11/*:: as any*/),
               (v5/*:: as any*/),
-              (v11/*:: as any*/)
+              (v12/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -393,16 +410,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "12b2e2543215c38d22fb17ac9e84d43d",
+    "cacheID": "981f1fa3cdc7eb0734c90cff338f00ec",
     "id": null,
     "metadata": {},
     "name": "addProduct_rootQuery",
     "operationKind": "query",
-    "text": "query addProduct_rootQuery(\n  $organizationCustomDomain: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  currencies {\n    type\n    name\n  }\n  paymentMethods {\n    type\n    name\n  }\n  ...singleChoiceProductPricingBillingMode_query\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...singleChoiceProductPricingCancellationType_query\n  ...multipleChoicesAmenities_query\n  ...singleChoiceProductType_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingBillingMode_query on Query {\n  productPricingBillingModes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCancellationType_query on Query {\n  productPricingCancellationTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductType_query on Query {\n  productTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query addProduct_rootQuery(\n  $organizationCustomDomain: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  durationDisplayUnits {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethods {\n    type\n    name\n  }\n  ...singleChoiceProductPricingBillingMode_query\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...singleChoiceProductPricingCancellationType_query\n  ...multipleChoicesAmenities_query\n  ...singleChoiceProductType_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingBillingMode_query on Query {\n  productPricingBillingModes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCancellationType_query on Query {\n  productPricingCancellationTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductType_query on Query {\n  productTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8400bd95c5f41d7f85d123eb478a5ad1";
+(node as any).hash = "a76bff9c20b32a9e99f3d0f16ef1ab23";
 
 export default node;

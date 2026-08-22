@@ -9,6 +9,6 @@ public class SubgraphsConfigurations : Dictionary<string, SubgraphConfig>
 
 public class SubgraphConfig
 {
-    public string ClientName { get; set; } = "";
+    public string ClientName { get; set; } = string.Empty;
     public Uri Url { get; set; } = Constants.EmptyUri;
 }

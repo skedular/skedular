@@ -13,6 +13,20 @@ public class RootQuery(IVersionService versionService)
     public int DefaultMaxAllowedResourcesLockTimePaidViaCard => Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard;
     public int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer => Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer;
 
+    public IEnumerable<DurationDisplayUnitDetails> DurationDisplayUnits =>
+    [
+        new()
+        {
+            Type = DurationDisplayUnit.Minutes,
+            Name = DurationDisplayUnit.Minutes.ToDurationDisplayUnitName(),
+        },
+        new()
+        {
+            Type = DurationDisplayUnit.Hours,
+            Name = DurationDisplayUnit.Hours.ToDurationDisplayUnitName(),
+        },
+    ];
+
     public IEnumerable<ProductPricingFulfillmentTypeDetails> ProductPricingFulfillmentTypes =>
     [
         new()

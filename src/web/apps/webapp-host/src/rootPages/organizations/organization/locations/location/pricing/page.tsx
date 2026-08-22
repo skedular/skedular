@@ -41,6 +41,10 @@ const defaultPricingOption = (): PricingOptionForm => ({
   fulfillmentType: 'RESERVATION',
   entitlementCreditQuantity: '',
   entitlementValidityDays: '',
+  minDurationDisplayUnit: null,
+  maxDurationDisplayUnit: null,
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit: null,
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: null,
 });
 
 type FormValues = {
@@ -68,14 +72,19 @@ const buildInitialValues = (data: QueryData): FormValues => {
     cancellationPolicyType: opt.cancellationPolicyType ?? 'NO_CANCELLATION',
     cancellationRefundRules: (opt.cancellationRefundRules ?? []).map((r) => ({
       minutesBefore: String(r.minutesBefore),
+      displayUnit: r.displayUnit ?? null,
       refundPercentage: String(r.refundPercentage),
     })),
     minDurationMinutes: opt.minDurationMinutes != null ? String(opt.minDurationMinutes) : '',
+    minDurationDisplayUnit: opt.minDurationDisplayUnit ?? null,
     maxDurationMinutes: opt.maxDurationMinutes != null ? String(opt.maxDurationMinutes) : '',
+    maxDurationDisplayUnit: opt.maxDurationDisplayUnit ?? null,
     isTaxInclusive: Boolean(opt.isTaxInclusive),
     supportsSubscriptionAutoRenewal: Boolean(opt.supportsSubscriptionAutoRenewal),
     maxAllowedResourcesLockTimePaidViaCard: opt.maxAllowedResourcesLockTimePaidViaCard != null ? String(opt.maxAllowedResourcesLockTimePaidViaCard) : '15',
+    maxAllowedResourcesLockTimePaidViaCardDisplayUnit: opt.maxAllowedResourcesLockTimePaidViaCardDisplayUnit ?? null,
     maxAllowedResourcesLockTimePaidViaBankTransfer: opt.maxAllowedResourcesLockTimePaidViaBankTransfer != null ? String(opt.maxAllowedResourcesLockTimePaidViaBankTransfer) : '0',
+    maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: opt.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit ?? null,
     fulfillmentType: opt.fulfillmentType ?? 'RESERVATION',
     entitlementCreditQuantity: opt.entitlementCreditQuantity != null ? String(opt.entitlementCreditQuantity) : '',
     entitlementValidityDays: opt.entitlementValidityDays != null ? String(opt.entitlementValidityDays) : '',
@@ -132,16 +141,21 @@ const PricingPage = () => {
               availableDays
               requiredDaysPerWeek
               minDurationMinutes
+              minDurationDisplayUnit
               maxDurationMinutes
+              maxDurationDisplayUnit
               cancellationPolicyType
               cancellationRefundRules {
                 minutesBefore
+                displayUnit
                 refundPercentage
               }
               isTaxInclusive
               supportsSubscriptionAutoRenewal
               maxAllowedResourcesLockTimePaidViaCard
+              maxAllowedResourcesLockTimePaidViaCardDisplayUnit
               maxAllowedResourcesLockTimePaidViaBankTransfer
+              maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit
               fulfillmentType
               entitlementCreditQuantity
               entitlementValidityDays
@@ -371,18 +385,22 @@ const PricingPage = () => {
                 availableDays: opt.availableDays,
                 requiredDaysPerWeek: opt.cadence === 'WEEKLY' && opt.requiredDaysPerWeek.trim() ? Number(opt.requiredDaysPerWeek) : null,
                 minDurationMinutes: opt.minDurationMinutes.trim() ? Number(opt.minDurationMinutes) : null,
+                minDurationDisplayUnit: opt.minDurationDisplayUnit,
                 maxDurationMinutes: opt.maxDurationMinutes.trim() ? Number(opt.maxDurationMinutes) : null,
+                maxDurationDisplayUnit: opt.maxDurationDisplayUnit,
                 maxAllowedResourcesLockTimePaidViaCard: opt.maxAllowedResourcesLockTimePaidViaCard.trim() ? Number(opt.maxAllowedResourcesLockTimePaidViaCard) : 15,
+                maxAllowedResourcesLockTimePaidViaCardDisplayUnit: opt.maxAllowedResourcesLockTimePaidViaCardDisplayUnit,
                 maxAllowedResourcesLockTimePaidViaBankTransfer: opt.maxAllowedResourcesLockTimePaidViaBankTransfer.trim()
                   ? Number(opt.maxAllowedResourcesLockTimePaidViaBankTransfer)
                   : 0,
+                maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: opt.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit,
                 numberOfResourcesToBook: 1,
                 billingMode: opt.billingMode || 'UPFRONT',
                 supportsSubscriptionAutoRenewal: opt.supportsSubscriptionAutoRenewal,
                 cancellationPolicyType: opt.cancellationPolicyType,
                 cancellationRefundRules: opt.cancellationRefundRules
                   .filter((r) => r.minutesBefore.trim() && r.refundPercentage.trim())
-                  .map((r) => ({ minutesBefore: Number(r.minutesBefore), refundPercentage: Number(r.refundPercentage) })),
+                  .map((r) => ({ minutesBefore: Number(r.minutesBefore), displayUnit: r.displayUnit, refundPercentage: Number(r.refundPercentage) })),
                 fulfillmentType: opt.fulfillmentType,
                 entitlementCreditQuantity: opt.fulfillmentType === 'ENTITLEMENT' && opt.entitlementCreditQuantity.trim() ? Number(opt.entitlementCreditQuantity) : null,
                 entitlementValidityDays: opt.fulfillmentType === 'ENTITLEMENT' && opt.entitlementValidityDays.trim() ? Number(opt.entitlementValidityDays) : null,

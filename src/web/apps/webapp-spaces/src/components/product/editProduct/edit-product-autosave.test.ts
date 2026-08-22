@@ -34,4 +34,13 @@ describe('edit product autosave', () => {
 
     expect(source).toContain('errorNotificationOptions');
   });
+
+  it('sends duration display units in the persisted pricing mutation payload', () => {
+    const source = readFileSync(resolve(process.cwd(), 'src/components/product/editProduct/edit-product.tsx'), 'utf8');
+
+    expect(source).toContain('minDurationDisplayUnit: pricingOption.minDurationDisplayUnit');
+    expect(source).toContain('maxDurationDisplayUnit: pricingOption.maxDurationDisplayUnit');
+    expect(source).toContain('maxAllowedResourcesLockTimePaidViaCardDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaCardDisplayUnit');
+    expect(source).toContain('displayUnit: item.displayUnit');
+  });
 });

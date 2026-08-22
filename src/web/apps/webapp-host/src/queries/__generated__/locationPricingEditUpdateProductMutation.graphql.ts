@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<65224adc4f5e519304e02a2435969c23>>
+ * @generated SignedSource<<6f53b2f7fe24da3c0fb04cb5c6116676>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
+export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPatchField = "CURRENCY" | "FEATURE_IMAGES" | "LISTING_METADATA" | "PRICING_OPTIONS" | "TAGS" | "TYPE" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
@@ -58,8 +59,12 @@ export type ProductPricingInput = {
   isTaxInclusive: boolean;
   listingMetadata: ListingMetadataInput;
   maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit?: DurationDisplayUnit | null | undefined;
   maxAllowedResourcesLockTimePaidViaCard: number;
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit?: DurationDisplayUnit | null | undefined;
+  maxDurationDisplayUnit?: DurationDisplayUnit | null | undefined;
   maxDurationMinutes?: number | null | undefined;
+  minDurationDisplayUnit?: DurationDisplayUnit | null | undefined;
   minDurationMinutes?: number | null | undefined;
   numberOfResourcesToBook: number;
   price: any;
@@ -68,6 +73,7 @@ export type ProductPricingInput = {
   supportsSubscriptionAutoRenewal: boolean;
 };
 export type ProductPricingCancellationRefundRuleInput = {
+  displayUnit?: DurationDisplayUnit | null | undefined;
   minutesBefore: number;
   refundPercentage: number;
 };

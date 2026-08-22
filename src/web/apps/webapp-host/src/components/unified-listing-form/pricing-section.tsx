@@ -18,7 +18,9 @@ export type PricingFormData = {
     cancellationPolicyType: string | null;
     isTaxInclusive: boolean;
     minDurationMinutes: string | null;
+    minDurationDisplayUnit?: string | null;
     maxDurationMinutes: string | null;
+    maxDurationDisplayUnit?: string | null;
   }>;
 };
 
@@ -65,8 +67,8 @@ const PricingSection = ({ disabled = false }: PricingSectionProps) => (
 
         {/* Duration Settings */}
         <Stack direction="row" spacing={2}>
-          <DurationField name="pricingOptions.0.minDurationMinutes" label="Minimum booking duration" required />
-          <DurationField name="pricingOptions.0.maxDurationMinutes" label="Maximum booking duration" required />
+          <DurationField name="pricingOptions.0.minDurationMinutes" unitName="pricingOptions.0.minDurationDisplayUnit" label="Minimum booking duration" required />
+          <DurationField name="pricingOptions.0.maxDurationMinutes" unitName="pricingOptions.0.maxDurationDisplayUnit" label="Maximum booking duration" required />
         </Stack>
       </Stack>
     </Stack>

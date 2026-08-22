@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8fa65a4d279c51ad76371dce80d1f5d6>>
+ * @generated SignedSource<<a6c537bfdbceb33b90734596eaff0e1e>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
+export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
@@ -25,6 +26,10 @@ export type editProduct_query$data = {
   }>;
   readonly defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number;
   readonly defaultMaxAllowedResourcesLockTimePaidViaCard: number;
+  readonly durationDisplayUnits: ReadonlyArray<{
+    readonly name: string;
+    readonly type: DurationDisplayUnit;
+  }>;
   readonly product: {
     readonly amenities: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -61,6 +66,7 @@ export type editProduct_query$data = {
       readonly bookingCadence: ProductPricingCadence;
       readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
       readonly cancellationRefundRules: ReadonlyArray<{
+        readonly displayUnit: DurationDisplayUnit | null | undefined;
         readonly minutesBefore: number;
         readonly refundPercentage: number;
       }>;
@@ -75,8 +81,12 @@ export type editProduct_query$data = {
         readonly title: string | null | undefined;
       };
       readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+      readonly maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit | null | undefined;
       readonly maxAllowedResourcesLockTimePaidViaCard: number;
+      readonly maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit | null | undefined;
+      readonly maxDurationDisplayUnit: DurationDisplayUnit | null | undefined;
       readonly maxDurationMinutes: number | null | undefined;
+      readonly minDurationDisplayUnit: DurationDisplayUnit | null | undefined;
       readonly minDurationMinutes: number | null | undefined;
       readonly numberOfResourcesToBook: number;
       readonly price: any;
@@ -392,7 +402,21 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "minDurationDisplayUnit",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "maxDurationMinutes",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "maxDurationDisplayUnit",
               "storageKey": null
             },
             {
@@ -415,6 +439,13 @@ return {
                   "args": null,
                   "kind": "ScalarField",
                   "name": "minutesBefore",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "displayUnit",
                   "storageKey": null
                 },
                 {
@@ -445,7 +476,21 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "maxAllowedResourcesLockTimePaidViaCardDisplayUnit",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "maxAllowedResourcesLockTimePaidViaBankTransfer",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit",
               "storageKey": null
             },
             {
@@ -536,6 +581,16 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "DurationDisplayUnitDetails",
+      "kind": "LinkedField",
+      "name": "durationDisplayUnits",
+      "plural": true,
+      "selections": (v4/*:: as any*/),
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "multipleChoicesProductTags_query"
@@ -576,6 +631,6 @@ return {
 };
 })();
 
-(node as any).hash = "dcd9be01bd11209913f629ea25b08ff3";
+(node as any).hash = "867ec27cac290b73ae436d739c75bf8f";
 
 export default node;

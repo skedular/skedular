@@ -36,11 +36,16 @@ export type PricingOptionForm = {
   /** Empty means this price is available every calendar day. */
   availableDays: string[];
   requiredDaysPerWeek: string;
+  minDurationDisplayUnit?: string | null;
+  maxDurationDisplayUnit?: string | null;
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit?: string | null;
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit?: string | null;
 };
 
 export type CancellationRefundRuleForm = {
   minutesBefore: string;
   refundPercentage: string;
+  displayUnit?: string | null;
 };
 
 export const cancellationRefundRuleSchema = object({
@@ -57,15 +62,21 @@ export const cancellationRefundRuleSchema = object({
 export const createCancellationRefundRule = (refundPercentage = '100'): CancellationRefundRuleForm => ({
   minutesBefore: '',
   refundPercentage,
+  displayUnit: null,
 });
 
 export const normalizeCancellationRefundRules = (
   cancellationPolicyType: string,
-  cancellationRefundRules: readonly { readonly minutesBefore: string | number; readonly refundPercentage: string | number }[] | CancellationRefundRuleForm[] | null | undefined,
+  cancellationRefundRules:
+    | readonly { readonly minutesBefore: string | number; readonly refundPercentage: string | number; readonly displayUnit?: 'MINUTES' | 'HOURS' | null }[]
+    | CancellationRefundRuleForm[]
+    | null
+    | undefined,
 ): CancellationRefundRuleForm[] => {
   const rules = (cancellationRefundRules ?? []).map((rule) => ({
     minutesBefore: rule.minutesBefore.toString(),
     refundPercentage: rule.refundPercentage.toString(),
+    displayUnit: rule.displayUnit ?? null,
   }));
 
   if (cancellationPolicyType === 'NO_CANCELLATION') {
@@ -77,6 +88,7 @@ export const normalizeCancellationRefundRules = (
       {
         minutesBefore: rules[0]?.minutesBefore?.toString() ?? '',
         refundPercentage: '100',
+        displayUnit: rules[0]?.displayUnit ?? null,
       },
     ];
   }
@@ -110,6 +122,10 @@ export const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCar
   acceptedPaymentMethods: ['CARD'],
   availableDays: [],
   requiredDaysPerWeek: '',
+  minDurationDisplayUnit: null,
+  maxDurationDisplayUnit: null,
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit: null,
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: null,
 });
 
 export const isEventType = (type?: string | null) => type === 'EVENT';

@@ -18,6 +18,7 @@ import { BodyIconTypography, FormFieldLabel, LeadIconTypography, SettingsSection
 export type CancellationRefundRuleForm = {
   minutesBefore: string;
   refundPercentage: string;
+  displayUnit?: string | null;
 };
 
 export type PricingOptionForm = {
@@ -40,6 +41,10 @@ export type PricingOptionForm = {
   fulfillmentType: string;
   entitlementCreditQuantity: string;
   entitlementValidityDays: string;
+  minDurationDisplayUnit?: string | null;
+  maxDurationDisplayUnit?: string | null;
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit?: string | null;
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit?: string | null;
 };
 
 export type HostListingProductSettingsValues = {
@@ -245,6 +250,10 @@ const HostListingProductSettings = ({
                     label="Minimum booking duration"
                     value={opt.minDurationMinutes}
                     onChange={(value) => onChangePricingOption(index, 'minDurationMinutes')({ target: { value } } as React.ChangeEvent<HTMLInputElement>)}
+                    unit={opt.minDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+                    onUnitChange={(unit) =>
+                      onChangePricingOption(index, 'minDurationDisplayUnit')({ target: { value: unit.toUpperCase() } } as React.ChangeEvent<HTMLInputElement>)
+                    }
                     required
                   />
                 </Grid>
@@ -253,6 +262,10 @@ const HostListingProductSettings = ({
                     label="Maximum booking duration"
                     value={opt.maxDurationMinutes}
                     onChange={(value) => onChangePricingOption(index, 'maxDurationMinutes')({ target: { value } } as React.ChangeEvent<HTMLInputElement>)}
+                    unit={opt.maxDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+                    onUnitChange={(unit) =>
+                      onChangePricingOption(index, 'maxDurationDisplayUnit')({ target: { value: unit.toUpperCase() } } as React.ChangeEvent<HTMLInputElement>)
+                    }
                     required
                   />
                 </Grid>
@@ -382,6 +395,8 @@ const HostListingProductSettings = ({
                           label="Full refund cutoff before booking"
                           value={opt.cancellationRefundRules[0]?.minutesBefore ?? ''}
                           onChange={(value) => onChangeCancellationRule(index, 0, 'minutesBefore', value)}
+                          unit={opt.cancellationRefundRules[0]?.displayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+                          onUnitChange={(unit) => onChangeCancellationRule(index, 0, 'displayUnit', unit.toUpperCase())}
                           required
                         />
                       </StackColumn>
@@ -410,6 +425,8 @@ const HostListingProductSettings = ({
                                   label="Refund timing before booking"
                                   value={rule.minutesBefore}
                                   onChange={(value) => onChangeCancellationRule(index, ruleIndex, 'minutesBefore', value)}
+                                  unit={rule.displayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+                                  onUnitChange={(unit) => onChangeCancellationRule(index, ruleIndex, 'displayUnit', unit.toUpperCase())}
                                   required
                                 />
                               </Grid>
@@ -444,18 +461,32 @@ const HostListingProductSettings = ({
                     label="Card payment lock window"
                     value={opt.maxAllowedResourcesLockTimePaidViaCard}
                     onChange={(value) => onChangePricingOption(index, 'maxAllowedResourcesLockTimePaidViaCard')({ target: { value } } as React.ChangeEvent<HTMLInputElement>)}
+                    unit={opt.maxAllowedResourcesLockTimePaidViaCardDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+                    onUnitChange={(unit) =>
+                      onChangePricingOption(
+                        index,
+                        'maxAllowedResourcesLockTimePaidViaCardDisplayUnit',
+                      )({ target: { value: unit.toUpperCase() } } as React.ChangeEvent<HTMLInputElement>)
+                    }
                     required
                   />
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  <FormFieldLabel label="Bank transfer lock window (days)">
-                    <TextField
-                      fullWidth
-                      value={opt.maxAllowedResourcesLockTimePaidViaBankTransfer}
-                      onChange={onChangePricingOption(index, 'maxAllowedResourcesLockTimePaidViaBankTransfer')}
-                      helperText="How long the slot is reserved while a bank transfer is being confirmed."
-                    />
-                  </FormFieldLabel>
+                  <DurationInput
+                    label="Bank transfer lock window"
+                    value={opt.maxAllowedResourcesLockTimePaidViaBankTransfer}
+                    onChange={(value) =>
+                      onChangePricingOption(index, 'maxAllowedResourcesLockTimePaidViaBankTransfer')({ target: { value } } as React.ChangeEvent<HTMLInputElement>)
+                    }
+                    unit={opt.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+                    onUnitChange={(unit) =>
+                      onChangePricingOption(
+                        index,
+                        'maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit',
+                      )({ target: { value: unit.toUpperCase() } } as React.ChangeEvent<HTMLInputElement>)
+                    }
+                    required
+                  />
                 </Grid>
               </Grid>
             </SettingsSectionCard>
