@@ -58,6 +58,7 @@ import { Switches, TextField } from 'mui-rff';
 import { memo, useEffect, useMemo, useState } from 'react';
 import type { PropsWithChildren } from 'react';
 import Image from 'next/image';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { v7 as uuid } from 'uuid';
 
 type Props = {
@@ -99,6 +100,10 @@ type EditorSectionProps = {
   expanded: boolean;
   onChange: () => void;
 };
+
+const editorStepIds = new Set<ProductEditorStep['id']>(['basics', 'offers', 'review']);
+const editorSectionIds = new Set(['presentation', 'classification', 'offer-basics', 'fulfillment', 'booking-rules', 'payments', 'cancellation', 'advanced']);
+const collapsedSectionQueryValue = 'none';
 
 const EditorSection = ({ title, description, summary, expanded, onChange, children }: PropsWithChildren<EditorSectionProps>) => (
   <Accordion
@@ -238,6 +243,10 @@ const ProductEditorForm = ({
   onSetPrimaryFeatureImage,
   paletteMode,
 }: Props) => {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pricingOptions = useMemo(() => values.pricingOptions ?? [], [values.pricingOptions]);
   const [activeStep, setActiveStep] = useState<ProductEditorStep['id']>('basics');
   const [expandedBasicsSection, setExpandedBasicsSection] = useState('presentation');
   const [expandedOfferId, setExpandedOfferId] = useState<string | false>(values.pricingOptions[0]?.id ?? false);
@@ -248,7 +257,54 @@ const ProductEditorForm = ({
   const previewImage = primaryFeatureImage ?? featureImages[0] ?? null;
   const previewImageUrl = previewImage?.thumbnail?.url ?? previewImage?.original?.url ?? '';
   const validationItems = useMemo(() => Array.from(new Set(summarizeErrors(errors))).slice(0, 8), [errors]);
-  const pricingOptions = values?.pricingOptions ?? [];
+  const updateEditorUrl = (updates: { tab?: ProductEditorStep['id']; offer?: string | false; section?: string }) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (updates.tab) params.set('tab', updates.tab);
+    if (updates.offer !== undefined) {
+      if (updates.offer) params.set('offer', updates.offer);
+      else params.delete('offer');
+    }
+    if (updates.section !== undefined) {
+      if (updates.section) params.set('section', updates.section);
+      else params.set('section', collapsedSectionQueryValue);
+    }
+    const query = params.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  };
+  const setEditorStep = (step: ProductEditorStep['id']) => {
+    setActiveStep(step);
+    updateEditorUrl({ tab: step, section: step === 'basics' ? 'presentation' : step === 'offers' ? 'offer-basics' : '' });
+  };
+  const setOfferSection = (section: string) => {
+    setExpandedOfferSection(section);
+    updateEditorUrl({ section });
+  };
+  const setBasicsSection = (section: string) => {
+    setExpandedBasicsSection(section);
+    updateEditorUrl({ section });
+  };
+  const selectOffer = (offer: string | false) => {
+    setExpandedOfferId(offer);
+    setOfferSection('offer-basics');
+    updateEditorUrl({ offer, section: 'offer-basics' });
+  };
+
+  /* eslint-disable react-hooks/set-state-in-effect -- restore the view from browser URL navigation. */
+  useEffect(() => {
+    const requestedStep = searchParams.get('tab');
+    const requestedSection = searchParams.get('section');
+    const requestedOffer = searchParams.get('offer');
+    if (requestedStep && editorStepIds.has(requestedStep as ProductEditorStep['id'])) setActiveStep(requestedStep as ProductEditorStep['id']);
+    if (requestedSection === collapsedSectionQueryValue) {
+      setExpandedOfferSection('');
+      setExpandedBasicsSection('');
+    } else if (requestedSection && editorSectionIds.has(requestedSection)) {
+      if (requestedSection === 'presentation' || requestedSection === 'classification') setExpandedBasicsSection(requestedSection);
+      else setExpandedOfferSection(requestedSection);
+    }
+    if (requestedOffer && pricingOptions.some((option) => option.id === requestedOffer)) setExpandedOfferId(requestedOffer);
+  }, [pricingOptions, searchParams]);
+  /* eslint-enable react-hooks/set-state-in-effect */
   const activeOfferIndex = Math.max(
     0,
     pricingOptions.findIndex((pricingOption) => pricingOption.id === expandedOfferId),
@@ -291,8 +347,7 @@ const ProductEditorForm = ({
     };
     const nextPricingOptions = [...(values?.pricingOptions ?? []), nextOffer];
     form.change('pricingOptions', nextPricingOptions);
-    setExpandedOfferId(nextOffer.id);
-    setExpandedOfferSection('offer-basics');
+    selectOffer(nextOffer.id);
   };
 
   const closeOfferActions = () => {
@@ -315,8 +370,7 @@ const ProductEditorForm = ({
     };
     const nextPricingOptions = [...pricingOptions, duplicate];
     form.change('pricingOptions', nextPricingOptions);
-    setExpandedOfferId(duplicate.id);
-    setExpandedOfferSection('offer-basics');
+    selectOffer(duplicate.id);
     closeOfferActions();
   };
 
@@ -324,7 +378,7 @@ const ProductEditorForm = ({
     if (offerActionsIndex === null || pricingOptions.length <= 1) return;
     const nextPricingOptions = pricingOptions.filter((_, index) => index !== offerActionsIndex);
     form.change('pricingOptions', nextPricingOptions);
-    setExpandedOfferId(nextPricingOptions[0]?.id ?? false);
+    selectOffer(nextPricingOptions[0]?.id ?? false);
     closeOfferActions();
   };
 
@@ -341,13 +395,13 @@ const ProductEditorForm = ({
   };
 
   const renderOfferEditor = (pricingOption: PricingOptionForm, index: number) => (
-    <StackColumn spacing={2}>
+    <StackColumn spacing={1}>
       <EditorSection
         title="Offer basics"
         description="Set the customer-facing name and price."
         summary={`${pricingOption.title?.trim() || 'Untitled offer'} · ${pricingOption.price || 'No price'}`}
         expanded={expandedOfferSection === 'offer-basics'}
-        onChange={() => setExpandedOfferSection(expandedOfferSection === 'offer-basics' ? '' : 'offer-basics')}
+        onChange={() => setOfferSection(expandedOfferSection === 'offer-basics' ? '' : 'offer-basics')}
       >
         <ListingMetadata
           fields={['title', 'subTitle']}
@@ -376,7 +430,7 @@ const ProductEditorForm = ({
         }
         summary={`${prettifyEnum(pricingOption.fulfillmentType)} · ${prettifyEnum(pricingOption.cadence)}`}
         expanded={expandedOfferSection === 'fulfillment'}
-        onChange={() => setExpandedOfferSection(expandedOfferSection === 'fulfillment' ? '' : 'fulfillment')}
+        onChange={() => setOfferSection(expandedOfferSection === 'fulfillment' ? '' : 'fulfillment')}
       >
         <StackColumn spacing={2}>
           <FormFieldLabel
@@ -433,7 +487,7 @@ const ProductEditorForm = ({
           description="Define availability, quantity, and booking duration."
           summary={`${pricingOption.availableDays.length || 7} days · ${pricingOption.numberOfResourcesToBook || 1} resource${pricingOption.numberOfResourcesToBook === '1' ? '' : 's'} · ${formatDurationSummary(pricingOption.minDurationMinutes)}–${formatDurationSummary(pricingOption.maxDurationMinutes)}`}
           expanded={expandedOfferSection === 'booking-rules'}
-          onChange={() => setExpandedOfferSection(expandedOfferSection === 'booking-rules' ? '' : 'booking-rules')}
+          onChange={() => setOfferSection(expandedOfferSection === 'booking-rules' ? '' : 'booking-rules')}
         >
           <CalendarDayPicker availableDays={pricingOption.availableDays} onChange={(availableDays) => changeNestedField(`pricingOptions[${index}].availableDays`, availableDays)} />
           <FormFieldLabel
@@ -453,6 +507,8 @@ const ProductEditorForm = ({
               help="The shortest time a customer can book for this offer. It must not exceed the maximum duration and is saved in minutes even when entered as hours."
               value={pricingOption.minDurationMinutes}
               onChange={(value) => changeNestedField(`pricingOptions[${index}].minDurationMinutes`, value)}
+              unit={pricingOption.minDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+              onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].minDurationDisplayUnit`, unit.toUpperCase())}
               required
             />
             <DurationInput
@@ -460,6 +516,8 @@ const ProductEditorForm = ({
               help="The longest time a customer can book for this offer. It works with the minimum duration to define the allowed booking range and is saved in minutes."
               value={pricingOption.maxDurationMinutes}
               onChange={(value) => changeNestedField(`pricingOptions[${index}].maxDurationMinutes`, value)}
+              unit={pricingOption.maxDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+              onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].maxDurationDisplayUnit`, unit.toUpperCase())}
               required
             />
           </Box>
@@ -486,7 +544,7 @@ const ProductEditorForm = ({
         description="Choose billing behavior and accepted payment methods."
         summary={`${pricingOption.acceptedPaymentMethods.length || 0} payment method${pricingOption.acceptedPaymentMethods.length === 1 ? '' : 's'} · ${prettifyEnum(pricingOption.billingMode)}`}
         expanded={expandedOfferSection === 'payments'}
-        onChange={() => setExpandedOfferSection(expandedOfferSection === 'payments' ? '' : 'payments')}
+        onChange={() => setOfferSection(expandedOfferSection === 'payments' ? '' : 'payments')}
       >
         <StackRow sx={{ gap: 3, flexWrap: 'wrap' }}>
           <FormFieldLabel
@@ -522,7 +580,7 @@ const ProductEditorForm = ({
         description="Choose the refund policy customers will see."
         summary={getCancellationPolicyPreview(pricingOption)}
         expanded={expandedOfferSection === 'cancellation'}
-        onChange={() => setExpandedOfferSection(expandedOfferSection === 'cancellation' ? '' : 'cancellation')}
+        onChange={() => setOfferSection(expandedOfferSection === 'cancellation' ? '' : 'cancellation')}
       >
         <StackRow sx={{ alignItems: 'center', gap: 0.25 }}>
           <BodyIconTypography label="Cancellation policy" />
@@ -578,6 +636,8 @@ const ProductEditorForm = ({
                   label="Full refund cutoff before booking or renewal"
                   value={pricingOption.cancellationRefundRules[0]?.minutesBefore ?? ''}
                   onChange={(value) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[0].minutesBefore`, value)}
+                  unit={pricingOption.cancellationRefundRules[0]?.displayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+                  onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[0].displayUnit`, unit.toUpperCase())}
                   required
                 />
               </StackColumn>
@@ -626,6 +686,8 @@ const ProductEditorForm = ({
                           label="Refund timing before booking"
                           value={rule.minutesBefore}
                           onChange={(value) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`, value)}
+                          unit={rule.displayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+                          onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].displayUnit`, unit.toUpperCase())}
                           required
                           hideLabel
                         />
@@ -668,9 +730,9 @@ const ProductEditorForm = ({
       <EditorSection
         title="Advanced"
         description="Set how long resources remain reserved while payment completes."
-        summary={`Card ${formatDurationSummary(pricingOption.maxAllowedResourcesLockTimePaidViaCard)} · Bank transfer ${pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer || 'not set'} days`}
+        summary={`Card ${formatDurationSummary(pricingOption.maxAllowedResourcesLockTimePaidViaCard)} · Bank transfer ${formatDurationSummary(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer)}`}
         expanded={expandedOfferSection === 'advanced'}
-        onChange={() => setExpandedOfferSection(expandedOfferSection === 'advanced' ? '' : 'advanced')}
+        onChange={() => setOfferSection(expandedOfferSection === 'advanced' ? '' : 'advanced')}
       >
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
           <Box>
@@ -684,18 +746,28 @@ const ProductEditorForm = ({
               label="Card payment lock window"
               value={pricingOption.maxAllowedResourcesLockTimePaidViaCard}
               onChange={(value) => changeNestedField(`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`, value)}
+              unit={pricingOption.maxAllowedResourcesLockTimePaidViaCardDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+              onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCardDisplayUnit`, unit.toUpperCase())}
               required
               hideLabel
             />
           </Box>
           <Box>
             <StackRow sx={{ minHeight: { md: 48 }, alignItems: 'flex-start', flexWrap: 'nowrap', gap: 0.25, mb: 1 }}>
-              <BodyIconTypography label="Bank transfer lock window (days)" />
+              <BodyIconTypography label="Bank transfer lock window" />
               <FieldHelp label="Bank transfer lock window">
                 How long resources remain held while a bank-transfer payment is pending. It protects the booking without holding availability indefinitely.
               </FieldHelp>
             </StackRow>
-            <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} required />
+            <DurationInput
+              label="Bank transfer lock window"
+              value={pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer}
+              onChange={(value) => changeNestedField(`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`, value)}
+              unit={pricingOption.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+              onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit`, unit.toUpperCase())}
+              required
+              hideLabel
+            />
           </Box>
         </Box>
       </EditorSection>
@@ -718,7 +790,7 @@ const ProductEditorForm = ({
           description="Pair a strong cover image with clear customer-facing copy."
           summary={`${values.title?.trim() || 'Untitled product'} · ${featureImages.length} image${featureImages.length === 1 ? '' : 's'}`}
           expanded={expandedBasicsSection === 'presentation'}
-          onChange={() => setExpandedBasicsSection(expandedBasicsSection === 'presentation' ? '' : 'presentation')}
+          onChange={() => setBasicsSection(expandedBasicsSection === 'presentation' ? '' : 'presentation')}
         >
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(280px, 0.9fr) minmax(0, 1.1fr)' }, gap: { xs: 2.5, md: 3 }, alignItems: 'start' }}>
             <StackColumn spacing={1.5}>
@@ -869,7 +941,7 @@ const ProductEditorForm = ({
           description="Control how this product behaves and where customers discover it."
           summary={`${prettifyEnum(values.type)} · ${values.currency || 'No currency'} · ${values.productTagIds.length} tag${values.productTagIds.length === 1 ? '' : 's'}`}
           expanded={expandedBasicsSection === 'classification'}
-          onChange={() => setExpandedBasicsSection(expandedBasicsSection === 'classification' ? '' : 'classification')}
+          onChange={() => setBasicsSection(expandedBasicsSection === 'classification' ? '' : 'classification')}
         >
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }, gap: 2 }}>
             <FormFieldLabel
@@ -914,13 +986,8 @@ const ProductEditorForm = ({
 
   const renderOffers = () => (
     <StackColumn spacing={2}>
-      <StackColumn spacing={0.5} sx={{ px: { xs: 0, sm: 1 } }}>
-        <SectionIconTypography label="Offers" />
-        <SmallIconTypography label="Configure one commercial offer at a time. Add another only when the price, cadence, or booking rules are genuinely different." />
-      </StackColumn>
-
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '250px minmax(0, 1fr)' }, alignItems: 'start', gap: { xs: 2, lg: 3 } }}>
-        <Card variant="outlined" sx={{ borderRadius: 3, position: { lg: 'sticky' }, top: { lg: 24 }, boxShadow: 'none', backgroundColor: 'background.paper' }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '248px minmax(0, 1fr)' }, alignItems: 'start', gap: { xs: 2, lg: 2.5 } }}>
+        <Card variant="outlined" sx={{ borderRadius: 3, position: { lg: 'sticky' }, top: { lg: 88 }, boxShadow: 'none', backgroundColor: 'background.paper' }}>
           <CardContent sx={{ p: 1.5 }}>
             <StackColumn spacing={1.25}>
               <StackRow sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
@@ -951,8 +1018,7 @@ const ProductEditorForm = ({
                       variant="text"
                       fullWidth
                       onClick={() => {
-                        setExpandedOfferId(pricingOption.id);
-                        setExpandedOfferSection('offer-basics');
+                        selectOffer(pricingOption.id);
                       }}
                       sx={{ display: 'block', textAlign: 'left', textTransform: 'none', color: 'text.primary', borderRadius: 0, px: 1.25, py: 1.25, pr: 4.5 }}
                     >
@@ -993,13 +1059,25 @@ const ProductEditorForm = ({
           </CardContent>
         </Card>
 
-        <StackColumn spacing={2} sx={{ minWidth: 0 }}>
+        <StackColumn spacing={1} sx={{ minWidth: 0 }}>
           {activeOffer ? (
             <>
-              <Box sx={{ px: { xs: 0, sm: 1 }, py: 0.5 }}>
+              <Box
+                sx={{
+                  px: { xs: 2, sm: 2.5 },
+                  py: 1.75,
+                  border: 1,
+                  borderColor: 'divider',
+                  borderRadius: 3,
+                  backgroundColor: 'background.paper',
+                }}
+              >
                 <StackColumn spacing={0.25}>
-                  <LeadIconTypography label={activeOffer.title?.trim() || `Offer ${activeOfferIndex + 1}`} />
-                  <SmallIconTypography label="Edit the commercial details below. Changes stay focused on this offer." />
+                  <StackRow sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
+                    <LeadIconTypography label={activeOffer.title?.trim() || `Offer ${activeOfferIndex + 1}`} />
+                    <Chip size="small" color="success" label={`Offer ${activeOfferIndex + 1} of ${pricingOptions.length}`} />
+                  </StackRow>
+                  <SmallIconTypography label="Edit the commercial details below." />
                 </StackColumn>
               </Box>
               {renderOfferEditor(activeOffer, activeOfferIndex)}
@@ -1059,7 +1137,7 @@ const ProductEditorForm = ({
           <PageHeaderPanel eyebrow="Product setup" title={pageTitle} description={pageDescription} />
 
           <Box sx={{ position: 'sticky', top: 12, zIndex: 10 }}>
-            <GuidedEditorProgress steps={steps} activeStepId={activeStep} onStepChange={(stepId) => setActiveStep(stepId as ProductEditorStep['id'])} variant="compact" />
+            <GuidedEditorProgress steps={steps} activeStepId={activeStep} onStepChange={(stepId) => setEditorStep(stepId as ProductEditorStep['id'])} variant="compact" />
           </Box>
 
           <Box

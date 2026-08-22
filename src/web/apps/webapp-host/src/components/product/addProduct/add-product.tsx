@@ -85,11 +85,16 @@ type PricingOptionForm = {
   /** Empty means this price is available every calendar day. */
   availableDays: string[];
   requiredDaysPerWeek: string;
+  minDurationDisplayUnit?: string | null;
+  maxDurationDisplayUnit?: string | null;
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit?: string | null;
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit?: string | null;
 };
 
 type CancellationRefundRuleForm = {
   minutesBefore: string;
   refundPercentage: string;
+  displayUnit?: string | null;
 };
 
 const cancellationRefundRuleSchema = object({
@@ -120,7 +125,7 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   isTaxInclusive: true,
   supportsSubscriptionAutoRenewal: false,
   maxAllowedResourcesLockTimePaidViaCard: defaultMaxAllowedResourcesLockTimePaidViaCard.toString(),
-  maxAllowedResourcesLockTimePaidViaBankTransfer: (defaultMaxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
+  maxAllowedResourcesLockTimePaidViaBankTransfer: defaultMaxAllowedResourcesLockTimePaidViaBankTransfer.toString(),
   billingMode: 'NOT_SET',
   acceptedPaymentMethods: [],
   availableDays: [],
@@ -466,15 +471,20 @@ const AddProduct = (props: Props) => {
               pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
             numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
             minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
+            minDurationDisplayUnit: pricingOption.minDurationDisplayUnit,
             maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
+            maxDurationDisplayUnit: pricingOption.maxDurationDisplayUnit,
             cancellationPolicyType: pricingOption.cancellationPolicyType as never,
             cancellationRefundRules: pricingOption.cancellationRefundRules.map((item) => ({
               minutesBefore: Number(item.minutesBefore),
+              displayUnit: item.displayUnit,
               refundPercentage: Number(item.refundPercentage),
             })),
             isTaxInclusive: pricingOption.isTaxInclusive,
             maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
-            maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
+            maxAllowedResourcesLockTimePaidViaCardDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaCardDisplayUnit,
+            maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer),
+            maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit,
             billingMode: pricingOption.billingMode as never,
             acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((type) => type as PaymentMethod),
           })),
@@ -536,15 +546,20 @@ const AddProduct = (props: Props) => {
                 pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
               numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
               minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
+              minDurationDisplayUnit: pricingOption.minDurationDisplayUnit,
               maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
+              maxDurationDisplayUnit: pricingOption.maxDurationDisplayUnit,
               cancellationPolicyType: pricingOption.cancellationPolicyType as never,
               cancellationRefundRules: pricingOption.cancellationRefundRules.map((item) => ({
                 minutesBefore: Number(item.minutesBefore),
+                displayUnit: item.displayUnit,
                 refundPercentage: Number(item.refundPercentage),
               })),
               isTaxInclusive: pricingOption.isTaxInclusive,
               maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
-              maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
+              maxAllowedResourcesLockTimePaidViaCardDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaCardDisplayUnit,
+              maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer),
+              maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit,
               acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((type) => type as PaymentMethod),
             })),
           },

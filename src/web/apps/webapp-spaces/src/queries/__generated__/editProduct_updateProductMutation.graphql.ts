@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e37c8e17beb71201a706b9b5d2c3a89>>
+ * @generated SignedSource<<d1bf5e4f58a6c7257d3c7ed0c3d8999a>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
+export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPatchField = "CURRENCY" | "FEATURE_IMAGES" | "LISTING_METADATA" | "PRICING_OPTIONS" | "TAGS" | "TYPE" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
@@ -58,8 +59,12 @@ export type ProductPricingInput = {
   isTaxInclusive: boolean;
   listingMetadata: ListingMetadataInput;
   maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit?: DurationDisplayUnit | null | undefined;
   maxAllowedResourcesLockTimePaidViaCard: number;
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit?: DurationDisplayUnit | null | undefined;
+  maxDurationDisplayUnit?: DurationDisplayUnit | null | undefined;
   maxDurationMinutes?: number | null | undefined;
+  minDurationDisplayUnit?: DurationDisplayUnit | null | undefined;
   minDurationMinutes?: number | null | undefined;
   numberOfResourcesToBook: number;
   price: any;
@@ -68,6 +73,7 @@ export type ProductPricingInput = {
   supportsSubscriptionAutoRenewal: boolean;
 };
 export type ProductPricingCancellationRefundRuleInput = {
+  displayUnit?: DurationDisplayUnit | null | undefined;
   minutesBefore: number;
   refundPercentage: number;
 };
@@ -111,6 +117,7 @@ export type editProduct_updateProductMutation$data = {
         readonly bookingCadence: ProductPricingCadence;
         readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
         readonly cancellationRefundRules: ReadonlyArray<{
+          readonly displayUnit: DurationDisplayUnit | null | undefined;
           readonly minutesBefore: number;
           readonly refundPercentage: number;
         }>;
@@ -121,8 +128,12 @@ export type editProduct_updateProductMutation$data = {
           readonly title: string | null | undefined;
         };
         readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+        readonly maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
+        readonly maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit | null | undefined;
+        readonly maxDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationMinutes: number | null | undefined;
+        readonly minDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
@@ -179,6 +190,7 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly bookingCadence: ProductPricingCadence;
         readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
         readonly cancellationRefundRules: ReadonlyArray<{
+          readonly displayUnit: DurationDisplayUnit | null | undefined;
           readonly minutesBefore: number;
           readonly refundPercentage: number;
         }>;
@@ -189,8 +201,12 @@ export type editProduct_updateProductMutation$rawResponse = {
           readonly title: string | null | undefined;
         };
         readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+        readonly maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
+        readonly maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit | null | undefined;
+        readonly maxDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationMinutes: number | null | undefined;
+        readonly minDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
@@ -506,7 +522,21 @@ v8 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "minDurationDisplayUnit",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "maxDurationMinutes",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "maxDurationDisplayUnit",
                 "storageKey": null
               },
               {
@@ -529,6 +559,13 @@ v8 = [
                     "args": null,
                     "kind": "ScalarField",
                     "name": "minutesBefore",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "displayUnit",
                     "storageKey": null
                   },
                   {
@@ -559,7 +596,21 @@ v8 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "maxAllowedResourcesLockTimePaidViaCardDisplayUnit",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "maxAllowedResourcesLockTimePaidViaBankTransfer",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit",
                 "storageKey": null
               },
               {
@@ -597,16 +648,16 @@ return {
     "selections": (v8/*:: as any*/)
   },
   "params": {
-    "cacheID": "7217f9b5f0f0b18c87e4b36e178c8a6e",
+    "cacheID": "e36ae7d928ad235ad56e1080fae0e51e",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        availableDays\n        requiredDaysPerWeek\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        availableDays\n        requiredDaysPerWeek\n        numberOfResourcesToBook\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          displayUnit\n          refundPercentage\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "16fe95c7ed0a8f850510662f33ae7836";
+(node as any).hash = "ff82f79c1f9c60714281270e979b3070";
 
 export default node;

@@ -63,11 +63,16 @@ type PricingOptionForm = {
   /** Empty means this price is available every calendar day. */
   availableDays: string[];
   requiredDaysPerWeek: string;
+  minDurationDisplayUnit?: string | null;
+  maxDurationDisplayUnit?: string | null;
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit?: string | null;
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit?: string | null;
 };
 
 type CancellationRefundRuleForm = {
   minutesBefore: string;
   refundPercentage: string;
+  displayUnit?: string | null;
 };
 const productAutosaveDebounceTimeout = 1000;
 
@@ -443,15 +448,20 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             requiredDaysPerWeek
             numberOfResourcesToBook
             minDurationMinutes
+            minDurationDisplayUnit
             maxDurationMinutes
+            maxDurationDisplayUnit
             cancellationPolicyType
             cancellationRefundRules {
               minutesBefore
+              displayUnit
               refundPercentage
             }
             isTaxInclusive
             maxAllowedResourcesLockTimePaidViaCard
+            maxAllowedResourcesLockTimePaidViaCardDisplayUnit
             maxAllowedResourcesLockTimePaidViaBankTransfer
+            maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit
             billingMode
             acceptedPaymentMethods
             fulfillmentType
@@ -538,15 +548,20 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             requiredDaysPerWeek
             numberOfResourcesToBook
             minDurationMinutes
+            minDurationDisplayUnit
             maxDurationMinutes
+            maxDurationDisplayUnit
             cancellationPolicyType
             cancellationRefundRules {
               minutesBefore
+              displayUnit
               refundPercentage
             }
             isTaxInclusive
             maxAllowedResourcesLockTimePaidViaCard
+            maxAllowedResourcesLockTimePaidViaCardDisplayUnit
             maxAllowedResourcesLockTimePaidViaBankTransfer
+            maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit
             acceptedPaymentMethods
           }
         }
@@ -625,15 +640,20 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                     supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
                     numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
                     minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',
+                    minDurationDisplayUnit: pricingOption.minDurationDisplayUnit ?? null,
                     maxDurationMinutes: pricingOption.maxDurationMinutes ? pricingOption.maxDurationMinutes.toString() : '',
+                    maxDurationDisplayUnit: pricingOption.maxDurationDisplayUnit ?? null,
                     cancellationPolicyType: pricingOption.cancellationPolicyType,
                     cancellationRefundRules: normalizeCancellationRefundRules(pricingOption.cancellationPolicyType, pricingOption.cancellationRefundRules).map((item) => ({
                       minutesBefore: item.minutesBefore.toString(),
+                      displayUnit: item.displayUnit ?? null,
                       refundPercentage: item.refundPercentage.toString(),
                     })),
                     isTaxInclusive: pricingOption.isTaxInclusive,
                     maxAllowedResourcesLockTimePaidViaCard: pricingOption.maxAllowedResourcesLockTimePaidViaCard.toString(),
-                    maxAllowedResourcesLockTimePaidViaBankTransfer: (pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
+                    maxAllowedResourcesLockTimePaidViaCardDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaCardDisplayUnit ?? null,
+                    maxAllowedResourcesLockTimePaidViaBankTransfer: pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer.toString(),
+                    maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit ?? null,
                     billingMode: (pricingOption as unknown as { billingMode?: string }).billingMode ?? 'NOT_SET',
                     acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((item) => item),
                     availableDays: (pricingOption as unknown as { availableDays?: readonly string[] }).availableDays?.slice() ?? [],
@@ -707,15 +727,20 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
             numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
             minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
+            minDurationDisplayUnit: pricingOption.minDurationDisplayUnit,
             maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
+            maxDurationDisplayUnit: pricingOption.maxDurationDisplayUnit,
             cancellationPolicyType: pricingOption.cancellationPolicyType as never,
             cancellationRefundRules: pricingOption.cancellationRefundRules.map((item) => ({
               minutesBefore: Number(item.minutesBefore),
+              displayUnit: item.displayUnit,
               refundPercentage: Number(item.refundPercentage),
             })),
             isTaxInclusive: pricingOption.isTaxInclusive,
             maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
-            maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
+            maxAllowedResourcesLockTimePaidViaCardDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaCardDisplayUnit,
+            maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer),
+            maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit,
             billingMode: pricingOption.billingMode as never,
             acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((type) => type as PaymentMethod),
           })),
@@ -774,15 +799,20 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                 pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementValidityDays ? Number(pricingOption.entitlementValidityDays) : null,
               numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
               minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
+              minDurationDisplayUnit: pricingOption.minDurationDisplayUnit,
               maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
+              maxDurationDisplayUnit: pricingOption.maxDurationDisplayUnit,
               cancellationPolicyType: pricingOption.cancellationPolicyType as never,
               cancellationRefundRules: pricingOption.cancellationRefundRules.map((item) => ({
                 minutesBefore: Number(item.minutesBefore),
+                displayUnit: item.displayUnit,
                 refundPercentage: Number(item.refundPercentage),
               })),
               isTaxInclusive: pricingOption.isTaxInclusive,
               maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
-              maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
+              maxAllowedResourcesLockTimePaidViaCardDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaCardDisplayUnit,
+              maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer),
+              maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: pricingOption.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit,
               acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((type) => type as PaymentMethod),
             })),
           },
@@ -823,17 +853,17 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       <Box sx={{ flexGrow: 1 }}>
         <Form
           onSubmit={() => undefined}
-          initialValues={initialProductValues}
+          initialValues={initialProductValues ?? undefined}
           initialValuesEqual={() => true}
           validate={validateProductDetails}
           render={({ handleSubmit, values, form, errors }) => {
-            debounceSetTitle(values!.title);
-            debounceSetSubTitle(values!.subTitle);
-            debounceSetIncludedFeatures(values!.includedFeatures);
-            debounceSetType(values!.type);
-            debounceSetCurrency(values!.currency);
-            debounceSetProductTagIds(values!.productTagIds);
-            debounceSetAmenityIds(values!.amenityIds);
+            debounceSetTitle(values?.title ?? null);
+            debounceSetSubTitle(values?.subTitle ?? null);
+            debounceSetIncludedFeatures(values?.includedFeatures ?? null);
+            debounceSetType(values?.type ?? null);
+            debounceSetCurrency(values?.currency ?? null);
+            debounceSetProductTagIds(values?.productTagIds ?? []);
+            debounceSetAmenityIds(values?.amenityIds ?? []);
             const productValues = values as ProductDetails;
             const changedFields = getChangedProductFields(previousProductValues.current, productValues, previousFeatureImages.current, featureImages);
             if (changedFields.length > 0) {

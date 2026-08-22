@@ -387,7 +387,12 @@ const ProductEditorForm = ({
               <StackColumn spacing={1.5}>
                 <LeadIconTypography label="Full Refund Window" />
                 <SmallIconTypography label="If the customer cancels before this cutoff, they receive the full refund. After that point, no refund is offered." />
-                <DurationField name={`pricingOptions[${index}].cancellationRefundRules[0].minutesBefore`} label="Full refund cutoff before booking or renewal" required />
+                <DurationField
+                  name={`pricingOptions[${index}].cancellationRefundRules[0].minutesBefore`}
+                  unitName={`pricingOptions[${index}].cancellationRefundRules[0].displayUnit`}
+                  label="Full refund cutoff before booking or renewal"
+                  required
+                />
               </StackColumn>
             </CardContent>
           </Card>
@@ -422,7 +427,12 @@ const ProductEditorForm = ({
                         </Button>
                       ) : null}
                     </StackRow>
-                    <DurationField name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`} label="Refund timing before booking or renewal" required />
+                    <DurationField
+                      name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`}
+                      unitName={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].displayUnit`}
+                      label="Refund timing before booking or renewal"
+                      required
+                    />
                     <FormFieldLabel label="Refund Percentage">
                       <TextField
                         name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].refundPercentage`}
@@ -456,9 +466,7 @@ const ProductEditorForm = ({
 
       <SettingsSectionCard title="Advanced" description="Keep the operational lock windows here so the commercial setup stays readable.">
         <DurationField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`} label="Maximum resource lock duration paid via card" required />
-        <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Bank Transfer (days)">
-          <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} required />
-        </FormFieldLabel>
+        <DurationField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} label="Maximum resource lock duration paid via bank transfer" required />
       </SettingsSectionCard>
     </StackColumn>
   );

@@ -3870,10 +3870,22 @@ type ProductPricing
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit
+    @fusion__field(schema: BOOKING_API)
+    @fusion__field(schema: MARKETPLACE_API)
   maxAllowedResourcesLockTimePaidViaCard: Int!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit
+    @fusion__field(schema: BOOKING_API)
+    @fusion__field(schema: MARKETPLACE_API)
+  maxDurationDisplayUnit: DurationDisplayUnit
+    @fusion__field(schema: BOOKING_API)
+    @fusion__field(schema: MARKETPLACE_API)
   maxDurationMinutes: Int
+    @fusion__field(schema: BOOKING_API)
+    @fusion__field(schema: MARKETPLACE_API)
+  minDurationDisplayUnit: DurationDisplayUnit
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
   minDurationMinutes: Int
@@ -3909,6 +3921,9 @@ type ProductPricingCadenceDetails @fusion__type(schema: MARKETPLACE_API) {
 type ProductPricingCancellationRefundRule
   @fusion__type(schema: BOOKING_API)
   @fusion__type(schema: MARKETPLACE_API) {
+  displayUnit: DurationDisplayUnit
+    @fusion__field(schema: BOOKING_API)
+    @fusion__field(schema: MARKETPLACE_API)
   minutesBefore: Int!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
@@ -5393,6 +5408,7 @@ input ProductOrderInput @fusion__type(schema: MARKETPLACE_API) {
 
 input ProductPricingCancellationRefundRuleInput
   @fusion__type(schema: MARKETPLACE_API) {
+  displayUnit: DurationDisplayUnit @fusion__inputField(schema: MARKETPLACE_API)
   minutesBefore: Int! @fusion__inputField(schema: MARKETPLACE_API)
   refundPercentage: Int! @fusion__inputField(schema: MARKETPLACE_API)
 }
@@ -5412,8 +5428,12 @@ input ProductPricingInput @fusion__type(schema: MARKETPLACE_API) {
   isTaxInclusive: Boolean! @fusion__inputField(schema: MARKETPLACE_API)
   listingMetadata: ListingMetadataInput! @fusion__inputField(schema: MARKETPLACE_API)
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int! @fusion__inputField(schema: MARKETPLACE_API)
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit @fusion__inputField(schema: MARKETPLACE_API)
   maxAllowedResourcesLockTimePaidViaCard: Int! @fusion__inputField(schema: MARKETPLACE_API)
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit @fusion__inputField(schema: MARKETPLACE_API)
+  maxDurationDisplayUnit: DurationDisplayUnit @fusion__inputField(schema: MARKETPLACE_API)
   maxDurationMinutes: Int @fusion__inputField(schema: MARKETPLACE_API)
+  minDurationDisplayUnit: DurationDisplayUnit @fusion__inputField(schema: MARKETPLACE_API)
   minDurationMinutes: Int @fusion__inputField(schema: MARKETPLACE_API)
   numberOfResourcesToBook: Int! @fusion__inputField(schema: MARKETPLACE_API)
   price: Decimal! @fusion__inputField(schema: MARKETPLACE_API)
@@ -6220,6 +6240,17 @@ enum DayOfWeek
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   SATURDAY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+}
+
+enum DurationDisplayUnit
+  @fusion__type(schema: BOOKING_API)
+  @fusion__type(schema: MARKETPLACE_API) {
+  MINUTES
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  HOURS
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
 }

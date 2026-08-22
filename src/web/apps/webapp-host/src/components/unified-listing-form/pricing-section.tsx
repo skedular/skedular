@@ -18,7 +18,9 @@ export type PricingFormData = {
     cancellationPolicyType: string | null;
     isTaxInclusive: boolean;
     minDurationMinutes: string | null;
+    minDurationDisplayUnit?: string | null;
     maxDurationMinutes: string | null;
+    maxDurationDisplayUnit?: string | null;
   }>;
 };
 

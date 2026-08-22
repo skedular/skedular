@@ -14,13 +14,16 @@ export type DurationInputProps = {
   label: string;
   value: string | null | undefined;
   onChange: (value: string) => void;
+  initialUnit?: DurationUnit;
+  unit?: DurationUnit;
+  onUnitChange?: (unit: DurationUnit) => void;
   disabled?: boolean;
   required?: boolean;
   help?: string;
   hideLabel?: boolean;
 };
 
-type DurationUnit = 'minutes' | 'hours';
+export type DurationUnit = 'minutes' | 'hours';
 
 const formatHours = (value: string) => {
   const minutes = Number(value);
@@ -33,8 +36,20 @@ const formatHours = (value: string) => {
         .replace(/(\.\d*[1-9])0+$/, '$1');
 };
 
-const DurationInput = ({ label, value = '', onChange, disabled, required, help, hideLabel = false }: DurationInputProps) => {
-  const [unit, setUnit] = useState<DurationUnit>('hours');
+const DurationInput = ({
+  label,
+  value = '',
+  onChange,
+  initialUnit = 'hours',
+  unit: controlledUnit,
+  onUnitChange,
+  disabled,
+  required,
+  help,
+  hideLabel = false,
+}: DurationInputProps) => {
+  const [localUnit, setLocalUnit] = useState<DurationUnit>(initialUnit);
+  const unit = controlledUnit ?? localUnit;
   const safeValue = value ?? '';
   const displayValue = unit === 'hours' ? formatHours(safeValue) : safeValue;
   const minutes = Number(safeValue);
@@ -66,7 +81,11 @@ const DurationInput = ({ label, value = '', onChange, disabled, required, help, 
                 <SmallIconTypography label="Minutes" />
                 <Switch
                   checked={unit === 'hours'}
-                  onChange={(_, checked) => setUnit(checked ? 'hours' : 'minutes')}
+                  onChange={(_, checked) => {
+                    const nextUnit = checked ? 'hours' : 'minutes';
+                    setLocalUnit(nextUnit);
+                    onUnitChange?.(nextUnit);
+                  }}
                   disabled={disabled}
                   slotProps={{ input: { 'aria-label': `${label} unit` } }}
                   size="small"

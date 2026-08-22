@@ -7,6 +7,19 @@ describe('weekly price day-selection editor state', () => {
       fulfillmentType: 'RESERVATION',
       entitlementCreditQuantity: '',
       entitlementValidityDays: '',
+      minDurationDisplayUnit: null,
+      maxDurationDisplayUnit: null,
+      maxAllowedResourcesLockTimePaidViaCardDisplayUnit: null,
+      maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: null,
+    });
+  });
+
+  it('preserves per-field duration display metadata in editor state', () => {
+    expect(createPricingOption(15)).toMatchObject({
+      minDurationMinutes: '',
+      maxDurationMinutes: '',
+      maxAllowedResourcesLockTimePaidViaCard: '15',
+      maxAllowedResourcesLockTimePaidViaBankTransfer: '0',
     });
   });
 

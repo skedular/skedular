@@ -28,7 +28,15 @@ public record ProductPricing(
     int? RequiredDaysPerWeek = null,
     ProductPricingFulfillmentType FulfillmentType = ProductPricingFulfillmentType.Reservation,
     int? EntitlementCreditQuantity = null,
-    int? EntitlementValidityDays = null)
+    int? EntitlementValidityDays = null,
+    [property: JsonConverter(typeof(DurationDisplayUnitJsonConverter))]
+    DurationDisplayUnit? MinDurationDisplayUnit = null,
+    [property: JsonConverter(typeof(DurationDisplayUnitJsonConverter))]
+    DurationDisplayUnit? MaxDurationDisplayUnit = null,
+    [property: JsonConverter(typeof(DurationDisplayUnitJsonConverter))]
+    DurationDisplayUnit? MaxAllowedResourcesLockTimePaidViaCardDisplayUnit = null,
+    [property: JsonConverter(typeof(DurationDisplayUnitJsonConverter))]
+    DurationDisplayUnit? MaxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit = null)
 {
     public static ProductPricing Empty(string id) =>
         new(

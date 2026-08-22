@@ -146,6 +146,10 @@ type ProductPricing @shareable {
   fulfillmentType: ProductPricingFulfillmentType!
   entitlementCreditQuantity: Int
   entitlementValidityDays: Int
+  minDurationDisplayUnit: DurationDisplayUnit
+  maxDurationDisplayUnit: DurationDisplayUnit
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit
 }
 
 type ProductPricingBillingModeDetails {
@@ -161,6 +165,7 @@ type ProductPricingCadenceDetails {
 type ProductPricingCancellationRefundRule @shareable {
   minutesBefore: Int!
   refundPercentage: Int!
+  displayUnit: DurationDisplayUnit
 }
 
 type ProductPricingCancellationTypeDetails {
@@ -256,6 +261,7 @@ input ProductOrderInput {
 input ProductPricingCancellationRefundRuleInput {
   minutesBefore: Int!
   refundPercentage: Int!
+  displayUnit: DurationDisplayUnit
 }
 
 input ProductPricingInput {
@@ -281,6 +287,10 @@ input ProductPricingInput {
   fulfillmentType: ProductPricingFulfillmentType! = RESERVATION
   entitlementCreditQuantity: Int
   entitlementValidityDays: Int
+  minDurationDisplayUnit: DurationDisplayUnit
+  maxDurationDisplayUnit: DurationDisplayUnit
+  maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit
+  maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: DurationDisplayUnit
 }
 
 input ProductWhereInput {
@@ -315,6 +325,11 @@ enum DayOfWeek {
   THURSDAY
   FRIDAY
   SATURDAY
+}
+
+enum DurationDisplayUnit {
+  MINUTES
+  HOURS
 }
 
 enum OrderDirection {
