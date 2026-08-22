@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a421fc70556032354c5bb8dd14d7f95>>
+ * @generated SignedSource<<eac5e3a74af7ed64dc7a7ab3ac05590a>>
  * @lightSyntaxTransform
  */
 
@@ -10,10 +10,6 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type guestStoreFront_rootQuery$variables = {
-  bookingsSearchCriteriaFrom: any;
-  bookingsSearchCriteriaTo: any;
-  includeActiveSubscriptions: boolean;
-  includeUpcomingBookings: boolean;
   organizationCustomDomain: string;
 };
 export type guestStoreFront_rootQuery$data = {
@@ -33,7 +29,7 @@ export type guestStoreFront_rootQuery$data = {
     };
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontActivitySummary_query" | "guestStoreFrontFooter_query" | "guestStoreFrontLocationsStrip_query" | "guestStoreFrontProductCard_query" | "guestStoreFrontProducts_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontFooter_query" | "guestStoreFrontLocationsStrip_query" | "guestStoreFrontProductCard_query" | "guestStoreFrontProducts_query">;
 };
 export type guestStoreFront_rootQuery = {
   response: guestStoreFront_rootQuery$data;
@@ -41,60 +37,42 @@ export type guestStoreFront_rootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "bookingsSearchCriteriaFrom"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "bookingsSearchCriteriaTo"
-},
-v2 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "includeActiveSubscriptions"
-},
-v3 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "includeUpcomingBookings"
-},
-v4 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "organizationCustomDomain"
-},
-v5 = [
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "organizationCustomDomain"
+  }
+],
+v1 = [
   {
     "kind": "Variable",
     "name": "customDomain",
     "variableName": "organizationCustomDomain"
   }
 ],
-v6 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v7 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v8 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "subTitle",
   "storageKey": null
 },
-v9 = {
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "ListingMetadata",
@@ -109,8 +87,8 @@ v9 = {
       "name": "about",
       "storageKey": null
     },
-    (v7/*:: as any*/),
-    (v8/*:: as any*/),
+    (v3/*:: as any*/),
+    (v4/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -121,14 +99,14 @@ v9 = {
   ],
   "storageKey": null
 },
-v10 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v11 = {
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "CdnImageFile",
@@ -144,7 +122,7 @@ v11 = {
       "name": "original",
       "plural": false,
       "selections": [
-        (v10/*:: as any*/),
+        (v6/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -165,22 +143,21 @@ v11 = {
   ],
   "storageKey": null
 },
-v12 = {
-  "kind": "Variable",
-  "name": "organizationCustomDomain",
-  "variableName": "organizationCustomDomain"
-},
-v13 = [
-  (v12/*:: as any*/)
+v8 = [
+  {
+    "kind": "Variable",
+    "name": "organizationCustomDomain",
+    "variableName": "organizationCustomDomain"
+  }
 ],
-v14 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v15 = {
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "ListingMetadata",
@@ -188,12 +165,12 @@ v15 = {
   "name": "listingMetadata",
   "plural": false,
   "selections": [
-    (v7/*:: as any*/),
-    (v8/*:: as any*/)
+    (v3/*:: as any*/),
+    (v4/*:: as any*/)
   ],
   "storageKey": null
 },
-v16 = [
+v11 = [
   {
     "alias": null,
     "args": null,
@@ -201,16 +178,9 @@ v16 = [
     "name": "type",
     "storageKey": null
   },
-  (v6/*:: as any*/)
+  (v2/*:: as any*/)
 ],
-v17 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "totalCount",
-  "storageKey": null
-},
-v18 = [
+v12 = [
   {
     "alias": null,
     "args": null,
@@ -239,49 +209,30 @@ v18 = [
     "name": "until",
     "storageKey": null
   }
-],
-v19 = {
-  "kind": "Literal",
-  "name": "first",
-  "value": 0
-},
-v20 = {
-  "kind": "Literal",
-  "name": "includeMineOnly",
-  "value": true
-},
-v21 = [
-  (v17/*:: as any*/)
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*:: as any*/),
-      (v1/*:: as any*/),
-      (v2/*:: as any*/),
-      (v3/*:: as any*/),
-      (v4/*:: as any*/)
-    ],
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "guestStoreFront_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v5/*:: as any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationPublicDetails",
         "kind": "LinkedField",
         "name": "organizationPublic",
         "plural": false,
         "selections": [
-          (v6/*:: as any*/),
-          (v9/*:: as any*/),
-          (v11/*:: as any*/)
+          (v2/*:: as any*/),
+          (v5/*:: as any*/),
+          (v7/*:: as any*/)
         ],
         "storageKey": null
       },
       {
-        "args": (v13/*:: as any*/),
+        "args": (v8/*:: as any*/),
         "kind": "FragmentSpread",
         "name": "guestStoreFrontProducts_query"
       },
@@ -299,33 +250,6 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "guestStoreFrontFooter_query"
-      },
-      {
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "bookingsSearchCriteriaFrom",
-            "variableName": "bookingsSearchCriteriaFrom"
-          },
-          {
-            "kind": "Variable",
-            "name": "bookingsSearchCriteriaTo",
-            "variableName": "bookingsSearchCriteriaTo"
-          },
-          {
-            "kind": "Variable",
-            "name": "includeActiveSubscriptions",
-            "variableName": "includeActiveSubscriptions"
-          },
-          {
-            "kind": "Variable",
-            "name": "includeUpcomingBookings",
-            "variableName": "includeUpcomingBookings"
-          },
-          (v12/*:: as any*/)
-        ],
-        "kind": "FragmentSpread",
-        "name": "guestStoreFrontActivitySummary_query"
       }
     ],
     "type": "Query",
@@ -333,27 +257,21 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v4/*:: as any*/),
-      (v0/*:: as any*/),
-      (v1/*:: as any*/),
-      (v3/*:: as any*/),
-      (v2/*:: as any*/)
-    ],
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "guestStoreFront_rootQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v5/*:: as any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "OrganizationPublicDetails",
         "kind": "LinkedField",
         "name": "organizationPublic",
         "plural": false,
         "selections": [
-          (v6/*:: as any*/),
-          (v9/*:: as any*/),
-          (v11/*:: as any*/),
+          (v2/*:: as any*/),
+          (v5/*:: as any*/),
+          (v7/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -425,7 +343,7 @@ return {
                 "name": "country",
                 "storageKey": null
               },
-              (v14/*:: as any*/)
+              (v9/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -479,7 +397,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v14/*:: as any*/),
+                  (v9/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -495,8 +413,8 @@ return {
                         "name": "index",
                         "storageKey": null
                       },
-                      (v14/*:: as any*/),
-                      (v15/*:: as any*/),
+                      (v9/*:: as any*/),
+                      (v10/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -535,7 +453,7 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v15/*:: as any*/),
+                  (v10/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -552,7 +470,7 @@ return {
                         "name": "original",
                         "plural": false,
                         "selections": [
-                          (v10/*:: as any*/)
+                          (v6/*:: as any*/)
                         ],
                         "storageKey": null
                       }
@@ -566,7 +484,7 @@ return {
                     "kind": "LinkedField",
                     "name": "currency",
                     "plural": false,
-                    "selections": (v16/*:: as any*/),
+                    "selections": (v11/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -577,8 +495,8 @@ return {
                     "name": "amenities",
                     "plural": true,
                     "selections": [
-                      (v14/*:: as any*/),
-                      (v6/*:: as any*/)
+                      (v9/*:: as any*/),
+                      (v2/*:: as any*/)
                     ],
                     "storageKey": null
                   }
@@ -595,7 +513,7 @@ return {
         "alias": null,
         "args": [
           {
-            "fields": (v13/*:: as any*/),
+            "fields": (v8/*:: as any*/),
             "kind": "ObjectValue",
             "name": "where"
           }
@@ -605,7 +523,13 @@ return {
         "name": "marketplaceLocations",
         "plural": false,
         "selections": [
-          (v17/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "totalCount",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -622,8 +546,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v14/*:: as any*/),
-                  (v6/*:: as any*/),
+                  (v9/*:: as any*/),
+                  (v2/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -653,7 +577,7 @@ return {
                         "name": "formattedAddress",
                         "storageKey": null
                       },
-                      (v14/*:: as any*/)
+                      (v9/*:: as any*/)
                     ],
                     "storageKey": null
                   },
@@ -680,7 +604,7 @@ return {
                             "kind": "LinkedField",
                             "name": "monday",
                             "plural": false,
-                            "selections": (v18/*:: as any*/),
+                            "selections": (v12/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -690,7 +614,7 @@ return {
                             "kind": "LinkedField",
                             "name": "tuesday",
                             "plural": false,
-                            "selections": (v18/*:: as any*/),
+                            "selections": (v12/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -700,7 +624,7 @@ return {
                             "kind": "LinkedField",
                             "name": "wednesday",
                             "plural": false,
-                            "selections": (v18/*:: as any*/),
+                            "selections": (v12/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -710,7 +634,7 @@ return {
                             "kind": "LinkedField",
                             "name": "thursday",
                             "plural": false,
-                            "selections": (v18/*:: as any*/),
+                            "selections": (v12/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -720,7 +644,7 @@ return {
                             "kind": "LinkedField",
                             "name": "friday",
                             "plural": false,
-                            "selections": (v18/*:: as any*/),
+                            "selections": (v12/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -730,7 +654,7 @@ return {
                             "kind": "LinkedField",
                             "name": "saturday",
                             "plural": false,
-                            "selections": (v18/*:: as any*/),
+                            "selections": (v12/*:: as any*/),
                             "storageKey": null
                           },
                           {
@@ -740,7 +664,7 @@ return {
                             "kind": "LinkedField",
                             "name": "sunday",
                             "plural": false,
-                            "selections": (v18/*:: as any*/),
+                            "selections": (v12/*:: as any*/),
                             "storageKey": null
                           }
                         ],
@@ -765,7 +689,7 @@ return {
         "kind": "LinkedField",
         "name": "productPricingCadences",
         "plural": true,
-        "selections": (v16/*:: as any*/),
+        "selections": (v11/*:: as any*/),
         "storageKey": null
       },
       {
@@ -775,122 +699,22 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v16/*:: as any*/),
-        "storageKey": null
-      },
-      {
-        "condition": "includeUpcomingBookings",
-        "kind": "Condition",
-        "passingValue": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": [
-              (v19/*:: as any*/),
-              {
-                "fields": [
-                  {
-                    "kind": "Literal",
-                    "name": "channel",
-                    "value": "MARKETPLACE"
-                  },
-                  {
-                    "kind": "Variable",
-                    "name": "fromGte",
-                    "variableName": "bookingsSearchCriteriaFrom"
-                  },
-                  {
-                    "kind": "Variable",
-                    "name": "fromLte",
-                    "variableName": "bookingsSearchCriteriaTo"
-                  },
-                  (v20/*:: as any*/),
-                  (v12/*:: as any*/)
-                ],
-                "kind": "ObjectValue",
-                "name": "where"
-              }
-            ],
-            "concreteType": "ConnectionOfBookingEdge",
-            "kind": "LinkedField",
-            "name": "bookings",
-            "plural": false,
-            "selections": (v21/*:: as any*/),
-            "storageKey": null
-          }
-        ]
-      },
-      {
-        "condition": "includeActiveSubscriptions",
-        "kind": "Condition",
-        "passingValue": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": [
-              (v19/*:: as any*/),
-              {
-                "fields": [
-                  (v20/*:: as any*/),
-                  (v12/*:: as any*/),
-                  {
-                    "kind": "Literal",
-                    "name": "status",
-                    "value": "ACTIVE"
-                  }
-                ],
-                "kind": "ObjectValue",
-                "name": "where"
-              }
-            ],
-            "concreteType": "ConnectionOfMarketplaceBookingSubscriptionEdge",
-            "kind": "LinkedField",
-            "name": "marketplaceBookingSubscriptions",
-            "plural": false,
-            "selections": (v21/*:: as any*/),
-            "storageKey": null
-          }
-        ]
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "EntitlementDetails",
-        "kind": "LinkedField",
-        "name": "myEntitlements",
-        "plural": true,
-        "selections": [
-          (v14/*:: as any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "availableQuantity",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "status",
-            "storageKey": null
-          }
-        ],
+        "selections": (v11/*:: as any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "660f3c1209e0b297bd7b6439557649c3",
+    "cacheID": "a52fc5d2ceba9c47e4793998ad06b318",
     "id": null,
     "metadata": {},
     "name": "guestStoreFront_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFront_rootQuery(\n  $organizationCustomDomain: String!\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n  $includeUpcomingBookings: Boolean!\n  $includeActiveSubscriptions: Boolean!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...guestStoreFrontProducts_query_VqntA\n  ...guestStoreFrontLocationsStrip_query\n  ...guestStoreFrontProductCard_query\n  ...guestStoreFrontFooter_query\n  ...guestStoreFrontActivitySummary_query_2N1lMJ\n}\n\nfragment guestStoreFrontActivitySummary_query_2N1lMJ on Query {\n  bookings(first: 0, where: {organizationCustomDomain: $organizationCustomDomain, fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo, includeMineOnly: true, channel: MARKETPLACE}) @include(if: $includeUpcomingBookings) {\n    totalCount\n  }\n  marketplaceBookingSubscriptions(first: 0, where: {includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, status: ACTIVE}) @include(if: $includeActiveSubscriptions) {\n    totalCount\n  }\n  myEntitlements {\n    id\n    availableQuantity\n    status\n  }\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n\nfragment guestStoreFrontLocationsStrip_query on Query {\n  marketplaceLocations(where: {organizationCustomDomain: $organizationCustomDomain}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        timezone\n        floorPlanCount\n        physicalAddress {\n          formattedAddress\n          id\n        }\n        openingHours {\n          weekOpeningHours {\n            monday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            tuesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            wednesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            thursday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            friday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            saturday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            sunday {\n              closed\n              openAllDay\n              from\n              until\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n    availableDays\n  }\n}\n\nfragment guestStoreFrontProductCard_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n\nfragment guestStoreFrontProducts_query_VqntA on Query {\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: false}) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFront_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...guestStoreFrontProducts_query_VqntA\n  ...guestStoreFrontLocationsStrip_query\n  ...guestStoreFrontProductCard_query\n  ...guestStoreFrontFooter_query\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n\nfragment guestStoreFrontLocationsStrip_query on Query {\n  marketplaceLocations(where: {organizationCustomDomain: $organizationCustomDomain}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        timezone\n        floorPlanCount\n        physicalAddress {\n          formattedAddress\n          id\n        }\n        openingHours {\n          weekOpeningHours {\n            monday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            tuesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            wednesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            thursday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            friday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            saturday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            sunday {\n              closed\n              openAllDay\n              from\n              until\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n    availableDays\n  }\n}\n\nfragment guestStoreFrontProductCard_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n\nfragment guestStoreFrontProducts_query_VqntA on Query {\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: false}) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4d9694a89187746671cd9636cd9a8d27";
+(node as any).hash = "826c1b407aa860579bb44675cb85e00d";
 
 export default node;

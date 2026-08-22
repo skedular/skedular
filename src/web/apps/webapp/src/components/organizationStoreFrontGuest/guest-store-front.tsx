@@ -2,6 +2,7 @@ import { RelayError, convertCalendarDayToStartOfDay, endOfWeek, toRootError } fr
 import { Loading } from '@/components/loading';
 
 import type { guestStoreFront_rootQuery } from '@/queries/__generated__/guestStoreFront_rootQuery.graphql';
+import type { guestStoreFrontActivityQuery } from '@/queries/__generated__/guestStoreFrontActivityQuery.graphql';
 import type { guestStoreFrontProducts_query$key } from '@/queries/__generated__/guestStoreFrontProducts_query.graphql';
 import type { guestStoreFrontSelectedLocationProductsQuery } from '@/queries/__generated__/guestStoreFrontSelectedLocationProductsQuery.graphql';
 import ButtonBase from '@mui/material/ButtonBase';
@@ -14,7 +15,7 @@ import dayjs from 'dayjs';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import GuestStoreFrontActivitySummary from './guest-store-front-activity-summary';
+import GuestStoreFrontActivitySummary, { ActivityQuery } from './guest-store-front-activity-summary';
 import GuestStoreFrontFooter from './guest-store-front-footer';
 import GuestStoreFrontLocationsStrip from './guest-store-front-locations-strip';
 import GuestStoreFrontProductCard from './guest-store-front-product-card';
@@ -22,17 +23,12 @@ import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<guestStoreFront_rootQuery, Record<string, unknown>>;
+  activityQueryReference: PreloadedQuery<guestStoreFrontActivityQuery, Record<string, unknown>> | null | undefined;
   organizationCustomDomain: string;
 };
 
 const RootQuery = graphql`
-  query guestStoreFront_rootQuery(
-    $organizationCustomDomain: String!
-    $bookingsSearchCriteriaFrom: DateTime!
-    $bookingsSearchCriteriaTo: DateTime!
-    $includeUpcomingBookings: Boolean!
-    $includeActiveSubscriptions: Boolean!
-  ) {
+  query guestStoreFront_rootQuery($organizationCustomDomain: String!) {
     organizationPublic(customDomain: $organizationCustomDomain) {
       name
       marketplaceListingMetadata {
@@ -53,14 +49,6 @@ const RootQuery = graphql`
     ...guestStoreFrontLocationsStrip_query
     ...guestStoreFrontProductCard_query
     ...guestStoreFrontFooter_query
-    ...guestStoreFrontActivitySummary_query
-      @arguments(
-        bookingsSearchCriteriaFrom: $bookingsSearchCriteriaFrom
-        bookingsSearchCriteriaTo: $bookingsSearchCriteriaTo
-        includeUpcomingBookings: $includeUpcomingBookings
-        includeActiveSubscriptions: $includeActiveSubscriptions
-        organizationCustomDomain: $organizationCustomDomain
-      )
   }
 `;
 
@@ -122,7 +110,7 @@ const SelectedLocationProducts = ({ queryReference, rootData, organizationCustom
   return <ProductList products={selectedLocationData.location?.products ?? []} rootData={rootData} organizationCustomDomain={organizationCustomDomain} />;
 };
 
-const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) => {
+const GuestStoreFront = ({ queryReference, activityQueryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<guestStoreFront_rootQuery>(RootQuery, queryReference);
   const productsData = useFragment<guestStoreFrontProducts_query$key>(
     graphql`
@@ -279,9 +267,7 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
           )}
         </Box>
 
-        <Box sx={{ mb: 4 }}>
-          <GuestStoreFrontActivitySummary rootDataRelay={rootData} />
-        </Box>
+        <Box sx={{ mb: 4 }}>{activityQueryReference ? <GuestStoreFrontActivitySummary queryReference={activityQueryReference} /> : null}</Box>
 
         <Box sx={{ mb: 4 }}>
           <GuestStoreFrontLocationsStrip rootDataRelay={rootData} onLocationChange={setSelectedLocationId} />
@@ -303,6 +289,7 @@ const MemoGuestStoreFront = memo(GuestStoreFront);
 
 const GuestStoreFrontWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<guestStoreFront_rootQuery>(RootQuery);
+  const [activityQueryReference, loadActivityQuery, disposeActivityQuery] = useQueryLoader<guestStoreFrontActivityQuery>(ActivityQuery);
   const { organizationCustomDomain } = useKnownParams();
   const { user, loading } = useAuth();
 
@@ -315,21 +302,27 @@ const GuestStoreFrontWithRelay = () => {
       return;
     }
 
-    const today = convertCalendarDayToStartOfDay(dayjs());
-
     loadQuery(
       {
         organizationCustomDomain,
-        bookingsSearchCriteriaFrom: today.toISOString(),
-        bookingsSearchCriteriaTo: endOfWeek(today).add(-1, 'milliseconds').toISOString(),
-        includeUpcomingBookings: !!user,
-        includeActiveSubscriptions: !!user,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, loading, organizationCustomDomain, user]);
+
+    if (!user) {
+      disposeActivityQuery();
+      return;
+    }
+
+    const today = convertCalendarDayToStartOfDay(dayjs());
+    loadActivityQuery({
+      organizationCustomDomain,
+      bookingsSearchCriteriaFrom: today.toISOString(),
+      bookingsSearchCriteriaTo: endOfWeek(today).add(-1, 'milliseconds').toISOString(),
+    });
+  }, [disposeActivityQuery, loadActivityQuery, loadQuery, loading, organizationCustomDomain, user]);
 
   if (!queryReference) {
     return <Loading />;
@@ -337,7 +330,7 @@ const GuestStoreFrontWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoGuestStoreFront queryReference={queryReference} organizationCustomDomain={organizationCustomDomain} />
+      <MemoGuestStoreFront queryReference={queryReference} activityQueryReference={activityQueryReference} organizationCustomDomain={organizationCustomDomain} />
     </ErrorBoundary>
   );
 };

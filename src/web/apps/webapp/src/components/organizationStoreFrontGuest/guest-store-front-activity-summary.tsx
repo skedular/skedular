@@ -1,6 +1,6 @@
 import { getMarketplaceBookingsLink, getMarketplaceSubscriptionsLink } from '@/components/links';
 import useKnownParams from '@/hooks/use-known-params';
-import type { guestStoreFrontActivitySummary_query$key } from '@/queries/__generated__/guestStoreFrontActivitySummary_query.graphql';
+import type { guestStoreFrontActivityQuery } from '@/queries/__generated__/guestStoreFrontActivityQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -10,48 +10,39 @@ import { useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import NextLink from 'next/link';
 import { memo } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay';
 
 type Props = {
-  rootDataRelay: guestStoreFrontActivitySummary_query$key;
+  queryReference: PreloadedQuery<guestStoreFrontActivityQuery, Record<string, unknown>>;
 };
 
-const GuestStoreFrontActivitySummary = ({ rootDataRelay }: Props) => {
-  const rootData = useFragment(
-    graphql`
-      fragment guestStoreFrontActivitySummary_query on Query
-      @argumentDefinitions(
-        bookingsSearchCriteriaFrom: { type: "DateTime!" }
-        bookingsSearchCriteriaTo: { type: "DateTime!" }
-        includeUpcomingBookings: { type: "Boolean!", defaultValue: false }
-        includeActiveSubscriptions: { type: "Boolean!", defaultValue: false }
-        organizationCustomDomain: { type: "String!" }
-      ) {
-        bookings(
-          first: 0
-          where: {
-            organizationCustomDomain: $organizationCustomDomain
-            fromGte: $bookingsSearchCriteriaFrom
-            fromLte: $bookingsSearchCriteriaTo
-            includeMineOnly: true
-            channel: MARKETPLACE
-          }
-        ) @include(if: $includeUpcomingBookings) {
-          totalCount
-        }
-        marketplaceBookingSubscriptions(first: 0, where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, status: ACTIVE })
-          @include(if: $includeActiveSubscriptions) {
-          totalCount
-        }
-        myEntitlements {
-          id
-          availableQuantity
-          status
-        }
+export const ActivityQuery = graphql`
+  query guestStoreFrontActivityQuery($organizationCustomDomain: String!, $bookingsSearchCriteriaFrom: DateTime!, $bookingsSearchCriteriaTo: DateTime!) {
+    bookings(
+      first: 0
+      where: {
+        organizationCustomDomain: $organizationCustomDomain
+        fromGte: $bookingsSearchCriteriaFrom
+        fromLte: $bookingsSearchCriteriaTo
+        includeMineOnly: true
+        channel: MARKETPLACE
       }
-    `,
-    rootDataRelay,
-  );
+    ) {
+      totalCount
+    }
+    marketplaceBookingSubscriptions(first: 0, where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, status: ACTIVE }) {
+      totalCount
+    }
+    myEntitlements {
+      id
+      availableQuantity
+      status
+    }
+  }
+`;
+
+const GuestStoreFrontActivitySummary = ({ queryReference }: Props) => {
+  const rootData = usePreloadedQuery<guestStoreFrontActivityQuery>(ActivityQuery, queryReference);
   const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
 
