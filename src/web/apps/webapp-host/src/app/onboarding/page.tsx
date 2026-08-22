@@ -98,7 +98,7 @@ const OnboardingPage = () => {
           <SetupFeatureCard
             icon={<LocationOnIcon color="primary" />}
             title="One place, one hidden resource"
-            description="Skedular creates the booking resource and product tag behind the scenes."
+            description="Skedular creates the booking resource and booking group behind the scenes."
           />
           <SetupFeatureCard
             icon={<CalendarMonthIcon color="primary" />}

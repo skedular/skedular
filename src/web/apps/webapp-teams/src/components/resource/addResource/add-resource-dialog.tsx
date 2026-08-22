@@ -360,7 +360,7 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
             <SettingsSectionCard title="After adding" description="The resource will be available in this location's resource list.">
               <StackColumn spacing={1}>
                 <SmallIconTypography label="Open the resource settings to adjust opening hours." />
-                <SmallIconTypography label="Use product tags for marketplace resources that should be bookable through products." />
+                <SmallIconTypography label="Use booking groups for resources that should be bookable through matching products." />
               </StackColumn>
             </SettingsSectionCard>
           </StickyReviewRail>

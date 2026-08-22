@@ -38,19 +38,19 @@ This is the practical way to understand Skedular: an organization connects peopl
 
 <p class="documentation-badge-legend"><strong>Support legend:</strong> ✅ Supported &nbsp; ❌ Not available &nbsp; ⚙ Automatic &nbsp; 👤 Owner or renter access</p>
 
-| Concept       | Skedular Teams   | Skedular Spaces  | Skedular Host           |
-| ------------- | ---------------- | ---------------- | ----------------------- |
-| Organization  | ✅ Supported     | ✅ Supported     | ✅ Supported            |
-| Location      | ✅ Supported     | ✅ Supported     | ✅ Supported            |
-| Resource      | ✅ Supported     | ✅ Supported     | ✅ Supported            |
-| Users         | ✅ Supported     | ✅ Supported     | 👤 Owner and renters    |
-| Teams         | ✅ Supported     | ❌ Not available | ❌ Not available        |
-| Product       | ❌ Not available | ✅ Supported     | ⚙ Listing configuration |
-| Product Tags  | ❌ Not available | ✅ Supported     | ❌ Not available        |
-| Subscriptions | ❌ Not available | ✅ Supported     | ❌ Not available        |
-| Floor Plans   | ✅ Supported     | ✅ Supported     | ✅ Supported            |
-| Availability  | ✅ Supported     | ✅ Supported     | ✅ Supported            |
-| Analytics     | ✅ Supported     | ✅ Supported     | ✅ Supported            |
+| Concept        | Skedular Teams   | Skedular Spaces  | Skedular Host           |
+| -------------- | ---------------- | ---------------- | ----------------------- |
+| Organization   | ✅ Supported     | ✅ Supported     | ✅ Supported            |
+| Location       | ✅ Supported     | ✅ Supported     | ✅ Supported            |
+| Resource       | ✅ Supported     | ✅ Supported     | ✅ Supported            |
+| Users          | ✅ Supported     | ✅ Supported     | 👤 Owner and renters    |
+| Teams          | ✅ Supported     | ❌ Not available | ❌ Not available        |
+| Product        | ❌ Not available | ✅ Supported     | ⚙ Listing configuration |
+| Booking Groups | ❌ Not available | ✅ Supported     | ❌ Not available        |
+| Subscriptions  | ❌ Not available | ✅ Supported     | ❌ Not available        |
+| Floor Plans    | ✅ Supported     | ✅ Supported     | ✅ Supported            |
+| Availability   | ✅ Supported     | ✅ Supported     | ✅ Supported            |
+| Analytics      | ✅ Supported     | ✅ Supported     | ✅ Supported            |
 
 ## Organization
 
@@ -68,7 +68,7 @@ A [floor plan](/docs/shared/core-concepts/floor-plans) is the visual layout of a
 
 ## Resource
 
-A [resource](/docs/shared/core-concepts/resources) is bookable inventory that belongs to exactly one location. A resource has a type and capacity, may have [tags](/docs/shared/core-concepts/tags), may belong to [zones](/docs/shared/core-concepts/zones), and may have Product Tags in [Skedular Spaces](/docs/spaces). It inherits opening hours from its location unless an override applies. Resources are the things users and customers actually book.
+A [resource](/docs/shared/core-concepts/resources) is bookable inventory that belongs to exactly one location. A resource has a type and capacity, may have [tags](/docs/shared/core-concepts/tags), may belong to [zones](/docs/shared/core-concepts/zones), and may have Booking Groups in [Skedular Spaces](/docs/spaces). It inherits opening hours from its location unless an override applies. Resources are the things users and customers actually book.
 
 > **Core rule:** Every resource belongs to exactly one location.
 
@@ -110,13 +110,13 @@ Analytics explains what has happened across bookings and resource activity. It h
 
 ## Product and offer context
 
-[Products](/docs/shared/marketplace/products) are the commercial layer of [Skedular Spaces](/docs/spaces). They define what customers purchase. Product Tags determine which resources fulfil a purchase, and a product may contain multiple offers. Each offer can define pricing, billing rules, payment methods, and cancellation policies. [Skedular Host](/docs/host) exposes a simpler place-first listing configuration instead.
+[Products](/docs/shared/marketplace/products) are the commercial layer of [Skedular Spaces](/docs/spaces). They define what customers purchase. Booking Groups determine which resources fulfil a purchase, and a product may contain multiple offers. Each offer can define pricing, billing rules, payment methods, and cancellation policies. [Skedular Host](/docs/host) exposes a simpler place-first listing configuration instead.
 
-> **Spaces only:** Products and Product Tags belong to the Skedular Spaces marketplace model.
+> **Spaces only:** Products and Booking Groups belong to the Skedular Spaces marketplace model.
 
-## Product Tags
+## Booking Groups
 
-[Product Tags](/docs/spaces/core-features/products-and-pricing) connect a Spaces product or offer to the resources that can fulfil it. They are different from ordinary resource tags: resource tags describe inventory, while Product Tags support commercial allocation.
+[Booking Groups](/docs/spaces/core-features/products-and-pricing) connect a Spaces product or offer to the resources that can fulfil it. They are different from ordinary resource tags: resource tags describe inventory, while Booking Groups support commercial allocation.
 
 ## Subscriptions and commerce
 

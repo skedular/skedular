@@ -29,9 +29,9 @@ const AddOrganizationProductTagButton = ({ organizationCustomDomain, fullWidth, 
 
   return (
     <Button component={NextLink} href={href} variant={variant ?? 'text'} fullWidth={fullWidth} sx={{ textTransform: 'none' }}>
-      {size === 'small' && <SmallIconTypography label={label ?? 'Add Product Tag'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
-      {size === 'medium' && <BodyIconTypography label={label ?? 'Add Product Tag'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
-      {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Product Tag'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
+      {size === 'small' && <SmallIconTypography label={label ?? 'Add Booking Group'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
+      {size === 'medium' && <BodyIconTypography label={label ?? 'Add Booking Group'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
+      {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Booking Group'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
     </Button>
   );
 };

@@ -35,7 +35,7 @@ type ProductTagDetails = {
 };
 
 const productTagSchema = object({
-  name: string().required('Product tag name is required'),
+  name: string().required('Booking group name is required'),
   description: string().nullable(),
 });
 
@@ -80,7 +80,7 @@ const AddOrganizationProductTagPageComponent = ({ organizationCustomDomain, conn
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          themedToast(<NotificationContent content={`We couldn't add the product tag '${name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
+          themedToast(<NotificationContent content={`We couldn't add the booking group '${name}'. ${getRelayErrorMessage(errors)}`} />, errorNotificationOptions);
 
           return;
         }
@@ -88,7 +88,7 @@ const AddOrganizationProductTagPageComponent = ({ organizationCustomDomain, conn
         onAddClicked();
       },
       onError: (error) => {
-        themedToast(<NotificationContent content={`We couldn't add the product tag '${name}'. ${error.message}`} />, errorNotificationOptions);
+        themedToast(<NotificationContent content={`We couldn't add the booking group '${name}'. ${error.message}`} />, errorNotificationOptions);
       },
       optimisticResponse: {
         addProductTag: {
@@ -107,7 +107,7 @@ const AddOrganizationProductTagPageComponent = ({ organizationCustomDomain, conn
     <Box sx={{ px: { xs: 2, md: 3 }, py: 3 }}>
       <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
         <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
-          <PageHeaderPanel title="Add product tag" description="Create a customer-facing product tag for marketplace listings and resource-product matching." />
+          <PageHeaderPanel title="Add booking group" description="Create a group that links products to the resources customers can book." />
 
           <Form
             onSubmit={handleAddClick}
@@ -116,10 +116,10 @@ const AddOrganizationProductTagPageComponent = ({ organizationCustomDomain, conn
             render={({ handleSubmit }) => {
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
-                  <SettingsSectionCard title="Product tag details" description="Set the label and description shown when products and resources are grouped.">
+                  <SettingsSectionCard title="Booking group details" description="Set the label and description used to link products and resources.">
                     <StackColumn spacing={2}>
                       <FormFieldLabel label="Name">
-                        <TextField name="name" required={requiredFields.name} helperText="Use a clear customer-facing category name." />
+                        <TextField name="name" required={requiredFields.name} helperText="Use a clear name, such as Hot desks or Meeting rooms." />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Description">
@@ -128,7 +128,7 @@ const AddOrganizationProductTagPageComponent = ({ organizationCustomDomain, conn
                     </StackColumn>
                   </SettingsSectionCard>
 
-                  <SettingsSectionCard title="Appearance" description="Choose a colour so this product tag is easy to recognise in marketplace setup.">
+                  <SettingsSectionCard title="Appearance" description="Choose a color so this booking group is easy to recognize in marketplace setup.">
                     <FormFieldLabel label="Colour">
                       <ColorPicker onChange={handleColorChange} />
                     </FormFieldLabel>
@@ -140,7 +140,7 @@ const AddOrganizationProductTagPageComponent = ({ organizationCustomDomain, conn
                         Cancel
                       </Button>
                     }
-                    primaryAction="Add product tag"
+                    primaryAction="Add booking group"
                   />
                 </FormStackColumn>
               );
@@ -148,16 +148,16 @@ const AddOrganizationProductTagPageComponent = ({ organizationCustomDomain, conn
           />
         </StackColumn>
 
-        <StickyReviewRail title="Product tag help" description="Product tags connect marketplace products with the resources they can book.">
-          <SettingsSectionCard title="Suggested setup" description="Use product tags as customer-facing categories.">
+        <StickyReviewRail title="Booking group help" description="Booking groups connect products with the resources customers can book.">
+          <SettingsSectionCard title="Suggested setup" description="Use booking groups to link matching products and resources.">
             <StackColumn spacing={1}>
-              <SmallIconTypography label="Keep names aligned with product categories customers understand." />
-              <SmallIconTypography label="Use descriptions to explain when operators should apply the tag." />
-              <SmallIconTypography label="Assign the tag to matching resources after creating it." />
+              <SmallIconTypography label="Keep names clear, such as Hot desks or Meeting rooms." />
+              <SmallIconTypography label="Assign the same booking group to matching products and resources." />
+              <SmallIconTypography label="A product and resource match when they share a booking group." />
             </StackColumn>
           </SettingsSectionCard>
 
-          <SettingsSectionCard title="After adding" description="The product tag can be used in product and resource setup.">
+          <SettingsSectionCard title="After adding" description="The booking group can be used in product and resource setup.">
             <StackColumn spacing={1}>
               <SmallIconTypography label="Return to the previous page to apply it where needed." />
             </StackColumn>

@@ -65,7 +65,7 @@ const getChangedTagFields = (left: ProductTagPatchDetails, right: ProductTagPatc
 };
 
 const productTagSchema = object({
-  name: string().required('Product tag name is required'),
+  name: string().required('Booking group name is required'),
   description: string().nullable(),
 });
 
@@ -143,12 +143,12 @@ const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId,
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
             submittedProductTagValues.current = previousValues;
-            themedToast(<NotificationContent content={`Failed to update product tag '${productTag.name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
+            themedToast(<NotificationContent content={`Failed to update booking group '${productTag.name}'. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           }
         },
         onError: (error) => {
           submittedProductTagValues.current = previousValues;
-          themedToast(<NotificationContent content={`Failed to update product tag '${productTag.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
+          themedToast(<NotificationContent content={`Failed to update booking group '${productTag.name}'. Error: ${error.message}.`} />, errorNotificationOptions);
         },
         optimisticResponse: {
           updateProductTag: {
@@ -175,8 +175,8 @@ const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId,
       <Box sx={{ maxWidth: 1320, mx: 'auto', display: 'grid', gridTemplateColumns: { xs: 'minmax(0, 1fr)', xl: 'minmax(0, 2fr) 320px' }, gap: 2 }}>
         <StackColumn spacing={2.5} sx={{ minWidth: 0 }}>
           <PageHeaderPanel
-            title="Edit product tag"
-            description="Update the product tag name, description, and colour used across marketplace products and resources."
+            title="Edit booking group"
+            description="Update the booking group name, description, and color used across products and resources."
             actions={
               <Button type="button" variant="text" onClick={onCancel} sx={{ textTransform: 'none' }}>
                 Cancel
@@ -199,10 +199,10 @@ const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId,
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
-                  <SettingsSectionCard title="Product tag details" description="Keep the product tag label clear for operators applying it across marketplace setup.">
+                  <SettingsSectionCard title="Booking group details" description="Keep the booking group label clear for operators applying it across marketplace setup.">
                     <StackColumn spacing={2}>
                       <FormFieldLabel label="Name">
-                        <TextField name="name" required={requiredFields.name} helperText="Use a short, recognisable product tag name." />
+                        <TextField name="name" required={requiredFields.name} helperText="Use a short, recognizable booking group name." />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Description">
@@ -211,7 +211,7 @@ const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId,
                     </StackColumn>
                   </SettingsSectionCard>
 
-                  <SettingsSectionCard title="Appearance" description="Choose a colour so this product tag is easy to recognise in lists and filters.">
+                  <SettingsSectionCard title="Appearance" description="Choose a color so this booking group is easy to recognize in lists and filters.">
                     <FormFieldLabel label="Colour">
                       <ColorPicker onChange={setSelectedColor} defaultColor={rootData.productTag?.color} />
                     </FormFieldLabel>
@@ -222,7 +222,7 @@ const EditOrganizationProductTagPageComponent = ({ queryReference, productTagId,
           />
         </StackColumn>
 
-        <StickyReviewRail title="Product tag help" description="Changes apply wherever this product tag is already used.">
+        <StickyReviewRail title="Booking group help" description="Changes apply wherever this booking group is already used.">
           <SettingsSectionCard title="Before saving" description="Avoid renaming tags in a way that changes their operational meaning unexpectedly.">
             <StackColumn spacing={1}>
               <SmallIconTypography label="Keep names consistent with how operators search and filter." />

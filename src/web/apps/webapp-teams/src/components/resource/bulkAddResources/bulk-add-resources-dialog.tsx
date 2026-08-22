@@ -370,7 +370,7 @@ const BulkAddResourcesDialogInner = ({ queryReference, locationId, organizationC
               <StackColumn spacing={1}>
                 <SmallIconTypography label="Quantity controls how many resources are generated from that row." />
                 <SmallIconTypography label="Use a base name that can produce clear resource names." />
-                <SmallIconTypography label="Create separate rows when resources need different tags, zones, or product tags." />
+                <SmallIconTypography label="Create separate rows when resources need different tags, zones, or booking groups." />
               </StackColumn>
             </SettingsSectionCard>
 

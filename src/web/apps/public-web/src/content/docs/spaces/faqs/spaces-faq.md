@@ -32,7 +32,7 @@ Yes. An Organization can manage multiple Locations. Each Location has its own Re
 
 ### What types of Resources can I manage?
 
-Spaces supports Resource types such as desks, rooms, parking, and other bookable Resources. Resource type is separate from Product Tags, which connect Resources to Products.
+Spaces supports Resource types such as desks, rooms, parking, and other bookable Resources. Resource type is separate from Booking Groups, which connect Resources to Products.
 
 ### Can a Resource belong to more than one Zone?
 
@@ -46,7 +46,7 @@ Yes. A Location can have floor plans that visually represent Resources. Floor pl
 
 ### How does a Product decide which Resources customers can book?
 
-Operators assign Product Tags to Resources and select Product Tags on a Product. A Resource with at least one selected Product Tag can enter the Product's eligible pool, and Availability still determines whether it can be booked for the requested time. Selecting multiple Product Tags broadens the matching pool rather than requiring every tag. See [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing).
+Operators assign Booking Groups to Resources and select Booking Groups on a Product. A Resource with at least one selected Booking Group can enter the Product's eligible pool, and Availability still determines whether it can be booked for the requested time. Selecting multiple Booking Groups broadens the matching pool rather than requiring every tag. See [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing).
 
 ### Can I offer different Prices for the same Product?
 

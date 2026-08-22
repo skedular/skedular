@@ -175,7 +175,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
     type: string().required('Please choose a product type.'),
     currency: string().required('Please choose a currency.'),
     mustBookAllLocationResources: boolean(),
-    productTagIds: array().min(1, 'Choose at least one product tag.').required('Please choose at least one product tag.'),
+    productTagIds: array().min(1, 'Choose at least one booking group.').required('Please choose at least one booking group.'),
     amenityIds: array().nullable(),
     pricingOptions: array()
       .of(

@@ -123,7 +123,7 @@ export const homePage = {
       },
       {
         title: "I have a place to rent",
-        body: "List one whole place without managing coworking resources, product tags, or marketplace configuration.",
+        body: "List one whole place without managing coworking resources, booking groups, or marketplace configuration.",
         ctaLabel: "Explore Host",
         href: "/host",
         accent: "emerald",

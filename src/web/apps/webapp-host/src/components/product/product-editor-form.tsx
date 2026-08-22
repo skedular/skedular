@@ -544,7 +544,7 @@ const ProductEditorForm = ({
       </SettingsSectionCard>
 
       <SettingsSectionCard title="Listing Details" description="Choose the currency and optional amenities customers should see. The booking setup is managed automatically.">
-        <BodyIconTypography label="Every offer reserves the entire location. Product tags and resources are managed by Skedular Host." sx={{ opacity: 0.78 }} />
+        <BodyIconTypography label="Every offer reserves the entire location. Booking groups and resources are managed by Skedular Host." sx={{ opacity: 0.78 }} />
         <FormFieldLabel label="Currency">
           <SingleChoiceCurrency rootDataRelay={rootDataRelay as never} name="currency" required={requiredFields.currency} />
         </FormFieldLabel>

@@ -66,19 +66,19 @@ Use Tags to describe what a Resource is or has. Use [Zones](/docs/shared/core-co
 
 Examples of Tags include Standing Desk, Dual Monitor, Accessible, and Near Window. Examples of Zones include Level 1, North Wing, Engineering Area, and Quiet Zone. A Resource can have both Tags and Zones because they answer different questions.
 
-## Tags vs Product Tags
+## Tags vs Booking Groups
 
-Resource Tags classify Resources for organization. Product Tags are a separate Skedular Spaces concept used to determine which Resources are eligible for allocation to marketplace Products. Do not use Resource Tags as a replacement for Product Tags.
+Resource Tags classify Resources for organization. Booking Groups are a separate Skedular Spaces concept used to determine which Resources are eligible for allocation to marketplace Products. Do not use Resource Tags as a replacement for Booking Groups.
 
-<div class="documentation-concept-grid"><div><strong>🏷 Resource Tags</strong><small>Organization labels that describe Resource characteristics.</small></div><div><strong>🛒 Product Tags</strong><small>Marketplace allocation rules in Skedular Spaces. Dedicated documentation is coming soon.</small></div></div>
+<div class="documentation-concept-grid"><div><strong>🏷 Resource Tags</strong><small>Organization labels that describe Resource characteristics.</small></div><div><strong>🛒 Booking Groups</strong><small>Marketplace allocation rules in Skedular Spaces. Dedicated documentation is coming soon.</small></div></div>
 
 ## Product Differences
 
-<div class="documentation-concept-grid"><div><strong>🧑‍💼 Skedular Teams</strong><small>Tags help classify and organize workplace Resources for private scheduling.</small></div><div><strong>🛒 Skedular Spaces</strong><small>Resource Tags remain descriptive; Product Tags separately control marketplace allocation.</small></div><div><strong>🏠 Skedular Host</strong><small>Hosts can manage organization Tags and assign them to Resources from the Host administration experience.</small></div></div>
+<div class="documentation-concept-grid"><div><strong>🧑‍💼 Skedular Teams</strong><small>Tags help classify and organize workplace Resources for private scheduling.</small></div><div><strong>🛒 Skedular Spaces</strong><small>Resource Tags remain descriptive; Booking Groups separately control marketplace allocation.</small></div><div><strong>🏠 Skedular Host</strong><small>Hosts can manage organization Tags and assign them to Resources from the Host administration experience.</small></div></div>
 
 ## How Tags Connect
 
-<div class="documentation-concept-grid"><a href="/docs/shared/core-concepts/organizations"><strong>🏢 Organization</strong><small>Owns the Tags available to its Resources.</small></a><a href="/docs/shared/core-concepts/resources"><strong>🪑 Resources</strong><small>Can be assigned zero, one, or multiple Tags.</small></a><a href="/docs/shared/core-concepts/zones"><strong>🔲 Zones</strong><small>Provide a different way to group Resources.</small></a><div><strong>🛒 Product Tags</strong><small>Control Resource eligibility for Products in Skedular Spaces. Dedicated documentation is coming soon.</small></div></div>
+<div class="documentation-concept-grid"><a href="/docs/shared/core-concepts/organizations"><strong>🏢 Organization</strong><small>Owns the Tags available to its Resources.</small></a><a href="/docs/shared/core-concepts/resources"><strong>🪑 Resources</strong><small>Can be assigned zero, one, or multiple Tags.</small></a><a href="/docs/shared/core-concepts/zones"><strong>🔲 Zones</strong><small>Provide a different way to group Resources.</small></a><div><strong>🛒 Booking Groups</strong><small>Control Resource eligibility for Products in Skedular Spaces. Dedicated documentation is coming soon.</small></div></div>
 
 ## Best Practices
 
@@ -88,7 +88,7 @@ Resource Tags classify Resources for organization. Product Tags are a separate S
 - Avoid multiple Tags with the same meaning.
 - Review unused Tags periodically.
 - Use Zones for physical or organizational areas.
-- Keep Resource Tags separate from Product Tags in Skedular Spaces.
+- Keep Resource Tags separate from Booking Groups in Skedular Spaces.
 
 ## Things to Know
 
@@ -100,7 +100,7 @@ Resource Tags classify Resources for organization. Product Tags are a separate S
 - Tags do not affect Resource Availability or Booking rules.
 - Renaming a Tag updates its displayed name wherever it is used.
 - Deleting a Tag removes its assignments without deleting Resources.
-- Resource Tags and Product Tags are different concepts.
+- Resource Tags and Booking Groups are different concepts.
 
 ## Frequently Asked Questions
 
@@ -120,9 +120,9 @@ Yes. Tags can be reused across the Resources in their Organization.
 
 No. Tags describe Resource characteristics, while [Zones](/docs/shared/core-concepts/zones) describe physical or logical grouping.
 
-### Are Resource Tags and Product Tags the same?
+### Are Resource Tags and Booking Groups the same?
 
-No. Product Tags are used by Skedular Spaces to control marketplace Resource allocation.
+No. Booking Groups are used by Skedular Spaces to control marketplace Resource allocation.
 
 ### What happens when I rename a Tag?
 

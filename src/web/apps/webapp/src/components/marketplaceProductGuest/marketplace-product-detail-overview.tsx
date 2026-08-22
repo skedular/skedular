@@ -81,7 +81,7 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
 
   const productTypeDescription =
     product.type.type === 'EVENT'
-      ? 'This booking reserves all matching resources for the selected time, including across multiple locations when the product tags match.'
+      ? 'This booking reserves all matching resources for the selected time, including across multiple locations when the booking groups match.'
       : 'This booking reserves the matching resources required for the selected time.';
 
   return (

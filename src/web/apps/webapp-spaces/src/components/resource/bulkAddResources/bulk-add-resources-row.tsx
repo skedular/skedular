@@ -58,7 +58,7 @@ const BulkAddResourceRowForm = ({ rowIndex, rootDataRelay, organizationCustomDom
         </FormFieldLabel>
 
         {showProductTags && (
-          <FormFieldLabel label="Product Tags">
+          <FormFieldLabel label="Booking Groups">
             <MultipleChoicesProductTags rootDataRelay={rootDataRelay} name={`${prefix}.productTagIds`} organizationCustomDomain={organizationCustomDomain} />
           </FormFieldLabel>
         )}

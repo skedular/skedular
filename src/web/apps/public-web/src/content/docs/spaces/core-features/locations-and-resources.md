@@ -32,10 +32,10 @@ Location Opening Hours, a Resource-specific Opening Hours override, and existing
 
 ## Prepare Resources for Products
 
-After Resources exist, assign **Product Tags** where the Product workflow uses them to select eligible Resources. Product Tags are separate from ordinary Tags and are used by Products to determine which Resources can be included in an offering. Products then define what customers can purchase and book; continue with [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing) for that workflow.
+After Resources exist, assign **Booking Groups** where the Product workflow uses them to select eligible Resources. Booking Groups are separate from ordinary Tags and are used by Products to determine which Resources can be included in an offering. Products then define what customers can purchase and book; continue with [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing) for that workflow.
 
 ## Keep the workspace configuration accurate
 
-Keep Locations, Resources, Capacity, and Product Tags accurate as the physical workspace changes, and review Opening Hours whenever schedules change. Changes to the underlying Resource setup or schedules can affect Availability and what customers can book through a Product.
+Keep Locations, Resources, Capacity, and Booking Groups accurate as the physical workspace changes, and review Opening Hours whenever schedules change. Changes to the underlying Resource setup or schedules can affect Availability and what customers can book through a Product.
 
 If you need additional organization, continue to [Zones and floor plans](/docs/spaces/workspace-setup/zones-and-floor-plans). Both are optional. When the physical workspace is ready, continue to [Products and marketplace](/docs/spaces/products-and-marketplace).

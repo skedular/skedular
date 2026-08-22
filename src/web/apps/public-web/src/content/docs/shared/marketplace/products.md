@@ -25,7 +25,7 @@ updatedAt: 2026-08-07
 
 A Product is the commercial offer that a Skedular Spaces operator presents to customers. It combines customer-facing listing details, Resource eligibility rules, pricing options, booking rules, payment methods, and cancellation terms. Customers choose a Product, and Skedular uses its eligibility rules to determine which Resources can fulfil the resulting Booking.
 
-Products belong to an Organization, not to a single Location. Product eligibility is organization-scoped through Product Tags, so the matching Resources can be maintained across the operator's Locations.
+Products belong to an Organization, not to a single Location. Product eligibility is organization-scoped through Booking Groups, so the matching Resources can be maintained across the operator's Locations.
 
 <aside class="documentation-callout" aria-label="Product core rule"><strong>Core rule</strong><p>A Product defines the commercial offer. Eligible Resources fulfil the Bookings created from that offer.</p></aside>
 
@@ -37,13 +37,13 @@ Customers choose Products, while Skedular allocates or books eligible Resources 
 
 ## Product relationships
 
-<div class="documentation-organization-context" aria-label="Product relationships"><div class="documentation-context-root">🏢 <a href="/docs/shared/core-concepts/organizations">Organization</a></div><div class="documentation-context-tree"><div><span>🛒 Product</span><div class="documentation-context-child"><span>🏷 Product Tags</span><span>💰 Prices</span><span>📝 Listing details</span><span>📅 Booking rules</span></div></div><div><span>🏷 Product Tags</span><div class="documentation-context-child"><a href="/docs/shared/core-concepts/resources">🪑 Eligible Resources</a><div class="documentation-context-child"><a href="/docs/shared/core-concepts/bookings">📅 Bookings</a></div></div></div><a href="/docs/shared/marketplace/customers">👤 Customers</a><a href="/docs/shared/marketplace/subscriptions">🔁 Subscriptions</a></div></div>
+<div class="documentation-organization-context" aria-label="Product relationships"><div class="documentation-context-root">🏢 <a href="/docs/shared/core-concepts/organizations">Organization</a></div><div class="documentation-context-tree"><div><span>🛒 Product</span><div class="documentation-context-child"><span>🏷 Booking Groups</span><span>💰 Prices</span><span>📝 Listing details</span><span>📅 Booking rules</span></div></div><div><span>🏷 Booking Groups</span><div class="documentation-context-child"><a href="/docs/shared/core-concepts/resources">🪑 Eligible Resources</a><div class="documentation-context-child"><a href="/docs/shared/core-concepts/bookings">📅 Bookings</a></div></div></div><a href="/docs/shared/marketplace/customers">👤 Customers</a><a href="/docs/shared/marketplace/subscriptions">🔁 Subscriptions</a></div></div>
 
-Product Tags are Organization-level, marketplace-specific tags. A Product must have at least one Product Tag, and Resources with matching Product Tags are eligible to fulfil that Product. Normal Resource Tags are general-purpose Organization labels. Changing a normal Resource Tag does not affect Product eligibility; changing a Product Tag assignment can change which Resources can fulfil a Product.
+Booking Groups are Organization-level, marketplace-specific tags. A Product must have at least one Booking Group, and Resources with matching Booking Groups are eligible to fulfil that Product. Normal Resource Tags are general-purpose Organization labels. Changing a normal Resource Tag does not affect Product eligibility; changing a Booking Group assignment can change which Resources can fulfil a Product.
 
 ## Product details
 
-Product versions hold the customer-facing listing metadata, feature images, currency, Product Tags, amenities, and pricing options. Listing metadata includes the title, subtitle, and description used in the marketplace. Feature images support the customer-facing presentation. Amenities are organization tags attached to the Product version and are separate from Product Tags.
+Product versions hold the customer-facing listing metadata, feature images, currency, Booking Groups, amenities, and pricing options. Listing metadata includes the title, subtitle, and description used in the marketplace. Feature images support the customer-facing presentation. Amenities are organization tags attached to the Product version and are separate from Booking Groups.
 
 ## Pricing
 
@@ -75,7 +75,7 @@ Pricing options require accepted payment methods and a billing mode. Supported b
 
 ## Product lifecycle
 
-<div class="documentation-concept-workflow"><span><b>1</b>Create the Product</span><span><b>2</b>Add listing details and Product Tags</span><span><b>3</b>Add pricing and commercial rules</span><span><b>4</b>Activate the Product</span><span><b>5</b>Customers book or subscribe</span></div>
+<div class="documentation-concept-workflow"><span><b>1</b>Create the Product</span><span><b>2</b>Add listing details and Booking Groups</span><span><b>3</b>Add pricing and commercial rules</span><span><b>4</b>Activate the Product</span><span><b>5</b>Customers book or subscribe</span></div>
 
 Products are versioned so changes do not silently rewrite an offer already used by customers. Updating listing metadata, images, tags, pricing, or other Product version fields creates a new Product version. New customers use the active version. Existing Bookings and active Subscriptions retain the commercial version used when they were created; renewal re-evaluates the current Product pricing and version for the next cycle. Activation and deactivation are operator controls; inactive Products remain available to administrators but are not offered to customers through the active marketplace experience.
 
@@ -83,14 +83,14 @@ Products are versioned so changes do not silently rewrite an offer already used 
 
 1. Open the organization's Products area in Skedular Spaces.
 2. Create or select a Product and add its customer-facing listing details.
-3. Add at least one Product Tag so eligible Resources can be found.
+3. Add at least one Booking Group so eligible Resources can be found.
 4. Configure one or more pricing options, payment methods, billing mode, and cancellation policy.
 5. Activate the Product when its configuration is complete.
 
 ## Best practices
 
 - Use clear customer-facing titles and descriptions.
-- Add Product Tags that match the Resources customers should be able to book.
+- Add Booking Groups that match the Resources customers should be able to book.
 - Keep pricing cadences and booking cadences aligned with the service you provide.
 - Test cancellation terms and payment methods before activation.
 - Review the active Product version after changing tags, images, or pricing.
@@ -100,7 +100,7 @@ Products are versioned so changes do not silently rewrite an offer already used 
 - Products are managed directly in Skedular Spaces.
 - Products belong to an Organization and are not owned by a single Location.
 - Products define the commercial offer; they do not directly own Resources.
-- Product Tags determine which Resources are eligible to fulfil a Product.
+- Booking Groups determine which Resources are eligible to fulfil a Product.
 - Resources are the entities ultimately reserved by Bookings.
 - A Product can have multiple pricing options.
 - Pricing configuration determines single Booking or Subscription behavior.
@@ -115,7 +115,7 @@ A Product is the commercial offer. A Resource is the desk, room, parking space, 
 
 ### How does a Product know which Resources can be booked?
 
-Product Tags define eligibility. Resources with matching Product Tags can fulfil Bookings created from that Product.
+Booking Groups define eligibility. Resources with matching Booking Groups can fulfil Bookings created from that Product.
 
 ### Can a Product have multiple Prices?
 

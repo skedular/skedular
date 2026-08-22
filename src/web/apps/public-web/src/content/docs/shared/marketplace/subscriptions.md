@@ -50,7 +50,7 @@ Purchase cadence and Booking cadence describe different things. Purchase cadence
 
 ## Booking generation and resource allocation
 
-Skedular creates the current recurring Booking cycle and keeps future Bookings aligned with the Subscription schedule. It uses the Product's Product Tags and requested resource count to find eligible Resources. When the schedule changes, Skedular repairs or removes future Bookings and creates missing Booking days for the current cycle.
+Skedular creates the current recurring Booking cycle and keeps future Bookings aligned with the Subscription schedule. It uses the Product's Booking Groups and requested resource count to find eligible Resources. When the schedule changes, Skedular repairs or removes future Bookings and creates missing Booking days for the current cycle.
 
 When the purchased Price has selected **Available days**, recurring generation creates Booking instances only on those calendar days. Sunday through Saturday are equal choices; an empty selection means every day. The Price rule is evaluated before normal opening-hours and Resource checks, which can still prevent an instance on an otherwise permitted day.
 
@@ -123,7 +123,7 @@ A Customer chooses a monthly desk Product and Price. Skedular creates a Subscrip
 - Review Product and Price changes before an upcoming renewal.
 - Use cancel at period end when the Customer should keep access through the current period.
 - Check Subscription-generated future Bookings when ending access immediately.
-- Keep Product Tags accurate so future cycles can find eligible Resources.
+- Keep Booking Groups accurate so future cycles can find eligible Resources.
 - Investigate Renewal Failed status before the next access period is expected to begin.
 
 ## Things to Know
@@ -133,7 +133,7 @@ A Customer chooses a monthly desk Product and Price. Skedular creates a Subscrip
 - Purchase cadence determines the Subscription cycle; Booking cadence determines reservation intervals.
 - Auto-renewal requires a Price that supports subscription auto-renewal.
 - Renewal rechecks the current Product Version and matching Price.
-- Product Tags determine which Resources can fulfil generated Bookings.
+- Booking Groups determine which Resources can fulfil generated Bookings.
 - Immediate cancellation cancels generated current and future Bookings asynchronously; past Bookings remain historical records.
 - Immediate cancellation and cancel at period end have different effects on the current access period.
 - Commerce owns billing, payment, invoice, payout, and accounting workflows.

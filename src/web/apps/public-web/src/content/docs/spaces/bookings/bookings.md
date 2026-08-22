@@ -24,7 +24,7 @@ updatedAt: 2026-08-07
 
 A Booking reserves one or more Resources for a defined period. In the Spaces marketplace, the customer chooses a Product and Price; the resulting Booking reserves eligible workspace Resources for the requested time.
 
-Products define the commercial offering. Product Tags guide which Resources are eligible, while Availability determines whether a matching Resource can be reserved.
+Products define the commercial offering. Booking Groups guide which Resources are eligible, while Availability determines whether a matching Resource can be reserved.
 
 ### Price calendar-day rules
 
@@ -62,7 +62,7 @@ For customer-facing Bookings, the person who purchased or created the Booking is
 
 ## Resource assignment and availability
 
-Product Tags identify the Resource pool eligible for a Product. In marketplace Bookings, Spaces matches that pool and reserves the Resource or Resources required by the Price. In **Add Booking**, the operator selects from the **Available resources** for the selected Location and time. If no eligible Resource is available for a marketplace request, the Booking cannot be completed.
+Booking Groups identify the Resource pool eligible for a Product. In marketplace Bookings, Spaces matches that pool and reserves the Resource or Resources required by the Price. In **Add Booking**, the operator selects from the **Available resources** for the selected Location and time. If no eligible Resource is available for a marketplace request, the Booking cannot be completed.
 
 Availability is checked again when Spaces creates the Booking. If another customer takes the final available capacity after the customer has selected a time, Spaces does not create a partial Booking. The customer sees an availability outcome and can choose another time or Product. Operators can review the retained outcome in the relevant customer-facing Booking history when it is available.
 

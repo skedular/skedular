@@ -110,7 +110,7 @@ export const documentationSourceMap: DocumentationSourceEntry[] = [
   {
     id: "product-tag",
     sourcePath: "doc-resources/product-tag.md",
-    concept: "Product tags",
+    concept: "Booking groups",
     scope: "shared",
     summary:
       "Classification used to connect products and resources and support dynamic allocation.",

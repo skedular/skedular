@@ -308,7 +308,7 @@ export const ProductTagIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Pro
   excludeTooltip ? (
     <LocalOffer fontSize={fontSize} sx={sx} color={color} />
   ) : (
-    <TooltipIcon tip={tip ?? 'Product Tag'}>
+    <TooltipIcon tip={tip ?? 'Booking Group'}>
       <LocalOffer fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );

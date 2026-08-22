@@ -82,7 +82,7 @@ type Props = {
 };
 
 const baseSteps = [
-  { id: 'basics', title: 'Basics', subtitle: 'Identity, media, tags, currency' },
+  { id: 'basics', title: 'Basics', subtitle: 'Identity, media, booking groups, currency' },
   { id: 'offers', title: 'Offers', subtitle: 'Sellable options, pricing, payment, cancellation' },
   { id: 'review', title: 'Review', subtitle: 'What customers and admins will understand' },
 ] as const;
@@ -939,7 +939,7 @@ const ProductEditorForm = ({
         <EditorSection
           title="Classification"
           description="Control how this product behaves and where customers discover it."
-          summary={`${prettifyEnum(values.type)} · ${values.currency || 'No currency'} · ${values.productTagIds.length} tag${values.productTagIds.length === 1 ? '' : 's'}`}
+          summary={`${prettifyEnum(values.type)} · ${values.currency || 'No currency'} · ${values.productTagIds.length} booking group${values.productTagIds.length === 1 ? '' : 's'}`}
           expanded={expandedBasicsSection === 'classification'}
           onChange={() => setBasicsSection(expandedBasicsSection === 'classification' ? '' : 'classification')}
         >
@@ -957,13 +957,13 @@ const ProductEditorForm = ({
 
           {isEventProduct ? (
             <Box sx={{ borderRadius: 2, backgroundColor: 'action.hover', p: 1.5 }}>
-              <BodyIconTypography label="Event products support explicit-time bookings only. Recurring plan cadences are unavailable, and the full matching tagged resource set is reserved." />
+              <BodyIconTypography label="Event products support explicit-time bookings only. Recurring plan cadences are unavailable, and the full matching booking-group resource set is reserved." />
             </Box>
           ) : null}
 
           <FormFieldLabel
-            label="Product tags"
-            help="Tags determine which resources can match this product. A booking can only use resources that satisfy the product's matching tags."
+            label="Booking groups"
+            help="Booking groups determine which resources can match this product. A booking can only use resources that share one of the product's booking groups."
           >
             <MultipleChoicesProductTags
               rootDataRelay={rootDataRelay as never}
@@ -975,7 +975,7 @@ const ProductEditorForm = ({
 
           <FormFieldLabel
             label="Amenities"
-            help="Amenities describe what the product provides to customers. They explain the product but do not determine resource matching like tags do."
+            help="Amenities describe what the product provides to customers. They explain the product but do not determine which resources it can match."
           >
             <MultipleChoicesAmenities rootDataRelay={rootDataRelay as never} name="amenityIds" required={requiredFields.amenityIds} />
           </FormFieldLabel>

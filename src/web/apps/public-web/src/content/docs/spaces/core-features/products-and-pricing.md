@@ -21,15 +21,15 @@ Resources are the physical entities customers can book. A Product is the commerc
 
 The Spaces model connects the workspace to the customer offering:
 
-`Location → Resources → Product Tags → Product → Price → Booking or Subscription`
+`Location → Resources → Booking Groups → Product → Price → Booking or Subscription`
 
 Products do not replace Locations or Resources. They describe what customers can purchase and how matching Resources are allocated. See the shared [Products](/docs/shared/marketplace/products) concept for the canonical definition.
 
 ## Connect Products to Resources
 
-Product Tags are created for the Organization and assigned to Resources. When you edit a Product, choose its Product Tags from the **Product Tags** field. A Resource is eligible when it has at least one of the Product's selected Product Tags and is available for the requested time; selecting multiple Product Tags broadens the matching Resource pool rather than requiring every tag. The same Resource can be eligible for multiple Products.
+Booking Groups are created for the Organization and assigned to Resources. When you edit a Product, choose its Booking Groups from the **Booking Groups** field. A Resource is eligible when it has at least one of the Product's selected Booking Groups and is available for the requested time; selecting multiple Booking Groups broadens the matching Resource pool rather than requiring every tag. The same Resource can be eligible for multiple Products.
 
-Product Tags are different from ordinary Tags. Ordinary Tags help organize and filter workspace data, while Product Tags connect Resources to commercial Products.
+Booking Groups are different from ordinary Tags. Ordinary Tags help organize and filter workspace data, while Booking Groups connect Resources to commercial Products.
 
 ## Create and describe a Product
 
@@ -39,7 +39,7 @@ Use **Add Product** to create a Product. The Product editor lets you define cust
 - Description and included features
 - Feature images
 - Product type, currency, and amenities
-- Product Tags used to select eligible Resources
+- Booking Groups used to select eligible Resources
 
 Organization marketplace information belongs in [Marketplace setup](/docs/spaces/products-and-marketplace/marketplace-setup), not in the Product editor.
 
@@ -61,7 +61,7 @@ A pricing option with a one-time purchase cadence leads to a customer Booking fo
 
 ## Activate a Product
 
-Products start inactive. An inactive Product is not available for customer purchase. Complete its customer-facing details, Product Tags, and at least one pricing option before using **Activate product**. Activation makes the Product available for customer purchase in the marketplace.
+Products start inactive. An inactive Product is not available for customer purchase. Complete its customer-facing details, Booking Groups, and at least one pricing option before using **Activate product**. Activation makes the Product available for customer purchase in the marketplace.
 
 ## Change an active Product
 

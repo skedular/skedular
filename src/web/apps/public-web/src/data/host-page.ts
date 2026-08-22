@@ -19,7 +19,7 @@ export const hostPage: ProductPageContent = {
   whyOrganizationsNeedMore: {
     heading: "Hosting should not feel like running a coworking business",
     description:
-      "Independent hosts need a clear way to publish one place, control its price and availability, and manage bookings. Skedular Host keeps resources, product tags, and marketplace configuration out of sight.",
+      "Independent hosts need a clear way to publish one place, control its price and availability, and manage bookings. Skedular Host keeps resources, booking groups, and marketplace configuration out of sight.",
     cards: [
       {
         title: "Start with the place",
@@ -269,9 +269,9 @@ export const hostPage: ProductPageContent = {
         "You can list a property, room, desk, studio, event space, parking space, or another place that should be booked as one whole unit. Each thing you rent is represented as its own Host location.",
     },
     {
-      question: "Do I need to create resources or product tags?",
+      question: "Do I need to create resources or booking groups?",
       answer:
-        "No. When you create a Host location, Skedular prepares the hidden booking resource, product tag, and private product draft automatically.",
+        "No. When you create a Host location, Skedular prepares the hidden booking resource, booking group, and private product draft automatically.",
     },
     {
       question: "Can I set different prices for the same place?",

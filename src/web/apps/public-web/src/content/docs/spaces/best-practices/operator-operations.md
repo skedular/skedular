@@ -38,9 +38,9 @@ Floor Plans are also optional. When the physical position of Resources matters, 
 
 See [Zones and floor plans](/docs/spaces/workspace-setup/zones-and-floor-plans) and [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing) for the separate organization and Product workflows.
 
-## Design Product Tags and Products deliberately
+## Design Booking Groups and Products deliberately
 
-Product Tags connect Products with eligible Resources; Zones solve a different organizational problem. A Resource matching at least one Product Tag selected on a Product can enter that Product's eligible pool. Selecting several Product Tags therefore broadens the pool, so avoid unrelated tags and review eligibility before activating a Product.
+Booking Groups connect Products with eligible Resources; Zones solve a different organizational problem. A Resource matching at least one Booking Group selected on a Product can enter that Product's eligible pool. Selecting several Booking Groups therefore broadens the pool, so avoid unrelated tags and review eligibility before activating a Product.
 
 Keep Products understandable to Customers. Use clear titles, useful descriptions, included features, relevant images, meaningful Prices, and an intentional cancellation policy. Offer only Prices that represent real customer choices, avoid near-duplicates, and review payment methods, billing mode, and auto-renewal before activation. Product activation controls whether a Product can be purchased; marketplace visibility is a separate Organization setting.
 
@@ -60,7 +60,7 @@ Before launch, test the intended public or private marketplace path from a Custo
 
 ## Keep Availability and operations accurate
 
-Product eligibility does not guarantee that a Customer can book. Product Tags determine which Resources may satisfy a Product; Availability determines whether an eligible Resource can be booked at the requested time. Regularly review Location opening hours, Resource overrides, existing Bookings, and the Resources selected by each Product.
+Product eligibility does not guarantee that a Customer can book. Booking Groups determine which Resources may satisfy a Product; Availability determines whether an eligible Resource can be booked at the requested time. Regularly review Location opening hours, Resource overrides, existing Bookings, and the Resources selected by each Product.
 
 A Booking represents scheduled Resource use. A Subscription represents an ongoing commercial arrangement with associated Booking instances. Review Subscription status separately from individual Bookings, and keep cancellation, stopping future billing, and refunding an existing payment as separate decisions. See [Bookings](/docs/spaces/bookings), [Subscriptions](/docs/spaces/bookings/subscriptions), and [Refunds](/docs/spaces/billing-and-payments/refunds).
 
@@ -72,7 +72,7 @@ Use [Operator analytics](/docs/spaces/analytics) to look for patterns in Booking
 
 ## Review your setup as the workspace changes
 
-Review your configuration whenever the real operation changes. Review the related configuration when adding or removing Resources, changing Location or Resource-specific opening hours, updating Floor Plans or Zones, changing Product Tags or Product eligibility, introducing or changing Products or Prices, or changing payment, billing, or accounting configuration. Keeping these details current helps avoid incorrect Availability, unintended Product eligibility, confusing Customer information, and inconsistent commercial workflows.
+Review your configuration whenever the real operation changes. Review the related configuration when adding or removing Resources, changing Location or Resource-specific opening hours, updating Floor Plans or Zones, changing Booking Groups or Product eligibility, introducing or changing Products or Prices, or changing payment, billing, or accounting configuration. Keeping these details current helps avoid incorrect Availability, unintended Product eligibility, confusing Customer information, and inconsistent commercial workflows.
 
 ## Before you go live
 
@@ -80,7 +80,7 @@ Review your configuration whenever the real operation changes. Review the relate
 - Locations have accurate addresses and timezones.
 - Opening hours and Resource overrides are correct.
 - Resources have the intended names and types.
-- Product Tags connect Products to the intended Resources.
+- Booking Groups connect Products to the intended Resources.
 - Zones and Floor Plans are accurate where used.
 - Products have complete customer-facing information.
 - Prices are correct.
@@ -101,7 +101,7 @@ Review your configuration whenever the real operation changes. Review the relate
 - Review active Subscriptions and relevant future Bookings.
 - Keep Location and Resource configuration current.
 - Review opening hours when operating schedules change.
-- Review Product eligibility when Resources or Product Tags change.
+- Review Product eligibility when Resources or Booking Groups change.
 - Review cancellation and refund requests consistently.
 - Verify Xero integration health when Xero is used.
 - Review Analytics for meaningful operational patterns.

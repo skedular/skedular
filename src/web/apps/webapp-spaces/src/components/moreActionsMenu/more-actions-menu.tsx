@@ -196,12 +196,12 @@ export const moreActionsMenuAllOptions: Record<MoreActionsMenuOptionType, MoreAc
   },
   [MoreActionsMenuOptionType.EditProductTag]: {
     id: MoreActionsMenuOptionType.EditProductTag,
-    label: 'Edit Product Tag',
+    label: 'Edit Booking Group',
     icon: <EditIcon />,
   },
   [MoreActionsMenuOptionType.DeleteProductTag]: {
     id: MoreActionsMenuOptionType.DeleteProductTag,
-    label: 'Remove Product Tag',
+    label: 'Remove Booking Group',
     icon: <DeleteIcon color="warning" />,
   },
   [MoreActionsMenuOptionType.EditResource]: {

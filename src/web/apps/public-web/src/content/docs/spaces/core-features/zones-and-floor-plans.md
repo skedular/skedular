@@ -35,9 +35,9 @@ Read the shared [Floor Plans](/docs/shared/core-concepts/floor-plans) concept fo
 
 You can configure Locations and Resources and continue to Product setup without creating Zones or Floor Plans. Use Zones when logical grouping helps you manage Resources. Use Floor Plans when a visual representation of the physical workspace is useful.
 
-## Keep Zones separate from Product Tags
+## Keep Zones separate from Booking Groups
 
-Zones organize Resources within the workspace. Product Tags are part of the Spaces Product workflow: they are assigned to Resources, and Products use matching Product Tags to determine which Resources can be included. See [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing) for that workflow.
+Zones organize Resources within the workspace. Booking Groups are part of the Spaces Product workflow: they are assigned to Resources, and Products use matching Booking Groups to determine which Resources can be included. See [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing) for that workflow.
 
 ## Next step
 

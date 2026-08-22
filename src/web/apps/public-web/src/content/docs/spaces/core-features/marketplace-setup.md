@@ -32,7 +32,7 @@ Keep these details accurate so customers can understand who operates the workspa
 
 ## Keep marketplace setup separate from Products
 
-Marketplace presence is not the same as Product availability. Locations and Resources describe the physical workspace, while Products define what customers can purchase or book. Product Tags may help determine which Resources are eligible for a Product, and publishing controls whether a configured offering is available to customers.
+Marketplace presence is not the same as Product availability. Locations and Resources describe the physical workspace, while Products define what customers can purchase or book. Booking Groups may help determine which Resources are eligible for a Product, and publishing controls whether a configured offering is available to customers.
 
 Keep the detailed Product workflow in [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing).
 

@@ -36,7 +36,7 @@ A resource is anything that can be booked in Skedular. Resources are the physica
 
 ## How Resources Work
 
-Resources are created inside a [Location](/docs/shared/core-concepts/locations). They become available according to the location's opening hours and any resource-specific schedule. [Bookings](/docs/shared/core-concepts/bookings) reserve resources, and the availability view updates as bookings are confirmed. In Skedular Spaces, products can expose resources through Product Tags. Skedular Host manages the underlying resource automatically behind its place-first workflow.
+Resources are created inside a [Location](/docs/shared/core-concepts/locations). They become available according to the location's opening hours and any resource-specific schedule. [Bookings](/docs/shared/core-concepts/bookings) reserve resources, and the availability view updates as bookings are confirmed. In Skedular Spaces, products can expose resources through Booking Groups. Skedular Host manages the underlying resource automatically behind its place-first workflow.
 
 ## Why Resources Exist
 
@@ -49,7 +49,7 @@ Resources represent the things an organization makes available for booking. Once
 ## Product Support
 
 - **Skedular Teams:** Resources represent private workplace assets such as desks, meeting rooms, and parking spaces.
-- **Skedular Spaces:** Resources are connected to marketplace products using Product Tags. Customers browse products, and Skedular allocates suitable resources based on availability.
+- **Skedular Spaces:** Resources are connected to marketplace products using Booking Groups. Customers browse products, and Skedular allocates suitable resources based on availability.
 - **Skedular Host:** A resource is created automatically when a host creates a place. Hosts manage a simplified place workflow while the booking engine uses the resource behind the scenes.
 
 ## Resource Types and Properties
@@ -60,7 +60,7 @@ Capacity describes how many people or units a resource can accommodate. Set it a
 
 ## What Belongs to a Resource
 
-<div class="documentation-concept-grid"><a href="/docs/shared/core-concepts/bookings"><strong>📅 Bookings</strong><small>Reservations made against one or more resources.</small></a><a href="/docs/shared/core-concepts/availability"><strong>⏱ Availability</strong><small>The times when the resource can be reserved.</small></a><a href="/docs/shared/administration/organization-settings"><strong>🕒 Opening Hours</strong><small>The default schedule used to calculate availability.</small></a><a href="/docs/shared/core-concepts/tags"><strong>🏷 Tags</strong><small>Characteristics used for search and filtering.</small></a><a href="/docs/shared/core-concepts/zones"><strong>🔲 Zones</strong><small>Physical or logical areas that group resources.</small></a><a href="/docs/shared/core-concepts/floor-plans"><strong>🗺 Floor Plan Placement</strong><small>Where the resource appears in a visual layout.</small></a><div><strong>🏷 Product Tags</strong><small>Commercial allocation rules in Skedular Spaces. Dedicated documentation is coming soon.</small></div></div>
+<div class="documentation-concept-grid"><a href="/docs/shared/core-concepts/bookings"><strong>📅 Bookings</strong><small>Reservations made against one or more resources.</small></a><a href="/docs/shared/core-concepts/availability"><strong>⏱ Availability</strong><small>The times when the resource can be reserved.</small></a><a href="/docs/shared/administration/organization-settings"><strong>🕒 Opening Hours</strong><small>The default schedule used to calculate availability.</small></a><a href="/docs/shared/core-concepts/tags"><strong>🏷 Tags</strong><small>Characteristics used for search and filtering.</small></a><a href="/docs/shared/core-concepts/zones"><strong>🔲 Zones</strong><small>Physical or logical areas that group resources.</small></a><a href="/docs/shared/core-concepts/floor-plans"><strong>🗺 Floor Plan Placement</strong><small>Where the resource appears in a visual layout.</small></a><div><strong>🏷 Booking Groups</strong><small>Commercial allocation rules in Skedular Spaces. Dedicated documentation is coming soon.</small></div></div>
 
 ## Typical Workflow
 

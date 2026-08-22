@@ -720,7 +720,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                       </FormFieldLabel>
 
                       {rootData.organization?.type.type === 'MARKETPLACE' && (
-                        <FormFieldLabel label="Product Tags">
+                        <FormFieldLabel label="Booking Groups">
                           <MultipleChoicesProductTags
                             rootDataRelay={rootData}
                             name="productTagIds"
@@ -802,7 +802,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                 <Divider />
                 <BodyIconTypography label={`Custom tags: ${resource.customTags.length}`} />
                 <BodyIconTypography label={`Zones: ${resource.zones.length}`} />
-                {rootData.organization?.type.type === 'MARKETPLACE' ? <BodyIconTypography label={`Product tags: ${resource.productTags.length}`} /> : null}
+                {rootData.organization?.type.type === 'MARKETPLACE' ? <BodyIconTypography label={`Booking groups: ${resource.productTags.length}`} /> : null}
               </StackColumn>
             </SettingsSectionCard>
           </StickyReviewRail>

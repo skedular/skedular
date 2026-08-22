@@ -746,7 +746,7 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          themedToast(<NotificationContent content={`Failed to remove product tags. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
+          themedToast(<NotificationContent content={`Failed to remove booking groups. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
@@ -754,7 +754,7 @@ const OrganizationMarketplaceSetup = ({
         setSelectedProductTagIds([]);
       },
       onError: (error) => {
-        themedToast(<NotificationContent content={`Failed to remove product tags. Error: ${error.message}.`} />, errorNotificationOptions);
+        themedToast(<NotificationContent content={`Failed to remove booking groups. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -774,7 +774,7 @@ const OrganizationMarketplaceSetup = ({
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          themedToast(<NotificationContent content={`Failed to remove product tag. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
+          themedToast(<NotificationContent content={`Failed to remove booking group. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
 
           return;
         }
@@ -782,7 +782,7 @@ const OrganizationMarketplaceSetup = ({
         setSelectedProductTagId(null);
       },
       onError: (error) => {
-        themedToast(<NotificationContent content={`Failed to remove product tag. Error: ${error.message}.`} />, errorNotificationOptions);
+        themedToast(<NotificationContent content={`Failed to remove booking group. Error: ${error.message}.`} />, errorNotificationOptions);
       },
     });
   };
@@ -1630,7 +1630,7 @@ const OrganizationMarketplaceSetup = ({
           <StackColumn spacing={2} sx={{ p: defaultPadding }}>
             <StackRow sx={{ alignItems: 'flex-start', gap: 2 }}>
               <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
-                <SectionIconTypography label="Product Tags" />
+                <SectionIconTypography label="Booking Groups" />
                 <BodyIconTypography label="Manage the marketplace-facing tags used to classify products, resources, and customer filters." />
               </StackColumn>
               <PushToRight />
@@ -1640,7 +1640,7 @@ const OrganizationMarketplaceSetup = ({
             <Divider />
 
             <StackRow sx={{ justifyContent: 'flex-end' }}>
-              <Search size="small" placeholder="Search for product tags" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
+              <Search size="small" placeholder="Search for booking groups" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
             </StackRow>
 
             {selectedProductTagIds.length > 0 && (
@@ -1650,7 +1650,7 @@ const OrganizationMarketplaceSetup = ({
                   <SmallIconTypography label={`${selectedProductTagIds.length} record${selectedProductTagIds.length === 1 ? '' : 's'} selected`} />
                   <PushToRight />
                   <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
-                    Remove Product Tag
+                    Remove Booking Group
                   </Button>
                 </StackRow>
               </StackColumn>
@@ -1658,8 +1658,8 @@ const OrganizationMarketplaceSetup = ({
 
             <OrganizationAdminTagManagementList
               items={productTagItems}
-              emptyTitle="No product tags found"
-              emptyDescription="Adjust the search or add a new product tag for this organization."
+              emptyTitle="No booking groups found"
+              emptyDescription="Adjust the search or add a new booking group for this organization."
               selectedIds={selectedProductTagIds}
               onToggleSelected={handleSelectedProductTagsChanged}
               onOpenMoreActions={(id, target) => {
@@ -1729,7 +1729,7 @@ const OrganizationMarketplaceSetup = ({
               <PageHeaderPanel
                 eyebrow="Marketplace setup"
                 title={organization?.name ?? 'Marketplace settings'}
-                description="Manage listing details, billing cadence, Xero, payout rails, and product tags."
+                description="Manage listing details, billing cadence, Xero, payout rails, and booking groups."
               >
                 <StackColumn spacing={0.5}>
                   <SmallIconTypography label="Commerce & payouts" />

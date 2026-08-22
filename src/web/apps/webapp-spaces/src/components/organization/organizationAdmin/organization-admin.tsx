@@ -94,7 +94,7 @@ const sectionLabels: Record<OrganizationAdminSection, string> = {
   'xero-setup': 'Xero',
   'stripe-connect-accounts-setup': 'Stripe',
   'bank-accounts-setup': 'Bank accounts',
-  'product-tags-setup': 'Product tags',
+  'product-tags-setup': 'Booking groups',
   'physical-address-setup': 'Address',
   'billing-payment-setup': 'Payment methods',
   'sso-setup': 'SSO',
@@ -151,7 +151,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     },
     {
       title: 'Marketplace',
-      description: 'Listing content, customer-facing product tags, zones, and tags.',
+      description: 'Listing content, booking groups, zones, and tags.',
       sections: ['marketplace-listing', 'product-tags-setup', 'zones-setup', 'tags-setup'] satisfies OrganizationAdminSection[],
     },
     {

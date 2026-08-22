@@ -30,7 +30,7 @@ Skedular Spaces helps workspace operators prepare Locations and Resources, creat
 
 1. Create the Organization that will operate the workspace and confirm access for the people managing it.
 2. Add Locations and the Resources customers can book. Review [workspace setup](/docs/spaces/workspace-setup) and the shared [Locations](/docs/shared/core-concepts/locations) and [Resources](/docs/shared/core-concepts/resources) concepts.
-3. Create a Product, add Product Tags where they help select eligible Resources, and configure pricing. Continue with [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing).
+3. Create a Product, add Booking Groups where they help select eligible Resources, and configure pricing. Continue with [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing).
 4. Prepare Availability, review the customer-facing details, and activate each Product when it is ready for customers. Continue with [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing).
 5. Connect the payment or accounting workflow your operation uses, then test the expected price, Availability, and payment path.
 

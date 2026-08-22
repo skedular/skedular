@@ -223,7 +223,7 @@ const OrganizationLocationResourceManagementList = ({
                       backgroundColor: 'background.default',
                     }}
                   >
-                    <BodyIconTypography label="Product tags" />
+                    <BodyIconTypography label="Booking groups" />
                     <ProductTags productTags={item.productTags} hideIcon hideNAText={false} sx={{ pt: 1 }} />
                   </Box>
                 </Box>

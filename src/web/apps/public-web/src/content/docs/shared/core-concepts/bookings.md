@@ -64,7 +64,7 @@ In [Skedular Teams](/docs/shared/core-concepts/teams), an authorized user can se
 ## Product Bookings
 
 - **Skedular Teams:** Users generally select resources directly for private workplace bookings.
-- **Skedular Spaces:** Customers usually select marketplace Products. The product and its Product Tags guide resource allocation behind the booking.
+- **Skedular Spaces:** Customers usually select marketplace Products. The product and its Booking Groups guide resource allocation behind the booking.
 - **Skedular Host:** Guests book Places through a simplified workflow. The underlying resource is managed automatically.
 
 ## Availability and Conflicts
