@@ -38,12 +38,17 @@ import type {
   organizationLocation_updateLocationRestrictedInformationMutation,
 } from '@/queries/__generated__/organizationLocation_updateLocationRestrictedInformationMutation.graphql';
 import Box from '@mui/material/Box';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext, stringCollectionToString, stringToMultiLines, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
@@ -53,6 +58,7 @@ import {
   FormFieldLabel,
   FormStackColumn,
   LeadIconTypography,
+  SmallIconTypography,
   PageHeaderPanel,
   SettingsSectionCard,
   StackColumn,
@@ -63,8 +69,8 @@ import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import NextLink from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, Suspense, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { memo, PropsWithChildren, Suspense, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -79,6 +85,36 @@ type Props = {
   organizationCustomDomain: string;
   locationId: string;
 };
+
+type EditorSectionProps = { title: string; description: string; summary: string; expanded: boolean; onChange: () => void };
+
+const EditorSection = ({ title, description, summary, expanded, onChange, children }: PropsWithChildren<EditorSectionProps>) => (
+  <Accordion
+    disableGutters
+    elevation={0}
+    expanded={expanded}
+    onChange={onChange}
+    sx={{
+      margin: 0,
+      border: 1,
+      borderColor: 'divider',
+      borderRadius: '16px !important',
+      overflow: 'hidden',
+      backgroundColor: 'background.paper',
+      '&::before': { display: 'none' },
+    }}
+  >
+    <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />} sx={{ px: 2.5, py: 0.75, minHeight: 72, '& .MuiAccordionSummary-content': { my: 1 } }}>
+      <StackColumn spacing={0.35} sx={{ minWidth: 0 }}>
+        <LeadIconTypography label={title} />
+        <SmallIconTypography label={expanded ? description : summary} />
+      </StackColumn>
+    </AccordionSummary>
+    <AccordionDetails sx={{ borderTop: 1, borderColor: 'divider', p: { xs: 2, sm: 2.5 } }}>
+      <StackColumn spacing={2}>{children}</StackColumn>
+    </AccordionDetails>
+  </Accordion>
+);
 
 type LocationDetails = {
   name: string;
@@ -184,7 +220,7 @@ const getActiveSection = (value: string | null): OrganizationLocationSection | n
 };
 
 const sectionLabels: Record<OrganizationLocationSection, string> = {
-  setup: 'Location setup',
+  setup: 'Location profile',
   'physical-address-setup': 'Physical address',
   'opening-hours': 'Opening hours',
   'floor-plans': 'Floor plans',
@@ -636,11 +672,56 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
 
   const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const activeSection = useMemo(() => getActiveSection(searchParams.get('section')), [searchParams]);
+  const [activeLandingTab, setActiveLandingTab] = useState(
+    searchParams.get('tab') === 'resources'
+      ? 'Resources'
+      : searchParams.get('tab') === 'floor-plans'
+        ? 'Floor Plans'
+        : searchParams.get('tab') === 'operations'
+          ? 'Operations'
+          : 'Profile',
+  );
+  const [expandedSetupSection, setExpandedSetupSection] = useState(
+    activeSection === 'physical-address-setup'
+      ? 'physical-address'
+      : activeSection === 'opening-hours'
+        ? 'opening-hours'
+        : activeSection === 'restricted-information'
+          ? 'restricted-information'
+          : 'presentation',
+  );
   const [stickyTop, setStickyTop] = useState(0);
+  const updateLocationUrl = (updates: { tab?: string; section?: string }) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (updates.tab) params.set('tab', updates.tab.toLowerCase().replaceAll(' ', '-'));
+    if (updates.section !== undefined) {
+      if (updates.section) params.set('section', updates.section);
+      else params.delete('section');
+    }
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+  const setLocationTab = (tab: string) => {
+    setActiveLandingTab(tab);
+    updateLocationUrl({ tab, section: tab === 'Profile' ? expandedSetupSection : '' });
+  };
+  const toggleSetupSection = (section: string) => {
+    const next = expandedSetupSection === section ? '' : section;
+    setExpandedSetupSection(next);
+    updateLocationUrl({ section: next });
+  };
+  /* eslint-disable react-hooks/set-state-in-effect -- restore the view from browser URL navigation. */
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    setActiveLandingTab(tab === 'resources' ? 'Resources' : tab === 'floor-plans' ? 'Floor Plans' : tab === 'operations' ? 'Operations' : 'Profile');
+    const section = searchParams.get('section');
+    setExpandedSetupSection(section ? (section === 'physical-address-setup' ? 'physical-address' : section) : 'presentation');
+  }, [searchParams]);
+  /* eslint-enable react-hooks/set-state-in-effect */
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
   const validateRestrictedInformation = makeValidate(restrictedInformationSchema);
@@ -1289,69 +1370,113 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         }
 
         return (
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 }, pb: defaultPadding }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: { xs: 2, xl: 2 } }}>
             <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
-              <StackColumn spacing={3}>
-                <SettingsSectionCard title="Location Setup" description="Edit the customer-facing identity, classification, and commercial details of this location.">
+              <StackColumn spacing={1.5}>
+                <EditorSection
+                  title="Presentation"
+                  description="Shape the customer-facing identity and visual presentation of this location."
+                  summary={`${featureImages.length} image${featureImages.length === 1 ? '' : 's'} · ${locationName || 'Unnamed location'}`}
+                  expanded={expandedSetupSection === 'presentation'}
+                  onChange={() => toggleSetupSection('presentation')}
+                >
+                  <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) minmax(0, 1fr)' }, gap: { xs: 2, md: 3 } }}>
+                    <StackColumn spacing={1.5}>
+                      <LeadIconTypography label="Cover and gallery" />
+                      <SmallIconTypography label="Use a strong cover image to help customers recognize this location." />
+                      <FormFieldLabel label="Feature Images">
+                        <StackColumn>
+                          <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 1.5 }}>
+                            {[primaryFeatureImage ?? featureImages[0]]
+                              .filter((image): image is FileUploadResponse => !!image)
+                              .map((image, index) => (
+                                <Box
+                                  key={index}
+                                  sx={{
+                                    position: 'relative',
+                                    aspectRatio: '16 / 9',
+                                    borderRadius: 3,
+                                    overflow: 'hidden',
+                                    border: 1,
+                                    borderColor: 'divider',
+                                    backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                                  }}
+                                >
+                                  <Image
+                                    width={800}
+                                    height={600}
+                                    unoptimized
+                                    alt=""
+                                    src={image.original?.url ?? image.thumbnail?.url ?? ''}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                  />
+                                  <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                                    <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                      <DeleteIcon fontSize="small" />
+                                    </IconButton>
+                                  </StackRow>
+                                  <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                                    {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                      <Chip size="small" color="success" label="Cover image" />
+                                    ) : (
+                                      <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                        Make cover
+                                      </Button>
+                                    )}
+                                  </StackRow>
+                                </Box>
+                              ))}
+                          </Box>
+                          <Box
+                            sx={{
+                              position: 'relative',
+                              overflow: 'hidden',
+                              border: 1,
+                              borderStyle: 'dashed',
+                              borderColor: 'success.main',
+                              borderRadius: 2.5,
+                              p: 2,
+                              backgroundColor: 'action.hover',
+                              '& .MuiFormControl-root': { position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, zIndex: 1 },
+                              '& .MuiInput-root, & input': { width: '100%', height: '100%', cursor: 'pointer' },
+                            }}
+                          >
+                            <StackRow sx={{ alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                              <AddPhotoAlternateRoundedIcon color="success" />
+                              <BodyIconTypography label={featureImages.length === 0 ? 'Choose a cover image' : 'Add another image'} />
+                            </StackRow>
+                            <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
+                          </Box>
+                        </StackColumn>
+                      </FormFieldLabel>
+                    </StackColumn>
+                    <StackColumn spacing={1.5}>
+                      <LeadIconTypography label="Customer-facing details" />
+                      <SmallIconTypography label="Use concise language customers can scan before choosing this location." />
+                      <FormFieldLabel label="Name">
+                        <TextField name="name" required={requiredFields.name} />
+                      </FormFieldLabel>
+                      <ListingMetadata
+                        fields={['title', 'subTitle', 'includedFeatures']}
+                        onChange={({ title, subTitle, includedFeatures }) => {
+                          debounceSetLocationTitle(title);
+                          debounceSetLocationSubTitle(subTitle);
+                          debounceSetLocationIncludedFeatures(includedFeatures);
+                        }}
+                        requiredFields={requiredFields}
+                      />
+                    </StackColumn>
+                  </Box>
+                </EditorSection>
+
+                <EditorSection
+                  title="Classification"
+                  description="Set how this location is categorized and presented in availability searches."
+                  summary={`${locationTimezone || 'No timezone'} · ${spaceTypeIds.length} space types · ${amenityIds.length} amenities`}
+                  expanded={expandedSetupSection === 'classification'}
+                  onChange={() => toggleSetupSection('classification')}
+                >
                   <StackColumn>
-                    <FormFieldLabel label="Feature Images">
-                      <StackColumn>
-                        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' }, gap: 2 }}>
-                          {featureImages.map((image, index) => (
-                            <Box
-                              key={index}
-                              sx={{
-                                position: 'relative',
-                                borderRadius: 2,
-                                overflow: 'hidden',
-                                border: 1,
-                                borderColor: 'divider',
-                                backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                              }}
-                            >
-                              <Image
-                                width={800}
-                                height={600}
-                                unoptimized
-                                alt=""
-                                src={image.original?.url ?? image.thumbnail?.url ?? ''}
-                                style={{ width: '100%', height: 'auto' }}
-                              />
-                              <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                                  <DeleteIcon fontSize="small" />
-                                </IconButton>
-                              </StackRow>
-                              <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                                {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                  <Chip size="small" color="success" label="Cover image" />
-                                ) : (
-                                  <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                    Make cover
-                                  </Button>
-                                )}
-                              </StackRow>
-                            </Box>
-                          ))}
-                        </Box>
-                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
-                      </StackColumn>
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredFields.name} />
-                    </FormFieldLabel>
-
-                    <ListingMetadata
-                      fields={['title', 'subTitle', 'includedFeatures']}
-                      onChange={({ title, subTitle, includedFeatures }) => {
-                        debounceSetLocationTitle(title);
-                        debounceSetLocationSubTitle(subTitle);
-                        debounceSetLocationIncludedFeatures(includedFeatures);
-                      }}
-                      requiredFields={requiredFields}
-                    />
-
                     <FormFieldLabel label="Timezone">
                       <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />
                     </FormFieldLabel>
@@ -1363,7 +1488,17 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
                     <FormFieldLabel label="Amenities">
                       <MultipleChoicesAmenities rootDataRelay={rootData} name="amenityIds" required={requiredFields.amenityIds} />
                     </FormFieldLabel>
+                  </StackColumn>
+                </EditorSection>
 
+                <EditorSection
+                  title="Capacity & Links"
+                  description="Add capacity, website, and supporting media links for customers and operators."
+                  summary={`${locationAreaRangeFromSqm || 'No area'} · ${locationPeopleCapacityFrom || 'No capacity'} · ${locationWebsite || 'No website'}`}
+                  expanded={expandedSetupSection === 'capacity'}
+                  onChange={() => toggleSetupSection('capacity')}
+                >
+                  <StackColumn>
                     {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
                       <>
                         <FormFieldLabel label="Area From(sqm)" required={requiredFields.areaRangeFromInSqm}>
@@ -1393,9 +1528,15 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
                       </>
                     )}
                   </StackColumn>
-                </SettingsSectionCard>
+                </EditorSection>
 
-                <SettingsSectionCard title="Contact Details" description="Keep the public contact points for this location accurate and easy to maintain.">
+                <EditorSection
+                  title="Contact Details"
+                  description="Keep the public contact points for this location accurate and easy to maintain."
+                  summary={`${locationContactEmail || 'No email'} · ${locationContactPhone || 'No phone'}`}
+                  expanded={expandedSetupSection === 'contact'}
+                  onChange={() => toggleSetupSection('contact')}
+                >
                   <StackColumn>
                     <FormFieldLabel label="Contact People" required={requiredFields.contactPeople}>
                       <TextField name="contactPeople" required={requiredFields.contactPeople} multiline rows={2} />
@@ -1407,11 +1548,9 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
                       <TextField name="contactPhones" required={requiredFields.contactPhones} multiline rows={2} />
                     </FormFieldLabel>
                   </StackColumn>
-                </SettingsSectionCard>
+                </EditorSection>
               </StackColumn>
             </FormStackColumn>
-
-            {renderLocationSummaryRail()}
           </Box>
         );
       }}
@@ -1456,9 +1595,15 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
         }
 
         return (
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 }, pb: defaultPadding }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: { xs: 2, xl: 2 } }}>
             <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
-              <SettingsSectionCard title="Physical Address" description="Use the exact address members and customers should navigate to.">
+              <EditorSection
+                title="Physical Address"
+                description="Use the exact address members and customers should navigate to."
+                summary={physicalAddressFormattedAddress || physicalAddressAddressLine1 || 'No address set'}
+                expanded={expandedSetupSection === 'physical-address'}
+                onChange={() => toggleSetupSection('physical-address')}
+              >
                 <StackColumn>
                   <PhysicalAddress
                     addressLine1Name="addressLine1"
@@ -1496,10 +1641,8 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
                     }}
                   />
                 </StackColumn>
-              </SettingsSectionCard>
+              </EditorSection>
             </FormStackColumn>
-
-            {renderLocationSummaryRail()}
           </Box>
         );
       }}
@@ -1507,23 +1650,27 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   );
 
   const renderOpeningHoursSection = () => (
-    <Box sx={{ pb: defaultPadding }}>
-      <SettingsSectionCard title="Opening Hours" description="Manage the standard opening hours that bookings and availability will follow.">
-        <WeekOpeningHours
-          rootDataRelay={rootData}
-          defaultValue={{
-            monday: location.openingHours.weekOpeningHours.monday,
-            tuesday: location.openingHours.weekOpeningHours.tuesday,
-            wednesday: location.openingHours.weekOpeningHours.wednesday,
-            thursday: location.openingHours.weekOpeningHours.thursday,
-            friday: location.openingHours.weekOpeningHours.friday,
-            saturday: location.openingHours.weekOpeningHours.saturday,
-            sunday: location.openingHours.weekOpeningHours.sunday,
-          }}
-          onWeekOpeningHoursDetailUpdateClick={handleLocationOpeningHoursUpdateClick}
-        />
-      </SettingsSectionCard>
-    </Box>
+    <EditorSection
+      title="Opening Hours"
+      description="Manage the standard opening hours that bookings and availability will follow."
+      summary="Weekly availability schedule"
+      expanded={expandedSetupSection === 'opening-hours'}
+      onChange={() => toggleSetupSection('opening-hours')}
+    >
+      <WeekOpeningHours
+        rootDataRelay={rootData}
+        defaultValue={{
+          monday: location.openingHours.weekOpeningHours.monday,
+          tuesday: location.openingHours.weekOpeningHours.tuesday,
+          wednesday: location.openingHours.weekOpeningHours.wednesday,
+          thursday: location.openingHours.weekOpeningHours.thursday,
+          friday: location.openingHours.weekOpeningHours.friday,
+          saturday: location.openingHours.weekOpeningHours.saturday,
+          sunday: location.openingHours.weekOpeningHours.sunday,
+        }}
+        onWeekOpeningHoursDetailUpdateClick={handleLocationOpeningHoursUpdateClick}
+      />
+    </EditorSection>
   );
 
   const renderRestrictedInformationFields = () => (
@@ -1544,59 +1691,60 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   );
 
   const renderRestrictedInformationSection = () => (
-    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 }, pb: defaultPadding }}>
-      <StackColumn spacing={3}>
-        <SettingsSectionCard title="Restricted Information" description="Manage private details shown only to organization members or customers with bookings at this location.">
-          <StackColumn spacing={3}>
-            {restrictedInformation.length === 0 ? (
-              <BodyIconTypography label="No restricted information has been added for this location." />
-            ) : (
-              restrictedInformation.map((item) => (
-                <Form<RestrictedInformationDetails>
-                  key={item.id}
-                  onSubmit={() => undefined}
-                  initialValues={{
-                    title: item.title,
-                    category: item.category,
-                    content: item.content,
-                    active: item.active,
-                    sortOrder: item.sortOrder,
-                  }}
-                  validate={validateRestrictedInformation}
-                  render={({ handleSubmit, values }) => {
-                    const restrictedInformationValues = values as RestrictedInformationDetails;
-                    const previousValues = previousRestrictedInformationValues.current[item.id];
-                    if (!previousValues) {
-                      previousRestrictedInformationValues.current[item.id] = restrictedInformationValues;
-                    } else {
-                      const changedFields = getChangedRestrictedInformationFields(previousValues, restrictedInformationValues);
-                      if (changedFields.length > 0) {
-                        previousRestrictedInformationValues.current[item.id] = restrictedInformationValues;
-                        debouncedRestrictedInformationUpdate(() => handleUpdateRestrictedInformationClick(item.id, changedFields, restrictedInformationValues));
-                      }
-                    }
+    <EditorSection
+      title="Restricted Information"
+      description="Manage private details shown only to organization members or customers with bookings at this location."
+      summary={`${restrictedInformation.length} private entr${restrictedInformation.length === 1 ? 'y' : 'ies'}`}
+      expanded={expandedSetupSection === 'restricted-information'}
+      onChange={() => toggleSetupSection('restricted-information')}
+    >
+      <StackColumn spacing={2}>
+        {restrictedInformation.length === 0 ? (
+          <BodyIconTypography label="No restricted information has been added for this location." />
+        ) : (
+          restrictedInformation.map((item) => (
+            <Form<RestrictedInformationDetails>
+              key={item.id}
+              onSubmit={() => undefined}
+              initialValues={{
+                title: item.title,
+                category: item.category,
+                content: item.content,
+                active: item.active,
+                sortOrder: item.sortOrder,
+              }}
+              validate={validateRestrictedInformation}
+              render={({ handleSubmit, values }) => {
+                const restrictedInformationValues = values as RestrictedInformationDetails;
+                const previousValues = previousRestrictedInformationValues.current[item.id];
+                if (!previousValues) {
+                  previousRestrictedInformationValues.current[item.id] = restrictedInformationValues;
+                } else {
+                  const changedFields = getChangedRestrictedInformationFields(previousValues, restrictedInformationValues);
+                  if (changedFields.length > 0) {
+                    previousRestrictedInformationValues.current[item.id] = restrictedInformationValues;
+                    debouncedRestrictedInformationUpdate(() => handleUpdateRestrictedInformationClick(item.id, changedFields, restrictedInformationValues));
+                  }
+                }
 
-                    return (
-                      <FormStackColumn onSubmit={handleSubmit}>
-                        <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 2 }}>
-                          <StackColumn>
-                            {renderRestrictedInformationFields()}
-                            <StackRow sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-                              <Button color="error" variant="outlined" onClick={() => handleDeleteRestrictedInformationClick(item)} sx={defaultButtonStyle}>
-                                Remove
-                              </Button>
-                            </StackRow>
-                          </StackColumn>
-                        </Box>
-                      </FormStackColumn>
-                    );
-                  }}
-                />
-              ))
-            )}
-          </StackColumn>
-        </SettingsSectionCard>
-
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 2 }}>
+                      <StackColumn>
+                        {renderRestrictedInformationFields()}
+                        <StackRow sx={{ justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                          <Button color="error" variant="outlined" onClick={() => handleDeleteRestrictedInformationClick(item)} sx={defaultButtonStyle}>
+                            Remove
+                          </Button>
+                        </StackRow>
+                      </StackColumn>
+                    </Box>
+                  </FormStackColumn>
+                );
+              }}
+            />
+          ))
+        )}
         <SettingsSectionCard
           title="Add Restricted Information"
           description="Create a new private note for access, Wi-Fi, cleaning, security, parking, or other operational details."
@@ -1626,9 +1774,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
           />
         </SettingsSectionCard>
       </StackColumn>
-
-      {renderLocationSummaryRail()}
-    </Box>
+    </EditorSection>
   );
 
   const renderManageLocationSection = () => (
@@ -1659,100 +1805,164 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     {
       title: 'Profile',
       description: 'Location identity, listing content, images, contact details, amenities, and space types.',
-      sections: ['setup', 'physical-address-setup'] satisfies OrganizationLocationSection[],
+      sections: ['setup'] satisfies OrganizationLocationSection[],
     },
     {
-      title: 'Availability',
-      description: 'Opening hours, floor plans, and resources that shape bookings and capacity.',
-      sections: ['opening-hours', 'floor-plans', 'manage-resources'] satisfies OrganizationLocationSection[],
+      title: 'Resources',
+      description: 'Manage the resources and capacity available at this location.',
+      sections: ['manage-resources'] satisfies OrganizationLocationSection[],
+    },
+    {
+      title: 'Floor Plans',
+      description: 'Manage the floor plans available for this location.',
+      sections: ['floor-plans'] satisfies OrganizationLocationSection[],
     },
     {
       title: 'Operations',
       description: 'Private operating notes and location lifecycle controls.',
-      sections: ['restricted-information', 'manage-location'] satisfies OrganizationLocationSection[],
+      sections: ['manage-location'] satisfies OrganizationLocationSection[],
     },
   ];
 
   const renderOverview = () => (
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-        gap: 2,
-      }}
-    >
-      {locationCards.map((card) => {
-        const primarySection = card.sections[0];
-
-        return (
-          <Card
-            key={card.title}
-            variant="outlined"
-            sx={{
-              borderRadius: 3,
-              borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
-              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.06)' : theme.shadows[1]),
-              overflow: 'hidden',
-            }}
-          >
-            <CardContent>
+    <StackColumn spacing={2}>
+      <Card variant="outlined" sx={{ borderRadius: 3, boxShadow: 'none' }}>
+        <CardContent sx={{ p: 1.5 }}>
+          <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
+            {locationCards.map((card) => (
+              <Button
+                key={card.title}
+                variant={activeLandingTab === card.title ? 'contained' : 'outlined'}
+                onClick={() => setLocationTab(card.title)}
+                sx={{ borderRadius: 999, textTransform: 'none' }}
+              >
+                {card.title}
+              </Button>
+            ))}
+          </StackRow>
+        </CardContent>
+      </Card>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+          gap: 2,
+        }}
+      >
+        {activeLandingTab === 'Profile' ? (
+          <Box sx={{ gridColumn: '1 / -1' }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: 2 }}>
               <StackColumn spacing={1.5}>
-                <StackColumn spacing={0.5}>
-                  <LeadIconTypography label={card.title} />
-                  <BodyIconTypography label={card.description} />
-                </StackColumn>
-                <Divider />
-                <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
-                  {card.sections.map((item) => (
-                    <Button
-                      key={item}
-                      component={NextLink}
-                      href={sectionLinks[item]}
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        borderRadius: 999,
-                        textTransform: 'none',
-                        fontWeight: 700,
-                        ...(item === primarySection
-                          ? {
-                              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.900' : 'grey.100'),
-                              borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.900' : 'grey.100'),
-                              color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.900'),
-                              '&:hover': {
-                                bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.800' : 'common.white'),
-                                borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.800' : 'common.white'),
-                              },
-                            }
-                          : {
-                              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'transparent'),
-                              borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.400' : 'grey.500'),
-                              color: 'text.primary',
-                              '&:hover': {
-                                bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.50' : 'rgba(255, 255, 255, 0.08)'),
-                                borderColor: 'text.primary',
-                              },
-                            }),
-                      }}
-                    >
-                      {sectionLabels[item]}
-                    </Button>
-                  ))}
-                </StackRow>
+                {renderSetupSection()}
+                {renderPhysicalAddressSection()}
+                {renderOpeningHoursSection()}
+                {renderRestrictedInformationSection()}
               </StackColumn>
-            </CardContent>
-          </Card>
-        );
-      })}
-    </Box>
+              {renderLocationSummaryRail()}
+            </Box>
+          </Box>
+        ) : activeLandingTab === 'Floor Plans' ? (
+          <Box sx={{ gridColumn: '1 / -1' }}>
+            <Suspense fallback={<Loading />}>
+              <OrganizationLocationFloorPlansSection organizationCustomDomain={organizationCustomDomain} locationId={locationId} />
+            </Suspense>
+          </Box>
+        ) : activeLandingTab === 'Resources' ? (
+          <Box sx={{ gridColumn: '1 / -1' }}>
+            <Suspense fallback={<Loading />}>
+              <OrganizationLocationManageResourcesSection onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} locationId={locationId} />
+            </Suspense>
+          </Box>
+        ) : (
+          <Box sx={{ gridColumn: '1 / -1' }}>{renderManageLocationSection()}</Box>
+        )}
+        {false &&
+          locationCards
+            .filter((card) => card.title === activeLandingTab)
+            .map((card) => {
+              const primarySection = card.sections[0];
+
+              return (
+                <Card
+                  key={card.title}
+                  variant="outlined"
+                  sx={{
+                    borderRadius: 3,
+                    borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+                    boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.06)' : theme.shadows[1]),
+                    overflow: 'hidden',
+                  }}
+                >
+                  <CardContent>
+                    <StackColumn spacing={1.5}>
+                      <StackColumn spacing={0.5}>
+                        <LeadIconTypography label={card.title} />
+                        <BodyIconTypography label={card.description} />
+                      </StackColumn>
+                      <Divider />
+                      <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
+                        {card.sections.map((item) => (
+                          <Button
+                            key={item}
+                            component={NextLink}
+                            href={sectionLinks[item]}
+                            variant="outlined"
+                            size="small"
+                            sx={{
+                              borderRadius: 999,
+                              textTransform: 'none',
+                              fontWeight: 700,
+                              ...(item === primarySection
+                                ? {
+                                    bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.900' : 'grey.100'),
+                                    borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.900' : 'grey.100'),
+                                    color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.900'),
+                                    '&:hover': {
+                                      bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.800' : 'common.white'),
+                                      borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.800' : 'common.white'),
+                                    },
+                                  }
+                                : {
+                                    bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'transparent'),
+                                    borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.400' : 'grey.500'),
+                                    color: 'text.primary',
+                                    '&:hover': {
+                                      bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.50' : 'rgba(255, 255, 255, 0.08)'),
+                                      borderColor: 'text.primary',
+                                    },
+                                  }),
+                            }}
+                          >
+                            {sectionLabels[item]}
+                          </Button>
+                        ))}
+                      </StackRow>
+                    </StackColumn>
+                  </CardContent>
+                </Card>
+              );
+            })}
+      </Box>
+    </StackColumn>
   );
 
   const renderSection = () => {
     switch (activeSection) {
       case 'physical-address-setup':
-        return renderPhysicalAddressSection();
+      case 'setup':
       case 'opening-hours':
-        return renderOpeningHoursSection();
+      case 'restricted-information':
+        return (
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 }, pb: defaultPadding }}>
+            <StackColumn spacing={1.5}>
+              {renderSetupSection()}
+              {renderPhysicalAddressSection()}
+              {renderOpeningHoursSection()}
+              {renderRestrictedInformationSection()}
+            </StackColumn>
+            {renderLocationSummaryRail()}
+          </Box>
+        );
       case 'floor-plans':
         return (
           <Suspense fallback={<Loading />}>
@@ -1765,12 +1975,8 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
             <OrganizationLocationManageResourcesSection onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} locationId={locationId} />
           </Suspense>
         );
-      case 'restricted-information':
-        return renderRestrictedInformationSection();
       case 'manage-location':
         return renderManageLocationSection();
-      case 'setup':
-        return renderSetupSection();
       default:
         return renderOverview();
     }

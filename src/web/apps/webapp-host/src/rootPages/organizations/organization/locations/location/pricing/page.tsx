@@ -102,7 +102,7 @@ const buildInitialValues = (data: QueryData): FormValues => {
   };
 };
 
-const PricingPage = () => {
+export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
   const { organizationCustomDomain, locationId } = useKnownParams();
   const { integratedPlatform } = useIntegratedPlatform();
   const coordinator = useHostListingCoordinator();
@@ -463,23 +463,27 @@ const PricingPage = () => {
   }, [debouncedSave, hasInvalidWeeklyRequiredDays, values]);
 
   return (
-    <Container maxWidth="lg">
-      <Stack spacing={3} sx={{ py: 4 }}>
-        <Button component={NextLink} href={backLink} sx={{ alignSelf: 'flex-start' }}>
-          ← Back to location
-        </Button>
+    <Container maxWidth={embedded ? false : 'lg'} disableGutters={embedded}>
+      <Stack spacing={3} sx={{ py: embedded ? 0 : 4 }}>
+        {!embedded ? (
+          <Button component={NextLink} href={backLink} sx={{ alignSelf: 'flex-start' }}>
+            ← Back to location
+          </Button>
+        ) : null}
 
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ justifyContent: 'space-between', alignItems: { sm: 'center' } }}>
-          <Box>
-            <MediumHeadingIconTypography label="Pricing and booking" />
-            <BodyIconTypography label="Manage rates, cadences, cancellation policies, and booking rules." />
-          </Box>
-          <Box>
-            {displayedSaveStatus === 'saving' && <SmallIconTypography label="Saving…" />}
-            {displayedSaveStatus === 'saved' && <SmallIconTypography label="All changes saved" />}
-            {displayedSaveStatus === 'error' && <SmallIconTypography label="Fix the highlighted weekly day selection before saving." />}
-          </Box>
-        </Stack>
+        {!embedded ? (
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ justifyContent: 'space-between', alignItems: { sm: 'center' } }}>
+            <Box>
+              <MediumHeadingIconTypography label="Pricing and booking" />
+              <BodyIconTypography label="Manage rates, cadences, cancellation policies, and booking rules." />
+            </Box>
+            <Box>
+              {displayedSaveStatus === 'saving' && <SmallIconTypography label="Saving…" />}
+              {displayedSaveStatus === 'saved' && <SmallIconTypography label="All changes saved" />}
+              {displayedSaveStatus === 'error' && <SmallIconTypography label="Fix the highlighted weekly day selection before saving." />}
+            </Box>
+          </Stack>
+        ) : null}
 
         {!canModify ? <Alert severity="warning">You do not have permission to edit this listing.</Alert> : null}
 
