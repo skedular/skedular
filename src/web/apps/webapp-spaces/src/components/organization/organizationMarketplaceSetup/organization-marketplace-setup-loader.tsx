@@ -10,7 +10,7 @@ import OrganizationMarketplaceSetup from './organization-marketplace-setup';
 type Props = {
   organizationCustomDomain: string;
   embedded?: boolean;
-  section?: 'billing-cycle';
+  section?: 'billing-cycle' | 'bank-accounts-setup';
 };
 
 type InnerProps = Props & {

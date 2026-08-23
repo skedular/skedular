@@ -228,13 +228,13 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
   const searchParams = useSearchParams();
-  const [expandedSection, setExpandedSectionState] = useState(() => searchParams.get('profileSection') ?? 'presentation');
+  const [expandedSection, setExpandedSectionState] = useState(() => searchParams.get('section') ?? 'presentation');
   const setExpandedSection = (section: string) => {
     setExpandedSectionState(section);
     const params = new URLSearchParams(searchParams.toString());
-    params.set('section', 'setup');
-    if (section) params.set('profileSection', section);
-    else params.delete('profileSection');
+    params.set('tab', 'profile');
+    if (section) params.set('section', section);
+    else params.delete('section');
     router.replace(`?${params.toString()}`, { scroll: false });
   };
   const initialPatchValues: OrganizationSetupPatchValues = {

@@ -78,7 +78,7 @@ type Props = {
   onReloadRequired: () => void;
   organizationCustomDomain: string;
   embedded?: boolean;
-  initialSection?: 'billing-cycle';
+  initialSection?: 'billing-cycle' | 'bank-accounts-setup';
 };
 
 const inlinePatchDebounceTimeout = 1000;
@@ -498,7 +498,7 @@ const OrganizationMarketplaceSetup = ({
   const pathname = usePathname();
   const isIntegrationsRoute = pathname.endsWith('/integrations');
   const section = searchParams.get(isIntegrationsRoute ? 'tab' : 'section');
-  const activeSection = section === 'setup' && initialSection ? getActiveSection(initialSection) : getActiveSection(section);
+  const activeSection = initialSection ? getActiveSection(initialSection) : getActiveSection(section);
   const [stickyTop, setStickyTop] = useState(0);
   const xeroSuggestedTenantId = searchParams.get('xeroSuggestedTenantId') ?? '';
   const xeroSuggestedTenantName = searchParams.get('xeroSuggestedTenantName') ?? '';

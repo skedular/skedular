@@ -40,8 +40,8 @@ public class StripeIntegrations(
         var redirectUrl = baseRedirectUrl;
 
         redirectUrl = redirectUrl
-            .SetQueryParam("section", "setup")
-            .SetQueryParam("profileSection", "plan");
+            .SetQueryParam("tab", "profile")
+            .SetQueryParam("section", "plan");
 
         if (args.RedirectStatus == "succeeded")
         {

@@ -4,9 +4,9 @@ import {
   getOrganizationAdminManageOrganizationBaseLink,
   getOrganizationAdminPhysicalAddressBaseLink,
   getOrganizationAdminSetupBaseLink,
-  getOrganizationAdminSsoSettingsBaseLink,
   getOrganizationAdminSetupBillingCycleBaseLink,
   getOrganizationAdminSetupMarketplaceListingBaseLink,
+  getOrganizationAdminSsoSettingsBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
   getOrganizationAdminTaxDetailsBaseLink,
   getOrganizationAdminZonesBaseLink,
@@ -19,21 +19,20 @@ import {
 } from '@/components/links';
 import OrganizationMarketplaceSetupLoader from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-loader';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
-import Box from '@mui/material/Box';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Divider from '@mui/material/Divider';
-import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn, StackRow } from '@skedular/ui';
 import NextLink from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, PropsWithChildren, useEffect, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import OrganizationAdminBillingPaymentSection from './organization-admin-billing-payment-section';
 import OrganizationAdminManageOrganizationSection from './organization-admin-manage-organization-section';
 import OrganizationAdminPhysicalAddressSection from './organization-admin-physical-address-section';
@@ -148,21 +147,23 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
   const pathname = usePathname();
   const { integratedPlatform } = useIntegratedPlatform();
   const integrationsMode = pathname.endsWith('/integrations');
+  const adminTab = searchParams.get('tab') ?? 'profile';
   const section = integrationsMode ? searchParams.get('tab') : searchParams.get('section');
   const activeSection = useMemo(() => getActiveSection(section) ?? (integrationsMode ? 'xero-setup' : null), [integrationsMode, section]);
   const router = useRouter();
   useEffect(() => {
-    if (section === 'billing-payment-setup') router.replace('?section=setup&profileSection=billing-details');
-    if (section === 'subscriptions') router.replace('?section=setup&profileSection=plan');
-    if (section === 'billing-cycle') router.replace('?section=setup&profileSection=billing-cadence');
-  }, [router, section]);
-  const profileSection = searchParams.get('profileSection') ?? 'presentation';
+    if (section === 'billing-payment-setup') router.replace('?tab=profile&section=billing-details');
+    if (section === 'subscriptions') router.replace('?tab=profile&section=plan');
+    if (section === 'billing-cycle') router.replace('?tab=profile&section=billing-cadence');
+    if (section === 'setup' && searchParams.get('profileSection')) router.replace(`?tab=profile&section=${searchParams.get('profileSection')}`);
+  }, [router, section, searchParams]);
+  const profileSection = section ?? 'presentation';
   const setExpandedProfileSection = (section: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('section', 'setup');
-    if (section) params.set('profileSection', section);
-    else params.delete('profileSection');
-    router.replace(`?${params.toString()}`, { scroll: false });
+    params.set('tab', 'profile');
+    if (section) params.set('section', section);
+    else params.delete('section');
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
   const expandedProfileSection = profileSection;
 
@@ -187,96 +188,25 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     'manage-organization': getOrganizationAdminManageOrganizationBaseLink(integratedPlatform, organizationCustomDomain),
   };
   const integrationsBaseLink = getOrganizationIntegrationsBaseLink(integratedPlatform, organizationCustomDomain);
-  const adminCards = [
-    {
-      title: 'Profile',
-      description: 'Organisation identity, physical address, and tax details.',
-      sections: ['setup'] satisfies OrganizationAdminSection[],
-    },
-    {
-      title: 'Billing & Payouts',
-      description: 'Bank accounts and payout settings.',
-      sections: ['bank-accounts-setup'] satisfies OrganizationAdminSection[],
-    },
-    {
-      title: 'Operations',
-      description: 'Subscriptions and organisation lifecycle controls.',
-      sections: ['manage-organization'] satisfies OrganizationAdminSection[],
-    },
-  ];
 
-  const renderOverview = () => (
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-        gap: 2,
-      }}
-    >
-      {adminCards.map((card) => {
-        const primarySection = card.sections[0];
-
-        return (
-          <Card
-            key={card.title}
-            variant="outlined"
-            sx={{
-              borderRadius: 3,
-              borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
-              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.06)' : theme.shadows[1]),
-              overflow: 'hidden',
-            }}
-          >
-            <CardContent>
-              <StackColumn spacing={1.5}>
-                <StackColumn spacing={0.5}>
-                  <LeadIconTypography label={card.title} />
-                  <BodyIconTypography label={card.description} />
-                </StackColumn>
-                <Divider />
-                <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
-                  {card.sections.map((item) => (
-                    <Button
-                      key={item}
-                      component={NextLink}
-                      href={sectionLinks[item]}
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        borderRadius: 999,
-                        textTransform: 'none',
-                        fontWeight: 700,
-                        ...(item === primarySection
-                          ? {
-                              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.900' : 'grey.100'),
-                              borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.900' : 'grey.100'),
-                              color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.900'),
-                              '&:hover': {
-                                bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.800' : 'common.white'),
-                                borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.800' : 'common.white'),
-                              },
-                            }
-                          : {
-                              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'transparent'),
-                              borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.400' : 'grey.500'),
-                              color: 'text.primary',
-                              '&:hover': {
-                                bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.50' : 'rgba(255, 255, 255, 0.08)'),
-                                borderColor: 'text.primary',
-                              },
-                            }),
-                      }}
-                    >
-                      {sectionLabels[item]}
-                    </Button>
-                  ))}
-                </StackRow>
-              </StackColumn>
-            </CardContent>
-          </Card>
-        );
-      })}
-    </Box>
+  const renderAdminTabs = () => (
+    <StackRow sx={{ overflowX: 'auto', gap: 1, p: 1, border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper' }}>
+      {[
+        ['profile', 'Profile'],
+        ['bank-accounts', 'Bank Accounts'],
+        ['operations', 'Operations'],
+      ].map(([key, label]) => (
+        <Button
+          key={key}
+          component={NextLink}
+          href={`${pathname}?tab=${key}${key === 'profile' ? '&section=presentation' : ''}`}
+          variant={adminTab === key ? 'contained' : 'outlined'}
+          sx={{ borderRadius: 999, textTransform: 'none' }}
+        >
+          {label}
+        </Button>
+      ))}
+    </StackRow>
   );
 
   const renderTagsGroupsTabs = () => (
@@ -394,9 +324,9 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
         </PageHeaderPanel>
 
         {tagsGroupsMode && renderTagsGroupsTabs()}
-        {!activeSection && !tagsGroupsMode && renderOverview()}
+        {!activeSection && !tagsGroupsMode && renderAdminTabs()}
         {['xero-setup', 'stripe-connect-accounts-setup'].includes(activeSection ?? '') && renderIntegrationTabs()}
-        {activeSection === 'setup' && (
+        {!activeSection && !tagsGroupsMode && adminTab === 'profile' && (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
             <StackColumn spacing={1.5}>
               <OrganizationAdminSetupSection key={expandedProfileSection} organizationCustomDomain={organizationCustomDomain} />
@@ -465,6 +395,27 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
               </EditorSection>
             </StackColumn>
             {renderOrganizationSummary()}
+          </Box>
+        )}
+        {!activeSection && !tagsGroupsMode && adminTab === 'bank-accounts' && (
+          <Box sx={{ width: '100%' }}>
+            <Box
+              sx={{
+                borderRadius: 4,
+                border: 1,
+                borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+                bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+                boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+                overflow: 'hidden',
+              }}
+            >
+              <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded section="bank-accounts-setup" />
+            </Box>
+          </Box>
+        )}
+        {!activeSection && !tagsGroupsMode && adminTab === 'operations' && (
+          <Box sx={{ width: '100%' }}>
+            <OrganizationAdminManageOrganizationSection organizationCustomDomain={organizationCustomDomain} />
           </Box>
         )}
         {activeSection === 'marketplace-listing' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}

@@ -17,12 +17,11 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Divider from '@mui/material/Divider';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn, StackRow } from '@skedular/ui';
 import NextLink from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, PropsWithChildren, useEffect, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import OrganizationAdminBillingPaymentSection from './organization-admin-billing-payment-section';
@@ -96,21 +95,26 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     rootDataRelay,
   );
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { integratedPlatform } = useIntegratedPlatform();
+  const adminTab = searchParams.get('tab') ?? 'profile';
   const section = searchParams.get('section');
   const activeSection = useMemo(() => getActiveSection(section), [section]);
   const router = useRouter();
   useEffect(() => {
-    if (section === 'billing-payment-setup') router.replace('?section=setup&profileSection=billing-details');
-    if (section === 'subscriptions') router.replace('?section=setup&profileSection=plan');
-  }, [router, section]);
-  const profileSection = searchParams.get('profileSection') ?? 'presentation';
+    if (section === 'billing-payment-setup') router.replace('?tab=profile&section=billing-details');
+    if (section === 'subscriptions') router.replace('?tab=profile&section=plan');
+    if (section === 'setup' && searchParams.get('profileSection')) {
+      router.replace(`?tab=profile&section=${searchParams.get('profileSection')}`);
+    }
+  }, [router, section, searchParams]);
+  const profileSection = section ?? 'presentation';
   const setExpandedProfileSection = (section: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('section', 'setup');
-    if (section) params.set('profileSection', section);
-    else params.delete('profileSection');
-    router.replace(`?${params.toString()}`, { scroll: false });
+    params.set('tab', 'profile');
+    if (section) params.set('section', section);
+    else params.delete('section');
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
   const expandedProfileSection = profileSection;
 
@@ -127,91 +131,23 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     subscriptions: getOrganizationAdminSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain),
     'manage-organization': getOrganizationAdminManageOrganizationBaseLink(integratedPlatform, organizationCustomDomain),
   };
-  const adminCards = [
-    {
-      title: 'Profile',
-      description: 'Organisation identity and physical address.',
-      sections: ['setup'] satisfies OrganizationAdminSection[],
-    },
-    {
-      title: 'Operations',
-      description: 'Organisation lifecycle controls.',
-      sections: ['manage-organization'] satisfies OrganizationAdminSection[],
-    },
-  ];
-
-  const renderOverview = () => (
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
-        gap: 2,
-      }}
-    >
-      {adminCards.map((card) => {
-        const primarySection = card.sections[0];
-
-        return (
-          <Card
-            key={card.title}
-            variant="outlined"
-            sx={{
-              borderRadius: 3,
-              borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
-              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.06)' : theme.shadows[1]),
-              overflow: 'hidden',
-            }}
-          >
-            <CardContent>
-              <StackColumn spacing={1.5}>
-                <StackColumn spacing={0.5}>
-                  <LeadIconTypography label={card.title} />
-                  <BodyIconTypography label={card.description} />
-                </StackColumn>
-                <Divider />
-                <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
-                  {card.sections.map((item) => (
-                    <Button
-                      key={item}
-                      component={NextLink}
-                      href={sectionLinks[item]}
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        borderRadius: 999,
-                        textTransform: 'none',
-                        fontWeight: 700,
-                        ...(item === primarySection
-                          ? {
-                              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.900' : 'grey.100'),
-                              borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.900' : 'grey.100'),
-                              color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.900'),
-                              '&:hover': {
-                                bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.800' : 'common.white'),
-                                borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.800' : 'common.white'),
-                              },
-                            }
-                          : {
-                              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'transparent'),
-                              borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.400' : 'grey.500'),
-                              color: 'text.primary',
-                              '&:hover': {
-                                bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.50' : 'rgba(255, 255, 255, 0.08)'),
-                                borderColor: 'text.primary',
-                              },
-                            }),
-                      }}
-                    >
-                      {sectionLabels[item]}
-                    </Button>
-                  ))}
-                </StackRow>
-              </StackColumn>
-            </CardContent>
-          </Card>
-        );
-      })}
-    </Box>
+  const renderAdminTabs = () => (
+    <StackRow sx={{ overflowX: 'auto', gap: 1, p: 1, border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper' }}>
+      {[
+        ['profile', 'Profile'],
+        ['operations', 'Operations'],
+      ].map(([key, label]) => (
+        <Button
+          key={key}
+          component={NextLink}
+          href={`${pathname}?tab=${key}${key === 'profile' ? '&section=presentation' : ''}`}
+          variant={adminTab === key ? 'contained' : 'outlined'}
+          sx={{ borderRadius: 999, textTransform: 'none' }}
+        >
+          {label}
+        </Button>
+      ))}
+    </StackRow>
   );
 
   const renderTagsGroupsTabs = () => (
@@ -310,11 +246,11 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
         </PageHeaderPanel>
 
         {tagsGroupsMode && renderTagsGroupsTabs()}
-        {!activeSection && !tagsGroupsMode && renderOverview()}
-        {activeSection === 'setup' && (
+        {!activeSection && !tagsGroupsMode && renderAdminTabs()}
+        {!activeSection && !tagsGroupsMode && adminTab === 'profile' && (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
             <StackColumn spacing={1.5}>
-              <OrganizationAdminSetupSection organizationCustomDomain={organizationCustomDomain} />
+              <OrganizationAdminSetupSection key={expandedProfileSection} organizationCustomDomain={organizationCustomDomain} />
               <EditorSection
                 title="Physical address"
                 description="Update the organization address used for internal records and operational context."
@@ -353,6 +289,11 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
               </EditorSection>
             </StackColumn>
             {renderOrganizationSummary()}
+          </Box>
+        )}
+        {!activeSection && !tagsGroupsMode && adminTab === 'operations' && (
+          <Box sx={{ width: '100%' }}>
+            <OrganizationAdminManageOrganizationSection organizationCustomDomain={organizationCustomDomain} />
           </Box>
         )}
         {activeSection === 'physical-address-setup' && <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />}
