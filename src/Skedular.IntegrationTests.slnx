@@ -1,0 +1,12 @@
+<Solution>
+    <Project Path="booking/domain/Booking.Domain.IntegrationTests/Booking.Domain.IntegrationTests.csproj"/>
+    <Project Path="core/domain/Core.Domain.IntegrationTests/Core.Domain.IntegrationTests.csproj"/>
+    <Project Path="customer/domain/Customer.Domain.IntegrationTests/Customer.Domain.IntegrationTests.csproj"/>
+    <Project Path="location/domain/Location.Domain.IntegrationTests/Location.Domain.IntegrationTests.csproj"/>
+    <Project Path="marketplace/domain/Marketplace.Domain.IntegrationTests/Marketplace.Domain.IntegrationTests.csproj"/>
+    <Project Path="msteams/domain/MsTeams.Domain.IntegrationTests/MsTeams.Domain.IntegrationTests.csproj"/>
+    <Project Path="organization/domain/Organization.Domain.IntegrationTests/Organization.Domain.IntegrationTests.csproj"/>
+    <Project Path="shared/Testing.Shared.IntegrationTests/Testing.Shared.IntegrationTests.csproj"/>
+    <Project Path="slack/domain/Slack.Domain.IntegrationTests/Slack.Domain.IntegrationTests.csproj"/>
+    <Project Path="team/domain/Team.Domain.IntegrationTests/Team.Domain.IntegrationTests.csproj"/>
+</Solution>
