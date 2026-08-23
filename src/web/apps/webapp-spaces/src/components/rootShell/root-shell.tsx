@@ -124,7 +124,9 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
   }
 
   const subscriptionPresentation = getSpacesSubscriptionPresentation(spacesSubscription);
-  const canRenderProduct = !subscriptionPresentation.blocksProduct || (pathName.endsWith('/admin') && searchParams.get('section') === 'subscriptions');
+  const isPlanManagementRoute =
+    pathName.endsWith('/admin') && ((searchParams.get('section') === 'setup' && searchParams.get('profileSection') === 'plan') || searchParams.get('section') === 'subscriptions');
+  const canRenderProduct = !subscriptionPresentation.blocksProduct || isPlanManagementRoute;
 
   return (
     <SpacesSubscriptionProvider value={spacesSubscription}>

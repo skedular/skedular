@@ -39,7 +39,9 @@ public class StripeIntegrations(
 
         var redirectUrl = baseRedirectUrl;
 
-        redirectUrl = redirectUrl.SetQueryParam("section", "subscriptions");
+        redirectUrl = redirectUrl
+            .SetQueryParam("section", "setup")
+            .SetQueryParam("profileSection", "plan");
 
         if (args.RedirectStatus == "succeeded")
         {

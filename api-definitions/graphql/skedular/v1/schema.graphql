@@ -2935,6 +2935,7 @@ type OpeningHoursDetails @fusion__type(schema: LOCATION_API) {
 }
 
 type OrganizationActiveOfferingDetails @fusion__type(schema: ORGANIZATION_API) {
+  canCancel: Boolean! @fusion__field(schema: ORGANIZATION_API)
   catalogVersion: CatalogVersionDetails @fusion__field(schema: ORGANIZATION_API)
   code: String! @fusion__field(schema: ORGANIZATION_API)
   currency: CurrencyDetails! @fusion__field(schema: ORGANIZATION_API)

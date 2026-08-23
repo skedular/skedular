@@ -153,6 +153,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
   const router = useRouter();
   useEffect(() => {
     if (section === 'billing-payment-setup') router.replace('?section=setup&profileSection=billing-details');
+    if (section === 'subscriptions') router.replace('?section=setup&profileSection=plan');
   }, [router, section]);
   const profileSection = searchParams.get('profileSection') ?? 'presentation';
   const setExpandedProfileSection = (section: string) => {
@@ -199,7 +200,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     {
       title: 'Operations',
       description: 'Subscriptions and organisation lifecycle controls.',
-      sections: ['subscriptions', 'manage-organization'] satisfies OrganizationAdminSection[],
+      sections: ['manage-organization'] satisfies OrganizationAdminSection[],
     },
   ];
 
@@ -426,15 +427,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
                 <OrganizationAdminBillingPaymentSection organizationCustomDomain={organizationCustomDomain} section="billing-details" />
               </EditorSection>
               <EditorSection
-                title="Payment methods"
-                description="Manage payment methods used for organization subscriptions and upgrades."
-                summary="Organization payment methods"
-                expanded={expandedProfileSection === 'payment-methods'}
-                onChange={() => setExpandedProfileSection(expandedProfileSection === 'payment-methods' ? '' : 'payment-methods')}
-              >
-                <OrganizationAdminBillingPaymentSection organizationCustomDomain={organizationCustomDomain} section="payment-methods" />
-              </EditorSection>
-              <EditorSection
                 title="Tax details"
                 description="Manage the tax registration and rate used for organization billing."
                 summary="Tax registration and rate"
@@ -451,6 +443,15 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
                 onChange={() => setExpandedProfileSection(expandedProfileSection === 'sso' ? '' : 'sso')}
               >
                 <OrganizationAdminSsoSection organizationCustomDomain={organizationCustomDomain} />
+              </EditorSection>
+              <EditorSection
+                title="Plan"
+                description="Manage the organization subscription tier and available features."
+                summary="Organization subscription plan"
+                expanded={expandedProfileSection === 'plan'}
+                onChange={() => setExpandedProfileSection(expandedProfileSection === 'plan' ? '' : 'plan')}
+              >
+                <OrganizationAdminSubscriptionsSection organizationCustomDomain={organizationCustomDomain} />
               </EditorSection>
             </StackColumn>
             {renderOrganizationSummary()}

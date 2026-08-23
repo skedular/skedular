@@ -353,6 +353,7 @@ type OrganizationActiveOfferingDetails {
   featureSet: [String!]!
   free: Boolean!
   earlyBird: Boolean!
+  canCancel: Boolean!
   id: ID!
 }
 

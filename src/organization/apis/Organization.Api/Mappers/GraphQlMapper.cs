@@ -336,7 +336,7 @@ public class GraphQlMapper : IGraphQlMapper
         var organizationOffering = src.OrganizationOfferings.FirstOrDefault();
         var availableOfferings = organizationOffering is null || organizationOffering.Code == OfferingCode.EarlyBirdV1
             ? []
-            : GetAvailableOfferingCodes(src.Type)
+            : Offerings.ForOrganizationType(src.Type)
                 .Where(item => item != organizationOffering.Code)
                 .Select(item =>
                 {
@@ -1148,13 +1148,6 @@ public class GraphQlMapper : IGraphQlMapper
             GeneratedAt = src.GeneratedAt,
         };
 
-    private static IReadOnlyList<OfferingCode> GetAvailableOfferingCodes(OrganizationType organizationType) =>
-        organizationType switch
-        {
-            OrganizationType.Marketplace => Offerings.SpacesOfferings,
-            _ => Offerings.TeamsOfferings,
-        };
-
     private Shared.Models.Organization MapTo(
         Shared.Database.Entities.Organization src,
         Uri stripeAuthorizeExistingConnectAccountUrl,
@@ -1336,6 +1329,7 @@ public class GraphQlMapper : IGraphQlMapper
             UnderPriceLines = offering.UnderPriceLines,
             Free = src.Code.IsFreeOffering(),
             EarlyBird = src.Code.IsEarlyBirdOffering(),
+            CanCancel = offering.CanCancel,
         };
     }
 

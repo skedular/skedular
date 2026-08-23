@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6e9b7fe29b7a324eb6f57a013bc2655f>>
+ * @generated SignedSource<<36b50bce4a36e3e2bbd71f26c18da97c>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,8 @@ export type organizationAdminSubscriptionsSectionQuery$variables = {
 export type organizationAdminSubscriptionsSectionQuery$data = {
   readonly organization: {
     readonly activeOffering: {
+      readonly canCancel: boolean;
+      readonly code: string;
       readonly currency: {
         readonly name: string;
       };
@@ -84,24 +86,31 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isEnterprise",
+  "name": "code",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "unitPrice",
+  "name": "isEnterprise",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "fixedPrice",
+  "name": "unitPrice",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "fixedPrice",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "CurrencyDetails",
@@ -113,28 +122,28 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "featureSet",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "underPriceLines",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "free",
   "storageKey": null
 },
-v10 = [
+v11 = [
   {
     "alias": null,
     "args": [
@@ -208,6 +217,14 @@ v10 = [
         "selections": [
           (v1/*:: as any*/),
           (v3/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canCancel",
+            "storageKey": null
+          },
+          (v4/*:: as any*/),
           (v2/*:: as any*/),
           {
             "alias": null,
@@ -223,12 +240,12 @@ v10 = [
             "name": "end",
             "storageKey": null
           },
-          (v4/*:: as any*/),
           (v5/*:: as any*/),
           (v6/*:: as any*/),
           (v7/*:: as any*/),
           (v8/*:: as any*/),
-          (v9/*:: as any*/)
+          (v9/*:: as any*/),
+          (v10/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -240,21 +257,15 @@ v10 = [
         "name": "availableOfferings",
         "plural": true,
         "selections": [
-          (v3/*:: as any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "code",
-            "storageKey": null
-          },
-          (v2/*:: as any*/),
           (v4/*:: as any*/),
+          (v3/*:: as any*/),
+          (v2/*:: as any*/),
           (v5/*:: as any*/),
           (v6/*:: as any*/),
           (v7/*:: as any*/),
           (v8/*:: as any*/),
-          (v9/*:: as any*/)
+          (v9/*:: as any*/),
+          (v10/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -268,7 +279,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminSubscriptionsSectionQuery",
-    "selections": (v10/*:: as any*/),
+    "selections": (v11/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -277,19 +288,19 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminSubscriptionsSectionQuery",
-    "selections": (v10/*:: as any*/)
+    "selections": (v11/*:: as any*/)
   },
   "params": {
-    "cacheID": "98ce2165419effe28c12ee0a656d3cf3",
+    "cacheID": "9ba5b194888206f13785b3cf07b00bd9",
     "id": null,
     "metadata": {},
     "name": "organizationAdminSubscriptionsSectionQuery",
     "operationKind": "query",
-    "text": "query organizationAdminSubscriptionsSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      fixedPrice\n      currency {\n        name\n      }\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      fixedPrice\n      currency {\n        name\n      }\n      featureSet\n      underPriceLines\n      free\n    }\n  }\n}\n"
+    "text": "query organizationAdminSubscriptionsSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      code\n      canCancel\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      fixedPrice\n      currency {\n        name\n      }\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      fixedPrice\n      currency {\n        name\n      }\n      featureSet\n      underPriceLines\n      free\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "35ff0a26ef8999d596a5be6732a54935";
+(node as any).hash = "05aa974c2d1bf46451229ee7f9d6f415";
 
 export default node;

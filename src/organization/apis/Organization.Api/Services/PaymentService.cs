@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
@@ -12,6 +13,7 @@ using Organization.Shared.Services.Cache;
 using Organization.Shared.Services.Pricing;
 using Organization.Shared.Workflows;
 using Stripe;
+using PaymentMethod = Stripe.PaymentMethod;
 
 namespace Organization.Api.Services;
 
@@ -136,12 +138,19 @@ public class PaymentService(
                 repositoryFactory.OrganizationOfferingRepository.Remove(organizationOffering);
             }
 
-            // Looking for an existing offering to avoid creating a duplicated offering as well as making sure we are not
-            // losing track of active users against a free offering
+            var fallbackOfferingCode = organization.Type switch
+            {
+                OrganizationTypeConstants.Private => OfferingCode.FreeTierV1,
+                OrganizationTypeConstants.Marketplace => OfferingCode.SpacesFreeTierV1,
+                OrganizationTypeConstants.Host => OfferingCode.HostStandardV1,
+                _ => throw new InvalidOperationException($"Unsupported organization type '{organization.Type}'."),
+            };
+
+            // Look for an existing offering to avoid creating a duplicate and preserve active users against the free offering.
             var existingFreeOffering = await repositoryFactory.OrganizationOfferingRepository
                 .GetCurrentByOrganizationIdAndCodeAsync(
                     organization.Id,
-                    OfferingCode.FreeTierV1,
+                    fallbackOfferingCode,
                     now,
                     true,
                     cancellationToken);
@@ -156,7 +165,7 @@ public class PaymentService(
                     End = now.GetOfferingPeriodStart().GetOfferingPeriodEnd(),
                     AutoRenew = true,
                 };
-                newOrganizationOffering.ApplyOfferingTemplate(OfferingCode.FreeTierV1);
+                newOrganizationOffering.ApplyOfferingTemplate(fallbackOfferingCode);
 
                 repositoryFactory.OrganizationOfferingRepository.Add(newOrganizationOffering);
 

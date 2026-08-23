@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ac161cdcf62c9fedb33707717c52e9fe>>
+ * @generated SignedSource<<36b50bce4a36e3e2bbd71f26c18da97c>>
  * @lightSyntaxTransform
  */
 
@@ -8,13 +8,14 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type SpacesSubscriptionStatus = "COMPLIMENTARY_BRIDGE" | "LEGACY_ACTIVE" | "MISSING_STATE" | "NOT_SET" | "PAID_ACTIVE" | "PAID_INACTIVE" | "TRIAL_ACTIVE" | "TRIAL_EXPIRED" | "TRIAL_EXPIRING" | "%future added value";
 export type organizationAdminSubscriptionsSectionQuery$variables = {
   organizationCustomDomain: string;
 };
 export type organizationAdminSubscriptionsSectionQuery$data = {
   readonly organization: {
     readonly activeOffering: {
+      readonly canCancel: boolean;
+      readonly code: string;
       readonly currency: {
         readonly name: string;
       };
@@ -53,14 +54,6 @@ export type organizationAdminSubscriptionsSectionQuery$data = {
       readonly id: string;
     }>;
   } | null | undefined;
-  readonly organizationSpacesSubscription: {
-    readonly isComplimentaryBridge: boolean;
-    readonly nextBillingAt: any | null | undefined;
-    readonly remainingTrialDays: number;
-    readonly subscriptionStatus: SpacesSubscriptionStatus;
-    readonly trialEndsAt: any | null | undefined;
-    readonly upgradeRequired: boolean;
-  } | null | undefined;
 };
 export type organizationAdminSubscriptionsSectionQuery = {
   response: organizationAdminSubscriptionsSectionQuery$data;
@@ -93,24 +86,31 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isEnterprise",
+  "name": "code",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "unitPrice",
+  "name": "isEnterprise",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "fixedPrice",
+  "name": "unitPrice",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "fixedPrice",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "CurrencyDetails",
@@ -122,87 +122,28 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "featureSet",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "underPriceLines",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "free",
   "storageKey": null
 },
-v10 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "organizationId",
-        "variableName": "organizationCustomDomain"
-      }
-    ],
-    "concreteType": "OrganizationSpacesSubscriptionDetails",
-    "kind": "LinkedField",
-    "name": "organizationSpacesSubscription",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "subscriptionStatus",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "remainingTrialDays",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "trialEndsAt",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "isComplimentaryBridge",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "nextBillingAt",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "upgradeRequired",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  },
+v11 = [
   {
     "alias": null,
     "args": [
@@ -276,6 +217,14 @@ v10 = [
         "selections": [
           (v1/*:: as any*/),
           (v3/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canCancel",
+            "storageKey": null
+          },
+          (v4/*:: as any*/),
           (v2/*:: as any*/),
           {
             "alias": null,
@@ -291,12 +240,12 @@ v10 = [
             "name": "end",
             "storageKey": null
           },
-          (v4/*:: as any*/),
           (v5/*:: as any*/),
           (v6/*:: as any*/),
           (v7/*:: as any*/),
           (v8/*:: as any*/),
-          (v9/*:: as any*/)
+          (v9/*:: as any*/),
+          (v10/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -308,21 +257,15 @@ v10 = [
         "name": "availableOfferings",
         "plural": true,
         "selections": [
-          (v3/*:: as any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "code",
-            "storageKey": null
-          },
-          (v2/*:: as any*/),
           (v4/*:: as any*/),
+          (v3/*:: as any*/),
+          (v2/*:: as any*/),
           (v5/*:: as any*/),
           (v6/*:: as any*/),
           (v7/*:: as any*/),
           (v8/*:: as any*/),
-          (v9/*:: as any*/)
+          (v9/*:: as any*/),
+          (v10/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -336,7 +279,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdminSubscriptionsSectionQuery",
-    "selections": (v10/*:: as any*/),
+    "selections": (v11/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -345,19 +288,19 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "organizationAdminSubscriptionsSectionQuery",
-    "selections": (v10/*:: as any*/)
+    "selections": (v11/*:: as any*/)
   },
   "params": {
-    "cacheID": "c3ea95b9d251171b11e5c1564ad98891",
+    "cacheID": "9ba5b194888206f13785b3cf07b00bd9",
     "id": null,
     "metadata": {},
     "name": "organizationAdminSubscriptionsSectionQuery",
     "operationKind": "query",
-    "text": "query organizationAdminSubscriptionsSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  organizationSpacesSubscription(organizationId: $organizationCustomDomain) {\n    subscriptionStatus\n    remainingTrialDays\n    trialEndsAt\n    isComplimentaryBridge\n    nextBillingAt\n    upgradeRequired\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      fixedPrice\n      currency {\n        name\n      }\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      fixedPrice\n      currency {\n        name\n      }\n      featureSet\n      underPriceLines\n      free\n    }\n  }\n}\n"
+    "text": "query organizationAdminSubscriptionsSectionQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      code\n      canCancel\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      fixedPrice\n      currency {\n        name\n      }\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      fixedPrice\n      currency {\n        name\n      }\n      featureSet\n      underPriceLines\n      free\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7cc58d6d9dea12c60074b881166d181e";
+(node as any).hash = "05aa974c2d1bf46451229ee7f9d6f415";
 
 export default node;

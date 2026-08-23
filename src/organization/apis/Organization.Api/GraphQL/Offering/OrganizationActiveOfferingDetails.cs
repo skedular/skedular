@@ -56,4 +56,7 @@ public class OrganizationActiveOfferingDetails : Node
 
     [GraphQLName("earlyBird")]
     public bool EarlyBird { get; set; }
+
+    [GraphQLName("canCancel")]
+    public bool CanCancel { get; set; }
 }

@@ -16,6 +16,7 @@ public class Offering
     public int? MaxResourceCount { get; set; }
     public int? MaxBookingInstanceCount { get; set; }
     public decimal HostCommissionPercentage { get; set; }
+    public bool CanCancel { get; set; } = true;
 }
 
 public enum OfferingCode
@@ -249,10 +250,20 @@ public static class Offerings
                 MaxResourceCount = null,
                 MaxBookingInstanceCount = null,
                 HostCommissionPercentage = 5m,
+                CanCancel = false,
                 UnderPriceLines = ["5% commission per booking", "Free to list"],
             }
         },
     };
+
+    public static IReadOnlyList<OfferingCode> ForOrganizationType(OrganizationType organizationType) =>
+        organizationType switch
+        {
+            OrganizationType.Private => TeamsOfferings,
+            OrganizationType.Marketplace => SpacesOfferings,
+            OrganizationType.Host => HostOfferings,
+            _ => throw new ArgumentOutOfRangeException(nameof(organizationType), organizationType, "Unsupported organization type."),
+        };
 
     extension(OfferingCode offeringCode)
     {

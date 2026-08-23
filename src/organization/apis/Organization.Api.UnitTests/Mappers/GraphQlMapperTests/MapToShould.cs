@@ -107,6 +107,86 @@ public class MapToShould
 
     [Theory]
     [AutoFakeItEasyData]
+    public void Return_Only_Host_Available_Offerings_For_Host_Organization(GraphQlMapper sut)
+    {
+        var organization = new Shared.Models.Organization
+        {
+            Id = "org-1",
+            Name = "Host organization",
+            Type = OrganizationType.Host,
+            OrganizationOfferings =
+            [
+                new OrganizationOffering
+                {
+                    Id = "offering-1",
+                    Code = OfferingCode.HostStandardV1,
+                    Currency = Currency.Usd,
+                },
+            ],
+        };
+
+        var result = sut.MapTo(organization);
+
+        result.ShouldNotBeNull();
+        result.AvailableOfferings.Select(item => item.Code).ShouldBe([]);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Map_Host_Standard_As_Non_Cancellable_Active_Offering(GraphQlMapper sut)
+    {
+        var organization = new Shared.Models.Organization
+        {
+            Id = "org-1",
+            Name = "Host organization",
+            Type = OrganizationType.Host,
+            OrganizationOfferings =
+            [
+                new OrganizationOffering
+                {
+                    Id = "offering-1",
+                    Code = OfferingCode.HostStandardV1,
+                    Currency = Currency.Usd,
+                },
+            ],
+        };
+
+        var result = sut.MapTo(organization);
+
+        result.ShouldNotBeNull();
+        result.ActiveOffering.Code.ShouldBe(OfferingCode.HostStandardV1.ToOfferingCode());
+        result.ActiveOffering.CanCancel.ShouldBeFalse();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Map_Cancellable_Offering_As_Cancellable_Active_Offering(GraphQlMapper sut)
+    {
+        var organization = new Shared.Models.Organization
+        {
+            Id = "org-1",
+            Name = "Private organization",
+            Type = OrganizationType.Private,
+            OrganizationOfferings =
+            [
+                new OrganizationOffering
+                {
+                    Id = "offering-1",
+                    Code = OfferingCode.PayAsYouGoV1,
+                    Currency = Currency.Usd,
+                },
+            ],
+        };
+
+        var result = sut.MapTo(organization);
+
+        result.ShouldNotBeNull();
+        result.ActiveOffering.Code.ShouldBe(OfferingCode.PayAsYouGoV1.ToOfferingCode());
+        result.ActiveOffering.CanCancel.ShouldBeTrue();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public void Ignore_Deleted_Spaces_Offering_When_Mapping_Current_Spaces_Subscription(GraphQlMapper sut)
     {
         var deletedFreeOffering = new Shared.Database.Entities.OrganizationOffering

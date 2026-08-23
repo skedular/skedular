@@ -1,4 +1,4 @@
-import { DeleteIcon, ErrorIcon, NewIcon, TickIcon } from '@/components/icons';
+import { DeleteIcon, TickIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
@@ -8,11 +8,11 @@ import type { organizationAdminSubscriptionsSection_cancelOrganizationOfferingMu
 import type { organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation } from '@/queries/__generated__/organizationAdminSubscriptionsSection_removeOrganizationPaymentMethodMutation.graphql';
 import type { organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdminSubscriptionsSection_updateOrganizationOfferingMutation.graphql';
 import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -25,7 +25,7 @@ import {
   defaultButtonStyle,
   emerald,
   ExtraLargeHeadingIconTypography,
-  SettingsSectionCard,
+  LeadIconTypography,
   SmallIconTypography,
   StackColumn,
   StackRow,
@@ -47,6 +47,8 @@ type InnerProps = {
 };
 
 const isContactUsOffering = (code: string) => code === 'SPACES_CONTACT_US_V1' || code === 'ENTERPRISE_CUSTOM_V1';
+const offeringOrder = ['HOST_STANDARD_V1', 'FREE_TIER_V1', 'PAY_AS_YOU_GO_V1', 'ENTERPRISE_CUSTOM_V1'];
+const getOfferingOrder = (code?: string | null) => (offeringOrder.indexOf(code ?? '') === -1 ? offeringOrder.length : offeringOrder.indexOf(code ?? ''));
 
 const getOfferingPriceLabel = (offering: { fixedPrice: number | null | undefined; unitPrice: number | null | undefined; free: boolean; code?: string }) => {
   if (isContactUsOffering(offering.code ?? '') || (!offering.free && offering.fixedPrice == null && offering.unitPrice == null)) {
@@ -60,14 +62,6 @@ const getCurrencyLabel = (currency: { readonly name: string } | null | undefined
 
 const RootQuery = graphql`
   query organizationAdminSubscriptionsSectionQuery($organizationCustomDomain: String!) {
-    organizationSpacesSubscription(organizationId: $organizationCustomDomain) {
-      subscriptionStatus
-      remainingTrialDays
-      trialEndsAt
-      isComplimentaryBridge
-      nextBillingAt
-      upgradeRequired
-    }
     organization(customDomain: $organizationCustomDomain) {
       id
       name
@@ -81,6 +75,8 @@ const RootQuery = graphql`
       }
       activeOffering {
         id
+        code
+        canCancel
         isEnterprise
         name
         start
@@ -235,151 +231,135 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
 
   return (
     <>
-      <Box sx={{ pb: 2 }}>
-        <SettingsSectionCard title="Subscriptions" description="Review the active plan and the available upgrades for the organization.">
-          {rootData.organizationSpacesSubscription?.subscriptionStatus === 'TRIAL_EXPIRED' ? (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              Your 14-day Spaces trial has expired. Add a payment method and select a paid plan to restore access. Your existing data and configuration are preserved.
-            </Alert>
-          ) : rootData.organizationSpacesSubscription?.isComplimentaryBridge ? (
-            <Alert severity="success" sx={{ mb: 2 }}>
-              Your paid plan is active. The remaining days this month are complimentary. Your first full monthly charge is scheduled for{' '}
-              {rootData.organizationSpacesSubscription.nextBillingAt
-                ? new Date(rootData.organizationSpacesSubscription.nextBillingAt).toLocaleDateString()
-                : 'the first day of next month'}
-              .
-            </Alert>
-          ) : rootData.organizationSpacesSubscription?.subscriptionStatus.startsWith('TRIAL_') ? (
-            <Alert severity={rootData.organizationSpacesSubscription.subscriptionStatus === 'TRIAL_EXPIRING' ? 'warning' : 'info'} sx={{ mb: 2 }}>
-              {rootData.organizationSpacesSubscription.remainingTrialDays} days remain in your 14-day Spaces trial. The existing limit of 100 booking instances per month applies.
-            </Alert>
-          ) : null}
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(280px, 320px))', xl: 'repeat(4, minmax(0, 300px))' },
-              gap: 2,
-              justifyContent: 'center',
-            }}
-          >
-            {activeOffering && (
-              <Grid>
-                <Card sx={{ width: '100%', height: '100%', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
-                  <CardContent sx={{ marginLeft: 1, flex: 1 }}>
-                    <BodyIconTypography label={activeOffering.name} sx={{ color: coal }} />
-                    <StackRow spacing={1} sx={{ marginTop: -2, minHeight: 72, alignItems: 'flex-start' }}>
-                      <ExtraLargeHeadingIconTypography label={getOfferingPriceLabel(activeOffering)} sx={{ paddingTop: 4, color: coal }} />
-                      <BodyIconTypography label={getCurrencyLabel(activeOffering.currency)} sx={{ color: coal, paddingTop: 5 }} />
-                    </StackRow>
+      <Box sx={{ width: '100%' }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(auto-fit, minmax(240px, 1fr))' },
+            gap: 2,
+            justifyContent: 'flex-start',
+          }}
+        >
+          {activeOffering && (
+            <Grid sx={{ order: getOfferingOrder(activeOffering.code) }}>
+              <Card sx={{ width: '100%', height: '100%', backgroundColor: 'white', display: 'grid', gridTemplateRows: '1fr auto' }}>
+                <CardContent sx={{ marginLeft: 1, display: 'grid', gridTemplateRows: 'auto auto 1fr', paddingBottom: 2 }}>
+                  <StackRow spacing={1} sx={{ alignItems: 'center' }}>
+                    <LeadIconTypography label={activeOffering.name} sx={{ color: coal }} />
+                    <Chip label="Current plan" size="small" color="success" />
+                  </StackRow>
+                  <StackRow spacing={1} sx={{ marginTop: -2, minHeight: 72, alignItems: 'flex-start' }}>
+                    <ExtraLargeHeadingIconTypography label={getOfferingPriceLabel(activeOffering)} sx={{ paddingTop: 4, color: coal }} />
+                    <BodyIconTypography label={getCurrencyLabel(activeOffering.currency)} sx={{ color: coal, paddingTop: 5 }} />
+                  </StackRow>
 
-                    <List sx={{ padding: 0 }}>
-                      <Box sx={{ marginTop: 2, marginBottom: 4, minHeight: 44 }}>
-                        {activeOffering.underPriceLines.map((item, index) => (
-                          <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
-                            <ListItemText>
-                              <SmallIconTypography label={item} sx={{ color: coal }} />
-                            </ListItemText>
-                          </ListItem>
-                        ))}
-                      </Box>
-
-                      {activeOffering.featureSet.map((item, index) => (
+                  <List sx={{ padding: 0 }}>
+                    <Box sx={{ marginTop: 2, marginBottom: 4, minHeight: 44 }}>
+                      {activeOffering.underPriceLines.map((item, index) => (
                         <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
-                          <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
-                            <TickIcon fontSize="small" sx={{ color: activeOffering.isEnterprise ? coal : emerald }} />
-                          </ListItemIcon>
                           <ListItemText>
                             <SmallIconTypography label={item} sx={{ color: coal }} />
                           </ListItemText>
                         </ListItem>
                       ))}
-                    </List>
+                    </Box>
 
-                    <CardActions sx={{ justifyContent: 'center' }}>
-                      {!activeOffering.free && (
-                        <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick} sx={defaultButtonStyle}>
-                          Cancel
-                        </Button>
-                      )}
-                    </CardActions>
-                  </CardContent>
-                </Card>
-              </Grid>
-            )}
+                    {activeOffering.featureSet.map((item, index) => (
+                      <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
+                        <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
+                          <TickIcon fontSize="small" sx={{ color: activeOffering.isEnterprise ? coal : emerald }} />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <SmallIconTypography label={item} sx={{ color: coal }} />
+                        </ListItemText>
+                      </ListItem>
+                    ))}
+                  </List>
+                </CardContent>
+                <CardActions sx={{ justifyContent: 'flex-start', px: 2, minHeight: 52, marginTop: 'auto' }}>
+                  {!activeOffering.free && activeOffering.canCancel && (
+                    <Button color="secondary" variant="contained" onClick={handleCancelActiveOfferingClick} sx={defaultButtonStyle}>
+                      Cancel
+                    </Button>
+                  )}
+                </CardActions>
+              </Card>
+            </Grid>
+          )}
 
-            {availableOfferings.map((availableOffering) => (
-              <Grid key={availableOffering.code}>
-                <Card sx={{ width: '100%', height: '100%', backgroundColor: 'white', display: 'flex', flexDirection: 'column' }}>
-                  <CardContent sx={{ marginLeft: 1, flex: 1 }}>
-                    <BodyIconTypography label={availableOffering.name} sx={{ color: coal }} />
-                    <StackRow spacing={1} sx={{ marginTop: -2, minHeight: 72, alignItems: 'flex-start' }}>
-                      <ExtraLargeHeadingIconTypography label={getOfferingPriceLabel(availableOffering)} sx={{ paddingTop: 4, color: coal }} />
-                      <BodyIconTypography label={getCurrencyLabel(availableOffering.currency)} sx={{ color: coal, paddingTop: 5 }} />
-                    </StackRow>
+          {availableOfferings.map((availableOffering) => (
+            <Grid key={availableOffering.code} sx={{ order: getOfferingOrder(availableOffering.code) }}>
+              <Card sx={{ width: '100%', height: '100%', backgroundColor: 'white', display: 'grid', gridTemplateRows: '1fr auto' }}>
+                <CardContent sx={{ marginLeft: 1, display: 'grid', gridTemplateRows: 'auto auto 1fr', paddingBottom: 2 }}>
+                  <LeadIconTypography label={availableOffering.name} sx={{ color: coal }} />
+                  <StackRow spacing={1} sx={{ marginTop: -2, minHeight: 72, alignItems: 'flex-start' }}>
+                    <ExtraLargeHeadingIconTypography label={getOfferingPriceLabel(availableOffering)} sx={{ paddingTop: 4, color: coal }} />
+                    <BodyIconTypography label={getCurrencyLabel(availableOffering.currency)} sx={{ color: coal, paddingTop: 5 }} />
+                  </StackRow>
 
-                    <List sx={{ padding: 0 }}>
-                      <Box sx={{ marginTop: 2, marginBottom: 4, minHeight: 44 }}>
-                        {availableOffering.underPriceLines.map((item, index) => (
-                          <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
-                            <ListItemText>
-                              <SmallIconTypography label={item} sx={{ color: coal }} />
-                            </ListItemText>
-                          </ListItem>
-                        ))}
-                      </Box>
-
-                      {availableOffering.featureSet.map((item, index) => (
+                  <List sx={{ padding: 0 }}>
+                    <Box sx={{ marginTop: 2, marginBottom: 4, minHeight: 44 }}>
+                      {availableOffering.underPriceLines.map((item, index) => (
                         <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
-                          <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
-                            <TickIcon fontSize="small" sx={{ color: availableOffering.isEnterprise ? coal : emerald }} />
-                          </ListItemIcon>
                           <ListItemText>
                             <SmallIconTypography label={item} sx={{ color: coal }} />
                           </ListItemText>
                         </ListItem>
                       ))}
+                    </Box>
 
-                      {!organization.hasAttachedPaymentMethod && !isContactUsOffering(availableOffering.code) && (
-                        <ListItem alignItems="flex-start" sx={{ padding: 0, paddingTop: 1 }}>
-                          <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
-                            <ErrorIcon fontSize="large" sx={{ color: 'red' }} />
-                          </ListItemIcon>
-                          <ListItemText>
-                            <SmallIconTypography label="You need to have payment method setup in order to upgrade to this offering." color="red" />
-                          </ListItemText>
-                        </ListItem>
-                      )}
-                    </List>
-                  </CardContent>
+                    {availableOffering.featureSet.map((item, index) => (
+                      <ListItem key={index} alignItems="flex-start" sx={{ padding: 0 }}>
+                        <ListItemIcon sx={{ minWidth: 'auto', marginRight: 1 }}>
+                          <TickIcon fontSize="small" sx={{ color: availableOffering.isEnterprise ? coal : emerald }} />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <SmallIconTypography label={item} sx={{ color: coal }} />
+                        </ListItemText>
+                      </ListItem>
+                    ))}
+                  </List>
+                </CardContent>
 
-                  <CardActions sx={{ justifyContent: 'center' }}>
-                    {!organization.hasAttachedPaymentMethod && !isContactUsOffering(availableOffering.code) && (
-                      <Button variant="contained" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none', color: 'white' }}>
-                        Add Payment Method
-                      </Button>
-                    )}
+                <CardActions sx={{ justifyContent: 'flex-start', px: 2, minHeight: 52, marginTop: 'auto' }}>
+                  {organization.hasAttachedPaymentMethod && !isContactUsOffering(availableOffering.code) && (
+                    <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)} sx={{ textTransform: 'none', color: 'white' }}>
+                      Upgrade
+                    </Button>
+                  )}
 
-                    {organization.hasAttachedPaymentMethod && !isContactUsOffering(availableOffering.code) && (
-                      <Button color="primary" variant="contained" onClick={() => handleUpgradeOfferingClick(availableOffering.code)} sx={{ textTransform: 'none', color: 'white' }}>
-                        Upgrade
-                      </Button>
-                    )}
+                  {isContactUsOffering(availableOffering.code) && (
+                    <Button href="mailto:support@getskedular.com" variant="contained" sx={{ textTransform: 'none', backgroundColor: 'black', color: 'white' }}>
+                      Contact Us
+                    </Button>
+                  )}
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Box>
 
-                    {isContactUsOffering(availableOffering.code) && (
-                      <Button href="mailto:support@getskedular.com" variant="contained" sx={{ textTransform: 'none', backgroundColor: 'black', color: 'white' }}>
-                        Contact Us
-                      </Button>
-                    )}
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Box>
+        <Box sx={{ pt: 2 }}>
+          <SpacesQuotaStatus organizationId={organization.id} />
+        </Box>
 
-          <Box sx={{ pt: 2 }}>
-            <SpacesQuotaStatus organizationId={organization.id} />
-          </Box>
+        {!organization.hasAttachedPaymentMethod &&
+          (activeOffering.code === 'HOST_STANDARD_V1' || availableOfferings.some((offering) => !offering.free && !isContactUsOffering(offering.code))) && (
+            <Box sx={{ pt: 2 }}>
+              <SmallIconTypography label="A payment method is required to upgrade to a paid plan." sx={{ color: coal }} />
+            </Box>
+          )}
 
+        <Box sx={{ mt: 3, pt: 2, borderTop: 1, borderColor: 'divider' }}>
+          <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+            <LeadIconTypography label="Payment method" sx={{ color: coal }} />
+            {!organization.hasAttachedPaymentMethod &&
+              (activeOffering.code === 'HOST_STANDARD_V1' || availableOfferings.some((offering) => !offering.free && !isContactUsOffering(offering.code))) && (
+                <Button variant="contained" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none', color: 'white' }}>
+                  Add Payment Method
+                </Button>
+              )}
+          </StackRow>
           {organization.paymentMethods.length > 0 && (
             <StackRow sx={{ gap: 2, flexWrap: 'wrap', pt: 2 }}>
               {organization.paymentMethods.map((item) => (
@@ -393,14 +373,8 @@ const OrganizationAdminSubscriptionsSectionContent = ({ organizationCustomDomain
             </StackRow>
           )}
 
-          {organization.paymentMethods.length === 0 && (
-            <Box sx={{ pt: 2 }}>
-              <Button variant="text" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
-                <BodyIconTypography label="Add Payment Method" endElement={<NewIcon fontSize="large" />} />
-              </Button>
-            </Box>
-          )}
-        </SettingsSectionCard>
+          {organization.paymentMethods.length === 0 && <Box sx={{ pt: 1 }} />}
+        </Box>
       </Box>
 
       {isAddPaymentMethodDialogOpen && (

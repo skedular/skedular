@@ -228,7 +228,7 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
   const searchParams = useSearchParams();
-  const [expandedSection, setExpandedSectionState] = useState(searchParams.get('profileSection') ?? 'presentation');
+  const [expandedSection, setExpandedSectionState] = useState(() => searchParams.get('profileSection') ?? 'presentation');
   const setExpandedSection = (section: string) => {
     setExpandedSectionState(section);
     const params = new URLSearchParams(searchParams.toString());
