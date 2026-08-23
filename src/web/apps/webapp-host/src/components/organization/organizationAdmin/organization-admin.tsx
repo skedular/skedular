@@ -3,9 +3,9 @@ import {
   getOrganizationAdminManageOrganizationBaseLink,
   getOrganizationAdminPhysicalAddressBaseLink,
   getOrganizationAdminSetupBaseLink,
+  getOrganizationAdminSetupMarketplaceListingBaseLink,
   getOrganizationIntegrationsBaseLink,
   getOrganizationAdminTaxDetailsBaseLink,
-  getOrganizationMarketplaceSetupMarketplaceListingBaseLink,
   getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
 } from '@/components/links';
 import OrganizationMarketplaceSetupLoader from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-loader';
@@ -110,6 +110,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
   const activeSection = useMemo(() => getActiveSection(section) ?? (integrationsMode ? 'stripe-connect-accounts-setup' : null), [integrationsMode, section]);
   const router = useRouter();
   useEffect(() => {
+    if (section === 'marketplace-listing') router.replace('?section=setup&profileSection=marketplace-listing');
     if (section === 'billing-payment-setup') router.replace('?section=setup&profileSection=billing-details');
     if (section === 'subscriptions') router.replace('?section=setup&profileSection=plan');
   }, [router, section]);
@@ -129,7 +130,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     setup: getOrganizationAdminSetupBaseLink(integratedPlatform, organizationCustomDomain),
     'physical-address-setup': getOrganizationAdminPhysicalAddressBaseLink(integratedPlatform, organizationCustomDomain),
     'tax-details-setup': getOrganizationAdminTaxDetailsBaseLink(integratedPlatform, organizationCustomDomain),
-    'marketplace-listing': getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatform, organizationCustomDomain),
+    'marketplace-listing': getOrganizationAdminSetupMarketplaceListingBaseLink(integratedPlatform, organizationCustomDomain),
     'stripe-connect-accounts-setup': getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatform, organizationCustomDomain),
     'manage-organization': getOrganizationAdminManageOrganizationBaseLink(integratedPlatform, organizationCustomDomain),
   };
@@ -139,11 +140,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
       title: 'Profile',
       description: 'Organization identity, physical address, and tax details.',
       sections: ['setup'] satisfies OrganizationAdminSection[],
-    },
-    {
-      title: 'Marketplace',
-      description: 'Listing content shown to people browsing your places.',
-      sections: ['marketplace-listing'] satisfies OrganizationAdminSection[],
     },
     {
       title: 'Operations',
@@ -314,13 +310,22 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
             <StackColumn spacing={1.5}>
               <OrganizationAdminSetupSection organizationCustomDomain={organizationCustomDomain} />
               <EditorSection
+                title="Marketplace listing"
+                description="Manage the public listing details shown for this organization in the marketplace."
+                summary="Marketplace listing details"
+                expanded={expandedProfileSection === 'marketplace-listing'}
+                onChange={() => setExpandedProfileSection(expandedProfileSection === 'marketplace-listing' ? '' : 'marketplace-listing')}
+              >
+                <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />
+              </EditorSection>
+              <EditorSection
                 title="Physical address"
                 description="Update the organization address used for internal records and operational context."
                 summary="Organization address"
                 expanded={expandedProfileSection === 'physical-address'}
                 onChange={() => setExpandedProfileSection(expandedProfileSection === 'physical-address' ? '' : 'physical-address')}
               >
-                <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />
+                <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} embedded />
               </EditorSection>
               <EditorSection
                 title="Billing details"

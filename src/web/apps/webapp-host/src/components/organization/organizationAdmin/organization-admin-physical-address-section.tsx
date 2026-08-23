@@ -19,11 +19,13 @@ import { v7 as uuid } from 'uuid';
 
 type Props = {
   organizationCustomDomain: string;
+  embedded?: boolean;
 };
 
 type InnerProps = {
   organizationCustomDomain: string;
   queryReference: PreloadedQuery<organizationAdminPhysicalAddressSectionQuery>;
+  embedded?: boolean;
 };
 
 const inlinePatchDebounceTimeout = 1000;
@@ -54,7 +56,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDomain, queryReference }: InnerProps) => {
+const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDomain, queryReference, embedded }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminPhysicalAddressSectionQuery>(RootQuery, queryReference);
   const [commitUpdateOrganizationPatch] = useMutation<organizationAdminPhysicalAddressSection_updateOrganizationMutation>(graphql`
     mutation organizationAdminPhysicalAddressSection_updateOrganizationMutation($input: UpdateOrganizationInput!) @raw_response_type {
@@ -229,8 +231,8 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
 
         return (
           <FormStackColumn onSubmit={handleSubmit}>
-            <Box sx={{ pb: 2 }}>
-              <SettingsSectionCard title="Physical address" description="Update the organization address used for internal records and operational context.">
+            <Box sx={{ pb: embedded ? 0 : 2 }}>
+              <SettingsSectionCard bare={embedded} title="Physical address" description="Update the organization address used for internal records and operational context.">
                 <StackColumn sx={formColumnSx}>
                   <PhysicalAddress
                     addressLine1Name="addressLine1"
@@ -276,7 +278,7 @@ const OrganizationAdminPhysicalAddressSectionContent = ({ organizationCustomDoma
   );
 };
 
-const OrganizationAdminPhysicalAddressSection = ({ organizationCustomDomain }: Props) => {
+const OrganizationAdminPhysicalAddressSection = ({ organizationCustomDomain, embedded }: Props) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationAdminPhysicalAddressSectionQuery>(RootQuery);
 
   useEffect(() => {
@@ -292,7 +294,7 @@ const OrganizationAdminPhysicalAddressSection = ({ organizationCustomDomain }: P
     return <Loading />;
   }
 
-  return <OrganizationAdminPhysicalAddressSectionContent organizationCustomDomain={organizationCustomDomain} queryReference={queryReference} />;
+  return <OrganizationAdminPhysicalAddressSectionContent organizationCustomDomain={organizationCustomDomain} queryReference={queryReference} embedded={embedded} />;
 };
 
 export default memo(OrganizationAdminPhysicalAddressSection);

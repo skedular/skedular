@@ -322,7 +322,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
                 expanded={expandedProfileSection === 'physical-address'}
                 onChange={() => setExpandedProfileSection(expandedProfileSection === 'physical-address' ? '' : 'physical-address')}
               >
-                <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />
+                <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} embedded />
               </EditorSection>
               <EditorSection
                 title="Billing details"
