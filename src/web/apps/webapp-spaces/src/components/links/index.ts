@@ -175,6 +175,8 @@ export const getOrganizationAdminSetupMarketplaceListingBaseLink = (integratedPl
   `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=setup&profileSection=marketplace-listing`;
 export const getOrganizationMarketplaceSetupBillingCycleBaseLink = (integratedPlatform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=billing-cycle`;
+export const getOrganizationAdminSetupBillingCycleBaseLink = (integratedPlatform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=setup&profileSection=billing-cadence`;
 export const getOrganizationMarketplaceSetupXeroBaseLink = (integratedPlatform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=xero-setup`;
 export const getOrganizationIntegrationsBaseLink = (integratedPlatform: string | undefined, id: string) =>

@@ -78,6 +78,7 @@ type Props = {
   onReloadRequired: () => void;
   organizationCustomDomain: string;
   embedded?: boolean;
+  initialSection?: 'billing-cycle';
 };
 
 const inlinePatchDebounceTimeout = 1000;
@@ -185,6 +186,7 @@ const OrganizationMarketplaceSetup = ({
   onReloadRequired,
   organizationCustomDomain,
   embedded = false,
+  initialSection,
 }: Props) => {
   const rootData = useFragment<organizationMarketplaceSetup_query$key>(
     graphql`
@@ -496,7 +498,7 @@ const OrganizationMarketplaceSetup = ({
   const pathname = usePathname();
   const isIntegrationsRoute = pathname.endsWith('/integrations');
   const section = searchParams.get(isIntegrationsRoute ? 'tab' : 'section');
-  const activeSection = getActiveSection(section);
+  const activeSection = section === 'setup' && initialSection ? getActiveSection(initialSection) : getActiveSection(section);
   const [stickyTop, setStickyTop] = useState(0);
   const xeroSuggestedTenantId = searchParams.get('xeroSuggestedTenantId') ?? '';
   const xeroSuggestedTenantName = searchParams.get('xeroSuggestedTenantName') ?? '';
@@ -1370,20 +1372,29 @@ const OrganizationMarketplaceSetup = ({
               }
 
               return (
-                <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <SectionIconTypography label="Organization Billing Settings" />
-                    <BodyIconTypography label="Edit your organization billing cycle and default invoice payment terms." />
-                    <Divider />
-                  </StackColumn>
+                <FormStackColumn onSubmit={handleSubmit} sx={embedded ? { width: '100%' } : formColumnSx}>
+                  {!embedded && (
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <SectionIconTypography label="Organization Billing Settings" />
+                      <BodyIconTypography label="Edit your organization billing cycle and default invoice payment terms." />
+                      <Divider />
+                    </StackColumn>
+                  )}
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                  <StackColumn sx={{ paddingLeft: embedded ? 0 : defaultPadding, paddingRight: embedded ? 0 : defaultPadding, paddingTop: embedded ? 0 : defaultPadding }}>
                     <FormFieldLabel label="Billing Cycle">
                       <SingleChoiceOrganizationBillingCycle rootDataRelay={rootData} name="billingCycle" required={requiredOrganizationBillingSettingsDetailsFields.billingCycle} />
                     </FormFieldLabel>
                   </StackColumn>
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: embedded ? 0 : defaultPadding,
+                      paddingRight: embedded ? 0 : defaultPadding,
+                      paddingTop: embedded ? 0 : defaultPadding,
+                      paddingBottom: defaultPadding,
+                    }}
+                  >
                     <FormFieldLabel label="Invoice Due Days">
                       <TextField
                         name="invoiceDueInDays"

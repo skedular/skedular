@@ -10,6 +10,7 @@ import OrganizationMarketplaceSetup from './organization-marketplace-setup';
 type Props = {
   organizationCustomDomain: string;
   embedded?: boolean;
+  section?: 'billing-cycle';
 };
 
 type InnerProps = Props & {
@@ -34,7 +35,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationMarketplaceSetupLoaderContent = ({ queryReference, onReloadRequired, organizationCustomDomain, embedded }: InnerProps) => {
+const OrganizationMarketplaceSetupLoaderContent = ({ queryReference, onReloadRequired, organizationCustomDomain, embedded, section }: InnerProps) => {
   const rootData = usePreloadedQuery<pageOrganizationMarketplaceSetup_rootQuery>(RootQuery, queryReference);
 
   return (
@@ -46,13 +47,14 @@ const OrganizationMarketplaceSetupLoaderContent = ({ queryReference, onReloadReq
       onReloadRequired={onReloadRequired}
       organizationCustomDomain={organizationCustomDomain}
       embedded={embedded}
+      initialSection={section}
     />
   );
 };
 
 const MemoOrganizationMarketplaceSetupLoaderContent = memo(OrganizationMarketplaceSetupLoaderContent);
 
-const OrganizationMarketplaceSetupLoader = ({ organizationCustomDomain, embedded }: Props) => {
+const OrganizationMarketplaceSetupLoader = ({ organizationCustomDomain, embedded, section }: Props) => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationMarketplaceSetup_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -85,6 +87,7 @@ const OrganizationMarketplaceSetupLoader = ({ organizationCustomDomain, embedded
         onReloadRequired={handleReloadRequired}
         organizationCustomDomain={organizationCustomDomain}
         embedded={embedded}
+        section={section}
       />
     </ErrorBoundary>
   );

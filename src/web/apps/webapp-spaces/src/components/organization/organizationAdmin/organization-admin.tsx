@@ -5,6 +5,7 @@ import {
   getOrganizationAdminPhysicalAddressBaseLink,
   getOrganizationAdminSetupBaseLink,
   getOrganizationAdminSsoSettingsBaseLink,
+  getOrganizationAdminSetupBillingCycleBaseLink,
   getOrganizationAdminSetupMarketplaceListingBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
   getOrganizationAdminTaxDetailsBaseLink,
@@ -12,7 +13,6 @@ import {
   getOrganizationBaseLink,
   getOrganizationIntegrationsBaseLink,
   getOrganizationMarketplaceSetupBankAccountsBaseLink,
-  getOrganizationMarketplaceSetupBillingCycleBaseLink,
   getOrganizationMarketplaceSetupProductTagsBaseLink,
   getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
   getOrganizationMarketplaceSetupXeroBaseLink,
@@ -154,6 +154,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
   useEffect(() => {
     if (section === 'billing-payment-setup') router.replace('?section=setup&profileSection=billing-details');
     if (section === 'subscriptions') router.replace('?section=setup&profileSection=plan');
+    if (section === 'billing-cycle') router.replace('?section=setup&profileSection=billing-cadence');
   }, [router, section]);
   const profileSection = searchParams.get('profileSection') ?? 'presentation';
   const setExpandedProfileSection = (section: string) => {
@@ -177,7 +178,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     'product-tags-setup': getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatform, organizationCustomDomain),
     'zones-setup': getOrganizationAdminZonesBaseLink(integratedPlatform, organizationCustomDomain),
     'tags-setup': getOrganizationAdminCustomTagsBaseLink(integratedPlatform, organizationCustomDomain),
-    'billing-cycle': getOrganizationMarketplaceSetupBillingCycleBaseLink(integratedPlatform, organizationCustomDomain),
+    'billing-cycle': getOrganizationAdminSetupBillingCycleBaseLink(integratedPlatform, organizationCustomDomain),
     'xero-setup': getOrganizationMarketplaceSetupXeroBaseLink(integratedPlatform, organizationCustomDomain),
     'stripe-connect-accounts-setup': getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatform, organizationCustomDomain),
     'bank-accounts-setup': getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatform, organizationCustomDomain),
@@ -194,8 +195,8 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     },
     {
       title: 'Billing & Payouts',
-      description: 'Billing cadence, bank accounts, and payment methods.',
-      sections: ['billing-cycle', 'bank-accounts-setup'] satisfies OrganizationAdminSection[],
+      description: 'Bank accounts and payout settings.',
+      sections: ['bank-accounts-setup'] satisfies OrganizationAdminSection[],
     },
     {
       title: 'Operations',
@@ -398,7 +399,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
         {activeSection === 'setup' && (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
             <StackColumn spacing={1.5}>
-              <OrganizationAdminSetupSection organizationCustomDomain={organizationCustomDomain} />
+              <OrganizationAdminSetupSection key={expandedProfileSection} organizationCustomDomain={organizationCustomDomain} />
               <EditorSection
                 title="Marketplace listing"
                 description="Manage the public listing details shown for this organization in the marketplace."
@@ -407,6 +408,15 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
                 onChange={() => setExpandedProfileSection(expandedProfileSection === 'marketplace-listing' ? '' : 'marketplace-listing')}
               >
                 <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />
+              </EditorSection>
+              <EditorSection
+                title="Billing cadence"
+                description="Manage the billing cycle and default invoice payment terms for marketplace bookings."
+                summary="Marketplace invoice settings"
+                expanded={expandedProfileSection === 'billing-cadence'}
+                onChange={() => setExpandedProfileSection(expandedProfileSection === 'billing-cadence' ? '' : 'billing-cadence')}
+              >
+                <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded section="billing-cycle" />
               </EditorSection>
               <EditorSection
                 title="Physical address"
