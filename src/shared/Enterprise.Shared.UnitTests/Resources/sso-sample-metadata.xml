@@ -5,14 +5,14 @@
                   xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
     <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
         <SignedInfo>
-            <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
             <Reference URI="#_820ba080-bd90-4c2f-92f8-5631507c73eb">
                 <Transforms>
-                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-                    <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                    <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
                 </Transforms>
-                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
                 <DigestValue>U6MT8sUbDwTnqXsqcXnO5j4x+W8UISdT6lGBNaMaPyA=</DigestValue>
             </Reference>
         </SignedInfo>
@@ -202,10 +202,10 @@
             </KeyInfo>
         </KeyDescriptor>
         <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-                             Location="https://login.microsoftonline.com/280c5331-477b-4a6a-98c5-5b1ae2bf725d/saml2"/>
+                             Location="https://login.microsoftonline.com/280c5331-477b-4a6a-98c5-5b1ae2bf725d/saml2" />
         <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
-                             Location="https://login.microsoftonline.com/280c5331-477b-4a6a-98c5-5b1ae2bf725d/saml2"/>
+                             Location="https://login.microsoftonline.com/280c5331-477b-4a6a-98c5-5b1ae2bf725d/saml2" />
         <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-                             Location="https://login.microsoftonline.com/280c5331-477b-4a6a-98c5-5b1ae2bf725d/saml2"/>
+                             Location="https://login.microsoftonline.com/280c5331-477b-4a6a-98c5-5b1ae2bf725d/saml2" />
     </IDPSSODescriptor>
 </EntityDescriptor>

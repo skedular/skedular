@@ -5,6 +5,7 @@ using Booking.Shared.Repositories;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
+using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 
 namespace Booking.Domain.IntegrationTests.Activities;
 
@@ -211,7 +212,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould(IRepositoryFactory
         });
     }
 
-    private async Task<Booking.Shared.Database.Entities.ProductVersion> CreateProductVersionAsync(
+    private async Task<ProductVersion> CreateProductVersionAsync(
         string key,
         CancellationToken cancellationToken)
     {
