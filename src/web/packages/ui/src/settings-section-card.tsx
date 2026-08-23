@@ -14,43 +14,47 @@ type Props = {
   description?: ReactNode;
   actions?: ReactNode;
   sx?: SxProps<Theme>;
+  bare?: boolean;
 };
 
-const SettingsSectionCard = ({ title, description, actions, sx, children }: PropsWithChildren<Props>) => (
-  <Card
-    variant="outlined"
-    sx={[
-      {
-        borderRadius: 4,
-        borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
-        boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : theme.shadows[1]),
-        backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.88)' : theme.palette.background.paper),
-      },
-      ...(sx != null ? (Array.isArray(sx) ? sx : [sx]) : []),
-    ]}
-  >
-    <CardContent sx={{ p: 2 }}>
-      <StackColumn spacing={2}>
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} sx={{ justifyContent: 'space-between', alignItems: { xs: 'flex-start', md: 'flex-start' } }}>
-          <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
-            <Typography variant="subtitle1">{title}</Typography>
-            {description ? (
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                {description}
-              </Typography>
+const SettingsSectionCard = ({ title, description, actions, sx, bare = false, children }: PropsWithChildren<Props>) =>
+  bare ? (
+    <>{children}</>
+  ) : (
+    <Card
+      variant="outlined"
+      sx={[
+        {
+          borderRadius: 4,
+          borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
+          boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : theme.shadows[1]),
+          backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.88)' : theme.palette.background.paper),
+        },
+        ...(sx != null ? (Array.isArray(sx) ? sx : [sx]) : []),
+      ]}
+    >
+      <CardContent sx={{ p: 2 }}>
+        <StackColumn spacing={2}>
+          <Stack direction={{ xs: 'column', md: 'row' }} spacing={1.5} sx={{ justifyContent: 'space-between', alignItems: { xs: 'flex-start', md: 'flex-start' } }}>
+            <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
+              <Typography variant="subtitle1">{title}</Typography>
+              {description ? (
+                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                  {description}
+                </Typography>
+              ) : null}
+            </StackColumn>
+            {actions ? (
+              <StackRow spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                {actions}
+              </StackRow>
             ) : null}
-          </StackColumn>
-          {actions ? (
-            <StackRow spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              {actions}
-            </StackRow>
-          ) : null}
-        </Stack>
-        <Divider />
-        {children}
-      </StackColumn>
-    </CardContent>
-  </Card>
-);
+          </Stack>
+          <Divider />
+          {children}
+        </StackColumn>
+      </CardContent>
+    </Card>
+  );
 
 export default SettingsSectionCard;

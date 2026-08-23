@@ -24,12 +24,14 @@ import { v7 as uuid } from 'uuid';
 
 type Props = {
   organizationCustomDomain: string;
+  section?: 'billing-details' | 'payment-methods' | 'all';
 };
 
 type InnerProps = {
   organizationCustomDomain: string;
   onRefetchRequired: () => void;
   queryReference: PreloadedQuery<organizationAdminBillingPaymentSectionQuery>;
+  section: 'billing-details' | 'payment-methods' | 'all';
 };
 
 type BillingDetailsPatchField = 'COMPANY_NAME' | 'EMAIL' | 'BILLING_ADDRESS';
@@ -89,7 +91,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomain, onRefetchRequired, queryReference }: InnerProps) => {
+const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomain, onRefetchRequired, queryReference, section }: InnerProps) => {
   const rootData = usePreloadedQuery<organizationAdminBillingPaymentSectionQuery>(RootQuery, queryReference);
   const [commitUpdateOrganizationBillingDetailsPatch] = useMutation<organizationAdminBillingPaymentSection_updateOrganizationBillingDetailsMutation>(graphql`
     mutation organizationAdminBillingPaymentSection_updateOrganizationBillingDetailsMutation($input: UpdateOrganizationBillingDetailsInput!) @raw_response_type {
@@ -365,84 +367,93 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
             <FormStackColumn onSubmit={handleSubmit}>
               <Box sx={{ pb: 2 }}>
                 <StackColumn spacing={2}>
-                  <SettingsSectionCard title="Billing details" description="Control invoice recipients and the legal billing address used for the organization.">
-                    <StackColumn sx={formColumnSx}>
-                      <FormFieldLabel label="Company name">
-                        <TextField name="companyName" required={requiredBillingFields.companyName} />
-                      </FormFieldLabel>
+                  {section !== 'payment-methods' && (
+                    <SettingsSectionCard
+                      bare={section !== 'all'}
+                      title="Billing details"
+                      description="Control invoice recipients and the legal billing address used for the organization."
+                    >
+                      <StackColumn sx={formColumnSx}>
+                        <FormFieldLabel label="Company name">
+                          <TextField name="companyName" required={requiredBillingFields.companyName} />
+                        </FormFieldLabel>
 
-                      <FormFieldLabel label="Email">
-                        <TextField name="email" required={requiredBillingFields.email} helperText="Email to send invoice to" />
-                      </FormFieldLabel>
+                        <FormFieldLabel label="Email">
+                          <TextField name="email" required={requiredBillingFields.email} helperText="Email to send invoice to" />
+                        </FormFieldLabel>
 
-                      <PhysicalAddress
-                        addressLine1Name="addressLine1"
-                        addressLine1Required={requiredBillingFields.addressLine1}
-                        addressLine2Name="addressLine2"
-                        addressLine2Required={requiredBillingFields.addressLine2}
-                        suburbName="suburb"
-                        suburbRequired={requiredBillingFields.suburb}
-                        cityName="city"
-                        cityRequired={requiredBillingFields.city}
-                        provinceName="province"
-                        provinceRequired={requiredBillingFields.province}
-                        zipcodeName="zipcode"
-                        zipcodeRequired={requiredBillingFields.zipcode}
-                        countryName="countryCode"
-                        countryRequired={requiredBillingFields.countryCode}
-                        onSelect={(address) => {
-                          handleBillingAddressSelect(address);
-                          form.batch(() => {
-                            form.change('osmType', address.osmType);
-                            form.change('osmId', address.osmId);
-                            form.change('placeId', address.placeId);
-                            form.change('longitude', address.longitude);
-                            form.change('latitude', address.latitude);
-                            form.change('formattedAddress', address.formattedAddress);
-                            form.change('country', address.country ?? '');
-                            form.change('addressLine1', address.addressLine1 ?? '');
-                            form.change('addressLine2', address.addressLine2 ?? '');
-                            form.change('suburb', address.suburb ?? '');
-                            form.change('city', address.city ?? '');
-                            form.change('province', address.province ?? '');
-                            form.change('zipcode', address.zipcode ?? '');
-                            form.change('countryCode', address.countryCode ?? '');
-                          });
-                        }}
-                      />
-                    </StackColumn>
-                  </SettingsSectionCard>
+                        <PhysicalAddress
+                          addressLine1Name="addressLine1"
+                          addressLine1Required={requiredBillingFields.addressLine1}
+                          addressLine2Name="addressLine2"
+                          addressLine2Required={requiredBillingFields.addressLine2}
+                          suburbName="suburb"
+                          suburbRequired={requiredBillingFields.suburb}
+                          cityName="city"
+                          cityRequired={requiredBillingFields.city}
+                          provinceName="province"
+                          provinceRequired={requiredBillingFields.province}
+                          zipcodeName="zipcode"
+                          zipcodeRequired={requiredBillingFields.zipcode}
+                          countryName="countryCode"
+                          countryRequired={requiredBillingFields.countryCode}
+                          onSelect={(address) => {
+                            handleBillingAddressSelect(address);
+                            form.batch(() => {
+                              form.change('osmType', address.osmType);
+                              form.change('osmId', address.osmId);
+                              form.change('placeId', address.placeId);
+                              form.change('longitude', address.longitude);
+                              form.change('latitude', address.latitude);
+                              form.change('formattedAddress', address.formattedAddress);
+                              form.change('country', address.country ?? '');
+                              form.change('addressLine1', address.addressLine1 ?? '');
+                              form.change('addressLine2', address.addressLine2 ?? '');
+                              form.change('suburb', address.suburb ?? '');
+                              form.change('city', address.city ?? '');
+                              form.change('province', address.province ?? '');
+                              form.change('zipcode', address.zipcode ?? '');
+                              form.change('countryCode', address.countryCode ?? '');
+                            });
+                          }}
+                        />
+                      </StackColumn>
+                    </SettingsSectionCard>
+                  )}
 
-                  <SettingsSectionCard
-                    title="Payment method"
-                    description={
-                      paymentMethodExist
-                        ? 'The active payment methods available for subscriptions and upgrades.'
-                        : 'Attach a payment method before upgrading or changing paid offerings.'
-                    }
-                    actions={
-                      !paymentMethodExist ? (
-                        <Button variant="text" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
-                          <BodyIconTypography label="Add Payment Method" endElement={<NewIcon fontSize="large" />} />
-                        </Button>
-                      ) : undefined
-                    }
-                  >
-                    {paymentMethodExist ? (
-                      <StackRow sx={{ gap: 2, flexWrap: 'wrap' }}>
-                        {organization.paymentMethods.map((item) => (
-                          <StackColumn key={item.id}>
-                            <CreditCard lastFourDigits={item.cardLastFourDigit} expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`} cardBrand={item.cardBrand} />
-                            <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>
-                              <BodyIconTypography label="Remove Payment Method" invertDefaultColor={paletteMode === 'dark'} startElement={<DeleteIcon />} />
-                            </Button>
-                          </StackColumn>
-                        ))}
-                      </StackRow>
-                    ) : (
-                      <BodyIconTypography label="No payment method setup yet" />
-                    )}
-                  </SettingsSectionCard>
+                  {section !== 'billing-details' && (
+                    <SettingsSectionCard
+                      bare={section !== 'all'}
+                      title="Payment method"
+                      description={
+                        paymentMethodExist
+                          ? 'The active payment methods available for subscriptions and upgrades.'
+                          : 'Attach a payment method before upgrading or changing paid offerings.'
+                      }
+                      actions={
+                        !paymentMethodExist ? (
+                          <Button variant="text" onClick={handleAddPaymentMethodClicked} sx={{ textTransform: 'none' }}>
+                            <BodyIconTypography label="Add Payment Method" endElement={<NewIcon fontSize="large" />} />
+                          </Button>
+                        ) : undefined
+                      }
+                    >
+                      {paymentMethodExist ? (
+                        <StackRow sx={{ gap: 2, flexWrap: 'wrap' }}>
+                          {organization.paymentMethods.map((item) => (
+                            <StackColumn key={item.id}>
+                              <CreditCard lastFourDigits={item.cardLastFourDigit} expiryDate={`${item.cardExpiryMonth}/${item.cardExpiryYear}`} cardBrand={item.cardBrand} />
+                              <Button variant="contained" color="warning" onClick={() => handleRemovePaymentMethodClick(item.id)}>
+                                <BodyIconTypography label="Remove Payment Method" invertDefaultColor={paletteMode === 'dark'} startElement={<DeleteIcon />} />
+                              </Button>
+                            </StackColumn>
+                          ))}
+                        </StackRow>
+                      ) : (
+                        <BodyIconTypography label="No payment method setup yet" />
+                      )}
+                    </SettingsSectionCard>
+                  )}
                 </StackColumn>
               </Box>
             </FormStackColumn>
@@ -461,7 +472,7 @@ const OrganizationAdminBillingPaymentSectionContent = ({ organizationCustomDomai
   );
 };
 
-const OrganizationAdminBillingPaymentSection = ({ organizationCustomDomain }: Props) => {
+const OrganizationAdminBillingPaymentSection = ({ organizationCustomDomain, section = 'all' }: Props) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationAdminBillingPaymentSectionQuery>(RootQuery);
   const [reloadKey, setReloadKey] = useState(uuid());
 
@@ -482,6 +493,7 @@ const OrganizationAdminBillingPaymentSection = ({ organizationCustomDomain }: Pr
     <OrganizationAdminBillingPaymentSectionContent
       key={reloadKey}
       organizationCustomDomain={organizationCustomDomain}
+      section={section}
       onRefetchRequired={() => setReloadKey(uuid())}
       queryReference={queryReference}
     />

@@ -1,6 +1,5 @@
 import {
   getOrganizationAdminBaseLink,
-  getOrganizationAdminBillingAndPaymentBaseLink,
   getOrganizationAdminCustomTagsBaseLink,
   getOrganizationAdminManageOrganizationBaseLink,
   getOrganizationAdminPhysicalAddressBaseLink,
@@ -24,7 +23,7 @@ import { useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn, StackRow } from '@skedular/ui';
 import NextLink from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, PropsWithChildren, useMemo } from 'react';
+import { memo, PropsWithChildren, useEffect, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import OrganizationAdminBillingPaymentSection from './organization-admin-billing-payment-section';
 import OrganizationAdminManageOrganizationSection from './organization-admin-manage-organization-section';
@@ -60,18 +59,9 @@ const EditorSection = ({ title, description, summary, expanded, onChange, childr
   </Accordion>
 );
 
-type OrganizationAdminSection = 'setup' | 'physical-address-setup' | 'billing-payment-setup' | 'sso-setup' | 'zones-setup' | 'tags-setup' | 'subscriptions' | 'manage-organization';
+type OrganizationAdminSection = 'setup' | 'physical-address-setup' | 'sso-setup' | 'zones-setup' | 'tags-setup' | 'subscriptions' | 'manage-organization';
 
-const validSections: OrganizationAdminSection[] = [
-  'setup',
-  'physical-address-setup',
-  'billing-payment-setup',
-  'sso-setup',
-  'zones-setup',
-  'tags-setup',
-  'subscriptions',
-  'manage-organization',
-];
+const validSections: OrganizationAdminSection[] = ['setup', 'physical-address-setup', 'sso-setup', 'zones-setup', 'tags-setup', 'subscriptions', 'manage-organization'];
 
 const getActiveSection = (value: string | null): OrganizationAdminSection | null => {
   if (value && validSections.includes(value as OrganizationAdminSection)) {
@@ -84,7 +74,6 @@ const getActiveSection = (value: string | null): OrganizationAdminSection | null
 const sectionLabels: Record<OrganizationAdminSection, string> = {
   setup: 'Organisation profile',
   'physical-address-setup': 'Address',
-  'billing-payment-setup': 'Payment methods',
   'sso-setup': 'SSO',
   'zones-setup': 'Zones',
   'tags-setup': 'Tags',
@@ -111,6 +100,9 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
   const section = searchParams.get('section');
   const activeSection = useMemo(() => getActiveSection(section), [section]);
   const router = useRouter();
+  useEffect(() => {
+    if (section === 'billing-payment-setup') router.replace('?section=setup&profileSection=billing-details');
+  }, [router, section]);
   const profileSection = searchParams.get('profileSection') ?? 'presentation';
   const setExpandedProfileSection = (section: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -128,7 +120,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
   const sectionLinks: Record<OrganizationAdminSection, string> = {
     setup: getOrganizationAdminSetupBaseLink(integratedPlatform, organizationCustomDomain),
     'physical-address-setup': getOrganizationAdminPhysicalAddressBaseLink(integratedPlatform, organizationCustomDomain),
-    'billing-payment-setup': getOrganizationAdminBillingAndPaymentBaseLink(integratedPlatform, organizationCustomDomain),
     'sso-setup': getOrganizationAdminSsoSettingsBaseLink(integratedPlatform, organizationCustomDomain),
     'zones-setup': getOrganizationAdminZonesBaseLink(integratedPlatform, organizationCustomDomain),
     'tags-setup': getOrganizationAdminCustomTagsBaseLink(integratedPlatform, organizationCustomDomain),
@@ -144,7 +135,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     {
       title: 'Billing',
       description: 'Payment methods and subscription controls.',
-      sections: ['billing-payment-setup', 'subscriptions'] satisfies OrganizationAdminSection[],
+      sections: ['subscriptions'] satisfies OrganizationAdminSection[],
     },
     {
       title: 'Operations',
@@ -338,6 +329,24 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
                 <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />
               </EditorSection>
               <EditorSection
+                title="Billing details"
+                description="Manage the billing recipient and legal address used for invoices."
+                summary="Invoice billing details"
+                expanded={expandedProfileSection === 'billing-details'}
+                onChange={() => setExpandedProfileSection(expandedProfileSection === 'billing-details' ? '' : 'billing-details')}
+              >
+                <OrganizationAdminBillingPaymentSection organizationCustomDomain={organizationCustomDomain} section="billing-details" />
+              </EditorSection>
+              <EditorSection
+                title="Payment methods"
+                description="Manage payment methods used for organization subscriptions and upgrades."
+                summary="Organization payment methods"
+                expanded={expandedProfileSection === 'payment-methods'}
+                onChange={() => setExpandedProfileSection(expandedProfileSection === 'payment-methods' ? '' : 'payment-methods')}
+              >
+                <OrganizationAdminBillingPaymentSection organizationCustomDomain={organizationCustomDomain} section="payment-methods" />
+              </EditorSection>
+              <EditorSection
                 title="SSO"
                 description="Configure enterprise sign-in and identity federation for organization members."
                 summary="Enterprise sign-in settings"
@@ -351,7 +360,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
           </Box>
         )}
         {activeSection === 'physical-address-setup' && <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />}
-        {activeSection === 'billing-payment-setup' && <OrganizationAdminBillingPaymentSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'sso-setup' && <OrganizationAdminSsoSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'zones-setup' && <OrganizationAdminZonesSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'tags-setup' && <OrganizationAdminTagsSection organizationCustomDomain={organizationCustomDomain} />}

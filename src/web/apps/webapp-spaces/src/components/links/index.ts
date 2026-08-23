@@ -139,7 +139,7 @@ export const getOrganizationAdminSetupBaseLink = (integratedPlatform: string | u
 export const getOrganizationAdminPhysicalAddressBaseLink = (integratedPlatform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=physical-address-setup`;
 export const getOrganizationAdminBillingAndPaymentBaseLink = (integratedPlatform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=billing-payment-setup`;
+  `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=setup&profileSection=billing-details`;
 export const getOrganizationAdminSsoSettingsBaseLink = (integratedPlatform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=sso-setup`;
 export const getOrganizationAdminTaxDetailsBaseLink = (integratedPlatform: string | undefined, id: string) =>

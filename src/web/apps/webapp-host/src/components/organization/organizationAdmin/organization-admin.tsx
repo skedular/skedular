@@ -8,6 +8,7 @@ import {
   getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
 } from '@/components/links';
 import OrganizationMarketplaceSetupLoader from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-loader';
+import OrganizationAdminBillingPaymentSection from './organization-admin-billing-payment-section';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
 import Box from '@mui/material/Box';
 import Accordion from '@mui/material/Accordion';
@@ -21,7 +22,7 @@ import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn, StackRow } from '@skedular/ui';
 import NextLink from 'next/link';
-import { memo, PropsWithChildren, useMemo } from 'react';
+import { memo, PropsWithChildren, useEffect, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { useRouter, useSearchParams } from 'next/navigation';
 import OrganizationAdminManageOrganizationSection from './organization-admin-manage-organization-section';
@@ -104,6 +105,9 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
   const section = searchParams.get('section');
   const activeSection = useMemo(() => getActiveSection(section), [section]);
   const router = useRouter();
+  useEffect(() => {
+    if (section === 'billing-payment-setup') router.replace('?section=setup&profileSection=billing-details');
+  }, [router, section]);
   const profileSection = searchParams.get('profileSection') ?? 'presentation';
   const setExpandedProfileSection = (section: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -295,6 +299,24 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
                 onChange={() => setExpandedProfileSection(expandedProfileSection === 'physical-address' ? '' : 'physical-address')}
               >
                 <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />
+              </EditorSection>
+              <EditorSection
+                title="Billing details"
+                description="Manage the billing recipient and legal address used for invoices."
+                summary="Invoice billing details"
+                expanded={expandedProfileSection === 'billing-details'}
+                onChange={() => setExpandedProfileSection(expandedProfileSection === 'billing-details' ? '' : 'billing-details')}
+              >
+                <OrganizationAdminBillingPaymentSection organizationCustomDomain={organizationCustomDomain} section="billing-details" />
+              </EditorSection>
+              <EditorSection
+                title="Payment methods"
+                description="Manage payment methods used for organization subscriptions and upgrades."
+                summary="Organization payment methods"
+                expanded={expandedProfileSection === 'payment-methods'}
+                onChange={() => setExpandedProfileSection(expandedProfileSection === 'payment-methods' ? '' : 'payment-methods')}
+              >
+                <OrganizationAdminBillingPaymentSection organizationCustomDomain={organizationCustomDomain} section="payment-methods" />
               </EditorSection>
               <EditorSection
                 title="Tax details"
