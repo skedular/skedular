@@ -535,8 +535,8 @@ public class OrganizationXeroConnectionService(
                 webAppBaseDomain.ToString(),
                 "organizations",
                 organizationCustomDomain,
-                "setup-marketplace")
-            .SetQueryParam("section", "xero-setup");
+                "integrations")
+            .SetQueryParam("tab", "xero-setup");
         if (tenantOptions is { Count: > 0 })
         {
             // These options are only consumed after redirect on the web setup page.

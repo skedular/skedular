@@ -494,7 +494,8 @@ const OrganizationMarketplaceSetup = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const section = searchParams.get('section');
+  const isIntegrationsRoute = pathname.endsWith('/integrations');
+  const section = searchParams.get(isIntegrationsRoute ? 'tab' : 'section');
   const activeSection = getActiveSection(section);
   const [stickyTop, setStickyTop] = useState(0);
   const xeroSuggestedTenantId = searchParams.get('xeroSuggestedTenantId') ?? '';
@@ -1539,16 +1540,16 @@ const OrganizationMarketplaceSetup = ({
       case 'stripe-connect-accounts-setup':
         return (
           <StackColumn spacing={2} sx={{ p: defaultPadding }}>
-            <StackRow sx={{ alignItems: 'flex-start', gap: 2 }}>
+            <StackRow sx={{ alignItems: 'flex-start', gap: 2, flexWrap: 'nowrap', width: '100%' }}>
               <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
                 <SectionIconTypography label="Stripe Connect Accounts" />
                 <BodyIconTypography label="Review connected payout accounts, onboarding readiness, and default payout routing for this organization." />
               </StackColumn>
               <PushToRight />
-              <StackColumn spacing={1} sx={{ alignItems: { xs: 'flex-start', sm: 'flex-end' } }}>
+              <StackRow spacing={2} sx={{ alignItems: 'center', flexShrink: 0, flexWrap: 'nowrap' }}>
                 <NewStripeConnectAccountButton organizationCustomDomain={organizationCustomDomain} label="Add New Account" />
                 <ExistingStripeConnectAccountButton rootDataRelay={rootData} label="Add Existing Account" />
-              </StackColumn>
+              </StackRow>
             </StackRow>
 
             <Divider />
@@ -1713,15 +1714,15 @@ const OrganizationMarketplaceSetup = ({
 
   return (
     <>
-      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: embedded ? 0 : { xs: 0, sm: 1, md: 2 }, pb: embedded ? 0 : defaultPadding }}>
         <StackColumn
           sx={{
             width: '100%',
-            maxWidth: 1200,
-            mx: 'auto',
-            pt: { xs: 1, sm: 1, md: 2 },
+            maxWidth: embedded ? 'none' : 1200,
+            mx: embedded ? 0 : 'auto',
+            pt: embedded ? 0 : { xs: 1, sm: 1, md: 2 },
             backgroundColor: 'transparent',
-            gap: 2,
+            gap: embedded ? 0 : 2,
           }}
         >
           {!embedded && (

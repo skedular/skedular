@@ -11,6 +11,7 @@ import Fullscreen from '@mui/icons-material/Fullscreen';
 import Home from '@mui/icons-material/Home';
 import Info from '@mui/icons-material/Info';
 import Link from '@mui/icons-material/Link';
+import Hub from '@mui/icons-material/Hub';
 import LocalOffer from '@mui/icons-material/LocalOffer';
 import NotificationsActive from '@mui/icons-material/NotificationsActive';
 import Person from '@mui/icons-material/Person';
@@ -202,6 +203,15 @@ export const SettingsIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props
   ) : (
     <TooltipIcon tip={tip ?? 'Settings'}>
       <Settings fontSize={fontSize} sx={sx} color={color} />
+    </TooltipIcon>
+  );
+
+export const IntegrationIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
+  excludeTooltip ? (
+    <Hub fontSize={fontSize} sx={sx} color={color} />
+  ) : (
+    <TooltipIcon tip={tip ?? 'Integrations'}>
+      <Hub fontSize={fontSize} sx={sx} color={color} />
     </TooltipIcon>
   );
 

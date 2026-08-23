@@ -494,7 +494,8 @@ const OrganizationMarketplaceSetup = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const section = searchParams.get('section');
+  const isIntegrationsRoute = pathname.endsWith('/integrations');
+  const section = searchParams.get(isIntegrationsRoute ? 'tab' : 'section');
   const activeSection = getActiveSection(section);
   const [stickyTop, setStickyTop] = useState(0);
   const xeroSuggestedTenantId = searchParams.get('xeroSuggestedTenantId') ?? '';
@@ -1546,16 +1547,16 @@ const OrganizationMarketplaceSetup = ({
       case 'stripe-connect-accounts-setup':
         return (
           <StackColumn spacing={2} sx={{ p: defaultPadding }}>
-            <StackRow sx={{ alignItems: 'flex-start', gap: 2 }}>
+            <StackRow sx={{ alignItems: 'flex-start', gap: 2, flexWrap: 'nowrap', width: '100%' }}>
               <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
                 <SectionIconTypography label="Stripe Connect Accounts" />
                 <BodyIconTypography label="Review connected payout accounts, onboarding readiness, and default payout routing for this organization." />
               </StackColumn>
               <PushToRight />
-              <StackColumn spacing={1} sx={{ alignItems: { xs: 'flex-start', sm: 'flex-end' } }}>
+              <StackRow spacing={2} sx={{ alignItems: 'center', flexShrink: 0, flexWrap: 'nowrap' }}>
                 <NewStripeConnectAccountButton organizationCustomDomain={organizationCustomDomain} label="Add New Account" />
                 <ExistingStripeConnectAccountButton rootDataRelay={rootData} label="Add Existing Account" />
-              </StackColumn>
+              </StackRow>
             </StackRow>
 
             <Divider />

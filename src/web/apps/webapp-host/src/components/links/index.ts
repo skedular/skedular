@@ -171,6 +171,8 @@ export const getOrganizationMarketplaceSetupXeroBaseLink = (integratedPlatform: 
   `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=xero-setup`;
 export const getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink = (integratedPlatform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=stripe-connect-accounts-setup`;
+export const getOrganizationIntegrationsBaseLink = (integratedPlatform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatform, id)}/integrations?tab=stripe-connect-accounts-setup`;
 export const getOrganizationMarketplaceSetupBankAccountsBaseLink = (integratedPlatform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/admin?section=bank-accounts-setup`;
 export const getOrganizationProductsBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/products`;

@@ -10,6 +10,7 @@ import {
   getOrganizationAdminTaxDetailsBaseLink,
   getOrganizationAdminZonesBaseLink,
   getOrganizationBaseLink,
+  getOrganizationIntegrationsBaseLink,
   getOrganizationMarketplaceSetupBankAccountsBaseLink,
   getOrganizationMarketplaceSetupBillingCycleBaseLink,
   getOrganizationMarketplaceSetupProductTagsBaseLink,
@@ -32,7 +33,7 @@ import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel
 import NextLink from 'next/link';
 import { memo, PropsWithChildren, useEffect, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import OrganizationAdminBillingPaymentSection from './organization-admin-billing-payment-section';
 import OrganizationAdminManageOrganizationSection from './organization-admin-manage-organization-section';
 import OrganizationAdminPhysicalAddressSection from './organization-admin-physical-address-section';
@@ -144,9 +145,11 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     rootDataRelay,
   );
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { integratedPlatform } = useIntegratedPlatform();
-  const section = searchParams.get('section');
-  const activeSection = useMemo(() => getActiveSection(section), [section]);
+  const integrationsMode = pathname.endsWith('/integrations');
+  const section = integrationsMode ? searchParams.get('tab') : searchParams.get('section');
+  const activeSection = useMemo(() => getActiveSection(section) ?? (integrationsMode ? 'xero-setup' : null), [integrationsMode, section]);
   const router = useRouter();
   useEffect(() => {
     if (section === 'billing-payment-setup') router.replace('?section=setup&profileSection=billing-details');
@@ -181,6 +184,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     subscriptions: getOrganizationAdminSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain),
     'manage-organization': getOrganizationAdminManageOrganizationBaseLink(integratedPlatform, organizationCustomDomain),
   };
+  const integrationsBaseLink = getOrganizationIntegrationsBaseLink(integratedPlatform, organizationCustomDomain);
   const adminCards = [
     {
       title: 'Profile',
@@ -189,8 +193,8 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     },
     {
       title: 'Billing & Payouts',
-      description: 'Billing cadence, Xero, Stripe, bank accounts, and payment methods.',
-      sections: ['billing-cycle', 'xero-setup', 'stripe-connect-accounts-setup', 'bank-accounts-setup'] satisfies OrganizationAdminSection[],
+      description: 'Billing cadence, bank accounts, and payment methods.',
+      sections: ['billing-cycle', 'bank-accounts-setup'] satisfies OrganizationAdminSection[],
     },
     {
       title: 'Operations',
@@ -315,6 +319,23 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     </StackColumn>
   );
 
+  const renderIntegrationTabs = () => (
+    <StackRow sx={{ overflowX: 'auto', gap: 1, p: 1, border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper' }}>
+      {(['xero-setup', 'stripe-connect-accounts-setup'] as OrganizationAdminSection[]).map((item) => (
+        <Button
+          key={item}
+          component={NextLink}
+          href={`${integrationsBaseLink.split('?')[0]}?tab=${item}`}
+          variant={activeSection === item ? 'contained' : 'outlined'}
+          color="primary"
+          sx={{ flexShrink: 0, borderRadius: 999, px: 2, textTransform: 'none', whiteSpace: 'nowrap' }}
+        >
+          {sectionLabels[item]}
+        </Button>
+      ))}
+    </StackRow>
+  );
+
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
       <StackColumn
@@ -328,18 +349,20 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
         }}
       >
         <PageHeaderPanel
-          eyebrow={tagsGroupsMode ? 'Tags & Groups' : 'Organisation admin'}
-          title={tagsGroupsMode ? 'Shared tags, zones & booking groups' : (organization?.name ?? 'Organisation settings')}
+          eyebrow={integrationsMode ? 'Integrations' : tagsGroupsMode ? 'Tags & Groups' : 'Organisation admin'}
+          title={integrationsMode ? 'Integrations' : tagsGroupsMode ? 'Shared tags, zones & booking groups' : (organization?.name ?? 'Organisation settings')}
           description={
-            tagsGroupsMode
-              ? 'Manage tags, zones, and booking groups used across this organization.'
-              : activeSection
-                ? `Editing ${sectionLabels[activeSection].toLocaleLowerCase()}.`
-                : 'Choose the area you want to configure for this marketplace organisation.'
+            integrationsMode
+              ? 'Manage connections to the external systems used by this organization.'
+              : tagsGroupsMode
+                ? 'Manage tags, zones, and booking groups used across this organization.'
+                : activeSection
+                  ? `Editing ${sectionLabels[activeSection].toLocaleLowerCase()}.`
+                  : 'Choose the area you want to configure for this marketplace organisation.'
           }
         >
           <StackColumn spacing={0.5}>
-            {activeSection && !tagsGroupsMode ? (
+            {!integrationsMode && activeSection && !tagsGroupsMode ? (
               <Button
                 component={NextLink}
                 href={adminBaseLink}
@@ -359,7 +382,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
               >
                 Back to admin
               </Button>
-            ) : !tagsGroupsMode ? (
+            ) : !tagsGroupsMode && !integrationsMode ? (
               <>
                 <LeadIconTypography label="Marketplace controls" />
                 <BodyIconTypography label={organization?.marketplaceListingMetadata?.title || organization?.name || 'Listing, billing, payouts, tags, and subscriptions'} />
@@ -370,6 +393,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
 
         {tagsGroupsMode && renderTagsGroupsTabs()}
         {!activeSection && !tagsGroupsMode && renderOverview()}
+        {['xero-setup', 'stripe-connect-accounts-setup'].includes(activeSection ?? '') && renderIntegrationTabs()}
         {activeSection === 'setup' && (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
             <StackColumn spacing={1.5}>
@@ -434,8 +458,15 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
         )}
         {activeSection === 'marketplace-listing' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
         {activeSection === 'billing-cycle' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
-        {activeSection === 'xero-setup' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
-        {activeSection === 'stripe-connect-accounts-setup' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
+        {integrationsMode && (activeSection === 'xero-setup' || activeSection === 'stripe-connect-accounts-setup') && (
+          <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper', overflow: 'hidden' }}>
+            <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />
+          </Box>
+        )}
+        {!integrationsMode && activeSection === 'xero-setup' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
+        {!integrationsMode && activeSection === 'stripe-connect-accounts-setup' && (
+          <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />
+        )}
         {activeSection === 'bank-accounts-setup' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
         {activeSection === 'product-tags-setup' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
         {activeSection === 'physical-address-setup' && <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />}

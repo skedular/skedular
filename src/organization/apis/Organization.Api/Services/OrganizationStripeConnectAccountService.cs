@@ -428,8 +428,8 @@ public class OrganizationStripeConnectAccountService(
                 GetWebAppBaseDomain(organization.Type).ToString(),
                 "organizations",
                 organization.CustomDomain,
-                "admin")
-            .SetQueryParam("section", "stripe-connect-accounts-setup"));
+                "integrations")
+            .SetQueryParam("tab", "stripe-connect-accounts-setup"));
     }
 
     public Uri GetStripeAuthorizeExistingConnectAccountUrl(string organizationId) =>

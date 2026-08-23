@@ -1,6 +1,7 @@
-import { AnalyticsIcon, CollpaseDrawerIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon } from '@/components/icons';
+import { AnalyticsIcon, CollpaseDrawerIcon, HomeIcon, IntegrationIcon, LocationIcon, MembersIcon, SettingsIcon } from '@/components/icons';
 import {
   getOrganizationAdminBaseLink,
+  getOrganizationIntegrationsBaseLink,
   getOrganizationAnalyticsBaseLink,
   getOrganizationBaseLink,
   getOrganizationLocationsBaseLink,
@@ -130,6 +131,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationAnalyticsPath = organizationAnalyticsSetupBaseLink.split('?')[0];
   const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationIntegrationsBaseLink = getOrganizationIntegrationsBaseLink(integratedPlatform, rootData.organization.customDomain!);
 
   return (
     <>
@@ -246,6 +248,19 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                       invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
                     />
                   )}
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          )}
+
+          {rootData.organization.canModify && (
+            <ListItem disablePadding>
+              <Link component={NextLink} href={organizationIntegrationsBaseLink}>
+                <ListItemButton
+                  selected={pathName.startsWith(organizationIntegrationsBaseLink.split('?')[0])}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationIntegrationsBaseLink.split('?')[0])) }}
+                >
+                  <BodyIconTypography label="Integrations" startElement={!hideIcons && <IntegrationIcon excludeTooltip color="inherit" />} spacing={3} />
                 </ListItemButton>
               </Link>
             </ListItem>

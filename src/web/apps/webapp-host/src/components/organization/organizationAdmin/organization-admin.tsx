@@ -3,6 +3,7 @@ import {
   getOrganizationAdminManageOrganizationBaseLink,
   getOrganizationAdminPhysicalAddressBaseLink,
   getOrganizationAdminSetupBaseLink,
+  getOrganizationIntegrationsBaseLink,
   getOrganizationAdminTaxDetailsBaseLink,
   getOrganizationMarketplaceSetupMarketplaceListingBaseLink,
   getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
@@ -24,7 +25,7 @@ import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel
 import NextLink from 'next/link';
 import { memo, PropsWithChildren, useEffect, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import OrganizationAdminManageOrganizationSection from './organization-admin-manage-organization-section';
 import OrganizationAdminPhysicalAddressSection from './organization-admin-physical-address-section';
 import OrganizationAdminSetupSection from './organization-admin-setup-section';
@@ -101,9 +102,11 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     rootDataRelay,
   );
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const { integratedPlatform } = useIntegratedPlatform();
-  const section = searchParams.get('section');
-  const activeSection = useMemo(() => getActiveSection(section), [section]);
+  const integrationsMode = pathname.endsWith('/integrations');
+  const section = integrationsMode ? searchParams.get('tab') : searchParams.get('section');
+  const activeSection = useMemo(() => getActiveSection(section) ?? (integrationsMode ? 'stripe-connect-accounts-setup' : null), [integrationsMode, section]);
   const router = useRouter();
   useEffect(() => {
     if (section === 'billing-payment-setup') router.replace('?section=setup&profileSection=billing-details');
@@ -128,6 +131,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     'stripe-connect-accounts-setup': getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatform, organizationCustomDomain),
     'manage-organization': getOrganizationAdminManageOrganizationBaseLink(integratedPlatform, organizationCustomDomain),
   };
+  const integrationsBaseLink = getOrganizationIntegrationsBaseLink(integratedPlatform, organizationCustomDomain);
   const adminCards = [
     {
       title: 'Profile',
@@ -138,11 +142,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
       title: 'Marketplace',
       description: 'Listing content shown to people browsing your places.',
       sections: ['marketplace-listing'] satisfies OrganizationAdminSection[],
-    },
-    {
-      title: 'Billing & Payouts',
-      description: 'Connect Stripe to receive card-payment proceeds after commission.',
-      sections: ['stripe-connect-accounts-setup'] satisfies OrganizationAdminSection[],
     },
     {
       title: 'Operations',
@@ -239,6 +238,20 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     </StackColumn>
   );
 
+  const renderIntegrationTabs = () => (
+    <StackRow sx={{ overflowX: 'auto', gap: 1, p: 1, border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper' }}>
+      <Button
+        component={NextLink}
+        href={`${integrationsBaseLink.split('?')[0]}?tab=stripe-connect-accounts-setup`}
+        variant="contained"
+        color="primary"
+        sx={{ flexShrink: 0, borderRadius: 999, px: 2, textTransform: 'none', whiteSpace: 'nowrap' }}
+      >
+        {sectionLabels['stripe-connect-accounts-setup']}
+      </Button>
+    </StackRow>
+  );
+
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
       <StackColumn
@@ -252,12 +265,18 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
         }}
       >
         <PageHeaderPanel
-          eyebrow="Organization admin"
-          title={organization?.name ?? 'Organization settings'}
-          description={activeSection ? `Editing ${sectionLabels[activeSection].toLocaleLowerCase()}.` : 'Choose the area you want to configure for this Host organization.'}
+          eyebrow={integrationsMode ? 'Integrations' : 'Organization admin'}
+          title={integrationsMode ? 'Integrations' : (organization?.name ?? 'Organization settings')}
+          description={
+            integrationsMode
+              ? 'Manage connections to the external systems used by this organization.'
+              : activeSection
+                ? `Editing ${sectionLabels[activeSection].toLocaleLowerCase()}.`
+                : 'Choose the area you want to configure for this Host organization.'
+          }
         >
           <StackColumn spacing={0.5}>
-            {activeSection ? (
+            {!integrationsMode && activeSection ? (
               <Button
                 component={NextLink}
                 href={adminBaseLink}
@@ -277,16 +296,17 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
               >
                 Back to admin
               </Button>
-            ) : (
+            ) : !integrationsMode ? (
               <>
                 <LeadIconTypography label="Host controls" />
                 <BodyIconTypography label={organization?.marketplaceListingMetadata?.title || organization?.name || 'Listing, payouts, tax, and organization settings'} />
               </>
-            )}
+            ) : null}
           </StackColumn>
         </PageHeaderPanel>
 
         {!activeSection && renderOverview()}
+        {activeSection === 'stripe-connect-accounts-setup' && renderIntegrationTabs()}
         {activeSection === 'setup' && (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
             <StackColumn spacing={1.5}>
