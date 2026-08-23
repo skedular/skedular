@@ -1339,6 +1339,8 @@ const OrganizationMarketplaceSetup = ({
     [pathname, router, searchParams],
   );
 
+  // These form render callbacks use refs as draft guards for debounced persistence. The values are not rendered.
+  /* eslint-disable react-hooks/refs */
   const renderActiveSection = () => {
     switch (activeSection) {
       case 'billing-cycle':
@@ -1692,14 +1694,23 @@ const OrganizationMarketplaceSetup = ({
             validate={validateOrganizationMarketplaceListingMetadataDetails}
             render={({ handleSubmit }) => {
               return (
-                <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <SectionIconTypography label="Organization Marketplace Listing Setup" />
-                    <BodyIconTypography label="Edit your organization marketplace listing details" />
-                    <Divider />
-                  </StackColumn>
+                <FormStackColumn onSubmit={handleSubmit} sx={embedded ? { width: '100%' } : formColumnSx}>
+                  {!embedded && (
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <SectionIconTypography label="Organization Marketplace Listing Setup" />
+                      <BodyIconTypography label="Edit your organization marketplace listing details" />
+                      <Divider />
+                    </StackColumn>
+                  )}
 
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
+                  <StackColumn
+                    sx={{
+                      paddingLeft: embedded ? 0 : defaultPadding,
+                      paddingRight: embedded ? 0 : defaultPadding,
+                      paddingTop: embedded ? 0 : defaultPadding,
+                      paddingBottom: defaultPadding,
+                    }}
+                  >
                     <ListingMetadata
                       fields={['title', 'subTitle']}
                       onChange={({ subTitle, title }) => {
@@ -1715,18 +1726,19 @@ const OrganizationMarketplaceSetup = ({
         );
     }
   };
+  /* eslint-enable react-hooks/refs */
 
   return (
     <>
-      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: embedded ? 0 : { xs: 0, sm: 1, md: 2 }, pb: embedded ? 0 : defaultPadding }}>
         <StackColumn
           sx={{
             width: '100%',
-            maxWidth: 1200,
-            mx: 'auto',
-            pt: { xs: 1, sm: 1, md: 2 },
+            maxWidth: embedded ? 'none' : 1200,
+            mx: embedded ? 0 : 'auto',
+            pt: embedded ? 0 : { xs: 1, sm: 1, md: 2 },
             backgroundColor: 'transparent',
-            gap: 2,
+            gap: embedded ? 0 : 2,
           }}
         >
           {!embedded && (
@@ -1745,18 +1757,22 @@ const OrganizationMarketplaceSetup = ({
               <OrganizationMarketplaceSetupSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} stickyTop={stickyTop} />
             </>
           )}
-          <Box
-            sx={{
-              borderRadius: 4,
-              border: 1,
-              borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
-              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
-              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
-              overflow: 'hidden',
-            }}
-          >
-            {renderActiveSection()}
-          </Box>
+          {embedded ? (
+            renderActiveSection()
+          ) : (
+            <Box
+              sx={{
+                borderRadius: 4,
+                border: 1,
+                borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+                bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+                boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+                overflow: 'hidden',
+              }}
+            >
+              {renderActiveSection()}
+            </Box>
+          )}
         </StackColumn>
       </Box>
 

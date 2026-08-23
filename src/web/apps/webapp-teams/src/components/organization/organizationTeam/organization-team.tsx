@@ -41,6 +41,7 @@ import {
   StackRow,
 } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -49,7 +50,6 @@ import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
-import Image from 'next/image';
 
 type Props = {
   rootDataRelay: organizationTeam_query$key;
@@ -943,12 +943,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
             gap: 2,
           }}
         >
-          <PageHeaderPanel eyebrow="Team settings" title={team.name} description="Manage team details, location assignment, members, and lifecycle controls.">
-            <StackColumn spacing={0.5}>
-              <SmallIconTypography label="Setup & operations" />
-              <BodyIconTypography label={team.about || team.name} />
-            </StackColumn>
-          </PageHeaderPanel>
+          <PageHeaderPanel eyebrow="Team settings" title={team.name} description="Manage team details, location assignment, members, and lifecycle controls." />
 
           <OrganizationTeamSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} teamId={teamId} stickyTop={stickyTop} />
 

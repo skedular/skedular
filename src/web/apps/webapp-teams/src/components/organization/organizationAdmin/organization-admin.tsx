@@ -8,6 +8,7 @@ import {
   getOrganizationAdminSsoSettingsBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
   getOrganizationAdminZonesBaseLink,
+  getOrganizationBaseLink,
 } from '@/components/links';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
 import Box from '@mui/material/Box';
@@ -37,6 +38,7 @@ import OrganizationAdminZonesSection from './organization-admin-zones-section';
 type Props = {
   rootDataRelay: organizationAdmin_query$key;
   organizationCustomDomain: string;
+  tagsGroupsMode?: boolean;
 };
 
 type EditorSectionProps = { title: string; description: string; summary: string; expanded: boolean; onChange: () => void };
@@ -90,7 +92,7 @@ const sectionLabels: Record<OrganizationAdminSection, string> = {
   'manage-organization': 'Manage organisation',
 };
 
-const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) => {
+const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroupsMode = false }: Props) => {
   const rootData = useFragment<organizationAdmin_query$key>(
     graphql`
       fragment organizationAdmin_query on Query {
@@ -120,7 +122,9 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
   const expandedProfileSection = profileSection;
 
   const organization = rootData.organization;
-  const adminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, organizationCustomDomain);
+  const adminBaseLink = tagsGroupsMode
+    ? `${getOrganizationBaseLink(integratedPlatform, organizationCustomDomain)}/tags-groups`
+    : getOrganizationAdminBaseLink(integratedPlatform, organizationCustomDomain);
   const sectionLinks: Record<OrganizationAdminSection, string> = {
     setup: getOrganizationAdminSetupBaseLink(integratedPlatform, organizationCustomDomain),
     'physical-address-setup': getOrganizationAdminPhysicalAddressBaseLink(integratedPlatform, organizationCustomDomain),
@@ -136,11 +140,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
       title: 'Profile',
       description: 'Organisation identity and physical address.',
       sections: ['setup'] satisfies OrganizationAdminSection[],
-    },
-    {
-      title: 'Team Controls',
-      description: 'Zones and tags used to organise access and preferences.',
-      sections: ['zones-setup', 'tags-setup'] satisfies OrganizationAdminSection[],
     },
     {
       title: 'Billing',
@@ -228,6 +227,34 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     </Box>
   );
 
+  const renderTagsGroupsTabs = () => (
+    <StackRow
+      sx={{
+        overflowX: 'auto',
+        gap: 1,
+        p: 1,
+        border: 1,
+        borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+        borderRadius: 4,
+        bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+        boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : 'none'),
+      }}
+    >
+      {(['tags-setup', 'zones-setup'] as OrganizationAdminSection[]).map((item) => (
+        <Button
+          key={item}
+          component={NextLink}
+          href={sectionLinks[item]}
+          variant={activeSection === item ? 'contained' : 'outlined'}
+          color="primary"
+          sx={{ borderRadius: 999, px: 2, textTransform: 'none', whiteSpace: 'nowrap' }}
+        >
+          {sectionLabels[item]}
+        </Button>
+      ))}
+    </StackRow>
+  );
+
   const renderOrganizationSummary = () => (
     <StackColumn sx={{ position: { md: 'sticky' }, top: { md: 16 }, alignSelf: 'flex-start' }}>
       <Card variant="outlined" sx={{ borderRadius: 3, width: '100%' }}>
@@ -255,12 +282,18 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
         }}
       >
         <PageHeaderPanel
-          eyebrow="Organisation admin"
-          title={organization?.name ?? 'Organisation settings'}
-          description={activeSection ? `Editing ${sectionLabels[activeSection].toLocaleLowerCase()}.` : 'Choose the area you want to configure for this organisation.'}
+          eyebrow={tagsGroupsMode ? 'Tags & Groups' : 'Organisation admin'}
+          title={tagsGroupsMode ? 'Shared tags & zones' : (organization?.name ?? 'Organisation settings')}
+          description={
+            tagsGroupsMode
+              ? 'Manage tags and zones used across this organization.'
+              : activeSection
+                ? `Editing ${sectionLabels[activeSection].toLocaleLowerCase()}.`
+                : 'Choose the area you want to configure for this organisation.'
+          }
         >
           <StackColumn spacing={0.5}>
-            {activeSection ? (
+            {activeSection && !tagsGroupsMode ? (
               <Button
                 component={NextLink}
                 href={adminBaseLink}
@@ -280,16 +313,17 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
               >
                 Back to admin
               </Button>
-            ) : (
+            ) : !tagsGroupsMode ? (
               <>
-                <LeadIconTypography label="Settings & controls" />
-                <BodyIconTypography label="Billing, address, identity, tags, and subscriptions" />
+                <LeadIconTypography label={tagsGroupsMode ? 'Shared classification' : 'Settings & controls'} />
+                <BodyIconTypography label={tagsGroupsMode ? 'Manage tags and zones used across this organization.' : 'Billing, address, identity, tags, and subscriptions'} />
               </>
-            )}
+            ) : null}
           </StackColumn>
         </PageHeaderPanel>
 
-        {!activeSection && renderOverview()}
+        {tagsGroupsMode && renderTagsGroupsTabs()}
+        {!activeSection && !tagsGroupsMode && renderOverview()}
         {activeSection === 'setup' && (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
             <StackColumn spacing={1.5}>

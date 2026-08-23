@@ -1,4 +1,16 @@
-import { AnalyticsIcon, BookingIcon, CollpaseDrawerIcon, GridViewIcon, HomeIcon, LocationIcon, MembersIcon, SettingsIcon, TeamIcon, UpgradeIcon } from '@/components/icons';
+import {
+  AnalyticsIcon,
+  BookingIcon,
+  CollpaseDrawerIcon,
+  CustomTagIcon,
+  GridViewIcon,
+  HomeIcon,
+  LocationIcon,
+  MembersIcon,
+  SettingsIcon,
+  TeamIcon,
+  UpgradeIcon,
+} from '@/components/icons';
 import {
   getOrganizationAdminBaseLink,
   getOrganizationAdminSubscriptionsBaseLink,
@@ -7,6 +19,7 @@ import {
   getOrganizationBaseLink,
   getOrganizationBookingsBaseLink,
   getOrganizationLocationsBaseLink,
+  getOrganizationAdminCustomTagsBaseLink,
   getOrganizationTeamsBaseLink,
   getOrganizationUsersBaseLink,
 } from '@/components/links';
@@ -135,6 +148,8 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationAnalyticsPath = organizationAnalyticsSetupBaseLink.split('?')[0];
   const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationTagsGroupsBaseLink = getOrganizationAdminCustomTagsBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationTagsGroupsPath = organizationTagsGroupsBaseLink.split('?')[0];
 
   return (
     <>
@@ -301,6 +316,32 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
               </ListItemButton>
             </Link>
           </ListItem>
+
+          {rootData.organization.canModify && (
+            <ListItem disablePadding>
+              <Link component={NextLink} href={organizationTagsGroupsBaseLink}>
+                <ListItemButton
+                  selected={pathName.startsWith(organizationTagsGroupsPath)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationTagsGroupsPath)) }}
+                >
+                  {collapsed && (
+                    <BodyIconTypography
+                      startElement={!hideIcons && <CustomTagIcon color="inherit" excludeTooltip />}
+                      invertDefaultColor={pathName.startsWith(organizationTagsGroupsPath) && paletteMode === 'dark'}
+                    />
+                  )}
+                  {!collapsed && (
+                    <BodyIconTypography
+                      label="Tags & Groups"
+                      startElement={!hideIcons && <CustomTagIcon color="inherit" excludeTooltip />}
+                      spacing={3}
+                      invertDefaultColor={pathName.startsWith(organizationTagsGroupsPath) && paletteMode === 'dark'}
+                    />
+                  )}
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          )}
 
           {rootData.organization.canModify && (
             <ListItem disablePadding>
