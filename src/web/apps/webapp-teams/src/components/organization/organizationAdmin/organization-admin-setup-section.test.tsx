@@ -120,6 +120,7 @@ vi.mock('react-toastify', () => ({
 
 vi.mock('next/navigation', () => ({
   usePathname: () => '/organizations/acme/admin',
+  useSearchParams: () => new URLSearchParams(),
   useRouter: () => ({
     replace: vi.fn(),
   }),
@@ -228,6 +229,7 @@ describe('OrganizationAdminSetupSection', () => {
 
   it('does not patch an invalid contact email', async () => {
     render(<OrganizationAdminSetupSection organizationCustomDomain="acme" />);
+    fireEvent.click(screen.getByRole('button', { name: /Contact details/ }));
 
     fireEvent.change(screen.getByRole('textbox', { name: 'Email' }), { target: { value: 'invalid-email' } });
     await act(async () => {
@@ -239,6 +241,7 @@ describe('OrganizationAdminSetupSection', () => {
 
   it('patches an empty contact email', async () => {
     render(<OrganizationAdminSetupSection organizationCustomDomain="acme" />);
+    fireEvent.click(screen.getByRole('button', { name: /Contact details/ }));
 
     fireEvent.change(screen.getByRole('textbox', { name: 'Email' }), { target: { value: '' } });
     await act(async () => {

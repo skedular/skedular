@@ -19,16 +19,20 @@ import {
 import OrganizationMarketplaceSetupLoader from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-loader';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
 import Box from '@mui/material/Box';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn, StackRow } from '@skedular/ui';
 import NextLink from 'next/link';
-import { memo, useMemo } from 'react';
+import { memo, PropsWithChildren, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import OrganizationAdminBillingPaymentSection from './organization-admin-billing-payment-section';
 import OrganizationAdminManageOrganizationSection from './organization-admin-manage-organization-section';
 import OrganizationAdminPhysicalAddressSection from './organization-admin-physical-address-section';
@@ -43,6 +47,25 @@ type Props = {
   rootDataRelay: organizationAdmin_query$key;
   organizationCustomDomain: string;
 };
+
+type EditorSectionProps = { title: string; description: string; summary: string; expanded: boolean; onChange: () => void };
+const EditorSection = ({ title, description, summary, expanded, onChange, children }: PropsWithChildren<EditorSectionProps>) => (
+  <Accordion
+    disableGutters
+    elevation={0}
+    expanded={expanded}
+    onChange={onChange}
+    sx={{ margin: 0, border: 1, borderColor: 'divider', borderRadius: '16px !important', overflow: 'hidden', '&::before': { display: 'none' } }}
+  >
+    <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />} sx={{ px: 2.5, py: 0.75, minHeight: 72, '& .MuiAccordionSummary-content': { my: 1 } }}>
+      <StackColumn spacing={0.35}>
+        <LeadIconTypography label={title} />
+        <BodyIconTypography label={expanded ? description : summary} />
+      </StackColumn>
+    </AccordionSummary>
+    <AccordionDetails sx={{ borderTop: 1, borderColor: 'divider', p: { xs: 2, sm: 2.5 } }}>{children}</AccordionDetails>
+  </Accordion>
+);
 
 type OrganizationAdminSection =
   | 'setup'
@@ -111,6 +134,9 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
       fragment organizationAdmin_query on Query {
         organization(customDomain: $organizationCustomDomain) {
           name
+          physicalAddress {
+            formattedAddress
+          }
           marketplaceListingMetadata {
             title
           }
@@ -123,6 +149,16 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
   const { integratedPlatform } = useIntegratedPlatform();
   const section = searchParams.get('section');
   const activeSection = useMemo(() => getActiveSection(section), [section]);
+  const router = useRouter();
+  const profileSection = searchParams.get('profileSection') ?? 'presentation';
+  const setExpandedProfileSection = (section: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('section', 'setup');
+    if (section) params.set('profileSection', section);
+    else params.delete('profileSection');
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
+  const expandedProfileSection = profileSection;
 
   const organization = rootData.organization;
   const adminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, organizationCustomDomain);
@@ -147,7 +183,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     {
       title: 'Profile',
       description: 'Organisation identity, physical address, and tax details.',
-      sections: ['setup', 'physical-address-setup', 'tax-details-setup'] satisfies OrganizationAdminSection[],
+      sections: ['setup'] satisfies OrganizationAdminSection[],
     },
     {
       title: 'Marketplace',
@@ -158,11 +194,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
       title: 'Billing & Payouts',
       description: 'Billing cadence, Xero, Stripe, bank accounts, and payment methods.',
       sections: ['billing-cycle', 'xero-setup', 'stripe-connect-accounts-setup', 'bank-accounts-setup', 'billing-payment-setup'] satisfies OrganizationAdminSection[],
-    },
-    {
-      title: 'Access',
-      description: 'Single sign-on and identity-provider controls.',
-      sections: ['sso-setup'] satisfies OrganizationAdminSection[],
     },
     {
       title: 'Operations',
@@ -245,6 +276,20 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     </Box>
   );
 
+  const renderOrganizationSummary = () => (
+    <StackColumn sx={{ position: { md: 'sticky' }, top: { md: 16 }, alignSelf: 'flex-start' }}>
+      <Card variant="outlined" sx={{ borderRadius: 3, width: '100%' }}>
+        <CardContent>
+          <StackColumn spacing={1.25}>
+            <BodyIconTypography label="Summary" />
+            <LeadIconTypography label={organization?.name ?? 'Organization'} />
+            <BodyIconTypography label={organization?.physicalAddress?.formattedAddress ?? 'No physical address added'} />
+          </StackColumn>
+        </CardContent>
+      </Card>
+    </StackColumn>
+  );
+
   return (
     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
       <StackColumn
@@ -293,7 +338,41 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
         </PageHeaderPanel>
 
         {!activeSection && renderOverview()}
-        {activeSection === 'setup' && <OrganizationAdminSetupSection organizationCustomDomain={organizationCustomDomain} />}
+        {activeSection === 'setup' && (
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
+            <StackColumn spacing={1.5}>
+              <OrganizationAdminSetupSection organizationCustomDomain={organizationCustomDomain} />
+              <EditorSection
+                title="Physical address"
+                description="Update the organization address used for internal records and operational context."
+                summary="Organization address"
+                expanded={expandedProfileSection === 'physical-address'}
+                onChange={() => setExpandedProfileSection(expandedProfileSection === 'physical-address' ? '' : 'physical-address')}
+              >
+                <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />
+              </EditorSection>
+              <EditorSection
+                title="Tax details"
+                description="Manage the tax registration and rate used for organization billing."
+                summary="Tax registration and rate"
+                expanded={expandedProfileSection === 'tax-details'}
+                onChange={() => setExpandedProfileSection(expandedProfileSection === 'tax-details' ? '' : 'tax-details')}
+              >
+                <OrganizationAdminTaxDetailsSection organizationCustomDomain={organizationCustomDomain} />
+              </EditorSection>
+              <EditorSection
+                title="SSO"
+                description="Configure enterprise sign-in and identity federation for organization members."
+                summary="Enterprise sign-in settings"
+                expanded={expandedProfileSection === 'sso'}
+                onChange={() => setExpandedProfileSection(expandedProfileSection === 'sso' ? '' : 'sso')}
+              >
+                <OrganizationAdminSsoSection organizationCustomDomain={organizationCustomDomain} />
+              </EditorSection>
+            </StackColumn>
+            {renderOrganizationSummary()}
+          </Box>
+        )}
         {activeSection === 'marketplace-listing' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
         {activeSection === 'billing-cycle' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
         {activeSection === 'xero-setup' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}

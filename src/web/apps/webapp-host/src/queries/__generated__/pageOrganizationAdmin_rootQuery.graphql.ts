@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f87c8a1d30469ab500e4f50e28b047a1>>
+ * @generated SignedSource<<c28c4171704c617d81bfde501536bfe7>>
  * @lightSyntaxTransform
  */
 
@@ -43,6 +43,13 @@ v2 = {
   "args": null,
   "kind": "ScalarField",
   "name": "name",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
   "storageKey": null
 };
 return {
@@ -88,11 +95,24 @@ return {
         "plural": false,
         "selections": [
           (v2/*:: as any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
+            "concreteType": "OrganizationPhysicalAddressDetails",
+            "kind": "LinkedField",
+            "name": "physicalAddress",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "formattedAddress",
+                "storageKey": null
+              },
+              (v3/*:: as any*/)
+            ],
             "storageKey": null
           },
           {
@@ -119,12 +139,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "096ba796eddda616a4b1c4aafa8fe35d",
+    "cacheID": "4db3b85f29dd21aad8a341cdd32756f3",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n}\n\nfragment organizationAdmin_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      title\n    }\n    id\n  }\n}\n"
+    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n}\n\nfragment organizationAdmin_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    physicalAddress {\n      formattedAddress\n      id\n    }\n    marketplaceListingMetadata {\n      title\n    }\n    id\n  }\n}\n"
   }
 };
 })();

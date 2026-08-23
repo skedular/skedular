@@ -52,7 +52,6 @@ import {
   SmallIconTypography,
   StackColumn,
   StackRow,
-  StickyReviewRail,
 } from '@skedular/ui';
 import { Switches, TextField } from 'mui-rff';
 import { memo, useEffect, useMemo, useState } from 'react';
@@ -254,8 +253,6 @@ const ProductEditorForm = ({
   const [offerActionsAnchor, setOfferActionsAnchor] = useState<HTMLElement | null>(null);
   const [offerActionsIndex, setOfferActionsIndex] = useState<number | null>(null);
   const isEventProduct = isEventType(values?.type);
-  const previewImage = primaryFeatureImage ?? featureImages[0] ?? null;
-  const previewImageUrl = previewImage?.thumbnail?.url ?? previewImage?.original?.url ?? '';
   const validationItems = useMemo(() => Array.from(new Set(summarizeErrors(errors))).slice(0, 8), [errors]);
   const updateEditorUrl = (updates: { tab?: ProductEditorStep['id']; offer?: string | false; section?: string }) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -780,13 +777,8 @@ const ProductEditorForm = ({
 
     return (
       <StackColumn spacing={2}>
-        <StackColumn spacing={0.5} sx={{ px: { xs: 0, sm: 1 } }}>
-          <SectionIconTypography label="Product basics" />
-          <SmallIconTypography label="Shape how this product looks to customers, then add the details that control where it appears." />
-        </StackColumn>
-
         <EditorSection
-          title="Product presentation"
+          title="Presentation"
           description="Pair a strong cover image with clear customer-facing copy."
           summary={`${values.title?.trim() || 'Untitled product'} · ${featureImages.length} image${featureImages.length === 1 ? '' : 's'}`}
           expanded={expandedBasicsSection === 'presentation'}
@@ -1159,22 +1151,12 @@ const ProductEditorForm = ({
               ) : null}
             </StackColumn>
 
-            <StickyReviewRail
-              title={activeStep === 'basics' ? 'Product preview' : 'Review rail'}
-              description={activeStep === 'basics' ? 'See the customer-facing identity take shape as you edit.' : 'A compact snapshot of the offer you are shaping.'}
-              top={24}
-              sx={{ display: 'none', '@media (min-width: 1200px)': { display: 'block' }, pl: 0, pr: 0, pt: 0 }}
+            <StackColumn
+              spacing={2}
+              sx={{ display: 'none', '@media (min-width: 1200px)': { display: 'flex' }, position: 'sticky', top: 24, alignSelf: 'start', pl: 0, pr: 0, pt: 0 }}
             >
-              <SettingsSectionCard
-                title={activeStep === 'basics' ? 'Customer preview' : 'Summary'}
-                description={activeStep === 'basics' ? 'The essential details customers use to recognize this product.' : 'A compact view of the product you are shaping.'}
-              >
+              <SettingsSectionCard title="Summary" description="The essential details customers use to recognize this product.">
                 <StackColumn spacing={1.5}>
-                  {activeStep === 'basics' && previewImageUrl ? (
-                    <Box sx={{ position: 'relative', overflow: 'hidden', aspectRatio: '16 / 9', borderRadius: 2.5, backgroundColor: 'action.hover' }}>
-                      <Image fill unoptimized alt="Product preview" src={previewImageUrl} sizes="288px" style={{ objectFit: 'cover' }} />
-                    </Box>
-                  ) : null}
                   <LeadIconTypography label={values.title?.trim() || 'Untitled product'} />
                   <SmallIconTypography label={values.subTitle?.trim() || 'Add a subtitle so customers understand the product quickly.'} />
                   <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
@@ -1182,26 +1164,18 @@ const ProductEditorForm = ({
                     <Chip size="small" label={values.currency || 'No currency'} />
                     <Chip size="small" label={`${featureImages.length} image${featureImages.length === 1 ? '' : 's'}`} />
                   </StackRow>
-                  {activeStep === 'basics' ? (
-                    <>
-                      <Divider />
-                      <BodyIconTypography label={values.includedFeatures?.trim() || 'Add the included features customers should know about.'} />
-                      <StackRow sx={{ gap: 0.75, flexWrap: 'wrap' }}>
-                        <Chip size="small" label={`${values.productTagIds.length} tag${values.productTagIds.length === 1 ? '' : 's'}`} />
-                        <Chip size="small" label={`${values.amenityIds.length} amenit${values.amenityIds.length === 1 ? 'y' : 'ies'}`} />
-                      </StackRow>
-                    </>
-                  ) : (
-                    <>
-                      <Divider />
-                      <BodyIconTypography label={`Offers: ${values.pricingOptions.length}`} />
-                      {values.pricingOptions.map((pricingOption, index) => (
-                        <Box key={pricingOption.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
-                          <OfferSummary pricingOption={pricingOption} index={index} />
-                        </Box>
-                      ))}
-                    </>
-                  )}
+                  <Divider />
+                  <BodyIconTypography label={values.includedFeatures?.trim() || 'Add the included features customers should know about.'} />
+                  <StackRow sx={{ gap: 0.75, flexWrap: 'wrap' }}>
+                    <Chip size="small" label={`${values.productTagIds.length} tag${values.productTagIds.length === 1 ? '' : 's'}`} />
+                    <Chip size="small" label={`${values.amenityIds.length} amenit${values.amenityIds.length === 1 ? 'y' : 'ies'}`} />
+                  </StackRow>
+                  <BodyIconTypography label={`Offers: ${values.pricingOptions.length}`} />
+                  {values.pricingOptions.map((pricingOption, index) => (
+                    <Box key={pricingOption.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 1.25 }}>
+                      <OfferSummary pricingOption={pricingOption} index={index} />
+                    </Box>
+                  ))}
                 </StackColumn>
               </SettingsSectionCard>
 
@@ -1214,7 +1188,7 @@ const ProductEditorForm = ({
                   )}
                 </StackColumn>
               </SettingsSectionCard>
-            </StickyReviewRail>
+            </StackColumn>
           </Box>
         </StackColumn>
       </Box>

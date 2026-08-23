@@ -201,18 +201,15 @@ describe('ProductEditorForm', () => {
     expect(option.maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit ?? null).toBeNull();
   });
 
-  it('shows the modern basics presentation and customer preview', async () => {
+  it('shows the modern presentation and customer-facing details', async () => {
     const user = userEvent.setup();
     const featureImage = { id: 'cover-image', original: { url: 'https://example.test/cover.png' }, thumbnail: { url: 'https://example.test/thumb.png' } };
 
     render(<ProductEditorForm {...baseProps} mode="edit" featureImages={[featureImage]} primaryFeatureImage={featureImage} />);
 
-    expect(screen.getByText('Product basics')).toBeInTheDocument();
-    expect(screen.getByText('Product presentation')).toBeInTheDocument();
+    expect(screen.getByText('Presentation')).toBeInTheDocument();
     expect(screen.getByAltText('Product cover')).toBeInTheDocument();
     expect(screen.getByText('Customer-facing details')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Product preview' })).toBeInTheDocument();
-    expect(screen.getByAltText('Product preview')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /Classification/ }));
     expect(screen.getByRole('button', { name: /Classification/ })).toHaveAttribute('aria-expanded', 'true');

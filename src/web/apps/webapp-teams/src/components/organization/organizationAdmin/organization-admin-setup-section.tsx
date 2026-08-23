@@ -13,14 +13,20 @@ import type {
   OrganizationPatchField,
 } from '@/queries/__generated__/organizationAdminSetupSection_updateOrganizationMutation.graphql';
 import Box from '@mui/material/Box';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
+import Grid from '@mui/material/Grid';
 import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
-import { FormFieldLabel, FormStackColumn, HelperText, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, LeadIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -200,6 +206,16 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
       : [],
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
+  const searchParams = useSearchParams();
+  const [expandedSection, setExpandedSectionState] = useState(searchParams.get('profileSection') ?? 'presentation');
+  const setExpandedSection = (section: string) => {
+    setExpandedSectionState(section);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('section', 'setup');
+    if (section) params.set('profileSection', section);
+    else params.delete('profileSection');
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
   const initialPatchValues: OrganizationSetupPatchValues = {
     customDomain: organization?.customDomain,
     name: organization?.name ?? '',
@@ -497,155 +513,239 @@ const OrganizationAdminSetupSectionContent = ({ queryReference }: InnerProps) =>
 
         return (
           <FormStackColumn onSubmit={handleSubmit}>
-            <Box sx={{ pb: 2 }}>
+            <Box>
               <StackColumn spacing={2}>
-                <SettingsSectionCard title="Organization setup" description="Edit identity, presentation, domain, industry, and customer-facing details.">
-                  <StackColumn sx={formColumnSx}>
-                    <FormFieldLabel label="Logo">
-                      <StackColumn>
-                        {organizationLogoUrl ? (
-                          <Box
-                            sx={{
-                              width: 128,
-                              height: 128,
-                              borderRadius: 2,
-                              border: 1,
-                              borderColor: 'divider',
-                              backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                              display: 'grid',
-                              placeItems: 'center',
-                              overflow: 'hidden',
-                              position: 'relative',
-                              p: 1,
-                            }}
-                          >
-                            <Image
-                              width={128}
-                              height={128}
-                              unoptimized
-                              alt={`${organization.name} logo`}
-                              src={organizationLogoUrl}
-                              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                <Accordion
+                  disableGutters
+                  elevation={0}
+                  expanded={expandedSection === 'presentation'}
+                  onChange={() => setExpandedSection(expandedSection === 'presentation' ? '' : 'presentation')}
+                  sx={{ border: 1, borderColor: 'divider', borderRadius: '16px !important', overflow: 'hidden', '&::before': { display: 'none' } }}
+                >
+                  <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />}>
+                    <StackColumn spacing={0.35}>
+                      <LeadIconTypography label="Presentation" />
+                      <BodyIconTypography label="Edit the organization identity, domain, industry, and customer-facing details." />
+                    </StackColumn>
+                  </AccordionSummary>
+                  <AccordionDetails sx={{ borderTop: 1, borderColor: 'divider', p: { xs: 2, sm: 2.5 } }}>
+                    <Grid container spacing={{ xs: 2, md: 3 }}>
+                      <Grid size={{ xs: 12, md: 5 }}>
+                        <StackColumn sx={formColumnSx}>
+                          <FormFieldLabel label="Logo">
+                            <StackColumn>
+                              {organizationLogoUrl ? (
+                                <Box
+                                  sx={{
+                                    width: 128,
+                                    height: 128,
+                                    borderRadius: 2,
+                                    border: 1,
+                                    borderColor: 'divider',
+                                    backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                                    display: 'grid',
+                                    placeItems: 'center',
+                                    overflow: 'hidden',
+                                    position: 'relative',
+                                    p: 1,
+                                  }}
+                                >
+                                  <Image
+                                    width={128}
+                                    height={128}
+                                    unoptimized
+                                    alt={`${organization.name} logo`}
+                                    src={organizationLogoUrl}
+                                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                  />
+                                  <IconButton
+                                    size="small"
+                                    aria-label="Remove logo"
+                                    onClick={handleRemoveLogo}
+                                    sx={{
+                                      position: 'absolute',
+                                      top: 6,
+                                      right: 6,
+                                      color: 'common.white',
+                                      backgroundColor: 'rgba(0, 0, 0, 0.72)',
+                                      '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.9)' },
+                                    }}
+                                  >
+                                    <DeleteIcon fontSize="small" />
+                                  </IconButton>
+                                </Box>
+                              ) : null}
+
+                              <Box
+                                sx={{
+                                  position: 'relative',
+                                  overflow: 'hidden',
+                                  border: 1,
+                                  borderStyle: 'dashed',
+                                  borderColor: 'success.main',
+                                  borderRadius: 2.5,
+                                  p: 1.5,
+                                  backgroundColor: 'action.hover',
+                                  '& .MuiFormControl-root': { position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, zIndex: 1 },
+                                  '& .MuiInput-root, & input': { width: '100%', height: '100%', cursor: 'pointer' },
+                                }}
+                              >
+                                <StackRow sx={{ alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                                  <AddPhotoAlternateRoundedIcon color="success" />
+                                  <BodyIconTypography label="Add or replace logo" />
+                                </StackRow>
+                                <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organization branding." onUploadCompleted={handleLogoUploadCompleted} />
+                              </Box>
+                            </StackColumn>
+                          </FormFieldLabel>
+
+                          <FormFieldLabel label="Feature Images">
+                            <StackColumn>
+                              <Box
+                                sx={{
+                                  display: 'grid',
+                                  gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                                  gap: 2,
+                                }}
+                              >
+                                {featureImages.map((image, index) => (
+                                  <Box
+                                    key={index}
+                                    sx={{
+                                      position: 'relative',
+                                      borderRadius: 2,
+                                      overflow: 'hidden',
+                                      border: 1,
+                                      borderColor: 'divider',
+                                      backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                                      aspectRatio: '16 / 9',
+                                    }}
+                                  >
+                                    <Image
+                                      width={800}
+                                      height={600}
+                                      unoptimized
+                                      alt=""
+                                      src={image.original?.url ?? image.thumbnail?.url ?? ''}
+                                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                                    />
+                                    <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                                      <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                        <DeleteIcon fontSize="small" />
+                                      </IconButton>
+                                    </StackRow>
+                                    <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                                      {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                        <Chip size="small" color="success" label="Cover image" />
+                                      ) : (
+                                        <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                          Make cover
+                                        </Button>
+                                      )}
+                                    </StackRow>
+                                  </Box>
+                                ))}
+                              </Box>
+
+                              <Box
+                                sx={{
+                                  position: 'relative',
+                                  overflow: 'hidden',
+                                  border: 1,
+                                  borderStyle: 'dashed',
+                                  borderColor: 'success.main',
+                                  borderRadius: 2.5,
+                                  p: 1.5,
+                                  backgroundColor: 'action.hover',
+                                  '& .MuiFormControl-root': { position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, zIndex: 1 },
+                                  '& .MuiInput-root, & input': { width: '100%', height: '100%', cursor: 'pointer' },
+                                }}
+                              >
+                                <StackRow sx={{ alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                                  <AddPhotoAlternateRoundedIcon color="success" />
+                                  <BodyIconTypography label="Add another image" />
+                                </StackRow>
+                                <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
+                              </Box>
+                            </StackColumn>
+                          </FormFieldLabel>
+                        </StackColumn>
+                      </Grid>
+                      <Grid size={{ xs: 12, md: 7 }}>
+                        <StackColumn sx={formColumnSx}>
+                          <FormFieldLabel label="Name">
+                            <TextField
+                              name="name"
+                              required={requiredOrganizationDetailsFields.name}
+                              onBlur={() => commitOrganizationPatch(['NAME'], { name: draftPatchValues.current.name })}
                             />
-                          </Box>
-                        ) : null}
+                          </FormFieldLabel>
 
-                        <StackRow>
-                          <ImageFileUploaderWithCropper helperText="Upload a square logo or icon for organization branding." onUploadCompleted={handleLogoUploadCompleted} />
-                          {organizationLogoUrl ? (
-                            <Button variant="outlined" size="small" onClick={handleRemoveLogo} sx={{ textTransform: 'none' }}>
-                              Remove logo
-                            </Button>
-                          ) : null}
-                        </StackRow>
-                      </StackColumn>
-                    </FormFieldLabel>
+                          {rootData.me?.emails.some(
+                            (item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase()),
+                          ) && (
+                            <FormFieldLabel label="Custom Domain" required={requiredOrganizationDetailsFields.customDomain}>
+                              <TextField name="customDomain" required={requiredOrganizationDetailsFields.customDomain} />
+                            </FormFieldLabel>
+                          )}
 
-                    <FormFieldLabel label="Feature Images">
-                      <StackColumn>
-                        <Box
-                          sx={{
-                            display: 'grid',
-                            gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                            gap: 2,
-                          }}
-                        >
-                          {featureImages.map((image, index) => (
-                            <Box
-                              key={index}
-                              sx={{
-                                position: 'relative',
-                                borderRadius: 2,
-                                overflow: 'hidden',
-                                border: 1,
-                                borderColor: 'divider',
-                                backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                              }}
-                            >
-                              <Image
-                                width={800}
-                                height={600}
-                                unoptimized
-                                alt=""
-                                src={image.original?.url ?? image.thumbnail?.url ?? ''}
-                                style={{ width: '100%', height: 'auto' }}
-                              />
-                              <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                                  <DeleteIcon fontSize="small" />
-                                </IconButton>
-                              </StackRow>
-                              <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                                {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                  <Chip size="small" color="success" label="Cover image" />
-                                ) : (
-                                  <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                    Make cover
-                                  </Button>
-                                )}
-                              </StackRow>
-                            </Box>
-                          ))}
-                        </Box>
+                          <FormFieldLabel label="Website">
+                            <TextField name="website" required={requiredOrganizationDetailsFields.website} helperText="https://" />
+                          </FormFieldLabel>
 
-                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
-                      </StackColumn>
-                    </FormFieldLabel>
+                          <FormFieldLabel label="Terms and Conditions">
+                            <TextField
+                              name="customerFacingTermsAndConditionsUrl"
+                              required={requiredOrganizationDetailsFields.customerFacingTermsAndConditionsUrl}
+                              helperText={<HelperText text="Provide your company's official website so members can learn more or verify your organization." />}
+                            />
+                          </FormFieldLabel>
 
-                    <FormFieldLabel label="Name">
-                      <TextField
-                        name="name"
-                        required={requiredOrganizationDetailsFields.name}
-                        onBlur={() => commitOrganizationPatch(['NAME'], { name: draftPatchValues.current.name })}
-                      />
-                    </FormFieldLabel>
+                          <FormFieldLabel label="Industry">
+                            <OrganizationMultipleChoicesIndustries
+                              rootDataRelay={rootData}
+                              name="industrySubCategoryIds"
+                              required={requiredOrganizationDetailsFields.industrySubCategoryIds}
+                            />
+                          </FormFieldLabel>
+                        </StackColumn>
+                      </Grid>
+                    </Grid>
+                  </AccordionDetails>
+                </Accordion>
 
-                    {rootData.me?.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                      <FormFieldLabel label="Custom Domain" required={requiredOrganizationDetailsFields.customDomain}>
-                        <TextField name="customDomain" required={requiredOrganizationDetailsFields.customDomain} />
+                <Accordion
+                  disableGutters
+                  elevation={0}
+                  expanded={expandedSection === 'contact'}
+                  onChange={() => setExpandedSection(expandedSection === 'contact' ? '' : 'contact')}
+                  sx={{ border: 1, borderColor: 'divider', borderRadius: '16px !important', overflow: 'hidden', '&::before': { display: 'none' } }}
+                >
+                  <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />}>
+                    <StackColumn spacing={0.35}>
+                      <LeadIconTypography label="Contact details" />
+                      <BodyIconTypography label="Operational contact points and refund notification recipients." />
+                    </StackColumn>
+                  </AccordionSummary>
+                  <AccordionDetails sx={{ borderTop: 1, borderColor: 'divider', p: { xs: 2, sm: 2.5 } }}>
+                    <StackColumn>
+                      <FormFieldLabel label="Email">
+                        <TextField name="contactEmail" required={requiredOrganizationDetailsFields.contactEmail} />
                       </FormFieldLabel>
-                    )}
 
-                    <FormFieldLabel label="Website">
-                      <TextField name="website" required={requiredOrganizationDetailsFields.website} helperText="https://" />
-                    </FormFieldLabel>
+                      <FormFieldLabel label="Phone Number">
+                        <TextField name="contactPhone" required={requiredOrganizationDetailsFields.contactPhone} />
+                      </FormFieldLabel>
 
-                    <FormFieldLabel label="Terms and Conditions">
-                      <TextField
-                        name="customerFacingTermsAndConditionsUrl"
-                        required={requiredOrganizationDetailsFields.customerFacingTermsAndConditionsUrl}
-                        helperText={<HelperText text="Provide your company's official website so members can learn more or verify your organization." />}
-                      />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Industry">
-                      <OrganizationMultipleChoicesIndustries
-                        rootDataRelay={rootData}
-                        name="industrySubCategoryIds"
-                        required={requiredOrganizationDetailsFields.industrySubCategoryIds}
-                      />
-                    </FormFieldLabel>
-                  </StackColumn>
-                </SettingsSectionCard>
-
-                <SettingsSectionCard title="Contact details" description="Set the operational contact points used for member communication and refund notifications.">
-                  <StackColumn>
-                    <FormFieldLabel label="Email">
-                      <TextField name="contactEmail" required={requiredOrganizationDetailsFields.contactEmail} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Phone Number">
-                      <TextField name="contactPhone" required={requiredOrganizationDetailsFields.contactPhone} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Refund Notification Emails">
-                      <StackColumn>
-                        <TextField name="refundNotificationEmailsText" required={requiredOrganizationDetailsFields.refundNotificationEmailsText} multiline minRows={3} />
-                        <HelperText text="Optional. One email per line, or separate multiple emails with commas. These addresses receive internal refund status updates." />
-                      </StackColumn>
-                    </FormFieldLabel>
-                  </StackColumn>
-                </SettingsSectionCard>
+                      <FormFieldLabel label="Refund Notification Emails">
+                        <StackColumn>
+                          <TextField name="refundNotificationEmailsText" required={requiredOrganizationDetailsFields.refundNotificationEmailsText} multiline minRows={3} />
+                          <HelperText text="Optional. One email per line, or separate multiple emails with commas. These addresses receive internal refund status updates." />
+                        </StackColumn>
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </AccordionDetails>
+                </Accordion>
               </StackColumn>
             </Box>
           </FormStackColumn>

@@ -37,18 +37,18 @@ import type {
   LocationRestrictedInformationPatchField,
   organizationLocation_updateLocationRestrictedInformationMutation,
 } from '@/queries/__generated__/organizationLocation_updateLocationRestrictedInformationMutation.graphql';
-import Box from '@mui/material/Box';
+import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext, stringCollectionToString, stringToMultiLines, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
@@ -58,16 +58,16 @@ import {
   FormFieldLabel,
   FormStackColumn,
   LeadIconTypography,
-  SmallIconTypography,
   PageHeaderPanel,
   SettingsSectionCard,
+  SmallIconTypography,
   StackColumn,
   StackRow,
-  StickyReviewRail,
 } from '@skedular/ui';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import Image from 'next/image';
 import NextLink from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, PropsWithChildren, Suspense, useContext, useEffect, useMemo, useRef, useState } from 'react';
@@ -77,7 +77,6 @@ import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
-import Image from 'next/image';
 
 type Props = {
   rootDataRelay: organizationLocation_query$key;
@@ -1290,13 +1289,8 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   };
 
   const renderLocationSummaryRail = () => (
-    <StickyReviewRail
-      title="Location summary"
-      description="Keep the most important setup signals visible while editing longer sections."
-      top={stickyTop + 24}
-      sx={{ pl: { xs: 0, xl: 0 }, pr: 0, pt: 0 }}
-    >
-      <SettingsSectionCard title="Overview" description="A compact snapshot of the location currently being managed.">
+    <StackColumn spacing={2} sx={{ position: { xl: 'sticky' }, top: { xl: stickyTop + 24 }, alignSelf: 'start', pl: { xs: 0, xl: 0 }, pr: 0, pt: 0 }}>
+      <SettingsSectionCard title="Summary" description="A compact snapshot of the location currently being managed.">
         <StackColumn>
           <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
             <Chip size="small" label={location.type.name} />
@@ -1309,7 +1303,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
           {location.physicalAddress?.formattedAddress && <BodyIconTypography label={location.physicalAddress.formattedAddress} />}
         </StackColumn>
       </SettingsSectionCard>
-    </StickyReviewRail>
+    </StackColumn>
   );
 
   const renderSetupSection = () => (
@@ -1791,7 +1785,6 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     </Box>
   );
 
-  const locationBaseLink = getOrganizationLocationsBaseLink(integratedPlatform, organizationCustomDomain).replace('/locations', `/locations/${locationId}`);
   const sectionLinks: Record<OrganizationLocationSection, string> = {
     setup: getOrganizationLocationSetupBaseLink(integratedPlatform, organizationCustomDomain, locationId),
     'physical-address-setup': getOrganizationLocationPhysicalAddressSetupBaseLink(integratedPlatform, organizationCustomDomain, locationId),
@@ -1993,36 +1986,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
           gap: 2,
         }}
       >
-        <PageHeaderPanel eyebrow="Location settings" title={location.name} description="Setup, address, opening hours, floor plans, resources, and lifecycle controls.">
-          <StackColumn spacing={0.5}>
-            {activeSection ? (
-              <Button
-                component={NextLink}
-                href={locationBaseLink}
-                variant="outlined"
-                sx={{
-                  alignSelf: 'flex-start',
-                  borderRadius: 999,
-                  textTransform: 'none',
-                  fontWeight: 700,
-                  borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.500' : 'grey.400'),
-                  color: 'text.primary',
-                  '&:hover': {
-                    bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.50' : 'rgba(255, 255, 255, 0.08)'),
-                    borderColor: 'text.primary',
-                  },
-                }}
-              >
-                Back to location
-              </Button>
-            ) : (
-              <>
-                <LeadIconTypography label="Setup & operations" />
-                <BodyIconTypography label={location.listingMetadata.title || location.type.name} />
-              </>
-            )}
-          </StackColumn>
-        </PageHeaderPanel>
+        <PageHeaderPanel eyebrow="Location settings" title={location.name} description="Setup, address, opening hours, floor plans, resources, and lifecycle controls." />
         {renderSection()}
       </StackColumn>
     </Box>

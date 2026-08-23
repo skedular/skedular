@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<143a5786c110779c3f9328b4b4079046>>
+ * @generated SignedSource<<077bd2fadaf301bbf72b128c06710868>>
  * @lightSyntaxTransform
  */
 
@@ -15,6 +15,9 @@ export type organizationAdmin_query$data = {
       readonly title: string | null | undefined;
     };
     readonly name: string;
+    readonly physicalAddress: {
+      readonly formattedAddress: string | null | undefined;
+    } | null | undefined;
   } | null | undefined;
   readonly " $fragmentType": "organizationAdmin_query";
 };
@@ -58,6 +61,24 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
+          "concreteType": "OrganizationPhysicalAddressDetails",
+          "kind": "LinkedField",
+          "name": "physicalAddress",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "formattedAddress",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "ListingMetadata",
           "kind": "LinkedField",
           "name": "marketplaceListingMetadata",
@@ -81,6 +102,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "262593da1c0624233e86762a5bc55840";
+(node as any).hash = "7ddf37f710d464aebeb228931f523266";
 
 export default node;

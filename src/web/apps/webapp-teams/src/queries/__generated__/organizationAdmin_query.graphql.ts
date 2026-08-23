@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<36fe2799e13185a25a0809eea12f7560>>
+ * @generated SignedSource<<797dfdc830f1e665ff9edc0088ad189b>>
  * @lightSyntaxTransform
  */
 
@@ -12,6 +12,9 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
   readonly organization: {
     readonly name: string;
+    readonly physicalAddress: {
+      readonly formattedAddress: string | null | undefined;
+    } | null | undefined;
   } | null | undefined;
   readonly " $fragmentType": "organizationAdmin_query";
 };
@@ -51,6 +54,24 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "name",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationPhysicalAddressDetails",
+          "kind": "LinkedField",
+          "name": "physicalAddress",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "formattedAddress",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -60,6 +81,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "2398f3a5e92edf2f83a1526a3602a51f";
+(node as any).hash = "4d4fc8e0afe27dfb5a3e0555e266d1de";
 
 export default node;
