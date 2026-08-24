@@ -1,4 +1,4 @@
-import { getOrganizationAdminBaseLink, getOrganizationIntegrationsBaseLink } from '@/components/links';
+import { getOrganizationIntegrationsBaseLink } from '@/components/links';
 import OrganizationMarketplaceSetupLoader from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-loader';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
@@ -9,11 +9,17 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn, StackRow } from '@skedular/ui';
 import NextLink from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { memo, PropsWithChildren, useEffect, useMemo } from 'react';
+import { memo, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import OrganizationAdminBillingPaymentSection from './organization-admin-billing-payment-section';
 import OrganizationAdminManageOrganizationSection from './organization-admin-manage-organization-section';
@@ -97,6 +103,9 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
   const { integratedPlatform } = useIntegratedPlatform();
   const integrationsMode = pathname.endsWith('/integrations');
   const adminTab = searchParams.get('tab') ?? 'profile';
+  const theme = useTheme();
+  const isMobileAdminNav = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true });
+  const [adminTabsMenuAnchor, setAdminTabsMenuAnchor] = useState<HTMLElement | null>(null);
   const section = integrationsMode ? searchParams.get('tab') : searchParams.get('section');
   const activeSection = useMemo(() => getActiveSection(section) ?? (integrationsMode ? 'stripe-connect-accounts-setup' : null), [integrationsMode, section]);
   const router = useRouter();
@@ -117,7 +126,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
   const expandedProfileSection = profileSection;
 
   const organization = rootData.organization;
-  const adminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, organizationCustomDomain);
   const integrationsBaseLink = getOrganizationIntegrationsBaseLink(integratedPlatform, organizationCustomDomain);
 
   const renderOrganizationSummary = () => (
@@ -134,24 +142,72 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     </StackColumn>
   );
 
-  const renderAdminTabs = () => (
-    <StackRow sx={{ overflowX: 'auto', gap: 1, p: 1, border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper' }}>
-      {[
-        ['profile', 'Profile'],
-        ['operations', 'Operations'],
-      ].map(([key, label]) => (
+  const renderAdminTabs = () => {
+    const tabs = [
+      ['profile', 'Profile'],
+      ['operations', 'Operations'],
+    ];
+
+    return isMobileAdminNav ? (
+      <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 1.5 }}>
         <Button
-          key={key}
-          component={NextLink}
-          href={`${pathname}?tab=${key}${key === 'profile' ? '&section=presentation' : ''}`}
-          variant={adminTab === key ? 'contained' : 'outlined'}
-          sx={{ borderRadius: 999, textTransform: 'none' }}
+          fullWidth
+          variant="outlined"
+          color="inherit"
+          onClick={(event) => setAdminTabsMenuAnchor(event.currentTarget)}
+          aria-haspopup="menu"
+          aria-expanded={adminTabsMenuAnchor ? 'true' : undefined}
+          aria-controls={adminTabsMenuAnchor ? 'organization-admin-sections-menu' : undefined}
+          endIcon={<ExpandMoreRoundedIcon />}
+          sx={{ justifyContent: 'space-between', minHeight: 48, borderRadius: 2.5, px: 2, textTransform: 'none' }}
         >
-          {label}
+          {`Section: ${tabs.find(([key]) => key === adminTab)?.[1] ?? 'Profile'}`}
         </Button>
-      ))}
-    </StackRow>
-  );
+        <Menu anchorEl={adminTabsMenuAnchor} open={Boolean(adminTabsMenuAnchor)} onClose={() => setAdminTabsMenuAnchor(null)} id="organization-admin-sections-menu">
+          {tabs.map(([key, label]) => (
+            <MenuItem
+              key={key}
+              component={NextLink}
+              href={`${pathname}?tab=${key}${key === 'profile' ? '&section=presentation' : ''}`}
+              selected={adminTab === key}
+              onClick={() => setAdminTabsMenuAnchor(null)}
+            >
+              {label}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+    ) : (
+      <Tabs
+        value={adminTab}
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="Organization admin sections"
+        sx={{ mb: -2, borderTop: 1, borderColor: 'divider', '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' } }}
+      >
+        {tabs.map(([key, label]) => (
+          <Tab
+            key={key}
+            value={key}
+            component={NextLink}
+            href={`${pathname}?tab=${key}${key === 'profile' ? '&section=presentation' : ''}`}
+            label={label}
+            disableRipple
+            sx={{
+              minWidth: 112,
+              minHeight: 52,
+              px: 2.5,
+              textTransform: 'none',
+              color: 'text.secondary',
+              fontWeight: 500,
+              '&.Mui-selected': { color: 'primary.main', fontWeight: 600 },
+              '&:hover': { color: 'text.primary', backgroundColor: 'action.hover' },
+            }}
+          />
+        ))}
+      </Tabs>
+    );
+  };
 
   const renderIntegrationTabs = () => (
     <StackRow sx={{ overflowX: 'auto', gap: 1, p: 1, border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper' }}>
@@ -168,12 +224,26 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
   );
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+    <Box
+      sx={{
+        width: '100%',
+        maxWidth: '100vw',
+        minWidth: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        overflowX: 'hidden',
+        boxSizing: 'border-box',
+        px: { xs: 0, sm: 1, md: 2 },
+        pb: defaultPadding,
+      }}
+    >
       <StackColumn
         sx={{
           width: '100%',
           maxWidth: 1200,
+          minWidth: 0,
           mx: 'auto',
+          overflowX: 'hidden',
           pt: { xs: 1, sm: 1, md: 2 },
           backgroundColor: 'transparent',
           gap: 2,
@@ -190,37 +260,9 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
                 : 'Choose the area you want to configure for this Host organization.'
           }
         >
-          <StackColumn spacing={0.5}>
-            {!integrationsMode && activeSection ? (
-              <Button
-                component={NextLink}
-                href={adminBaseLink}
-                variant="outlined"
-                sx={{
-                  alignSelf: 'flex-start',
-                  borderRadius: 999,
-                  textTransform: 'none',
-                  fontWeight: 700,
-                  borderColor: (theme) => (theme.palette.mode === 'light' ? 'grey.500' : 'grey.400'),
-                  color: 'text.primary',
-                  '&:hover': {
-                    bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.50' : 'rgba(255, 255, 255, 0.08)'),
-                    borderColor: 'text.primary',
-                  },
-                }}
-              >
-                Back to admin
-              </Button>
-            ) : !integrationsMode ? (
-              <>
-                <LeadIconTypography label="Host controls" />
-                <BodyIconTypography label={organization?.marketplaceListingMetadata?.title || organization?.name || 'Listing, payouts, tax, and organization settings'} />
-              </>
-            ) : null}
-          </StackColumn>
+          {!activeSection && !integrationsMode && renderAdminTabs()}
         </PageHeaderPanel>
 
-        {!activeSection && renderAdminTabs()}
         {activeSection === 'stripe-connect-accounts-setup' && renderIntegrationTabs()}
         {!activeSection && adminTab === 'profile' && (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
