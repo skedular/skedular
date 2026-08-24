@@ -49,6 +49,12 @@ import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext, stringCollectionToString, stringToMultiLines, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
@@ -70,7 +76,7 @@ import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { memo, PropsWithChildren, Suspense, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, PropsWithChildren, Suspense, useContext, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -672,6 +678,8 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const theme = useTheme();
+  const isMobileLocationNav = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true });
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const activeSection = useMemo(() => getActiveSection(searchParams.get('section')), [searchParams]);
@@ -684,6 +692,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
           ? 'Operations'
           : 'Profile',
   );
+  const [locationTabsMenuAnchor, setLocationTabsMenuAnchor] = useState<HTMLElement | null>(null);
   const [expandedSetupSection, setExpandedSetupSection] = useState(
     activeSection === 'physical-address-setup'
       ? 'physical-address'
@@ -706,6 +715,12 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   const setLocationTab = (tab: string) => {
     setActiveLandingTab(tab);
     updateLocationUrl({ tab, section: tab === 'Profile' ? expandedSetupSection : '' });
+  };
+  const openLocationTabsMenu = (event: MouseEvent<HTMLElement>) => {
+    setLocationTabsMenuAnchor(event.currentTarget);
+  };
+  const closeLocationTabsMenu = () => {
+    setLocationTabsMenuAnchor(null);
   };
   const toggleSetupSection = (section: string) => {
     const next = expandedSetupSection === section ? '' : section;
@@ -1816,24 +1831,84 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
     },
   ];
 
+  const renderLocationTabs = () =>
+    isMobileLocationNav ? (
+      <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 1.5 }}>
+        <Button
+          fullWidth
+          variant="outlined"
+          color="inherit"
+          onClick={openLocationTabsMenu}
+          aria-haspopup="menu"
+          aria-expanded={locationTabsMenuAnchor ? 'true' : undefined}
+          aria-controls={locationTabsMenuAnchor ? 'location-settings-sections-menu' : undefined}
+          endIcon={<ExpandMoreRoundedIcon />}
+          sx={{ justifyContent: 'space-between', minHeight: 48, borderRadius: 2.5, px: 2, textTransform: 'none' }}
+        >
+          {`Section: ${activeLandingTab}`}
+        </Button>
+        <Menu anchorEl={locationTabsMenuAnchor} open={Boolean(locationTabsMenuAnchor)} onClose={closeLocationTabsMenu} id="location-settings-sections-menu">
+          {locationCards.map((card) => (
+            <MenuItem
+              key={card.title}
+              selected={activeLandingTab === card.title}
+              onClick={() => {
+                setLocationTab(card.title);
+                closeLocationTabsMenu();
+              }}
+            >
+              {card.title}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+    ) : (
+      <Tabs
+        value={activeLandingTab}
+        onChange={(_, tab: string) => setLocationTab(tab)}
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="Location settings sections"
+        sx={{
+          mb: -2,
+          borderTop: 1,
+          borderColor: 'divider',
+          '& .MuiTabs-indicator': {
+            height: 3,
+            borderRadius: '3px 3px 0 0',
+          },
+        }}
+      >
+        {locationCards.map((card) => (
+          <Tab
+            key={card.title}
+            value={card.title}
+            label={card.title}
+            disableRipple
+            sx={{
+              minWidth: 112,
+              minHeight: 52,
+              px: 2.5,
+              textTransform: 'none',
+              whiteSpace: 'nowrap',
+              color: 'text.secondary',
+              fontWeight: 500,
+              '&.Mui-selected': {
+                color: 'primary.main',
+                fontWeight: 600,
+              },
+              '&:hover': {
+                color: 'text.primary',
+                backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(46, 125, 50, 0.08)' : 'rgba(255, 255, 255, 0.06)'),
+              },
+            }}
+          />
+        ))}
+      </Tabs>
+    );
+
   const renderOverview = () => (
     <StackColumn spacing={2}>
-      <Card variant="outlined" sx={{ borderRadius: 3, boxShadow: 'none' }}>
-        <CardContent sx={{ p: 1.5 }}>
-          <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
-            {locationCards.map((card) => (
-              <Button
-                key={card.title}
-                variant={activeLandingTab === card.title ? 'contained' : 'outlined'}
-                onClick={() => setLocationTab(card.title)}
-                sx={{ borderRadius: 999, textTransform: 'none' }}
-              >
-                {card.title}
-              </Button>
-            ))}
-          </StackRow>
-        </CardContent>
-      </Card>
       <Box
         sx={{
           display: 'grid',
@@ -1975,17 +2050,39 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
   };
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pt: { xs: 1, sm: 1, md: 2 }, pb: defaultPadding }}>
+    <Box
+      sx={{
+        width: '100%',
+        maxWidth: '100vw',
+        minWidth: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        overflowX: 'hidden',
+        boxSizing: 'border-box',
+        px: { xs: 0, sm: 1, md: 2 },
+        pt: { xs: 1, sm: 1, md: 2 },
+        pb: defaultPadding,
+      }}
+    >
       <StackColumn
         sx={{
           width: '100%',
           maxWidth: 1200,
+          minWidth: 0,
           mx: 'auto',
+          overflowX: 'hidden',
           backgroundColor: 'transparent',
           gap: 2,
         }}
       >
-        <PageHeaderPanel eyebrow="Location settings" title={location.name} description="Setup, address, opening hours, floor plans, resources, and lifecycle controls." />
+        <PageHeaderPanel
+          eyebrow="Location settings"
+          title={location.name}
+          description="Setup, address, opening hours, floor plans, resources, and lifecycle controls."
+          sx={{ width: '100%', minWidth: 0, maxWidth: '100%' }}
+        >
+          {activeSection ? null : renderLocationTabs()}
+        </PageHeaderPanel>
         {renderSection()}
       </StackColumn>
     </Box>
