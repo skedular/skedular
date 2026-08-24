@@ -1,6 +1,6 @@
 import { RelayError, toRootError, useKnownParams } from '@skedular/shared';
 import { Loading } from '@/components/loading';
-import { OrganizationAdmin } from '@/components/organization/organizationAdmin';
+import OrganizationTagsGroups from '@/components/organization/organizationTagsGroups/organization-tags-groups';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationTagsGroups_rootQuery } from '@/queries/__generated__/pageOrganizationTagsGroups_rootQuery.graphql';
 import { memo, useEffect } from 'react';
@@ -17,7 +17,7 @@ const RootQuery = graphql`
     organization(customDomain: $organizationCustomDomain) {
       name
     }
-    ...organizationAdmin_query
+    ...organizationTagsGroups_query
   }
 `;
 
@@ -25,7 +25,7 @@ const RootPage = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationTagsGroups_rootQuery>(RootQuery, queryReference);
   return (
     <RootShell>
-      <OrganizationAdmin rootDataRelay={rootData} organizationCustomDomain={organizationCustomDomain} tagsGroupsMode />
+      <OrganizationTagsGroups rootDataRelay={rootData} organizationCustomDomain={organizationCustomDomain} />
     </RootShell>
   );
 };

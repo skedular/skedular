@@ -1,20 +1,4 @@
-import {
-  getOrganizationAdminCustomTagsBaseLink,
-  getOrganizationAdminManageOrganizationBaseLink,
-  getOrganizationAdminPhysicalAddressBaseLink,
-  getOrganizationAdminSetupBaseLink,
-  getOrganizationAdminSetupBillingCycleBaseLink,
-  getOrganizationAdminSetupMarketplaceListingBaseLink,
-  getOrganizationAdminSsoSettingsBaseLink,
-  getOrganizationAdminSubscriptionsBaseLink,
-  getOrganizationAdminTaxDetailsBaseLink,
-  getOrganizationAdminZonesBaseLink,
-  getOrganizationIntegrationsBaseLink,
-  getOrganizationMarketplaceSetupBankAccountsBaseLink,
-  getOrganizationMarketplaceSetupProductTagsBaseLink,
-  getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
-  getOrganizationMarketplaceSetupXeroBaseLink,
-} from '@/components/links';
+import { getOrganizationIntegrationsBaseLink } from '@/components/links';
 import OrganizationMarketplaceSetupLoader from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-loader';
 import type { organizationAdmin_query$key } from '@/queries/__generated__/organizationAdmin_query.graphql';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
@@ -50,7 +34,6 @@ import OrganizationAdminZonesSection from './organization-admin-zones-section';
 type Props = {
   rootDataRelay: organizationAdmin_query$key;
   organizationCustomDomain: string;
-  tagsGroupsMode?: boolean;
 };
 
 type EditorSectionProps = { title: string; description: string; summary: string; expanded: boolean; onChange: () => void };
@@ -130,7 +113,7 @@ const sectionLabels: Record<OrganizationAdminSection, string> = {
   'manage-organization': 'Manage organisation',
 };
 
-const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroupsMode = false }: Props) => {
+const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   const rootData = useFragment<organizationAdmin_query$key>(
     graphql`
       fragment organizationAdmin_query on Query {
@@ -173,24 +156,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
   const expandedProfileSection = profileSection;
-
   const organization = rootData.organization;
-  const sectionLinks: Record<OrganizationAdminSection, string> = {
-    setup: getOrganizationAdminSetupBaseLink(integratedPlatform, organizationCustomDomain),
-    'physical-address-setup': getOrganizationAdminPhysicalAddressBaseLink(integratedPlatform, organizationCustomDomain),
-    'tax-details-setup': getOrganizationAdminTaxDetailsBaseLink(integratedPlatform, organizationCustomDomain),
-    'marketplace-listing': getOrganizationAdminSetupMarketplaceListingBaseLink(integratedPlatform, organizationCustomDomain),
-    'product-tags-setup': getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatform, organizationCustomDomain),
-    'zones-setup': getOrganizationAdminZonesBaseLink(integratedPlatform, organizationCustomDomain),
-    'tags-setup': getOrganizationAdminCustomTagsBaseLink(integratedPlatform, organizationCustomDomain),
-    'billing-cycle': getOrganizationAdminSetupBillingCycleBaseLink(integratedPlatform, organizationCustomDomain),
-    'xero-setup': getOrganizationMarketplaceSetupXeroBaseLink(integratedPlatform, organizationCustomDomain),
-    'stripe-connect-accounts-setup': getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatform, organizationCustomDomain),
-    'bank-accounts-setup': getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatform, organizationCustomDomain),
-    'sso-setup': getOrganizationAdminSsoSettingsBaseLink(integratedPlatform, organizationCustomDomain),
-    subscriptions: getOrganizationAdminSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain),
-    'manage-organization': getOrganizationAdminManageOrganizationBaseLink(integratedPlatform, organizationCustomDomain),
-  };
   const integrationsBaseLink = getOrganizationIntegrationsBaseLink(integratedPlatform, organizationCustomDomain);
 
   const renderAdminTabs = () => {
@@ -244,64 +210,6 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
             component={NextLink}
             href={`${pathname}?tab=${key}${key === 'profile' ? '&section=presentation' : ''}`}
             label={label}
-            disableRipple
-            sx={{
-              minWidth: 112,
-              minHeight: 52,
-              px: 2.5,
-              textTransform: 'none',
-              color: 'text.secondary',
-              fontWeight: 500,
-              '&.Mui-selected': { color: 'primary.main', fontWeight: 600 },
-              '&:hover': { color: 'text.primary', backgroundColor: 'action.hover' },
-            }}
-          />
-        ))}
-      </Tabs>
-    );
-  };
-
-  const renderTagsGroupsTabs = () => {
-    const tabs = ['tags-setup', 'zones-setup', 'product-tags-setup'] as OrganizationAdminSection[];
-
-    return isMobileAdminNav ? (
-      <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 1.5 }}>
-        <Button
-          fullWidth
-          variant="outlined"
-          color="inherit"
-          onClick={(event) => setAdminTabsMenuAnchor(event.currentTarget)}
-          aria-haspopup="menu"
-          aria-expanded={adminTabsMenuAnchor ? 'true' : undefined}
-          aria-controls={adminTabsMenuAnchor ? 'organization-tags-groups-sections-menu' : undefined}
-          endIcon={<ExpandMoreRoundedIcon />}
-          sx={{ justifyContent: 'space-between', minHeight: 48, borderRadius: 2.5, px: 2, textTransform: 'none' }}
-        >
-          {`Section: ${activeSection ? sectionLabels[activeSection] : sectionLabels['tags-setup']}`}
-        </Button>
-        <Menu anchorEl={adminTabsMenuAnchor} open={Boolean(adminTabsMenuAnchor)} onClose={() => setAdminTabsMenuAnchor(null)} id="organization-tags-groups-sections-menu">
-          {tabs.map((item) => (
-            <MenuItem key={item} component={NextLink} href={sectionLinks[item]} selected={activeSection === item} onClick={() => setAdminTabsMenuAnchor(null)}>
-              {sectionLabels[item]}
-            </MenuItem>
-          ))}
-        </Menu>
-      </Box>
-    ) : (
-      <Tabs
-        value={activeSection ?? false}
-        variant="scrollable"
-        scrollButtons="auto"
-        aria-label="Tags and groups sections"
-        sx={{ mb: -2, borderTop: 1, borderColor: 'divider', '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' } }}
-      >
-        {tabs.map((item) => (
-          <Tab
-            key={item}
-            value={item}
-            component={NextLink}
-            href={sectionLinks[item]}
-            label={sectionLabels[item]}
             disableRipple
             sx={{
               minWidth: 112,
@@ -424,25 +332,22 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
         }}
       >
         <PageHeaderPanel
-          eyebrow={integrationsMode ? 'Integrations' : tagsGroupsMode ? 'Tags & Groups' : 'Organisation admin'}
-          title={integrationsMode ? 'Integrations' : tagsGroupsMode ? 'Shared tags, zones & booking groups' : (organization?.name ?? 'Organisation settings')}
+          eyebrow={integrationsMode ? 'Integrations' : 'Organisation admin'}
+          title={integrationsMode ? 'Integrations' : (organization?.name ?? 'Organisation settings')}
           description={
             integrationsMode
               ? 'Manage connections to the external systems used by this organization.'
-              : tagsGroupsMode
-                ? 'Manage tags, zones, and booking groups used across this organization.'
-                : activeSection
-                  ? `Editing ${sectionLabels[activeSection].toLocaleLowerCase()}.`
-                  : 'Choose the area you want to configure for this marketplace organisation.'
+              : activeSection
+                ? `Editing ${sectionLabels[activeSection].toLocaleLowerCase()}.`
+                : 'Choose the area you want to configure for this marketplace organisation.'
           }
           sx={{ width: '100%', minWidth: 0, maxWidth: '100%' }}
         >
-          {tagsGroupsMode && renderTagsGroupsTabs()}
           {integrationsMode && activeSection && renderIntegrationTabs()}
-          {!activeSection && !tagsGroupsMode && !integrationsMode && renderAdminTabs()}
+          {!activeSection && !integrationsMode && renderAdminTabs()}
         </PageHeaderPanel>
 
-        {!activeSection && !tagsGroupsMode && adminTab === 'profile' && (
+        {!activeSection && adminTab === 'profile' && (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
             <StackColumn spacing={1.5}>
               <OrganizationAdminSetupSection key={expandedProfileSection} organizationCustomDomain={organizationCustomDomain} />
@@ -513,7 +418,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
             {renderOrganizationSummary()}
           </Box>
         )}
-        {!activeSection && !tagsGroupsMode && adminTab === 'bank-accounts' && (
+        {!activeSection && adminTab === 'bank-accounts' && (
           <Box sx={{ width: '100%' }}>
             <Box
               sx={{
@@ -529,7 +434,7 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
             </Box>
           </Box>
         )}
-        {!activeSection && !tagsGroupsMode && adminTab === 'operations' && (
+        {!activeSection && adminTab === 'operations' && (
           <Box sx={{ width: '100%' }}>
             <OrganizationAdminManageOrganizationSection organizationCustomDomain={organizationCustomDomain} />
           </Box>

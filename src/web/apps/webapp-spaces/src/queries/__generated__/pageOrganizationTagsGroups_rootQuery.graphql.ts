@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b6d9738495e67872a59c702133b400c4>>
+ * @generated SignedSource<<b1967130b2ecb8ff17d6437b14215e87>>
  * @lightSyntaxTransform
  */
 
@@ -16,7 +16,7 @@ export type pageOrganizationTagsGroups_rootQuery$data = {
   readonly organization: {
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationTagsGroups_query">;
 };
 export type pageOrganizationTagsGroups_rootQuery = {
   response: pageOrganizationTagsGroups_rootQuery$data;
@@ -44,13 +44,6 @@ v2 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -74,7 +67,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "organizationAdmin_query"
+        "name": "organizationTagsGroups_query"
       }
     ],
     "type": "Query",
@@ -95,42 +88,11 @@ return {
         "plural": false,
         "selections": [
           (v2/*:: as any*/),
-          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "OrganizationPhysicalAddressDetails",
-            "kind": "LinkedField",
-            "name": "physicalAddress",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "formattedAddress",
-                "storageKey": null
-              },
-              (v3/*:: as any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ListingMetadata",
-            "kind": "LinkedField",
-            "name": "marketplaceListingMetadata",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "title",
-                "storageKey": null
-              }
-            ],
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
@@ -139,16 +101,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1a1109f7c5c720829177748d21fc4572",
+    "cacheID": "b551320707e2b64c229504d932b511bd",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationTagsGroups_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationTagsGroups_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n}\n\nfragment organizationAdmin_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    physicalAddress {\n      formattedAddress\n      id\n    }\n    marketplaceListingMetadata {\n      title\n    }\n    id\n  }\n}\n"
+    "text": "query pageOrganizationTagsGroups_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationTagsGroups_query\n}\n\nfragment organizationTagsGroups_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8c4cb34b4bbf87d6f60e37ecd9693af0";
+(node as any).hash = "5e8bf1113a640754a539f9aa12f3d389";
 
 export default node;
