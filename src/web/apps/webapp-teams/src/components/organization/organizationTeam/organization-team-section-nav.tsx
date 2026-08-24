@@ -4,6 +4,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import NextLink from 'next/link';
@@ -19,15 +22,15 @@ type Props = {
 };
 
 const sectionLabels: Record<OrganizationTeamSection, string> = {
-  setup: 'Team Setup',
+  setup: 'Presentation',
   members: 'Members',
   'manage-team': 'Manage',
 };
 
-const OrganizationTeamSectionNav = ({ activeSection, organizationCustomDomain, teamId, stickyTop = 0 }: Props) => {
+const OrganizationTeamSectionNav = ({ activeSection, organizationCustomDomain, teamId }: Props) => {
   const { integratedPlatform } = useIntegratedPlatform();
   const theme = useTheme();
-  const isCompactNav = useMediaQuery(theme.breakpoints.down('md'), { noSsr: true });
+  const isCompactNav = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true });
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const bookingsLink = getOrganizationBookingsBaseLink(integratedPlatform, organizationCustomDomain, { teamId });
   const sectionLinks: Record<OrganizationTeamSection, string> = {
@@ -45,84 +48,70 @@ const OrganizationTeamSectionNav = ({ activeSection, organizationCustomDomain, t
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: { xs: 'column', md: 'row' },
-        alignItems: { xs: 'stretch', md: 'center' },
-        gap: 1,
-        px: { xs: 2, sm: 3 },
-        py: 2,
-        border: 1,
-        borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
-        borderRadius: 4,
-        bgcolor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.88)' : theme.palette.background.paper),
-        boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : theme.shadows[1]),
-        position: 'sticky',
-        top: stickyTop,
-        zIndex: 2,
-      }}
-    >
+    <Box sx={{ width: '100%', minWidth: 0, position: 'relative', zIndex: 2 }}>
       {isCompactNav ? (
         <>
           <Button
-            variant="contained"
-            color="primary"
+            fullWidth
+            variant="outlined"
+            color="inherit"
             onClick={handleOpenMenu}
             aria-haspopup="menu"
             aria-expanded={menuAnchor ? 'true' : undefined}
             aria-controls={menuAnchor ? 'organization-team-sections-menu' : undefined}
-            sx={{
-              justifyContent: 'space-between',
-              borderRadius: 999,
-              px: 2,
-              textTransform: 'none',
-            }}
+            endIcon={<ExpandMoreRoundedIcon />}
+            sx={{ justifyContent: 'space-between', minHeight: 48, borderRadius: 2.5, px: 2, textTransform: 'none' }}
           >
             {`Section: ${sectionLabels[activeSection]}`}
           </Button>
 
           <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleCloseMenu} id="organization-team-sections-menu">
             {(Object.keys(sectionLabels) as OrganizationTeamSection[]).map((section) => (
-              <MenuItem key={section} component={NextLink} href={sectionLinks[section]} selected={activeSection === section} onClick={handleCloseMenu}>
+              <MenuItem
+                key={section}
+                component={NextLink}
+                href={sectionLinks[section]}
+                aria-label={section === 'setup' ? 'Team Setup' : undefined}
+                selected={activeSection === section}
+                onClick={handleCloseMenu}
+              >
                 {sectionLabels[section]}
               </MenuItem>
             ))}
           </Menu>
         </>
       ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 1,
-            overflowX: 'auto',
-            flex: '1 1 0%',
-            minWidth: 0,
-            scrollbarWidth: 'none',
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
-          }}
+        <Tabs
+          value={activeSection}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="Team sections"
+          sx={{ borderTop: 1, borderColor: 'divider', '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' } }}
         >
           {(Object.keys(sectionLabels) as OrganizationTeamSection[]).map((section) => (
-            <Button
+            <Tab
               key={section}
+              value={section}
               component={NextLink}
               href={sectionLinks[section]}
-              variant={activeSection === section ? 'contained' : 'text'}
-              color={activeSection === section ? 'primary' : 'inherit'}
+              role="link"
+              aria-label={section === 'setup' ? 'Team Setup' : undefined}
+              className={activeSection === section ? 'MuiButton-contained' : 'MuiButton-text'}
+              label={sectionLabels[section]}
+              disableRipple
               sx={{
-                flexShrink: 0,
-                borderRadius: 999,
-                px: 2,
+                minWidth: 112,
+                minHeight: 52,
+                px: 2.5,
                 textTransform: 'none',
-                whiteSpace: 'nowrap',
+                color: 'text.secondary',
+                fontWeight: 500,
+                '&.Mui-selected': { color: 'primary.main', fontWeight: 600 },
+                '&:hover': { color: 'text.primary', backgroundColor: 'action.hover' },
               }}
-            >
-              {sectionLabels[section]}
-            </Button>
+            ></Tab>
           ))}
-        </Box>
+        </Tabs>
       )}
 
       <Button
@@ -130,14 +119,7 @@ const OrganizationTeamSectionNav = ({ activeSection, organizationCustomDomain, t
         href={bookingsLink}
         variant="outlined"
         color="inherit"
-        sx={{
-          flexShrink: 0,
-          borderRadius: 999,
-          alignSelf: { xs: 'stretch', md: 'center' },
-          px: 2,
-          textTransform: 'none',
-          whiteSpace: 'nowrap',
-        }}
+        sx={{ flexShrink: 0, borderRadius: 2.5, alignSelf: { xs: 'stretch', md: 'flex-end' }, px: 2, textTransform: 'none', whiteSpace: 'nowrap', mt: 1 }}
       >
         View team bookings
       </Button>

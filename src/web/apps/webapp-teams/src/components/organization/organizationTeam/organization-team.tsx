@@ -19,20 +19,24 @@ import type { organizationTeam_teamMembers_query$key, TeamMemberRole } from '@/q
 import type { organizationTeam_teamMembers_refetchableFragment } from '@/queries/__generated__/organizationTeam_teamMembers_refetchableFragment.graphql';
 import type { organizationTeam_updateTeamMutation, TeamPatchField } from '@/queries/__generated__/organizationTeam_updateTeamMutation.graphql';
 import Box from '@mui/material/Box';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
 import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
   defaultPadding,
   FormFieldLabel,
   FormStackColumn,
-  GridContainer,
+  LeadIconTypography,
   PageHeaderPanel,
   SectionIconTypography,
   SettingsSectionCard,
@@ -42,7 +46,7 @@ import {
 } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
@@ -87,7 +91,7 @@ const getActiveSection = (value: string | null): OrganizationTeamSection => {
 
 const formColumnSx = {
   width: '100%',
-  maxWidth: 760,
+  maxWidth: 'none',
 };
 const teamAutosaveDebounceTimeout = 1000;
 
@@ -105,6 +109,10 @@ const getChangedTeamFields = (left: TeamDetails | null, right: TeamDetails): Tea
 
 const getValidTeamPatchFields = (fieldsToUpdate: TeamPatchField[], values: TeamDetails): TeamPatchField[] =>
   fieldsToUpdate.filter((patchField) => {
+    if (patchField === 'FEATURE_IMAGES') {
+      return true;
+    }
+
     const formField = (Object.entries(teamPatchFields) as [keyof TeamDetails, TeamPatchField][]).find(([, field]) => field === patchField)?.[0];
     if (!formField) {
       return false;
@@ -301,12 +309,20 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   const { integratedPlatform } = useIntegratedPlatform();
   const [, startTransition] = useTransition();
   const router = useRouter();
+  const pathname = usePathname();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
   const activeSection = getActiveSection(section);
+  const presentationExpanded = section !== '';
   const [stickyTop, setStickyTop] = useState(0);
+  const togglePresentation = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (presentationExpanded) params.set('section', '');
+    else params.set('section', 'setup');
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
   const validate = makeValidate(teamSchema);
@@ -346,6 +362,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   );
   const previousTeamValues = useRef<TeamDetails | null>(initialTeamValues);
   const previousFeatureImages = useRef<FileUploadResponse[]>(featureImages);
+  const featureImagesRef = useRef<FileUploadResponse[]>(featureImages);
 
   const requiredTeamDetailsFields = makeRequired(teamSchema);
   const [selectedMemberId, setSelectedMemberId] = useState<null | string>(null);
@@ -429,7 +446,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       return;
     }
 
-    const finalFeatureImages = featureImages.map((image) => ({
+    const finalFeatureImages = featureImagesRef.current.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
     }));
@@ -745,20 +762,17 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   }));
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setFeatureImages((prev) => [response, ...prev]);
+    const next = [response, ...featureImagesRef.current];
+    featureImagesRef.current = next;
+    setFeatureImages(next);
     setPrimaryFeatureImage((prevPrimary) => prevPrimary ?? response);
   };
 
   const handleRemoveFeatureImage = (image: FileUploadResponse) => {
-    setFeatureImages((prev) => {
-      const next = prev.filter((item) => item.original?.url !== image.original?.url);
-
-      if (primaryFeatureImage?.original?.url === image.original?.url) {
-        setPrimaryFeatureImage(next[0] ?? null);
-      }
-
-      return next;
-    });
+    const next = featureImagesRef.current.filter((item) => item.original?.url !== image.original?.url);
+    featureImagesRef.current = next;
+    setFeatureImages(next);
+    if (primaryFeatureImage?.original?.url === image.original?.url) setPrimaryFeatureImage(next[0] ?? null);
   };
 
   const handleSetPrimaryFeatureImage = (image: FileUploadResponse) => {
@@ -829,123 +843,181 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
       case 'setup':
       default:
         return (
-          <Form
-            onSubmit={() => undefined}
-            initialValues={initialTeamValues}
-            validate={validate}
-            render={({ handleSubmit, values }) => {
-              const teamValues = values as TeamDetails;
-              const changedFormFields = getChangedTeamFields(previousTeamValues.current, teamValues);
-              const extraFields: TeamPatchField[] = featureImages !== previousFeatureImages.current ? ['FEATURE_IMAGES'] : [];
-              const fieldsToUpdate: TeamPatchField[] = [...changedFormFields, ...extraFields];
-              if (fieldsToUpdate.length > 0) {
-                previousTeamValues.current = teamValues;
-                previousFeatureImages.current = featureImages;
-                debouncedTeamDetailUpdate(fieldsToUpdate, teamValues);
-              }
+          <Accordion
+            disableGutters
+            elevation={0}
+            expanded={presentationExpanded}
+            onChange={togglePresentation}
+            sx={{ border: 1, borderColor: 'divider', borderRadius: '16px !important', overflow: 'hidden', '&::before': { display: 'none' } }}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />} sx={{ px: 2.5, py: 0.75, minHeight: 72, '& .MuiAccordionSummary-content': { my: 1 } }}>
+              <StackColumn spacing={0.35} sx={{ minWidth: 0 }}>
+                <LeadIconTypography label="Presentation" />
+                <BodyIconTypography label={presentationExpanded ? 'Shape the customer-facing identity and settings for this team.' : 'Team profile and presentation details'} />
+              </StackColumn>
+            </AccordionSummary>
+            <AccordionDetails sx={{ borderTop: 1, borderColor: 'divider', p: 0 }}>
+              <Form
+                onSubmit={() => undefined}
+                initialValues={initialTeamValues ?? undefined}
+                validate={validate}
+                render={({ handleSubmit, values }) => {
+                  const teamValues = values as TeamDetails;
+                  const changedFormFields = getChangedTeamFields(previousTeamValues.current, teamValues);
+                  const extraFields: TeamPatchField[] = featureImages !== previousFeatureImages.current ? ['FEATURE_IMAGES'] : [];
+                  const fieldsToUpdate: TeamPatchField[] = [...changedFormFields, ...extraFields];
+                  if (fieldsToUpdate.length > 0) {
+                    previousTeamValues.current = teamValues;
+                    previousFeatureImages.current = featureImages;
+                    debouncedTeamDetailUpdate(fieldsToUpdate, teamValues);
+                  }
 
-              return (
-                <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <GridContainer sx={{ justifyContent: 'space-between' }}>
-                      <Grid>
-                        <SectionIconTypography label="Team Setup" />
-                        <BodyIconTypography label="Edit your team name and details" />
-                      </Grid>
-                    </GridContainer>
-                    <Divider />
-                  </StackColumn>
-
-                  <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding, paddingBottom: defaultPadding }}>
-                    <FormFieldLabel label="Feature Images">
-                      <StackColumn>
-                        <Box
-                          sx={{
-                            display: 'grid',
-                            gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                            gap: 2,
-                          }}
-                        >
-                          {featureImages.map((image, index) => (
-                            <Box
-                              key={index}
-                              sx={{
-                                position: 'relative',
-                                borderRadius: 2,
-                                overflow: 'hidden',
-                                border: 1,
-                                borderColor: 'divider',
-                                backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                              }}
-                            >
-                              <Image
-                                width={800}
-                                height={600}
-                                unoptimized
-                                alt=""
-                                src={image.original?.url ?? image.thumbnail?.url ?? ''}
-                                style={{ width: '100%', height: 'auto' }}
-                              />
-                              <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                                  <DeleteIcon fontSize="small" />
-                                </IconButton>
-                              </StackRow>
-                              <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                                {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                  <Chip size="small" color="success" label="Cover image" />
-                                ) : (
-                                  <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                    Make cover
+                  return (
+                    <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+                      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 0.95fr) minmax(0, 1.05fr)' }, gap: { xs: 2, md: 4 }, p: { xs: 1.5, sm: 2 } }}>
+                        <StackColumn spacing={2}>
+                          <StackColumn spacing={0.5}>
+                            <LeadIconTypography label="Cover and gallery" />
+                            <BodyIconTypography label="Use a strong cover image to help customers recognize this team." />
+                          </StackColumn>
+                          <FormFieldLabel label="Feature Images">
+                            <StackColumn>
+                              <Box
+                                sx={{
+                                  display: 'grid',
+                                  gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                                  gap: 2,
+                                }}
+                              >
+                                {featureImages.map((image, index) => (
+                                  <Box
+                                    key={index}
+                                    sx={{
+                                      position: 'relative',
+                                      borderRadius: 2,
+                                      overflow: 'hidden',
+                                      border: 1,
+                                      borderColor: 'divider',
+                                      backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                                    }}
+                                  >
+                                    <Image
+                                      width={800}
+                                      height={600}
+                                      unoptimized
+                                      alt=""
+                                      src={image.original?.url ?? image.thumbnail?.url ?? ''}
+                                      style={{ width: '100%', height: 'auto' }}
+                                    />
+                                    <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                                      <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                        <DeleteIcon fontSize="small" />
+                                      </IconButton>
+                                    </StackRow>
+                                    <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                                      {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                        <Chip size="small" color="success" label="Cover image" />
+                                      ) : (
+                                        <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                          Make cover
+                                        </Button>
+                                      )}
+                                    </StackRow>
+                                  </Box>
+                                ))}
+                              </Box>
+                              <ImageFileUploaderWithCropper
+                                onUploadCompleted={handleFeatureImageUploadCompleted}
+                                trigger={
+                                  <Button
+                                    fullWidth
+                                    variant="outlined"
+                                    color="success"
+                                    startIcon={<AddPhotoAlternateRoundedIcon />}
+                                    sx={{
+                                      minHeight: 72,
+                                      borderRadius: 2.5,
+                                      borderWidth: 1,
+                                      borderStyle: 'dashed',
+                                      bgcolor: 'action.hover',
+                                      textTransform: 'none',
+                                      fontSize: '1rem',
+                                    }}
+                                  >
+                                    Add another image
                                   </Button>
-                                )}
-                              </StackRow>
-                            </Box>
-                          ))}
-                        </Box>
-                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
-                      </StackColumn>
-                    </FormFieldLabel>
+                                }
+                              />
+                            </StackColumn>
+                          </FormFieldLabel>
+                        </StackColumn>
+                        <StackColumn spacing={2}>
+                          <StackColumn spacing={0.5}>
+                            <LeadIconTypography label="Team details" />
+                            <BodyIconTypography label="Use concise language to describe this team." />
+                          </StackColumn>
+                          <FormFieldLabel label="Name">
+                            <TextField name="name" required={requiredTeamDetailsFields.name} />
+                          </FormFieldLabel>
 
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredTeamDetailsFields.name} />
-                    </FormFieldLabel>
+                          <FormFieldLabel label="About">
+                            <TextField name="about" required={requiredTeamDetailsFields.about} multiline rows={3} />
+                          </FormFieldLabel>
 
-                    <FormFieldLabel label="About">
-                      <TextField name="about" required={requiredTeamDetailsFields.about} multiline rows={3} />
-                    </FormFieldLabel>
+                          <FormFieldLabel label="Timezone">
+                            <SingleChoinceTimezone name="timezone" required={requiredTeamDetailsFields.timezone} />
+                          </FormFieldLabel>
 
-                    <FormFieldLabel label="Timezone">
-                      <SingleChoinceTimezone name="timezone" required={requiredTeamDetailsFields.timezone} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Primary Location">
-                      <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
-                    </FormFieldLabel>
-                  </StackColumn>
-                </FormStackColumn>
-              );
-            }}
-          />
+                          <FormFieldLabel label="Primary Location">
+                            <SingleChoiceLocation rootDataRelay={rootData} id="primaryLocationId" required={requiredTeamDetailsFields.primaryLocationId} />
+                          </FormFieldLabel>
+                        </StackColumn>
+                      </Box>
+                    </FormStackColumn>
+                  );
+                }}
+              />
+            </AccordionDetails>
+          </Accordion>
         );
     }
   };
 
   return (
     <>
-      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pt: { xs: 1, sm: 1, md: 2 }, pb: defaultPadding }}>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: '100vw',
+          minWidth: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          overflowX: 'hidden',
+          boxSizing: 'border-box',
+          px: { xs: 0, sm: 1, md: 2 },
+          pt: { xs: 1, sm: 1, md: 2 },
+          pb: defaultPadding,
+        }}
+      >
         <StackColumn
           sx={{
             width: '100%',
             maxWidth: 1200,
+            minWidth: 0,
             mx: 'auto',
+            overflowX: 'hidden',
             backgroundColor: 'transparent',
             gap: 2,
           }}
         >
-          <PageHeaderPanel eyebrow="Team settings" title={team.name} description="Manage team details, location assignment, members, and lifecycle controls." />
-
-          <OrganizationTeamSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} teamId={teamId} stickyTop={stickyTop} />
+          <PageHeaderPanel
+            eyebrow="Team settings"
+            title={team.name}
+            description="Manage team details, location assignment, members, and lifecycle controls."
+            sx={{ width: '100%', minWidth: 0, maxWidth: '100%' }}
+          >
+            <OrganizationTeamSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} teamId={teamId} stickyTop={stickyTop} />
+          </PageHeaderPanel>
 
           <Box
             sx={{

@@ -33,18 +33,21 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   BodyIconTypography,
   defaultButtonStyle,
   defaultPadding,
   FormFieldLabel,
   FormStackColumn,
-  GuidedEditorProgress,
   LeadIconTypography,
   PageHeaderPanel,
   SectionIconTypography,
@@ -245,6 +248,8 @@ const ProductEditorForm = ({
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const theme = useTheme();
+  const isMobileStepNav = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true });
   const pricingOptions = useMemo(() => values.pricingOptions ?? [], [values.pricingOptions]);
   const [activeStep, setActiveStep] = useState<ProductEditorStep['id']>('basics');
   const [expandedBasicsSection, setExpandedBasicsSection] = useState('presentation');
@@ -252,6 +257,7 @@ const ProductEditorForm = ({
   const [expandedOfferSection, setExpandedOfferSection] = useState('offer-basics');
   const [offerActionsAnchor, setOfferActionsAnchor] = useState<HTMLElement | null>(null);
   const [offerActionsIndex, setOfferActionsIndex] = useState<number | null>(null);
+  const [stepMenuAnchor, setStepMenuAnchor] = useState<HTMLElement | null>(null);
   const isEventProduct = isEventType(values?.type);
   const validationItems = useMemo(() => Array.from(new Set(summarizeErrors(errors))).slice(0, 8), [errors]);
   const updateEditorUrl = (updates: { tab?: ProductEditorStep['id']; offer?: string | false; section?: string }) => {
@@ -323,6 +329,66 @@ const ProductEditorForm = ({
             subtitle: 'Final check before creating the product',
           }
         : step,
+    );
+  const renderStepTabs = () =>
+    isMobileStepNav ? (
+      <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 1.5 }}>
+        <Button
+          fullWidth
+          variant="outlined"
+          color="inherit"
+          onClick={(event) => setStepMenuAnchor(event.currentTarget)}
+          aria-haspopup="menu"
+          aria-expanded={stepMenuAnchor ? 'true' : undefined}
+          aria-controls={stepMenuAnchor ? 'product-editor-sections-menu' : undefined}
+          endIcon={<ExpandMoreRoundedIcon />}
+          sx={{ justifyContent: 'space-between', minHeight: 48, borderRadius: 2.5, px: 2, textTransform: 'none' }}
+        >
+          {`Section: ${steps.find((step) => step.id === activeStep)?.title ?? 'Basics'}`}
+        </Button>
+        <Menu anchorEl={stepMenuAnchor} open={Boolean(stepMenuAnchor)} onClose={() => setStepMenuAnchor(null)} id="product-editor-sections-menu">
+          {steps.map((step) => (
+            <MenuItem
+              key={step.id}
+              selected={activeStep === step.id}
+              onClick={() => {
+                setEditorStep(step.id);
+                setStepMenuAnchor(null);
+              }}
+            >
+              {step.title}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+    ) : (
+      <Tabs
+        value={activeStep}
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="Product setup sections"
+        sx={{ mb: -2, borderTop: 1, borderColor: 'divider', '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' } }}
+      >
+        {steps.map((step) => (
+          <Tab
+            key={step.id}
+            value={step.id}
+            label={step.title}
+            onClick={() => setEditorStep(step.id)}
+            disableRipple
+            sx={{
+              minWidth: 112,
+              minHeight: 52,
+              px: 2.5,
+              textTransform: 'none',
+              color: 'text.secondary',
+              fontWeight: 500,
+              '&.Mui-selected': { color: 'primary.main', fontWeight: 600 },
+              '&:hover': { color: 'text.primary', backgroundColor: 'action.hover' },
+            }}
+          />
+        ))}
+      </Tabs>
     );
 
   const changeNestedField = (path: string, value: unknown) => {
@@ -1124,13 +1190,23 @@ const ProductEditorForm = ({
 
   return (
     <FormStackColumn onSubmit={onSubmit} sx={{ pt: { xs: 2, md: 3 } }}>
-      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
-        <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', backgroundColor: 'transparent', gap: 2 }}>
-          <PageHeaderPanel eyebrow="Product setup" title={pageTitle} description={pageDescription} />
-
-          <Box sx={{ position: 'sticky', top: 12, zIndex: 10 }}>
-            <GuidedEditorProgress steps={steps} activeStepId={activeStep} onStepChange={(stepId) => setEditorStep(stepId as ProductEditorStep['id'])} variant="compact" />
-          </Box>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: '100vw',
+          minWidth: 0,
+          display: 'flex',
+          justifyContent: 'center',
+          overflowX: 'hidden',
+          boxSizing: 'border-box',
+          px: { xs: 0, sm: 1, md: 2 },
+          pb: defaultPadding,
+        }}
+      >
+        <StackColumn sx={{ width: '100%', maxWidth: 1200, minWidth: 0, mx: 'auto', overflowX: 'hidden', backgroundColor: 'transparent', gap: 2 }}>
+          <PageHeaderPanel eyebrow="Product setup" title={pageTitle} description={pageDescription} sx={{ width: '100%', minWidth: 0, maxWidth: '100%' }}>
+            {renderStepTabs()}
+          </PageHeaderPanel>
 
           <Box
             sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: { xs: 2, lg: 3 }, '@media (min-width: 1200px)': { gridTemplateColumns: 'minmax(0, 1fr) 288px' } }}

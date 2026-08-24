@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 type Props = {
   onUpload: (file: Blob) => Promise<void>;
   helperText?: string;
+  trigger?: React.ReactNode;
 };
 
 type AspectRatioOption = {
@@ -49,7 +50,7 @@ const popularAspectRatioOptions: AspectRatioOption[] = [
   { key: 'custom', label: 'Custom' },
 ];
 
-const ImageFileUploaderWithCropper = ({ onUpload, helperText }: Props) => {
+const ImageFileUploaderWithCropper = ({ onUpload, helperText, trigger }: Props) => {
   const [imageSource, setImgSrc] = useState<string>('');
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -185,7 +186,8 @@ const ImageFileUploaderWithCropper = ({ onUpload, helperText }: Props) => {
   return (
     <>
       <FormControl>
-        <Input inputRef={inputRef} type="file" inputProps={{ accept: 'image/*' }} onChange={onSelectFile} />
+        <Input inputRef={inputRef} type="file" inputProps={{ accept: 'image/*' }} onChange={onSelectFile} sx={trigger ? { display: 'none' } : undefined} />
+        {trigger ? React.cloneElement(trigger as React.ReactElement<{ onClick?: () => void }>, { onClick: () => inputRef.current?.click() }) : null}
         {helperText && <FormHelperText>{helperText}</FormHelperText>}
       </FormControl>
       <Dialog open={isDialogOpen} fullWidth>

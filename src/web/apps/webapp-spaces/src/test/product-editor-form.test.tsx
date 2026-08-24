@@ -250,7 +250,7 @@ describe('ProductEditorForm', () => {
     const change = vi.fn();
 
     render(<ProductEditorForm {...baseProps} mode="edit" form={{ change }} />);
-    await user.click(screen.getByRole('button', { name: 'Offers' }));
+    await user.click(screen.getByRole('tab', { name: 'Offers' }));
     await user.click(screen.getByRole('button', { name: 'Add offer' }));
 
     const nextPricingOptions = change.mock.calls.at(-1)?.[1] as Array<{ cadence: string }>;
@@ -266,7 +266,7 @@ describe('ProductEditorForm', () => {
     const { unmount } = render(
       <ProductEditorForm {...baseProps} mode="edit" form={{ change }} values={{ ...baseProps.values, pricingOptions: [baseProps.values.pricingOptions[0], secondOffer] }} />,
     );
-    await user.click(screen.getByRole('button', { name: 'Offers' }));
+    await user.click(screen.getByRole('tab', { name: 'Offers' }));
     await user.click(screen.getByRole('button', { name: 'Actions for Daily pass' }));
     await user.click(screen.getByRole('menuitem', { name: 'Duplicate offer' }));
 
@@ -283,7 +283,7 @@ describe('ProductEditorForm', () => {
     unmount();
     const singleOfferChange = vi.fn();
     render(<ProductEditorForm {...baseProps} mode="edit" form={{ change: singleOfferChange }} />);
-    await user.click(screen.getByRole('button', { name: 'Offers' }));
+    await user.click(screen.getByRole('tab', { name: 'Offers' }));
     await user.click(screen.getByRole('button', { name: 'Actions for Daily pass' }));
     expect(screen.getByRole('menuitem', { name: 'Remove offer' })).toHaveAttribute('aria-disabled', 'true');
   });
@@ -301,7 +301,7 @@ describe('ProductEditorForm', () => {
         }}
       />,
     );
-    await user.click(screen.getByRole('button', { name: 'Offers' }));
+    await user.click(screen.getByRole('tab', { name: 'Offers' }));
 
     await user.click(screen.getByRole('button', { name: /Fulfillment/ }));
     expect(screen.getByText(/Choose One time for a single purchase/)).toBeVisible();
@@ -328,7 +328,7 @@ describe('ProductEditorForm', () => {
     await user.click(screen.getByRole('button', { name: 'Help for Product type' }));
     expect(screen.getByText(/matching resources and bookings behave/)).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Offers' }));
+    await user.click(screen.getByRole('tab', { name: 'Offers' }));
     await user.click(screen.getByRole('button', { name: /Fulfillment/ }));
     await user.click(screen.getByRole('button', { name: 'Help for Cadence' }));
     expect(screen.getByRole('button', { name: 'Help for Cadence' })).toBeInTheDocument();
@@ -339,11 +339,11 @@ describe('ProductEditorForm', () => {
 
     render(<ProductEditorForm {...baseProps} mode="add" />);
 
-    expect(screen.getByRole('button', { name: 'Review & Create' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Review & Create' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Create' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Review & Create' }));
+    await user.click(screen.getByRole('tab', { name: 'Review & Create' }));
 
     expect(screen.getAllByText('Review & Create')).not.toHaveLength(0);
     expect(screen.getByText('Check the high-level shape before creating the product. This is the compact product story people need to understand.')).toBeInTheDocument();
@@ -356,8 +356,8 @@ describe('ProductEditorForm', () => {
 
     // Edit mode: review step removed entirely — autosave handles updates
     expect(screen.queryByText('Review & Update')).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Basics' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Offers' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Basics' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: 'Offers' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Update' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Back' })).not.toBeInTheDocument();
   });
