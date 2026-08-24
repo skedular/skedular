@@ -4,6 +4,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import NextLink from 'next/link';
@@ -24,10 +27,10 @@ const sectionLabels: Record<ResourceEditSection, string> = {
   'opening-hours': 'Opening Hours',
 };
 
-const ResourceEditSectionNav = ({ activeSection, organizationCustomDomain, locationId, resourceId, stickyTop = 0 }: Props) => {
+const ResourceEditSectionNav = ({ activeSection, organizationCustomDomain, locationId, resourceId }: Props) => {
   const { integratedPlatform } = useIntegratedPlatform();
   const theme = useTheme();
-  const isCompactNav = useMediaQuery(theme.breakpoints.down('md'), { noSsr: true });
+  const isCompactNav = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true });
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const sectionLinks: Record<ResourceEditSection, string> = {
     setup: getOrganizationLocationResourceSetupBaseLink(integratedPlatform, organizationCustomDomain, locationId, resourceId),
@@ -43,37 +46,19 @@ const ResourceEditSectionNav = ({ activeSection, organizationCustomDomain, locat
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: { xs: 'column', md: 'row' },
-        px: { xs: 2, sm: 3 },
-        py: 2,
-        border: 1,
-        borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
-        borderRadius: 4,
-        bgcolor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.88)' : theme.palette.background.paper),
-        boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : theme.shadows[1]),
-        position: 'sticky',
-        top: stickyTop,
-        zIndex: 2,
-      }}
-    >
+    <Box sx={{ width: '100%', minWidth: 0 }}>
       {isCompactNav ? (
         <>
           <Button
-            variant="contained"
-            color="primary"
+            fullWidth
+            variant="outlined"
+            color="inherit"
             onClick={handleOpenMenu}
             aria-haspopup="menu"
             aria-expanded={menuAnchor ? 'true' : undefined}
             aria-controls={menuAnchor ? 'resource-edit-sections-menu' : undefined}
-            sx={{
-              justifyContent: 'space-between',
-              borderRadius: 999,
-              px: 2,
-              textTransform: 'none',
-            }}
+            endIcon={<ExpandMoreRoundedIcon />}
+            sx={{ justifyContent: 'space-between', minHeight: 48, borderRadius: 2.5, px: 2, textTransform: 'none' }}
           >
             {`Section: ${sectionLabels[activeSection]}`}
           </Button>
@@ -87,38 +72,36 @@ const ResourceEditSectionNav = ({ activeSection, organizationCustomDomain, locat
           </Menu>
         </>
       ) : (
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 1,
-            overflowX: 'auto',
-            flex: '1 1 0%',
-            minWidth: 0,
-            scrollbarWidth: 'none',
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
-          }}
+        <Tabs
+          value={activeSection}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="Resource sections"
+          sx={{ borderTop: 1, borderColor: 'divider', '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' } }}
         >
           {(Object.keys(sectionLabels) as ResourceEditSection[]).map((section) => (
-            <Button
+            <Tab
               key={section}
+              value={section}
               component={NextLink}
               href={sectionLinks[section]}
-              variant={activeSection === section ? 'contained' : 'text'}
-              color={activeSection === section ? 'primary' : 'inherit'}
+              label={sectionLabels[section]}
+              disableRipple
+              role="link"
+              className={activeSection === section ? 'MuiButton-contained' : 'MuiButton-text'}
               sx={{
-                flexShrink: 0,
-                borderRadius: 999,
-                px: 2,
+                minWidth: 112,
+                minHeight: 52,
+                px: 2.5,
                 textTransform: 'none',
-                whiteSpace: 'nowrap',
+                color: 'text.secondary',
+                fontWeight: 500,
+                '&.Mui-selected': { color: 'primary.main', fontWeight: 600 },
+                '&:hover': { color: 'text.primary', backgroundColor: 'action.hover' },
               }}
-            >
-              {sectionLabels[section]}
-            </Button>
+            ></Tab>
           ))}
-        </Box>
+        </Tabs>
       )}
     </Box>
   );

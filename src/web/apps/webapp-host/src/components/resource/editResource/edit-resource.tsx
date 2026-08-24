@@ -6,7 +6,6 @@ import type { editResource_query$key } from '@/queries/__generated__/editResourc
 import type { editResource_updateLocationResourceAvailableHoursMutation } from '@/queries/__generated__/editResource_updateLocationResourceAvailableHoursMutation.graphql';
 import type { editResource_updateResourceMutation, ResourcePatchField } from '@/queries/__generated__/editResource_updateResourceMutation.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Switch from '@mui/material/Switch';
@@ -19,12 +18,11 @@ import {
   FormStackColumn,
   PageHeaderPanel,
   SettingsSectionCard,
-  SmallIconTypography,
   StackColumn,
   StickyReviewRail,
 } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
@@ -423,7 +421,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     }
   `);
 
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const activeSection = getActiveSection(searchParams.get('section'));
@@ -464,10 +461,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
-  };
-
-  const handleCloseClick = () => {
-    router.back();
   };
 
   const handleResourceDetailUpdateClick = (fieldsToUpdate: ResourcePatchField[], resourceDetails: ResourceDetails) => {
@@ -758,16 +751,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
           gap: 2,
         }}
       >
-        <PageHeaderPanel eyebrow="Resource settings" title={resource.name} description="Edit identity, categorization, capacity, and custom availability for this resource.">
-          <StackColumn spacing={0.5}>
-            <SmallIconTypography label="Resource in this location" />
-            <BodyIconTypography label={resource.resourceType.name} />
-            <Button variant="text" onClick={handleCloseClick} sx={{ px: 0, justifyContent: 'flex-start', textTransform: 'none' }}>
-              Back to location
-            </Button>
-          </StackColumn>
-        </PageHeaderPanel>
-
+        <PageHeaderPanel eyebrow="Resource settings" title={resource.name} description="Edit identity, categorization, capacity, and custom availability for this resource." />
         <ResourceEditSectionNav
           activeSection={activeSection}
           organizationCustomDomain={organizationCustomDomain}

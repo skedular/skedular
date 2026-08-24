@@ -6,7 +6,6 @@ import type { editResource_query$key } from '@/queries/__generated__/editResourc
 import type { editResource_updateLocationResourceAvailableHoursMutation } from '@/queries/__generated__/editResource_updateLocationResourceAvailableHoursMutation.graphql';
 import type { editResource_updateResourceMutation, ResourcePatchField } from '@/queries/__generated__/editResource_updateResourceMutation.graphql';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Switch from '@mui/material/Switch';
@@ -19,12 +18,11 @@ import {
   FormStackColumn,
   PageHeaderPanel,
   SettingsSectionCard,
-  SmallIconTypography,
   StackColumn,
   StickyReviewRail,
 } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
@@ -405,7 +403,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     }
   `);
 
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const activeSection = getActiveSection(searchParams.get('section'));
@@ -445,10 +442,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
-  };
-
-  const handleCloseClick = () => {
-    router.back();
   };
 
   const handleResourceDetailUpdateClick = (fieldsToUpdate: ResourcePatchField[], resourceDetails: ResourceDetails) => {
@@ -661,7 +654,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         return (
           <Form
             onSubmit={() => undefined}
-            initialValues={initialResourceValues}
+            initialValues={initialResourceValues ?? undefined}
             validate={validateResourceDetails}
             render={({ handleSubmit, values }) => {
               const resourceValues = values as ResourceDetails;
@@ -715,33 +708,44 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   };
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
+    <Box
+      sx={{
+        width: '100%',
+        maxWidth: '100vw',
+        minWidth: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        overflowX: 'hidden',
+        boxSizing: 'border-box',
+        px: { xs: 0, sm: 1, md: 2 },
+        pb: defaultPadding,
+      }}
+    >
       <StackColumn
         sx={{
           width: '100%',
           maxWidth: 1200,
+          minWidth: 0,
           mx: 'auto',
+          overflowX: 'hidden',
           backgroundColor: 'transparent',
           gap: 2,
         }}
       >
-        <PageHeaderPanel eyebrow="Resource settings" title={resource.name} description="Edit identity, categorization, capacity, and custom availability for this resource.">
-          <StackColumn spacing={0.5}>
-            <SmallIconTypography label="Resource in this location" />
-            <BodyIconTypography label={resource.resourceType.name} />
-            <Button variant="text" onClick={handleCloseClick} sx={{ px: 0, justifyContent: 'flex-start', textTransform: 'none' }}>
-              Back to location
-            </Button>
-          </StackColumn>
+        <PageHeaderPanel
+          eyebrow="Resource settings"
+          title={resource.name}
+          description="Edit identity, categorization, capacity, and custom availability for this resource."
+          sx={{ width: '100%', minWidth: 0, maxWidth: '100%' }}
+        >
+          <ResourceEditSectionNav
+            activeSection={activeSection}
+            organizationCustomDomain={organizationCustomDomain}
+            locationId={locationId}
+            resourceId={resource.id}
+            stickyTop={stickyTop}
+          />
         </PageHeaderPanel>
-
-        <ResourceEditSectionNav
-          activeSection={activeSection}
-          organizationCustomDomain={organizationCustomDomain}
-          locationId={locationId}
-          resourceId={resource.id}
-          stickyTop={stickyTop}
-        />
 
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 } }}>
           <Box
