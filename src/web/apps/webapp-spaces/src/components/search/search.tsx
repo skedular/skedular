@@ -11,11 +11,12 @@ type Props = {
   size?: 'small' | 'medium';
   placeholder?: string;
   defaultValue?: unknown;
+  value?: string;
   sx?: SxProps<Theme>;
   onChange?: (searchTerm: string) => void;
 };
 
-const Search = ({ size, placeholder, defaultValue, sx, onChange }: Props) => {
+const Search = ({ size, placeholder, defaultValue, value, sx, onChange }: Props) => {
   const handleChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!onChange) {
       return;
@@ -30,13 +31,14 @@ const Search = ({ size, placeholder, defaultValue, sx, onChange }: Props) => {
     <OutlinedInput
       size={size}
       placeholder={placeholder}
+      value={value}
       startAdornment={
         <StackRow sx={{ paddingRight: 1 }}>
           <SearchRoundedIcon />
           <Divider orientation="vertical" flexItem />
         </StackRow>
       }
-      onChange={debounceChanged}
+      onChange={value !== undefined ? handleChanged : debounceChanged}
       defaultValue={defaultValue}
       sx={{
         ...sx,
