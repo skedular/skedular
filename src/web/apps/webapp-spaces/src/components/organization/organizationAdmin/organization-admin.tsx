@@ -32,7 +32,7 @@ import Tabs from '@mui/material/Tabs';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useIntegratedPlatform } from '@skedular/shared';
-import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn } from '@skedular/ui';
 import NextLink from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, PropsWithChildren, useEffect, useMemo, useState } from 'react';
@@ -261,33 +261,63 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     );
   };
 
-  const renderTagsGroupsTabs = () => (
-    <StackRow
-      sx={{
-        overflowX: 'auto',
-        gap: 1,
-        p: 1,
-        border: 1,
-        borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
-        borderRadius: 4,
-        bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
-        boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : 'none'),
-      }}
-    >
-      {(['tags-setup', 'zones-setup', 'product-tags-setup'] as OrganizationAdminSection[]).map((item) => (
+  const renderTagsGroupsTabs = () => {
+    const tabs = ['tags-setup', 'zones-setup', 'product-tags-setup'] as OrganizationAdminSection[];
+
+    return isMobileAdminNav ? (
+      <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 1.5 }}>
         <Button
-          key={item}
-          component={NextLink}
-          href={sectionLinks[item]}
-          variant={activeSection === item ? 'contained' : 'outlined'}
-          color="primary"
-          sx={{ borderRadius: 999, px: 2, textTransform: 'none', whiteSpace: 'nowrap' }}
+          fullWidth
+          variant="outlined"
+          color="inherit"
+          onClick={(event) => setAdminTabsMenuAnchor(event.currentTarget)}
+          aria-haspopup="menu"
+          aria-expanded={adminTabsMenuAnchor ? 'true' : undefined}
+          aria-controls={adminTabsMenuAnchor ? 'organization-tags-groups-sections-menu' : undefined}
+          endIcon={<ExpandMoreRoundedIcon />}
+          sx={{ justifyContent: 'space-between', minHeight: 48, borderRadius: 2.5, px: 2, textTransform: 'none' }}
         >
-          {sectionLabels[item]}
+          {`Section: ${activeSection ? sectionLabels[activeSection] : sectionLabels['tags-setup']}`}
         </Button>
-      ))}
-    </StackRow>
-  );
+        <Menu anchorEl={adminTabsMenuAnchor} open={Boolean(adminTabsMenuAnchor)} onClose={() => setAdminTabsMenuAnchor(null)} id="organization-tags-groups-sections-menu">
+          {tabs.map((item) => (
+            <MenuItem key={item} component={NextLink} href={sectionLinks[item]} selected={activeSection === item} onClick={() => setAdminTabsMenuAnchor(null)}>
+              {sectionLabels[item]}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+    ) : (
+      <Tabs
+        value={activeSection ?? false}
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="Tags and groups sections"
+        sx={{ mb: -2, borderTop: 1, borderColor: 'divider', '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' } }}
+      >
+        {tabs.map((item) => (
+          <Tab
+            key={item}
+            value={item}
+            component={NextLink}
+            href={sectionLinks[item]}
+            label={sectionLabels[item]}
+            disableRipple
+            sx={{
+              minWidth: 112,
+              minHeight: 52,
+              px: 2.5,
+              textTransform: 'none',
+              color: 'text.secondary',
+              fontWeight: 500,
+              '&.Mui-selected': { color: 'primary.main', fontWeight: 600 },
+              '&:hover': { color: 'text.primary', backgroundColor: 'action.hover' },
+            }}
+          />
+        ))}
+      </Tabs>
+    );
+  };
 
   const renderOrganizationSummary = () => (
     <StackColumn sx={{ position: { md: 'sticky' }, top: { md: 16 }, alignSelf: 'flex-start' }}>
@@ -303,22 +333,69 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
     </StackColumn>
   );
 
-  const renderIntegrationTabs = () => (
-    <StackRow sx={{ overflowX: 'auto', gap: 1, p: 1, border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper' }}>
-      {(['xero-setup', 'stripe-connect-accounts-setup'] as OrganizationAdminSection[]).map((item) => (
+  const renderIntegrationTabs = () => {
+    const tabs = ['xero-setup', 'stripe-connect-accounts-setup'] as OrganizationAdminSection[];
+
+    return isMobileAdminNav ? (
+      <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 1.5 }}>
         <Button
-          key={item}
-          component={NextLink}
-          href={`${integrationsBaseLink.split('?')[0]}?tab=${item}`}
-          variant={activeSection === item ? 'contained' : 'outlined'}
-          color="primary"
-          sx={{ flexShrink: 0, borderRadius: 999, px: 2, textTransform: 'none', whiteSpace: 'nowrap' }}
+          fullWidth
+          variant="outlined"
+          color="inherit"
+          onClick={(event) => setAdminTabsMenuAnchor(event.currentTarget)}
+          aria-haspopup="menu"
+          aria-expanded={adminTabsMenuAnchor ? 'true' : undefined}
+          aria-controls={adminTabsMenuAnchor ? 'organization-integration-sections-menu' : undefined}
+          endIcon={<ExpandMoreRoundedIcon />}
+          sx={{ justifyContent: 'space-between', minHeight: 48, borderRadius: 2.5, px: 2, textTransform: 'none' }}
         >
-          {sectionLabels[item]}
+          {`Section: ${sectionLabels[activeSection as OrganizationAdminSection]}`}
         </Button>
-      ))}
-    </StackRow>
-  );
+        <Menu anchorEl={adminTabsMenuAnchor} open={Boolean(adminTabsMenuAnchor)} onClose={() => setAdminTabsMenuAnchor(null)} id="organization-integration-sections-menu">
+          {tabs.map((item) => (
+            <MenuItem
+              key={item}
+              component={NextLink}
+              href={`${integrationsBaseLink.split('?')[0]}?tab=${item}`}
+              selected={activeSection === item}
+              onClick={() => setAdminTabsMenuAnchor(null)}
+            >
+              {sectionLabels[item]}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Box>
+    ) : (
+      <Tabs
+        value={activeSection ?? false}
+        variant="scrollable"
+        scrollButtons="auto"
+        aria-label="Integration sections"
+        sx={{ mb: -2, borderTop: 1, borderColor: 'divider', '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' } }}
+      >
+        {tabs.map((item) => (
+          <Tab
+            key={item}
+            value={item}
+            component={NextLink}
+            href={`${integrationsBaseLink.split('?')[0]}?tab=${item}`}
+            label={sectionLabels[item]}
+            disableRipple
+            sx={{
+              minWidth: 112,
+              minHeight: 52,
+              px: 2.5,
+              textTransform: 'none',
+              color: 'text.secondary',
+              fontWeight: 500,
+              '&.Mui-selected': { color: 'primary.main', fontWeight: 600 },
+              '&:hover': { color: 'text.primary', backgroundColor: 'action.hover' },
+            }}
+          />
+        ))}
+      </Tabs>
+    );
+  };
 
   return (
     <Box
@@ -358,12 +435,13 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
                   ? `Editing ${sectionLabels[activeSection].toLocaleLowerCase()}.`
                   : 'Choose the area you want to configure for this marketplace organisation.'
           }
+          sx={{ width: '100%', minWidth: 0, maxWidth: '100%' }}
         >
+          {tagsGroupsMode && renderTagsGroupsTabs()}
+          {integrationsMode && activeSection && renderIntegrationTabs()}
           {!activeSection && !tagsGroupsMode && !integrationsMode && renderAdminTabs()}
         </PageHeaderPanel>
 
-        {tagsGroupsMode && renderTagsGroupsTabs()}
-        {['xero-setup', 'stripe-connect-accounts-setup'].includes(activeSection ?? '') && renderIntegrationTabs()}
         {!activeSection && !tagsGroupsMode && adminTab === 'profile' && (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
             <StackColumn spacing={1.5}>
@@ -468,7 +546,20 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain, tagsGroups
           <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />
         )}
         {activeSection === 'bank-accounts-setup' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
-        {activeSection === 'product-tags-setup' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
+        {activeSection === 'product-tags-setup' && (
+          <Box
+            sx={{
+              borderRadius: 4,
+              border: 1,
+              borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+              bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+              overflow: 'hidden',
+            }}
+          >
+            <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />
+          </Box>
+        )}
         {activeSection === 'physical-address-setup' && <OrganizationAdminPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'sso-setup' && <OrganizationAdminSsoSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'tax-details-setup' && <OrganizationAdminTaxDetailsSection organizationCustomDomain={organizationCustomDomain} />}

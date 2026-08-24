@@ -2,41 +2,105 @@ import { getOrganizationIntegrationsBaseLink } from '@/components/links';
 import OrganizationMarketplaceSetupLoader from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-loader';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useIntegratedPlatform } from '@skedular/shared';
-import { defaultPadding, PageHeaderPanel, StackColumn, StackRow } from '@skedular/ui';
+import { defaultPadding, PageHeaderPanel, StackColumn } from '@skedular/ui';
 import NextLink from 'next/link';
-import { memo, useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { memo, useState } from 'react';
 
 type Props = { organizationCustomDomain: string };
 
 const OrganizationIntegration = ({ organizationCustomDomain }: Props) => {
-  const searchParams = useSearchParams();
   const { integratedPlatform } = useIntegratedPlatform();
-  const tab = searchParams.get('tab');
-  const activeTab = useMemo(() => (tab === 'xero-setup' || tab === 'stripe-connect-accounts-setup' ? tab : 'stripe-connect-accounts-setup'), [tab]);
+  const theme = useTheme();
+  const isMobileIntegrationNav = useMediaQuery(theme.breakpoints.down('sm'), { noSsr: true });
+  const [integrationMenuAnchor, setIntegrationMenuAnchor] = useState<HTMLElement | null>(null);
   const integrationsBaseLink = getOrganizationIntegrationsBaseLink(integratedPlatform, organizationCustomDomain);
-  const tabs = ['stripe-connect-accounts-setup'] as const;
+  const tab = 'stripe-connect-accounts-setup' as const;
+  const renderIntegrationTabs = () =>
+    isMobileIntegrationNav ? (
+      <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 1.5 }}>
+        <Button
+          fullWidth
+          variant="outlined"
+          color="inherit"
+          onClick={(event) => setIntegrationMenuAnchor(event.currentTarget)}
+          aria-haspopup="menu"
+          aria-expanded={integrationMenuAnchor ? 'true' : undefined}
+          aria-controls={integrationMenuAnchor ? 'organization-integration-sections-menu' : undefined}
+          endIcon={<ExpandMoreRoundedIcon />}
+          sx={{ justifyContent: 'space-between', minHeight: 48, borderRadius: 2.5, px: 2, textTransform: 'none' }}
+        >
+          Section: Stripe
+        </Button>
+        <Menu anchorEl={integrationMenuAnchor} open={Boolean(integrationMenuAnchor)} onClose={() => setIntegrationMenuAnchor(null)} id="organization-integration-sections-menu">
+          <MenuItem component={NextLink} href={`${integrationsBaseLink.split('?')[0]}?tab=${tab}`} selected onClick={() => setIntegrationMenuAnchor(null)}>
+            Stripe
+          </MenuItem>
+        </Menu>
+      </Box>
+    ) : (
+      <Tabs value={tab} aria-label="Integration sections" sx={{ mb: -2, borderTop: 1, borderColor: 'divider', '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' } }}>
+        <Tab
+          value={tab}
+          component={NextLink}
+          href={`${integrationsBaseLink.split('?')[0]}?tab=${tab}`}
+          label="Stripe"
+          disableRipple
+          sx={{
+            minWidth: 112,
+            minHeight: 52,
+            px: 2.5,
+            textTransform: 'none',
+            color: 'text.secondary',
+            fontWeight: 500,
+            '&.Mui-selected': { color: 'primary.main', fontWeight: 600 },
+            '&:hover': { color: 'text.primary', backgroundColor: 'action.hover' },
+          }}
+        />
+      </Tabs>
+    );
 
   return (
-    <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
-      <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pt: { xs: 1, sm: 1, md: 2 }, gap: 2 }}>
-        <PageHeaderPanel eyebrow="Integrations" title="Integrations" description="Manage connections to the external systems used by this organization." />
-        <StackRow sx={{ overflowX: 'auto', gap: 1, p: 1, border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper' }}>
-          {tabs.map((item) => (
-            <Button
-              key={item}
-              component={NextLink}
-              href={`${integrationsBaseLink.split('?')[0]}?tab=${item}`}
-              variant={activeTab === item ? 'contained' : 'outlined'}
-              color="primary"
-              sx={{ flexShrink: 0, borderRadius: 999, px: 2, textTransform: 'none' }}
-            >
-              Stripe
-            </Button>
-          ))}
-        </StackRow>
-        <Box sx={{ width: '100%' }}>
+    <Box
+      sx={{
+        width: '100%',
+        maxWidth: '100vw',
+        minWidth: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        overflowX: 'hidden',
+        boxSizing: 'border-box',
+        px: { xs: 0, sm: 1, md: 2 },
+        pb: defaultPadding,
+      }}
+    >
+      <StackColumn sx={{ width: '100%', maxWidth: 1200, minWidth: 0, mx: 'auto', overflowX: 'hidden', pt: { xs: 1, sm: 1, md: 2 }, gap: 2 }}>
+        <PageHeaderPanel
+          eyebrow="Integrations"
+          title="Integrations"
+          description="Manage connections to the external systems used by this organization."
+          sx={{ width: '100%', minWidth: 0, maxWidth: '100%' }}
+        >
+          {renderIntegrationTabs()}
+        </PageHeaderPanel>
+        <Box
+          sx={{
+            width: '100%',
+            borderRadius: 4,
+            border: 1,
+            borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
+            bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+            boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+            overflow: 'hidden',
+          }}
+        >
           <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />
         </Box>
       </StackColumn>

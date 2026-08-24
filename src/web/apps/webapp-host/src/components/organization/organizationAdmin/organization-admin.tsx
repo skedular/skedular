@@ -16,7 +16,7 @@ import Tabs from '@mui/material/Tabs';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useIntegratedPlatform } from '@skedular/shared';
-import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, defaultPadding, LeadIconTypography, PageHeaderPanel, StackColumn } from '@skedular/ui';
 import NextLink from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, PropsWithChildren, useEffect, useMemo, useState } from 'react';
@@ -209,19 +209,56 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
     );
   };
 
-  const renderIntegrationTabs = () => (
-    <StackRow sx={{ overflowX: 'auto', gap: 1, p: 1, border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper' }}>
-      <Button
-        component={NextLink}
-        href={`${integrationsBaseLink.split('?')[0]}?tab=stripe-connect-accounts-setup`}
-        variant="contained"
-        color="primary"
-        sx={{ flexShrink: 0, borderRadius: 999, px: 2, textTransform: 'none', whiteSpace: 'nowrap' }}
+  const renderIntegrationTabs = () => {
+    const tab = 'stripe-connect-accounts-setup' as OrganizationAdminSection;
+
+    return isMobileAdminNav ? (
+      <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 1.5 }}>
+        <Button
+          fullWidth
+          variant="outlined"
+          color="inherit"
+          onClick={(event) => setAdminTabsMenuAnchor(event.currentTarget)}
+          aria-haspopup="menu"
+          aria-expanded={adminTabsMenuAnchor ? 'true' : undefined}
+          aria-controls={adminTabsMenuAnchor ? 'organization-integration-sections-menu' : undefined}
+          endIcon={<ExpandMoreRoundedIcon />}
+          sx={{ justifyContent: 'space-between', minHeight: 48, borderRadius: 2.5, px: 2, textTransform: 'none' }}
+        >
+          {`Section: ${sectionLabels[tab]}`}
+        </Button>
+        <Menu anchorEl={adminTabsMenuAnchor} open={Boolean(adminTabsMenuAnchor)} onClose={() => setAdminTabsMenuAnchor(null)} id="organization-integration-sections-menu">
+          <MenuItem component={NextLink} href={`${integrationsBaseLink.split('?')[0]}?tab=${tab}`} selected={activeSection === tab} onClick={() => setAdminTabsMenuAnchor(null)}>
+            {sectionLabels[tab]}
+          </MenuItem>
+        </Menu>
+      </Box>
+    ) : (
+      <Tabs
+        value={activeSection ?? false}
+        aria-label="Integration sections"
+        sx={{ mb: -2, borderTop: 1, borderColor: 'divider', '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' } }}
       >
-        {sectionLabels['stripe-connect-accounts-setup']}
-      </Button>
-    </StackRow>
-  );
+        <Tab
+          value={tab}
+          component={NextLink}
+          href={`${integrationsBaseLink.split('?')[0]}?tab=${tab}`}
+          label={sectionLabels[tab]}
+          disableRipple
+          sx={{
+            minWidth: 112,
+            minHeight: 52,
+            px: 2.5,
+            textTransform: 'none',
+            color: 'text.secondary',
+            fontWeight: 500,
+            '&.Mui-selected': { color: 'primary.main', fontWeight: 600 },
+            '&:hover': { color: 'text.primary', backgroundColor: 'action.hover' },
+          }}
+        />
+      </Tabs>
+    );
+  };
 
   return (
     <Box
@@ -260,10 +297,10 @@ const OrganizationAdmin = ({ rootDataRelay, organizationCustomDomain }: Props) =
                 : 'Choose the area you want to configure for this Host organization.'
           }
         >
+          {integrationsMode && activeSection && renderIntegrationTabs()}
           {!activeSection && !integrationsMode && renderAdminTabs()}
         </PageHeaderPanel>
 
-        {activeSection === 'stripe-connect-accounts-setup' && renderIntegrationTabs()}
         {!activeSection && adminTab === 'profile' && (
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'minmax(0, 1fr) 300px' }, gap: { xs: 2, md: 3 }, alignItems: 'start' }}>
             <StackColumn spacing={1.5}>
