@@ -126,7 +126,9 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
   const subscriptionPresentation = getSpacesSubscriptionPresentation(spacesSubscription);
   const isPlanManagementRoute =
     pathName.endsWith('/settings') &&
-    ((searchParams.get('section') === 'setup' && searchParams.get('profileSection') === 'plan') || searchParams.get('section') === 'subscriptions');
+    ((searchParams.get('section') === 'setup' && searchParams.get('profileSection') === 'plan') ||
+      searchParams.get('section') === 'subscriptions' ||
+      searchParams.get('section') === 'plan');
   const canRenderProduct = !subscriptionPresentation.blocksProduct || isPlanManagementRoute;
 
   return (
