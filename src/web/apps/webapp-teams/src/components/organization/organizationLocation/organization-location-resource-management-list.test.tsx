@@ -15,7 +15,8 @@ vi.mock('@/components/zone', () => ({
 }));
 
 describe('OrganizationLocationResourceManagementList', () => {
-  it('renders a compact resource row and expands details on demand', () => {
+  it('renders a compact resource row without an inline accordion', () => {
+    const onOpenResource = vi.fn();
     render(
       <OrganizationLocationResourceManagementList
         items={[
@@ -32,7 +33,7 @@ describe('OrganizationLocationResourceManagementList', () => {
         ]}
         selectedIds={[]}
         onToggleSelected={vi.fn()}
-        onOpenResource={vi.fn()}
+        onOpenResource={onOpenResource}
         onOpenMoreActions={vi.fn()}
         onDeactivateSelected={vi.fn()}
         onActivateSelected={vi.fn()}
@@ -41,13 +42,13 @@ describe('OrganizationLocationResourceManagementList', () => {
     );
 
     expect(screen.getByText('Desk A1')).toBeInTheDocument();
-    expect(screen.getByText('Capacity 1')).toBeInTheDocument();
-    expect(screen.getByText('North Wing')).toBeInTheDocument();
-    expect(screen.getByText('Quiet')).toBeInTheDocument();
+    expect(screen.getAllByText('1 person')).not.toHaveLength(0);
+    expect(screen.getAllByText('North Wing')).not.toHaveLength(0);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Details' }));
-
-    expect(screen.getByText('Hide details')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Desk A1'));
+    expect(onOpenResource).toHaveBeenCalledWith('resource-1');
+    expect(screen.queryByRole('button', { name: 'View' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Details' })).not.toBeInTheDocument();
   });
 
   it('shows bulk actions when resources are selected', () => {

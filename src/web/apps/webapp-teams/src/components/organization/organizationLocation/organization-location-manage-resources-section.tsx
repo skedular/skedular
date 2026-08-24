@@ -14,9 +14,13 @@ import type { organizationLocationManageResourcesSection_deleteResourcesMutation
 import type { organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocationManageResourcesSection_removeCustomerPreferredResourceMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
-import { defaultPadding, LeadIconTypography, PushToRight, SettingsSectionCard, StackColumn, StackRow } from '@skedular/ui';
-import { useRouter } from 'next/navigation';
+import { defaultPadding, LeadIconTypography, PushToRight, SettingsSectionCard, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, useContext, useMemo, useState } from 'react';
 import { graphql, useLazyLoadQuery, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -70,6 +74,10 @@ const ResourcesSectionQuery = graphql`
     $resourceNameSearchText: String
     $resourceZoneIds: [String!]
     $resourceCustomTagIds: [String!]
+    $resourcesFirst: Int
+    $resourcesAfter: String
+    $resourcesLast: Int
+    $resourcesBefore: String
     $zonesSortingValues: [OrganizationTagOrderInput!]
     $customTagsSortingValues: [OrganizationTagOrderInput!]
     $resourcesSortingValues: [ResourceOrderInput!]
@@ -81,8 +89,22 @@ const ResourcesSectionQuery = graphql`
       }
     }
     location(id: $locationId) {
-      resources(where: { nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds }, orderBy: $resourcesSortingValues) {
+      resources(
+        first: $resourcesFirst
+        after: $resourcesAfter
+        last: $resourcesLast
+        before: $resourcesBefore
+        where: { nameContains: $resourceNameSearchText, customTagIds: $resourceCustomTagIds, zoneIds: $resourceZoneIds }
+        orderBy: $resourcesSortingValues
+      ) {
         __id
+        totalCount
+        pageInfo {
+          endCursor
+          startCursor
+          hasNextPage
+          hasPreviousPage
+        }
         edges {
           node {
             id
@@ -118,11 +140,17 @@ const ResourcesSectionQuery = graphql`
 const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, locationId }: Props) => {
   const { integratedPlatform } = useIntegratedPlatform();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const [resourceNameSearchText, setResourceNameSearchText] = useState('');
+  const resourceNameSearchText = searchParams.get('resourceSearch') ?? '';
   const [resourceCustomTagIds, setResourceCustomTagIds] = useState<string[]>([]);
   const [resourceZoneIds, setResourceZoneIds] = useState<string[]>([]);
+  const [resourcePageSize, setResourcePageSize] = useState(25);
+  const [resourceAfter, setResourceAfter] = useState<string | null>(null);
+  const [resourceBefore, setResourceBefore] = useState<string | null>(null);
+  const [resourcePage, setResourcePage] = useState(1);
   const [selectedResourceId, setSelectedResourceId] = useState<null | string>(null);
   const [selectedResourceIds, setSelectedResourceIds] = useState<string[]>([]);
   const [resourceMoreActionsAnchorEl, setResourceMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
@@ -136,6 +164,10 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
       resourceNameSearchText,
       resourceCustomTagIds,
       resourceZoneIds,
+      resourcesFirst: resourceBefore ? null : resourcePageSize,
+      resourcesAfter: resourceAfter,
+      resourcesLast: resourceBefore ? resourcePageSize : null,
+      resourcesBefore: resourceBefore,
       zonesSortingValues: [
         {
           direction: 'ASCENDING',
@@ -215,8 +247,23 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
     }
   `);
 
-  const resources = useMemo(() => (rootData.location ? rootData.location.resources.edges.map(({ node }) => node) : []), [rootData.location]);
+  const currentPageResources = useMemo(() => (rootData.location ? rootData.location.resources.edges.map(({ node }) => node) : []), [rootData.location]);
+  const resources = currentPageResources;
   const resourcesConnectionIds = useMemo(() => (rootData.location ? [rootData.location.resources.__id] : []), [rootData.location]);
+  const hasMoreResources = rootData.location?.resources.pageInfo.hasNextPage ?? false;
+  const hasPreviousResources = rootData.location?.resources.pageInfo.hasPreviousPage ?? false;
+  const resourceEndCursor = rootData.location?.resources.pageInfo.endCursor ?? null;
+  const resourceStartCursor = rootData.location?.resources.pageInfo.startCursor ?? null;
+  const resourceTotalCount = rootData.location?.resources.totalCount ?? 0;
+  const resourceTotalPages = Math.max(1, Math.ceil(resourceTotalCount / resourcePageSize));
+  const resourceRangeStart = resourceTotalCount === 0 ? 0 : (resourcePage - 1) * resourcePageSize + 1;
+  const resourceRangeEnd = Math.min(resourcePage * resourcePageSize, resourceTotalCount);
+
+  const resetResourcePagination = () => {
+    setResourceAfter(null);
+    setResourceBefore(null);
+    setResourcePage(1);
+  };
 
   const resourceItems: ResourceManagementItem[] = resources.map((resource) => ({
     id: resource.id,
@@ -260,15 +307,50 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
   }, [selectedResourceItem]);
 
   const handleResourceNameSearchTextChange = (value: string) => {
-    setResourceNameSearchText(value);
+    resetResourcePagination();
+    const nextSearchParams = new URLSearchParams(searchParams.toString());
+    if (value) {
+      nextSearchParams.set('resourceSearch', value);
+    } else {
+      nextSearchParams.delete('resourceSearch');
+    }
+
+    router.replace(`${pathname}?${nextSearchParams.toString()}`, { scroll: false });
   };
 
   const handleResourceCustomTagChanged = (id?: string) => {
+    resetResourcePagination();
     setResourceCustomTagIds(id ? [id] : []);
   };
 
   const handleResourceZoneTypeChanged = (id?: string) => {
+    resetResourcePagination();
     setResourceZoneIds(id ? [id] : []);
+  };
+
+  const handleResourcePageSizeChanged = (value: number) => {
+    resetResourcePagination();
+    setResourcePageSize(value);
+  };
+
+  const handleNextResourcePage = () => {
+    if (!resourceEndCursor || !hasMoreResources) {
+      return;
+    }
+
+    setResourceAfter(resourceEndCursor);
+    setResourceBefore(null);
+    setResourcePage((current) => current + 1);
+  };
+
+  const handlePreviousResourcePage = () => {
+    if (!resourceStartCursor || !hasPreviousResources) {
+      return;
+    }
+
+    setResourceBefore(resourceStartCursor);
+    setResourceAfter(null);
+    setResourcePage((current) => Math.max(1, current - 1));
   };
 
   const handleDeactivateResourcesClick = (ids: string[]) => {
@@ -476,7 +558,7 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
               <ZoneSelector rootDataRelay={rootData} onChange={handleResourceZoneTypeChanged} />
               <CustomTagSelector rootDataRelay={rootData} onChange={handleResourceCustomTagChanged} />
               <PushToRight />
-              <Search size="small" placeholder="Search for resources" defaultValue={resourceNameSearchText} onChange={handleResourceNameSearchTextChange} />
+              <Search size="small" placeholder="Search for resources" value={resourceNameSearchText} onChange={handleResourceNameSearchTextChange} />
             </StackRow>
 
             <OrganizationLocationResourceManagementList
@@ -501,6 +583,52 @@ const OrganizationLocationManageResourcesSection = ({ organizationCustomDomain, 
               onActivateSelected={(ids) => handleActivateResourcesClick(ids)}
               onDeleteSelected={(ids) => handleDeleteResourcesClick(ids)}
             />
+            <StackRow
+              sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: 1.5,
+                flexWrap: 'wrap',
+                borderTop: 1,
+                borderColor: 'divider',
+                pt: 1.5,
+              }}
+            >
+              <SmallIconTypography label={`Showing ${resourceRangeStart}–${resourceRangeEnd} of ${resourceTotalCount}`} />
+              <FormControl size="small" sx={{ minWidth: 118 }}>
+                <InputLabel id="resource-page-size-label">Rows</InputLabel>
+                <Select labelId="resource-page-size-label" label="Rows" value={resourcePageSize} onChange={(event) => handleResourcePageSizeChanged(Number(event.target.value))}>
+                  {[25, 50, 100].map((size) => (
+                    <MenuItem key={size} value={size}>
+                      {size}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <StackRow sx={{ alignItems: 'center', gap: 0.25 }}>
+                <Button
+                  variant="text"
+                  size="small"
+                  disabled={!hasPreviousResources}
+                  onClick={handlePreviousResourcePage}
+                  aria-label="Previous page"
+                  sx={{ minWidth: 32, px: 0.75, fontSize: '1.25rem', lineHeight: 1 }}
+                >
+                  ‹
+                </Button>
+                <SmallIconTypography label={`${resourcePage} / ${resourceTotalPages}`} sx={{ minWidth: 42, textAlign: 'center', fontWeight: 700 }} />
+                <Button
+                  variant="text"
+                  size="small"
+                  disabled={!hasMoreResources}
+                  onClick={handleNextResourcePage}
+                  aria-label="Next page"
+                  sx={{ minWidth: 32, px: 0.75, fontSize: '1.25rem', lineHeight: 1 }}
+                >
+                  ›
+                </Button>
+              </StackRow>
+            </StackRow>
           </StackColumn>
         </SettingsSectionCard>
       </Box>

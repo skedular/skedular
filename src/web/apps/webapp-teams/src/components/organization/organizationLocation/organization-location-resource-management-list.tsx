@@ -1,26 +1,14 @@
-import { CustomTags } from '@/components/customTag';
+import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
 import { ResourceType } from '@/components/resourceType';
 import { Zones } from '@/components/zone';
+import { compactManagementIconButtonSx, defaultGridActionPadding } from '@skedular/ui';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
-import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
-import {
-  BodyIconTypography,
-  compactManagementActionButtonSx,
-  compactManagementIconButtonSx,
-  compactManagementNeutralChipSx,
-  compactManagementWarningChipSx,
-  defaultGridActionPadding,
-  LeadIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-} from '@skedular/ui';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 
 export type ResourceManagementListItem = {
   id: string;
@@ -66,12 +54,6 @@ const OrganizationLocationResourceManagementList = ({
   onActivateSelected,
   onDeleteSelected,
 }: Props) => {
-  const [expandedIds, setExpandedIds] = useState<string[]>([]);
-
-  const handleToggleExpanded = (resourceId: string) => {
-    setExpandedIds((current) => (current.includes(resourceId) ? current.filter((id) => id !== resourceId) : current.concat(resourceId)));
-  };
-
   if (items.length === 0) {
     return (
       <Box
@@ -91,7 +73,7 @@ const OrganizationLocationResourceManagementList = ({
   }
 
   return (
-    <StackColumn spacing={1.5}>
+    <StackColumn spacing={0}>
       {selectedIds.length > 0 && (
         <Box
           sx={{
@@ -118,101 +100,109 @@ const OrganizationLocationResourceManagementList = ({
         </Box>
       )}
 
+      <Box
+        sx={{
+          display: { xs: 'none', lg: 'grid' },
+          gridTemplateColumns: '40px minmax(180px, 1.4fr) 100px 80px minmax(180px, 1fr) 40px',
+          gap: 1,
+          alignItems: 'center',
+          px: 0.5,
+          py: 0.75,
+          color: 'text.secondary',
+          typography: 'caption',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.04em',
+        }}
+      >
+        <Box />
+        <Box>Name</Box>
+        <Box>Capacity</Box>
+        <Box>Type</Box>
+        <Box>Zone</Box>
+        <Box />
+      </Box>
+
       {items.map((item) => {
         const isSelected = selectedIds.includes(item.id);
-        const isExpanded = expandedIds.includes(item.id);
-        const hasMetadata = item.zones.length > 0 || item.customTags.length > 0;
 
         return (
           <Box
             key={item.id}
+            role="button"
+            tabIndex={0}
+            onClick={() => onOpenResource(item.id)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                onOpenResource(item.id);
+              }
+            }}
             sx={{
-              border: 1,
-              borderColor: isSelected ? 'primary.main' : 'divider',
-              borderRadius: 2.5,
-              px: 1,
-              py: 0.75,
+              borderBottom: 1,
+              borderColor: 'divider',
+              px: 0.5,
+              py: 1,
               backgroundColor: isSelected ? 'action.selected' : 'background.paper',
-              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 2px 10px rgba(15, 23, 42, 0.04)' : theme.shadows[1]),
+              '&:last-child': { borderBottom: 0 },
+              '&:hover': { backgroundColor: isSelected ? 'action.selected' : 'action.hover' },
+              '&:focus-visible': { outline: '2px solid', outlineColor: 'primary.main', outlineOffset: -2 },
             }}
           >
             <StackColumn spacing={1}>
-              <StackRow sx={{ alignItems: 'center', gap: 1, flexWrap: 'nowrap', minWidth: 0 }}>
-                <Checkbox checked={isSelected} onChange={() => onToggleSelected(item.id)} slotProps={{ input: { 'aria-label': `Select ${item.resourceName}` } }} />
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '40px minmax(0, 1fr) auto', lg: '40px minmax(180px, 1.4fr) 100px 80px minmax(180px, 1fr) 40px' },
+                  gap: 1,
+                  alignItems: 'center',
+                  minWidth: 0,
+                }}
+              >
+                <Checkbox
+                  checked={isSelected}
+                  onClick={(event) => event.stopPropagation()}
+                  onChange={() => onToggleSelected(item.id)}
+                  slotProps={{ input: { 'aria-label': `Select ${item.resourceName}` } }}
+                />
 
-                <StackRow sx={{ gap: 0.75, alignItems: 'center', flex: '1 1 auto', minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                  <Box sx={{ minWidth: 0, maxWidth: 220, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <StackRow sx={{ gap: 0.75, minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                  {item.isActive ? (
+                    <Box component="span" sx={{ width: 8, height: 8, flex: '0 0 auto', borderRadius: '50%', bgcolor: 'success.main' }} />
+                  ) : (
+                    <Box component="span" sx={{ width: 8, height: 8, flex: '0 0 auto', borderRadius: '50%', bgcolor: 'text.disabled' }} />
+                  )}
+                  <Box sx={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     <LeadIconTypography label={item.resourceName} />
                   </Box>
+                </StackRow>
+
+                <Chip size="small" label={`${item.capacity} ${item.capacity === 1 ? 'person' : 'people'}`} sx={{ display: { xs: 'none', lg: 'inline-flex' } }} />
+
+                <Box sx={{ display: { xs: 'none', lg: 'block' }, minWidth: 0, overflow: 'hidden' }}>
                   <ResourceType resourceType={item.resourceType} showFullName />
-                  {hasMetadata && (
-                    <>
-                      {item.zones.length > 0 && <Zones zones={item.zones} hideIcon hideNAText />}
-                      {item.customTags.length > 0 && <CustomTags customTags={item.customTags} hideIcon hideNAText />}
-                    </>
-                  )}
-                </StackRow>
-
-                <StackRow sx={{ gap: 0.75, ml: 'auto', alignItems: 'center', flexWrap: 'nowrap', flexShrink: 0 }}>
-                  <Chip size="small" label={`Capacity ${item.capacity}`} />
-                  {item.isActive ? (
-                    <Chip size="small" label="Active" sx={compactManagementNeutralChipSx} />
-                  ) : (
-                    <Chip size="small" label="Inactive" sx={compactManagementWarningChipSx} />
-                  )}
-                  <Button variant="text" onClick={() => onOpenResource(item.id)} sx={compactManagementActionButtonSx}>
-                    Open
-                  </Button>
-                  <Button variant="text" onClick={() => handleToggleExpanded(item.id)} sx={compactManagementActionButtonSx}>
-                    {isExpanded ? 'Hide details' : 'Details'}
-                  </Button>
-                  <IconButton
-                    onClick={(event: React.MouseEvent<HTMLElement>) => {
-                      onOpenMoreActions(item.id, event.currentTarget);
-                    }}
-                    aria-label={`More actions for ${item.resourceName}`}
-                    sx={compactManagementIconButtonSx}
-                  >
-                    <EllipseMenuIcon />
-                  </IconButton>
-                </StackRow>
-              </StackRow>
-
-              <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', lg: 'repeat(3, minmax(0, 1fr))' },
-                    gap: 1.25,
-                    pt: 0.5,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      borderRadius: 2,
-                      border: 1,
-                      borderColor: 'divider',
-                      p: 1.25,
-                      backgroundColor: 'background.default',
-                    }}
-                  >
-                    <BodyIconTypography label="Zones" />
-                    <Zones zones={item.zones} hideIcon hideNAText={false} sx={{ pt: 1 }} />
-                  </Box>
-                  <Box
-                    sx={{
-                      borderRadius: 2,
-                      border: 1,
-                      borderColor: 'divider',
-                      p: 1.25,
-                      backgroundColor: 'background.default',
-                    }}
-                  >
-                    <BodyIconTypography label="Custom tags" />
-                    <CustomTags customTags={item.customTags} hideIcon hideNAText={false} sx={{ pt: 1 }} />
-                  </Box>
                 </Box>
-              </Collapse>
+                <StackRow sx={{ display: { xs: 'none', lg: 'flex' }, gap: 0.5, minWidth: 0, overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                  {item.zones.length > 0 ? <Zones zones={item.zones} hideIcon hideNAText /> : <SmallIconTypography label="—" />}
+                </StackRow>
+
+                <IconButton
+                  onClick={(event: React.MouseEvent<HTMLElement>) => {
+                    event.stopPropagation();
+                    onOpenMoreActions(item.id, event.currentTarget);
+                  }}
+                  aria-label={`More actions for ${item.resourceName}`}
+                  sx={compactManagementIconButtonSx}
+                >
+                  <EllipseMenuIcon />
+                </IconButton>
+
+                <StackRow sx={{ gridColumn: '2 / -1', display: { xs: 'flex', lg: 'none' }, gap: 0.5, flexWrap: 'wrap' }}>
+                  <ResourceType resourceType={item.resourceType} showFullName />
+                  {item.zones.length > 0 && <Zones zones={item.zones} hideIcon hideNAText />}
+                  <Chip size="small" label={`${item.capacity} ${item.capacity === 1 ? 'person' : 'people'}`} />
+                </StackRow>
+              </Box>
             </StackColumn>
           </Box>
         );
