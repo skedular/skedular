@@ -26,7 +26,7 @@ public class SetOrganizationPaymentMethodAsyncShould
             Id = "org-1",
             CustomDomain = "acme",
         };
-        const string redirectTo = "https://app.example.test/organizations/acme/admin?tab=profile&section=plan";
+        const string redirectTo = "https://app.example.test/organizations/acme/settings?tab=profile&section=plan";
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(organization.Id, null, environment.CancellationTokenSource.Token))
@@ -35,7 +35,7 @@ public class SetOrganizationPaymentMethodAsyncShould
         var result = await environment.RunAsync(() => sut.SetOrganizationPaymentMethodAsync(
             new SetOrganizationPaymentMethodInput(organization.Id, "seti-1", "failed", redirectTo)));
 
-        result.ShouldBe("https://app.example.test/organizations/acme/admin?tab=profile&section=plan&add-payment-method-status=failed");
+        result.ShouldBe("https://app.example.test/organizations/acme/settings?tab=profile&section=plan&add-payment-method-status=failed");
         A.CallTo(() => repositoryFactory.OrganizationStripePaymentMethodRepository).MustNotHaveHappened();
     }
 
@@ -62,7 +62,7 @@ public class SetOrganizationPaymentMethodAsyncShould
             Id = "org-1",
             CustomDomain = "acme",
         };
-        const string redirectTo = "https://app.example.test/organizations/acme/admin?tab=profile&section=plan";
+        const string redirectTo = "https://app.example.test/organizations/acme/settings?tab=profile&section=plan";
         var setupIntent = new SetupIntent
         {
             PaymentMethodId = "pm-1",
@@ -87,7 +87,7 @@ public class SetOrganizationPaymentMethodAsyncShould
         var result = await environment.RunAsync(() => sut.SetOrganizationPaymentMethodAsync(
             new SetOrganizationPaymentMethodInput(organization.Id, setupIntent.Id, "succeeded", redirectTo)));
 
-        result.ShouldBe("https://app.example.test/organizations/acme/admin?tab=profile&section=plan&add-payment-method-status=added");
+        result.ShouldBe("https://app.example.test/organizations/acme/settings?tab=profile&section=plan&add-payment-method-status=added");
         A.CallTo(() => organizationStripePaymentMethodRepository.Add(mappedPaymentMethod)).MustHaveHappenedOnceExactly();
     }
 }

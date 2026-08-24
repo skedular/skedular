@@ -1,6 +1,6 @@
-import { getOrganizationAdminCustomTagsBaseLink, getOrganizationAdminZonesBaseLink } from '@/components/links';
-import OrganizationAdminTagsSection from '@/components/organization/organizationAdmin/organization-admin-tags-section';
-import OrganizationAdminZonesSection from '@/components/organization/organizationAdmin/organization-admin-zones-section';
+import { getOrganizationSettingsCustomTagsBaseLink, getOrganizationSettingsZonesBaseLink } from '@/components/links';
+import OrganizationSettingsTagsSection from '@/components/organization/organizationSettings/organization-settings-tags-section';
+import OrganizationSettingsZonesSection from '@/components/organization/organizationSettings/organization-settings-zones-section';
 import type { organizationTagsGroups_query$key } from '@/queries/__generated__/organizationTagsGroups_query.graphql';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import Box from '@mui/material/Box';
@@ -37,8 +37,8 @@ const OrganizationTagsGroups = ({ rootDataRelay, organizationCustomDomain }: Pro
   const activeSection = requestedSection && sections.includes(requestedSection) ? requestedSection : 'tags-setup';
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const links: Record<Section, string> = {
-    'tags-setup': getOrganizationAdminCustomTagsBaseLink(integratedPlatform, organizationCustomDomain),
-    'zones-setup': getOrganizationAdminZonesBaseLink(integratedPlatform, organizationCustomDomain),
+    'tags-setup': getOrganizationSettingsCustomTagsBaseLink(integratedPlatform, organizationCustomDomain),
+    'zones-setup': getOrganizationSettingsZonesBaseLink(integratedPlatform, organizationCustomDomain),
   };
   return (
     <Box sx={{ width: '100%', maxWidth: '100vw', px: { xs: 0, sm: 1, md: 2 }, pb: defaultPadding }}>
@@ -73,8 +73,8 @@ const OrganizationTagsGroups = ({ rootDataRelay, organizationCustomDomain }: Pro
             ))}
           </Tabs>
         </PageHeaderPanel>
-        {activeSection === 'tags-setup' && <OrganizationAdminTagsSection organizationCustomDomain={organizationCustomDomain} />}
-        {activeSection === 'zones-setup' && <OrganizationAdminZonesSection organizationCustomDomain={organizationCustomDomain} />}
+        {activeSection === 'tags-setup' && <OrganizationSettingsTagsSection organizationCustomDomain={organizationCustomDomain} />}
+        {activeSection === 'zones-setup' && <OrganizationSettingsZonesSection organizationCustomDomain={organizationCustomDomain} />}
       </StackColumn>
     </Box>
   );

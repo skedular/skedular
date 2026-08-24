@@ -12,14 +12,14 @@ import {
   UpgradeIcon,
 } from '@/components/icons';
 import {
-  getOrganizationAdminBaseLink,
-  getOrganizationAdminSubscriptionsBaseLink,
+  getOrganizationSettingsBaseLink,
+  getOrganizationSettingsSubscriptionsBaseLink,
   getOrganizationAnalyticsBaseLink,
   getOrganizationAvailabilityDashboardBaseLink,
   getOrganizationBaseLink,
   getOrganizationBookingsBaseLink,
   getOrganizationLocationsBaseLink,
-  getOrganizationAdminCustomTagsBaseLink,
+  getOrganizationSettingsCustomTagsBaseLink,
   getOrganizationTeamsBaseLink,
   getOrganizationUsersBaseLink,
 } from '@/components/links';
@@ -147,8 +147,8 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationAnalyticsPath = organizationAnalyticsSetupBaseLink.split('?')[0];
   const organizationAvailabilityDashboardBaseLink = getOrganizationAvailabilityDashboardBaseLink(integratedPlatform, rootData.organization.customDomain!);
-  const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, rootData.organization.customDomain!);
-  const organizationTagsGroupsBaseLink = getOrganizationAdminCustomTagsBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationSettingsBaseLink = getOrganizationSettingsBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationTagsGroupsBaseLink = getOrganizationSettingsCustomTagsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationTagsGroupsPath = organizationTagsGroupsBaseLink.split('?')[0];
 
   return (
@@ -345,23 +345,23 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
 
           {rootData.organization.canModify && (
             <ListItem disablePadding>
-              <Link component={NextLink} href={organizationAdminBaseLink}>
+              <Link component={NextLink} href={organizationSettingsBaseLink}>
                 <ListItemButton
-                  selected={pathName.startsWith(organizationAdminBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAdminBaseLink)) }}
+                  selected={pathName.startsWith(organizationSettingsBaseLink)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationSettingsBaseLink)) }}
                 >
                   {collapsed && (
                     <BodyIconTypography
                       startElement={!hideIcons && <SettingsIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
+                      invertDefaultColor={pathName.startsWith(organizationSettingsBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                   {!collapsed && (
                     <BodyIconTypography
-                      label="Admin"
+                      label="Settings"
                       startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
                       spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
+                      invertDefaultColor={pathName.startsWith(organizationSettingsBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                 </ListItemButton>
@@ -404,7 +404,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
               {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
                 <Button
-                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatform, rootData.organization.customDomain!)}
+                  href={getOrganizationSettingsSubscriptionsBaseLink(integratedPlatform, rootData.organization.customDomain!)}
                   variant="contained"
                   color="secondary"
                   sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}

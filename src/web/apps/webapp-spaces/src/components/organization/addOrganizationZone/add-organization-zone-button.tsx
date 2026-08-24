@@ -1,5 +1,5 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
-import { getOrganizationAdminAddZoneBaseLink } from '@/components/links';
+import { getOrganizationSettingsAddZoneBaseLink } from '@/components/links';
 import { NewIcon } from '@/components/icons';
 import Button from '@mui/material/Button';
 import { useIntegratedPlatform } from '@skedular/shared';
@@ -24,7 +24,7 @@ const AddOrganizationZoneButton = ({ organizationCustomDomain, fullWidth, label,
   const href = useMemo(() => {
     const currentQuery = searchParams.toString();
     const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
-    return getOrganizationAdminAddZoneBaseLink(integratedPlatform, organizationCustomDomain, { redirectUrl });
+    return getOrganizationSettingsAddZoneBaseLink(integratedPlatform, organizationCustomDomain, { redirectUrl });
   }, [integratedPlatform, organizationCustomDomain, pathname, searchParams]);
 
   return (

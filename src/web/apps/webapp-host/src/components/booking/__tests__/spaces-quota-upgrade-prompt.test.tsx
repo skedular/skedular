@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { usePreloadedQuery } from 'react-relay';
-import { SpacesQuotaStatusInner } from '@/components/organization/organizationAdmin/organization-spaces-quota-status';
+import { SpacesQuotaStatusInner } from '@/components/organization/organizationSettings/organization-spaces-quota-status';
 import { SpacesQuotaUpgradePrompt } from '../spaces-quota-upgrade-prompt';
 
 vi.mock('react-relay', () => ({

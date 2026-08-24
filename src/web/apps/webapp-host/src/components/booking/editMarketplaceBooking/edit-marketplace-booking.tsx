@@ -790,7 +790,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, onReloadR
                   <StackColumn key={modification.id} spacing={0.25} sx={{ mb: 1.5 }}>
                     <BodyIconTypography label={`${toShortDate(modification.originalFrom)} → ${toShortDate(modification.resultFrom)}`} />
                     <SmallIconTypography
-                      label={`${toShortDate(modification.occurredAt)} · ${modification.actorKind === 'ORGANIZATION_OPERATOR' ? 'Organization administrator' : 'Customer'}`}
+                      label={`${toShortDate(modification.occurredAt)} · ${modification.actorKind === 'ORGANIZATION_OPERATOR' ? 'Organization settingsistrator' : 'Customer'}`}
                       sx={{ opacity: 0.72 }}
                     />
                     {modification.reason ? <SmallIconTypography label={modification.reason} sx={{ opacity: 0.82 }} /> : null}

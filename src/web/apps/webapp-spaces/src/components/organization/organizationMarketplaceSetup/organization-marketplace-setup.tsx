@@ -1,12 +1,12 @@
 import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
 import { BillingIcon, DeleteIcon } from '@/components/icons';
-import { getOrganizationAdminEditProductTagBaseLink, getOrganizationBankAccountBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
+import { getOrganizationSettingsEditProductTagBaseLink, getOrganizationBankAccountBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { SingleChoiceOrganizationBillingCycle, SingleChoiceOrganizationXeroBillingMode } from '@/components/organization';
 import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
-import OrganizationAdminTagManagementList from '@/components/organization/organizationAdmin/organization-admin-tag-management-list';
+import OrganizationSettingsTagManagementList from '@/components/organization/organizationSettings/organization-settings-tag-management-list';
 import OrganizationMarketplaceBankAccountManagementList from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-bank-account-management-list';
 import OrganizationMarketplaceSetupSectionNav, {
   OrganizationMarketplaceSetupSection,
@@ -733,7 +733,7 @@ const OrganizationMarketplaceSetup = ({
         if (selectedProductTagId) {
           const currentQuery = searchParams.toString();
           const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
-          router.push(getOrganizationAdminEditProductTagBaseLink(integratedPlatform, organizationCustomDomain, selectedProductTagId, { redirectUrl }));
+          router.push(getOrganizationSettingsEditProductTagBaseLink(integratedPlatform, organizationCustomDomain, selectedProductTagId, { redirectUrl }));
         }
         break;
 
@@ -1675,7 +1675,7 @@ const OrganizationMarketplaceSetup = ({
               </StackColumn>
             )}
 
-            <OrganizationAdminTagManagementList
+            <OrganizationSettingsTagManagementList
               items={productTagItems}
               emptyTitle="No booking groups found"
               emptyDescription="Adjust the search or add a new booking group for this organization."

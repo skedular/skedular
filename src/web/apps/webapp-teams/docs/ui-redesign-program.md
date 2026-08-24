@@ -176,7 +176,7 @@ Current recommendation:
 1. Product add/edit
 1. Location add/edit
 1. Resource add/edit
-1. Organization settings/admin
+1. Organization settings/settings
 
 ### Phase 4: Operations
 
@@ -301,7 +301,7 @@ These patterns should be designed once and reused many times:
     - `EditorActionBar`
   - keep the top section nav route-backed and render one active section at a time
   - do not turn the admin surface back into one giant page just because the shared section cards exist
-  - do not use right-side summary rails on route-backed setup/admin surfaces; let the active section own the page width
+  - do not use right-side summary rails on route-backed setup/settings surfaces; let the active section own the page width
   - treat data grids like zones and tags as settings surfaces inside shared section cards, not as ad hoc blocks with local headers and dividers
   - zones and custom tags should use compact management rows with overflow actions, not DataGrid-heavy spreadsheet layouts
 
@@ -312,7 +312,7 @@ Recently completed migrations:
 - organization location detail page
 - organization admin detail page
   - remove nested page-level left rails and inner dark app bars when the organization shell already provides the primary chrome
-  - use a simple centered header plus a sticky top section nav for setup/admin subsections
+  - use a simple centered header plus a sticky top section nav for setup/settings subsections
   - use the same responsive section-menu fallback on medium and smaller widths
   - avoid duplicating back actions inside the page body when the shell already provides navigation context
 - organization team detail page
