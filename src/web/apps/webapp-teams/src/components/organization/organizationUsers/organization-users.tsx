@@ -15,8 +15,12 @@ import type { organizationUsers_organizationUsers_refetchableFragment } from '@/
 import type { organizationUsers_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUsers_removeOrganizationUsersMutation.graphql';
 import type { organizationUsers_rootQuery } from '@/queries/__generated__/organizationUsers_rootQuery.graphql';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 import { BodyIconTypography, defaultPadding, PageHeaderPanel, SettingsSectionCard, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -71,18 +75,28 @@ const RootQuery = graphql`
 
 const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<organizationUsers_rootQuery>(RootQuery, queryReference);
+  const [userPageSize, setUserPageSize] = useState(25);
+  const [userAfter, setUserAfter] = useState<string | null>(null);
+  const [userBefore, setUserBefore] = useState<string | null>(null);
+  const [userPage, setUserPage] = useState(1);
   const [rootDataOrganizationUsers, refetchOrganizationUsers] = useRefetchableFragment<
     organizationUsers_organizationUsers_refetchableFragment,
     organizationUsers_organizationMembers_query$key
   >(
     graphql`
       fragment organizationUsers_organizationMembers_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
+      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }, before: { type: "String" }, last: { type: "Int" })
       @refetchable(queryName: "organizationUsers_organizationUsers_refetchableFragment") {
         organization(customDomain: $organizationCustomDomain) {
-          members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }) @connection(key: "organizationMembers_members") {
+          members(first: $count, after: $cursor, last: $last, before: $before, where: { nameContains: $peopleNameSearchText }) @connection(key: "organizationMembers_members") {
             __id
             totalCount
+            pageInfo {
+              endCursor
+              startCursor
+              hasNextPage
+              hasPreviousPage
+            }
             edges {
               node {
                 id
@@ -243,14 +257,27 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
       return member.teams.some((team) => teamIds.includes(team.id));
     });
   }, [rootData.teams, rootDataOrganizationUsers.organization, teamIds]);
+  const membersConnection = rootDataOrganizationUsers.organization?.members;
+  const hasNextUsers = membersConnection?.pageInfo.hasNextPage ?? false;
+  const hasPreviousUsers = membersConnection?.pageInfo.hasPreviousPage ?? false;
+  const userEndCursor = membersConnection?.pageInfo.endCursor ?? null;
+  const userStartCursor = membersConnection?.pageInfo.startCursor ?? null;
+  const userTotalCount = membersConnection?.totalCount ?? 0;
+  const userTotalPages = Math.max(1, Math.ceil(userTotalCount / userPageSize));
+  const userRangeStart = userTotalCount === 0 ? 0 : (userPage - 1) * userPageSize + 1;
+  const userRangeEnd = Math.min(userPage * userPageSize, userTotalCount);
   const organizationMemberRoleNameByType = useMemo(() => new Map(rootData.organizationMemberRoles.map((item) => [item.type, item.name])), [rootData.organizationMemberRoles]);
 
   const handleRefetchOrganizationUsers = useCallback(
-    (peopleNameSearchText: string) => {
+    (peopleNameSearchText: string, after: string | null = userAfter, before: string | null = userBefore, count = userPageSize) => {
       startTransition(() => {
         refetchOrganizationUsers(
           {
             peopleNameSearchText,
+            count: before ? null : count,
+            cursor: after,
+            last: before ? count : null,
+            before,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -258,12 +285,39 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
         );
       });
     },
-    [startTransition, refetchOrganizationUsers],
+    [refetchOrganizationUsers, startTransition, userAfter, userBefore, userPageSize],
   );
 
   useEffect(() => {
     handleRefetchOrganizationUsers(peopleNameSearchText);
   }, [handleRefetchOrganizationUsers, peopleNameSearchText]);
+
+  const resetUserPagination = () => {
+    setUserAfter(null);
+    setUserBefore(null);
+    setUserPage(1);
+  };
+
+  const handleUserPageSizeChanged = (value: number) => {
+    resetUserPagination();
+    setUserPageSize(value);
+  };
+
+  const handleNextUserPage = () => {
+    if (!userEndCursor || !hasNextUsers) return;
+    setUserAfter(userEndCursor);
+    setUserBefore(null);
+    setUserPage((current) => current + 1);
+    handleRefetchOrganizationUsers(peopleNameSearchText, userEndCursor, null, userPageSize);
+  };
+
+  const handlePreviousUserPage = () => {
+    if (!userStartCursor || !hasPreviousUsers) return;
+    setUserBefore(userStartCursor);
+    setUserAfter(null);
+    setUserPage((current) => Math.max(1, current - 1));
+    handleRefetchOrganizationUsers(peopleNameSearchText, null, userStartCursor, userPageSize);
+  };
 
   const handlTeamChanged = (id?: string) => {
     const params = new URLSearchParams(window.location.search);
@@ -604,6 +658,42 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
                   onActivateSelected={() => handleActivateUsersClick()}
                   onRemoveSelected={() => handleRemoveUsersClick()}
                 />
+                <StackRow sx={{ justifyContent: 'center', alignItems: 'center', gap: 1.5, flexWrap: 'wrap', borderTop: 1, borderColor: 'divider', pt: 1.5 }}>
+                  <SmallIconTypography label={`Showing ${userRangeStart}–${userRangeEnd} of ${userTotalCount}`} />
+                  <FormControl size="small" sx={{ minWidth: 118 }}>
+                    <InputLabel id="user-page-size-label">Rows</InputLabel>
+                    <Select labelId="user-page-size-label" label="Rows" value={userPageSize} onChange={(event) => handleUserPageSizeChanged(Number(event.target.value))}>
+                      {[25, 50, 100].map((size) => (
+                        <MenuItem key={size} value={size}>
+                          {size}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <StackRow sx={{ alignItems: 'center', gap: 0.25 }}>
+                    <Button
+                      variant="text"
+                      size="small"
+                      disabled={!hasPreviousUsers}
+                      onClick={handlePreviousUserPage}
+                      aria-label="Previous page"
+                      sx={{ minWidth: 32, px: 0.75, fontSize: '1.25rem', lineHeight: 1 }}
+                    >
+                      ‹
+                    </Button>
+                    <SmallIconTypography label={`${userPage} / ${userTotalPages}`} sx={{ minWidth: 42, textAlign: 'center', fontWeight: 700 }} />
+                    <Button
+                      variant="text"
+                      size="small"
+                      disabled={!hasNextUsers}
+                      onClick={handleNextUserPage}
+                      aria-label="Next page"
+                      sx={{ minWidth: 32, px: 0.75, fontSize: '1.25rem', lineHeight: 1 }}
+                    >
+                      ›
+                    </Button>
+                  </StackRow>
+                </StackRow>
               </StackColumn>
             </SettingsSectionCard>
           </Box>

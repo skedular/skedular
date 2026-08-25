@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<455fa86101275bbfaf85925a553af149>>
+ * @generated SignedSource<<d332f07082a815082f73d002c8069df5>>
  * @lightSyntaxTransform
  */
 
@@ -38,6 +38,12 @@ export type organizationUsers_organizationMembers_query$data = {
           };
         };
       }>;
+      readonly pageInfo: {
+        readonly endCursor: string | null | undefined;
+        readonly hasNextPage: boolean;
+        readonly hasPreviousPage: boolean;
+        readonly startCursor: string | null | undefined;
+      };
       readonly totalCount: number;
     };
   } | null | undefined;
@@ -84,12 +90,22 @@ return {
     {
       "defaultValue": null,
       "kind": "LocalArgument",
+      "name": "before"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
       "name": "count"
     },
     {
       "defaultValue": null,
       "kind": "LocalArgument",
       "name": "cursor"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "last"
     },
     {
       "kind": "RootArgument",
@@ -104,9 +120,9 @@ return {
   "metadata": {
     "connection": [
       {
-        "count": "count",
-        "cursor": "cursor",
-        "direction": "forward",
+        "count": null,
+        "cursor": null,
+        "direction": "bidirectional",
         "path": (v0/*:: as any*/)
       }
     ],
@@ -116,7 +132,10 @@ return {
           "count": "count",
           "cursor": "cursor"
         },
-        "backward": null,
+        "backward": {
+          "count": "last",
+          "cursor": "before"
+        },
         "path": (v0/*:: as any*/)
       },
       "fragmentPathInResult": [],
@@ -164,6 +183,45 @@ return {
               "args": null,
               "kind": "ScalarField",
               "name": "totalCount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "PageInfo",
+              "kind": "LinkedField",
+              "name": "pageInfo",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "endCursor",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "startCursor",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasNextPage",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasPreviousPage",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             },
             {
@@ -279,31 +337,6 @@ return {
               "storageKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "concreteType": "PageInfo",
-              "kind": "LinkedField",
-              "name": "pageInfo",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "endCursor",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "hasNextPage",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            {
               "kind": "ClientExtension",
               "selections": [
                 {
@@ -327,6 +360,6 @@ return {
 };
 })();
 
-(node as any).hash = "8d78875d9d27bc07bbf2be1242ab5171";
+(node as any).hash = "e78e93ad5d7e029f3223ab3991df1fc0";
 
 export default node;

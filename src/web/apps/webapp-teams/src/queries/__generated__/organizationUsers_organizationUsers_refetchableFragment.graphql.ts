@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2570341561ea614325a5d9abed7d6042>>
+ * @generated SignedSource<<fdeb3fb653c442e46aea2d3bf74d3e1d>>
  * @lightSyntaxTransform
  */
 
@@ -10,8 +10,10 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationUsers_organizationUsers_refetchableFragment$variables = {
+  before?: string | null | undefined;
   count?: number | null | undefined;
   cursor?: string | null | undefined;
+  last?: number | null | undefined;
   organizationCustomDomain?: string | null | undefined;
   peopleNameSearchText?: string | null | undefined;
 };
@@ -28,12 +30,22 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
+    "name": "before"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
     "name": "count"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "cursor"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "last"
   },
   {
     "defaultValue": null,
@@ -46,17 +58,29 @@ var v0 = [
     "name": "peopleNameSearchText"
   }
 ],
-v1 = [
+v1 = {
+  "kind": "Variable",
+  "name": "before",
+  "variableName": "before"
+},
+v2 = {
+  "kind": "Variable",
+  "name": "last",
+  "variableName": "last"
+},
+v3 = [
   {
     "kind": "Variable",
     "name": "after",
     "variableName": "cursor"
   },
+  (v1/*:: as any*/),
   {
     "kind": "Variable",
     "name": "first",
     "variableName": "count"
   },
+  (v2/*:: as any*/),
   {
     "fields": [
       {
@@ -69,21 +93,21 @@ v1 = [
     "name": "where"
   }
 ],
-v2 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = [
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -91,7 +115,7 @@ v4 = [
     "name": "type",
     "storageKey": null
   },
-  (v3/*:: as any*/)
+  (v5/*:: as any*/)
 ];
 return {
   "fragment": {
@@ -102,6 +126,7 @@ return {
     "selections": [
       {
         "args": [
+          (v1/*:: as any*/),
           {
             "kind": "Variable",
             "name": "count",
@@ -111,7 +136,8 @@ return {
             "kind": "Variable",
             "name": "cursor",
             "variableName": "cursor"
-          }
+          },
+          (v2/*:: as any*/)
         ],
         "kind": "FragmentSpread",
         "name": "organizationUsers_organizationMembers_query"
@@ -142,7 +168,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v1/*:: as any*/),
+            "args": (v3/*:: as any*/),
             "concreteType": "ConnectionOfOrganizationMemberEdge",
             "kind": "LinkedField",
             "name": "members",
@@ -153,6 +179,45 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "totalCount",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "startCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasPreviousPage",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               },
               {
@@ -171,7 +236,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v2/*:: as any*/),
+                      (v4/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -180,7 +245,7 @@ return {
                         "name": "customer",
                         "plural": false,
                         "selections": [
-                          (v2/*:: as any*/),
+                          (v4/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -188,7 +253,7 @@ return {
                             "name": "email",
                             "storageKey": null
                           },
-                          (v3/*:: as any*/),
+                          (v5/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -234,7 +299,7 @@ return {
                         "kind": "LinkedField",
                         "name": "status",
                         "plural": false,
-                        "selections": (v4/*:: as any*/),
+                        "selections": (v6/*:: as any*/),
                         "storageKey": null
                       },
                       {
@@ -244,7 +309,7 @@ return {
                         "kind": "LinkedField",
                         "name": "role",
                         "plural": false,
-                        "selections": (v4/*:: as any*/),
+                        "selections": (v6/*:: as any*/),
                         "storageKey": null
                       },
                       {
@@ -268,31 +333,6 @@ return {
                 "storageKey": null
               },
               {
-                "alias": null,
-                "args": null,
-                "concreteType": "PageInfo",
-                "kind": "LinkedField",
-                "name": "pageInfo",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "endCursor",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "hasNextPage",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
                 "kind": "ClientExtension",
                 "selections": [
                   {
@@ -309,7 +349,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v1/*:: as any*/),
+            "args": (v3/*:: as any*/),
             "filters": [
               "where"
             ],
@@ -318,23 +358,23 @@ return {
             "kind": "LinkedHandle",
             "name": "members"
           },
-          (v2/*:: as any*/)
+          (v4/*:: as any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "27f5b36acbcf15247532d8d99a5ced5b",
+    "cacheID": "09963fd8cea74a1b2dabc2211461a8cd",
     "id": null,
     "metadata": {},
     "name": "organizationUsers_organizationUsers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationUsers_organizationUsers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationCustomDomain: String\n  $peopleNameSearchText: String\n) {\n  ...organizationUsers_organizationMembers_query_1G22uz\n}\n\nfragment organizationUsers_organizationMembers_query_1G22uz on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(first: $count, after: $cursor, where: {nameContains: $peopleNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            email\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n            phoneNumber\n          }\n          status {\n            type\n            name\n          }\n          role {\n            type\n            name\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationUsers_organizationUsers_refetchableFragment(\n  $before: String\n  $count: Int = null\n  $cursor: String\n  $last: Int\n  $organizationCustomDomain: String\n  $peopleNameSearchText: String\n) {\n  ...organizationUsers_organizationMembers_query_2aiyqj\n}\n\nfragment organizationUsers_organizationMembers_query_2aiyqj on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(first: $count, after: $cursor, last: $last, before: $before, where: {nameContains: $peopleNameSearchText}) {\n      totalCount\n      pageInfo {\n        endCursor\n        startCursor\n        hasNextPage\n        hasPreviousPage\n      }\n      edges {\n        node {\n          id\n          customer {\n            id\n            email\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n            phoneNumber\n          }\n          status {\n            type\n            name\n          }\n          role {\n            type\n            name\n          }\n          __typename\n        }\n        cursor\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8d78875d9d27bc07bbf2be1242ab5171";
+(node as any).hash = "e78e93ad5d7e029f3223ab3991df1fc0";
 
 export default node;

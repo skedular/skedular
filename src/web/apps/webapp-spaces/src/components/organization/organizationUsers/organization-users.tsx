@@ -519,7 +519,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
               actions={<InvitePeopleToJoinOrganizationButton organizationCustomDomain={organizationCustomDomain} />}
             >
               <StackColumn spacing={2}>
-                <StackRow sx={{ gap: 1, flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center' }}>
+                <StackRow sx={{ gap: 1, flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'center' }}>
                   <Search key={peopleNameSearchText} size="small" placeholder="Search for users" defaultValue={peopleNameSearchText} onChange={handleSearchTextChange} />
                 </StackRow>
 

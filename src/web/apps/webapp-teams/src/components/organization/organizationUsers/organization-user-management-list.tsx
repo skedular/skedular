@@ -1,25 +1,18 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
+import { DeleteIcon, EditIcon, EllipseMenuIcon } from '@/components/icons';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import Chip from '@mui/material/Chip';
-import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
-import {
-  BodyIconTypography,
-  compactManagementActionButtonSx,
-  compactManagementIconButtonSx,
-  compactManagementNeutralChipSx,
-  compactManagementWarningChipSx,
-  defaultButtonStyle,
-  defaultGridActionPadding,
-  LeadIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-} from '@skedular/ui';
-import { memo, useState } from 'react';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Tooltip from '@mui/material/Tooltip';
+import { compactManagementIconButtonSx, defaultButtonStyle, defaultGridActionPadding, LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { memo } from 'react';
 
 export type OrganizationUserManagementListItem = {
   id: string;
@@ -64,12 +57,6 @@ const OrganizationUserManagementList = ({
   onActivateSelected,
   onRemoveSelected,
 }: Props) => {
-  const [expandedIds, setExpandedIds] = useState<string[]>([]);
-
-  const handleToggleExpanded = (memberId: string) => {
-    setExpandedIds((current) => (current.includes(memberId) ? current.filter((id) => id !== memberId) : current.concat(memberId)));
-  };
-
   if (items.length === 0) {
     return (
       <Box
@@ -116,111 +103,83 @@ const OrganizationUserManagementList = ({
         </Box>
       )}
 
-      {items.map((item) => {
-        const isSelected = selectedIds.includes(item.id);
-        const isExpanded = expandedIds.includes(item.id);
-
-        return (
-          <Box
-            key={item.id}
-            sx={{
-              border: 1,
-              borderColor: isSelected ? 'primary.main' : 'divider',
-              borderRadius: 2.5,
-              px: 1,
-              py: 0.75,
-              backgroundColor: isSelected ? 'action.selected' : 'background.paper',
-              boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 2px 10px rgba(15, 23, 42, 0.04)' : theme.shadows[1]),
-            }}
-          >
-            <StackColumn spacing={1}>
-              <StackRow sx={{ alignItems: 'center', gap: 1, minWidth: 0, flexWrap: 'nowrap' }}>
-                <Checkbox checked={isSelected} onChange={() => onToggleSelected(item.id)} slotProps={{ input: { 'aria-label': `Select ${item.name}` } }} />
-
-                <CustomerAvatar name={item.customer} photo={{ url: item.customer.photoUrl }} size="medium" />
-
-                <StackColumn sx={{ minWidth: 0, flex: '1 1 auto' }} spacing={0.35}>
-                  <StackRow sx={{ alignItems: 'center', gap: 1, minWidth: 0, flexWrap: 'wrap' }}>
-                    <Box sx={{ minWidth: 0, maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      <LeadIconTypography label={item.name} />
-                    </Box>
-                    <Chip size="small" label={item.statusName} sx={item.isActive ? compactManagementNeutralChipSx : compactManagementWarningChipSx} />
-                  </StackRow>
-                  <StackRow sx={{ gap: 1, flexWrap: 'wrap' }}>
-                    <SmallIconTypography label={`Role: ${item.role || 'Not assigned'}`} sx={{ color: 'text.secondary', fontWeight: 600 }} />
-                    {item.email ? <SmallIconTypography label={item.email} /> : null}
-                    {item.phoneNumber ? <SmallIconTypography label={item.phoneNumber} /> : null}
-                  </StackRow>
-                </StackColumn>
-
-                <StackRow sx={{ gap: 0.75, ml: 'auto', alignItems: 'center', flexWrap: 'nowrap', flexShrink: 0 }}>
-                  <Button variant="text" onClick={() => onOpenProfile(item.id)} sx={compactManagementActionButtonSx}>
-                    Open profile
-                  </Button>
-                  <Button
-                    variant="text"
-                    onClick={(event: React.MouseEvent<HTMLElement>) => {
-                      onOpenChangeRole(item.id, event.currentTarget);
-                    }}
-                    sx={compactManagementActionButtonSx}
-                  >
-                    Change role
-                  </Button>
-                  <Button variant="text" onClick={() => handleToggleExpanded(item.id)} sx={compactManagementActionButtonSx}>
-                    {isExpanded ? 'Hide details' : 'Details'}
-                  </Button>
-                  <IconButton
-                    onClick={(event: React.MouseEvent<HTMLElement>) => {
-                      onOpenMoreActions(item.id, event.currentTarget);
-                    }}
-                    aria-label={`More actions for ${item.name}`}
-                    sx={compactManagementIconButtonSx}
-                  >
-                    <EllipseMenuIcon />
-                  </IconButton>
-                </StackRow>
-              </StackRow>
-
-              <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: { xs: '1fr', md: 'repeat(4, minmax(0, 1fr))' },
-                    gap: 1.25,
-                    pt: 0.5,
+      <TableContainer component={Box} sx={{ overflowX: 'auto' }}>
+        <Table size="small" aria-label="Organization users" sx={{ minWidth: 640 }}>
+          <TableHead>
+            <TableRow sx={{ '& th': { fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'text.primary', borderBottom: 1, borderColor: 'divider' } }}>
+              <TableCell padding="checkbox" />
+              <TableCell>Name</TableCell>
+              <TableCell>Role</TableCell>
+              <TableCell>Contact</TableCell>
+              <TableCell align="right" />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {items.map((item) => {
+              const isSelected = selectedIds.includes(item.id);
+              return (
+                <TableRow
+                  key={item.id}
+                  hover
+                  selected={isSelected}
+                  tabIndex={0}
+                  onClick={() => onOpenProfile(item.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      onOpenProfile(item.id);
+                    }
                   }}
+                  sx={{ cursor: 'pointer', '& td': { py: 1.25, borderBottom: 1, borderColor: 'divider' } }}
                 >
-                  <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 1.25, backgroundColor: 'background.default' }}>
-                    <BodyIconTypography label="Contact" />
-                    <StackColumn spacing={0.75} sx={{ pt: 1 }}>
-                      <SmallIconTypography label={item.email || 'No email'} />
-                      <SmallIconTypography label={item.phoneNumber || 'No phone number'} />
-                    </StackColumn>
-                  </Box>
-                  <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 1.25, backgroundColor: 'background.default' }}>
-                    <BodyIconTypography label="Role" />
-                    <StackColumn spacing={0.75} sx={{ pt: 1 }}>
-                      <SmallIconTypography label={item.role || 'No role'} />
-                    </StackColumn>
-                  </Box>
-                  <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 1.25, backgroundColor: 'background.default' }}>
-                    <BodyIconTypography label="Status" />
-                    <StackColumn spacing={0.75} sx={{ pt: 1 }}>
-                      <SmallIconTypography label={item.statusName} />
-                    </StackColumn>
-                  </Box>
-                  <Box sx={{ borderRadius: 2, border: 1, borderColor: 'divider', p: 1.25, backgroundColor: 'background.default' }}>
-                    <BodyIconTypography label="Teams" />
-                    <StackColumn spacing={0.75} sx={{ pt: 1 }}>
-                      <SmallIconTypography label={item.teams.length > 0 ? item.teams.join(', ') : 'No teams assigned'} />
-                    </StackColumn>
-                  </Box>
-                </Box>
-              </Collapse>
-            </StackColumn>
-          </Box>
-        );
-      })}
+                  <TableCell padding="checkbox" onClick={(event) => event.stopPropagation()}>
+                    <Checkbox checked={isSelected} onChange={() => onToggleSelected(item.id)} slotProps={{ input: { 'aria-label': `Select ${item.name}` } }} />
+                  </TableCell>
+                  <TableCell sx={{ minWidth: 300 }}>
+                    <StackRow sx={{ alignItems: 'center', gap: 1, minWidth: 0 }}>
+                      <CustomerAvatar name={item.customer} photo={{ url: item.customer.photoUrl }} size="medium" />
+                      <StackColumn spacing={0.35} sx={{ minWidth: 0 }}>
+                        <StackRow sx={{ alignItems: 'center', gap: 1, minWidth: 0, flexWrap: 'wrap' }}>
+                          <Box component="span" sx={{ width: 8, height: 8, flex: '0 0 auto', borderRadius: '50%', bgcolor: item.isActive ? 'success.main' : 'text.disabled' }} />
+                          <LeadIconTypography label={item.name} sx={{ fontWeight: 600 }} />
+                        </StackRow>
+                      </StackColumn>
+                    </StackRow>
+                  </TableCell>
+                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' }, fontWeight: 600 }}>{item.role || 'Not assigned'}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', lg: 'table-cell' }, maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {item.email || item.phoneNumber || '—'}
+                  </TableCell>
+                  <TableCell align="right" onClick={(event) => event.stopPropagation()}>
+                    <StackRow sx={{ gap: 0.75, justifyContent: 'flex-end', alignItems: 'center', flexWrap: 'nowrap' }}>
+                      <Tooltip title="Change role">
+                        <IconButton
+                          onClick={(event: React.MouseEvent<HTMLElement>) => {
+                            onOpenChangeRole(item.id, event.currentTarget);
+                          }}
+                          aria-label={`Change role for ${item.name}`}
+                          sx={compactManagementIconButtonSx}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <IconButton
+                        onClick={(event: React.MouseEvent<HTMLElement>) => {
+                          onOpenMoreActions(item.id, event.currentTarget);
+                        }}
+                        aria-label={`More actions for ${item.name}`}
+                        sx={compactManagementIconButtonSx}
+                      >
+                        <EllipseMenuIcon />
+                      </IconButton>
+                    </StackRow>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </StackColumn>
   );
 };
