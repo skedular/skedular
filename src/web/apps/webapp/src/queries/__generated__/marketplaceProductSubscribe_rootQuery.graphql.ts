@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a6e2da0557dc67f4fb4a785d3967cb61>>
+ * @generated SignedSource<<e01d4daa82bf60de7f4aa469e8dad04e>>
  * @lightSyntaxTransform
  */
 
@@ -468,16 +468,6 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "ProductPricingCadenceDetails",
-        "kind": "LinkedField",
-        "name": "productPricingCadences",
-        "plural": true,
-        "selections": (v9/*:: as any*/),
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
         "concreteType": "CurrencyDetails",
         "kind": "LinkedField",
         "name": "currencies",
@@ -498,12 +488,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0d023d2f86f332c9d6cf1d31306122a1",
+    "cacheID": "377c9795482108ced3ae62365cb6a840",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscribe_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductSubscribe_rootQuery(\n  $productId: String!\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  product(id: $productId) {\n    ...marketplaceProductSubscribeHero_product\n    id\n  }\n  ...marketplaceProductSubscribeForm_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      customerFacingTermsAndConditionsUrl\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      price\n      isTaxInclusive\n      supportsSubscriptionAutoRenewal\n      billingMode\n      acceptedPaymentMethods\n      availableDays\n      requiredDaysPerWeek\n      numberOfResourcesToBook\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n    }\n  }\n}\n\nfragment marketplaceProductSubscribeHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
+    "text": "query marketplaceProductSubscribe_rootQuery(\n  $productId: String!\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  product(id: $productId) {\n    ...marketplaceProductSubscribeHero_product\n    id\n  }\n  ...marketplaceProductSubscribeForm_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      customerFacingTermsAndConditionsUrl\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      price\n      isTaxInclusive\n      supportsSubscriptionAutoRenewal\n      billingMode\n      acceptedPaymentMethods\n      availableDays\n      requiredDaysPerWeek\n      numberOfResourcesToBook\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n    }\n  }\n}\n\nfragment marketplaceProductSubscribeHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
   }
 };
 })();

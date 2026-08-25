@@ -15,7 +15,6 @@ vi.mock('react-relay', () => ({
   graphql: (strings: TemplateStringsArray) => strings.join(''),
   useFragment: () => ({
     me: { id: 'customer-1', emails: ['customer@example.com'] },
-    productPricingCadences: [{ type: 'WEEKLY', name: 'Weekly' }],
     currencies: [{ type: 'NZD', name: 'New Zealand dollar' }],
     paymentMethodTypes: [{ type: 'CARD', name: 'Card' }],
     product: {
@@ -66,6 +65,9 @@ describe('MarketplaceProductSubscribeForm weekly checkout', () => {
     const user = userEvent.setup();
 
     render(<MarketplaceProductSubscribeForm bookingAvailable bookingAvailabilityMessage="Available" rootDataRelay={{} as never} />);
+
+    expect(screen.getByLabelText('Plan')).toHaveTextContent('Two days');
+    expect(screen.getByLabelText('Plan')).not.toHaveTextContent('WEEKLY');
 
     const submit = screen.getByRole('button', { name: 'Start plan' });
     expect(submit).toBeDisabled();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bae358ebaf1fbb12a6b274a6d5a385e6>>
+ * @generated SignedSource<<de7a6b65cc9f4372b4a1bb42c92d71aa>>
  * @lightSyntaxTransform
  */
 
@@ -94,16 +94,6 @@ return {
     "kind": "Operation",
     "name": "marketplaceProductSubscribeSignIn_rootQuery",
     "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "ProductPricingCadenceDetails",
-        "kind": "LinkedField",
-        "name": "productPricingCadences",
-        "plural": true,
-        "selections": (v2/*:: as any*/),
-        "storageKey": null
-      },
       {
         "alias": null,
         "args": null,
@@ -277,12 +267,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "751c7766d210b1ba64d9c7c64ae246d7",
+    "cacheID": "3e57c1806eebf08d114973829052b339",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscribeSignIn_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductSubscribeSignIn_rootQuery(\n  $productId: String!\n) {\n  ...marketplaceProductSubscribeAuthGate_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeAuthGate_query_2SWcqy on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    type {\n      type\n      name\n    }\n    listingMetadata {\n      title\n      subTitle\n      about\n    }\n    currency {\n      type\n      name\n    }\n    featureImages {\n      original {\n        url\n      }\n    }\n    amenities {\n      id\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      price\n      supportsSubscriptionAutoRenewal\n      billingMode\n    }\n  }\n}\n"
+    "text": "query marketplaceProductSubscribeSignIn_rootQuery(\n  $productId: String!\n) {\n  ...marketplaceProductSubscribeAuthGate_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeAuthGate_query_2SWcqy on Query {\n  currencies {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    type {\n      type\n      name\n    }\n    listingMetadata {\n      title\n      subTitle\n      about\n    }\n    currency {\n      type\n      name\n    }\n    featureImages {\n      original {\n        url\n      }\n    }\n    amenities {\n      id\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      price\n      supportsSubscriptionAutoRenewal\n      billingMode\n    }\n  }\n}\n"
   }
 };
 })();

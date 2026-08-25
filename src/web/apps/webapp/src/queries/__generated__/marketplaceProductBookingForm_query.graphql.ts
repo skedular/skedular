@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9458e853a84e55360837dbb7b4502527>>
+ * @generated SignedSource<<35cb14afb33d9dcd45832cd79207a5b9>>
  * @lightSyntaxTransform
  */
 
@@ -96,10 +96,6 @@ export type marketplaceProductBookingForm_query$data = {
       readonly type: ProductType;
     };
   } | null | undefined;
-  readonly productPricingCadences: ReadonlyArray<{
-    readonly name: string;
-    readonly type: ProductPricingCadence;
-  }>;
   readonly " $fragmentType": "marketplaceProductBookingForm_query";
 };
 export type marketplaceProductBookingForm_query$key = {
@@ -321,16 +317,6 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "bookingSlotSizeInMinutes",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ProductPricingCadenceDetails",
-      "kind": "LinkedField",
-      "name": "productPricingCadences",
-      "plural": true,
-      "selections": (v2/*:: as any*/),
       "storageKey": null
     },
     {
@@ -575,6 +561,6 @@ return {
 };
 })();
 
-(node as any).hash = "d6d0c83e8de87b52d14778ea0d4433ee";
+(node as any).hash = "0815f962ab8b4c9f9c28a9c3c017e886";
 
 export default node;

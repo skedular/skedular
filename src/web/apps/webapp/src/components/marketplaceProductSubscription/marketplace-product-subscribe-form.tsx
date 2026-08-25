@@ -44,10 +44,6 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
           id
           emails
         }
-        productPricingCadences {
-          type
-          name
-        }
         currencies {
           type
           name
@@ -231,16 +227,13 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
     () =>
       subscriptionPricingOptions.map((option) => ({
         id: option.id,
-        label: rootData.productPricingCadences.find((item) => item.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
-        description: option.listingMetadata.title ?? option.listingMetadata.subTitle ?? '',
+        label: option.listingMetadata.title ?? option.listingMetadata.subTitle ?? 'Pricing option',
+        description: option.listingMetadata.title ? (option.listingMetadata.subTitle ?? '') : '',
       })),
-    [rootData.productPricingCadences, subscriptionPricingOptions],
+    [subscriptionPricingOptions],
   );
 
   const totalLabel = selectedPricingOption ? formatPriceForDisplay(currencyLabel, Number(selectedPricingOption.price) * quantity, selectedPricingOption.purchaseCadence) : '';
-  const cadenceLabel = selectedPricingOption
-    ? (rootData.productPricingCadences.find((item) => item.type === selectedPricingOption.purchaseCadence)?.name ?? selectedPricingOption.purchaseCadence)
-    : '';
   const billingModeLabel = selectedPricingOption?.billingMode === 'IN_ARREARS' ? 'First invoice due now, later cycles billed in arrears' : 'Payment due at checkout';
   const requiredDaysPerWeek = selectedPricingOption?.requiredDaysPerWeek ?? 0;
   const weeklySelectionRequired = selectedPricingOption?.purchaseCadence === 'WEEKLY' && selectedPricingOption?.requiredDaysPerWeek != null;
@@ -467,7 +460,10 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
             >
               <Box>
                 <SubtitleIconTypography label={rootData.product.listingMetadata.title ?? ''} />
-                <BodyIconTypography label={`${cadenceLabel} plan`} sx={{ opacity: 0.72 }} />
+                <BodyIconTypography
+                  label={selectedPricingOption?.listingMetadata.title ?? selectedPricingOption?.listingMetadata.subTitle ?? 'Pricing option'}
+                  sx={{ opacity: 0.72 }}
+                />
               </Box>
               <StackRow spacing={1.25}>
                 <Button variant="text" onClick={() => router.push(productLink)} sx={{ textTransform: 'none' }}>
@@ -498,7 +494,6 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
         amountLabel={totalLabel}
         autoRenew={selectedPricingOption?.supportsSubscriptionAutoRenewal ? autoRenew : false}
         billingModeLabel={billingModeLabel}
-        cadenceLabel={cadenceLabel}
         cancellationPolicyType={selectedPricingOption?.cancellationPolicyType}
         cancellationRefundRules={selectedPricingOption?.cancellationRefundRules}
         productType={rootData.product.type.type}

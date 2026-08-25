@@ -23,16 +23,14 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
 import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
+  FeatureImageGallery,
   defaultPadding,
   FormFieldLabel,
   FormStackColumn,
@@ -45,7 +43,6 @@ import {
   StackRow,
 } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -881,74 +878,13 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                             <BodyIconTypography label="Use a strong cover image to help customers recognize this team." />
                           </StackColumn>
                           <FormFieldLabel label="Feature Images">
-                            <StackColumn>
-                              <Box
-                                sx={{
-                                  display: 'grid',
-                                  gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                                  gap: 2,
-                                }}
-                              >
-                                {featureImages.map((image, index) => (
-                                  <Box
-                                    key={index}
-                                    sx={{
-                                      position: 'relative',
-                                      borderRadius: 2,
-                                      overflow: 'hidden',
-                                      border: 1,
-                                      borderColor: 'divider',
-                                      backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                                    }}
-                                  >
-                                    <Image
-                                      width={800}
-                                      height={600}
-                                      unoptimized
-                                      alt=""
-                                      src={image.original?.url ?? image.thumbnail?.url ?? ''}
-                                      style={{ width: '100%', height: 'auto' }}
-                                    />
-                                    <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                      <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                                        <DeleteIcon fontSize="small" />
-                                      </IconButton>
-                                    </StackRow>
-                                    <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                                      {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                        <Chip size="small" color="success" label="Cover image" />
-                                      ) : (
-                                        <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                          Make cover
-                                        </Button>
-                                      )}
-                                    </StackRow>
-                                  </Box>
-                                ))}
-                              </Box>
-                              <ImageFileUploaderWithCropper
-                                onUploadCompleted={handleFeatureImageUploadCompleted}
-                                trigger={
-                                  <Button
-                                    fullWidth
-                                    variant="outlined"
-                                    color="success"
-                                    startIcon={<AddPhotoAlternateRoundedIcon />}
-                                    sx={{
-                                      minHeight: 72,
-                                      borderRadius: 2.5,
-                                      borderWidth: 1,
-                                      borderStyle: 'dashed',
-                                      bgcolor: 'action.hover',
-                                      textTransform: 'none',
-                                      fontSize: '1rem',
-                                    }}
-                                  >
-                                    Add another image
-                                  </Button>
-                                }
-                              />
-                            </StackColumn>
+                            <FeatureImageGallery
+                              images={featureImages}
+                              coverImage={primaryFeatureImage}
+                              onRemove={handleRemoveFeatureImage}
+                              onMakeCover={handleSetPrimaryFeatureImage}
+                              uploadControl={<ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />}
+                            />
                           </FormFieldLabel>
                         </StackColumn>
                         <StackColumn spacing={2}>

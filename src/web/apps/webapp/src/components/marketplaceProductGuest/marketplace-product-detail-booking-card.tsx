@@ -28,10 +28,6 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<marketplaceProductDetailBookingCard_query$key>(
     graphql`
       fragment marketplaceProductDetailBookingCard_query on Query @argumentDefinitions(productId: { type: "String!" }) {
-        productPricingCadences {
-          type
-          name
-        }
         currencies {
           type
           name
@@ -141,14 +137,13 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         title: pricingOption.listingMetadata.title ?? '',
         subTitle: pricingOption.listingMetadata.subTitle ?? '',
         cadence: pricingOption.purchaseCadence,
-        cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.purchaseCadence)?.name ?? pricingOption.purchaseCadence,
         amountLabel: formatPriceForDisplay(currencyLabel, pricingOption.price, pricingOption.purchaseCadence),
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
         availableDays: pricingOption.availableDays ?? [],
         cancellationPolicyType: pricingOption.cancellationPolicyType,
         cancellationRefundRules: pricingOption.cancellationRefundRules,
       }));
-  }, [product, rootData.currencies, rootData.productPricingCadences]);
+  }, [product, rootData.currencies]);
   const marketplaceLocations = useMemo(
     () => rootData.marketplaceLocations.edges.map((edge) => edge.node).filter((location): location is NonNullable<typeof location> => !!location),
     [rootData.marketplaceLocations.edges],
@@ -164,7 +159,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
     <Box sx={{ position: { md: 'sticky' }, top: { md: 90 }, minWidth: 0, maxWidth: '100%' }}>
       <Card sx={{ borderRadius: 3, border: 1, borderColor: (theme) => theme.palette.divider, minWidth: 0, maxWidth: '100%' }}>
         <CardContent sx={{ p: { xs: 2.5, md: 3 }, '&:last-child': { pb: { xs: 2.5, md: 3 } } }}>
-          <CaptionIconTypography label="Product" sx={{ letterSpacing: '0.04em', textTransform: 'uppercase', opacity: 0.7 }} />
+          <CaptionIconTypography label="PRODUCT" sx={{ color: 'primary.dark', fontSize: { xs: '0.9rem', md: '1rem' }, fontWeight: 800, letterSpacing: '0.02em' }} />
           <LeadIconTypography label={product.listingMetadata.title} sx={{ mt: 0.4, mb: 0.6 }} />
           {productType && (
             <Box sx={{ mb: 1.2 }}>
@@ -174,7 +169,10 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
           <BodyIconTypography label={product.listingMetadata.about ?? ''} sx={{ opacity: 0.85, mb: 2.2 }} />
           {productType && <CaptionIconTypography label={productType.description} sx={{ mb: 2, opacity: 0.78 }} />}
 
-          <LeadIconTypography label="Select a pricing option" sx={{ mb: 1.2 }} />
+          <CaptionIconTypography
+            label="SELECT A PRICING OPTION"
+            sx={{ color: 'primary.dark', fontSize: { xs: '0.9rem', md: '1rem' }, fontWeight: 800, mb: 1.2, letterSpacing: '0.02em' }}
+          />
           <Box sx={{ mb: 1.5 }}>
             <CustomerTermsAndConditionsPanel termsAndConditionsUrl={product.organization.customerFacingTermsAndConditionsUrl} />
           </Box>
@@ -192,7 +190,6 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
               >
                 <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: { xs: 'wrap', sm: 'nowrap' }, gap: 1 }}>
                   <Box sx={{ minWidth: 0, pr: 1 }}>
-                    <CaptionIconTypography label={pricingPlan.cadenceLabel} fontWeight={600} />
                     <SubtitleIconTypography label={pricingPlan.title} sx={{ lineHeight: 1.25 }} />
                     {pricingPlan.subTitle && <CaptionIconTypography label={pricingPlan.subTitle} sx={{ mt: 0.5, opacity: 0.78 }} />}
                   </Box>
@@ -241,7 +238,10 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
           ) : null}
 
           <Box sx={{ mt: 2 }}>
-            <CaptionIconTypography label={marketplaceLocations.length > 0 ? 'Available locations' : 'Availability'} sx={{ opacity: 0.72, mb: 0.8 }} />
+            <CaptionIconTypography
+              label={marketplaceLocations.length > 0 ? 'AVAILABLE LOCATIONS' : 'AVAILABILITY'}
+              sx={{ color: 'primary.dark', fontSize: { xs: '0.9rem', md: '1rem' }, fontWeight: 800, mb: 0.8, letterSpacing: '0.02em' }}
+            />
             {marketplaceLocations.length > 0 ? (
               <StackRow spacing={0.75}>
                 {marketplaceLocations.map((location) => (

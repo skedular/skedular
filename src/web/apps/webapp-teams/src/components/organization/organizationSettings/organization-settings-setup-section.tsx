@@ -16,14 +16,12 @@ import Box from '@mui/material/Box';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
 import Grid from '@mui/material/Grid';
 import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, LeadIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, FeatureImageGallery, FormFieldLabel, FormStackColumn, HelperText, LeadIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -600,74 +598,13 @@ const OrganizationSettingsSetupSectionContent = ({ queryReference }: InnerProps)
                           </FormFieldLabel>
 
                           <FormFieldLabel label="Feature Images">
-                            <StackColumn>
-                              <Box
-                                sx={{
-                                  display: 'grid',
-                                  gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
-                                  gap: 2,
-                                }}
-                              >
-                                {featureImages.map((image, index) => (
-                                  <Box
-                                    key={index}
-                                    sx={{
-                                      position: 'relative',
-                                      borderRadius: 2,
-                                      overflow: 'hidden',
-                                      border: 1,
-                                      borderColor: 'divider',
-                                      backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                                      aspectRatio: '16 / 9',
-                                    }}
-                                  >
-                                    <Image
-                                      width={800}
-                                      height={600}
-                                      unoptimized
-                                      alt=""
-                                      src={image.original?.url ?? image.thumbnail?.url ?? ''}
-                                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                                    />
-                                    <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                      <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                                        <DeleteIcon fontSize="small" />
-                                      </IconButton>
-                                    </StackRow>
-                                    <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                                      {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                        <Chip size="small" color="success" label="Cover image" />
-                                      ) : (
-                                        <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                          Make cover
-                                        </Button>
-                                      )}
-                                    </StackRow>
-                                  </Box>
-                                ))}
-                              </Box>
-
-                              <Box
-                                sx={{
-                                  position: 'relative',
-                                  overflow: 'hidden',
-                                  border: 1,
-                                  borderStyle: 'dashed',
-                                  borderColor: 'success.main',
-                                  borderRadius: 2.5,
-                                  p: 1.5,
-                                  backgroundColor: 'action.hover',
-                                  '& .MuiFormControl-root': { position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, zIndex: 1 },
-                                  '& .MuiInput-root, & input': { width: '100%', height: '100%', cursor: 'pointer' },
-                                }}
-                              >
-                                <StackRow sx={{ alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                                  <AddPhotoAlternateRoundedIcon color="success" />
-                                  <BodyIconTypography label="Add another image" />
-                                </StackRow>
-                                <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
-                              </Box>
-                            </StackColumn>
+                            <FeatureImageGallery
+                              images={featureImages}
+                              coverImage={primaryFeatureImage}
+                              onRemove={handleRemoveFeatureImage}
+                              onMakeCover={handleSetPrimaryFeatureImage}
+                              uploadControl={<ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />}
+                            />
                           </FormFieldLabel>
                         </StackColumn>
                       </Grid>

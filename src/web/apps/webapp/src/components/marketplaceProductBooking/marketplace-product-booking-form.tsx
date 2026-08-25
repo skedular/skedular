@@ -144,10 +144,6 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
           name
         }
         bookingSlotSizeInMinutes
-        productPricingCadences {
-          type
-          name
-        }
         product(id: $productId) {
           id
           latestProductVersionId

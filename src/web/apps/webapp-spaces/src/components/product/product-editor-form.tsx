@@ -1,5 +1,4 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
-import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata } from '@/components/listingMetadata';
 import {
   MultipleChoicesPaymentMethodTypes,
@@ -11,7 +10,7 @@ import {
 } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import CalendarDayPicker from '@/components/product/calendar-day-picker';
-import { DurationInput, FieldHelp } from '@skedular/ui';
+import { DurationInput, FeatureImageGallery, FieldHelp } from '@skedular/ui';
 import {
   createCancellationRefundRule,
   createPricingOption,
@@ -37,7 +36,6 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import { useTheme } from '@mui/material/styles';
@@ -59,7 +57,6 @@ import {
 import { Switches, TextField } from 'mui-rff';
 import { memo, useEffect, useMemo, useState } from 'react';
 import type { PropsWithChildren } from 'react';
-import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { v7 as uuid } from 'uuid';
 
@@ -243,7 +240,6 @@ const ProductEditorForm = ({
   onUploadCompleted,
   onRemoveFeatureImage,
   onSetPrimaryFeatureImage,
-  paletteMode,
 }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -838,9 +834,6 @@ const ProductEditorForm = ({
   );
 
   const renderBasics = () => {
-    const coverImage = primaryFeatureImage ?? featureImages[0] ?? null;
-    const coverImageUrl = coverImage?.original?.url ?? coverImage?.thumbnail?.url ?? '';
-
     return (
       <StackColumn spacing={2}>
         <EditorSection
@@ -857,104 +850,13 @@ const ProductEditorForm = ({
                 <SmallIconTypography label="Use a bright, landscape image that helps customers recognize the space quickly." />
               </StackColumn>
 
-              <Box
-                sx={{
-                  position: 'relative',
-                  aspectRatio: '16 / 9',
-                  overflow: 'hidden',
-                  border: 1,
-                  borderColor: coverImageUrl ? 'divider' : 'transparent',
-                  borderRadius: 3,
-                  backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.100',
-                  backgroundImage: coverImageUrl ? undefined : 'linear-gradient(135deg, rgba(104, 211, 126, 0.18), rgba(104, 211, 126, 0.04))',
-                }}
-              >
-                {coverImageUrl ? (
-                  <>
-                    <Image fill unoptimized alt="Product cover" src={coverImageUrl} sizes="(max-width: 900px) 100vw, 40vw" style={{ objectFit: 'cover' }} />
-                    <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.58))' }} />
-                    <Chip size="small" color="success" label="Cover image" sx={{ position: 'absolute', left: 12, bottom: 12 }} />
-                    <IconButton
-                      size="small"
-                      aria-label="Remove cover image"
-                      onClick={() => coverImage && onRemoveFeatureImage(coverImage)}
-                      sx={{
-                        position: 'absolute',
-                        top: 10,
-                        right: 10,
-                        color: 'common.white',
-                        backgroundColor: 'rgba(0,0,0,0.48)',
-                        '&:hover': { backgroundColor: 'rgba(0,0,0,0.68)' },
-                      }}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </>
-                ) : (
-                  <StackColumn spacing={0.75} sx={{ position: 'absolute', inset: 0, alignItems: 'center', justifyContent: 'center', textAlign: 'center', px: 3 }}>
-                    <AddPhotoAlternateRoundedIcon color="success" sx={{ fontSize: 42 }} />
-                    <LeadIconTypography label="Add a cover image" />
-                    <SmallIconTypography label="Landscape images work best." />
-                  </StackColumn>
-                )}
-              </Box>
-
-              {featureImages.length > 1 ? (
-                <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(92px, 1fr))', gap: 1 }}>
-                  {featureImages.map((image, index) => {
-                    const imageUrl = image.thumbnail?.url ?? image.original?.url ?? '';
-                    const isCover = coverImage?.original?.url === image.original?.url;
-                    if (!imageUrl) return null;
-
-                    return (
-                      <Box
-                        key={image.original?.url ?? image.thumbnail?.url ?? index}
-                        component="button"
-                        type="button"
-                        aria-label={isCover ? 'Current cover image' : 'Make image the cover'}
-                        onClick={() => onSetPrimaryFeatureImage(image)}
-                        sx={{
-                          position: 'relative',
-                          aspectRatio: '4 / 3',
-                          overflow: 'hidden',
-                          borderRadius: 2,
-                          border: 2,
-                          borderColor: isCover ? 'success.main' : 'divider',
-                          p: 0,
-                          cursor: 'pointer',
-                          backgroundColor: 'background.paper',
-                        }}
-                      >
-                        <Image fill unoptimized alt="" src={imageUrl} sizes="120px" style={{ objectFit: 'cover' }} />
-                        {isCover ? (
-                          <CheckCircleRoundedIcon color="success" sx={{ position: 'absolute', top: 5, right: 5, backgroundColor: 'background.paper', borderRadius: '50%' }} />
-                        ) : null}
-                      </Box>
-                    );
-                  })}
-                </Box>
-              ) : null}
-
-              <Box
-                sx={{
-                  position: 'relative',
-                  overflow: 'hidden',
-                  border: 1,
-                  borderStyle: 'dashed',
-                  borderColor: 'success.main',
-                  borderRadius: 2.5,
-                  p: 2,
-                  backgroundColor: 'action.hover',
-                  '& .MuiFormControl-root': { position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, zIndex: 1 },
-                  '& .MuiInput-root, & input': { width: '100%', height: '100%', cursor: 'pointer' },
-                }}
-              >
-                <StackRow sx={{ alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                  <AddPhotoAlternateRoundedIcon color="success" />
-                  <BodyIconTypography label={featureImages.length === 0 ? 'Choose a cover image' : 'Add another image'} />
-                </StackRow>
-                <ImageFileUploaderWithCropper onUploadCompleted={onUploadCompleted} />
-              </Box>
+              <FeatureImageGallery
+                images={featureImages}
+                coverImage={primaryFeatureImage}
+                onRemove={onRemoveFeatureImage}
+                onMakeCover={onSetPrimaryFeatureImage}
+                uploadControl={<ImageFileUploaderWithCropper onUploadCompleted={onUploadCompleted} />}
+              />
             </StackColumn>
 
             <StackColumn spacing={2}>

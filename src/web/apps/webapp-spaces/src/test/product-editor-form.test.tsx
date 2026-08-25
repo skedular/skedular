@@ -16,6 +16,35 @@ vi.mock('next/image', () => ({ default: (props: React.ComponentProps<'img'>) => 
 vi.mock('@/components/icons', () => ({ DeleteIcon: () => <span data-testid="delete-icon" /> }));
 
 vi.mock('@skedular/ui', () => ({
+  FeatureImageGallery: ({
+    images,
+    onRemove,
+    onMakeCover,
+    uploadControl,
+  }: {
+    images: Array<{ original?: { url: string } }>;
+    onRemove: (image: unknown) => void;
+    onMakeCover: (image: unknown) => void;
+    uploadControl?: ReactNode;
+  }) => (
+    <div>
+      {images[0] ? (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element -- this test fixture intentionally renders the raw image element. */}
+          <img alt="Product cover" src={images[0].original?.url} />
+          <button type="button" aria-label="Remove cover image" onClick={() => onRemove(images[0])}>
+            Remove
+          </button>
+        </>
+      ) : null}
+      {images[1] ? (
+        <button type="button" aria-label="Make image the cover" onClick={() => onMakeCover(images[1])}>
+          Make cover
+        </button>
+      ) : null}
+      {uploadControl}
+    </div>
+  ),
   // component stubs
   BodyIconTypography: ({ label }: { label: string }) => <div>{label}</div>,
   FieldHelp: ({ label, children }: { label: string; children: ReactNode }) => (

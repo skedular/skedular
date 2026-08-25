@@ -10,7 +10,6 @@ type Props = {
   amountLabel: string;
   autoRenew: boolean;
   billingModeLabel: string;
-  cadenceLabel: string;
   cancellationPolicyType: string | null | undefined;
   cancellationRefundRules: ReadonlyArray<{ minutesBefore: number; refundPercentage: number }> | null | undefined;
   productType: string | null | undefined;
@@ -31,7 +30,6 @@ const MarketplaceProductSubscribeSummary = ({
   amountLabel,
   autoRenew,
   billingModeLabel,
-  cadenceLabel,
   cancellationPolicyType,
   cancellationRefundRules,
   productType,
@@ -51,7 +49,7 @@ const MarketplaceProductSubscribeSummary = ({
         <Divider sx={{ my: 2.25 }} />
 
         <StackColumn spacing={1.2}>
-          <SummaryRow label="Plan" value={cadenceLabel} />
+          <SummaryRow label="Plan" value={title} />
           <SummaryRow label="Quantity" value={`${quantity}`} />
           <SummaryRow label="Starts" value={startsOnLabel} />
           <SummaryRow label="Billing" value={billingModeLabel} />
@@ -68,7 +66,7 @@ const MarketplaceProductSubscribeSummary = ({
                     : 'This purchase reserves the full matching event resource set for the current cadence window only.'
                   : autoRenew
                     ? 'Your next cycle will use the latest matching pricing option for the same cadence.'
-                    : 'This purchase covers the current cadence window only. No additional renewal will be created.'
+                    : 'This purchase covers the current pricing period only. No additional renewal will be created.'
               }
               sx={{ opacity: 0.86 }}
             />

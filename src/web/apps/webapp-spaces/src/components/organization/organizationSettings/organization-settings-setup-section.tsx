@@ -16,14 +16,16 @@ import Box from '@mui/material/Box';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- retained for the feature-image setup variant below.
+import FeatureButton from '@mui/material/Button';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- retained for the feature-image setup variant below.
+import FeatureChip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
 import Grid from '@mui/material/Grid';
 import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
-import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, LeadIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, FeatureImageGallery, FormFieldLabel, FormStackColumn, HelperText, LeadIconTypography, StackColumn, StackRow } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -628,6 +630,14 @@ const OrganizationSettingsSetupSectionContent = ({ queryReference }: InnerProps)
                           </FormFieldLabel>
 
                           <FormFieldLabel label="Feature Images">
+                            <FeatureImageGallery
+                              images={featureImages}
+                              coverImage={primaryFeatureImage}
+                              onRemove={handleRemoveFeatureImage}
+                              onMakeCover={handleSetPrimaryFeatureImage}
+                              uploadControl={<ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />}
+                            />
+                            {/*
                             <StackColumn>
                               <Box
                                 sx={{
@@ -664,11 +674,11 @@ const OrganizationSettingsSetupSectionContent = ({ queryReference }: InnerProps)
                                     </StackRow>
                                     <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
                                       {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                        <Chip size="small" color="success" label="Cover image" />
+                                        <FeatureChip size="small" color="success" label="Cover image" />
                                       ) : (
-                                        <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                        <FeatureButton variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
                                           Make cover
-                                        </Button>
+                                        </FeatureButton>
                                       )}
                                     </StackRow>
                                   </Box>
@@ -695,7 +705,7 @@ const OrganizationSettingsSetupSectionContent = ({ queryReference }: InnerProps)
                                 </StackRow>
                                 <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
                               </Box>
-                            </StackColumn>
+                            </StackColumn> */}
                           </FormFieldLabel>
                         </StackColumn>
                       </Grid>

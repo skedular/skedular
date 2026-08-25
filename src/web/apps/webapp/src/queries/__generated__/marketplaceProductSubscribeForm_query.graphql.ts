@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<46ad29df2f593ae0ad8a02401920c5cf>>
+ * @generated SignedSource<<7f2913a366ae935a34cd615db5e67685>>
  * @lightSyntaxTransform
  */
 
@@ -69,10 +69,6 @@ export type marketplaceProductSubscribeForm_query$data = {
       readonly type: ProductType;
     };
   } | null | undefined;
-  readonly productPricingCadences: ReadonlyArray<{
-    readonly name: string;
-    readonly type: ProductPricingCadence;
-  }>;
   readonly " $fragmentType": "marketplaceProductSubscribeForm_query";
 };
 export type marketplaceProductSubscribeForm_query$key = {
@@ -140,16 +136,6 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ProductPricingCadenceDetails",
-      "kind": "LinkedField",
-      "name": "productPricingCadences",
-      "plural": true,
-      "selections": (v1/*:: as any*/),
       "storageKey": null
     },
     {
@@ -386,6 +372,6 @@ return {
 };
 })();
 
-(node as any).hash = "d7f6ec5cb978a26ca930ff5f9d63bfe4";
+(node as any).hash = "21777b06fb4515ca216270c9e1699997";
 
 export default node;

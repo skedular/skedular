@@ -1,6 +1,7 @@
 import {
   AreaIcon,
   ArrowLeftIcon,
+  ArrowRightIcon,
   CheckIcon,
   ContactEmailIcon,
   ContactPhoneIcon,
@@ -29,6 +30,7 @@ import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import { useTheme } from '@mui/material/styles';
@@ -61,7 +63,6 @@ type Props = {
 type PricingRow = {
   amountLabel: string;
   cadence: string;
-  cadenceLabel: string;
   id: string;
   taxLabel: string;
   title: string;
@@ -157,10 +158,6 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
       fragment marketplaceLocation_query on Query
       @argumentDefinitions(locationId: { type: "String!" }, selectedFloorPlanId: { type: "String" }, floorPlanSelected: { type: "Boolean", defaultValue: false })
       @refetchable(queryName: "marketplaceLocation_refetchableFragment") {
-        productPricingCadences {
-          type
-          name
-        }
         deskResourceType
         roomResourceType
         parkingResourceType
@@ -443,7 +440,6 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           id: option.id,
           title: option.listingMetadata.title ?? '',
           cadence: option.purchaseCadence,
-          cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
           amountLabel: formatPriceForDisplay(currencyLabel, option.price, option.purchaseCadence),
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
           availableDays: option.availableDays ?? [],
@@ -458,7 +454,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
         pricingRows,
       };
     });
-  }, [heroImage, locationDetails, rootData.currencies, rootData.productPricingCadences]);
+  }, [heroImage, locationDetails, rootData.currencies]);
   const floorPlans = useMemo(() => rootData.floorPlans.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item), [rootData.floorPlans.edges]);
   const effectiveSelectedFloorPlanId = useMemo(() => {
     if (floorPlans.some((item) => item.id === selectedFloorPlanId)) {
@@ -498,7 +494,6 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             id: option.id,
             title: option.listingMetadata.title ?? '',
             cadence: option.purchaseCadence,
-            cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
             amountLabel: formatPriceForDisplay(currencyLabel, option.price, option.purchaseCadence),
             taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
             availableDays: option.availableDays ?? [],
@@ -506,7 +501,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           })),
       };
     });
-  }, [locationDetails, rootData.currencies, rootData.productPricingCadences]);
+  }, [locationDetails, rootData.currencies]);
   const matchedProductsForSelectedResource = useMemo(() => {
     if (!selectedResource) {
       return [];
@@ -765,8 +760,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                                     }}
                                   >
                                     <Box sx={{ minWidth: 0 }}>
-                                      <SmallSubtitleIconTypography label={pricingRow.cadenceLabel} fontWeight={600} color="text.primary" />
-                                      {pricingRow.title ? <SmallIconTypography label={pricingRow.title} sx={{ fontSize: '0.92rem' }} color="text.secondary" /> : null}
+                                      {pricingRow.title ? <SmallSubtitleIconTypography label={pricingRow.title} fontWeight={600} color="text.primary" /> : null}
                                     </Box>
                                     <Box sx={{ textAlign: 'right', ml: 'auto' }}>
                                       <BodyIconTypography label={pricingRow.amountLabel} sx={{ fontWeight: 700 }} color="text.primary" />
@@ -845,78 +839,84 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, minWidth: 0, maxWidth: '100%' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'flex-start', width: '100%', boxSizing: 'border-box', maxWidth: '100%', overflow: 'hidden' }}>
               {heroImage ? (
-                <Box
-                  component="img"
-                  src={heroImage}
-                  alt={locationDetails.listingMetadata.title ?? locationDetails.name}
-                  sx={{
-                    display: 'block',
-                    width: { xs: '100%', md: 'auto' },
-                    boxSizing: 'border-box',
-                    height: 'auto',
-                    maxWidth: '100%',
-                    maxHeight: { md: 420 },
-                    borderRadius: 3,
-                    objectFit: 'contain',
-                  }}
-                />
+                <Box sx={{ position: 'relative', width: '100%', height: { xs: 300, md: 420 }, borderRadius: 3, overflow: 'hidden', bgcolor: 'action.hover' }}>
+                  <Box
+                    component="img"
+                    src={heroImage}
+                    alt={locationDetails.listingMetadata.title ?? locationDetails.name}
+                    sx={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+
+                  {heroImages.length > 1 ? (
+                    <Box sx={{ position: 'absolute', left: 16, right: 16, bottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+                      <Box sx={{ display: 'flex', gap: 0.75, maxWidth: 'calc(100% - 96px)', overflowX: 'auto', p: 0.25 }}>
+                        {heroImages.map((image, index) => {
+                          const isSelected = image.url === heroImage;
+
+                          return (
+                            <Box
+                              key={`${image.url}-${index}`}
+                              component="button"
+                              type="button"
+                              onClick={() => setSelectedHeroImageUrl(image.url)}
+                              aria-label={index === 0 ? 'Show cover image' : `Show image ${index + 1}`}
+                              sx={{
+                                width: 56,
+                                height: 40,
+                                flex: '0 0 auto',
+                                p: 0,
+                                lineHeight: 0,
+                                border: 2,
+                                borderColor: isSelected ? 'common.white' : 'rgba(255, 255, 255, 0.58)',
+                                bgcolor: 'background.default',
+                                cursor: 'pointer',
+                                borderRadius: 1,
+                                overflow: 'hidden',
+                                boxShadow: '0 1px 4px rgba(0, 0, 0, 0.4)',
+                              }}
+                            >
+                              <Box
+                                component="img"
+                                src={image.thumbnailUrl}
+                                alt={index === 0 ? 'Cover image' : ''}
+                                sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                              />
+                            </Box>
+                          );
+                        })}
+                      </Box>
+
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, borderRadius: 99, bgcolor: 'rgba(17, 24, 39, 0.68)', p: 0.25 }}>
+                        <IconButton
+                          size="small"
+                          onClick={() => {
+                            const selectedIndex = heroImages.findIndex((image) => image.url === heroImage);
+                            setSelectedHeroImageUrl(heroImages[(selectedIndex - 1 + heroImages.length) % heroImages.length]?.url ?? heroImages[0]?.url ?? '');
+                          }}
+                          aria-label="Previous image"
+                          sx={{ color: 'common.white' }}
+                        >
+                          <ArrowLeftIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => {
+                            const selectedIndex = heroImages.findIndex((image) => image.url === heroImage);
+                            setSelectedHeroImageUrl(heroImages[(selectedIndex + 1) % heroImages.length]?.url ?? heroImages[0]?.url ?? '');
+                          }}
+                          aria-label="Next image"
+                          sx={{ color: 'common.white' }}
+                        >
+                          <ArrowRightIcon fontSize="small" />
+                        </IconButton>
+                      </Box>
+                    </Box>
+                  ) : null}
+                </Box>
               ) : (
                 <Box sx={{ width: '100%', height: { xs: 260, md: 420 }, bgcolor: 'action.hover' }} />
               )}
             </Box>
-
-            {heroImages.length > 1 ? (
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: 1,
-                  width: '100%',
-                  maxWidth: '100%',
-                  overflowX: 'auto',
-                  pb: 0.5,
-                  scrollbarWidth: 'thin',
-                }}
-              >
-                {heroImages.map((image, index) => {
-                  const isSelected = image.url === heroImage;
-
-                  return (
-                    <Box
-                      key={image.url}
-                      component="button"
-                      type="button"
-                      onClick={() => setSelectedHeroImageUrl(image.url)}
-                      sx={{
-                        width: { xs: 72, md: 96 },
-                        height: { xs: 54, md: 72 },
-                        flex: '0 0 auto',
-                        p: 0,
-                        lineHeight: 0,
-                        border: 2,
-                        borderColor: isSelected ? theme.palette.primary.main : theme.palette.divider,
-                        bgcolor: 'background.default',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                        borderRadius: 1.5,
-                        overflow: 'hidden',
-                        outline: 'none',
-                        opacity: isSelected ? 1 : 0.78,
-                        '&:focus-visible': {
-                          boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
-                        },
-                      }}
-                    >
-                      <Box
-                        component="img"
-                        src={image.thumbnailUrl}
-                        alt={`${locationDetails.name} image ${index + 1}`}
-                        sx={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
-                      />
-                    </Box>
-                  );
-                })}
-              </Box>
-            ) : null}
           </Box>
         </Box>
 

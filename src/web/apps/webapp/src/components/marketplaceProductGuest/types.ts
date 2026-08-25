@@ -3,7 +3,6 @@ export type MarketplaceProductPricingPlan = {
   title: string;
   subTitle: string;
   cadence: string;
-  cadenceLabel: string;
   amountLabel: string;
   note: string;
   availableDays: readonly string[];

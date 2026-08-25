@@ -15,10 +15,6 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationC
   const rootData = useFragment<guestStoreFrontProductCard_query$key>(
     graphql`
       fragment guestStoreFrontProductCard_query on Query {
-        productPricingCadences {
-          type
-          name
-        }
         currencies {
           type
           name
@@ -77,12 +73,11 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationC
           id: option.id,
           title: option.listingMetadata.title ?? '',
           cadence: option.purchaseCadence,
-          cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
           amountLabel: formatPriceForDisplay(currency, option.price, option.purchaseCadence),
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
           availableDays: option.availableDays ?? [],
         })),
-    [currency, product.pricingOptions, rootData.productPricingCadences],
+    [currency, product.pricingOptions],
   );
 
   return (

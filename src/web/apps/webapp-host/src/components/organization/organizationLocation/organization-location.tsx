@@ -34,7 +34,6 @@ import type {
   organizationLocation_updateLocationRestrictedInformationMutation,
 } from '@/queries/__generated__/organizationLocation_updateLocationRestrictedInformationMutation.graphql';
 import { PricingPage } from '@/rootPages/organizations/organization/locations/location/pricing/page';
-import AddPhotoAlternateRoundedIcon from '@mui/icons-material/AddPhotoAlternateRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -45,7 +44,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tab from '@mui/material/Tab';
@@ -55,6 +53,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, PaletteModeContext, stringCollectionToString, stringToMultiLines, useIntegratedPlatform } from '@skedular/shared';
 import {
   BodyIconTypography,
+  FeatureImageGallery,
   defaultButtonStyle,
   defaultPadding,
   EditorActionBar,
@@ -70,7 +69,6 @@ import {
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import Image from 'next/image';
 import NextLink from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
@@ -1372,69 +1370,13 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
                       <LeadIconTypography label="Cover and gallery" />
                       <SmallIconTypography label="Use a strong cover image to help customers recognize this location." />
                       <FormFieldLabel label="Feature Images">
-                        <StackColumn>
-                          <Box sx={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 1.5 }}>
-                            {[primaryFeatureImage ?? featureImages[0]]
-                              .filter((image): image is FileUploadResponse => !!image)
-                              .map((image, index) => (
-                                <Box
-                                  key={index}
-                                  sx={{
-                                    position: 'relative',
-                                    aspectRatio: '16 / 9',
-                                    borderRadius: 3,
-                                    overflow: 'hidden',
-                                    border: 1,
-                                    borderColor: 'divider',
-                                    backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                                  }}
-                                >
-                                  <Image
-                                    width={800}
-                                    height={600}
-                                    unoptimized
-                                    alt=""
-                                    src={image.original?.url ?? image.thumbnail?.url ?? ''}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                  />
-                                  <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                    <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
-                                      <DeleteIcon fontSize="small" />
-                                    </IconButton>
-                                  </StackRow>
-                                  <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
-                                    {primaryFeatureImage?.original?.url === image.original?.url ? (
-                                      <Chip size="small" color="success" label="Cover image" />
-                                    ) : (
-                                      <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
-                                        Make cover
-                                      </Button>
-                                    )}
-                                  </StackRow>
-                                </Box>
-                              ))}
-                          </Box>
-                          <Box
-                            sx={{
-                              position: 'relative',
-                              overflow: 'hidden',
-                              border: 1,
-                              borderStyle: 'dashed',
-                              borderColor: 'success.main',
-                              borderRadius: 2.5,
-                              p: 2,
-                              backgroundColor: 'action.hover',
-                              '& .MuiFormControl-root': { position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, zIndex: 1 },
-                              '& .MuiInput-root, & input': { width: '100%', height: '100%', cursor: 'pointer' },
-                            }}
-                          >
-                            <StackRow sx={{ alignItems: 'center', justifyContent: 'center', gap: 1 }}>
-                              <AddPhotoAlternateRoundedIcon color="success" />
-                              <BodyIconTypography label={featureImages.length === 0 ? 'Choose a cover image' : 'Add another image'} />
-                            </StackRow>
-                            <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
-                          </Box>
-                        </StackColumn>
+                        <FeatureImageGallery
+                          images={featureImages}
+                          coverImage={primaryFeatureImage}
+                          onRemove={handleRemoveFeatureImage}
+                          onMakeCover={handleSetPrimaryFeatureImage}
+                          uploadControl={<ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />}
+                        />
                       </FormFieldLabel>
                     </StackColumn>
                     <StackColumn spacing={1.5}>

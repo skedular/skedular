@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b866f76cc8dcdb79d3f5581a12ba2642>>
+ * @generated SignedSource<<c37adad0f028eaad3496472a7f0c540c>>
  * @lightSyntaxTransform
  */
 
@@ -44,24 +44,6 @@ v3 = {
   "variableName": "locationId"
 },
 v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v6 = [
-  (v4/*:: as any*/),
-  (v5/*:: as any*/)
-],
-v7 = {
   "kind": "Literal",
   "name": "orderBy",
   "value": [
@@ -71,21 +53,28 @@ v7 = {
     }
   ]
 },
-v8 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v9 = {
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v10 = {
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "CdnFile",
@@ -93,7 +82,7 @@ v10 = {
   "name": "original",
   "plural": false,
   "selections": [
-    (v9/*:: as any*/),
+    (v7/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -111,24 +100,31 @@ v10 = {
   ],
   "storageKey": null
 },
-v11 = [
-  (v8/*:: as any*/)
+v9 = [
+  (v5/*:: as any*/)
 ],
-v12 = {
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "subTitle",
   "storageKey": null
 },
-v14 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationTagDetails",
@@ -136,22 +132,22 @@ v14 = {
   "name": "amenities",
   "plural": true,
   "selections": [
-    (v8/*:: as any*/),
-    (v5/*:: as any*/)
+    (v5/*:: as any*/),
+    (v6/*:: as any*/)
   ],
   "storageKey": null
 },
-v15 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "from",
   "storageKey": null
 },
-v16 = [
-  (v9/*:: as any*/)
+v15 = [
+  (v7/*:: as any*/)
 ],
-v17 = [
+v16 = [
   {
     "alias": null,
     "args": null,
@@ -166,7 +162,7 @@ v17 = [
     "name": "openAllDay",
     "storageKey": null
   },
-  (v15/*:: as any*/),
+  (v14/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -175,7 +171,7 @@ v17 = [
     "storageKey": null
   }
 ],
-v18 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -227,16 +223,6 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "ProductPricingCadenceDetails",
-        "kind": "LinkedField",
-        "name": "productPricingCadences",
-        "plural": true,
-        "selections": (v6/*:: as any*/),
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
         "kind": "ScalarField",
         "name": "deskResourceType",
         "storageKey": null
@@ -258,7 +244,7 @@ return {
       {
         "alias": null,
         "args": [
-          (v7/*:: as any*/),
+          (v4/*:: as any*/),
           {
             "fields": [
               (v3/*:: as any*/)
@@ -288,8 +274,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v8/*:: as any*/),
                   (v5/*:: as any*/),
+                  (v6/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -305,7 +291,7 @@ return {
                     "name": "image",
                     "plural": false,
                     "selections": [
-                      (v10/*:: as any*/)
+                      (v8/*:: as any*/)
                     ],
                     "storageKey": null
                   },
@@ -338,10 +324,10 @@ return {
                         "kind": "LinkedField",
                         "name": "resource",
                         "plural": false,
-                        "selections": (v11/*:: as any*/),
+                        "selections": (v9/*:: as any*/),
                         "storageKey": null
                       },
-                      (v8/*:: as any*/)
+                      (v5/*:: as any*/)
                     ],
                     "storageKey": null
                   }
@@ -361,7 +347,10 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v6/*:: as any*/),
+        "selections": [
+          (v10/*:: as any*/),
+          (v6/*:: as any*/)
+        ],
         "storageKey": null
       },
       {
@@ -378,8 +367,8 @@ return {
         "name": "location",
         "plural": false,
         "selections": [
-          (v8/*:: as any*/),
           (v5/*:: as any*/),
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -395,7 +384,7 @@ return {
                 "name": "customDomain",
                 "storageKey": null
               },
-              (v8/*:: as any*/)
+              (v5/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -414,8 +403,8 @@ return {
                 "name": "about",
                 "storageKey": null
               },
+              (v11/*:: as any*/),
               (v12/*:: as any*/),
-              (v13/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -433,7 +422,7 @@ return {
             "name": "timezone",
             "storageKey": null
           },
-          (v14/*:: as any*/),
+          (v13/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -507,7 +496,7 @@ return {
                 "name": "peopleCapacity",
                 "plural": false,
                 "selections": [
-                  (v15/*:: as any*/),
+                  (v14/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -543,7 +532,7 @@ return {
             "name": "featureImages",
             "plural": true,
             "selections": [
-              (v10/*:: as any*/),
+              (v8/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -551,7 +540,7 @@ return {
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v16/*:: as any*/),
+                "selections": (v15/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -586,7 +575,7 @@ return {
                 "name": "multilinesFormattedAddress",
                 "storageKey": null
               },
-              (v8/*:: as any*/)
+              (v5/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -613,7 +602,7 @@ return {
                     "kind": "LinkedField",
                     "name": "monday",
                     "plural": false,
-                    "selections": (v17/*:: as any*/),
+                    "selections": (v16/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -623,7 +612,7 @@ return {
                     "kind": "LinkedField",
                     "name": "tuesday",
                     "plural": false,
-                    "selections": (v17/*:: as any*/),
+                    "selections": (v16/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -633,7 +622,7 @@ return {
                     "kind": "LinkedField",
                     "name": "wednesday",
                     "plural": false,
-                    "selections": (v17/*:: as any*/),
+                    "selections": (v16/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -643,7 +632,7 @@ return {
                     "kind": "LinkedField",
                     "name": "thursday",
                     "plural": false,
-                    "selections": (v17/*:: as any*/),
+                    "selections": (v16/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -653,7 +642,7 @@ return {
                     "kind": "LinkedField",
                     "name": "friday",
                     "plural": false,
-                    "selections": (v17/*:: as any*/),
+                    "selections": (v16/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -663,7 +652,7 @@ return {
                     "kind": "LinkedField",
                     "name": "saturday",
                     "plural": false,
-                    "selections": (v17/*:: as any*/),
+                    "selections": (v16/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -673,7 +662,7 @@ return {
                     "kind": "LinkedField",
                     "name": "sunday",
                     "plural": false,
-                    "selections": (v17/*:: as any*/),
+                    "selections": (v16/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -690,7 +679,7 @@ return {
             "name": "products",
             "plural": true,
             "selections": [
-              (v8/*:: as any*/),
+              (v5/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -699,8 +688,8 @@ return {
                 "name": "listingMetadata",
                 "plural": false,
                 "selections": [
-                  (v12/*:: as any*/),
-                  (v13/*:: as any*/)
+                  (v11/*:: as any*/),
+                  (v12/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -711,7 +700,7 @@ return {
                 "kind": "LinkedField",
                 "name": "productTags",
                 "plural": true,
-                "selections": (v11/*:: as any*/),
+                "selections": (v9/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -729,7 +718,7 @@ return {
                     "kind": "LinkedField",
                     "name": "original",
                     "plural": false,
-                    "selections": (v16/*:: as any*/),
+                    "selections": (v15/*:: as any*/),
                     "storageKey": null
                   }
                 ],
@@ -743,7 +732,7 @@ return {
                 "name": "currency",
                 "plural": false,
                 "selections": [
-                  (v4/*:: as any*/)
+                  (v10/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -755,7 +744,7 @@ return {
                 "name": "pricingOptions",
                 "plural": true,
                 "selections": [
-                  (v8/*:: as any*/),
+                  (v5/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -771,7 +760,7 @@ return {
                     "name": "listingMetadata",
                     "plural": false,
                     "selections": [
-                      (v12/*:: as any*/)
+                      (v11/*:: as any*/)
                     ],
                     "storageKey": null
                   },
@@ -813,7 +802,7 @@ return {
                 ],
                 "storageKey": null
               },
-              (v14/*:: as any*/)
+              (v13/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -825,7 +814,7 @@ return {
               {
                 "alias": null,
                 "args": [
-                  (v7/*:: as any*/),
+                  (v4/*:: as any*/),
                   {
                     "fields": [
                       {
@@ -859,8 +848,8 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v8/*:: as any*/),
                           (v5/*:: as any*/),
+                          (v6/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -868,7 +857,7 @@ return {
                             "name": "inactive",
                             "storageKey": null
                           },
-                          (v18/*:: as any*/),
+                          (v17/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -877,9 +866,9 @@ return {
                             "name": "productTags",
                             "plural": true,
                             "selections": [
-                              (v8/*:: as any*/),
                               (v5/*:: as any*/),
-                              (v18/*:: as any*/)
+                              (v6/*:: as any*/),
+                              (v17/*:: as any*/)
                             ],
                             "storageKey": null
                           },
@@ -891,10 +880,10 @@ return {
                             "name": "resourceType",
                             "plural": false,
                             "selections": [
-                              (v8/*:: as any*/),
                               (v5/*:: as any*/),
-                              (v18/*:: as any*/),
-                              (v4/*:: as any*/)
+                              (v6/*:: as any*/),
+                              (v17/*:: as any*/),
+                              (v10/*:: as any*/)
                             ],
                             "storageKey": null
                           }
@@ -915,12 +904,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ed2a7176848126a63d5fa1566acc0fd3",
+    "cacheID": "a4a40b4a74cd3fa73ec6af4d9eb2bf04",
     "id": null,
     "metadata": {},
     "name": "pageMarketplaceLocation_rootQuery",
     "operationKind": "query",
-    "text": "query pageMarketplaceLocation_rootQuery(\n  $locationId: String!\n  $selectedFloorPlanId: String\n  $floorPlanSelected: Boolean!\n) {\n  ...marketplaceLocation_query_4ndSC6\n}\n\nfragment marketplaceLocation_query_4ndSC6 on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n  floorPlans(where: {locationId: $locationId}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    edges {\n      node {\n        id\n        name\n        resourceCount\n        image {\n          original {\n            url\n            height\n            width\n          }\n        }\n        resourcePositions {\n          x\n          y\n          resource {\n            id\n          }\n          id\n        }\n      }\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  location(id: $locationId) {\n    id\n    name\n    organization {\n      customDomain\n      id\n    }\n    listingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    timezone\n    amenities {\n      id\n      name\n    }\n    extraMetadata {\n      contactDetails {\n        contactPeople\n        contactEmails\n        contactPhones\n      }\n      areaRange {\n        fromInSqm\n        toInSqm\n      }\n      peopleCapacity {\n        from\n        to\n      }\n      website\n      relatedImageLinks\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n      }\n    }\n    physicalAddress {\n      longitude\n      latitude\n      multilinesFormattedAddress\n      id\n    }\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n    products {\n      id\n      listingMetadata {\n        title\n        subTitle\n      }\n      productTags {\n        id\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      currency {\n        type\n      }\n      pricingOptions {\n        id\n        index\n        listingMetadata {\n          title\n        }\n        purchaseCadence\n        price\n        isTaxInclusive\n        supportsSubscriptionAutoRenewal\n        availableDays\n      }\n      amenities {\n        id\n        name\n      }\n    }\n    resources(where: {floorPlanId: $selectedFloorPlanId}, orderBy: [{direction: ASCENDING, field: NAME}]) @include(if: $floorPlanSelected) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            type\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query pageMarketplaceLocation_rootQuery(\n  $locationId: String!\n  $selectedFloorPlanId: String\n  $floorPlanSelected: Boolean!\n) {\n  ...marketplaceLocation_query_4ndSC6\n}\n\nfragment marketplaceLocation_query_4ndSC6 on Query {\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n  floorPlans(where: {locationId: $locationId}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    edges {\n      node {\n        id\n        name\n        resourceCount\n        image {\n          original {\n            url\n            height\n            width\n          }\n        }\n        resourcePositions {\n          x\n          y\n          resource {\n            id\n          }\n          id\n        }\n      }\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  location(id: $locationId) {\n    id\n    name\n    organization {\n      customDomain\n      id\n    }\n    listingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    timezone\n    amenities {\n      id\n      name\n    }\n    extraMetadata {\n      contactDetails {\n        contactPeople\n        contactEmails\n        contactPhones\n      }\n      areaRange {\n        fromInSqm\n        toInSqm\n      }\n      peopleCapacity {\n        from\n        to\n      }\n      website\n      relatedImageLinks\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n      }\n    }\n    physicalAddress {\n      longitude\n      latitude\n      multilinesFormattedAddress\n      id\n    }\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n    products {\n      id\n      listingMetadata {\n        title\n        subTitle\n      }\n      productTags {\n        id\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      currency {\n        type\n      }\n      pricingOptions {\n        id\n        index\n        listingMetadata {\n          title\n        }\n        purchaseCadence\n        price\n        isTaxInclusive\n        supportsSubscriptionAutoRenewal\n        availableDays\n      }\n      amenities {\n        id\n        name\n      }\n    }\n    resources(where: {floorPlanId: $selectedFloorPlanId}, orderBy: [{direction: ASCENDING, field: NAME}]) @include(if: $floorPlanSelected) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            type\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();

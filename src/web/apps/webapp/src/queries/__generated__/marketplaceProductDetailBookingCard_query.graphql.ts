@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8749257dc793e08bc858cd82e55a3265>>
+ * @generated SignedSource<<ea11ac26603877b79c1f6896f4a6f262>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,6 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceProductDetailBookingCard_query$data = {
   readonly currencies: ReadonlyArray<{
@@ -27,10 +26,6 @@ export type marketplaceProductDetailBookingCard_query$data = {
   readonly product: {
     readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailBookingCard_product">;
   } | null | undefined;
-  readonly productPricingCadences: ReadonlyArray<{
-    readonly name: string;
-    readonly type: ProductPricingCadence;
-  }>;
   readonly " $fragmentType": "marketplaceProductDetailBookingCard_query";
 };
 export type marketplaceProductDetailBookingCard_query$key = {
@@ -45,17 +40,7 @@ var v0 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v0/*:: as any*/)
-];
+};
 return {
   "argumentDefinitions": [
     {
@@ -71,21 +56,20 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "ProductPricingCadenceDetails",
-      "kind": "LinkedField",
-      "name": "productPricingCadences",
-      "plural": true,
-      "selections": (v1/*:: as any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "CurrencyDetails",
       "kind": "LinkedField",
       "name": "currencies",
       "plural": true,
-      "selections": (v1/*:: as any*/),
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        (v0/*:: as any*/)
+      ],
       "storageKey": null
     },
     {
@@ -175,6 +159,6 @@ return {
 };
 })();
 
-(node as any).hash = "92ad79a56623cb3ffd8665e60a7d315b";
+(node as any).hash = "32a5f7acae78cdc73283e62fdab628fe";
 
 export default node;

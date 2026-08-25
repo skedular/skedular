@@ -57,7 +57,6 @@ const EditorSection = ({ title, description, summary, expanded, onChange, childr
 
 type OrganizationSettingsSection =
   | 'setup'
-  | 'marketplace-listing'
   | 'billing-cycle'
   | 'xero-setup'
   | 'stripe-connect-accounts-setup'
@@ -73,7 +72,6 @@ type OrganizationSettingsSection =
 
 const validSections: OrganizationSettingsSection[] = [
   'setup',
-  'marketplace-listing',
   'billing-cycle',
   'xero-setup',
   'stripe-connect-accounts-setup',
@@ -98,7 +96,6 @@ const getActiveSection = (value: string | null): OrganizationSettingsSection | n
 
 const sectionLabels: Record<OrganizationSettingsSection, string> = {
   setup: 'Organisation profile',
-  'marketplace-listing': 'Marketplace listing',
   'billing-cycle': 'Billing cadence',
   'xero-setup': 'Xero',
   'stripe-connect-accounts-setup': 'Stripe',
@@ -439,7 +436,6 @@ const OrganizationSettings = ({ rootDataRelay, organizationCustomDomain }: Props
             <OrganizationSettingsManageOrganizationSection organizationCustomDomain={organizationCustomDomain} />
           </Box>
         )}
-        {activeSection === 'marketplace-listing' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
         {activeSection === 'billing-cycle' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
         {integrationsMode && (activeSection === 'xero-setup' || activeSection === 'stripe-connect-accounts-setup') && (
           <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper', overflow: 'hidden' }}>

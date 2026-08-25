@@ -33,10 +33,6 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
   const rootData = useFragment(
     graphql`
       fragment marketplaceProductSubscribeAuthGate_query on Query @argumentDefinitions(productId: { type: "String!" }) {
-        productPricingCadences {
-          type
-          name
-        }
         currencies {
           type
           name
@@ -118,10 +114,6 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
 
     return availablePricingOptions[0] ?? null;
   }, [availablePricingOptions, pricingOptionId]);
-  const cadenceLabel = useMemo(
-    () => rootData.productPricingCadences.find((item) => item.type === selectedPricingOption?.purchaseCadence)?.name ?? selectedPricingOption?.purchaseCadence ?? '',
-    [rootData.productPricingCadences, selectedPricingOption?.purchaseCadence],
-  );
   const returnTo = useMemo(() => {
     const query = searchParams.toString();
     return query ? `${pathname}?${query}` : pathname;
@@ -164,7 +156,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
 
   const productLink = getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, selectedResourceIds);
   const priceLabel = formatPriceForDisplay(currencyLabel, selectedPricingOption.price, selectedPricingOption.purchaseCadence);
-  const pricingTitle = selectedPricingOption.listingMetadata.title ?? selectedPricingOption.listingMetadata.subTitle ?? cadenceLabel;
+  const pricingTitle = selectedPricingOption.listingMetadata.title ?? selectedPricingOption.listingMetadata.subTitle ?? 'Pricing option';
 
   return (
     <Box
@@ -268,7 +260,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
 
             <LeadIconTypography label="Sign in to continue" sx={{ fontSize: { xs: '1.9rem', md: '2.35rem' } }} />
             <BodyIconTypography
-              label={bodyLabel ?? `You’ll need an account to start this ${cadenceLabel.toLowerCase()} plan, manage renewals, and keep your booking details saved in one place.`}
+              label={bodyLabel ?? `You’ll need an account to start the ${pricingTitle} plan, manage renewals, and keep your booking details saved in one place.`}
               sx={{ mt: 1.5, opacity: 0.76, maxWidth: 560, mx: 'auto' }}
             />
 

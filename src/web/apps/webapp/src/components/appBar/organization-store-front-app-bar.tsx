@@ -1,7 +1,7 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { ArrowDownIcon, BookingIcon, FeedbackIcon, SettingsIcon, SignOutIcon, SubscriptionsIcon, SystemModeIcon } from '@/components/icons';
-import { getMarketplaceBookingsLink, getMarketplaceSubscriptionsLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
+import { getMarketplaceBookingsLink, getMarketplaceSubscriptionsLink, getRootLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import useKnownParams from '@/hooks/use-known-params';
 import type { organizationStoreFrontAppBar_query$key } from '@/queries/__generated__/organizationStoreFrontAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -20,6 +20,7 @@ import { getCustomerFullName, SelectedPaletteModeContext, UpdatePaletteModeConte
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@skedular/ui';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
+import { usePathname } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -51,6 +52,7 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
 
   const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
+  const pathname = usePathname();
   const { signOut } = useAuth();
   const selectedThemeMode = useContext(SelectedPaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
@@ -109,8 +111,12 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
   });
 
   const settingsLink = getSettingsLink(integratedPlatform);
+  const productsLink = getRootLink(integratedPlatform);
   const bookingsLink = getMarketplaceBookingsLink(integratedPlatform, isCustomDomain, organizationCustomDomain);
   const subscriptionsLink = getMarketplaceSubscriptionsLink(integratedPlatform, isCustomDomain, organizationCustomDomain);
+  const isBookingsTabActive = pathname === bookingsLink || pathname.startsWith(`${bookingsLink}/`);
+  const isPlansTabActive = pathname === subscriptionsLink || pathname.startsWith(`${subscriptionsLink}/`);
+  const isProductsTabActive = !isBookingsTabActive && !isPlansTabActive;
   const selectedThemeIcon =
     selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
 
@@ -164,6 +170,57 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
                   },
                 }}
               />
+            </Box>
+
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 0.5, ml: { md: 3, lg: 5 } }}>
+              <Button
+                component={NextLink}
+                href={productsLink}
+                color="inherit"
+                aria-current={isProductsTabActive ? 'page' : undefined}
+                sx={{
+                  textTransform: 'none',
+                  color: isProductsTabActive ? 'text.primary' : 'text.secondary',
+                  fontWeight: isProductsTabActive ? 700 : 500,
+                  borderRadius: 2,
+                  px: 1.25,
+                  boxShadow: isProductsTabActive ? (theme) => `inset 0 -2px 0 ${theme.palette.primary.main}` : 'none',
+                }}
+              >
+                Products
+              </Button>
+              <Button
+                component={NextLink}
+                href={bookingsLink}
+                color="inherit"
+                aria-current={isBookingsTabActive ? 'page' : undefined}
+                sx={{
+                  textTransform: 'none',
+                  color: isBookingsTabActive ? 'text.primary' : 'text.secondary',
+                  fontWeight: isBookingsTabActive ? 700 : 500,
+                  borderRadius: 2,
+                  px: 1.25,
+                  boxShadow: isBookingsTabActive ? (theme) => `inset 0 -2px 0 ${theme.palette.primary.main}` : 'none',
+                }}
+              >
+                My bookings
+              </Button>
+              <Button
+                component={NextLink}
+                href={subscriptionsLink}
+                color="inherit"
+                aria-current={isPlansTabActive ? 'page' : undefined}
+                sx={{
+                  textTransform: 'none',
+                  color: isPlansTabActive ? 'text.primary' : 'text.secondary',
+                  fontWeight: isPlansTabActive ? 700 : 500,
+                  borderRadius: 2,
+                  px: 1.25,
+                  boxShadow: isPlansTabActive ? (theme) => `inset 0 -2px 0 ${theme.palette.primary.main}` : 'none',
+                }}
+              >
+                Plans & credits
+              </Button>
             </Box>
 
             <PushToRight />
@@ -291,7 +348,7 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
 
           <MenuItem>
             <Link component={NextLink} href={subscriptionsLink}>
-              <SmallIconTypography startElement={<SubscriptionsIcon />} label="Subscriptions" />
+              <SmallIconTypography startElement={<SubscriptionsIcon />} label="Plans & credits" />
             </Link>
           </MenuItem>
 

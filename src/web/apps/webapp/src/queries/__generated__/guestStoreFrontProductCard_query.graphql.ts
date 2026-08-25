@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<30f59ae6ff3e216e2a111d12c324bb3e>>
+ * @generated SignedSource<<dfdbf17f830a1593472256a23fd2556f>>
  * @lightSyntaxTransform
  */
 
@@ -9,16 +9,11 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type guestStoreFrontProductCard_query$data = {
   readonly currencies: ReadonlyArray<{
     readonly name: string;
     readonly type: Currency;
-  }>;
-  readonly productPricingCadences: ReadonlyArray<{
-    readonly name: string;
-    readonly type: ProductPricingCadence;
   }>;
   readonly " $fragmentType": "guestStoreFrontProductCard_query";
 };
@@ -27,24 +22,7 @@ export type guestStoreFrontProductCard_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontProductCard_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "name",
-    "storageKey": null
-  }
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -53,29 +31,33 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "ProductPricingCadenceDetails",
-      "kind": "LinkedField",
-      "name": "productPricingCadences",
-      "plural": true,
-      "selections": (v0/*:: as any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "CurrencyDetails",
       "kind": "LinkedField",
       "name": "currencies",
       "plural": true,
-      "selections": (v0/*:: as any*/),
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "47f2395ae974a42f730d5e9265ee8db6";
+(node as any).hash = "adf92838e0bb1b319f5dd829c405b3c9";
 
 export default node;

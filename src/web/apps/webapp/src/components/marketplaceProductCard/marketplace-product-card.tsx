@@ -17,7 +17,6 @@ type PricingRow = {
   amountLabel: string;
   availableDays: readonly string[];
   cadence: string;
-  cadenceLabel: string;
   id: string;
   taxLabel: string;
   title: string;
@@ -116,8 +115,7 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
                         }}
                       />
                       <Box sx={{ minWidth: 0 }}>
-                        <CaptionIconTypography label={row.cadenceLabel} sx={{ opacity: 0.9, display: 'block', fontWeight: 500 }} />
-                        <CaptionIconTypography label={row.title} sx={{ opacity: 0.65, display: 'block' }} />
+                        <CaptionIconTypography label={row.title} sx={{ opacity: 0.9, display: 'block', fontWeight: 500 }} />
                         <CaptionIconTypography label={getAvailableDaysLabel(row.availableDays)} sx={{ opacity: 0.65, display: 'block' }} />
                       </Box>
                     </StackRow>

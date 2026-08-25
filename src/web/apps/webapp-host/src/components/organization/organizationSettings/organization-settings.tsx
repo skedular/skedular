@@ -53,16 +53,9 @@ const EditorSection = ({ title, description, summary, expanded, onChange, childr
   </Accordion>
 );
 
-type OrganizationSettingsSection = 'setup' | 'marketplace-listing' | 'stripe-connect-accounts-setup' | 'physical-address-setup' | 'tax-details-setup' | 'manage-organization';
+type OrganizationSettingsSection = 'setup' | 'stripe-connect-accounts-setup' | 'physical-address-setup' | 'tax-details-setup' | 'manage-organization';
 
-const validSections: OrganizationSettingsSection[] = [
-  'setup',
-  'marketplace-listing',
-  'stripe-connect-accounts-setup',
-  'physical-address-setup',
-  'tax-details-setup',
-  'manage-organization',
-];
+const validSections: OrganizationSettingsSection[] = ['setup', 'stripe-connect-accounts-setup', 'physical-address-setup', 'tax-details-setup', 'manage-organization'];
 
 const getActiveSection = (value: string | null): OrganizationSettingsSection | null => {
   if (value && validSections.includes(value as OrganizationSettingsSection)) {
@@ -74,7 +67,6 @@ const getActiveSection = (value: string | null): OrganizationSettingsSection | n
 
 const sectionLabels: Record<OrganizationSettingsSection, string> = {
   setup: 'Organization profile',
-  'marketplace-listing': 'Marketplace listing',
   'stripe-connect-accounts-setup': 'Stripe',
   'physical-address-setup': 'Address',
   'tax-details-setup': 'Tax',
@@ -110,7 +102,6 @@ const OrganizationSettings = ({ rootDataRelay, organizationCustomDomain }: Props
   const activeSection = useMemo(() => getActiveSection(section) ?? (integrationsMode ? 'stripe-connect-accounts-setup' : null), [integrationsMode, section]);
   const router = useRouter();
   useEffect(() => {
-    if (section === 'marketplace-listing') router.replace('?tab=profile&section=marketplace-listing');
     if (section === 'billing-payment-setup') router.replace('?tab=profile&section=billing-details');
     if (section === 'subscriptions') router.replace('?tab=profile&section=plan');
     if (section === 'setup' && searchParams.get('profileSection')) router.replace(`?tab=profile&section=${searchParams.get('profileSection')}`);
@@ -368,7 +359,6 @@ const OrganizationSettings = ({ rootDataRelay, organizationCustomDomain }: Props
             <OrganizationSettingsManageOrganizationSection organizationCustomDomain={organizationCustomDomain} />
           </Box>
         )}
-        {activeSection === 'marketplace-listing' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
         {activeSection === 'stripe-connect-accounts-setup' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
         {activeSection === 'physical-address-setup' && <OrganizationSettingsPhysicalAddressSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'tax-details-setup' && <OrganizationSettingsTaxDetailsSection organizationCustomDomain={organizationCustomDomain} />}
