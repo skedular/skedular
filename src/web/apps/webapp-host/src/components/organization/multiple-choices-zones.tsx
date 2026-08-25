@@ -1,5 +1,6 @@
-import { BodyIconTypography } from '@skedular/ui';
+import { BodyIconTypography, StackColumn } from '@skedular/ui';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
+import Box from '@mui/material/Box';
 import type { multipleChoicesZones_query$key } from '@/queries/__generated__/multipleChoicesZones_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
@@ -45,7 +46,15 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationCusto
   const filter = createFilterOptions<ZoneDetails>();
 
   if (items.length === 0) {
-    return <AddOrganizationZoneButton organizationCustomDomain={organizationCustomDomain} size="medium" />;
+    return (
+      <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 2, bgcolor: 'action.hover', px: 2, py: 1.75 }}>
+        <StackColumn spacing={0.75} sx={{ alignItems: 'flex-start' }}>
+          <BodyIconTypography label="No zones yet" />
+          <BodyIconTypography label="Create a zone to make this resource easier to find." />
+          <AddOrganizationZoneButton organizationCustomDomain={organizationCustomDomain} label="Create zone" size="small" variant="outlined" />
+        </StackColumn>
+      </Box>
+    );
   }
 
   return (

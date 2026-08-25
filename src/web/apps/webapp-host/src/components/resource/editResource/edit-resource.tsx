@@ -1,18 +1,18 @@
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
-import ResourceEditSectionNav, { ResourceEditSection } from '@/components/resource/editResource/resource-edit-section-nav';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import type { editResource_query$key } from '@/queries/__generated__/editResource_query.graphql';
 import type { editResource_updateLocationResourceAvailableHoursMutation } from '@/queries/__generated__/editResource_updateLocationResourceAvailableHoursMutation.graphql';
 import type { editResource_updateResourceMutation, ResourcePatchField } from '@/queries/__generated__/editResource_updateResourceMutation.graphql';
+import ResourceEditSectionNav, { ResourceEditSection } from '@/components/resource/editResource/resource-edit-section-nav';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
-import Switch from '@mui/material/Switch';
+import Button from '@mui/material/Button';
 import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
 import {
   BodyIconTypography,
-  ColorPicker,
+  ColorPickerButton,
   defaultPadding,
   FormFieldLabel,
   FormStackColumn,
@@ -23,8 +23,8 @@ import {
 } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { memo, useContext, useEffect, useRef, useState } from 'react';
-import { Form } from 'react-final-form';
+import { memo, useContext, useRef, useState } from 'react';
+import { Form, FormSpy } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
@@ -430,7 +430,6 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   const requiredFields = makeRequired(ResourceSchema);
   const [selectedColor, setSelectedColor] = useState(rootData.resource?.color);
   const [isAvailableHoursOverridden, setIsAvailableHoursOverridden] = useState(rootData.resource ? rootData.resource.isAvailableHoursOverridden : false);
-  const [stickyTop, setStickyTop] = useState(0);
   const [initialResourceValues] = useState<ResourceDetails | null>(() =>
     rootData.resource
       ? {
@@ -445,22 +444,12 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   );
   const previousResourceValues = useRef<ResourceDetails | null>(initialResourceValues);
   const previousSelectedColor = useRef<string | null | undefined>(rootData.resource?.color);
-
-  useEffect(() => {
-    const updateStickyTop = () => {
-      setStickyTop(document.querySelector('.app-bar')?.clientHeight ?? 0);
-    };
-
-    updateStickyTop();
-    window.addEventListener('resize', updateStickyTop);
-
-    return () => {
-      window.removeEventListener('resize', updateStickyTop);
-    };
-  }, []);
+  const lastScheduledResourceUpdateKey = useRef<string | null>(null);
+  const latestResourceValues = useRef<ResourceDetails | null>(initialResourceValues);
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
+    if (latestResourceValues.current) scheduleResourceDetailsUpdate(latestResourceValues.current, color);
   };
 
   const handleResourceDetailUpdateClick = (fieldsToUpdate: ResourcePatchField[], resourceDetails: ResourceDetails) => {
@@ -531,6 +520,27 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   };
   const debouncedResourceDetailsUpdate = useDebounceCallback(handleResourceDetailUpdateClick, resourceAutosaveDebounceTimeout);
 
+  const scheduleResourceDetailsUpdate = (resourceDetails: ResourceDetails, color = selectedColor) => {
+    const changedFields = getChangedResourceFields(previousResourceValues.current, resourceDetails, previousSelectedColor.current, color);
+    const resourceUpdateKey = JSON.stringify({ resourceDetails, color });
+    if (changedFields.length === 0 || lastScheduledResourceUpdateKey.current === resourceUpdateKey) return;
+
+    lastScheduledResourceUpdateKey.current = resourceUpdateKey;
+    previousResourceValues.current = {
+      ...resourceDetails,
+      customTagIds: [...resourceDetails.customTagIds],
+      zoneIds: [...resourceDetails.zoneIds],
+      productTagIds: [...resourceDetails.productTagIds],
+    };
+    previousSelectedColor.current = color;
+    debouncedResourceDetailsUpdate(changedFields, resourceDetails);
+  };
+
+  const handleResourceFormChange = ({ values }: { values: ResourceDetails }) => {
+    latestResourceValues.current = values;
+    scheduleResourceDetailsUpdate(values);
+  };
+
   const handleResourceAvailableHoursUpdateClick = (weekOpeningHours: WeekOpeningHoursDetails) => {
     const resource = rootData.resource;
     if (!resource) {
@@ -578,10 +588,11 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     });
   };
 
-  const handleIsAvailableHoursOverriddenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsAvailableHoursOverridden(event.target.checked);
+  const handleIsAvailableHoursOverriddenChange = (overrideAvailableHours: boolean) => {
+    if (overrideAvailableHours === isAvailableHoursOverridden) return;
+    setIsAvailableHoursOverridden(overrideAvailableHours);
 
-    if (event.target.checked) {
+    if (overrideAvailableHours) {
       return;
     }
 
@@ -645,9 +656,28 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         return (
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
             <SettingsSectionCard title="Opening hours" description="Only change these hours if this resource should be available at different times from the location.">
-              <FormFieldLabel label="Use custom hours for this resource">
-                <Switch checked={isAvailableHoursOverridden} onChange={handleIsAvailableHoursOverriddenChange} />
-              </FormFieldLabel>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }, gap: 1.5 }}>
+                <Button
+                  variant={isAvailableHoursOverridden ? 'outlined' : 'contained'}
+                  onClick={() => handleIsAvailableHoursOverriddenChange(false)}
+                  sx={{ alignItems: 'flex-start', justifyContent: 'flex-start', minHeight: 92, px: 2, py: 1.5, textAlign: 'left', textTransform: 'none' }}
+                >
+                  <StackColumn spacing={0.35} sx={{ alignItems: 'flex-start' }}>
+                    <BodyIconTypography label="Use location hours" />
+                    <BodyIconTypography label="This resource follows the location's regular opening hours." />
+                  </StackColumn>
+                </Button>
+                <Button
+                  variant={isAvailableHoursOverridden ? 'contained' : 'outlined'}
+                  onClick={() => handleIsAvailableHoursOverriddenChange(true)}
+                  sx={{ alignItems: 'flex-start', justifyContent: 'flex-start', minHeight: 92, px: 2, py: 1.5, textAlign: 'left', textTransform: 'none' }}
+                >
+                  <StackColumn spacing={0.35} sx={{ alignItems: 'flex-start' }}>
+                    <BodyIconTypography label="Customize hours" />
+                    <BodyIconTypography label="Set different availability for this resource." />
+                  </StackColumn>
+                </Button>
+              </Box>
             </SettingsSectionCard>
 
             {isAvailableHoursOverridden && (
@@ -676,19 +706,12 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         return (
           <Form
             onSubmit={() => undefined}
-            initialValues={initialResourceValues}
+            initialValues={initialResourceValues ?? undefined}
             validate={validateResourceDetails}
-            render={({ handleSubmit, values }) => {
-              const resourceValues = values as ResourceDetails;
-              const changedFields = getChangedResourceFields(previousResourceValues.current, resourceValues, previousSelectedColor.current, selectedColor);
-              if (changedFields.length > 0) {
-                previousResourceValues.current = resourceValues;
-                previousSelectedColor.current = selectedColor;
-                debouncedResourceDetailsUpdate(changedFields, resourceValues);
-              }
-
+            render={({ handleSubmit }) => {
               return (
                 <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+                  <FormSpy subscription={{ values: true }} onChange={handleResourceFormChange} />
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
                     <SettingsSectionCard title="Resource details" description="Update the name, type, tags, and capacity for this resource.">
                       <FormFieldLabel label="Resource Type">
@@ -724,7 +747,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                       )}
 
                       <FormFieldLabel label="Color">
-                        <ColorPicker onChange={handleColorChange} defaultColor={rootData.resource?.color} />
+                        <ColorPickerButton onChange={handleColorChange} defaultColor={rootData.resource?.color} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Capacity">
@@ -752,13 +775,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         }}
       >
         <PageHeaderPanel eyebrow="Resource settings" title={resource.name} description="Edit identity, categorization, capacity, and custom availability for this resource." />
-        <ResourceEditSectionNav
-          activeSection={activeSection}
-          organizationCustomDomain={organizationCustomDomain}
-          locationId={locationId}
-          resourceId={resource.id}
-          stickyTop={stickyTop}
-        />
+        <ResourceEditSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} locationId={locationId} resourceId={resource.id} stickyTop={0} />
 
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) 320px' }, gap: { xs: 2, xl: 2 } }}>
           <Box

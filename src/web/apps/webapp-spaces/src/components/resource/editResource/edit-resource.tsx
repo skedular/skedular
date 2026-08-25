@@ -9,13 +9,13 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Box from '@mui/material/Box';
-import Switch from '@mui/material/Switch';
+import Button from '@mui/material/Button';
 import { getRelayErrorMessage, PaletteModeContext } from '@skedular/shared';
-import { BodyIconTypography, ColorPicker, defaultPadding, FormFieldLabel, FormStackColumn, PageHeaderPanel, StackColumn } from '@skedular/ui';
+import { BodyIconTypography, ColorPickerButton, defaultPadding, FormFieldLabel, FormStackColumn, PageHeaderPanel, StackColumn } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { Form } from 'react-final-form';
+import { Form, FormSpy } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
@@ -89,6 +89,13 @@ const EditorSection = ({
     <AccordionDetails sx={{ borderTop: 1, borderColor: 'divider', p: { xs: 2, sm: 2.5 } }}>{children}</AccordionDetails>
   </Accordion>
 );
+
+const getClassificationSummary = (resource: { customTags: ReadonlyArray<unknown>; zones: ReadonlyArray<unknown>; color: string | null | undefined }) => {
+  const tagLabel = `${resource.customTags.length} ${resource.customTags.length === 1 ? 'tag' : 'tags'}`;
+  const zoneLabel = `${resource.zones.length} ${resource.zones.length === 1 ? 'zone' : 'zones'}`;
+
+  return `${tagLabel} · ${zoneLabel} · Color`;
+};
 
 const formColumnSx = {
   width: '100%',
@@ -470,6 +477,8 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   );
   const previousResourceValues = useRef<ResourceDetails | null>(initialResourceValues);
   const previousSelectedColor = useRef<string | null | undefined>(rootData.resource?.color);
+  const lastScheduledResourceUpdateKey = useRef<string | null>(null);
+  const latestResourceValues = useRef<ResourceDetails | null>(initialResourceValues);
 
   useEffect(() => {
     if (searchParams.get('section') !== 'setup') return;
@@ -480,6 +489,32 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
 
   const handleColorChange = (color: string) => {
     setSelectedColor(color);
+    if (latestResourceValues.current) {
+      scheduleResourceDetailsUpdate(latestResourceValues.current, color);
+    }
+  };
+
+  const scheduleResourceDetailsUpdate = (resourceDetails: ResourceDetails, color = selectedColor) => {
+    const changedFields = getChangedResourceFields(previousResourceValues.current, resourceDetails, previousSelectedColor.current, color);
+    const resourceUpdateKey = JSON.stringify({ resourceDetails, color });
+    if (changedFields.length === 0 || lastScheduledResourceUpdateKey.current === resourceUpdateKey) {
+      return;
+    }
+
+    lastScheduledResourceUpdateKey.current = resourceUpdateKey;
+    previousResourceValues.current = {
+      ...resourceDetails,
+      customTagIds: [...resourceDetails.customTagIds],
+      zoneIds: [...resourceDetails.zoneIds],
+      productTagIds: [...resourceDetails.productTagIds],
+    };
+    previousSelectedColor.current = color;
+    debouncedResourceDetailsUpdate(changedFields, resourceDetails);
+  };
+
+  const handleResourceFormChange = ({ values }: { values: ResourceDetails }) => {
+    latestResourceValues.current = values;
+    scheduleResourceDetailsUpdate(values);
   };
 
   const handleResourceDetailUpdateClick = (fieldsToUpdate: ResourcePatchField[], resourceDetails: ResourceDetails) => {
@@ -597,10 +632,14 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
     });
   };
 
-  const handleIsAvailableHoursOverriddenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsAvailableHoursOverridden(event.target.checked);
+  const handleIsAvailableHoursOverriddenChange = (overrideAvailableHours: boolean) => {
+    if (overrideAvailableHours === isAvailableHoursOverridden) {
+      return;
+    }
 
-    if (event.target.checked) {
+    setIsAvailableHoursOverridden(overrideAvailableHours);
+
+    if (overrideAvailableHours) {
       return;
     }
 
@@ -664,28 +703,51 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
 
   const renderOpeningHours = () => (
     <StackColumn spacing={2}>
-      <FormFieldLabel label="Use custom hours for this resource">
-        <Switch checked={isAvailableHoursOverridden} onChange={handleIsAvailableHoursOverriddenChange} />
-      </FormFieldLabel>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))' }, gap: 1.5 }}>
+        <Button
+          variant={isAvailableHoursOverridden ? 'outlined' : 'contained'}
+          color="primary"
+          onClick={() => handleIsAvailableHoursOverriddenChange(false)}
+          sx={{ alignItems: 'flex-start', justifyContent: 'flex-start', minHeight: 92, px: 2, py: 1.5, textAlign: 'left', textTransform: 'none' }}
+        >
+          <StackColumn spacing={0.35} sx={{ alignItems: 'flex-start' }}>
+            <BodyIconTypography label="Use location hours" />
+            <BodyIconTypography label="This resource follows the location's regular opening hours." />
+          </StackColumn>
+        </Button>
+        <Button
+          variant={isAvailableHoursOverridden ? 'contained' : 'outlined'}
+          color="primary"
+          onClick={() => handleIsAvailableHoursOverriddenChange(true)}
+          sx={{ alignItems: 'flex-start', justifyContent: 'flex-start', minHeight: 92, px: 2, py: 1.5, textAlign: 'left', textTransform: 'none' }}
+        >
+          <StackColumn spacing={0.35} sx={{ alignItems: 'flex-start' }}>
+            <BodyIconTypography label="Customize hours" />
+            <BodyIconTypography label="Set different availability for this resource." />
+          </StackColumn>
+        </Button>
+      </Box>
 
       {isAvailableHoursOverridden && (
-        <WeekOpeningHours
-          rootDataRelay={rootData}
-          defaultValue={
-            resource.availableHours
-              ? {
-                  monday: resource.availableHours.weekOpeningHours.monday,
-                  tuesday: resource.availableHours.weekOpeningHours.tuesday,
-                  wednesday: resource.availableHours.weekOpeningHours.wednesday,
-                  thursday: resource.availableHours.weekOpeningHours.thursday,
-                  friday: resource.availableHours.weekOpeningHours.friday,
-                  saturday: resource.availableHours.weekOpeningHours.saturday,
-                  sunday: resource.availableHours.weekOpeningHours.sunday,
-                }
-              : location.openingHours.weekOpeningHours
-          }
-          onWeekOpeningHoursDetailUpdateClick={handleResourceAvailableHoursUpdateClick}
-        />
+        <Box sx={{ borderTop: 1, borderColor: 'divider', pt: 2 }}>
+          <WeekOpeningHours
+            rootDataRelay={rootData}
+            defaultValue={
+              resource.availableHours
+                ? {
+                    monday: resource.availableHours.weekOpeningHours.monday,
+                    tuesday: resource.availableHours.weekOpeningHours.tuesday,
+                    wednesday: resource.availableHours.weekOpeningHours.wednesday,
+                    thursday: resource.availableHours.weekOpeningHours.thursday,
+                    friday: resource.availableHours.weekOpeningHours.friday,
+                    saturday: resource.availableHours.weekOpeningHours.saturday,
+                    sunday: resource.availableHours.weekOpeningHours.sunday,
+                  }
+                : location.openingHours.weekOpeningHours
+            }
+            onWeekOpeningHoursDetailUpdateClick={handleResourceAvailableHoursUpdateClick}
+          />
+        </Box>
       )}
     </StackColumn>
   );
@@ -695,17 +757,10 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       onSubmit={() => undefined}
       initialValues={initialResourceValues ?? undefined}
       validate={validateResourceDetails}
-      render={({ handleSubmit, values }) => {
-        const resourceValues = values as ResourceDetails;
-        const changedFields = getChangedResourceFields(previousResourceValues.current, resourceValues, previousSelectedColor.current, selectedColor);
-        if (changedFields.length > 0) {
-          previousResourceValues.current = resourceValues;
-          previousSelectedColor.current = selectedColor;
-          debouncedResourceDetailsUpdate(changedFields, resourceValues);
-        }
-
+      render={({ handleSubmit }) => {
         return (
           <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+            <FormSpy subscription={{ values: true }} onChange={handleResourceFormChange} />
             <StackColumn spacing={2}>
               <FormFieldLabel label="Resource Type">
                 <SingleChoiceResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
@@ -730,17 +785,10 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       onSubmit={() => undefined}
       initialValues={initialResourceValues ?? undefined}
       validate={validateResourceDetails}
-      render={({ handleSubmit, values }) => {
-        const resourceValues = values as ResourceDetails;
-        const changedFields = getChangedResourceFields(previousResourceValues.current, resourceValues, previousSelectedColor.current, selectedColor);
-        if (changedFields.length > 0) {
-          previousResourceValues.current = resourceValues;
-          previousSelectedColor.current = selectedColor;
-          debouncedResourceDetailsUpdate(changedFields, resourceValues);
-        }
-
+      render={({ handleSubmit }) => {
         return (
           <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
+            <FormSpy subscription={{ values: true }} onChange={handleResourceFormChange} />
             <StackColumn spacing={2}>
               <FormFieldLabel label="Tags">
                 <MultipleChoicesCustomTags
@@ -764,7 +812,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                 </FormFieldLabel>
               )}
               <FormFieldLabel label="Color">
-                <ColorPicker onChange={handleColorChange} defaultColor={rootData.resource?.color} />
+                <ColorPickerButton onChange={handleColorChange} defaultColor={rootData.resource?.color} />
               </FormFieldLabel>
             </StackColumn>
           </FormStackColumn>
@@ -816,20 +864,20 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               <EditorSection
                 title="Presentation"
                 description="Update the name, type, and capacity for this resource."
-                summary="Resource identity and capacity"
+                summary={`${resource.resourceType.name} · capacity ${resource.capacity}`}
                 expanded={activeSection === 'presentation'}
                 onChange={() => updateSection('presentation')}
               >
-                {renderPresentation()}
+                {activeSection === 'presentation' ? renderPresentation() : null}
               </EditorSection>
               <EditorSection
                 title="Classification"
                 description="Use tags, zones, booking groups, and color to make this resource easy to filter and recognize."
-                summary="Tags, zones, booking groups, and color"
+                summary={getClassificationSummary(resource)}
                 expanded={activeSection === 'classification'}
                 onChange={() => updateSection('classification')}
               >
-                {renderClassification()}
+                {activeSection === 'classification' ? renderClassification() : null}
               </EditorSection>
               <EditorSection
                 title="Opening hours"
@@ -838,7 +886,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                 expanded={activeSection === 'opening-hours'}
                 onChange={() => updateSection('opening-hours')}
               >
-                {renderOpeningHours()}
+                {activeSection === 'opening-hours' ? renderOpeningHours() : null}
               </EditorSection>
             </StackColumn>
           </Box>
