@@ -15,6 +15,10 @@ import type {
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { getCustomerFullName, getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
 import {
   CaptionIconTypography,
@@ -31,7 +35,7 @@ import {
 } from '@skedular/ui';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
@@ -71,19 +75,15 @@ const profileDetailsSchema = object({
   personalInformationVisibility: string().required('Personal Information Visibility is required'),
 });
 
-const validSections: OrganizationUserSection[] = ['profile', 'manage-user'];
-
-const getActiveSection = (value: string | null): OrganizationUserSection => {
-  if (value && validSections.includes(value as OrganizationUserSection)) {
-    return value as OrganizationUserSection;
-  }
-
+const getActiveSection = (tab: string | null, section: string | null): OrganizationUserSection => {
+  if (tab === 'profile' || section === 'identity' || section === 'profile') return 'profile';
+  if (tab === 'manage' || section === 'manage-user') return 'manage-user';
   return 'profile';
 };
 
 const formColumnSx = {
   width: '100%',
-  maxWidth: 760,
+  maxWidth: 'none',
 };
 
 const inlinePatchDebounceTimeout = 1000;
@@ -215,8 +215,19 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const searchParams = useSearchParams();
-  const activeSection = useMemo(() => getActiveSection(searchParams.get('section')), [searchParams]);
-  const [stickyTop, setStickyTop] = useState(0);
+  const activeSection = useMemo(() => getActiveSection(searchParams.get('tab'), searchParams.get('section')), [searchParams]);
+  const [expandedProfileSection, setExpandedProfileSection] = useState<'identity' | 'contact' | 'privacy' | false>(() => {
+    const section = searchParams.get('section');
+    return section === 'contact' || section === 'privacy' || section === 'identity' ? section : 'identity';
+  });
+  const updateProfileSection = (section: 'identity' | 'contact' | 'privacy' | false) => {
+    setExpandedProfileSection(section);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', 'profile');
+    if (section) params.set('section', section);
+    else params.delete('section');
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
   const validateProfileDetails = makeValidate(profileDetailsSchema);
   const requiredProfileDetailsFields = makeRequired(profileDetailsSchema);
   const member = useMemo(
@@ -224,19 +235,6 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
     [rootData.organization],
   );
   const organizationMemberConnectionIds = useMemo(() => (rootData.organization?.members ? [rootData.organization.members.__id] : []), [rootData.organization]);
-
-  useEffect(() => {
-    const updateStickyTop = () => {
-      setStickyTop(document.querySelector('.app-bar')?.clientHeight ?? 0);
-    };
-
-    updateStickyTop();
-    window.addEventListener('resize', updateStickyTop);
-
-    return () => {
-      window.removeEventListener('resize', updateStickyTop);
-    };
-  }, []);
 
   const initialProfileValues = useMemo<ProfileDetailsDetails | null>(
     () =>
@@ -396,10 +394,10 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
   const isItMe = customer.id === rootData.me?.id;
 
   const renderProfileSection = () => (
-    <Box sx={{ p: defaultPadding }}>
+    <StackColumn spacing={2}>
       <Form
         onSubmit={() => undefined}
-        initialValues={initialProfileValues}
+        initialValues={initialProfileValues ?? undefined}
         validate={validateProfileDetails}
         render={({ handleSubmit, values }) => {
           const formValues = values as ProfileDetailsDetails;
@@ -412,66 +410,109 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
           return (
             <FormStackColumn onSubmit={handleSubmit} sx={formColumnSx}>
               <StackColumn spacing={2}>
-                <StackColumn spacing={0.5}>
-                  <LeadIconTypography label="Profile" />
-                  <SmallIconTypography label="Manage the identity, contact details, and visibility settings for this user." />
-                </StackColumn>
+                <Accordion
+                  expanded={expandedProfileSection === 'identity'}
+                  onChange={() => updateProfileSection(expandedProfileSection === 'identity' ? false : 'identity')}
+                  disableGutters
+                  elevation={0}
+                  sx={{ border: 1, borderColor: 'divider', borderRadius: '12px !important', overflow: 'hidden', '&::before': { display: 'none' } }}
+                >
+                  <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />} sx={{ px: 2, minHeight: 56 }}>
+                    <StackColumn spacing={0.25}>
+                      <LeadIconTypography label="Identity" />
+                      <SmallIconTypography label="Names, title, and designation" />
+                    </StackColumn>
+                  </AccordionSummary>
+                  <AccordionDetails sx={{ borderTop: 1, borderColor: 'divider', p: 2 }}>
+                    <StackColumn spacing={2}>
+                      <FormFieldLabel label="Designation">
+                        {isItMe && <TextField name="designation" required={requiredProfileDetailsFields.designation} />}
+                        {!isItMe && <SmallIconTypography label={customer.designation} />}
+                      </FormFieldLabel>
 
-                <Divider />
+                      <FormFieldLabel label="Title">
+                        {isItMe && <TextField name="title" required={requiredProfileDetailsFields.title} />}
+                        {!isItMe && <SmallIconTypography label={customer.title} />}
+                      </FormFieldLabel>
 
-                <FormFieldLabel label="Designation">
-                  {isItMe && <TextField name="designation" required={requiredProfileDetailsFields.designation} />}
-                  {!isItMe && <SmallIconTypography label={customer.designation} />}
-                </FormFieldLabel>
+                      <FormFieldLabel label="Name">
+                        {isItMe && <TextField name="name" required={requiredProfileDetailsFields.name} />}
+                        {!isItMe && <SmallIconTypography label={customer.name} />}
+                      </FormFieldLabel>
 
-                <FormFieldLabel label="Title">
-                  {isItMe && <TextField name="title" required={requiredProfileDetailsFields.title} />}
-                  {!isItMe && <SmallIconTypography label={customer.title} />}
-                </FormFieldLabel>
+                      <FormFieldLabel label="Given Name">
+                        {isItMe && <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />}
+                        {!isItMe && <SmallIconTypography label={customer.givenName} />}
+                      </FormFieldLabel>
 
-                <FormFieldLabel label="Name">
-                  {isItMe && <TextField name="name" required={requiredProfileDetailsFields.name} />}
-                  {!isItMe && <SmallIconTypography label={customer.name} />}
-                </FormFieldLabel>
+                      <FormFieldLabel label="Middle Name">
+                        {isItMe && <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />}
+                        {!isItMe && <SmallIconTypography label={customer.middleName} />}
+                      </FormFieldLabel>
 
-                <FormFieldLabel label="Given Name">
-                  {isItMe && <TextField name="givenName" required={requiredProfileDetailsFields.givenName} />}
-                  {!isItMe && <SmallIconTypography label={customer.givenName} />}
-                </FormFieldLabel>
+                      <FormFieldLabel label="Family Name">
+                        {isItMe && <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />}
+                        {!isItMe && <SmallIconTypography label={customer.familyName} />}
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion
+                  expanded={expandedProfileSection === 'contact'}
+                  onChange={() => updateProfileSection(expandedProfileSection === 'contact' ? false : 'contact')}
+                  disableGutters
+                  elevation={0}
+                  sx={{ border: 1, borderColor: 'divider', borderRadius: '12px !important', overflow: 'hidden', '&::before': { display: 'none' } }}
+                >
+                  <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />} sx={{ px: 2, minHeight: 56 }}>
+                    <StackColumn spacing={0.25}>
+                      <LeadIconTypography label="Contact" />
+                      <SmallIconTypography label="Timezone and phone number" />
+                    </StackColumn>
+                  </AccordionSummary>
+                  <AccordionDetails sx={{ borderTop: 1, borderColor: 'divider', p: 2 }}>
+                    <StackColumn spacing={2}>
+                      <FormFieldLabel label="Timezone">
+                        {isItMe && <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />}
+                        {!isItMe && <SmallIconTypography label={customer.timezone} />}
+                      </FormFieldLabel>
 
-                <FormFieldLabel label="Middle Name">
-                  {isItMe && <TextField name="middleName" required={requiredProfileDetailsFields.middleName} />}
-                  {!isItMe && <SmallIconTypography label={customer.middleName} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Family Name">
-                  {isItMe && <TextField name="familyName" required={requiredProfileDetailsFields.familyName} />}
-                  {!isItMe && <SmallIconTypography label={customer.familyName} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Timezone">
-                  {isItMe && <SingleChoinceTimezone name="timezone" required={requiredProfileDetailsFields.timezone} />}
-                  {!isItMe && <SmallIconTypography label={customer.timezone} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Phone Number">
-                  {isItMe && <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />}
-                  {!isItMe && <SmallIconTypography label={customer.phoneNumber} />}
-                </FormFieldLabel>
-
-                <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
-                  <SingleChoiceUserPersonalInformationVisibility
-                    rootDataRelay={rootData}
-                    name="personalInformationVisibility"
-                    required={requiredProfileDetailsFields.personalInformationVisibility}
-                  />
-                </FormFieldLabel>
+                      <FormFieldLabel label="Phone Number">
+                        {isItMe && <TextField name="phoneNumber" required={requiredProfileDetailsFields.phoneNumber} />}
+                        {!isItMe && <SmallIconTypography label={customer.phoneNumber} />}
+                      </FormFieldLabel>
+                    </StackColumn>
+                  </AccordionDetails>
+                </Accordion>
+                <Accordion
+                  expanded={expandedProfileSection === 'privacy'}
+                  onChange={() => updateProfileSection(expandedProfileSection === 'privacy' ? false : 'privacy')}
+                  disableGutters
+                  elevation={0}
+                  sx={{ border: 1, borderColor: 'divider', borderRadius: '12px !important', overflow: 'hidden', '&::before': { display: 'none' } }}
+                >
+                  <AccordionSummary expandIcon={<ExpandMoreRoundedIcon />} sx={{ px: 2, minHeight: 56 }}>
+                    <StackColumn spacing={0.25}>
+                      <LeadIconTypography label="Privacy" />
+                      <SmallIconTypography label="Personal information visibility" />
+                    </StackColumn>
+                  </AccordionSummary>
+                  <AccordionDetails sx={{ borderTop: 1, borderColor: 'divider', p: 2 }}>
+                    <FormFieldLabel label="Personal Information Visibility" required={requiredProfileDetailsFields.personalInformationVisibility}>
+                      <SingleChoiceUserPersonalInformationVisibility
+                        rootDataRelay={rootData}
+                        name="personalInformationVisibility"
+                        required={requiredProfileDetailsFields.personalInformationVisibility}
+                      />
+                    </FormFieldLabel>
+                  </AccordionDetails>
+                </Accordion>
               </StackColumn>
             </FormStackColumn>
           );
         }}
       />
-    </Box>
+    </StackColumn>
   );
 
   const renderManageSection = () => (
@@ -533,28 +574,27 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
           gap: 2,
         }}
       >
-        <PageHeaderPanel eyebrow="User profile" title={getCustomerFullName(customer)} description="Manage profile details, booking context, and lifecycle controls.">
+        <PageHeaderPanel eyebrow="User profile" title="User profile" description="Manage profile details, booking context, and lifecycle controls.">
           <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-            <StackRow>
-              <CustomerAvatar name={customer} photo={{ url: customer?.photoUrl }} size="large" />
-              <StackColumn spacing={0.5}>
+            <StackRow sx={{ alignItems: 'center', gap: 1.5 }}>
+              <CustomerAvatar name={customer} photo={{ url: customer.photoUrl }} size="large" />
+              <StackColumn spacing={0.25}>
                 <LeadIconTypography label={getCustomerFullName(customer)} />
                 <CaptionIconTypography label={customer.email} />
               </StackColumn>
             </StackRow>
           </StackRow>
+          <OrganizationUserSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} customerId={customerId} />
         </PageHeaderPanel>
-
-        <OrganizationUserSectionNav activeSection={activeSection} organizationCustomDomain={organizationCustomDomain} customerId={customerId} stickyTop={stickyTop} />
 
         <Box
           sx={{
-            borderRadius: 4,
-            border: 1,
+            borderRadius: activeSection === 'profile' ? 0 : 4,
+            border: activeSection === 'profile' ? 0 : 1,
             borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
-            bgcolor: (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
-            boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
-            overflow: 'hidden',
+            bgcolor: activeSection === 'profile' ? 'transparent' : (theme) => (theme.palette.mode === 'light' ? 'common.white' : theme.palette.background.paper),
+            boxShadow: activeSection === 'profile' ? 'none' : (theme) => (theme.palette.mode === 'light' ? '0 12px 32px rgba(15, 23, 42, 0.08)' : theme.shadows[1]),
+            overflow: activeSection === 'profile' ? 'visible' : 'hidden',
           }}
         >
           {renderActiveSection()}

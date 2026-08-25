@@ -4,6 +4,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import NextLink from 'next/link';
@@ -15,7 +17,6 @@ type Props = {
   activeSection: OrganizationUserSection;
   organizationCustomDomain: string;
   customerId: string;
-  stickyTop?: number;
 };
 
 const sectionLabels: Record<OrganizationUserSection, string> = {
@@ -23,7 +24,7 @@ const sectionLabels: Record<OrganizationUserSection, string> = {
   'manage-user': 'Manage',
 };
 
-const OrganizationUserSectionNav = ({ activeSection, organizationCustomDomain, customerId, stickyTop = 0 }: Props) => {
+const OrganizationUserSectionNav = ({ activeSection, organizationCustomDomain, customerId }: Props) => {
   const { integratedPlatform } = useIntegratedPlatform();
   const theme = useTheme();
   const isCompactNav = useMediaQuery(theme.breakpoints.down('md'), { noSsr: true });
@@ -49,16 +50,16 @@ const OrganizationUserSectionNav = ({ activeSection, organizationCustomDomain, c
         flexDirection: { xs: 'column', md: 'row' },
         alignItems: { xs: 'stretch', md: 'center' },
         gap: 1,
+        mt: 1.5,
+        pt: 1,
+        borderTop: 1,
+        borderColor: 'divider',
+        borderRadius: 0,
+        boxShadow: 'none',
+        bgcolor: 'transparent',
         px: { xs: 2, sm: 3 },
-        py: 2,
-        border: 1,
-        borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : 'divider'),
-        borderRadius: 4,
-        bgcolor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.88)' : theme.palette.background.paper),
-        boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : theme.shadows[1]),
-        position: 'sticky',
-        top: stickyTop,
-        zIndex: 2,
+        py: 0,
+        position: 'relative',
       }}
     >
       {isCompactNav ? (
@@ -89,38 +90,39 @@ const OrganizationUserSectionNav = ({ activeSection, organizationCustomDomain, c
           </Menu>
         </>
       ) : (
-        <Box
+        <Tabs
+          value={activeSection}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="User profile sections"
           sx={{
-            display: 'flex',
-            gap: 1,
-            overflowX: 'auto',
             flex: '1 1 0%',
             minWidth: 0,
-            scrollbarWidth: 'none',
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
+            mb: -2,
+            '& .MuiTabs-indicator': { height: 3, borderRadius: '3px 3px 0 0' },
           }}
         >
           {(Object.keys(sectionLabels) as OrganizationUserSection[]).map((section) => (
-            <Button
+            <Tab
               key={section}
+              value={section}
               component={NextLink}
               href={sectionLinks[section]}
-              variant={activeSection === section ? 'contained' : 'text'}
-              color={activeSection === section ? 'primary' : 'inherit'}
+              label={sectionLabels[section]}
+              disableRipple
               sx={{
-                flexShrink: 0,
-                borderRadius: 999,
-                px: 2,
+                minWidth: 112,
+                minHeight: 52,
+                px: 2.5,
                 textTransform: 'none',
                 whiteSpace: 'nowrap',
+                color: 'text.secondary',
+                fontWeight: 500,
+                '&.Mui-selected': { color: 'primary.main', fontWeight: 600 },
               }}
-            >
-              {sectionLabels[section]}
-            </Button>
+            />
           ))}
-        </Box>
+        </Tabs>
       )}
 
       <Button

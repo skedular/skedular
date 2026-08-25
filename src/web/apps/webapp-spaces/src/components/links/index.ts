@@ -63,11 +63,11 @@ export const getOrganizationEntitlementPurchaseBaseLink = (integratedPlatform: s
   `${getOrganizationBaseLink(integratedPlatform, id)}/purchases/entitlements/${purchaseId}`;
 export const getOrganizationUsersBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/users`;
 export const getOrganizationUserProfileBaseLink = (integratedPlatform: string | undefined, id: string, customerId: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?section=profile`;
+  `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?tab=profile&section=identity`;
 export const getOrganizationUserBillingAndPaymentBaseLink = (integratedPlatform: string | undefined, id: string, customerId: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?section=billing-payment-setup`;
 export const getOrganizationUserManageBaseLink = (integratedPlatform: string | undefined, id: string, customerId: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?section=manage-user`;
+  `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?tab=manage`;
 
 export const getOrganizationBookingBaseLink = (integratedPlatform: string | undefined, id: string, bookingId: string, options?: { editMode?: 'occurrence' | 'recurring' }) =>
   appendQueryParams(`${getOrganizationBaseLink(integratedPlatform, id)}/bookings/${bookingId}`, {

@@ -63,13 +63,13 @@ export const getOrganizationBookingAddLink = (
   });
 export const getOrganizationUsersBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/users`;
 export const getOrganizationUserProfileBaseLink = (integratedPlatform: string | undefined, id: string, customerId: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?section=profile`;
+  `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?tab=profile&section=identity`;
 export const getOrganizationUserManageTeamsBaseLink = (integratedPlatform: string | undefined, id: string, customerId: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?section=manage-teams`;
+  `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?tab=teams`;
 export const getOrganizationUserBillingAndPaymentBaseLink = (integratedPlatform: string | undefined, id: string, customerId: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?section=billing-payment-setup`;
 export const getOrganizationUserManageBaseLink = (integratedPlatform: string | undefined, id: string, customerId: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?section=manage-user`;
+  `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?tab=manage`;
 
 export const getOrganizationTeamAddLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/teams/add`;
 export const getOrganizationTeamsBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/teams`;
