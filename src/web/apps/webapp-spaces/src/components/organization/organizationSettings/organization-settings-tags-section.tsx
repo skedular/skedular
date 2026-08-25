@@ -325,11 +325,6 @@ const OrganizationSettingsTagsSectionContent = ({ organizationCustomDomain, onSe
                 setSelectedCustomTagId(id);
                 setCustomTagMoreActionsAnchorEl(target);
               }}
-              onOpenTag={(id) => {
-                const currentQuery = searchParams.toString();
-                const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
-                router.push(getOrganizationAdminEditCustomTagBaseLink(integratedPlatform, organizationCustomDomain, id, { redirectUrl }));
-              }}
               variant="plain"
               renderPrimary={(item) => {
                 const customTag = customTags.find((entry) => entry.id === item.id);
