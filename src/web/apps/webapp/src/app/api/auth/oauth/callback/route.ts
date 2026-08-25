@@ -23,7 +23,11 @@ export const GET = async (request: NextRequest) => {
     clearOAuthStateCookie(response);
 
     return response;
-  } catch {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const status = typeof error === 'object' && error !== null && 'status' in error && typeof error.status === 'number' ? error.status : undefined;
+    console.error('Custom WorkOS OAuth callback failed.', { message, status });
+
     const response = redirectToCustomAuth(request, 'signin', 'oauth_failed', stateCookie.returnTo);
     clearOAuthStateCookie(response);
 

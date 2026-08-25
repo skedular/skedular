@@ -47,7 +47,8 @@ export const authenticateAndRedirect = async (
   authResponse: Awaited<ReturnType<ReturnType<typeof getWorkOS>['userManagement']['authenticateWithPassword']>>,
   returnTo: string,
 ) => {
-  await saveSession(authResponse, request);
+  const { accessToken, refreshToken, user, impersonator, authenticationMethod } = authResponse;
+  await saveSession({ accessToken, refreshToken, user, impersonator, authenticationMethod }, request);
 
   return NextResponse.redirect(getRequestPublicUrl(request, returnTo));
 };

@@ -38,8 +38,12 @@ locals {
       value = data.aws_ssm_parameter.workos_secret.value
     },
     {
+      key   = "WORKOS_COOKIE_NAME"
+      value = "skedular-webapp-host-session-v2"
+    },
+    {
       key   = "WORKOS_COOKIE_DOMAIN"
-      value = ".${module.shared_common.cloudflare_webapp_domain_name}"
+      value = ".${module.shared_common.webapp_host_domain_name}"
     },
     {
       key   = "NEXT_PUBLIC_SITE_URL"
