@@ -1564,7 +1564,7 @@ const OrganizationMarketplaceSetup = ({
         );
       case 'stripe-connect-accounts-setup':
         return (
-          <StackColumn spacing={2} sx={{ p: defaultPadding }}>
+          <StackColumn spacing={2} sx={{ p: defaultPadding, bgcolor: 'background.paper', borderRadius: 4, border: 1, borderColor: 'divider', overflow: 'hidden' }}>
             <StackRow sx={{ alignItems: 'flex-start', gap: 2, flexWrap: 'nowrap', width: '100%' }}>
               <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
                 <SectionIconTypography label="Stripe Connect Accounts" />

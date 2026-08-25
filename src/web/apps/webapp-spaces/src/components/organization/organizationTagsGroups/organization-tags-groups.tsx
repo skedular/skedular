@@ -78,11 +78,7 @@ const OrganizationTagsGroups = ({ rootDataRelay, organizationCustomDomain }: Pro
         </PageHeaderPanel>
         {activeSection === 'tags-setup' && <OrganizationSettingsTagsSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'zones-setup' && <OrganizationSettingsZonesSection organizationCustomDomain={organizationCustomDomain} />}
-        {activeSection === 'product-tags-setup' && (
-          <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper', overflow: 'hidden' }}>
-            <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />
-          </Box>
-        )}
+        {activeSection === 'product-tags-setup' && <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />}
       </StackColumn>
     </Box>
   );
