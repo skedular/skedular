@@ -1,0 +1,19 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+
+Astro.response.status = 404;
+---
+
+<SiteLayout
+  title="Page not found | Skedular"
+  description="The requested Skedular page could not be found."
+  canonicalPath={Astro.url.pathname}
+>
+  <main class="page-section">
+    <div class="container">
+      <h1>Page not found</h1>
+      <p>The page you requested does not exist or is no longer available.</p>
+      <p><a href="/">Return to Skedular home</a></p>
+    </div>
+  </main>
+</SiteLayout>

@@ -38,8 +38,8 @@ export const competitors: ComparisonProduct[] = [
     slug: "skedda",
     productKind: "competitor",
     category: "workplace-management",
-    publicationStatus: "draft",
-    reviewStatus: "pending",
+    publicationStatus: "published",
+    reviewStatus: "approved",
     summary:
       "A workplace booking platform focused on desk booking, meeting room booking, interactive floor plans, resource scheduling, visitor management, and workplace coordination.",
     bestFor:
@@ -73,8 +73,8 @@ export const competitors: ComparisonProduct[] = [
     slug: "officernd",
     productKind: "competitor",
     category: "workplace-management",
-    publicationStatus: "draft",
-    reviewStatus: "pending",
+    publicationStatus: "published",
+    reviewStatus: "approved",
     summary:
       "A workplace management platform focused on hybrid work and office space optimization.",
     bestFor:
@@ -100,8 +100,8 @@ export const competitors: ComparisonProduct[] = [
     slug: "nexudus",
     productKind: "competitor",
     category: "coworking-management",
-    publicationStatus: "draft",
-    reviewStatus: "pending",
+    publicationStatus: "published",
+    reviewStatus: "approved",
     summary:
       "A coworking space management platform with comprehensive member and billing features.",
     bestFor:
@@ -125,8 +125,8 @@ export const competitors: ComparisonProduct[] = [
     slug: "gable",
     productKind: "competitor",
     category: "hybrid-workplace",
-    publicationStatus: "draft",
-    reviewStatus: "pending",
+    publicationStatus: "published",
+    reviewStatus: "approved",
     summary:
       "A workplace management and hybrid work platform focused on office operations, visitor workflows, distributed workspace access, workspace discovery, and flexible workplace coordination.",
     bestFor:
@@ -151,8 +151,8 @@ export const competitors: ComparisonProduct[] = [
     slug: "robin",
     productKind: "competitor",
     category: "hybrid-workplace",
-    publicationStatus: "draft",
-    reviewStatus: "pending",
+    publicationStatus: "published",
+    reviewStatus: "approved",
     summary:
       "A workplace management platform focused on hybrid work, office coordination, desk booking, meeting room scheduling, workplace analytics, and employee workplace experience.",
     bestFor:

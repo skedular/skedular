@@ -10,8 +10,6 @@ export const siteUrl =
 
 export const defaultRobots = "index, follow";
 
-export const noIndexRobots = "noindex, follow";
-
 export const defaultSocialImagePath = "/images/skedular-logo-primary.svg";
 
 export const defaultSocialImageUrl = new URL(
@@ -68,18 +66,7 @@ export const getCanonicalUrl = (canonicalPath: string) =>
   new URL(canonicalPath, siteUrl).toString();
 
 export const getRobotsForPath = (canonicalPath: string) => {
-  const page = publicPages.find(
-    (candidate) => candidate.canonicalPath === canonicalPath,
-  );
-
-  if (!page) {
-    return defaultRobots;
-  }
-
-  return page.metadataStatus === "published" &&
-    page.contentStatus === "published"
-    ? defaultRobots
-    : noIndexRobots;
+  return defaultRobots;
 };
 
 export const getArticleMetadataForPath = (canonicalPath: string) =>
