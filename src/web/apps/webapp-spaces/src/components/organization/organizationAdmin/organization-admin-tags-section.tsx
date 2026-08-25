@@ -320,6 +320,7 @@ const OrganizationAdminTagsSectionContent = ({ organizationCustomDomain, onSearc
               emptyTitle="No tags found"
               emptyDescription="Adjust the search or add a new custom tag for this organization."
               selectedIds={selectedCustomTagIds}
+              variant="plain"
               onToggleSelected={handleSelectedCustomTagsChanged}
               onOpenMoreActions={(id, target) => {
                 setSelectedCustomTagId(id);

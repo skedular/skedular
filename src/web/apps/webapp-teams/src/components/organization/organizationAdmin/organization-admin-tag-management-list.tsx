@@ -22,11 +22,22 @@ type Props = {
   selectedIds: string[];
   onToggleSelected: (id: string) => void;
   onOpenMoreActions: (id: string, target: HTMLElement) => void;
+  onOpenTag?: (id: string) => void;
   renderPrimary: (item: OrganizationAdminTagManagementListItem) => ReactNode;
   variant?: 'panel' | 'plain';
 };
 
-const OrganizationAdminTagManagementList = ({ items, emptyTitle, emptyDescription, selectedIds, onToggleSelected, onOpenMoreActions, renderPrimary, variant = 'panel' }: Props) => {
+const OrganizationAdminTagManagementList = ({
+  items,
+  emptyTitle,
+  emptyDescription,
+  selectedIds,
+  onToggleSelected,
+  onOpenMoreActions,
+  onOpenTag,
+  renderPrimary,
+  variant = 'panel',
+}: Props) => {
   if (items.length === 0) {
     return (
       <Box
@@ -76,9 +87,29 @@ const OrganizationAdminTagManagementList = ({ items, emptyTitle, emptyDescriptio
         return (
           <StackColumn key={item.id} spacing={0}>
             {variant === 'plain' && itemIndex > 0 ? <Divider /> : null}
-            <Box sx={rowSx}>
+            <Box
+              role={onOpenTag ? 'button' : undefined}
+              tabIndex={onOpenTag ? 0 : undefined}
+              onClick={() => onOpenTag?.(item.id)}
+              onKeyDown={(event) => {
+                if (onOpenTag && (event.key === 'Enter' || event.key === ' ')) {
+                  event.preventDefault();
+                  onOpenTag(item.id);
+                }
+              }}
+              sx={{
+                ...rowSx,
+                '&:hover': { backgroundColor: isSelected ? 'action.selected' : 'action.hover' },
+                '&:focus-visible': { outline: '2px solid', outlineColor: 'primary.main', outlineOffset: -2 },
+              }}
+            >
               <StackRow sx={{ alignItems: 'center', gap: 1, flexWrap: 'nowrap', minWidth: 0 }}>
-                <Checkbox checked={isSelected} onChange={() => onToggleSelected(item.id)} slotProps={{ input: { 'aria-label': `Select ${item.name}` } }} />
+                <Checkbox
+                  checked={isSelected}
+                  onClick={(event) => event.stopPropagation()}
+                  onChange={() => onToggleSelected(item.id)}
+                  slotProps={{ input: { 'aria-label': `Select ${item.name}` } }}
+                />
 
                 <Box sx={{ flexShrink: 0 }}>{renderPrimary(item)}</Box>
 
@@ -88,6 +119,7 @@ const OrganizationAdminTagManagementList = ({ items, emptyTitle, emptyDescriptio
 
                 <IconButton
                   onClick={(event: React.MouseEvent<HTMLElement>) => {
+                    event.stopPropagation();
                     onOpenMoreActions(item.id, event.currentTarget);
                   }}
                   aria-label={`More actions for ${item.name}`}

@@ -322,6 +322,7 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
               emptyTitle="No zones found"
               emptyDescription="Adjust the search or add a new zone for this organization."
               selectedIds={selectedZoneIds}
+              variant="plain"
               onToggleSelected={handleSelectedZonesChanged}
               onOpenMoreActions={(id, target) => {
                 setSelectedZoneId(id);

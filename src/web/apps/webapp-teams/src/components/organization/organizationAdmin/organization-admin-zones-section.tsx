@@ -327,6 +327,7 @@ const OrganizationAdminZonesSectionContent = ({ organizationCustomDomain, onSear
                 setSelectedZoneId(id);
                 setZoneMoreActionsAnchorEl(target);
               }}
+              variant="plain"
               renderPrimary={(item) => {
                 const zone = zones.find((entry) => entry.id === item.id);
                 return zone ? <Zone zone={zone} showFullName /> : null;
