@@ -22,7 +22,11 @@ export default async function proxy(request: NextRequest) {
     return continueWithoutSession(request, redirectUri);
   }
 
-  const { headers, authorizationUrl, session } = await authkit(request, { debug: true, eagerAuth: true, redirectUri });
+  const { headers, authorizationUrl, session } = await authkit(request, {
+    debug: process.env.NODE_ENV !== 'production',
+    eagerAuth: true,
+    redirectUri,
+  });
   if (!session.user && authorizationUrl && !isUnauthenticatedPath(request.nextUrl.pathname)) {
     return handleAuthkitHeaders(request, headers, { redirect: authorizationUrl });
   }

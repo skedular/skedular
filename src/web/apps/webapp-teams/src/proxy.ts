@@ -28,7 +28,7 @@ export default async function proxy(request: NextRequest) {
   }
 
   const { headers, authorizationUrl, session } = await authkit(request, {
-    debug: true,
+    debug: process.env.NODE_ENV !== 'production',
     eagerAuth: true,
     redirectUri,
   });
