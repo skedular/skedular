@@ -12,7 +12,7 @@ const RootQuery = graphql`
     organization(customDomain: $organizationCustomDomain) {
       name
     }
-    ...organizationAdmin_query
+    ...organizationSettings_query
   }
 `;
 const RootPage = ({

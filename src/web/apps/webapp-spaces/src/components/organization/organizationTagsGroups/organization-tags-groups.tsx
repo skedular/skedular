@@ -1,7 +1,7 @@
-import { getOrganizationAdminCustomTagsBaseLink, getOrganizationAdminZonesBaseLink, getOrganizationMarketplaceSetupProductTagsBaseLink } from '@/components/links';
+import { getOrganizationSettingsCustomTagsBaseLink, getOrganizationSettingsZonesBaseLink, getOrganizationMarketplaceSetupProductTagsBaseLink } from '@/components/links';
 import OrganizationMarketplaceSetupLoader from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-loader';
-import OrganizationAdminTagsSection from '@/components/organization/organizationAdmin/organization-admin-tags-section';
-import OrganizationAdminZonesSection from '@/components/organization/organizationAdmin/organization-admin-zones-section';
+import OrganizationSettingsTagsSection from '@/components/organization/organizationSettings/organization-settings-tags-section';
+import OrganizationSettingsZonesSection from '@/components/organization/organizationSettings/organization-settings-zones-section';
 import type { organizationTagsGroups_query$key } from '@/queries/__generated__/organizationTagsGroups_query.graphql';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import Box from '@mui/material/Box';
@@ -39,8 +39,8 @@ const OrganizationTagsGroups = ({ rootDataRelay, organizationCustomDomain }: Pro
   const requestedSection = searchParams.get('section') as Section | null;
   const activeSection = requestedSection && sections.includes(requestedSection) ? requestedSection : 'tags-setup';
   const links: Record<Section, string> = {
-    'tags-setup': getOrganizationAdminCustomTagsBaseLink(integratedPlatform, organizationCustomDomain),
-    'zones-setup': getOrganizationAdminZonesBaseLink(integratedPlatform, organizationCustomDomain),
+    'tags-setup': getOrganizationSettingsCustomTagsBaseLink(integratedPlatform, organizationCustomDomain),
+    'zones-setup': getOrganizationSettingsZonesBaseLink(integratedPlatform, organizationCustomDomain),
     'product-tags-setup': getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatform, organizationCustomDomain),
   };
   return (
@@ -76,8 +76,8 @@ const OrganizationTagsGroups = ({ rootDataRelay, organizationCustomDomain }: Pro
             ))}
           </Tabs>
         </PageHeaderPanel>
-        {activeSection === 'tags-setup' && <OrganizationAdminTagsSection organizationCustomDomain={organizationCustomDomain} />}
-        {activeSection === 'zones-setup' && <OrganizationAdminZonesSection organizationCustomDomain={organizationCustomDomain} />}
+        {activeSection === 'tags-setup' && <OrganizationSettingsTagsSection organizationCustomDomain={organizationCustomDomain} />}
+        {activeSection === 'zones-setup' && <OrganizationSettingsZonesSection organizationCustomDomain={organizationCustomDomain} />}
         {activeSection === 'product-tags-setup' && (
           <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 4, bgcolor: 'background.paper', overflow: 'hidden' }}>
             <OrganizationMarketplaceSetupLoader organizationCustomDomain={organizationCustomDomain} embedded />

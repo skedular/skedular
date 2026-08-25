@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b8810457657ca3a1a741b27f7f957197>>
+ * @generated SignedSource<<15a4a1c4b057ce014d64bcd489edce6f>>
  * @lightSyntaxTransform
  */
 
@@ -16,7 +16,7 @@ export type pageOrganizationIntegration_rootQuery$data = {
   readonly organization: {
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationSettings_query">;
 };
 export type pageOrganizationIntegration_rootQuery = {
   response: pageOrganizationIntegration_rootQuery$data;
@@ -74,7 +74,7 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "organizationAdmin_query"
+        "name": "organizationSettings_query"
       }
     ],
     "type": "Query",
@@ -139,16 +139,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "befef48dff7e51ad67d029a001b2d10a",
+    "cacheID": "39568b4f48af246ca254ec934f74d678",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationIntegration_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationIntegration_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n}\n\nfragment organizationAdmin_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    physicalAddress {\n      formattedAddress\n      id\n    }\n    marketplaceListingMetadata {\n      title\n    }\n    id\n  }\n}\n"
+    "text": "query pageOrganizationIntegration_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationSettings_query\n}\n\nfragment organizationSettings_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    physicalAddress {\n      formattedAddress\n      id\n    }\n    marketplaceListingMetadata {\n      title\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c4d5ab1c91d2bb685bf002e5fb0083c4";
+(node as any).hash = "c3b5ef15eddbdc52d806da292e266123";
 
 export default node;

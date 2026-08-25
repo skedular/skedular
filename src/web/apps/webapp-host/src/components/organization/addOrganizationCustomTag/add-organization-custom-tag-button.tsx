@@ -1,5 +1,5 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@skedular/ui';
-import { getOrganizationAdminAddCustomTagBaseLink } from '@/components/links';
+import { getOrganizationSettingsAddCustomTagBaseLink } from '@/components/links';
 import { NewIcon } from '@/components/icons';
 import Button from '@mui/material/Button';
 import { useIntegratedPlatform } from '@skedular/shared';
@@ -24,7 +24,7 @@ const AddOrganizationCustomTagButton = ({ organizationCustomDomain, fullWidth, l
   const href = useMemo(() => {
     const currentQuery = searchParams.toString();
     const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
-    return getOrganizationAdminAddCustomTagBaseLink(integratedPlatform, organizationCustomDomain, { redirectUrl });
+    return getOrganizationSettingsAddCustomTagBaseLink(integratedPlatform, organizationCustomDomain, { redirectUrl });
   }, [integratedPlatform, organizationCustomDomain, pathname, searchParams]);
 
   return (

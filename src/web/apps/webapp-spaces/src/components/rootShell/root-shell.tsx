@@ -1,7 +1,7 @@
 import { RelayError, toRootError, useIntegratedPlatform, useKnownParams } from '@skedular/shared';
 import { AppBar } from '@/components/appBar';
 import { InfoIcon, SignOutIcon } from '@/components/icons';
-import { getOrganizationAdminSubscriptionsBaseLink, getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
+import { getOrganizationSettingsSubscriptionsBaseLink, getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
@@ -125,7 +125,10 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
 
   const subscriptionPresentation = getSpacesSubscriptionPresentation(spacesSubscription);
   const isPlanManagementRoute =
-    pathName.endsWith('/admin') && ((searchParams.get('section') === 'setup' && searchParams.get('profileSection') === 'plan') || searchParams.get('section') === 'subscriptions');
+    pathName.endsWith('/settings') &&
+    ((searchParams.get('section') === 'setup' && searchParams.get('profileSection') === 'plan') ||
+      searchParams.get('section') === 'subscriptions' ||
+      searchParams.get('section') === 'plan');
   const canRenderProduct = !subscriptionPresentation.blocksProduct || isPlanManagementRoute;
 
   return (
@@ -141,7 +144,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
               <Alert
                 severity={subscriptionPresentation.severity}
                 action={
-                  <Button color="inherit" href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain)} sx={{ whiteSpace: 'nowrap' }}>
+                  <Button color="inherit" href={getOrganizationSettingsSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain)} sx={{ whiteSpace: 'nowrap' }}>
                     Upgrade
                   </Button>
                 }
@@ -217,7 +220,7 @@ const RootShell = ({ queryReference, children, onReloadRequired, organizationCus
               <StackColumn spacing={2} sx={{ alignItems: 'flex-start' }}>
                 <SmallHeadingIconTypography label="Your Spaces trial has ended" />
                 <BodyIconTypography label="Upgrade to a paid plan to continue using Spaces and accepting bookings. Your listings, bookings, configuration, and history are preserved." />
-                <Button variant="contained" href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain)}>
+                <Button variant="contained" href={getOrganizationSettingsSubscriptionsBaseLink(integratedPlatform, organizationCustomDomain)}>
                   View upgrade options
                 </Button>
               </StackColumn>

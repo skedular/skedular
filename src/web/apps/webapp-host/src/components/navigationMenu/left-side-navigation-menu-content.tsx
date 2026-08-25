@@ -1,6 +1,6 @@
 import { AnalyticsIcon, CollpaseDrawerIcon, HomeIcon, IntegrationIcon, LocationIcon, MembersIcon, SettingsIcon } from '@/components/icons';
 import {
-  getOrganizationAdminBaseLink,
+  getOrganizationSettingsBaseLink,
   getOrganizationIntegrationsBaseLink,
   getOrganizationAnalyticsBaseLink,
   getOrganizationBaseLink,
@@ -130,7 +130,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationAnalyticsPath = organizationAnalyticsSetupBaseLink.split('?')[0];
-  const organizationAdminBaseLink = getOrganizationAdminBaseLink(integratedPlatform, rootData.organization.customDomain!);
+  const organizationSettingsBaseLink = getOrganizationSettingsBaseLink(integratedPlatform, rootData.organization.customDomain!);
   const organizationIntegrationsBaseLink = getOrganizationIntegrationsBaseLink(integratedPlatform, rootData.organization.customDomain!);
 
   return (
@@ -229,23 +229,23 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
 
           {rootData.organization.canModify && (
             <ListItem disablePadding>
-              <Link component={NextLink} href={organizationAdminBaseLink}>
+              <Link component={NextLink} href={organizationSettingsBaseLink}>
                 <ListItemButton
-                  selected={pathName.startsWith(organizationAdminBaseLink)}
-                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationAdminBaseLink)) }}
+                  selected={pathName.startsWith(organizationSettingsBaseLink)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationSettingsBaseLink)) }}
                 >
                   {collapsed && (
                     <BodyIconTypography
                       startElement={!hideIcons && <SettingsIcon color="inherit" />}
-                      invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
+                      invertDefaultColor={pathName.startsWith(organizationSettingsBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                   {!collapsed && (
                     <BodyIconTypography
-                      label="Admin"
+                      label="Settings"
                       startElement={!hideIcons && <SettingsIcon excludeTooltip color="inherit" />}
                       spacing={3}
-                      invertDefaultColor={pathName.startsWith(organizationAdminBaseLink) && paletteMode === 'dark'}
+                      invertDefaultColor={pathName.startsWith(organizationSettingsBaseLink) && paletteMode === 'dark'}
                     />
                   )}
                 </ListItemButton>

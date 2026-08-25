@@ -35,7 +35,7 @@ public class StripeIntegrations(
 
         var baseRedirectUrl = IsValidRedirectUrl(args.RedirectTo)
             ? args.RedirectTo!
-            : Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "organizations", organization.CustomDomain, "admin");
+            : Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "organizations", organization.CustomDomain, "settings");
 
         var redirectUrl = baseRedirectUrl;
 

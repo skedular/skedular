@@ -5,7 +5,7 @@ This file covers `web/apps/webapp/`.
 ## Purpose
 
 - This is the main Next.js application for the Skedular platform.
-- It serves both the customer-facing booking/marketplace experience and the operator/admin management surfaces.
+- It serves both the customer-facing booking/marketplace experience and the operator/settings management surfaces.
 
 ## Technology
 
@@ -111,7 +111,7 @@ scripts/
   - in the resources section, prefer a compact management list with drill-down details over a wide data grid; the location detail page should support dozens of resources without turning into a spreadsheet
   - resource rows should show the real zone/custom/product tag chips inline in a compact metadata strip, not only abstract counts
   - user-specific preference actions like preferred resources should not sit in the primary row chrome on admin management lists; keep them in overflow actions until there is a dedicated personal-preferences surface
-  - apply the same compact-row rule to organization-admin zones and tags; avoid bringing data grids back for small tag-like management surfaces
+  - apply the same compact-row rule to organization-settings zones and tags; avoid bringing data grids back for small tag-like management surfaces
   - collection pages should converge on the same shell language where possible; the organization teams collection should follow the organization locations pattern instead of keeping its own list/grid toggle and old card layout
 - For the organization admin page specifically:
   - do not stack another fixed left rail and another sticky app bar inside the existing organization shell
@@ -119,11 +119,11 @@ scripts/
   - use the same responsive collapse pattern for the top section nav on medium and smaller widths
   - keep shell-level back navigation in the shell breadcrumbs/app bar instead of duplicating it inside the page body
 - For organization team and setup-marketplace detail pages specifically:
-  - use the same centered content shell + compact header + route-backed sticky top section nav pattern as location/admin
+  - use the same centered content shell + compact header + route-backed sticky top section nav pattern as location/settings
   - collapse section pills into a single section-menu trigger on medium and smaller widths
   - do not reintroduce fixed inner left rails or nested page-level app bars
   - render one active admin section at a time from the route-backed section nav; do not stack all admin sections into one long page
-  - do not use right-side summary rails on these route-backed setup/admin sections; the section content should own the available width
+  - do not use right-side summary rails on these route-backed setup/settings sections; the section content should own the available width
 - Avoid embedding maps, full carousels, or other heavy detail widgets directly inside dense list cards unless the card is explicitly a media-first browsing surface.
 - The long-term target is extraction into `web/packages/*`, but do not extract unstable domain-specific widgets too
   early.

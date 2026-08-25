@@ -129,31 +129,31 @@ export const getOrganizationLocationsAnalyticsLocationsBaseLink = (integratedPla
 export const getOrganizationAvailabilityDashboardBaseLink = (integratedPlatform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/availability`;
 
-export const getOrganizationAdminBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/admin`;
-export const getOrganizationAdminSetupBaseLink = (integratedPlatform: string | undefined, id: string) =>
-  `${getOrganizationAdminBaseLink(integratedPlatform, id)}?tab=profile&section=presentation`;
-export const getOrganizationAdminPhysicalAddressBaseLink = (integratedPlatform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/admin?tab=profile&section=physical-address`;
-export const getOrganizationAdminBillingAndPaymentBaseLink = (integratedPlatform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/admin?tab=profile&section=billing-details`;
-export const getOrganizationAdminSsoSettingsBaseLink = (integratedPlatform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/admin?tab=profile&section=sso`;
-export const getOrganizationAdminZonesBaseLink = (integratedPlatform: string | undefined, id: string) =>
+export const getOrganizationSettingsBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/settings`;
+export const getOrganizationSettingsSetupBaseLink = (integratedPlatform: string | undefined, id: string) =>
+  `${getOrganizationSettingsBaseLink(integratedPlatform, id)}?tab=profile&section=presentation`;
+export const getOrganizationSettingsPhysicalAddressBaseLink = (integratedPlatform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatform, id)}/settings?tab=profile&section=physical-address`;
+export const getOrganizationSettingsBillingAndPaymentBaseLink = (integratedPlatform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatform, id)}/settings?tab=profile&section=billing-details`;
+export const getOrganizationSettingsSsoSettingsBaseLink = (integratedPlatform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatform, id)}/settings?tab=profile&section=sso`;
+export const getOrganizationSettingsZonesBaseLink = (integratedPlatform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/tags-groups?section=zones-setup`;
-export const getOrganizationAdminAddZoneBaseLink = (integratedPlatform: string | undefined, id: string, options?: { redirectUrl?: string }) =>
-  appendQueryParams(`${getOrganizationBaseLink(integratedPlatform, id)}/admin/zones/add`, { redirectUrl: options?.redirectUrl });
-export const getOrganizationAdminEditZoneBaseLink = (integratedPlatform: string | undefined, id: string, zoneId: string, options?: { redirectUrl?: string }) =>
-  appendQueryParams(`${getOrganizationBaseLink(integratedPlatform, id)}/admin/zones/${zoneId}/edit`, { redirectUrl: options?.redirectUrl });
-export const getOrganizationAdminCustomTagsBaseLink = (integratedPlatform: string | undefined, id: string) =>
+export const getOrganizationSettingsAddZoneBaseLink = (integratedPlatform: string | undefined, id: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatform, id)}/settings/zones/add`, { redirectUrl: options?.redirectUrl });
+export const getOrganizationSettingsEditZoneBaseLink = (integratedPlatform: string | undefined, id: string, zoneId: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatform, id)}/settings/zones/${zoneId}/edit`, { redirectUrl: options?.redirectUrl });
+export const getOrganizationSettingsCustomTagsBaseLink = (integratedPlatform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/tags-groups?section=tags-setup`;
-export const getOrganizationAdminAddCustomTagBaseLink = (integratedPlatform: string | undefined, id: string, options?: { redirectUrl?: string }) =>
-  appendQueryParams(`${getOrganizationBaseLink(integratedPlatform, id)}/admin/tags/add`, { redirectUrl: options?.redirectUrl });
-export const getOrganizationAdminEditCustomTagBaseLink = (integratedPlatform: string | undefined, id: string, customTagId: string, options?: { redirectUrl?: string }) =>
-  appendQueryParams(`${getOrganizationBaseLink(integratedPlatform, id)}/admin/tags/${customTagId}/edit`, { redirectUrl: options?.redirectUrl });
-export const getOrganizationAdminSubscriptionsBaseLink = (integratedPlatform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/admin?tab=profile&section=plan`;
-export const getOrganizationAdminManageOrganizationBaseLink = (integratedPlatform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatform, id)}/admin?tab=operations&section=manage-organization`;
+export const getOrganizationSettingsAddCustomTagBaseLink = (integratedPlatform: string | undefined, id: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatform, id)}/settings/tags/add`, { redirectUrl: options?.redirectUrl });
+export const getOrganizationSettingsEditCustomTagBaseLink = (integratedPlatform: string | undefined, id: string, customTagId: string, options?: { redirectUrl?: string }) =>
+  appendQueryParams(`${getOrganizationBaseLink(integratedPlatform, id)}/settings/tags/${customTagId}/edit`, { redirectUrl: options?.redirectUrl });
+export const getOrganizationSettingsSubscriptionsBaseLink = (integratedPlatform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatform, id)}/settings?tab=profile&section=plan`;
+export const getOrganizationSettingsManageOrganizationBaseLink = (integratedPlatform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatform, id)}/settings?tab=operations&section=manage-organization`;
 
 export const getOrganizationSsoSignInBaseLink = (integratedPlatform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/sso-signin?redirectUrl=${window.location.href}`;
