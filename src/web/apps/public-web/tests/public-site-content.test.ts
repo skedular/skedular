@@ -12,9 +12,18 @@ import {
   normalizedFeatures,
 } from "../src/data/comparison/feature-matrix";
 import { featureSupport } from "../src/data/comparison/feature-support";
+import {
+  COMPARE_HUB_PATH,
+  INDIVIDUAL_COMPARISON_PATHS,
+  REMOVED_LEGACY_COMPARISON_PATHS,
+  REQUIRED_COMPARISON_PATHS,
+  isLegacyComparisonPath,
+} from "../src/data/comparison/page-paths";
 import { generateAllComparisonPageTargets } from "../src/data/comparison/page-targets";
 import { skedularCapabilityEvidence } from "../src/data/comparison/skedular-evidence";
+import { supportStateLabels } from "../src/data/comparison/support-states";
 import {
+  validateBlockedClaims,
   validateComparisonData,
   validateCompetitorEvidence,
   validateDuplicateIds,
@@ -23,24 +32,15 @@ import {
 import { publicPages } from "../src/data/content-inventory";
 import { resourceArticles } from "../src/data/current-public-content";
 import { featurePages } from "../src/data/feature-pages";
-import { getRobotsForPath, sitemapPages } from "../src/data/seo";
-import { publicUrlEnvironment, publicUrlFixtures } from "./public-url-fixtures";
-import {
-  COMPARE_HUB_PATH,
-  INDIVIDUAL_COMPARISON_PATHS,
-  REQUIRED_COMPARISON_PATHS,
-  REMOVED_LEGACY_COMPARISON_PATHS,
-  isLegacyComparisonPath,
-} from "../src/data/comparison/page-paths";
-import { supportStateLabels } from "../src/data/comparison/support-states";
-import { validateBlockedClaims } from "../src/data/comparison/validation";
+import { footerNavigation } from "../src/data/navigation";
 import { redirects } from "../src/data/redirects";
 import {
-  routeFamilies,
   primaryRoutes,
+  routeFamilies,
   utilityRoutes,
 } from "../src/data/routes";
-import { footerNavigation } from "../src/data/navigation";
+import { getRobotsForPath, sitemapPages } from "../src/data/seo";
+import { publicUrlEnvironment, publicUrlFixtures } from "./public-url-fixtures";
 
 beforeAll(() => {
   const result = spawnSync("pnpm", ["build"], {
@@ -294,7 +294,7 @@ describe("expanded public site content", () => {
     expect(document.querySelectorAll(".footer-social-button")).toHaveLength(3);
     expect(
       document.querySelector(
-        'a[href="https://www.linkedin.com/company/getskedular/"]',
+        'a[href="https://www.linkedin.com/company/skedular/"]',
       ),
     ).toBeTruthy();
     expect(
