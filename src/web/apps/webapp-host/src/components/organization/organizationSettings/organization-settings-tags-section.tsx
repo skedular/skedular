@@ -1,6 +1,5 @@
 import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
 import { PushToRight, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
-import { CustomTag } from '@/components/customTag';
 import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -281,6 +280,12 @@ const OrganizationSettingsTagsSectionContent = ({ organizationCustomDomain, onSe
     }
   };
 
+  const handleOpenCustomTag = (id: string) => {
+    const currentQuery = searchParams.toString();
+    const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
+    router.push(getOrganizationSettingsEditCustomTagBaseLink(integratedPlatform, organizationCustomDomain, id, { redirectUrl }));
+  };
+
   return (
     <>
       <Box sx={{ pb: 2 }}>
@@ -324,9 +329,9 @@ const OrganizationSettingsTagsSectionContent = ({ organizationCustomDomain, onSe
                 setSelectedCustomTagId(id);
                 setCustomTagMoreActionsAnchorEl(target);
               }}
+              onOpenItem={handleOpenCustomTag}
               renderPrimary={(item) => {
-                const customTag = customTags.find((entry) => entry.id === item.id);
-                return customTag ? <CustomTag customTag={customTag} showFullName /> : null;
+                return <SmallIconTypography label={item.name} />;
               }}
             />
           </StackColumn>

@@ -8,7 +8,6 @@ import { getOrganizationSettingsEditZoneBaseLink } from '@/components/links';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
 import OrganizationSettingsTagManagementList from '@/components/organization/organizationSettings/organization-settings-tag-management-list';
 import { Search } from '@/components/search';
-import { Zone } from '@/components/zone';
 
 import { defaultGridActionPadding } from '@skedular/ui';
 
@@ -284,6 +283,12 @@ const OrganizationSettingsZonesSectionContent = ({ organizationCustomDomain, onS
     }
   };
 
+  const handleOpenZone = (id: string) => {
+    const currentQuery = searchParams.toString();
+    const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
+    router.push(getOrganizationSettingsEditZoneBaseLink(integratedPlatform, organizationCustomDomain, id, { redirectUrl }));
+  };
+
   return (
     <>
       <Box sx={{ pb: 2 }}>
@@ -328,9 +333,9 @@ const OrganizationSettingsZonesSectionContent = ({ organizationCustomDomain, onS
                 setSelectedZoneId(id);
                 setZoneMoreActionsAnchorEl(target);
               }}
+              onOpenItem={handleOpenZone}
               renderPrimary={(item) => {
-                const zone = zones.find((entry) => entry.id === item.id);
-                return zone ? <Zone zone={zone} showFullName /> : null;
+                return <SmallIconTypography label={item.name} />;
               }}
             />
           </StackColumn>

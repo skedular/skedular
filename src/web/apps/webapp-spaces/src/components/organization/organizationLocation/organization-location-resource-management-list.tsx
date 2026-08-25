@@ -9,6 +9,12 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import { memo } from 'react';
 
 export type ResourceManagementListItem = {
@@ -106,9 +112,29 @@ const OrganizationLocationResourceManagementList = ({
         </Box>
       )}
 
+      <TableContainer component={Box} sx={{ display: { xs: 'none', lg: 'block' } }}>
+        <Table size="small">
+          <TableHead>
+            <TableRow sx={{ '& th': { fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'text.secondary', borderBottom: 1, borderColor: 'divider' } }}>
+              <TableCell padding="checkbox" />
+              <TableCell>Name</TableCell>
+              <TableCell>Capacity</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Zone</TableCell>
+              <TableCell>Booking groups</TableCell>
+              <TableCell align="right" />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan={7} sx={{ p: 0, border: 0 }} />
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Box
         sx={{
-          display: { xs: 'none', lg: 'grid' },
+          display: { xs: 'none', lg: 'none' },
           gridTemplateColumns: '40px minmax(180px, 1.4fr) 100px 80px minmax(180px, 1fr) minmax(140px, 0.8fr) 40px',
           gap: 1,
           alignItems: 'center',
@@ -119,6 +145,8 @@ const OrganizationLocationResourceManagementList = ({
           fontWeight: 700,
           textTransform: 'uppercase',
           letterSpacing: '0.04em',
+          borderBottom: 1,
+          borderColor: 'divider',
         }}
       >
         <Box />

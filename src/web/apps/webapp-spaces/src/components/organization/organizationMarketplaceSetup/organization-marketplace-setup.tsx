@@ -1,18 +1,17 @@
 import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
 import { BillingIcon, DeleteIcon } from '@/components/icons';
-import { getOrganizationSettingsEditProductTagBaseLink, getOrganizationBankAccountBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
+import { getOrganizationBankAccountBaseLink, getOrganizationSettingsEditProductTagBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { SingleChoiceOrganizationBillingCycle, SingleChoiceOrganizationXeroBillingMode } from '@/components/organization';
 import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
-import OrganizationSettingsTagManagementList from '@/components/organization/organizationSettings/organization-settings-tag-management-list';
 import OrganizationMarketplaceBankAccountManagementList from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-bank-account-management-list';
 import OrganizationMarketplaceSetupSectionNav, {
   OrganizationMarketplaceSetupSection,
 } from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-section-nav';
 import OrganizationMarketplaceStripeConnectAccountManagementList from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-stripe-connect-account-management-list';
-import { ProductTag } from '@/components/productTag';
+import OrganizationSettingsTagManagementList from '@/components/organization/organizationSettings/organization-settings-tag-management-list';
 import { Search } from '@/components/search';
 import { ExistingStripeConnectAccountButton, NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
@@ -47,12 +46,14 @@ import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from 
 import {
   BodyIconTypography,
   defaultButtonStyle,
+  defaultGridActionPadding,
   defaultPadding,
   FormFieldLabel,
   FormStackColumn,
   GridContainer,
   PageHeaderPanel,
   PushToRight,
+  SettingsSectionCard,
   SectionIconTypography,
   SmallIconTypography,
   StackColumn,
@@ -741,6 +742,12 @@ const OrganizationMarketplaceSetup = ({
         handleRemoveProductTagClick();
         break;
     }
+  };
+
+  const handleOpenProductTag = (id: string) => {
+    const currentQuery = searchParams.toString();
+    const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
+    router.push(getOrganizationSettingsEditProductTagBaseLink(integratedPlatform, organizationCustomDomain, id, { redirectUrl }));
   };
 
   const handleRemoveProductTagsClick = () => {
@@ -1646,53 +1653,56 @@ const OrganizationMarketplaceSetup = ({
         );
       case 'product-tags-setup':
         return (
-          <StackColumn spacing={2} sx={{ p: defaultPadding }}>
-            <StackRow sx={{ alignItems: 'flex-start', gap: 2 }}>
-              <StackColumn spacing={0.5} sx={{ minWidth: 0 }}>
-                <SectionIconTypography label="Booking Groups" />
-                <BodyIconTypography label="Manage the marketplace-facing tags used to classify products, resources, and customer filters." />
-              </StackColumn>
-              <PushToRight />
-              <AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} />
-            </StackRow>
-
-            <Divider />
-
-            <StackRow sx={{ justifyContent: 'flex-end' }}>
-              <Search size="small" placeholder="Search for booking groups" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
-            </StackRow>
-
-            {selectedProductTagIds.length > 0 && (
+          <Box sx={{ pb: 2 }}>
+            <SettingsSectionCard
+              title="Booking Groups"
+              description="Manage the marketplace-facing tags used to classify products, resources, and customer filters."
+              actions={<AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} />}
+            >
               <StackColumn spacing={2}>
-                <Divider />
-                <StackRow sx={{ alignItems: 'center' }}>
-                  <SmallIconTypography label={`${selectedProductTagIds.length} record${selectedProductTagIds.length === 1 ? '' : 's'} selected`} />
-                  <PushToRight />
-                  <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
-                    Remove Booking Group
-                  </Button>
+                <StackRow sx={{ justifyContent: 'flex-end' }}>
+                  <Search size="small" placeholder="Search for booking groups" defaultValue={productTagNameSearchText} onChange={handleProductTagsSearchTextChange} />
                 </StackRow>
+
+                {selectedProductTagIds.length > 0 && (
+                  <Box
+                    sx={{
+                      backgroundColor: 'background.paper',
+                      padding: defaultGridActionPadding,
+                      border: 1,
+                      borderColor: (theme) => theme.palette.divider,
+                      borderRadius: 2,
+                    }}
+                  >
+                    <StackRow sx={{ alignItems: 'center' }}>
+                      <SmallIconTypography label={`${selectedProductTagIds.length} record${selectedProductTagIds.length === 1 ? '' : 's'} selected`} />
+                      <PushToRight />
+                      <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveProductTagsClick} sx={{ textTransform: 'none' }}>
+                        Remove Booking Group
+                      </Button>
+                    </StackRow>
+                  </Box>
+                )}
+
+                <OrganizationSettingsTagManagementList
+                  items={productTagItems}
+                  emptyTitle="No booking groups found"
+                  emptyDescription="Adjust the search or add a new booking group for this organization."
+                  selectedIds={selectedProductTagIds}
+                  onToggleSelected={handleSelectedProductTagsChanged}
+                  onOpenMoreActions={(id, target) => {
+                    setSelectedProductTagId(id);
+                    setProductTagMoreActionsAnchorEl(target);
+                  }}
+                  onOpenItem={handleOpenProductTag}
+                  renderPrimary={(item) => {
+                    return <SmallIconTypography label={item.name} />;
+                  }}
+                  variant="plain"
+                />
               </StackColumn>
-            )}
-
-            <OrganizationSettingsTagManagementList
-              items={productTagItems}
-              emptyTitle="No booking groups found"
-              emptyDescription="Adjust the search or add a new booking group for this organization."
-              selectedIds={selectedProductTagIds}
-              onToggleSelected={handleSelectedProductTagsChanged}
-              onOpenMoreActions={(id, target) => {
-                setSelectedProductTagId(id);
-                setProductTagMoreActionsAnchorEl(target);
-              }}
-              renderPrimary={(item) => {
-                const productTag = productTags.find((entry) => entry.id === item.id);
-
-                return productTag ? <ProductTag productTag={productTag} showFullName /> : null;
-              }}
-              variant="plain"
-            />
-          </StackColumn>
+            </SettingsSectionCard>
+          </Box>
         );
       case 'marketplace-listing':
       default:

@@ -66,7 +66,7 @@ const OrganizationTagsGroups = ({ rootDataRelay, organizationCustomDomain }: Pro
             variant="scrollable"
             scrollButtons="auto"
             aria-label="Tags and groups sections"
-            sx={{ display: { xs: 'none', sm: 'flex' }, mb: -2, borderTop: 1, borderColor: 'divider' }}
+            sx={{ display: { xs: 'none', sm: 'flex' }, mb: -2, borderTop: 1, borderColor: 'divider', '& .MuiTab-root': { textTransform: 'none' } }}
           >
             {sections.map((section) => (
               <Tab key={section} value={section} component={NextLink} href={links[section]} label={labels[section]} disableRipple />

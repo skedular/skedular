@@ -12,7 +12,6 @@ import OrganizationMarketplaceSetupSectionNav, {
   OrganizationMarketplaceSetupSection,
 } from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-setup-section-nav';
 import OrganizationMarketplaceStripeConnectAccountManagementList from '@/components/organization/organizationMarketplaceSetup/organization-marketplace-stripe-connect-account-management-list';
-import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
 import { ExistingStripeConnectAccountButton, NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
@@ -734,6 +733,12 @@ const OrganizationMarketplaceSetup = ({
         handleRemoveProductTagClick();
         break;
     }
+  };
+
+  const handleOpenProductTag = (id: string) => {
+    const currentQuery = searchParams.toString();
+    const redirectUrl = currentQuery ? `${pathname}?${currentQuery}` : pathname;
+    router.push(getOrganizationSettingsEditProductTagBaseLink(integratedPlatform, organizationCustomDomain, id, { redirectUrl }));
   };
 
   const handleRemoveProductTagsClick = () => {
@@ -1669,10 +1674,9 @@ const OrganizationMarketplaceSetup = ({
                 setSelectedProductTagId(id);
                 setProductTagMoreActionsAnchorEl(target);
               }}
+              onOpenItem={handleOpenProductTag}
               renderPrimary={(item) => {
-                const productTag = productTags.find((entry) => entry.id === item.id);
-
-                return productTag ? <ProductTag productTag={productTag} showFullName /> : null;
+                return <SmallIconTypography label={item.name} />;
               }}
               variant="plain"
             />

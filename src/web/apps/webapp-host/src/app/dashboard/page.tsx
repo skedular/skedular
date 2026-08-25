@@ -94,7 +94,7 @@ const HostDashboardData = ({ organizationId }: { organizationId: string }) => {
         <LeadIconTypography label="Recent bookings" />
         <Table size="small">
           <TableHead>
-            <TableRow>
+            <TableRow sx={{ '& th': { borderBottom: 1, borderColor: 'divider' } }}>
               <TableCell>Location</TableCell>
               <TableCell>From</TableCell>
               <TableCell>Until</TableCell>

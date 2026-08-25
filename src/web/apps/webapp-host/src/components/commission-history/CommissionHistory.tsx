@@ -27,7 +27,7 @@ const CommissionHistory = ({ entries }: { entries: CommissionEntry[] }) => {
     <TableContainer component={Paper} variant="outlined">
       <Table size="small">
         <TableHead>
-          <TableRow>
+          <TableRow sx={{ '& th': { borderBottom: 1, borderColor: 'divider' } }}>
             <TableCell>Date</TableCell>
             <TableCell>Booking</TableCell>
             <TableCell align="right">Booking value</TableCell>

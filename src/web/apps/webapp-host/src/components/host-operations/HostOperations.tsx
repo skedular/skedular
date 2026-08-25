@@ -240,7 +240,7 @@ const Bookings = ({ organizationId, showCommission }: { organizationId: string; 
       </Box>
       <Table>
         <TableHead>
-          <TableRow>
+          <TableRow sx={{ '& th': { borderBottom: 1, borderColor: 'divider' } }}>
             <TableCell>Location</TableCell>
             <TableCell>From</TableCell>
             <TableCell>Until</TableCell>

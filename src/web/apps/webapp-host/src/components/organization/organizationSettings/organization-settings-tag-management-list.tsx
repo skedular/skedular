@@ -1,11 +1,14 @@
-import { LeadIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { LeadIconTypography, SmallIconTypography, compactManagementIconButtonSx } from '@skedular/ui';
 import { EllipseMenuIcon } from '@/components/icons';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import type { Theme } from '@mui/material/styles';
-import type { SxProps } from '@mui/system';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import type { ReactNode } from 'react';
 import { memo } from 'react';
 
@@ -22,6 +25,7 @@ type Props = {
   selectedIds: string[];
   onToggleSelected: (id: string) => void;
   onOpenMoreActions: (id: string, target: HTMLElement) => void;
+  onOpenItem?: (id: string) => void;
   renderPrimary: (item: OrganizationSettingsTagManagementListItem) => ReactNode;
   variant?: 'panel' | 'plain';
 };
@@ -33,6 +37,7 @@ const OrganizationSettingsTagManagementList = ({
   selectedIds,
   onToggleSelected,
   onOpenMoreActions,
+  onOpenItem,
   renderPrimary,
   variant = 'panel',
 }: Props) => {
@@ -61,54 +66,61 @@ const OrganizationSettingsTagManagementList = ({
   }
 
   return (
-    <StackColumn spacing={1}>
-      {items.map((item, itemIndex) => {
-        const isSelected = selectedIds.includes(item.id);
-        const rowSx: SxProps<Theme> =
-          variant === 'plain'
-            ? {
-                py: 1.25,
-                px: isSelected ? 1 : 0,
-                backgroundColor: isSelected ? 'action.selected' : 'transparent',
-                borderRadius: isSelected ? 2 : 0,
-              }
-            : {
-                border: 1,
-                borderColor: isSelected ? 'primary.main' : 'divider',
-                borderRadius: 2.5,
-                px: 1,
-                py: 0.75,
-                backgroundColor: isSelected ? 'action.selected' : 'background.paper',
-                boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 2px 10px rgba(15, 23, 42, 0.04)' : theme.shadows[1]),
-              };
+    <TableContainer component={Box} sx={{ border: 0, overflow: 'hidden', bgcolor: 'transparent' }}>
+      <Table size="small" aria-label="Management list" sx={{ minWidth: 520 }}>
+        <TableHead>
+          <TableRow
+            sx={{
+              '& th': { px: 1.5, py: 1.25, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'text.primary', borderBottom: 1, borderColor: 'divider' },
+            }}
+          >
+            <TableCell padding="checkbox" />
+            <TableCell>Name</TableCell>
+            <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Description</TableCell>
+            <TableCell align="right" />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {items.map((item) => {
+            const isSelected = selectedIds.includes(item.id);
 
-        return (
-          <StackColumn key={item.id} spacing={0}>
-            {variant === 'plain' && itemIndex > 0 ? <Divider /> : null}
-            <Box sx={rowSx}>
-              <StackRow sx={{ alignItems: 'center', gap: 1, flexWrap: 'nowrap', minWidth: 0 }}>
-                <Checkbox checked={isSelected} onChange={() => onToggleSelected(item.id)} slotProps={{ input: { 'aria-label': `Select ${item.name}` } }} />
-
-                <Box sx={{ flexShrink: 0 }}>{renderPrimary(item)}</Box>
-
-                <Box sx={{ minWidth: 0, flex: '1 1 auto', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {item.description ? <SmallIconTypography label={item.description} /> : null}
-                </Box>
-
-                <IconButton
-                  onClick={(event: React.MouseEvent<HTMLElement>) => {
-                    onOpenMoreActions(item.id, event.currentTarget);
-                  }}
-                  aria-label={`More actions for ${item.name}`}
-                >
-                  <EllipseMenuIcon />
-                </IconButton>
-              </StackRow>
-            </Box>
-          </StackColumn>
-        );
-      })}
-    </StackColumn>
+            return (
+              <TableRow
+                key={item.id}
+                hover
+                selected={isSelected}
+                tabIndex={onOpenItem ? 0 : undefined}
+                onClick={() => onOpenItem?.(item.id)}
+                onKeyDown={(event) => {
+                  if (onOpenItem && (event.key === 'Enter' || event.key === ' ')) {
+                    event.preventDefault();
+                    onOpenItem(item.id);
+                  }
+                }}
+                sx={{ cursor: onOpenItem ? 'pointer' : undefined, '& td': { px: 1.5, py: 1.25, borderBottom: 1, borderColor: 'divider' } }}
+              >
+                <TableCell padding="checkbox" onClick={(event) => event.stopPropagation()}>
+                  <Checkbox checked={isSelected} onChange={() => onToggleSelected(item.id)} slotProps={{ input: { 'aria-label': `Select ${item.name}` } }} />
+                </TableCell>
+                <TableCell sx={{ minWidth: 160, fontWeight: 600, '& .MuiTypography-root': { fontWeight: 600 } }}>{renderPrimary(item)}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' }, maxWidth: 360, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {item.description ? <SmallIconTypography label={item.description} /> : <SmallIconTypography label="—" />}
+                </TableCell>
+                <TableCell align="right" onClick={(event) => event.stopPropagation()}>
+                  <IconButton
+                    onClick={(event: React.MouseEvent<HTMLElement>) => onOpenMoreActions(item.id, event.currentTarget)}
+                    aria-label={`More actions for ${item.name}`}
+                    sx={compactManagementIconButtonSx}
+                  >
+                    <EllipseMenuIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
