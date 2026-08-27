@@ -8,6 +8,7 @@ const defaultReturnTo = '/';
 type OAuthStateCookie = {
   state: string;
   returnTo: string;
+  codeVerifier?: string;
 };
 
 export const getSafeReturnTo = (value: FormDataEntryValue | string | null | undefined) => {
@@ -53,9 +54,10 @@ export const authenticateAndRedirect = async (
   return NextResponse.redirect(getRequestPublicUrl(request, returnTo));
 };
 
-export const createOAuthStateCookieValue = (returnTo: string): OAuthStateCookie => ({
+export const createOAuthStateCookieValue = (returnTo: string, codeVerifier?: string): OAuthStateCookie => ({
   state: crypto.randomUUID(),
   returnTo,
+  codeVerifier,
 });
 
 export const serialiseOAuthStateCookie = (stateCookie: OAuthStateCookie) => Buffer.from(JSON.stringify(stateCookie), 'utf8').toString('base64url');
@@ -74,6 +76,7 @@ export const parseOAuthStateCookie = (value: string | undefined): OAuthStateCook
     return {
       state: parsed.state,
       returnTo: getSafeReturnTo(parsed.returnTo),
+      codeVerifier: typeof parsed.codeVerifier === 'string' ? parsed.codeVerifier : undefined,
     };
   } catch {
     return null;

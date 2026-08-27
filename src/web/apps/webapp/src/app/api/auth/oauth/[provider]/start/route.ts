@@ -15,12 +15,22 @@ export const GET = async (request: NextRequest, context: { params: Promise<{ pro
   }
 
   const returnTo = getSafeReturnTo(request.nextUrl.searchParams.get('returnTo'));
-  const stateCookie = createOAuthStateCookieValue(returnTo);
+  const pkce = await getWorkOS().pkce.generate();
+  const stateCookie = createOAuthStateCookieValue(returnTo, pkce.codeVerifier);
+  console.info('Starting custom WorkOS OAuth flow.', {
+    provider: providerKey,
+    hasClientId: Boolean(process.env.WORKOS_CLIENT_ID),
+    hasApiKey: Boolean(process.env.WORKOS_API_KEY),
+    hasCodeVerifier: Boolean(pkce.codeVerifier),
+    redirectHost: new URL(getCustomAuthRedirectUri(request)).host,
+  });
   const authorizationUrl = getWorkOS().userManagement.getAuthorizationUrl({
     clientId: getWorkOSClientId(),
     provider,
     redirectUri: getCustomAuthRedirectUri(request),
     state: stateCookie.state,
+    codeChallenge: pkce.codeChallenge,
+    codeChallengeMethod: pkce.codeChallengeMethod,
   });
 
   const response = NextResponse.redirect(authorizationUrl);

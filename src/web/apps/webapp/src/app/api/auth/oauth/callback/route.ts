@@ -7,6 +7,14 @@ export const GET = async (request: NextRequest) => {
   const state = request.nextUrl.searchParams.get('state');
   const stateCookie = getOAuthStateCookie(request);
 
+  console.info('Received custom WorkOS OAuth callback.', {
+    hasCode: Boolean(code),
+    hasState: Boolean(state),
+    hasStateCookie: Boolean(stateCookie),
+    stateMatches: Boolean(state && stateCookie?.state === state),
+    hasCodeVerifier: Boolean(stateCookie?.codeVerifier),
+  });
+
   if (!code || !state || !stateCookie || stateCookie.state !== state) {
     return redirectToCustomAuth(request, 'signin', 'oauth_state_invalid');
   }
@@ -15,6 +23,7 @@ export const GET = async (request: NextRequest) => {
     const authResponse = await getWorkOS().userManagement.authenticateWithCode({
       clientId: getWorkOSClientId(),
       code,
+      codeVerifier: stateCookie.codeVerifier,
       ipAddress: request.headers.get('x-forwarded-for')?.split(',')[0]?.trim(),
       userAgent: request.headers.get('user-agent') ?? undefined,
     });
