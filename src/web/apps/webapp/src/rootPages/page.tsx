@@ -116,7 +116,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      {favouriteLocationsQueryReference ? (
+      {!user || favouriteLocationsQueryReference ? (
         <MemoRootPage queryReference={queryReference} favouriteLocationsQueryReference={favouriteLocationsQueryReference} onReloadRequired={handleReloadRequired} />
       ) : (
         <Loading />
