@@ -161,7 +161,11 @@ const RootQuery = graphql`
       type
       name
     }
-    upcomingBookings: bookings(first: 48, where: { includeMineOnly: true, fromGte: $today }, orderBy: [{ field: FROM, direction: ASCENDING }]) {
+    upcomingBookings: bookings(
+      first: 48
+      where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, fromGte: $today }
+      orderBy: [{ field: FROM, direction: ASCENDING }]
+    ) {
       totalCount
       edges {
         node {
@@ -211,7 +215,11 @@ const RootQuery = graphql`
         }
       }
     }
-    recentBookings: bookings(first: 24, where: { includeMineOnly: true, fromLt: $today }, orderBy: [{ field: FROM, direction: DESCENDING }]) {
+    recentBookings: bookings(
+      first: 24
+      where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, fromLt: $today }
+      orderBy: [{ field: FROM, direction: DESCENDING }]
+    ) {
       totalCount
       edges {
         node {
@@ -261,7 +269,11 @@ const RootQuery = graphql`
         }
       }
     }
-    marketplaceBookingSubscriptions(first: 48, where: { includeMineOnly: true }, orderBy: [{ field: NEXT_RENEWAL_AT, direction: ASCENDING }]) {
+    marketplaceBookingSubscriptions(
+      first: 48
+      where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain }
+      orderBy: [{ field: NEXT_RENEWAL_AT, direction: ASCENDING }]
+    ) {
       totalCount
       edges {
         node {
