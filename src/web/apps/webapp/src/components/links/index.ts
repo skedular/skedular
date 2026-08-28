@@ -27,6 +27,15 @@ export const getMarketplaceLocationLink = (integratedPlatform: string | undefine
   integratedPlatform ? `/${integratedPlatform}/marketplace/locations/${locationId}` : `/marketplace/locations/${locationId}`;
 export const getMarketplaceLocationFloorPlansLink = (integratedPlatform: string | undefined, locationId: string) =>
   integratedPlatform ? `/${integratedPlatform}/marketplace/locations/${locationId}/floorPlans` : `/marketplace/locations/${locationId}/floorPlans`;
+export const getMarketplaceOrganizationLink = (integratedPlatform: string | undefined, isCustomDomain: boolean, organizationCustomDomain: string) => {
+  if (isCustomDomain) {
+    return getRootLink(integratedPlatform);
+  }
+
+  const baseLink = `organizations/${organizationCustomDomain}`;
+
+  return integratedPlatform ? `/${integratedPlatform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
+};
 
 export const getCustomerMarketplaceBookingsLink = (integratedPlatform: string | undefined) =>
   integratedPlatform ? `/${integratedPlatform}/marketplace/bookings` : '/marketplace/bookings';

@@ -16,6 +16,7 @@ import {
 import {
   getMarketplaceLocationFloorPlansLink,
   getMarketplaceLocationLink,
+  getMarketplaceOrganizationLink,
   getMarketplaceProductBookingLink,
   getMarketplaceProductLink,
   getMarketplaceProductSubscribeLink,
@@ -525,6 +526,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   }
 
   const effectiveOrganizationCustomDomain = organizationCustomDomain || locationDetails.organization?.customDomain || '';
+  const marketplaceLink = getMarketplaceOrganizationLink(integratedPlatform, isCustomDomain, effectiveOrganizationCustomDomain);
   const locationLink = getMarketplaceLocationLink(integratedPlatform, locationDetails.id);
   const floorPlansLink = getMarketplaceLocationFloorPlansLink(integratedPlatform, locationDetails.id);
 
@@ -533,6 +535,9 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
       <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 8 }}>
         <Container maxWidth="xl" sx={{ pt: { xs: 3, md: 4 } }}>
           <Breadcrumbs separator="/" sx={{ mb: 3 }}>
+            <Link component="button" onClick={() => router.push(marketplaceLink)} underline="hover" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
+              Marketplace
+            </Link>
             <Link component="button" onClick={() => router.push(locationLink)} underline="hover" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
               {locationDetails.name}
             </Link>
@@ -785,7 +790,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 8 }}>
       <Container maxWidth="xl" sx={{ pt: { xs: 3, md: 4 } }}>
         <Breadcrumbs separator="/" sx={{ mb: 3 }}>
-          <Link component="button" onClick={() => router.back()} underline="hover" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
+          <Link component="button" onClick={() => router.push(marketplaceLink)} underline="hover" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
             Marketplace
           </Link>
           <SmallIconTypography label={locationDetails.name} color="text.primary" />
