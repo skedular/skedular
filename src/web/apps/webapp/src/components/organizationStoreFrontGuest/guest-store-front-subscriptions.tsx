@@ -1,5 +1,6 @@
 import { ArrowLeftIcon, PaymentStatusIcon, QuantityIcon } from '@/components/icons';
 import { getMarketplaceEntitlementPurchaseDetailsLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
+import CustomerEntitlementsStrip from '@/components/marketplaceEntitlement/customer-entitlements-strip';
 import { Loading } from '@/components/loading';
 import {
   SupportedMarketplaceBookingSubscriptionCancellationMode,
@@ -309,6 +310,8 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
             </StackRow>
           </CardContent>
         </Card>
+
+        <CustomerEntitlementsStrip integratedPlatform={integratedPlatform} />
 
         <Box sx={{ mt: 4 }}>
           {pendingEntitlementPurchases.length > 0 ? (
