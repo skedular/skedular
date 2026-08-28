@@ -8,10 +8,12 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Radio from '@mui/material/Radio';
 import Box from '@mui/system/Box';
-import { useIntegratedPlatform } from '@skedular/shared';
+import { formatPriceForDisplay, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { useRouter } from 'next/navigation';
 import { memo, useMemo, useState } from 'react';
+import { graphql, useFragment } from 'react-relay';
+import type { marketplaceProductCard_product$key } from '@/queries/__generated__/marketplaceProductCard_product.graphql';
 
 type PricingRow = {
   amountLabel: string;
@@ -22,22 +24,61 @@ type PricingRow = {
   title: string;
 };
 
-type Amenity = {
-  id: string;
-  name: string;
-};
-
 type Props = {
-  amenities: readonly Amenity[];
-  imageUrl: string;
+  productRelay: marketplaceProductCard_product$key;
   organizationCustomDomain: string;
-  pricingRows: readonly PricingRow[];
-  productId: string;
-  subTitle: string;
-  title: string;
 };
 
-const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain, pricingRows, productId, subTitle, title }: Props) => {
+const MarketplaceProductCard = ({ organizationCustomDomain, productRelay }: Props) => {
+  const product = useFragment(
+    graphql`
+      fragment marketplaceProductCard_product on ProductDetails {
+        id
+        listingMetadata {
+          title
+          subTitle
+        }
+        featureImages {
+          original {
+            url
+          }
+        }
+        currency {
+          name
+        }
+        pricingOptions {
+          id
+          index
+          listingMetadata {
+            title
+            subTitle
+          }
+          purchaseCadence
+          price
+          isTaxInclusive
+          availableDays
+        }
+      }
+    `,
+    productRelay,
+  );
+  const title = product.listingMetadata.title ?? 'Untitled product';
+  const subTitle = product.listingMetadata.subTitle ?? '';
+  const imageUrl = product.featureImages[0]?.original?.url ?? '';
+  const pricingRows = useMemo<PricingRow[]>(
+    () =>
+      [...product.pricingOptions]
+        .sort((left, right) => left.index - right.index)
+        .map((option) => ({
+          id: option.id,
+          title: option.listingMetadata.title ?? '',
+          cadence: option.purchaseCadence,
+          amountLabel: formatPriceForDisplay(product.currency.name, option.price, option.purchaseCadence),
+          taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
+          availableDays: option.availableDays ?? [],
+        })),
+    [product.currency.name, product.pricingOptions],
+  );
   const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain } = useKnownParams();
   const router = useRouter();
@@ -52,11 +93,27 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
         borderColor: (theme) => theme.palette.divider,
         backgroundColor: (theme) => theme.palette.background.paper,
         borderRadius: 3,
+        display: 'flex',
+        flexDirection: 'column',
         height: '100%',
       }}
     >
-      <CardMedia component="img" image={imageUrl} alt={title} sx={{ height: 190, bgcolor: (theme) => theme.palette.action.hover }} />
-      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+      <CardMedia
+        component="img"
+        image={imageUrl}
+        alt={title}
+        role="link"
+        tabIndex={0}
+        onClick={() => router.push(getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id))}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            router.push(getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id));
+          }
+        }}
+        sx={{ height: 190, bgcolor: (theme) => theme.palette.action.hover, cursor: 'pointer' }}
+      />
+      <CardContent sx={{ display: 'flex', flex: 1, minHeight: 0, flexDirection: 'column', gap: 1.5 }}>
         <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
           <LeadIconTypography label={title} />
         </StackRow>
@@ -64,22 +121,13 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
         <BodyIconTypography
           label={subTitle}
           sx={{
+            minHeight: '4.5em',
             overflow: 'hidden',
             display: '-webkit-box',
             WebkitLineClamp: 3,
             WebkitBoxOrient: 'vertical',
           }}
         />
-
-        <Box sx={{ minHeight: 36, display: 'flex', flexWrap: 'wrap', gap: 1, alignContent: 'flex-start' }}>
-          {amenities.slice(0, 4).map((amenity) => (
-            <CaptionIconTypography
-              key={amenity.id}
-              label={amenity.name}
-              sx={{ px: 1.25, py: 0.5, borderRadius: 1.25, bgcolor: (theme) => theme.palette.action.hover, fontSize: '0.8rem' }}
-            />
-          ))}
-        </Box>
 
         <Box sx={{ mt: 1, borderTop: 1, borderColor: (theme) => theme.palette.divider, pt: 1.5, flex: 1 }}>
           <CaptionIconTypography label="Choose your plan" sx={{ opacity: 0.7, mb: 1, textTransform: 'uppercase', letterSpacing: '0.04em' }} />
@@ -101,7 +149,7 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
                     transition: 'border-color 120ms ease, background-color 120ms ease',
                   }}
                 >
-                  <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'nowrap', height: '100%' }}>
+                  <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap', height: '100%' }}>
                     <StackRow spacing={0.75} sx={{ flexWrap: 'nowrap', alignItems: 'flex-start', minWidth: 0 }}>
                       <Radio
                         checked={row.id === effectiveSelectedPricingId}
@@ -109,6 +157,8 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
                         size="small"
                         sx={{
                           p: 0,
+                          mt: 0,
+                          transform: 'translateY(4px)',
                           '& .MuiSvgIcon-root': {
                             fontSize: 18,
                           },
@@ -143,8 +193,8 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
 
               router.push(
                 isSubscriptionCadence(selectedPricing.cadence)
-                  ? getMarketplaceProductSubscribeLink(integratedPlatform, isCustomDomain, organizationCustomDomain, productId, selectedPricing.id)
-                  : getMarketplaceProductBookingLink(integratedPlatform, isCustomDomain, organizationCustomDomain, productId, selectedPricing.id),
+                  ? getMarketplaceProductSubscribeLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, selectedPricing.id)
+                  : getMarketplaceProductBookingLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, selectedPricing.id),
               );
             }}
             disabled={!selectedPricing}
@@ -155,7 +205,7 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain,
           <Button
             fullWidth
             variant="outlined"
-            onClick={() => router.push(getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, productId))}
+            onClick={() => router.push(getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id))}
             sx={{ textTransform: 'none' }}
           >
             Details

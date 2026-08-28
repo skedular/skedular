@@ -45,7 +45,6 @@ const RootQuery = graphql`
     }
     ...guestStoreFrontProducts_query @arguments(organizationCustomDomain: $organizationCustomDomain)
     ...guestStoreFrontLocationsStrip_query
-    ...guestStoreFrontProductCard_query
     ...guestStoreFrontFooter_query
   }
 `;
@@ -58,7 +57,7 @@ const SelectedLocationProductsQuery = graphql`
         pricingOptions {
           index
         }
-        ...guestStoreFrontProductCard_product
+        ...marketplaceProductCard_product
       }
     }
   }
@@ -67,7 +66,6 @@ const SelectedLocationProductsQuery = graphql`
 type ProductListProps = {
   organizationCustomDomain: string;
   products: ReadonlyArray<NonNullable<guestStoreFrontProducts_query$key[' $data']>['products']['edges'][number]['node']>;
-  rootData: guestStoreFront_rootQuery['response'];
 };
 
 const sortProducts = <T extends { readonly pricingOptions: ReadonlyArray<{ readonly index: number }> }>(products: ReadonlyArray<T>) =>
@@ -78,34 +76,34 @@ const sortProducts = <T extends { readonly pricingOptions: ReadonlyArray<{ reado
     return leftIndex - rightIndex;
   });
 
-const ProductList = ({ products, rootData, organizationCustomDomain }: ProductListProps) => (
+const ProductList = ({ products, organizationCustomDomain }: ProductListProps) => (
   <Box
     sx={{
       display: 'grid',
       gap: 3,
+      maxWidth: 1320,
       gridTemplateColumns: {
         xs: '1fr',
         sm: '1fr 1fr',
-        lg: 'repeat(4, minmax(0, 1fr))',
+        lg: 'repeat(3, minmax(0, 1fr))',
       },
     }}
   >
     {sortProducts(products).map((product) => (
-      <GuestStoreFrontProductCard key={product.id} rootDataRelay={rootData} productRelay={product} organizationCustomDomain={organizationCustomDomain} />
+      <GuestStoreFrontProductCard key={product.id} productRelay={product} organizationCustomDomain={organizationCustomDomain} />
     ))}
   </Box>
 );
 
 type SelectedLocationProductsProps = {
   queryReference: PreloadedQuery<guestStoreFrontSelectedLocationProductsQuery, Record<string, unknown>>;
-  rootData: guestStoreFront_rootQuery['response'];
   organizationCustomDomain: string;
 };
 
-const SelectedLocationProducts = ({ queryReference, rootData, organizationCustomDomain }: SelectedLocationProductsProps) => {
+const SelectedLocationProducts = ({ queryReference, organizationCustomDomain }: SelectedLocationProductsProps) => {
   const selectedLocationData = usePreloadedQuery<guestStoreFrontSelectedLocationProductsQuery>(SelectedLocationProductsQuery, queryReference);
 
-  return <ProductList products={selectedLocationData.location?.products ?? []} rootData={rootData} organizationCustomDomain={organizationCustomDomain} />;
+  return <ProductList products={selectedLocationData.location?.products ?? []} organizationCustomDomain={organizationCustomDomain} />;
 };
 
 const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) => {
@@ -120,7 +118,7 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
               pricingOptions {
                 index
               }
-              ...guestStoreFrontProductCard_product
+              ...marketplaceProductCard_product
             }
           }
         }
@@ -300,9 +298,9 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
         </Box>
 
         {selectedLocationId && selectedLocationProductsQueryReference ? (
-          <SelectedLocationProducts queryReference={selectedLocationProductsQueryReference} rootData={rootData} organizationCustomDomain={organizationCustomDomain} />
+          <SelectedLocationProducts queryReference={selectedLocationProductsQueryReference} organizationCustomDomain={organizationCustomDomain} />
         ) : (
-          <ProductList products={defaultProducts} rootData={rootData} organizationCustomDomain={organizationCustomDomain} />
+          <ProductList products={defaultProducts} organizationCustomDomain={organizationCustomDomain} />
         )}
       </Container>
 

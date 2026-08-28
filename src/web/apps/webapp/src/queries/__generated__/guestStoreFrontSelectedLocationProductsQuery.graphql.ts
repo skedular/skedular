@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e880293787f84618b1d75e31b676aed9>>
+ * @generated SignedSource<<bb5f4f42da8472fea8444ac5b7777d91>>
  * @lightSyntaxTransform
  */
 
@@ -19,7 +19,7 @@ export type guestStoreFrontSelectedLocationProductsQuery$data = {
       readonly pricingOptions: ReadonlyArray<{
         readonly index: number;
       }>;
-      readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontProductCard_product">;
+      readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductCard_product">;
     }>;
   } | null | undefined;
 };
@@ -81,13 +81,6 @@ v4 = {
     }
   ],
   "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -128,7 +121,7 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "guestStoreFrontProductCard_product"
+                "name": "marketplaceProductCard_product"
               }
             ],
             "storageKey": null
@@ -199,13 +192,6 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "supportsSubscriptionAutoRenewal",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
                     "name": "availableDays",
                     "storageKey": null
                   }
@@ -254,23 +240,9 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "type",
+                    "name": "name",
                     "storageKey": null
-                  },
-                  (v5/*:: as any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "OrganizationTagDetails",
-                "kind": "LinkedField",
-                "name": "amenities",
-                "plural": true,
-                "selections": [
-                  (v2/*:: as any*/),
-                  (v5/*:: as any*/)
+                  }
                 ],
                 "storageKey": null
               }
@@ -284,16 +256,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1e3fe324b699848a10df671dc340f302",
+    "cacheID": "286327ee577b6f5e4a590b4f0eab1e4d",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontSelectedLocationProductsQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontSelectedLocationProductsQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    products {\n      id\n      pricingOptions {\n        index\n      }\n      ...guestStoreFrontProductCard_product\n    }\n    id\n  }\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n    availableDays\n  }\n}\n"
+    "text": "query guestStoreFrontSelectedLocationProductsQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    products {\n      id\n      pricingOptions {\n        index\n      }\n      ...marketplaceProductCard_product\n    }\n    id\n  }\n}\n\nfragment marketplaceProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    availableDays\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f897809446a9be438e9d42b81d6430b2";
+(node as any).hash = "26df25641622e99ea15ce26a90bf230f";
 
 export default node;

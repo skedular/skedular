@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<879a861986205933ee2171f13aa1e18d>>
+ * @generated SignedSource<<7a0fada88cc4b81e80f065462eab26da>>
  * @lightSyntaxTransform
  */
 
@@ -17,7 +17,7 @@ export type guestStoreFrontProducts_query$data = {
         readonly pricingOptions: ReadonlyArray<{
           readonly index: number;
         }>;
-        readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontProductCard_product">;
+        readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductCard_product">;
       };
     }>;
   };
@@ -115,7 +115,7 @@ const node: ReaderFragment = {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "guestStoreFrontProductCard_product"
+                  "name": "marketplaceProductCard_product"
                 }
               ],
               "storageKey": null
@@ -131,6 +131,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "9e186197fa0d3967e503da2d4d1abf92";
+(node as any).hash = "5c7bd374d5f7a49fdda97981849ec002";
 
 export default node;

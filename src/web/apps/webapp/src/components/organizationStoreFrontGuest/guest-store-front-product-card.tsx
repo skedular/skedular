@@ -1,96 +1,14 @@
 import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
-import { formatPriceForDisplay } from '@skedular/shared';
-import type { guestStoreFrontProductCard_product$key } from '@/queries/__generated__/guestStoreFrontProductCard_product.graphql';
-import type { guestStoreFrontProductCard_query$key } from '@/queries/__generated__/guestStoreFrontProductCard_query.graphql';
-import { memo, useMemo } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import type { marketplaceProductCard_product$key } from '@/queries/__generated__/marketplaceProductCard_product.graphql';
+import { memo } from 'react';
 
 type Props = {
-  rootDataRelay: guestStoreFrontProductCard_query$key;
-  productRelay: guestStoreFrontProductCard_product$key;
+  productRelay: marketplaceProductCard_product$key;
   organizationCustomDomain: string;
 };
 
-const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationCustomDomain }: Props) => {
-  const rootData = useFragment<guestStoreFrontProductCard_query$key>(
-    graphql`
-      fragment guestStoreFrontProductCard_query on Query {
-        currencies {
-          type
-          name
-        }
-      }
-    `,
-    rootDataRelay,
-  );
-
-  const product = useFragment(
-    graphql`
-      fragment guestStoreFrontProductCard_product on ProductDetails {
-        id
-        listingMetadata {
-          title
-          subTitle
-        }
-        featureImages {
-          original {
-            url
-          }
-        }
-        currency {
-          type
-          name
-        }
-        amenities {
-          id
-          name
-        }
-        pricingOptions {
-          id
-          index
-          listingMetadata {
-            title
-            subTitle
-          }
-          purchaseCadence
-          price
-          isTaxInclusive
-          supportsSubscriptionAutoRenewal
-          availableDays
-        }
-      }
-    `,
-    productRelay,
-  );
-
-  const currency = product.currency ? rootData.currencies.find((item) => item.type === product.currency?.type)?.name : null;
-
-  const pricingRows = useMemo(
-    () =>
-      [...product.pricingOptions]
-        .sort((a, b) => a.index - b.index)
-        .map((option) => ({
-          id: option.id,
-          title: option.listingMetadata.title ?? '',
-          cadence: option.purchaseCadence,
-          amountLabel: formatPriceForDisplay(currency, option.price, option.purchaseCadence),
-          taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
-          availableDays: option.availableDays ?? [],
-        })),
-    [currency, product.pricingOptions],
-  );
-
-  return (
-    <MarketplaceProductCard
-      amenities={product.amenities}
-      imageUrl={product.featureImages[0]?.original?.url ?? ''}
-      organizationCustomDomain={organizationCustomDomain}
-      pricingRows={pricingRows}
-      productId={product.id}
-      subTitle={product.listingMetadata.subTitle ?? ''}
-      title={product.listingMetadata.title ?? ''}
-    />
-  );
+const GuestStoreFrontProductCard = ({ productRelay, organizationCustomDomain }: Props) => {
+  return <MarketplaceProductCard productRelay={productRelay} organizationCustomDomain={organizationCustomDomain} />;
 };
 
 export default memo(GuestStoreFrontProductCard);

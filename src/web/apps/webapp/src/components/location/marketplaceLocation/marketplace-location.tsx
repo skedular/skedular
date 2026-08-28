@@ -284,18 +284,11 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             }
           }
           products {
+            ...marketplaceProductCard_product
             id
             listingMetadata {
               title
               subTitle
-            }
-            productTags {
-              id
-            }
-            featureImages {
-              original {
-                url
-              }
             }
             currency {
               type
@@ -309,12 +302,10 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
               purchaseCadence
               price
               isTaxInclusive
-              supportsSubscriptionAutoRenewal
               availableDays
             }
-            amenities {
+            productTags {
               id
-              name
             }
           }
           resources(where: { floorPlanId: $selectedFloorPlanId }, orderBy: [{ direction: ASCENDING, field: NAME }]) @include(if: $floorPlanSelected) {
@@ -418,43 +409,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   const primaryPhone = getFirstPopulatedValue(extraMetadata?.contactDetails?.contactPhones);
   const primaryEmail = getFirstPopulatedValue(extraMetadata?.contactDetails?.contactEmails);
 
-  const products = useMemo<
-    {
-      amenities: readonly { id: string; name: string }[];
-      id: string;
-      imageUrl: string;
-      pricingRows: PricingRow[];
-      subTitle: string;
-      title: string;
-    }[]
-  >(() => {
-    if (!locationDetails) {
-      return [];
-    }
-
-    return [...locationDetails.products].map((product) => {
-      const currencyLabel = product.currency?.type ? (rootData.currencies.find((item) => item.type === product.currency?.type)?.name ?? product.currency.type) : null;
-      const pricingRows = [...product.pricingOptions]
-        .sort((left, right) => left.index - right.index)
-        .map((option) => ({
-          id: option.id,
-          title: option.listingMetadata.title ?? '',
-          cadence: option.purchaseCadence,
-          amountLabel: formatPriceForDisplay(currencyLabel, option.price, option.purchaseCadence),
-          taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
-          availableDays: option.availableDays ?? [],
-        }));
-
-      return {
-        amenities: product.amenities,
-        id: product.id,
-        imageUrl: product.featureImages[0]?.original?.url ?? heroImage,
-        title: product.listingMetadata.title ?? 'Untitled product',
-        subTitle: product.listingMetadata.subTitle ?? '',
-        pricingRows,
-      };
-    });
-  }, [heroImage, locationDetails, rootData.currencies]);
+  const products = locationDetails?.products ?? [];
   const floorPlans = useMemo(() => rootData.floorPlans.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item), [rootData.floorPlans.edges]);
   const effectiveSelectedFloorPlanId = useMemo(() => {
     if (floorPlans.some((item) => item.id === selectedFloorPlanId)) {
@@ -1128,15 +1083,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             <Grid container spacing={3}>
               {products.map((product) => (
                 <Grid key={product.id} size={{ xs: 12, sm: 6, lg: 4 }}>
-                  <MarketplaceProductCard
-                    amenities={product.amenities}
-                    imageUrl={product.imageUrl}
-                    organizationCustomDomain={effectiveOrganizationCustomDomain}
-                    pricingRows={product.pricingRows}
-                    productId={product.id}
-                    subTitle={product.subTitle}
-                    title={product.title}
-                  />
+                  <MarketplaceProductCard productRelay={product} organizationCustomDomain={effectiveOrganizationCustomDomain} />
                 </Grid>
               ))}
             </Grid>

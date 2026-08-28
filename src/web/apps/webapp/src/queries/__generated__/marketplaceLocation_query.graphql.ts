@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<97b535dde7f9864ae6150ffd34e36bc4>>
+ * @generated SignedSource<<52d817533beddfdb694c4c6bd3bb1965>>
  * @lightSyntaxTransform
  */
 
@@ -137,18 +137,9 @@ export type marketplaceLocation_query$data = {
       readonly multilinesFormattedAddress: string | null | undefined;
     } | null | undefined;
     readonly products: ReadonlyArray<{
-      readonly amenities: ReadonlyArray<{
-        readonly id: string;
-        readonly name: string;
-      }>;
       readonly currency: {
         readonly type: Currency;
       };
-      readonly featureImages: ReadonlyArray<{
-        readonly original: {
-          readonly url: string;
-        } | null | undefined;
-      }>;
       readonly id: string;
       readonly listingMetadata: {
         readonly subTitle: string | null | undefined;
@@ -164,11 +155,11 @@ export type marketplaceLocation_query$data = {
         };
         readonly price: any;
         readonly purchaseCadence: ProductPricingCadence;
-        readonly supportsSubscriptionAutoRenewal: boolean;
       }>;
       readonly productTags: ReadonlyArray<{
         readonly id: string;
       }>;
+      readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductCard_product">;
     }>;
     readonly resources?: {
       readonly edges: ReadonlyArray<{
@@ -289,27 +280,11 @@ v8 = {
 v9 = {
   "alias": null,
   "args": null,
-  "concreteType": "OrganizationTagDetails",
-  "kind": "LinkedField",
-  "name": "amenities",
-  "plural": true,
-  "selections": [
-    (v1/*:: as any*/),
-    (v2/*:: as any*/)
-  ],
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
   "kind": "ScalarField",
   "name": "from",
   "storageKey": null
 },
-v11 = [
-  (v3/*:: as any*/)
-],
-v12 = [
+v10 = [
   {
     "alias": null,
     "args": null,
@@ -324,7 +299,7 @@ v12 = [
     "name": "openAllDay",
     "storageKey": null
   },
-  (v10/*:: as any*/),
+  (v9/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -333,7 +308,7 @@ v12 = [
     "storageKey": null
   }
 ],
-v13 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -572,7 +547,19 @@ return {
           "name": "timezone",
           "storageKey": null
         },
-        (v9/*:: as any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationTagDetails",
+          "kind": "LinkedField",
+          "name": "amenities",
+          "plural": true,
+          "selections": [
+            (v1/*:: as any*/),
+            (v2/*:: as any*/)
+          ],
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -646,7 +633,7 @@ return {
               "name": "peopleCapacity",
               "plural": false,
               "selections": [
-                (v10/*:: as any*/),
+                (v9/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -690,7 +677,9 @@ return {
               "kind": "LinkedField",
               "name": "thumbnail",
               "plural": false,
-              "selections": (v11/*:: as any*/),
+              "selections": [
+                (v3/*:: as any*/)
+              ],
               "storageKey": null
             }
           ],
@@ -751,7 +740,7 @@ return {
                   "kind": "LinkedField",
                   "name": "monday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v10/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -761,7 +750,7 @@ return {
                   "kind": "LinkedField",
                   "name": "tuesday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v10/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -771,7 +760,7 @@ return {
                   "kind": "LinkedField",
                   "name": "wednesday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v10/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -781,7 +770,7 @@ return {
                   "kind": "LinkedField",
                   "name": "thursday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v10/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -791,7 +780,7 @@ return {
                   "kind": "LinkedField",
                   "name": "friday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v10/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -801,7 +790,7 @@ return {
                   "kind": "LinkedField",
                   "name": "saturday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v10/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -811,7 +800,7 @@ return {
                   "kind": "LinkedField",
                   "name": "sunday",
                   "plural": false,
-                  "selections": (v12/*:: as any*/),
+                  "selections": (v10/*:: as any*/),
                   "storageKey": null
                 }
               ],
@@ -828,6 +817,11 @@ return {
           "name": "products",
           "plural": true,
           "selections": [
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "marketplaceProductCard_product"
+            },
             (v1/*:: as any*/),
             {
               "alias": null,
@@ -839,37 +833,6 @@ return {
               "selections": [
                 (v7/*:: as any*/),
                 (v8/*:: as any*/)
-              ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "OrganizationTagDetails",
-              "kind": "LinkedField",
-              "name": "productTags",
-              "plural": true,
-              "selections": (v5/*:: as any*/),
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "CdnImageFile",
-              "kind": "LinkedField",
-              "name": "featureImages",
-              "plural": true,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "CdnFile",
-                  "kind": "LinkedField",
-                  "name": "original",
-                  "plural": false,
-                  "selections": (v11/*:: as any*/),
-                  "storageKey": null
-                }
               ],
               "storageKey": null
             },
@@ -938,20 +901,22 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "supportsSubscriptionAutoRenewal",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
                   "name": "availableDays",
                   "storageKey": null
                 }
               ],
               "storageKey": null
             },
-            (v9/*:: as any*/)
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "OrganizationTagDetails",
+              "kind": "LinkedField",
+              "name": "productTags",
+              "plural": true,
+              "selections": (v5/*:: as any*/),
+              "storageKey": null
+            }
           ],
           "storageKey": null
         },
@@ -1006,7 +971,7 @@ return {
                           "name": "inactive",
                           "storageKey": null
                         },
-                        (v13/*:: as any*/),
+                        (v11/*:: as any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -1017,7 +982,7 @@ return {
                           "selections": [
                             (v1/*:: as any*/),
                             (v2/*:: as any*/),
-                            (v13/*:: as any*/)
+                            (v11/*:: as any*/)
                           ],
                           "storageKey": null
                         },
@@ -1031,7 +996,7 @@ return {
                           "selections": [
                             (v1/*:: as any*/),
                             (v2/*:: as any*/),
-                            (v13/*:: as any*/),
+                            (v11/*:: as any*/),
                             (v6/*:: as any*/)
                           ],
                           "storageKey": null
@@ -1056,6 +1021,6 @@ return {
 };
 })();
 
-(node as any).hash = "b07d4e87860b8a445a750f631334e724";
+(node as any).hash = "c052388428a8a07eb884a581c4c44e78";
 
 export default node;

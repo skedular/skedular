@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9c8455dd7d6e7723bff045031a14ca13>>
+ * @generated SignedSource<<7142e59c9cf21f6509bd67af7c0d2030>>
  * @lightSyntaxTransform
  */
 
@@ -8,18 +8,12 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type guestStoreFrontProductCard_product$data = {
-  readonly amenities: ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-  }>;
+export type marketplaceProductCard_product$data = {
   readonly currency: {
     readonly name: string;
-    readonly type: Currency;
   };
   readonly featureImages: ReadonlyArray<{
     readonly original: {
@@ -42,13 +36,12 @@ export type guestStoreFrontProductCard_product$data = {
     };
     readonly price: any;
     readonly purchaseCadence: ProductPricingCadence;
-    readonly supportsSubscriptionAutoRenewal: boolean;
   }>;
-  readonly " $fragmentType": "guestStoreFrontProductCard_product";
+  readonly " $fragmentType": "marketplaceProductCard_product";
 };
-export type guestStoreFrontProductCard_product$key = {
-  readonly " $data"?: guestStoreFrontProductCard_product$data;
-  readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontProductCard_product">;
+export type marketplaceProductCard_product$key = {
+  readonly " $data"?: marketplaceProductCard_product$data;
+  readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductCard_product">;
 };
 
 const node: ReaderFragment = (function(){
@@ -83,19 +76,12 @@ v1 = {
     }
   ],
   "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
 };
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "guestStoreFrontProductCard_product",
+  "name": "marketplaceProductCard_product",
   "selections": [
     (v0/*:: as any*/),
     (v1/*:: as any*/),
@@ -140,23 +126,9 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "type",
+          "name": "name",
           "storageKey": null
-        },
-        (v2/*:: as any*/)
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "OrganizationTagDetails",
-      "kind": "LinkedField",
-      "name": "amenities",
-      "plural": true,
-      "selections": [
-        (v0/*:: as any*/),
-        (v2/*:: as any*/)
+        }
       ],
       "storageKey": null
     },
@@ -202,13 +174,6 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "supportsSubscriptionAutoRenewal",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
           "name": "availableDays",
           "storageKey": null
         }
@@ -221,6 +186,6 @@ return {
 };
 })();
 
-(node as any).hash = "f91bb0b2e554a956879c20145b4ae69d";
+(node as any).hash = "7eb0cea6dd4bbd9096ea09c232f7c925";
 
 export default node;
