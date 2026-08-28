@@ -1,15 +1,16 @@
-import { BodyIconTypography, StackRow } from '@skedular/ui';
-import { ArrowLeftIcon } from '@/components/icons';
+import { BodyIconTypography } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@skedular/shared';
 import type { marketplaceProductDetail_rootQuery } from '@/queries/__generated__/marketplaceProductDetail_rootQuery.graphql';
-import Button from '@mui/material/Button';
+import type { marketplaceProductDetailBreadcrumb_query$key } from '@/queries/__generated__/marketplaceProductDetailBreadcrumb_query.graphql';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Container from '@mui/material/Container';
+import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { graphql, PreloadedQuery, useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import MarketplaceProductDetailBookingCard from './marketplace-product-detail-booking-card';
 import MarketplaceProductDetailOverview from './marketplace-product-detail-overview';
 import useKnownParams from '@/hooks/use-known-params';
@@ -20,6 +21,7 @@ type Props = {
 
 const RootQuery = graphql`
   query marketplaceProductDetail_rootQuery($productId: String!) {
+    ...marketplaceProductDetailBreadcrumb_query @arguments(productId: $productId)
     ...marketplaceProductDetailOverview_query @arguments(productId: $productId)
     ...marketplaceProductDetailBookingCard_query @arguments(productId: $productId)
   }
@@ -28,16 +30,29 @@ const RootQuery = graphql`
 const MarketplaceProductDetail = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<marketplaceProductDetail_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
+  const breadcrumbData = useFragment<marketplaceProductDetailBreadcrumb_query$key>(
+    graphql`
+      fragment marketplaceProductDetailBreadcrumb_query on Query @argumentDefinitions(productId: { type: "String!" }) {
+        product(id: $productId) {
+          listingMetadata {
+            title
+          }
+        }
+      }
+    `,
+    rootData,
+  );
+  const productTitle = breadcrumbData.product?.listingMetadata.title ?? 'Product';
 
   return (
     <Box sx={{ bgcolor: (theme) => theme.palette.background.default, minHeight: '100vh', pb: 8 }}>
       <Container maxWidth="xl" sx={{ pt: { xs: 3, md: 4 } }}>
-        <Button variant="text" onClick={() => router.back()} sx={{ textTransform: 'none', px: 0, mb: 2 }}>
-          <StackRow spacing={0.5} sx={{ flexWrap: 'nowrap' }}>
-            <ArrowLeftIcon fontSize="small" />
-            <BodyIconTypography label="Back" />
-          </StackRow>
-        </Button>
+        <Breadcrumbs separator="/" sx={{ mb: 3 }}>
+          <Link component="button" onClick={() => router.back()} underline="hover" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
+            Marketplace
+          </Link>
+          <BodyIconTypography label={productTitle} color="text.primary" />
+        </Breadcrumbs>
 
         <Box
           sx={{

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bf86381c62b5c402cb44ec3abcfcc4d3>>
+ * @generated SignedSource<<24b77252690848a1517e239f0541c7ca>>
  * @lightSyntaxTransform
  */
 
@@ -23,7 +23,7 @@ export type marketplaceProductBooking_rootQuery$data = {
   readonly product: {
     readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductBookingHero_product">;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductBookingForm_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductBookingBreadcrumb_query" | "marketplaceProductBookingForm_query">;
 };
 export type marketplaceProductBooking_rootQuery = {
   response: marketplaceProductBooking_rootQuery$data;
@@ -44,11 +44,18 @@ v1 = {
 v2 = [
   {
     "kind": "Variable",
+    "name": "productId",
+    "variableName": "productId"
+  }
+],
+v3 = [
+  {
+    "kind": "Variable",
     "name": "customDomain",
     "variableName": "organizationCustomDomain"
   }
 ],
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": "SpacesPublicBookingAvailabilityDetails",
@@ -73,42 +80,42 @@ v3 = {
   ],
   "storageKey": null
 },
-v4 = [
+v5 = [
   {
     "kind": "Variable",
     "name": "id",
     "variableName": "productId"
   }
 ],
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "subTitle",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v9 = [
+v10 = [
   {
     "alias": null,
     "args": null,
@@ -116,9 +123,9 @@ v9 = [
     "name": "type",
     "storageKey": null
   },
-  (v8/*:: as any*/)
+  (v9/*:: as any*/)
 ],
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -136,20 +143,25 @@ return {
     "name": "marketplaceProductBooking_rootQuery",
     "selections": [
       {
-        "alias": null,
         "args": (v2/*:: as any*/),
+        "kind": "FragmentSpread",
+        "name": "marketplaceProductBookingBreadcrumb_query"
+      },
+      {
+        "alias": null,
+        "args": (v3/*:: as any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v3/*:: as any*/)
+          (v4/*:: as any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v4/*:: as any*/),
+        "args": (v5/*:: as any*/),
         "concreteType": "ProductDetails",
         "kind": "LinkedField",
         "name": "product",
@@ -164,13 +176,7 @@ return {
         "storageKey": null
       },
       {
-        "args": [
-          {
-            "kind": "Variable",
-            "name": "productId",
-            "variableName": "productId"
-          }
-        ],
+        "args": (v2/*:: as any*/),
         "kind": "FragmentSpread",
         "name": "marketplaceProductBookingForm_query"
       }
@@ -189,25 +195,13 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v2/*:: as any*/),
-        "concreteType": "OrganizationDetails",
-        "kind": "LinkedField",
-        "name": "organization",
-        "plural": false,
-        "selections": [
-          (v3/*:: as any*/),
-          (v5/*:: as any*/)
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v4/*:: as any*/),
+        "args": (v5/*:: as any*/),
         "concreteType": "ProductDetails",
         "kind": "LinkedField",
         "name": "product",
         "plural": false,
         "selections": [
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -216,8 +210,8 @@ return {
             "name": "listingMetadata",
             "plural": false,
             "selections": [
-              (v6/*:: as any*/),
               (v7/*:: as any*/),
+              (v8/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -272,12 +266,11 @@ return {
             "name": "amenities",
             "plural": true,
             "selections": [
-              (v5/*:: as any*/),
-              (v8/*:: as any*/)
+              (v6/*:: as any*/),
+              (v9/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v5/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -292,7 +285,7 @@ return {
             "kind": "LinkedField",
             "name": "type",
             "plural": false,
-            "selections": (v9/*:: as any*/),
+            "selections": (v10/*:: as any*/),
             "storageKey": null
           },
           {
@@ -327,7 +320,7 @@ return {
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v9/*:: as any*/),
+            "selections": (v10/*:: as any*/),
             "storageKey": null
           },
           {
@@ -338,7 +331,7 @@ return {
             "name": "pricingOptions",
             "plural": true,
             "selections": [
-              (v5/*:: as any*/),
+              (v6/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -354,8 +347,8 @@ return {
                 "name": "listingMetadata",
                 "plural": false,
                 "selections": [
-                  (v6/*:: as any*/),
-                  (v7/*:: as any*/)
+                  (v7/*:: as any*/),
+                  (v8/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -483,13 +476,26 @@ return {
       },
       {
         "alias": null,
+        "args": (v3/*:: as any*/),
+        "concreteType": "OrganizationDetails",
+        "kind": "LinkedField",
+        "name": "organization",
+        "plural": false,
+        "selections": [
+          (v4/*:: as any*/),
+          (v6/*:: as any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
         "args": null,
         "concreteType": "CustomerDetails",
         "kind": "LinkedField",
         "name": "me",
         "plural": false,
         "selections": [
-          (v5/*:: as any*/),
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -508,7 +514,7 @@ return {
         "name": "entitlementPurchases",
         "plural": true,
         "selections": [
-          (v5/*:: as any*/),
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -558,7 +564,7 @@ return {
             "name": "invoiceNumber",
             "storageKey": null
           },
-          (v10/*:: as any*/),
+          (v11/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -604,12 +610,12 @@ return {
                         "name": "marketplaceBooking",
                         "plural": false,
                         "selections": [
-                          (v10/*:: as any*/),
-                          (v5/*:: as any*/)
+                          (v11/*:: as any*/),
+                          (v6/*:: as any*/)
                         ],
                         "storageKey": null
                       },
-                      (v5/*:: as any*/)
+                      (v6/*:: as any*/)
                     ],
                     "storageKey": null
                   }
@@ -629,7 +635,7 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v9/*:: as any*/),
+        "selections": (v10/*:: as any*/),
         "storageKey": null
       },
       {
@@ -639,7 +645,7 @@ return {
         "kind": "LinkedField",
         "name": "paymentMethodTypes",
         "plural": true,
-        "selections": (v9/*:: as any*/),
+        "selections": (v10/*:: as any*/),
         "storageKey": null
       },
       {
@@ -652,16 +658,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "146e3cb6c59c27dd76eb72bbdc6a24b1",
+    "cacheID": "21db8b4b7da982fa5d61beb6db6a8611",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBooking_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductBooking_rootQuery(\n  $productId: String!\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  product(id: $productId) {\n    ...marketplaceProductBookingHero_product\n    id\n  }\n  ...marketplaceProductBookingForm_query_2SWcqy\n}\n\nfragment marketplaceProductBookingForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  entitlementPurchases {\n    id\n    paymentStatus\n    paymentMethod\n    paymentExpiry\n    amount\n    currency\n    paymentAction\n    invoiceNumber\n    invoiceUrl\n    paymentInstructions\n    linkedBookings(first: 1) {\n      edges {\n        node {\n          marketplaceBooking {\n            invoiceUrl\n            id\n          }\n          id\n        }\n      }\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      uniqueId\n      customerFacingTermsAndConditionsUrl\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      bookingCadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n      isTaxInclusive\n      billingMode\n      acceptedPaymentMethods\n      availableDays\n      fulfillmentType\n      supportsSubscriptionAutoRenewal\n    }\n  }\n}\n\nfragment marketplaceProductBookingHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
+    "text": "query marketplaceProductBooking_rootQuery(\n  $productId: String!\n  $organizationCustomDomain: String!\n) {\n  ...marketplaceProductBookingBreadcrumb_query_2SWcqy\n  organization(customDomain: $organizationCustomDomain) {\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  product(id: $productId) {\n    ...marketplaceProductBookingHero_product\n    id\n  }\n  ...marketplaceProductBookingForm_query_2SWcqy\n}\n\nfragment marketplaceProductBookingBreadcrumb_query_2SWcqy on Query {\n  product(id: $productId) {\n    id\n    listingMetadata {\n      title\n    }\n  }\n}\n\nfragment marketplaceProductBookingForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  entitlementPurchases {\n    id\n    paymentStatus\n    paymentMethod\n    paymentExpiry\n    amount\n    currency\n    paymentAction\n    invoiceNumber\n    invoiceUrl\n    paymentInstructions\n    linkedBookings(first: 1) {\n      edges {\n        node {\n          marketplaceBooking {\n            invoiceUrl\n            id\n          }\n          id\n        }\n      }\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      uniqueId\n      customerFacingTermsAndConditionsUrl\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      bookingCadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n      isTaxInclusive\n      billingMode\n      acceptedPaymentMethods\n      availableDays\n      fulfillmentType\n      supportsSubscriptionAutoRenewal\n    }\n  }\n}\n\nfragment marketplaceProductBookingHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "092067937221921e8cb7f75349e2e737";
+(node as any).hash = "21436f61994e9b59fa70c6d08bd6e425";
 
 export default node;

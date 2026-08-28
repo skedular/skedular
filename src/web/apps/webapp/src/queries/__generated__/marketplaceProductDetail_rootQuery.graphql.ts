@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3e32c911c37d5562de33f2d34792c69c>>
+ * @generated SignedSource<<865dabbfe4ab9d324d4f18666de7f2ea>>
  * @lightSyntaxTransform
  */
 
@@ -13,7 +13,7 @@ export type marketplaceProductDetail_rootQuery$variables = {
   productId: string;
 };
 export type marketplaceProductDetail_rootQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailBookingCard_query" | "marketplaceProductDetailOverview_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailBookingCard_query" | "marketplaceProductDetailBreadcrumb_query" | "marketplaceProductDetailOverview_query">;
 };
 export type marketplaceProductDetail_rootQuery = {
   response: marketplaceProductDetail_rootQuery$data;
@@ -39,31 +39,28 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 },
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v2/*:: as any*/)
-],
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "subTitle",
+  "storageKey": null
+},
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "id",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "subTitle",
+  "name": "name",
   "storageKey": null
 },
 v6 = [
@@ -71,17 +68,20 @@ v6 = [
     "alias": null,
     "args": null,
     "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v5/*:: as any*/)
+],
+v7 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
     "name": "url",
     "storageKey": null
   }
-],
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*:: as any*/),
@@ -89,6 +89,11 @@ return {
     "metadata": null,
     "name": "marketplaceProductDetail_rootQuery",
     "selections": [
+      {
+        "args": (v1/*:: as any*/),
+        "kind": "FragmentSpread",
+        "name": "marketplaceProductDetailBreadcrumb_query"
+      },
       {
         "args": (v1/*:: as any*/),
         "kind": "FragmentSpread",
@@ -126,23 +131,13 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "ProductTypeDetails",
-            "kind": "LinkedField",
-            "name": "type",
-            "plural": false,
-            "selections": (v3/*:: as any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "ListingMetadata",
             "kind": "LinkedField",
             "name": "listingMetadata",
             "plural": false,
             "selections": [
-              (v4/*:: as any*/),
-              (v5/*:: as any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -160,6 +155,17 @@ return {
             ],
             "storageKey": null
           },
+          (v4/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ProductTypeDetails",
+            "kind": "LinkedField",
+            "name": "type",
+            "plural": false,
+            "selections": (v6/*:: as any*/),
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -175,7 +181,7 @@ return {
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v6/*:: as any*/),
+                "selections": (v7/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -185,7 +191,7 @@ return {
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v6/*:: as any*/),
+                "selections": (v7/*:: as any*/),
                 "storageKey": null
               }
             ],
@@ -199,8 +205,8 @@ return {
             "name": "amenities",
             "plural": true,
             "selections": [
-              (v7/*:: as any*/),
-              (v2/*:: as any*/),
+              (v4/*:: as any*/),
+              (v5/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -211,7 +217,6 @@ return {
             ],
             "storageKey": null
           },
-          (v7/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -237,7 +242,7 @@ return {
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v3/*:: as any*/),
+            "selections": (v6/*:: as any*/),
             "storageKey": null
           },
           {
@@ -248,7 +253,7 @@ return {
             "name": "pricingOptions",
             "plural": true,
             "selections": [
-              (v7/*:: as any*/),
+              (v4/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -264,8 +269,8 @@ return {
                 "name": "listingMetadata",
                 "plural": false,
                 "selections": [
-                  (v4/*:: as any*/),
-                  (v5/*:: as any*/)
+                  (v2/*:: as any*/),
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -377,7 +382,7 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v3/*:: as any*/),
+        "selections": (v6/*:: as any*/),
         "storageKey": null
       },
       {
@@ -422,8 +427,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v7/*:: as any*/),
-                  (v2/*:: as any*/)
+                  (v4/*:: as any*/),
+                  (v5/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -436,16 +441,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6a1815d157476d36f087a5897f0fef81",
+    "cacheID": "304c0cbe663d2b2542aa408025bbcd99",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductDetail_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductDetail_rootQuery(\n  $productId: String!\n) {\n  ...marketplaceProductDetailOverview_query_2SWcqy\n  ...marketplaceProductDetailBookingCard_query_2SWcqy\n}\n\nfragment marketplaceProductDetailBookingCard_product on ProductDetails {\n  id\n  organization {\n    customerFacingTermsAndConditionsUrl\n  }\n  type {\n    type\n    name\n  }\n  listingMetadata {\n    about\n    title\n    subTitle\n    includedFeatures\n  }\n  amenities {\n    id\n    name\n    color\n  }\n  currency {\n    type\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n    availableDays\n    acceptedPaymentMethods\n    minDurationMinutes\n    maxDurationMinutes\n    numberOfResourcesToBook\n    cancellationPolicyType\n    cancellationRefundRules {\n      minutesBefore\n      refundPercentage\n    }\n  }\n}\n\nfragment marketplaceProductDetailBookingCard_query_2SWcqy on Query {\n  currencies {\n    type\n    name\n  }\n  product(id: $productId) {\n    ...marketplaceProductDetailBookingCard_product\n    id\n  }\n  marketplaceLocations(where: {productIds: [$productId]}) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment marketplaceProductDetailOverview_product on ProductDetails {\n  type {\n    type\n    name\n  }\n  listingMetadata {\n    title\n    subTitle\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n    thumbnail {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n    color\n  }\n}\n\nfragment marketplaceProductDetailOverview_query_2SWcqy on Query {\n  product(id: $productId) {\n    ...marketplaceProductDetailOverview_product\n    id\n  }\n}\n"
+    "text": "query marketplaceProductDetail_rootQuery(\n  $productId: String!\n) {\n  ...marketplaceProductDetailBreadcrumb_query_2SWcqy\n  ...marketplaceProductDetailOverview_query_2SWcqy\n  ...marketplaceProductDetailBookingCard_query_2SWcqy\n}\n\nfragment marketplaceProductDetailBookingCard_product on ProductDetails {\n  id\n  organization {\n    customerFacingTermsAndConditionsUrl\n  }\n  type {\n    type\n    name\n  }\n  listingMetadata {\n    about\n    title\n    subTitle\n    includedFeatures\n  }\n  amenities {\n    id\n    name\n    color\n  }\n  currency {\n    type\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n    availableDays\n    acceptedPaymentMethods\n    minDurationMinutes\n    maxDurationMinutes\n    numberOfResourcesToBook\n    cancellationPolicyType\n    cancellationRefundRules {\n      minutesBefore\n      refundPercentage\n    }\n  }\n}\n\nfragment marketplaceProductDetailBookingCard_query_2SWcqy on Query {\n  currencies {\n    type\n    name\n  }\n  product(id: $productId) {\n    ...marketplaceProductDetailBookingCard_product\n    id\n  }\n  marketplaceLocations(where: {productIds: [$productId]}) {\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment marketplaceProductDetailBreadcrumb_query_2SWcqy on Query {\n  product(id: $productId) {\n    listingMetadata {\n      title\n    }\n    id\n  }\n}\n\nfragment marketplaceProductDetailOverview_product on ProductDetails {\n  type {\n    type\n    name\n  }\n  listingMetadata {\n    title\n    subTitle\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n    thumbnail {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n    color\n  }\n}\n\nfragment marketplaceProductDetailOverview_query_2SWcqy on Query {\n  product(id: $productId) {\n    ...marketplaceProductDetailOverview_product\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a9e9b09da7b93dff6f4b801f2ca8f631";
+(node as any).hash = "d8cf7252ba562aefc61a9dbb7d1f84fd";
 
 export default node;

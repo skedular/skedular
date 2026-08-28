@@ -27,6 +27,7 @@ import type { marketplaceLocation_refetchableFragment } from '@/queries/__genera
 import '@/styles/leaflet/leaflet.css';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
@@ -530,13 +531,13 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   if (isFloorPlanPage) {
     return (
       <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 8 }}>
-        <Container maxWidth="lg" sx={{ pt: { xs: 3, md: 4 } }}>
-          <Button variant="text" onClick={() => router.push(locationLink)} sx={{ textTransform: 'none', px: 0, mb: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <ArrowLeftIcon fontSize="small" />
-              <SmallIconTypography label="Back to location" color="text.primary" />
-            </Box>
-          </Button>
+        <Container maxWidth="xl" sx={{ pt: { xs: 3, md: 4 } }}>
+          <Breadcrumbs separator="/" sx={{ mb: 3 }}>
+            <Link component="button" onClick={() => router.push(locationLink)} underline="hover" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
+              {locationDetails.name}
+            </Link>
+            <SmallIconTypography label="Floor plans" color="text.primary" />
+          </Breadcrumbs>
 
           <Paper sx={{ ...sectionCardSx, p: { xs: 3, md: 5 }, mb: 4 }}>
             <CaptionIconTypography
@@ -782,13 +783,13 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 8 }}>
-      <Container maxWidth="lg" sx={{ pt: { xs: 3, md: 4 } }}>
-        <Button variant="text" onClick={() => router.back()} sx={{ textTransform: 'none', px: 0, mb: 3 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <ArrowLeftIcon fontSize="small" />
-            <SmallIconTypography label="Back" color="text.primary" />
-          </Box>
-        </Button>
+      <Container maxWidth="xl" sx={{ pt: { xs: 3, md: 4 } }}>
+        <Breadcrumbs separator="/" sx={{ mb: 3 }}>
+          <Link component="button" onClick={() => router.back()} underline="hover" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
+            Marketplace
+          </Link>
+          <SmallIconTypography label={locationDetails.name} color="text.primary" />
+        </Breadcrumbs>
 
         <Box sx={{ mb: 2, minWidth: 0, maxWidth: '100%' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, minWidth: 0, maxWidth: '100%' }}>

@@ -81,7 +81,7 @@ const ProductList = ({ products, organizationCustomDomain }: ProductListProps) =
     sx={{
       display: 'grid',
       gap: 3,
-      maxWidth: 1320,
+      maxWidth: 1400,
       gridTemplateColumns: {
         xs: '1fr',
         sm: '1fr 1fr',

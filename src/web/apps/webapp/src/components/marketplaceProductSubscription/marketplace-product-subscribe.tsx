@@ -1,15 +1,18 @@
-import { BodyIconTypography, StackRow } from '@skedular/ui';
-import { ArrowLeftIcon } from '@/components/icons';
+import { getMarketplaceProductLink } from '@/components/links';
+import { BodyIconTypography } from '@skedular/ui';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@skedular/shared';
 import type { marketplaceProductSubscribe_rootQuery } from '@/queries/__generated__/marketplaceProductSubscribe_rootQuery.graphql';
-import Button from '@mui/material/Button';
+import type { marketplaceProductSubscribeBreadcrumb_query$key } from '@/queries/__generated__/marketplaceProductSubscribeBreadcrumb_query.graphql';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Container from '@mui/material/Container';
+import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { graphql, PreloadedQuery, useFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
+import { useIntegratedPlatform } from '@skedular/shared';
 import MarketplaceProductSubscribeForm from './marketplace-product-subscribe-form';
 import MarketplaceProductSubscribeHero from './marketplace-product-subscribe-hero';
 import useKnownParams from '@/hooks/use-known-params';
@@ -20,6 +23,7 @@ type Props = {
 
 const RootQuery = graphql`
   query marketplaceProductSubscribe_rootQuery($productId: String!, $organizationCustomDomain: String!) {
+    ...marketplaceProductSubscribeBreadcrumb_query @arguments(productId: $productId)
     organization(customDomain: $organizationCustomDomain) {
       spacesPublicBookingAvailability {
         available
@@ -36,6 +40,23 @@ const RootQuery = graphql`
 const MarketplaceProductSubscribe = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<marketplaceProductSubscribe_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
+  const { integratedPlatform } = useIntegratedPlatform();
+  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
+  const breadcrumbData = useFragment<marketplaceProductSubscribeBreadcrumb_query$key>(
+    graphql`
+      fragment marketplaceProductSubscribeBreadcrumb_query on Query @argumentDefinitions(productId: { type: "String!" }) {
+        product(id: $productId) {
+          id
+          listingMetadata {
+            title
+          }
+        }
+      }
+    `,
+    rootData,
+  );
+  const product = breadcrumbData.product;
+  const productTitle = product?.listingMetadata.title ?? 'Product';
 
   return (
     <Box
@@ -47,12 +68,25 @@ const MarketplaceProductSubscribe = ({ queryReference }: Props) => {
       }}
     >
       <Container maxWidth="xl" sx={{ pt: { xs: 3, md: 4 } }}>
-        <Button variant="text" onClick={() => router.back()} sx={{ textTransform: 'none', px: 0, mb: 2 }}>
-          <StackRow spacing={0.5} sx={{ flexWrap: 'nowrap' }}>
-            <ArrowLeftIcon fontSize="small" />
-            <BodyIconTypography label="Back" />
-          </StackRow>
-        </Button>
+        <Breadcrumbs separator="/" sx={{ mb: 3 }}>
+          <Link component="button" onClick={() => router.back()} underline="hover" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
+            Marketplace
+          </Link>
+          <Link
+            component="button"
+            onClick={() => {
+              if (product) {
+                router.push(getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id));
+              }
+            }}
+            underline="hover"
+            color="text.secondary"
+            sx={{ fontSize: '0.9rem' }}
+          >
+            {productTitle}
+          </Link>
+          <BodyIconTypography label="Checkout" color="text.primary" />
+        </Breadcrumbs>
 
         {rootData.product ? <MarketplaceProductSubscribeHero productRelay={rootData.product} /> : null}
         <Box sx={{ mt: 3 }}>
