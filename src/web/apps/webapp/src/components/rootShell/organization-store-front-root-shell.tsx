@@ -100,7 +100,17 @@ const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadReq
       <Observability rootDataRelay={rootData} onReloadRequired={onReloadRequired} />
       <Box sx={{ display: 'flex', width: '100%', maxWidth: '100vw', minHeight: '100vh', overflowX: 'clip', bgcolor: (theme) => theme.palette.background.default }}>
         <CssBaseline enableColorScheme />
-        <Box component="main" sx={{ flexGrow: 1, width: '100%', minWidth: 0, maxWidth: '100%', overflowX: 'clip' }}>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            width: '100%',
+            minWidth: 0,
+            maxWidth: '100%',
+            overflowX: 'clip',
+            pb: { xs: 10, md: 0 },
+          }}
+        >
           <OrganizationStoreFrontAppBar rootDataRelay={rootData} />
           {children}
         </Box>

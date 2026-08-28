@@ -1,6 +1,6 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewFeedbackDialog } from '@/components/feedback';
-import { ArrowDownIcon, BookingIcon, FeedbackIcon, SettingsIcon, SignOutIcon, SubscriptionsIcon, SystemModeIcon } from '@/components/icons';
+import { ArrowDownIcon, BookingIcon, FeedbackIcon, MarketplaceIcon, SettingsIcon, SignOutIcon, SubscriptionsIcon, SystemModeIcon } from '@/components/icons';
 import { getMarketplaceBookingsLink, getMarketplaceSubscriptionsLink, getRootLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import useKnownParams from '@/hooks/use-known-params';
 import type { organizationStoreFrontAppBar_query$key } from '@/queries/__generated__/organizationStoreFrontAppBar_query.graphql';
@@ -365,6 +365,60 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
           </MenuItem>
         </Menu>
       </MuiAppBar>
+
+      <Box
+        component="nav"
+        aria-label="Customer navigation"
+        sx={{
+          display: { xs: 'grid', md: 'none' },
+          gridTemplateColumns: 'repeat(3, 1fr)',
+          position: 'fixed',
+          zIndex: 10,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          pb: 'env(safe-area-inset-bottom)',
+          borderTop: 1,
+          borderColor: (theme) => theme.palette.divider,
+          backgroundColor: (theme) => theme.palette.background.default,
+          backdropFilter: 'blur(12px)',
+        }}
+      >
+        {[
+          { href: productsLink, label: 'Products', icon: <MarketplaceIcon fontSize="small" />, active: isProductsTabActive },
+          { href: bookingsLink, label: 'Bookings', icon: <BookingIcon fontSize="small" />, active: isBookingsTabActive },
+          { href: subscriptionsLink, label: 'Plans', icon: <SubscriptionsIcon fontSize="small" />, active: isPlansTabActive },
+        ].map(({ href, label, icon, active }) => (
+          <Button
+            key={label}
+            component={NextLink}
+            href={href}
+            color="inherit"
+            aria-current={active ? 'page' : undefined}
+            sx={{
+              minHeight: 64,
+              borderRadius: 0,
+              flexDirection: 'column',
+              gap: 0.25,
+              textTransform: 'none',
+              color: active ? 'primary.main' : 'text.secondary',
+              fontWeight: active ? 700 : 500,
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                width: 32,
+                height: 2,
+                borderRadius: 1,
+                backgroundColor: active ? 'primary.main' : 'transparent',
+              },
+            }}
+          >
+            {icon}
+            <SmallIconTypography label={label} sx={{ color: 'inherit', fontWeight: 'inherit' }} />
+          </Button>
+        ))}
+      </Box>
 
       <NewFeedbackDialog
         rootDataRelay={rootData}
