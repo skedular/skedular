@@ -38,11 +38,6 @@ public class MarketplacePurchaseHistoryService(
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         if (string.IsNullOrWhiteSpace(organizationCustomDomain))
         {
-            if (searchCriteria.IncludeMineOnly)
-            {
-                return (new PaginatedInfo(false, false, null, null), [], 0);
-            }
-
             throw new InvalidOperationException("Purchase history must be scoped to an organization.");
         }
 

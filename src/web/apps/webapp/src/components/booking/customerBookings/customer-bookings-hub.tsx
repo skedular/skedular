@@ -81,7 +81,7 @@ type PendingCancellationConfirmation = {
 } | null;
 
 const RootQuery = graphql`
-  query customerBookingsHub_rootQuery($today: DateTime!, $organizationCustomDomain: String) {
+  query customerBookingsHub_rootQuery($today: DateTime!, $organizationCustomDomain: String!) {
     marketplacePurchases(
       first: 48
       where: { organizationCustomDomain: $organizationCustomDomain, includeMineOnly: true, lifecycleStates: [CANCELLED, DELETED, EXPIRED, PAYMENT_FAILED] }
@@ -923,6 +923,10 @@ const CustomerBookingsHubWithRelay = () => {
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const { organizationCustomDomain } = useKnownParams();
+
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
+  }
 
   useEffect(() => {
     loadQuery(
