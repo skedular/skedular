@@ -43,7 +43,14 @@ public class MarketplacePurchaseHistoryService(
 
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             null, organizationCustomDomain, false, false, cancellationToken) ?? throw new OrganizationNotFound();
-        if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
+        if (searchCriteria.IncludeMineOnly)
+        {
+            searchCriteria = searchCriteria with
+            {
+                CustomerId = customerId,
+            };
+        }
+        else if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

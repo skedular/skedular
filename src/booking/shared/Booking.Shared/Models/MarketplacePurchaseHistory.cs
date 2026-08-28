@@ -52,7 +52,8 @@ public record MarketplacePurchaseHistorySearchCriteria(
     DateTimeOffset? ActivityFrom = null,
     DateTimeOffset? ActivityUntil = null,
     DateTimeOffset? BookingFrom = null,
-    DateTimeOffset? BookingUntil = null);
+    DateTimeOffset? BookingUntil = null,
+    bool IncludeMineOnly = false);
 
 public record MarketplacePurchaseHistoryOrder(OrderDirection Direction, MarketplacePurchaseHistoryOrderField Field);
 

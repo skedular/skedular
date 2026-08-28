@@ -84,8 +84,7 @@ const RootQuery = graphql`
   query customerBookingsHub_rootQuery($today: DateTime!, $organizationCustomDomain: String) {
     marketplacePurchases(
       first: 48
-      organizationCustomDomain: $organizationCustomDomain
-      lifecycleStates: [CANCELLED, DELETED, EXPIRED, PAYMENT_FAILED]
+      where: { organizationCustomDomain: $organizationCustomDomain, includeMineOnly: true, lifecycleStates: [CANCELLED, DELETED, EXPIRED, PAYMENT_FAILED] }
       orderBy: [{ field: ACTIVITY_AT, direction: DESCENDING }]
     ) {
       edges {

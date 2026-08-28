@@ -270,21 +270,12 @@ type Query
     @fusion__cost(schema: LOCATION_API, weight: "10")
     @fusion__field(schema: LOCATION_API)
   marketplacePurchases(
-    activityFrom: DateTime @fusion__inputField(schema: BOOKING_API)
-    activityUntil: DateTime @fusion__inputField(schema: BOOKING_API)
     after: String @fusion__inputField(schema: BOOKING_API)
     before: String @fusion__inputField(schema: BOOKING_API)
-    bookingFrom: DateTime @fusion__inputField(schema: BOOKING_API)
-    bookingUntil: DateTime @fusion__inputField(schema: BOOKING_API)
-    customerId: String @fusion__inputField(schema: BOOKING_API)
     first: Int @fusion__inputField(schema: BOOKING_API)
     last: Int @fusion__inputField(schema: BOOKING_API)
-    lifecycleStates: [MarketplacePurchaseLifecycleState!] @fusion__inputField(schema: BOOKING_API)
     orderBy: [MarketplacePurchaseHistoryOrderInput!] @fusion__inputField(schema: BOOKING_API)
-    organizationCustomDomain: String @fusion__inputField(schema: BOOKING_API)
-    paymentStatuses: [PaymentStatus!] @fusion__inputField(schema: BOOKING_API)
-    productVersionId: String @fusion__inputField(schema: BOOKING_API)
-    sourceTypes: [MarketplacePurchaseSourceType!] @fusion__inputField(schema: BOOKING_API)
+    where: MarketplacePurchaseHistoryWhereInput! @fusion__inputField(schema: BOOKING_API)
   ): ConnectionOfMarketplacePurchaseHistoryEdge!
     @cost(weight: "10")
     @fusion__cost(schema: BOOKING_API, weight: "10")
@@ -5279,6 +5270,20 @@ input MarketplaceLocationWhereInput @fusion__type(schema: LOCATION_API) {
 input MarketplacePurchaseHistoryOrderInput @fusion__type(schema: BOOKING_API) {
   direction: OrderDirection! @fusion__inputField(schema: BOOKING_API)
   field: MarketplacePurchaseHistoryOrderField! @fusion__inputField(schema: BOOKING_API)
+}
+
+input MarketplacePurchaseHistoryWhereInput @fusion__type(schema: BOOKING_API) {
+  activityFrom: DateTime @fusion__inputField(schema: BOOKING_API)
+  activityUntil: DateTime @fusion__inputField(schema: BOOKING_API)
+  bookingFrom: DateTime @fusion__inputField(schema: BOOKING_API)
+  bookingUntil: DateTime @fusion__inputField(schema: BOOKING_API)
+  customerId: String @fusion__inputField(schema: BOOKING_API)
+  includeMineOnly: Boolean @fusion__inputField(schema: BOOKING_API)
+  lifecycleStates: [MarketplacePurchaseLifecycleState!] @fusion__inputField(schema: BOOKING_API)
+  organizationCustomDomain: String @fusion__inputField(schema: BOOKING_API)
+  paymentStatuses: [PaymentStatus!] @fusion__inputField(schema: BOOKING_API)
+  productVersionId: String @fusion__inputField(schema: BOOKING_API)
+  sourceTypes: [MarketplacePurchaseSourceType!] @fusion__inputField(schema: BOOKING_API)
 }
 
 input MarketplaceRefundWhereInput @fusion__type(schema: BOOKING_API) {

@@ -21,10 +21,10 @@ public class MarketplacePurchasesShould
             Create("two", TimeProvider.System.GetUtcNow().AddMinutes(-1)),
         ]);
 
-        var first = await sut.MarketplacePurchasesAsync(null, 1, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        var first = await sut.MarketplacePurchasesAsync(null, 1, null, null, new MarketplacePurchaseHistoryWhereInput(), null,
             service, cancellationToken);
-        var second = await sut.MarketplacePurchasesAsync(first.PageInfo.EndCursor, 1, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, service, cancellationToken);
+        var second = await sut.MarketplacePurchasesAsync(first.PageInfo.EndCursor, 1, null, null, new MarketplacePurchaseHistoryWhereInput(), null,
+            service, cancellationToken);
 
         first.Edges.Single().Node.Id.ShouldBe("marketplace-purchase-history:Booking:one");
         first.Edges.Single().Node.SourceId.ShouldBe("one");
@@ -48,7 +48,7 @@ public class MarketplacePurchasesShould
             },
         ]);
 
-        var result = await sut.MarketplacePurchasesAsync(null, 10, null, null, null, null, null, null, null, null, null, null, null, null, null,
+        var result = await sut.MarketplacePurchasesAsync(null, 10, null, null, new MarketplacePurchaseHistoryWhereInput(), null,
             service, cancellationToken);
 
         result.Edges.Single().Node.IsDeleted.ShouldBeTrue();
@@ -78,16 +78,15 @@ public class MarketplacePurchasesShould
             10,
             null,
             null,
-            "example.test",
-            [MarketplacePurchaseSourceType.Booking],
-            [MarketplacePurchaseLifecycleState.Deleted],
-            [PaymentStatus.Confirmed],
-            "customer-1",
-            "product-1",
-            null,
-            null,
-            null,
-            null,
+            new MarketplacePurchaseHistoryWhereInput
+            {
+                OrganizationCustomDomain = "example.test",
+                SourceTypes = [MarketplacePurchaseSourceType.Booking],
+                LifecycleStates = [MarketplacePurchaseLifecycleState.Deleted],
+                PaymentStatuses = [PaymentStatus.Confirmed],
+                CustomerId = "customer-1",
+                ProductVersionId = "product-1",
+            },
             [order],
             service,
             cancellationToken);

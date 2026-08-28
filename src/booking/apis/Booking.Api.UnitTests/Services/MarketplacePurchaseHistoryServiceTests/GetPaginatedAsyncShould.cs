@@ -16,6 +16,53 @@ public class GetPaginatedAsyncShould
 {
     [Theory]
     [AutoFakeItEasyData]
+    public async Task Allow_NonMember_To_Read_Own_Purchases(
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IOrganizationRepository organizationRepository,
+        [Frozen]
+        IMarketplacePurchaseHistoryRepository historyRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        [Frozen]
+        IOrganizationAuthorizationService authorizationService,
+        MarketplacePurchaseHistoryService sut,
+        CancellationToken cancellationToken)
+    {
+        A.CallTo(() => repositoryFactory.MarketplacePurchaseHistoryRepository).Returns(historyRepository);
+        A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(null, "example.test", false, false, cancellationToken))
+            .Returns(new Organization
+            {
+                Id = "organization-1",
+                CustomDomain = "example.test",
+            });
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
+        A.CallTo(() => historyRepository.GetPaginatedRowsAsync(A<PaginationInputParam>._,
+                A<MarketplacePurchaseHistorySearchCriteria>._,
+                A<IReadOnlyList<MarketplacePurchaseHistoryOrder>?>._, cancellationToken))
+            .Returns((new PaginatedInfo(false, false, null, null), Array.Empty<Edge<MarketplacePurchaseHistoryRow>>(), 0));
+
+        await sut.GetPaginatedAsync(
+            new PaginationInputParam(null, 10, null, null),
+            "example.test",
+            new MarketplacePurchaseHistorySearchCriteria("example.test", "another-customer", null,
+                IncludeMineOnly: true),
+            null,
+            cancellationToken);
+
+        A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync(
+            A<string>._, A<string>._, cancellationToken)).MustNotHaveHappened();
+        A.CallTo(() => historyRepository.GetPaginatedRowsAsync(
+            A<PaginationInputParam>._,
+            A<MarketplacePurchaseHistorySearchCriteria>.That.Matches(criteria => criteria.CustomerId == "customer-1"),
+            A<IReadOnlyList<MarketplacePurchaseHistoryOrder>?>._,
+            cancellationToken)).MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public async Task Read_only_from_history_repository(
         [Frozen]
         IRepositoryFactory repositoryFactory,

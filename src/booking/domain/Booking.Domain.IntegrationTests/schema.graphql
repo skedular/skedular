@@ -97,16 +97,7 @@ type Query {
     first: Int
     before: String
     last: Int
-    organizationCustomDomain: String
-    sourceTypes: [MarketplacePurchaseSourceType!]
-    lifecycleStates: [MarketplacePurchaseLifecycleState!]
-    paymentStatuses: [PaymentStatus!]
-    customerId: String
-    productVersionId: String
-    activityFrom: DateTime
-    activityUntil: DateTime
-    bookingFrom: DateTime
-    bookingUntil: DateTime
+    where: MarketplacePurchaseHistoryWhereInput!
     orderBy: [MarketplacePurchaseHistoryOrderInput!]
   ): ConnectionOfMarketplacePurchaseHistoryEdge! @cost(weight: "10")
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
@@ -1410,6 +1401,20 @@ input MarketplaceBookingSubscriptionWhereInput {
 input MarketplacePurchaseHistoryOrderInput {
   field: MarketplacePurchaseHistoryOrderField!
   direction: OrderDirection!
+}
+
+input MarketplacePurchaseHistoryWhereInput {
+  organizationCustomDomain: String
+  sourceTypes: [MarketplacePurchaseSourceType!]
+  lifecycleStates: [MarketplacePurchaseLifecycleState!]
+  paymentStatuses: [PaymentStatus!]
+  customerId: String
+  productVersionId: String
+  activityFrom: DateTime
+  activityUntil: DateTime
+  bookingFrom: DateTime
+  bookingUntil: DateTime
+  includeMineOnly: Boolean
 }
 
 input MarketplaceRefundWhereInput {

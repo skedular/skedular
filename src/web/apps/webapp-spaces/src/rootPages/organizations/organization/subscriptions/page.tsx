@@ -237,12 +237,14 @@ const RootQuery = graphql`
     marketplacePurchases(
       after: $purchaseAfter
       first: $purchaseFirst
-      organizationCustomDomain: $organizationCustomDomain
-      sourceTypes: $purchaseSourceTypes
-      lifecycleStates: $purchaseLifecycleStates
-      paymentStatuses: $purchasePaymentStatuses
-      activityFrom: $purchaseActivityFrom
-      activityUntil: $purchaseActivityUntil
+      where: {
+        organizationCustomDomain: $organizationCustomDomain
+        sourceTypes: $purchaseSourceTypes
+        lifecycleStates: $purchaseLifecycleStates
+        paymentStatuses: $purchasePaymentStatuses
+        activityFrom: $purchaseActivityFrom
+        activityUntil: $purchaseActivityUntil
+      }
       orderBy: $purchaseOrderBy
     ) {
       totalCount

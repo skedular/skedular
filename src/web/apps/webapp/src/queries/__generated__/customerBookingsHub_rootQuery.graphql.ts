@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0203b48b5161fa84b123304ef2b49f04>>
+ * @generated SignedSource<<3dd209aeda98a0debfc798c376ca1d65>>
  * @lightSyntaxTransform
  */
 
@@ -267,57 +267,52 @@ v2 = {
   "value": 48
 },
 v3 = {
+  "kind": "Literal",
+  "name": "includeMineOnly",
+  "value": true
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "currency",
   "storageKey": null
 },
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "creditQuantity",
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "paymentStatus",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v8 = [
-  (v7/*:: as any*/)
+v9 = [
+  (v8/*:: as any*/)
 ],
-v9 = {
+v10 = {
   "alias": null,
   "args": [
     (v2/*:: as any*/),
-    {
-      "kind": "Literal",
-      "name": "lifecycleStates",
-      "value": [
-        "CANCELLED",
-        "DELETED",
-        "EXPIRED",
-        "PAYMENT_FAILED"
-      ]
-    },
     {
       "kind": "Literal",
       "name": "orderBy",
@@ -329,9 +324,26 @@ v9 = {
       ]
     },
     {
-      "kind": "Variable",
-      "name": "organizationCustomDomain",
-      "variableName": "organizationCustomDomain"
+      "fields": [
+        (v3/*:: as any*/),
+        {
+          "kind": "Literal",
+          "name": "lifecycleStates",
+          "value": [
+            "CANCELLED",
+            "DELETED",
+            "EXPIRED",
+            "PAYMENT_FAILED"
+          ]
+        },
+        {
+          "kind": "Variable",
+          "name": "organizationCustomDomain",
+          "variableName": "organizationCustomDomain"
+        }
+      ],
+      "kind": "ObjectValue",
+      "name": "where"
     }
   ],
   "concreteType": "ConnectionOfMarketplacePurchaseHistoryEdge",
@@ -355,7 +367,7 @@ v9 = {
           "name": "node",
           "plural": false,
           "selections": [
-            (v3/*:: as any*/),
+            (v4/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -426,7 +438,7 @@ v9 = {
               "name": "totalAmount",
               "storageKey": null
             },
-            (v4/*:: as any*/),
+            (v5/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -434,7 +446,7 @@ v9 = {
               "name": "bookingId",
               "storageKey": null
             },
-            (v5/*:: as any*/),
+            (v6/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -442,7 +454,7 @@ v9 = {
               "name": "isDeleted",
               "storageKey": null
             },
-            (v6/*:: as any*/),
+            (v7/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -458,7 +470,7 @@ v9 = {
                   "kind": "LinkedField",
                   "name": "status",
                   "plural": false,
-                  "selections": (v8/*:: as any*/),
+                  "selections": (v9/*:: as any*/),
                   "storageKey": null
                 },
                 {
@@ -487,7 +499,7 @@ v9 = {
   ],
   "storageKey": null
 },
-v10 = [
+v11 = [
   {
     "alias": null,
     "args": null,
@@ -495,9 +507,9 @@ v10 = [
     "name": "type",
     "storageKey": null
   },
-  (v7/*:: as any*/)
+  (v8/*:: as any*/)
 ],
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "MarketplaceBookingFailureDetails",
@@ -505,7 +517,7 @@ v11 = {
   "name": "marketplaceBookingFailures",
   "plural": true,
   "selections": [
-    (v3/*:: as any*/),
+    (v4/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -513,7 +525,7 @@ v11 = {
       "kind": "LinkedField",
       "name": "category",
       "plural": false,
-      "selections": (v10/*:: as any*/),
+      "selections": (v11/*:: as any*/),
       "storageKey": null
     },
     {
@@ -523,7 +535,7 @@ v11 = {
       "kind": "LinkedField",
       "name": "scope",
       "plural": false,
-      "selections": (v10/*:: as any*/),
+      "selections": (v11/*:: as any*/),
       "storageKey": null
     },
     {
@@ -554,13 +566,13 @@ v11 = {
       "kind": "LinkedField",
       "name": "customerAction",
       "plural": false,
-      "selections": (v10/*:: as any*/),
+      "selections": (v11/*:: as any*/),
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "EntitlementDetails",
@@ -568,7 +580,7 @@ v12 = {
   "name": "myEntitlements",
   "plural": true,
   "selections": [
-    (v3/*:: as any*/),
+    (v4/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -646,7 +658,7 @@ v12 = {
   ],
   "storageKey": null
 },
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "EntitlementPurchaseDetails",
@@ -654,8 +666,8 @@ v13 = {
   "name": "entitlementPurchases",
   "plural": true,
   "selections": [
-    (v3/*:: as any*/),
-    (v6/*:: as any*/),
+    (v4/*:: as any*/),
+    (v7/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -670,8 +682,8 @@ v13 = {
       "name": "amount",
       "storageKey": null
     },
-    (v4/*:: as any*/),
     (v5/*:: as any*/),
+    (v6/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -689,20 +701,15 @@ v13 = {
   ],
   "storageKey": null
 },
-v14 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "MarketplaceBookingSubscriptionCancellationModeDetails",
   "kind": "LinkedField",
   "name": "marketplaceBookingSubscriptionCancellationModes",
   "plural": true,
-  "selections": (v10/*:: as any*/),
+  "selections": (v11/*:: as any*/),
   "storageKey": null
-},
-v15 = {
-  "kind": "Literal",
-  "name": "includeMineOnly",
-  "value": true
 },
 v16 = [
   (v2/*:: as any*/),
@@ -723,7 +730,7 @@ v16 = [
         "name": "fromGte",
         "variableName": "today"
       },
-      (v15/*:: as any*/)
+      (v3/*:: as any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
@@ -779,7 +786,7 @@ v22 = {
       "name": "channel",
       "storageKey": null
     },
-    (v7/*:: as any*/)
+    (v8/*:: as any*/)
   ],
   "storageKey": null
 },
@@ -791,8 +798,8 @@ v23 = {
   "name": "involvedOrganizations",
   "plural": true,
   "selections": [
-    (v3/*:: as any*/),
-    (v7/*:: as any*/),
+    (v4/*:: as any*/),
+    (v8/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -810,12 +817,12 @@ v24 = {
   "kind": "LinkedField",
   "name": "involvedLocations",
   "plural": true,
-  "selections": (v8/*:: as any*/),
+  "selections": (v9/*:: as any*/),
   "storageKey": null
 },
 v25 = [
-  (v3/*:: as any*/),
-  (v7/*:: as any*/)
+  (v4/*:: as any*/),
+  (v8/*:: as any*/)
 ],
 v26 = {
   "alias": null,
@@ -862,7 +869,7 @@ v29 = {
   "kind": "LinkedField",
   "name": "paymentStatus",
   "plural": false,
-  "selections": (v10/*:: as any*/),
+  "selections": (v11/*:: as any*/),
   "storageKey": null
 },
 v30 = {
@@ -873,7 +880,7 @@ v30 = {
   "name": "recurringBooking",
   "plural": false,
   "selections": [
-    (v3/*:: as any*/),
+    (v4/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -881,7 +888,7 @@ v30 = {
       "kind": "LinkedField",
       "name": "frequency",
       "plural": false,
-      "selections": (v8/*:: as any*/),
+      "selections": (v9/*:: as any*/),
       "storageKey": null
     },
     {
@@ -892,7 +899,7 @@ v30 = {
       "name": "marketplaceBooking",
       "plural": false,
       "selections": [
-        (v3/*:: as any*/)
+        (v4/*:: as any*/)
       ],
       "storageKey": null
     }
@@ -917,7 +924,7 @@ v31 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v3/*:: as any*/),
+          (v4/*:: as any*/),
           (v18/*:: as any*/),
           (v19/*:: as any*/),
           (v20/*:: as any*/),
@@ -971,7 +978,7 @@ v32 = [
         "name": "fromLt",
         "variableName": "today"
       },
-      (v15/*:: as any*/)
+      (v3/*:: as any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
@@ -1032,7 +1039,7 @@ v38 = {
   "kind": "LinkedField",
   "name": "status",
   "plural": false,
-  "selections": (v10/*:: as any*/),
+  "selections": (v11/*:: as any*/),
   "storageKey": null
 },
 v39 = {
@@ -1042,7 +1049,7 @@ v39 = {
   "kind": "LinkedField",
   "name": "paymentMethod",
   "plural": false,
-  "selections": (v8/*:: as any*/),
+  "selections": (v9/*:: as any*/),
   "storageKey": null
 },
 v40 = {
@@ -1078,7 +1085,7 @@ v41 = {
   "name": "recurringBookings",
   "plural": true,
   "selections": [
-    (v3/*:: as any*/),
+    (v4/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -1114,7 +1121,7 @@ v42 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v3/*:: as any*/),
+          (v4/*:: as any*/),
           (v18/*:: as any*/),
           (v19/*:: as any*/),
           (v20/*:: as any*/),
@@ -1134,7 +1141,7 @@ v42 = [
             "selections": [
               (v28/*:: as any*/),
               (v29/*:: as any*/),
-              (v3/*:: as any*/)
+              (v4/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -1156,11 +1163,11 @@ return {
     "metadata": null,
     "name": "customerBookingsHub_rootQuery",
     "selections": [
-      (v9/*:: as any*/),
-      (v11/*:: as any*/),
+      (v10/*:: as any*/),
       (v12/*:: as any*/),
       (v13/*:: as any*/),
       (v14/*:: as any*/),
+      (v15/*:: as any*/),
       {
         "alias": "upcomingBookings",
         "args": (v16/*:: as any*/),
@@ -1206,7 +1213,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v3/*:: as any*/),
+                  (v4/*:: as any*/),
                   (v18/*:: as any*/),
                   (v19/*:: as any*/),
                   (v34/*:: as any*/),
@@ -1265,11 +1272,11 @@ return {
     "kind": "Operation",
     "name": "customerBookingsHub_rootQuery",
     "selections": [
-      (v9/*:: as any*/),
-      (v11/*:: as any*/),
+      (v10/*:: as any*/),
       (v12/*:: as any*/),
       (v13/*:: as any*/),
       (v14/*:: as any*/),
+      (v15/*:: as any*/),
       {
         "alias": "upcomingBookings",
         "args": (v16/*:: as any*/),
@@ -1315,7 +1322,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v3/*:: as any*/),
+                  (v4/*:: as any*/),
                   (v18/*:: as any*/),
                   (v19/*:: as any*/),
                   (v34/*:: as any*/),
@@ -1345,11 +1352,11 @@ return {
                         "plural": false,
                         "selections": [
                           (v40/*:: as any*/),
-                          (v3/*:: as any*/)
+                          (v4/*:: as any*/)
                         ],
                         "storageKey": null
                       },
-                      (v3/*:: as any*/)
+                      (v4/*:: as any*/)
                     ],
                     "storageKey": null
                   },
@@ -1366,16 +1373,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "56897aaa6a629ef22ca7233492f853aa",
+    "cacheID": "49d80b99e448a2bc4af794749a6a58bd",
     "id": null,
     "metadata": {},
     "name": "customerBookingsHub_rootQuery",
     "operationKind": "query",
-    "text": "query customerBookingsHub_rootQuery(\n  $today: DateTime!\n  $organizationCustomDomain: String\n) {\n  marketplacePurchases(first: 48, organizationCustomDomain: $organizationCustomDomain, lifecycleStates: [CANCELLED, DELETED, EXPIRED, PAYMENT_FAILED], orderBy: [{field: ACTIVITY_AT, direction: DESCENDING}]) {\n    edges {\n      node {\n        id\n        sourceId\n        sourceType\n        sourceTypeName\n        lifecycleStateName\n        renewalStateName\n        activityAt\n        bookingFrom\n        bookingUntil\n        productTitle\n        totalAmount\n        currency\n        bookingId\n        creditQuantity\n        isDeleted\n        paymentStatus\n        refund {\n          status {\n            name\n          }\n          refundAmount\n          currencyToDisplay\n        }\n      }\n    }\n  }\n  marketplaceBookingFailures {\n    id\n    category {\n      type\n      name\n    }\n    scope {\n      type\n      name\n    }\n    finalizedAt\n    requestedFrom\n    requestedUntil\n    customerAction {\n      type\n      name\n    }\n  }\n  myEntitlements {\n    id\n    purchaseReference\n    pricingId\n    availableQuantity\n    grantedQuantity\n    expiresAt\n    status\n    restrictions {\n      productId\n      productVersionId\n      availableDays\n    }\n  }\n  entitlementPurchases {\n    id\n    paymentStatus\n    paymentMethod\n    amount\n    currency\n    creditQuantity\n    paymentExpiry\n    invoiceNumber\n  }\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  upcomingBookings: bookings(first: 48, where: {includeMineOnly: true, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        cancellationPolicyOverridden\n        cancellationOverrideReason\n        from\n        until\n        channel {\n          channel\n          name\n        }\n        involvedOrganizations {\n          id\n          name\n          customDomain\n        }\n        involvedLocations {\n          name\n        }\n        involvedTeams {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n        recurringBooking {\n          id\n          frequency {\n            name\n          }\n          marketplaceBooking {\n            id\n          }\n        }\n      }\n    }\n  }\n  recentBookings: bookings(first: 24, where: {includeMineOnly: true, fromLt: $today}, orderBy: [{field: FROM, direction: DESCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        cancellationPolicyOverridden\n        cancellationOverrideReason\n        from\n        until\n        channel {\n          channel\n          name\n        }\n        involvedOrganizations {\n          id\n          name\n          customDomain\n        }\n        involvedLocations {\n          name\n        }\n        involvedTeams {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n        recurringBooking {\n          id\n          frequency {\n            name\n          }\n          marketplaceBooking {\n            id\n          }\n        }\n      }\n    }\n  }\n  marketplaceBookingSubscriptions(first: 48, where: {includeMineOnly: true}, orderBy: [{field: NEXT_RENEWAL_AT, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        cancellationPolicyOverridden\n        cancellationOverrideReason\n        startedAt\n        nextRenewalAt\n        autoRenew\n        cancelAtPeriodEnd\n        status {\n          type\n          name\n        }\n        involvedOrganizations {\n          id\n          name\n          customDomain\n        }\n        involvedTeams {\n          id\n          name\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          paymentMethod {\n            name\n          }\n          productVersion {\n            listingMetadata {\n              title\n              subTitle\n            }\n            id\n          }\n          id\n        }\n        recurringBookings {\n          id\n          startDate\n          endDate\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query customerBookingsHub_rootQuery(\n  $today: DateTime!\n  $organizationCustomDomain: String\n) {\n  marketplacePurchases(first: 48, where: {organizationCustomDomain: $organizationCustomDomain, includeMineOnly: true, lifecycleStates: [CANCELLED, DELETED, EXPIRED, PAYMENT_FAILED]}, orderBy: [{field: ACTIVITY_AT, direction: DESCENDING}]) {\n    edges {\n      node {\n        id\n        sourceId\n        sourceType\n        sourceTypeName\n        lifecycleStateName\n        renewalStateName\n        activityAt\n        bookingFrom\n        bookingUntil\n        productTitle\n        totalAmount\n        currency\n        bookingId\n        creditQuantity\n        isDeleted\n        paymentStatus\n        refund {\n          status {\n            name\n          }\n          refundAmount\n          currencyToDisplay\n        }\n      }\n    }\n  }\n  marketplaceBookingFailures {\n    id\n    category {\n      type\n      name\n    }\n    scope {\n      type\n      name\n    }\n    finalizedAt\n    requestedFrom\n    requestedUntil\n    customerAction {\n      type\n      name\n    }\n  }\n  myEntitlements {\n    id\n    purchaseReference\n    pricingId\n    availableQuantity\n    grantedQuantity\n    expiresAt\n    status\n    restrictions {\n      productId\n      productVersionId\n      availableDays\n    }\n  }\n  entitlementPurchases {\n    id\n    paymentStatus\n    paymentMethod\n    amount\n    currency\n    creditQuantity\n    paymentExpiry\n    invoiceNumber\n  }\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  upcomingBookings: bookings(first: 48, where: {includeMineOnly: true, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        cancellationPolicyOverridden\n        cancellationOverrideReason\n        from\n        until\n        channel {\n          channel\n          name\n        }\n        involvedOrganizations {\n          id\n          name\n          customDomain\n        }\n        involvedLocations {\n          name\n        }\n        involvedTeams {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n        recurringBooking {\n          id\n          frequency {\n            name\n          }\n          marketplaceBooking {\n            id\n          }\n        }\n      }\n    }\n  }\n  recentBookings: bookings(first: 24, where: {includeMineOnly: true, fromLt: $today}, orderBy: [{field: FROM, direction: DESCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        cancellationPolicyOverridden\n        cancellationOverrideReason\n        from\n        until\n        channel {\n          channel\n          name\n        }\n        involvedOrganizations {\n          id\n          name\n          customDomain\n        }\n        involvedLocations {\n          name\n        }\n        involvedTeams {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n        recurringBooking {\n          id\n          frequency {\n            name\n          }\n          marketplaceBooking {\n            id\n          }\n        }\n      }\n    }\n  }\n  marketplaceBookingSubscriptions(first: 48, where: {includeMineOnly: true}, orderBy: [{field: NEXT_RENEWAL_AT, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        cancellationPolicyOverridden\n        cancellationOverrideReason\n        startedAt\n        nextRenewalAt\n        autoRenew\n        cancelAtPeriodEnd\n        status {\n          type\n          name\n        }\n        involvedOrganizations {\n          id\n          name\n          customDomain\n        }\n        involvedTeams {\n          id\n          name\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          paymentMethod {\n            name\n          }\n          productVersion {\n            listingMetadata {\n              title\n              subTitle\n            }\n            id\n          }\n          id\n        }\n        recurringBookings {\n          id\n          startDate\n          endDate\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "27027f33a7fabd7daad1336d05d2b646";
+(node as any).hash = "a5a55c60fe8114b8d29b2f73e37b4b1d";
 
 export default node;

@@ -66,8 +66,7 @@ const RootQuery = graphql`
   query guestStoreFrontSubscriptions_rootQuery($organizationCustomDomain: String!) {
     marketplacePurchases(
       first: 48
-      organizationCustomDomain: $organizationCustomDomain
-      lifecycleStates: [CANCELLED, DELETED, EXPIRED, PAYMENT_FAILED]
+      where: { organizationCustomDomain: $organizationCustomDomain, includeMineOnly: true, lifecycleStates: [CANCELLED, DELETED, EXPIRED, PAYMENT_FAILED] }
       orderBy: [{ field: ACTIVITY_AT, direction: DESCENDING }]
     ) {
       edges {

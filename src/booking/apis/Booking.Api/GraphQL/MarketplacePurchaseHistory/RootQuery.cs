@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
@@ -19,23 +18,14 @@ public sealed class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> l
         int? first,
         string? before,
         int? last,
-        string? organizationCustomDomain,
-        MarketplacePurchaseSourceType[]? sourceTypes,
-        MarketplacePurchaseLifecycleState[]? lifecycleStates,
-        PaymentStatus[]? paymentStatuses,
-        string? customerId,
-        string? productVersionId,
-        DateTimeOffset? activityFrom,
-        DateTimeOffset? activityUntil,
-        DateTimeOffset? bookingFrom,
-        DateTimeOffset? bookingUntil,
+        MarketplacePurchaseHistoryWhereInput where,
         MarketplacePurchaseHistoryOrderInput[]? orderBy,
         [Service]
         IMarketplacePurchaseHistoryService service,
         CancellationToken cancellationToken)
     {
         var definedSources = Enum.GetValues<MarketplacePurchaseSourceType>();
-        var unknownSources = sourceTypes?.Where(item => !definedSources.Contains(item)).ToList() ?? [];
+        var unknownSources = where.SourceTypes?.Where(item => !definedSources.Contains(item)).ToList() ?? [];
         if (unknownSources.Count > 0)
         {
             logger.LogWarning("MarketplacePurchasesAsync received {Count} unrecognised source type value(s): {Values}", unknownSources.Count,
@@ -43,7 +33,7 @@ public sealed class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> l
         }
 
         var definedLifecycleStates = Enum.GetValues<MarketplacePurchaseLifecycleState>();
-        var unknownLifecycleStates = lifecycleStates?.Where(item => !definedLifecycleStates.Contains(item)).ToList() ?? [];
+        var unknownLifecycleStates = where.LifecycleStates?.Where(item => !definedLifecycleStates.Contains(item)).ToList() ?? [];
         if (unknownLifecycleStates.Count > 0)
         {
             logger.LogWarning("MarketplacePurchasesAsync received {Count} unrecognised lifecycle state value(s): {Values}",
@@ -52,18 +42,19 @@ public sealed class RootQuery(IGraphQlMapper graphQlMapper, ILogger<RootQuery> l
 
         var (paginatedInfo, entries, totalCount) = await service.GetPaginatedAsync(
             new PaginationInputParam(after, first, before, last),
-            organizationCustomDomain,
+            where.OrganizationCustomDomain,
             new MarketplacePurchaseHistorySearchCriteria(
-                organizationCustomDomain,
-                customerId,
-                productVersionId,
-                sourceTypes,
-                lifecycleStates,
-                paymentStatuses,
-                activityFrom,
-                activityUntil,
-                bookingFrom,
-                bookingUntil),
+                where.OrganizationCustomDomain,
+                where.CustomerId,
+                where.ProductVersionId,
+                where.SourceTypes,
+                where.LifecycleStates,
+                where.PaymentStatuses,
+                where.ActivityFrom,
+                where.ActivityUntil,
+                where.BookingFrom,
+                where.BookingUntil,
+                where.IncludeMineOnly == true),
             orderBy?.Select(item => new MarketplacePurchaseHistoryOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
