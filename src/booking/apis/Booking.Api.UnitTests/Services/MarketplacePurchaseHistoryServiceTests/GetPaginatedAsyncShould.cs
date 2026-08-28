@@ -16,6 +16,26 @@ public class GetPaginatedAsyncShould
 {
     [Theory]
     [AutoFakeItEasyData]
+    public async Task Return_No_Rows_For_Unscoped_Own_Purchases(
+        [Frozen] ICachedCustomerService cachedCustomerService,
+        MarketplacePurchaseHistoryService sut,
+        CancellationToken cancellationToken)
+    {
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
+
+        var result = await sut.GetPaginatedAsync(
+            new PaginationInputParam(null, 10, null, null),
+            null,
+            new MarketplacePurchaseHistorySearchCriteria(null, null, null, IncludeMineOnly: true),
+            null,
+            cancellationToken);
+
+        result.Item3.ShouldBe(0);
+        result.Item2.ShouldBeEmpty();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public async Task Allow_NonMember_To_Read_Own_Purchases(
         [Frozen]
         IRepositoryFactory repositoryFactory,
