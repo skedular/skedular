@@ -1,6 +1,6 @@
-import { RelayError, toRootError } from '@skedular/shared';
 import { ArrowLeftIcon, ArrowRightIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
+import { RelayError, toRootError } from '@skedular/shared';
 
 import type { guestStoreFront_rootQuery } from '@/queries/__generated__/guestStoreFront_rootQuery.graphql';
 import type { guestStoreFrontProducts_query$key } from '@/queries/__generated__/guestStoreFrontProducts_query.graphql';
@@ -11,6 +11,7 @@ import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/system/Box';
 
+import useKnownParams from '@/hooks/use-known-params';
 import { BodyIconTypography, MediumHeadingIconTypography } from '@skedular/ui';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -18,7 +19,6 @@ import { graphql, PreloadedQuery, useFragment, usePreloadedQuery, useQueryLoader
 import GuestStoreFrontFooter from './guest-store-front-footer';
 import GuestStoreFrontLocationsStrip from './guest-store-front-locations-strip';
 import GuestStoreFrontProductCard from './guest-store-front-product-card';
-import useKnownParams from '@/hooks/use-known-params';
 
 type Props = {
   queryReference: PreloadedQuery<guestStoreFront_rootQuery, Record<string, unknown>>;
@@ -81,7 +81,7 @@ const ProductList = ({ products, organizationCustomDomain }: ProductListProps) =
     sx={{
       display: 'grid',
       gap: 3,
-      maxWidth: 1400,
+      maxWidth: 1500,
       gridTemplateColumns: {
         xs: '1fr',
         sm: '1fr 1fr',

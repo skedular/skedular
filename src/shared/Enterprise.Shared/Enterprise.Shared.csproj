@@ -22,7 +22,7 @@
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.15.0"/>
         <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.15.0"/>
         <!-- Required by Confluent's protobuf serdes for descriptor/reflection types such as FileDescriptorSet. -->
-        <PackageReference Include="protobuf-net.Reflection" Version="3.4.14"/>
+        <PackageReference Include="protobuf-net.Reflection" Version="3.4.19"/>
 
         <!-- Database / PostgreSQL -->
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
@@ -35,8 +35,8 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.11"/>
 
         <!-- AWS -->
-        <PackageReference Include="AWSSDK.S3" Version="4.0.102.3"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.100.10"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.102.4"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.100.11"/>
 
         <!-- gRPC / Protobuf -->
         <PackageReference Include="Google.Protobuf" Version="3.36.0"/>
@@ -121,7 +121,7 @@
         <PackageReference Include="WorkOS.net" Version="6.2.0"/>
 
         <!-- Payments / Accounting -->
-        <PackageReference Include="Stripe.net" Version="52.3.0"/>
+        <PackageReference Include="Stripe.net" Version="52.4.0"/>
         <PackageReference Include="Xero.NetStandard.OAuth2" Version="18.1.0"/>
         <PackageReference Include="Xero.NetStandard.OAuth2Client" Version="1.6.1"/>
 
@@ -130,7 +130,7 @@
 
         <!-- PDF / Documents / Email -->
         <PackageReference Include="MimeKit" Version="4.17.0"/>
-        <PackageReference Include="QuestPDF" Version="2026.7.3"/>
+        <PackageReference Include="QuestPDF" Version="2026.8.0"/>
 
         <!-- Image Processing -->
         <PackageReference Include="SkiaSharp" Version="4.151.1"/>
