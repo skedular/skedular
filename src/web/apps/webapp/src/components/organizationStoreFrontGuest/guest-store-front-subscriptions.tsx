@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, PaymentStatusIcon, QuantityIcon } from '@/components/icons';
+import { PaymentStatusIcon, QuantityIcon } from '@/components/icons';
 import { getMarketplaceEntitlementPurchaseDetailsLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import CustomerEntitlementsStrip from '@/components/marketplaceEntitlement/customer-entitlements-strip';
 import { Loading } from '@/components/loading';
@@ -17,7 +17,6 @@ import useKnownParams from '@/hooks/use-known-params';
 import type { guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/guestStoreFrontSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { guestStoreFrontSubscriptions_rootQuery } from '@/queries/__generated__/guestStoreFrontSubscriptions_rootQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -45,7 +44,6 @@ import {
 } from '@skedular/ui';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -166,7 +164,6 @@ const RootQuery = graphql`
 
 const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<guestStoreFrontSubscriptions_rootQuery>(RootQuery, queryReference);
-  const router = useRouter();
   const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
@@ -277,13 +274,6 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
       }}
     >
       <Container maxWidth="xl" sx={{ pt: { xs: 3, md: 4 } }}>
-        <Button variant="text" onClick={() => router.back()} sx={{ textTransform: 'none', px: 0, mb: 2 }}>
-          <StackRow spacing={0.5} sx={{ flexWrap: 'nowrap' }}>
-            <ArrowLeftIcon fontSize="small" />
-            <BodyIconTypography label="Back" />
-          </StackRow>
-        </Button>
-
         <Card
           sx={{
             borderRadius: 4,

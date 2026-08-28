@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, CalendarIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon, TeamIcon } from '@/components/icons';
+import { CalendarIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon, TeamIcon } from '@/components/icons';
 import { getMarketplaceBookingDetailsLink, getMarketplaceSubscriptionDetailsLink, getTeamsOrganizationBookingBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import {
@@ -15,7 +15,6 @@ import { logCustomerPurchaseHubLoaded } from '@/libs/logging/aggregate-marketpla
 import type { customerBookingsHub_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/customerBookingsHub_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { customerBookingsHub_rootQuery } from '@/queries/__generated__/customerBookingsHub_rootQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
@@ -43,7 +42,6 @@ import {
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -294,7 +292,6 @@ const RootQuery = graphql`
 
 const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
   const rootData = usePreloadedQuery<customerBookingsHub_rootQuery>(RootQuery, queryReference);
-  const router = useRouter();
   const { integratedPlatform } = useIntegratedPlatform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
@@ -425,13 +422,6 @@ const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
       }}
     >
       <Container disableGutters maxWidth="xl" sx={{ pt: { xs: 3, md: 4 }, width: '100%', minWidth: 0, maxWidth: '100%', overflowX: 'hidden' }}>
-        <Button variant="text" onClick={() => router.back()} sx={{ textTransform: 'none', px: 0, mb: 2 }}>
-          <StackRow spacing={0.5} sx={{ flexWrap: 'nowrap' }}>
-            <ArrowLeftIcon fontSize="small" />
-            <BodyIconTypography label="Back" />
-          </StackRow>
-        </Button>
-
         <Card
           sx={{
             borderRadius: 4,
