@@ -1,151 +1,77 @@
-import { CalendarIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon, TeamIcon } from '@/components/icons';
-import { getMarketplaceBookingDetailsLink, getMarketplaceSubscriptionDetailsLink, getTeamsOrganizationBookingBaseLink } from '@/components/links';
+import { LocationIcon, ResourceIcon, TeamIcon } from '@/components/icons';
+import { getMarketplaceBookingDetailsLink, getTeamsOrganizationBookingBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
-import {
-  SupportedMarketplaceBookingSubscriptionCancellationMode,
-  SupportedMarketplaceBookingSubscriptionCancellationModeDetails,
-  toSupportedMarketplaceBookingSubscriptionCancellationModeDetails,
-} from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
-import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
-import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
-import MarketplacePurchaseHistorySection from '@/components/marketplacePurchaseHistory/marketplace-purchase-history-section';
-import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import logger from '@/libs/logging';
-import { logCustomerPurchaseHubLoaded } from '@/libs/logging/aggregate-marketplace-telemetry';
-import type { customerBookingsHub_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/customerBookingsHub_deleteMarketplaceBookingSubscriptionMutation.graphql';
+import type { customerBookingsHub_pastBookingsPaginationQuery } from '@/queries/__generated__/customerBookingsHub_pastBookingsPaginationQuery.graphql';
+import type { customerBookingsHub_pastBookings_query$key } from '@/queries/__generated__/customerBookingsHub_pastBookings_query.graphql';
 import type { customerBookingsHub_rootQuery } from '@/queries/__generated__/customerBookingsHub_rootQuery.graphql';
+import type { customerBookingsHub_upcomingBookingsPaginationQuery } from '@/queries/__generated__/customerBookingsHub_upcomingBookingsPaginationQuery.graphql';
+import type {
+  customerBookingsHub_upcomingBookings_query$data,
+  customerBookingsHub_upcomingBookings_query$key,
+} from '@/queries/__generated__/customerBookingsHub_upcomingBookings_query.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import Divider from '@mui/material/Divider';
 import Link from '@mui/material/Link';
-import { alpha, type Theme } from '@mui/material/styles';
-import type { SxProps } from '@mui/system';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
-import { getRelayErrorMessage, RelayError, toRootError, toStoredBookingTimeRange, useIntegratedPlatform } from '@skedular/shared';
-import {
-  BodyIconTypography,
-  CaptionIconTypography,
-  DefaultDialogTitle,
-  LeadIconTypography,
-  SmallIconTypography,
-  StackColumn,
-  StackRow,
-  SubtitleIconTypography,
-  TwoButtonsDialogActions,
-} from '@skedular/ui';
+import { RelayError, toRootError, toStoredBookingTimeRange, useIntegratedPlatform } from '@skedular/shared';
+import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import NextLink from 'next/link';
-import { memo, useEffect, useMemo, useState, useTransition } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { toast } from 'react-toastify';
-import { v7 as uuid } from 'uuid';
+import { graphql, PreloadedQuery, usePaginationFragment, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import useKnownParams from '@/hooks/use-known-params';
 
 dayjs.extend(utc);
 
-const toCustomerSubscriptionCancellationErrorMessage = (message: string) =>
-  message.toLowerCase().includes('cancellation') && message.toLowerCase().includes('not allowed')
-    ? 'This subscription cannot be cancelled under the current cancellation policy.'
-    : message;
-
 type Props = {
   queryReference: PreloadedQuery<customerBookingsHub_rootQuery, Record<string, unknown>>;
-  onReloadRequired: () => void;
 };
-
-type BookingNode = NonNullable<customerBookingsHub_rootQuery['response']['upcomingBookings']['edges'][number]['node']>;
-type SubscriptionNode = NonNullable<customerBookingsHub_rootQuery['response']['marketplaceBookingSubscriptions']['edges'][number]['node']>;
-
-type PendingCancellationConfirmation = {
-  subscriptionId: string;
-  productTitle: string;
-  mode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails;
-} | null;
+type BookingNode = NonNullable<customerBookingsHub_upcomingBookings_query$data['upcomingBookings']['edges'][number]['node']>;
+type BookingTab = 'upcoming' | 'past';
+type BookingDay = {
+  key: string;
+  date: string;
+  bookings: ReadonlyArray<BookingNode>;
+};
 
 const RootQuery = graphql`
   query customerBookingsHub_rootQuery($today: DateTime!, $organizationCustomDomain: String!) {
-    marketplacePurchases(
-      first: 48
-      where: { organizationCustomDomain: $organizationCustomDomain, includeMineOnly: true, lifecycleStates: [CANCELLED, DELETED, EXPIRED, PAYMENT_FAILED] }
-      orderBy: [{ field: ACTIVITY_AT, direction: DESCENDING }]
-    ) {
-      edges {
-        node {
-          id
-          sourceId
-          sourceType
-          sourceTypeName
-          lifecycleStateName
-          renewalStateName
-          activityAt
-          bookingFrom
-          bookingUntil
-          productTitle
-          totalAmount
-          currency
-          bookingId
-          creditQuantity
-          isDeleted
-          paymentStatus
-          refund {
-            status {
-              name
-            }
-            refundAmount
-            currencyToDisplay
-          }
-        }
-      }
-    }
-    marketplaceBookingFailures {
-      id
-      category {
-        type
-        name
-      }
-      scope {
-        type
-        name
-      }
-      finalizedAt
-      requestedFrom
-      requestedUntil
-      customerAction {
-        type
-        name
-      }
-    }
-    marketplaceBookingSubscriptionCancellationModes {
-      type
-      name
-    }
+    ...customerBookingsHub_upcomingBookings_query @arguments(today: $today, organizationCustomDomain: $organizationCustomDomain)
+    ...customerBookingsHub_pastBookings_query @arguments(today: $today, organizationCustomDomain: $organizationCustomDomain)
+  }
+`;
+
+const UpcomingBookingsFragment = graphql`
+  fragment customerBookingsHub_upcomingBookings_query on Query
+  @argumentDefinitions(today: { type: "DateTime!" }, organizationCustomDomain: { type: "String!" }, count: { type: "Int", defaultValue: 25 }, cursor: { type: "String" })
+  @refetchable(queryName: "customerBookingsHub_upcomingBookingsPaginationQuery") {
     upcomingBookings: bookings(
-      first: 48
+      first: $count
+      after: $cursor
       where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, fromGte: $today }
       orderBy: [{ field: FROM, direction: ASCENDING }]
-    ) {
+    ) @connection(key: "customerBookingsHub_upcomingBookings") {
       totalCount
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
       edges {
         node {
           id
-          cancellationPolicyOverridden
-          cancellationOverrideReason
           from
           until
-          channel {
-            channel
-            name
-          }
           involvedOrganizations {
-            id
             name
             customDomain
           }
@@ -153,136 +79,23 @@ const RootQuery = graphql`
             name
           }
           involvedTeams {
-            id
             name
           }
           bookingResources {
             resource {
-              id
               name
             }
           }
           marketplaceBooking {
-            quantity
             paymentStatus {
               type
               name
             }
           }
           recurringBooking {
-            id
             frequency {
               name
             }
-            marketplaceBooking {
-              id
-            }
-          }
-        }
-      }
-    }
-    recentBookings: bookings(
-      first: 24
-      where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, fromLt: $today }
-      orderBy: [{ field: FROM, direction: DESCENDING }]
-    ) {
-      totalCount
-      edges {
-        node {
-          id
-          cancellationPolicyOverridden
-          cancellationOverrideReason
-          from
-          until
-          channel {
-            channel
-            name
-          }
-          involvedOrganizations {
-            id
-            name
-            customDomain
-          }
-          involvedLocations {
-            name
-          }
-          involvedTeams {
-            id
-            name
-          }
-          bookingResources {
-            resource {
-              id
-              name
-            }
-          }
-          marketplaceBooking {
-            quantity
-            paymentStatus {
-              type
-              name
-            }
-          }
-          recurringBooking {
-            id
-            frequency {
-              name
-            }
-            marketplaceBooking {
-              id
-            }
-          }
-        }
-      }
-    }
-    marketplaceBookingSubscriptions(
-      first: 48
-      where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain }
-      orderBy: [{ field: NEXT_RENEWAL_AT, direction: ASCENDING }]
-    ) {
-      totalCount
-      edges {
-        node {
-          id
-          cancellationPolicyOverridden
-          cancellationOverrideReason
-          startedAt
-          nextRenewalAt
-          autoRenew
-          cancelAtPeriodEnd
-          status {
-            type
-            name
-          }
-          involvedOrganizations {
-            id
-            name
-            customDomain
-          }
-          involvedTeams {
-            id
-            name
-          }
-          marketplaceBooking {
-            quantity
-            paymentStatus {
-              type
-              name
-            }
-            paymentMethod {
-              name
-            }
-            productVersion {
-              listingMetadata {
-                title
-                subTitle
-              }
-            }
-          }
-          recurringBookings {
-            id
-            startDate
-            endDate
           }
         }
       }
@@ -290,556 +103,441 @@ const RootQuery = graphql`
   }
 `;
 
-const CustomerBookingsHub = ({ queryReference, onReloadRequired }: Props) => {
-  const rootData = usePreloadedQuery<customerBookingsHub_rootQuery>(RootQuery, queryReference);
-  const { integratedPlatform } = useIntegratedPlatform();
-  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
-  const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
-  const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
-    useMutation<customerBookingsHub_deleteMarketplaceBookingSubscriptionMutation>(graphql`
-      mutation customerBookingsHub_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
-        deleteMarketplaceBookingSubscription(input: $input) {
-          cancellationError {
-            code
-            message
+const PastBookingsFragment = graphql`
+  fragment customerBookingsHub_pastBookings_query on Query
+  @argumentDefinitions(today: { type: "DateTime!" }, organizationCustomDomain: { type: "String!" }, count: { type: "Int", defaultValue: 25 }, cursor: { type: "String" })
+  @refetchable(queryName: "customerBookingsHub_pastBookingsPaginationQuery") {
+    recentBookings: bookings(
+      first: $count
+      after: $cursor
+      where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, fromLt: $today }
+      orderBy: [{ field: FROM, direction: DESCENDING }]
+    ) @connection(key: "customerBookingsHub_pastBookings__recentBookings") {
+      totalCount
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          id
+          from
+          until
+          involvedOrganizations {
+            name
+            customDomain
           }
-          marketplaceBookingSubscription {
-            id
-            cancelAtPeriodEnd
-            nextRenewalAt
-            status {
+          involvedLocations {
+            name
+          }
+          involvedTeams {
+            name
+          }
+          bookingResources {
+            resource {
+              name
+            }
+          }
+          marketplaceBooking {
+            paymentStatus {
               type
+              name
+            }
+          }
+          recurringBooking {
+            frequency {
               name
             }
           }
         }
       }
-    `);
-  const upcomingBookings = useMemo(() => toNodes(rootData.upcomingBookings.edges), [rootData.upcomingBookings.edges]);
-  const recentBookings = useMemo(() => toNodes(rootData.recentBookings.edges), [rootData.recentBookings.edges]);
-  const subscriptions = useMemo(() => toNodes(rootData.marketplaceBookingSubscriptions.edges), [rootData.marketplaceBookingSubscriptions.edges]);
-  const totalCount = rootData.upcomingBookings.totalCount + rootData.recentBookings.totalCount + rootData.marketplaceBookingSubscriptions.totalCount;
-  const immediateCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
-    const mode = rootData.marketplaceBookingSubscriptionCancellationModes.find((item) => item.type === 'IMMEDIATE');
-
-    return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
-  }, [rootData.marketplaceBookingSubscriptionCancellationModes]);
-  const atPeriodEndCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
-    const mode = rootData.marketplaceBookingSubscriptionCancellationModes.find((item) => item.type === 'AT_PERIOD_END');
-
-    return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
-  }, [rootData.marketplaceBookingSubscriptionCancellationModes]);
-
-  useEffect(() => {
-    logCustomerPurchaseHubLoaded({
-      logger,
-      customerIdHash: 'current-customer',
-      bookingCount: rootData.upcomingBookings.totalCount + rootData.recentBookings.totalCount,
-      subscriptionCount: rootData.marketplaceBookingSubscriptions.totalCount,
-    });
-  }, [rootData.marketplaceBookingSubscriptions.totalCount, rootData.recentBookings.totalCount, rootData.upcomingBookings.totalCount]);
-
-  const handleDeleteMarketplaceBookingSubscriptionClick = (
-    subscriptionId: string,
-    productTitle: string,
-    cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode,
-  ) => {
-    commitDeleteMarketplaceBookingSubscription({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: subscriptionId,
-          cancellationMode: cancellationModeType,
-        },
-      },
-      onCompleted: (data, errors) => {
-        const cancellationError = data?.deleteMarketplaceBookingSubscription?.cancellationError;
-        if (cancellationError) {
-          toast(
-            <NotificationContent content={`Failed to update ${productTitle}. ${toCustomerSubscriptionCancellationErrorMessage(cancellationError.message)}`} />,
-            errorNotificationOptions,
-          );
-          return;
-        }
-        if (errors && errors.length > 0) {
-          toast(
-            <NotificationContent content={`Failed to update ${productTitle}. ${toCustomerSubscriptionCancellationErrorMessage(getRelayErrorMessage(errors))}`} />,
-            errorNotificationOptions,
-          );
-
-          return;
-        }
-
-        onReloadRequired();
-      },
-      onError: (error) => {
-        toast(
-          <NotificationContent content={`Failed to update ${productTitle}. ${toCustomerSubscriptionCancellationErrorMessage(getRelayErrorMessage(error))}`} />,
-          errorNotificationOptions,
-        );
-      },
-    });
-  };
-  const handleRequestImmediateCancellationClick = (
-    subscriptionId: string,
-    productTitle: string,
-    cancellationMode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails,
-  ) => {
-    setPendingCancellationConfirmation({
-      subscriptionId,
-      productTitle,
-      mode: cancellationMode,
-    });
-  };
-  const handleCancelImmediateCancellationClick = () => {
-    setPendingCancellationConfirmation(null);
-  };
-  const handleConfirmImmediateCancellationClick = () => {
-    if (!pendingCancellationConfirmation) {
-      return;
     }
+  }
+`;
 
-    handleDeleteMarketplaceBookingSubscriptionClick(
-      pendingCancellationConfirmation.subscriptionId,
-      pendingCancellationConfirmation.productTitle,
-      pendingCancellationConfirmation.mode.type,
-    );
-    setPendingCancellationConfirmation(null);
-  };
+const CustomerBookingsHub = ({ queryReference }: Props) => {
+  const rootData = usePreloadedQuery<customerBookingsHub_rootQuery>(RootQuery, queryReference);
+  const { integratedPlatform } = useIntegratedPlatform();
+  const [selectedTab, setSelectedTab] = useState<BookingTab>('upcoming');
 
   return (
     <Box
       sx={{
         minHeight: '100vh',
-        width: '100%',
-        maxWidth: '100vw',
-        overflowX: 'hidden',
-        pb: 8,
-        px: { xs: 2, sm: 3, md: 0 },
-        boxSizing: 'border-box',
-        background:
-          'radial-gradient(circle at top left, rgba(23, 93, 175, 0.14), transparent 24%), radial-gradient(circle at top right, rgba(255, 159, 67, 0.12), transparent 20%)',
+        pb: { xs: 5, md: 8 },
+        bgcolor: 'background.default',
       }}
     >
-      <Container disableGutters maxWidth="xl" sx={{ pt: { xs: 3, md: 4 }, width: '100%', minWidth: 0, maxWidth: '100%', overflowX: 'hidden' }}>
-        <Card
-          sx={{
-            borderRadius: 4,
-            overflow: 'hidden',
-            border: 1,
-            borderColor: (theme) => alpha(theme.palette.primary.main, 0.18),
-            background: (theme) =>
-              `linear-gradient(135deg, ${alpha(theme.palette.primary.light, 0.12)} 0%, ${alpha(theme.palette.background.paper, 1)} 42%, ${alpha(theme.palette.warning.light, 0.1)} 100%)`,
-          }}
+      <Container maxWidth="lg" sx={{ pt: { xs: 3, md: 5 } }}>
+        <CaptionIconTypography label="My bookings" sx={{ textTransform: 'uppercase', opacity: 0.66 }} />
+        <LeadIconTypography label="Where you need to be" sx={{ mt: 0.5 }} />
+        <BodyIconTypography label="Your schedule at this coworking space." sx={{ mt: 0.5, opacity: 0.72 }} />
+        <Tabs
+          value={selectedTab}
+          onChange={(_, value: BookingTab) => setSelectedTab(value)}
+          aria-label="Booking schedule"
+          sx={{ mt: 3, minHeight: 42, borderBottom: 1, borderColor: 'divider' }}
         >
-          <CardContent sx={{ p: { xs: 2, sm: 2.5, md: 3.5 } }}>
-            <CaptionIconTypography label="My bookings" sx={{ textTransform: 'uppercase', opacity: 0.66 }} />
-            <LeadIconTypography label="Your bookings" sx={{ mt: 0.75 }} />
-            <BodyIconTypography
-              label="Review your upcoming and recent bookings. Marketplace bookings stay here for payment and cancellation; private bookings open in the Teams scheduler."
-              sx={{ mt: 0.9, opacity: 0.82, maxWidth: 820 }}
-            />
-
-            <StackRow sx={{ mt: 2, rowGap: 1 }}>
-              <Chip label={`${rootData.upcomingBookings.totalCount} upcoming`} color="primary" variant="outlined" />
-              <Chip label={`${rootData.recentBookings.totalCount} recent`} variant="outlined" />
-              <Chip label={`${rootData.marketplaceBookingSubscriptions.totalCount} subscriptions`} color="success" variant="outlined" />
-            </StackRow>
-          </CardContent>
-        </Card>
-
-        {rootData.marketplaceBookingFailures.length > 0 ? (
-          <Card sx={{ mt: 3, borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
-            <CardContent sx={{ p: { xs: 2, sm: 2.5 } }}>
-              <CaptionIconTypography label="Booking notifications" sx={{ textTransform: 'uppercase', opacity: 0.66 }} />
-              <SubtitleIconTypography label="Recent booking outcomes" sx={{ mt: 0.75 }} />
-              {rootData.marketplaceBookingFailures.map((failure) => (
-                <Box key={failure.id} sx={{ borderTop: 1, borderColor: 'divider', mt: 1.5, pt: 1.5 }}>
-                  <BodyIconTypography label={failure.category.name} />
-                  <SmallIconTypography label={`${failure.scope.name} · ${dayjs(failure.finalizedAt).format('MMM D, YYYY h:mm A')}`} sx={{ mt: 0.25, opacity: 0.72 }} />
-                  <BodyIconTypography
-                    label={failure.customerAction.type === 'Rebook' ? 'Please start a new booking from current availability.' : failure.customerAction.name}
-                    sx={{ mt: 0.5, opacity: 0.82 }}
-                  />
-                </Box>
-              ))}
-            </CardContent>
-          </Card>
-        ) : null}
-
-        {totalCount === 0 ? (
-          <Card sx={{ mt: 4, borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
-            <CardContent sx={{ p: 2.5 }}>
-              <SubtitleIconTypography label="No bookings found." />
-              <BodyIconTypography
-                label="When you book a private space, reserve a marketplace product, or start a subscription, it will appear here."
-                sx={{ mt: 0.75, opacity: 0.8 }}
-              />
-            </CardContent>
-          </Card>
-        ) : null}
-
-        <BookingsSection bookings={upcomingBookings} integratedPlatform={integratedPlatform} label="Coming up" title="Upcoming bookings" />
-        <SubscriptionsSection
-          atPeriodEndCancellationMode={atPeriodEndCancellationMode}
-          immediateCancellationMode={immediateCancellationMode}
-          integratedPlatform={integratedPlatform}
-          isDeleteMarketplaceBookingSubscriptionInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
-          onAtPeriodEndCancellationClick={handleDeleteMarketplaceBookingSubscriptionClick}
-          onImmediateCancellationClick={handleRequestImmediateCancellationClick}
-          subscriptions={subscriptions}
-        />
-        <BookingsSection bookings={recentBookings} integratedPlatform={integratedPlatform} label="Already happened" title="Recent bookings" />
-        <MarketplacePurchaseHistorySection
-          items={rootData.marketplacePurchases.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item)}
-          integratedPlatform={integratedPlatform}
-          isCustomDomain={isCustomDomain}
-          organizationCustomDomain={organizationCustomDomain}
-        />
+          <Tab value="upcoming" label="Upcoming" sx={tabSx} />
+          <Tab value="past" label="Past" sx={tabSx} />
+        </Tabs>
+        {selectedTab === 'upcoming' ? (
+          <UpcomingBookings rootDataRelay={rootData} integratedPlatform={integratedPlatform} />
+        ) : (
+          <PastBookings rootDataRelay={rootData} integratedPlatform={integratedPlatform} />
+        )}
       </Container>
-
-      <Dialog open={!!pendingCancellationConfirmation} onClose={handleCancelImmediateCancellationClick}>
-        <DefaultDialogTitle title="Cancel subscription now" />
-        <DialogContent sx={{ mt: 2 }}>
-          <DialogContentText>
-            {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing will stop right away. Previous invoices will still stay on record.`}
-          </DialogContentText>
-          <TwoButtonsDialogActions
-            onPrimaryClicked={handleConfirmImmediateCancellationClick}
-            onSecondaryClicked={handleCancelImmediateCancellationClick}
-            primaryLabel="Cancel now"
-            secondaryLabel="Keep subscription"
-          />
-        </DialogContent>
-      </Dialog>
     </Box>
   );
 };
 
-const BookingsSection = ({
-  bookings,
+const UpcomingBookings = ({ rootDataRelay, integratedPlatform }: { rootDataRelay: customerBookingsHub_upcomingBookings_query$key; integratedPlatform: string | undefined }) => {
+  const { data, hasNext, isLoadingNext, loadNext } = usePaginationFragment<customerBookingsHub_upcomingBookingsPaginationQuery, customerBookingsHub_upcomingBookings_query$key>(
+    UpcomingBookingsFragment,
+    rootDataRelay,
+  );
+  const bookings = useMemo(() => toNodes(data.upcomingBookings.edges), [data.upcomingBookings.edges]);
+  const days = useMemo(() => groupBookingsByDay(bookings), [bookings]);
+  return (
+    <>
+      <NextBooking booking={bookings[0]} integratedPlatform={integratedPlatform} />
+      <ScheduleSection
+        days={days}
+        emptyMessage="Nothing is scheduled yet."
+        integratedPlatform={integratedPlatform}
+        label="Upcoming"
+        loadMoreLabel="Load 25 more upcoming bookings"
+        loadedCount={bookings.length}
+        onLoadMore={() => loadNext(25)}
+        isLoadingMore={isLoadingNext}
+        hasMore={hasNext}
+        totalCount={data.upcomingBookings.totalCount}
+      />
+    </>
+  );
+};
+
+const PastBookings = ({ rootDataRelay, integratedPlatform }: { rootDataRelay: customerBookingsHub_pastBookings_query$key; integratedPlatform: string | undefined }) => {
+  const { data, hasNext, isLoadingNext, loadNext } = usePaginationFragment<customerBookingsHub_pastBookingsPaginationQuery, customerBookingsHub_pastBookings_query$key>(
+    PastBookingsFragment,
+    rootDataRelay,
+  );
+  const bookings = useMemo(() => toNodes(data.recentBookings.edges), [data.recentBookings.edges]);
+  const days = useMemo(() => groupBookingsByDay(bookings), [bookings]);
+  return (
+    <ScheduleSection
+      days={days}
+      emptyMessage="No past bookings to show yet."
+      integratedPlatform={integratedPlatform}
+      label="Past bookings"
+      loadMoreLabel="Load 25 earlier bookings"
+      loadedCount={bookings.length}
+      onLoadMore={() => loadNext(25)}
+      isLoadingMore={isLoadingNext}
+      hasMore={hasNext}
+      totalCount={data.recentBookings.totalCount}
+    />
+  );
+};
+
+const NextBooking = ({ booking, integratedPlatform }: { booking: BookingNode | undefined; integratedPlatform: string | undefined }) => {
+  if (!booking) return null;
+  const bookingLink = getBookingLink(booking, integratedPlatform);
+  return (
+    <Box sx={{ mt: 3 }}>
+      <CaptionIconTypography label="Next up" sx={{ textTransform: 'uppercase', opacity: 0.66 }} />
+      <Link component={NextLink} href={bookingLink} underline="none" color="inherit" sx={{ display: 'block', mt: 1 }}>
+        <Card
+          sx={{
+            borderRadius: 3,
+            border: 1,
+            borderColor: (theme) => alpha(theme.palette.success.main, 0.35),
+            bgcolor: (theme) => alpha(theme.palette.success.light, theme.palette.mode === 'light' ? 0.1 : 0.16),
+            boxShadow: 'none',
+            '&:hover': { borderColor: 'success.main', boxShadow: 2 },
+          }}
+        >
+          <CardContent
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: '60px minmax(0, 1fr)',
+                sm: '76px minmax(0, 1fr) auto',
+              },
+              gap: { xs: 1.5, sm: 2 },
+              p: { xs: 2, sm: 2.5 },
+            }}
+          >
+            <DateBlock date={booking.from} />
+            <Box sx={{ minWidth: 0 }}>
+              <SubtitleIconTypography label={booking.involvedLocations[0]?.name ?? 'Location to be confirmed'} sx={{ overflowWrap: 'anywhere' }} />
+              <BodyIconTypography label={toStoredBookingTimeRange(booking.from, booking.until) || 'Time to be confirmed'} sx={{ mt: 0.35, fontWeight: 700 }} />
+              <ScheduleMeta booking={booking} resourcesLabel={toResourcesLabel(booking)} />
+            </Box>
+            <StackRow
+              sx={{
+                gridColumn: { xs: '1 / -1', sm: 'auto' },
+                alignSelf: 'center',
+                justifyContent: { xs: 'flex-end', sm: 'initial' },
+                color: 'success.main',
+              }}
+            >
+              <BodyIconTypography label="Open booking" sx={{ fontWeight: 700 }} />
+              <ChevronRightIcon fontSize="small" />
+            </StackRow>
+          </CardContent>
+        </Card>
+      </Link>
+    </Box>
+  );
+};
+
+const ScheduleSection = ({
+  days,
+  emptyMessage,
   integratedPlatform,
   label,
-  title,
+  hasMore,
+  isLoadingMore,
+  loadMoreLabel,
+  loadedCount,
+  onLoadMore,
+  totalCount,
 }: {
-  bookings: ReadonlyArray<BookingNode>;
+  days: ReadonlyArray<BookingDay>;
+  emptyMessage: string;
   integratedPlatform: string | undefined;
   label: string;
-  title: string;
+  hasMore: boolean;
+  isLoadingMore: boolean;
+  loadMoreLabel: string;
+  loadedCount: number;
+  onLoadMore: () => void;
+  totalCount: number;
 }) => (
-  <Box sx={{ mt: 4, minWidth: 0 }}>
+  <Box sx={{ mt: 4 }}>
     <CaptionIconTypography label={label} sx={{ textTransform: 'uppercase', opacity: 0.66 }} />
-    <LeadIconTypography label={title} sx={{ mt: 0.5 }} />
-
-    {bookings.length > 0 ? (
-      <Box sx={{ mt: 2, display: 'grid', gap: 1.5, minWidth: 0, gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(3, minmax(0, 1fr))' } }}>
-        {bookings.map((booking) => (
-          <BookingCard key={booking.id} booking={booking} integratedPlatform={integratedPlatform} />
+    {days.length > 0 ? (
+      <StackColumn spacing={1.25} sx={{ mt: 1.25 }}>
+        {days.map((day) => (
+          <BookingDayGroup key={day.key} day={day} integratedPlatform={integratedPlatform} />
         ))}
-      </Box>
+      </StackColumn>
     ) : (
-      <Card sx={{ mt: 2, borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
+      <Card
+        sx={{
+          mt: 1.25,
+          borderRadius: 3,
+          border: 1,
+          borderColor: 'divider',
+          boxShadow: 'none',
+        }}
+      >
         <CardContent sx={{ p: 2.5 }}>
-          <BodyIconTypography label={title === 'Upcoming bookings' ? 'Nothing is scheduled yet.' : 'No recent bookings to show.'} sx={{ opacity: 0.8 }} />
+          <BodyIconTypography label={emptyMessage} sx={{ opacity: 0.75 }} />
         </CardContent>
       </Card>
     )}
+    {hasMore ? (
+      <Box
+        sx={{
+          mt: 2.5,
+          mx: 'auto',
+          width: '100%',
+          maxWidth: 440,
+          textAlign: 'center',
+        }}
+      >
+        <Button
+          variant="outlined"
+          color="primary"
+          size="large"
+          fullWidth
+          onClick={onLoadMore}
+          disabled={isLoadingMore}
+          sx={{ minHeight: 48, textTransform: 'none', fontWeight: 700 }}
+        >
+          {isLoadingMore ? 'Loading bookings…' : loadMoreLabel}
+        </Button>
+        <SmallIconTypography label={`${loadedCount} of ${totalCount} bookings shown`} sx={{ mt: 0.85, opacity: 0.68 }} />
+      </Box>
+    ) : null}
   </Box>
 );
 
-const BookingCard = ({ booking, integratedPlatform }: { booking: BookingNode; integratedPlatform: string | undefined }) => {
-  const organization = booking.involvedOrganizations[0];
-  const organizationCustomDomain = organization?.customDomain ?? '';
-  const organizationName = organization?.name ?? 'Organization pending';
-  const isMarketplaceBooking = !!booking.marketplaceBooking;
-  const bookingLink = isMarketplaceBooking
+const BookingDayGroup = ({ day, integratedPlatform }: { day: BookingDay; integratedPlatform: string | undefined }) => (
+  <Box
+    sx={{
+      display: 'grid',
+      gridTemplateColumns: {
+        xs: '54px minmax(0, 1fr)',
+        sm: '84px minmax(0, 1fr)',
+      },
+      gap: { xs: 1, sm: 2 },
+    }}
+  >
+    <Box sx={{ pt: 1.25, textAlign: { xs: 'center', sm: 'left' } }}>
+      <SmallIconTypography label={dayjs.utc(day.date).format('ddd').toUpperCase()} sx={{ fontWeight: 800, letterSpacing: '0.08em', opacity: 0.7 }} />
+      <LeadIconTypography label={dayjs.utc(day.date).format('D')} sx={{ mt: -0.2, fontSize: { xs: '1.6rem', sm: '2rem' }, lineHeight: 1 }} />
+      <SmallIconTypography label={dayjs.utc(day.date).format('MMM')} sx={{ mt: 0.3, opacity: 0.68 }} />
+    </Box>
+    <Card
+      sx={{
+        overflow: 'hidden',
+        borderRadius: 3,
+        border: 1,
+        borderColor: 'divider',
+        boxShadow: 'none',
+      }}
+    >
+      {day.bookings.map((booking, index) => (
+        <Box key={booking.id}>
+          {index > 0 ? <Divider /> : null}
+          <BookingRow booking={booking} integratedPlatform={integratedPlatform} />
+        </Box>
+      ))}
+    </Card>
+  </Box>
+);
+
+const BookingRow = ({ booking, integratedPlatform }: { booking: BookingNode; integratedPlatform: string | undefined }) => {
+  const paymentStatus = booking.marketplaceBooking?.paymentStatus;
+  return (
+    <Link
+      component={NextLink}
+      href={getBookingLink(booking, integratedPlatform)}
+      underline="none"
+      color="inherit"
+      sx={{ display: 'block', '&:hover': { bgcolor: 'action.hover' } }}
+    >
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: '68px minmax(0, 1fr) 20px',
+            sm: '108px minmax(0, 1fr) auto 20px',
+          },
+          gap: { xs: 1, sm: 2 },
+          alignItems: 'center',
+          p: { xs: 1.5, sm: 2 },
+        }}
+      >
+        <SmallIconTypography label={toStoredBookingTimeRange(booking.from, booking.until) || 'Time TBC'} sx={{ fontWeight: 800, opacity: 0.88 }} />
+        <Box sx={{ minWidth: 0 }}>
+          <BodyIconTypography label={booking.involvedLocations[0]?.name ?? 'Location to be confirmed'} sx={{ fontWeight: 700, overflowWrap: 'anywhere' }} />
+          <ScheduleMeta booking={booking} resourcesLabel={toResourcesLabel(booking)} compact />
+        </Box>
+        <StackRow
+          sx={{
+            display: { xs: 'none', sm: 'flex' },
+            justifyContent: 'flex-end',
+            gap: 0.75,
+            flexWrap: 'wrap',
+          }}
+        >
+          {paymentStatus ? <PaymentChip type={paymentStatus.type} name={paymentStatus.name} /> : null}
+          {booking.recurringBooking ? <Chip label={booking.recurringBooking.frequency.name} size="small" variant="outlined" /> : null}
+        </StackRow>
+        <ChevronRightIcon fontSize="small" color="action" />
+        {paymentStatus || booking.recurringBooking ? (
+          <StackRow
+            sx={{
+              gridColumn: { xs: '2 / 4', sm: 'auto' },
+              display: { xs: 'flex', sm: 'none' },
+              gap: 0.75,
+              flexWrap: 'wrap',
+            }}
+          >
+            {paymentStatus ? <PaymentChip type={paymentStatus.type} name={paymentStatus.name} /> : null}
+            {booking.recurringBooking ? <Chip label={booking.recurringBooking.frequency.name} size="small" variant="outlined" /> : null}
+          </StackRow>
+        ) : null}
+      </Box>
+    </Link>
+  );
+};
+
+const ScheduleMeta = ({ booking, compact, resourcesLabel }: { booking: BookingNode; compact?: boolean; resourcesLabel: string }) => {
+  const teamLabel = booking.involvedTeams.map((team) => team.name).join(', ');
+  const organizationName = booking.involvedOrganizations[0]?.name;
+  return (
+    <StackRow
+      spacing={compact ? 0.75 : 1.25}
+      sx={{
+        mt: compact ? 0.3 : 0.85,
+        flexWrap: 'wrap',
+        color: 'text.secondary',
+      }}
+    >
+      {organizationName ? <SmallIconTypography startElement={<LocationIcon fontSize="inherit" />} label={organizationName} sx={{ opacity: 0.8 }} /> : null}
+      <SmallIconTypography startElement={<ResourceIcon fontSize="inherit" />} label={resourcesLabel} sx={{ opacity: 0.8 }} />
+      {teamLabel ? <SmallIconTypography startElement={<TeamIcon fontSize="inherit" />} label={teamLabel} sx={{ opacity: 0.8 }} /> : null}
+    </StackRow>
+  );
+};
+const DateBlock = ({ date }: { date: string }) => (
+  <Box sx={{ textAlign: 'center', color: 'success.dark' }}>
+    <SmallIconTypography label={dayjs.utc(date).format('ddd').toUpperCase()} sx={{ fontWeight: 800, letterSpacing: '0.08em' }} />
+    <LeadIconTypography
+      label={dayjs.utc(date).format('D')}
+      sx={{
+        mt: -0.2,
+        fontSize: { xs: '1.8rem', sm: '2.25rem' },
+        lineHeight: 1,
+      }}
+    />
+    <SmallIconTypography label={dayjs.utc(date).format('MMM')} sx={{ mt: 0.2 }} />
+  </Box>
+);
+const PaymentChip = ({ name, type }: { name: string; type: string }) => (
+  <Chip
+    label={name}
+    color={type === 'CONFIRMED' ? 'success' : type === 'PENDING' ? 'warning' : 'default'}
+    size="small"
+    variant={type === 'CONFIRMED' || type === 'PENDING' ? 'filled' : 'outlined'}
+  />
+);
+const groupBookingsByDay = (bookings: ReadonlyArray<BookingNode>): ReadonlyArray<BookingDay> => {
+  const days = new Map<string, BookingNode[]>();
+  bookings.forEach((booking) => {
+    const key = dayjs.utc(booking.from).format('YYYY-MM-DD');
+    const day = days.get(key) ?? [];
+    day.push(booking);
+    days.set(key, day);
+  });
+  return Array.from(days, ([key, items]) => ({
+    key,
+    date: items[0]?.from ?? key,
+    bookings: items,
+  }));
+};
+const getBookingLink = (booking: BookingNode, integratedPlatform: string | undefined) => {
+  const organizationCustomDomain = booking.involvedOrganizations[0]?.customDomain ?? '';
+  return booking.marketplaceBooking
     ? getMarketplaceBookingDetailsLink(integratedPlatform, false, organizationCustomDomain, booking.id)
     : getTeamsOrganizationBookingBaseLink(organizationCustomDomain, booking.id);
-  const locationLabel = booking.involvedLocations[0]?.name ?? 'Location to be confirmed';
-  const resourcesLabel = booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later';
-  const teamLabel = booking.involvedTeams.map((team) => team.name).join(', ');
-  const paymentStatusType = booking.marketplaceBooking?.paymentStatus.type;
-  const isConfirmed = paymentStatusType === 'CONFIRMED';
-  const isPending = paymentStatusType === 'PENDING';
-  const callToActionLabel = isMarketplaceBooking ? 'Open marketplace booking' : 'Open in Teams';
-
-  return (
-    <Link component={NextLink} href={bookingLink} underline="none" color="inherit" sx={cardLinkSx('primary')}>
-      <Box sx={{ p: { xs: 2, sm: 2.25 }, minWidth: 0 }}>
-        <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 1, minWidth: 0 }}>
-          <Box sx={{ minWidth: 0 }}>
-            <SmallIconTypography label={organizationName} sx={{ opacity: 0.62, overflowWrap: 'anywhere', textTransform: 'uppercase' }} />
-            <SubtitleIconTypography label={locationLabel} sx={{ mt: 0.4, overflowWrap: 'anywhere' }} />
-          </Box>
-          <Chip
-            size="small"
-            label={isMarketplaceBooking ? 'Marketplace' : 'Private'}
-            color={isMarketplaceBooking ? 'primary' : 'default'}
-            variant={isMarketplaceBooking ? 'filled' : 'outlined'}
-          />
-        </StackRow>
-
-        <StackColumn spacing={1.1} sx={{ mt: 2 }}>
-          <StackRow sx={{ flexWrap: 'nowrap', minWidth: 0 }}>
-            <CalendarIcon fontSize="small" />
-            <BodyIconTypography label={toBookingDateTimeLabel(booking.from, booking.until)} sx={{ minWidth: 0, overflowWrap: 'anywhere', opacity: 0.88 }} />
-          </StackRow>
-          <StackRow sx={{ flexWrap: 'nowrap', minWidth: 0 }}>
-            <LocationIcon fontSize="small" />
-            <BodyIconTypography label={locationLabel} sx={{ minWidth: 0, overflowWrap: 'anywhere', opacity: 0.88 }} />
-          </StackRow>
-          {teamLabel ? (
-            <StackRow sx={{ flexWrap: 'nowrap', minWidth: 0 }}>
-              <TeamIcon fontSize="small" />
-              <BodyIconTypography label={teamLabel} sx={{ minWidth: 0, overflowWrap: 'anywhere', opacity: 0.88 }} />
-            </StackRow>
-          ) : null}
-          <StackRow sx={{ flexWrap: 'nowrap', minWidth: 0 }}>
-            <ResourceIcon fontSize="small" />
-            <BodyIconTypography label={resourcesLabel} sx={{ minWidth: 0, overflowWrap: 'anywhere', opacity: 0.88 }} />
-          </StackRow>
-          {booking.marketplaceBooking ? (
-            <StackRow sx={{ flexWrap: 'nowrap', minWidth: 0 }}>
-              <QuantityIcon fontSize="small" />
-              <BodyIconTypography label={`Quantity ${booking.marketplaceBooking.quantity}`} sx={{ minWidth: 0, overflowWrap: 'anywhere', opacity: 0.88 }} />
-            </StackRow>
-          ) : null}
-          {booking.cancellationPolicyOverridden ? <DetailsRow label="Cancellation reason" value={booking.cancellationOverrideReason ?? 'Policy overridden'} /> : null}
-        </StackColumn>
-
-        <StackRow sx={{ mt: 2, gap: 1, flexWrap: 'wrap' }}>
-          {booking.marketplaceBooking ? (
-            <Chip
-              size="small"
-              icon={<PaymentStatusIcon />}
-              label={booking.marketplaceBooking.paymentStatus.name}
-              color={isConfirmed ? 'success' : isPending ? 'warning' : 'default'}
-              variant={isConfirmed || isPending ? 'filled' : 'outlined'}
-            />
-          ) : null}
-          {booking.recurringBooking ? <Chip label={`${booking.recurringBooking.frequency.name} recurring`} size="small" variant="outlined" /> : null}
-        </StackRow>
-
-        <Divider sx={{ mt: 2 }} />
-
-        <StackRow sx={{ mt: 2, justifyContent: 'space-between', flexWrap: 'wrap', gap: 1, minWidth: 0 }}>
-          <BodyIconTypography label={callToActionLabel} sx={{ color: 'primary.main', fontWeight: 600, minWidth: 0, overflowWrap: 'anywhere' }} />
-          <ChevronRightIcon fontSize="small" />
-        </StackRow>
-      </Box>
-    </Link>
-  );
 };
-
-const SubscriptionsSection = ({
-  atPeriodEndCancellationMode,
-  immediateCancellationMode,
-  integratedPlatform,
-  isDeleteMarketplaceBookingSubscriptionInFlight,
-  onAtPeriodEndCancellationClick,
-  onImmediateCancellationClick,
-  subscriptions,
-}: {
-  atPeriodEndCancellationMode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null;
-  immediateCancellationMode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null;
-  integratedPlatform: string | undefined;
-  isDeleteMarketplaceBookingSubscriptionInFlight: boolean;
-  onAtPeriodEndCancellationClick: (subscriptionId: string, productTitle: string, cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode) => void;
-  onImmediateCancellationClick: (subscriptionId: string, productTitle: string, cancellationMode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails) => void;
-  subscriptions: ReadonlyArray<SubscriptionNode>;
-}) => (
-  <Box sx={{ mt: 4, minWidth: 0 }}>
-    <CaptionIconTypography label="Subscriptions" sx={{ textTransform: 'uppercase', opacity: 0.66 }} />
-    <LeadIconTypography label="Marketplace subscriptions" sx={{ mt: 0.5 }} />
-
-    {subscriptions.length > 0 ? (
-      <Box sx={{ mt: 2, display: 'grid', gap: 1.5, minWidth: 0, gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(3, minmax(0, 1fr))' } }}>
-        {subscriptions.map((subscription) => (
-          <SubscriptionCard
-            key={subscription.id}
-            atPeriodEndCancellationMode={atPeriodEndCancellationMode}
-            immediateCancellationMode={immediateCancellationMode}
-            integratedPlatform={integratedPlatform}
-            isDeleteMarketplaceBookingSubscriptionInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
-            onAtPeriodEndCancellationClick={onAtPeriodEndCancellationClick}
-            onImmediateCancellationClick={onImmediateCancellationClick}
-            subscription={subscription}
-          />
-        ))}
-      </Box>
-    ) : (
-      <Card sx={{ mt: 2, borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
-        <CardContent sx={{ p: 2.5 }}>
-          <BodyIconTypography label="You don't have any subscriptions yet." sx={{ opacity: 0.8 }} />
-        </CardContent>
-      </Card>
-    )}
-  </Box>
-);
-
-const SubscriptionCard = ({
-  atPeriodEndCancellationMode,
-  immediateCancellationMode,
-  integratedPlatform,
-  isDeleteMarketplaceBookingSubscriptionInFlight,
-  onAtPeriodEndCancellationClick,
-  onImmediateCancellationClick,
-  subscription,
-}: {
-  atPeriodEndCancellationMode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null;
-  immediateCancellationMode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null;
-  integratedPlatform: string | undefined;
-  isDeleteMarketplaceBookingSubscriptionInFlight: boolean;
-  onAtPeriodEndCancellationClick: (subscriptionId: string, productTitle: string, cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode) => void;
-  onImmediateCancellationClick: (subscriptionId: string, productTitle: string, cancellationMode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails) => void;
-  subscription: SubscriptionNode;
-}) => {
-  const organization = subscription.involvedOrganizations[0];
-  const organizationCustomDomain = organization?.customDomain ?? '';
-  const subscriptionLink = getMarketplaceSubscriptionDetailsLink(integratedPlatform, false, organizationCustomDomain, subscription.id);
-  const productTitle = subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription';
-  const latestRecurringBooking = [...subscription.recurringBookings].sort((left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime())[0];
-  const paymentStatusType = subscription.marketplaceBooking.paymentStatus.type;
-  const isConfirmed = paymentStatusType === 'CONFIRMED';
-  const isPending = paymentStatusType === 'PENDING';
-  const lifecycleDisplay = toMarketplaceBookingSubscriptionLifecycleDisplay({
-    autoRenew: subscription.autoRenew,
-    cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
-    isCancelled: subscription.status.type === 'CANCELLED',
-    fallbackActiveLabel: subscription.status.name,
-  });
-  const paymentStatusLabel = subscription.status.type === 'CANCELLED' ? lifecycleDisplay.statusLabel : subscription.marketplaceBooking.paymentStatus.name;
-
-  return (
-    <Link component={NextLink} href={subscriptionLink} underline="none" color="inherit" sx={cardLinkSx('success')}>
-      <Box sx={{ p: { xs: 2, sm: 2.25 }, minWidth: 0 }}>
-        <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 1, minWidth: 0 }}>
-          <Box sx={{ minWidth: 0 }}>
-            <SmallIconTypography label={organization?.name ?? 'Organization pending'} sx={{ opacity: 0.62, overflowWrap: 'anywhere', textTransform: 'uppercase' }} />
-            <SubtitleIconTypography label={productTitle} sx={{ mt: 0.4, overflowWrap: 'anywhere' }} />
-          </Box>
-          <Chip
-            size="small"
-            icon={<PaymentStatusIcon />}
-            label={paymentStatusLabel}
-            color={isConfirmed ? 'success' : isPending ? 'warning' : 'default'}
-            variant={isConfirmed || isPending ? 'filled' : 'outlined'}
-          />
-        </StackRow>
-
-        <StackColumn spacing={1.1} sx={{ mt: 2 }}>
-          <DetailsRow label="Quantity" value={`${subscription.marketplaceBooking.quantity}`} />
-          <DetailsRow
-            label="Current period"
-            value={latestRecurringBooking ? `${toStoredDate(latestRecurringBooking.startDate)} - ${toStoredDate(latestRecurringBooking.endDate)}` : 'Preparing cycle'}
-          />
-          <DetailsRow label="Next renewal" value={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : lifecycleDisplay.nextRenewalFallbackLabel} />
-          <DetailsRow label="Cancellation" value={lifecycleDisplay.renewalLabel} />
-          <DetailsRow label="Payment method" value={subscription.marketplaceBooking.paymentMethod.name} />
-          {subscription.cancellationPolicyOverridden ? <DetailsRow label="Cancellation reason" value={subscription.cancellationOverrideReason ?? 'Policy overridden'} /> : null}
-        </StackColumn>
-
-        {subscription.status.type === 'ACTIVE' ? (
-          <Box sx={{ mt: 2 }} onClick={(event) => event.preventDefault()}>
-            <Divider sx={{ mb: 2 }} />
-            <SubscriptionCancellationSection
-              cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
-              hasConfirmedPayment={subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED'}
-              isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
-              immediateCancellationMode={immediateCancellationMode}
-              atPeriodEndCancellationMode={subscription.autoRenew ? atPeriodEndCancellationMode : null}
-              onImmediateCancellationClick={() => (immediateCancellationMode ? onImmediateCancellationClick(subscription.id, productTitle, immediateCancellationMode) : undefined)}
-              onAtPeriodEndCancellationClick={() =>
-                atPeriodEndCancellationMode ? onAtPeriodEndCancellationClick(subscription.id, productTitle, atPeriodEndCancellationMode.type) : undefined
-              }
-            />
-          </Box>
-        ) : null}
-
-        <Divider sx={{ mt: 2 }} />
-
-        <StackRow sx={{ mt: 2, justifyContent: 'space-between', flexWrap: 'wrap', gap: 1, minWidth: 0 }}>
-          <BodyIconTypography label="Open subscription" sx={{ color: 'success.main', fontWeight: 600, minWidth: 0, overflowWrap: 'anywhere' }} />
-          <ChevronRightIcon fontSize="small" />
-        </StackRow>
-      </Box>
-    </Link>
-  );
-};
-
-const DetailsRow = ({ label, value }: { label: string; value: string }) => (
-  <StackColumn spacing={0.35} sx={{ minWidth: 0 }}>
-    <SmallIconTypography label={label} sx={{ opacity: 0.62, textTransform: 'uppercase' }} />
-    <BodyIconTypography label={value} sx={{ minWidth: 0, overflowWrap: 'anywhere', opacity: 0.88 }} />
-  </StackColumn>
-);
-
-const cardLinkSx = (accent: 'primary' | 'success'): SxProps<Theme> => ({
-  display: 'block',
-  width: '100%',
-  minWidth: 0,
-  maxWidth: '100%',
-  boxSizing: 'border-box',
-  borderRadius: 3,
-  border: 1,
-  borderColor: (theme: Theme) => alpha(theme.palette.divider, 0.9),
-  bgcolor: (theme: Theme) => alpha(theme.palette.background.paper, 0.86),
-  backdropFilter: 'blur(10px)',
-  transition: 'transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease',
-  '&:hover': {
-    transform: 'translateY(-2px)',
-    boxShadow: (theme: Theme) => theme.shadows[4],
-    borderColor: (theme: Theme) => (accent === 'success' ? theme.palette.success.main : theme.palette.primary.main),
-  },
-});
-
+const toResourcesLabel = (booking: BookingNode) => booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later';
 const toNodes = <TNode,>(edges: ReadonlyArray<{ readonly node: TNode | null | undefined }>) => edges.map((edge) => edge.node).filter((item): item is NonNullable<TNode> => !!item);
-
-const toStoredDate = (date?: string | null) => (date ? dayjs.utc(date).format('dddd, Do MMM YYYY') : '');
-const toBookingDateTimeLabel = (from?: string | null, until?: string | null) => {
-  const bookingDate = toStoredDate(from);
-  const bookingTime = toStoredBookingTimeRange(from, until);
-
-  return bookingTime ? `${bookingDate}, ${bookingTime}` : bookingDate;
+const tabSx = {
+  minHeight: 42,
+  px: 1.25,
+  textTransform: 'none',
+  fontWeight: 700,
 };
 
 const MemoCustomerBookingsHub = memo(CustomerBookingsHub);
-
 const CustomerBookingsHubWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<customerBookingsHub_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
-  const [, startTransition] = useTransition();
   const { organizationCustomDomain } = useKnownParams();
-
-  if (!organizationCustomDomain) {
-    throw new Error('organizationCustomDomain is required');
-  }
-
+  if (!organizationCustomDomain) throw new Error('organizationCustomDomain is required');
   useEffect(() => {
-    loadQuery(
-      {
-        today: dayjs().startOf('day').toISOString(),
-        organizationCustomDomain,
-      },
-      {
-        fetchPolicy: 'store-and-network',
-      },
-    );
-  }, [loadQuery, organizationCustomDomain, triggerReloadId]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReloadId(uuid());
-    });
-  };
-
-  if (!queryReference) {
-    return <Loading />;
-  }
-
+    loadQuery({ today: dayjs().startOf('day').toISOString(), organizationCustomDomain }, { fetchPolicy: 'store-and-network' });
+  }, [loadQuery, organizationCustomDomain]);
+  if (!queryReference) return <Loading />;
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoCustomerBookingsHub queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+      <MemoCustomerBookingsHub queryReference={queryReference} />
     </ErrorBoundary>
   );
 };
