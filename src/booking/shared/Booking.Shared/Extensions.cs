@@ -66,7 +66,6 @@ public static class Extensions
                 .AddScoped<IBookingResourceSlotsHelperService, BookingResourceSlotsHelperService>()
                 .AddScoped<IMarketplaceRefundEventService, MarketplaceRefundEventService>()
                 .AddScoped<IMarketplaceRefundTransitionService, MarketplaceRefundTransitionService>()
-                .AddScoped<IMarketplacePurchaseHistoryEventService, MarketplacePurchaseHistoryEventService>()
                 .AddScoped<IMarketplaceRefundService, MarketplaceRefundService>()
                 .AddScoped<IEntitlementService, EntitlementService>()
                 .AddScoped<IEntitlementPurchaseService, EntitlementPurchaseService>()
