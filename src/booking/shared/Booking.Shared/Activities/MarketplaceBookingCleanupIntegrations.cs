@@ -1,3 +1,5 @@
+using Api.Shared.Services.Models;
+using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
@@ -161,6 +163,12 @@ public class MarketplaceBookingCleanupIntegrations(
         }
 
         logger.LogInformation("Running marketplace booking cleanup for failure {FailureId}", input.FailureId);
+        if (!await IsCurrentPaymentStillTerminalAsync(failure, cancellationToken))
+        {
+            logger.LogInformation("Skipped stale marketplace booking cleanup after payment state changed. FailureId={FailureId}", failure.Id);
+            return;
+        }
+
         if (failure.Category == MarketplaceBookingFailureCategoryConstants.PaymentFailed &&
             failure.Scope == MarketplaceBookingFailureScopeConstants.InitialSeries &&
             failure.MarketplaceBookingSubscriptionId is not null)
@@ -187,5 +195,19 @@ public class MarketplaceBookingCleanupIntegrations(
         {
             throw new InvalidOperationException($"Marketplace booking failure {input.FailureId} has no cleanup target.");
         }
+    }
+
+    private async Task<bool> IsCurrentPaymentStillTerminalAsync(
+        MarketplaceBookingFailure failure,
+        CancellationToken cancellationToken)
+    {
+        var paymentStatus = failure.BookingId is not null
+            ? (await repositoryFactory.BookingRepository.GetByIdAsync(failure.BookingId, cancellationToken))?.MarketplaceBooking?.PaymentStatus
+            : failure.RecurringBookingId is not null
+                ? (await repositoryFactory.RecurringBookingRepository.GetByIdAsync(failure.RecurringBookingId, cancellationToken))?.MarketplaceBooking
+                ?.PaymentStatus
+                : null;
+
+        return paymentStatus is PaymentStatusConstants.Rejected or PaymentStatusConstants.Expired or PaymentStatusConstants.RecordNeverCreated;
     }
 }

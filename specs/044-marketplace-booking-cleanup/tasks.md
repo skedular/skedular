@@ -65,19 +65,6 @@
 - [X] T034 Add Vitest/React Testing Library coverage for pre-commit and post-commit status rendering and verify no-reload mutation updates under `src/web/apps/webapp*/src/`.
 - [X] T035 Review and update customer/operator documentation under `src/web/apps/public-web/src/content/docs/` for the new status semantics.
 
-## Phase 6: User Story 4 - Reconcile existing orphaned allocations (Priority: P2)
-
-**Goal**: Historical and retry-exhausted terminal bookings are automatically found and safely re-enqueued, including subscription-linked ownership.
-
-**Independent Test**: Seed terminal bookings with allocations, run reconciliation, and verify automatic cleanup enqueue, lease safety, effective owner resolution, and no subscription recreation.
-
-- [X] T036 [P] [US4] Add repository integration tests for terminal effective-owner eligibility, durable failure records with no payment record, confirmed-entitlement exclusion, and reconciliation leases in `src/booking/domain/Booking.Domain.IntegrationTests/Repositories/MarketplaceBookingCleanupReconciliationShould.cs`.
-- [X] T037 [P] [US4] Add reconciliation service unit tests for automatic enqueue and lease-safe duplicate runs in `src/booking/jobs/Booking.Jobs.UnitTests/Services/MarketplaceBookingCleanupReconciliationServiceTests/`.
-- [X] T038 Extend `src/booking/shared/Booking.Shared/Repositories/MarketplaceBookingFailureRepository.cs` and related booking repositories to query rejected/expired effective payments and durable terminal failures with remaining allocations, including cases without a payment record.
-- [X] T039 Extend `src/booking/jobs/Booking.Jobs/Services/MarketplaceRefundReconciliationHostedService.cs` with a cleanup reconciliation service that leases candidates, records attempts, and automatically enqueues idempotent cleanup.
-- [X] T040 Prevent canceled/terminal subscriptions from renewal or resource rematerialization in `src/booking/shared/Booking.Shared/Workflows/BookMarketplaceBookingSubscriptionResources.cs` and related subscription/payment workflows.
-- [X] T041 Add workflow/service unit coverage for orphan repair enqueue and concurrent lease skips, with subscription cancellation and no-recreation guards covered by existing subscription activity unit tests in `src/booking/shared/Booking.Shared.UnitTests/`.
-
 ## Phase 7: Polish & Cross-Cutting Concerns
 
 - [X] T043 [P] Audit changed C# signatures for required-parameter-before-`CancellationToken` and nullability compliance across `src/booking/`.
@@ -93,14 +80,12 @@
 - US1 T011-T021 is the MVP and should land first.
 - US2 T022-T028 depends on the local cleanup contract from US1 but can parallelize after T016-T019.
 - US3 T029-T035 depends on stable cleanup status fields from US1/US2.
-- US4 T036-T042 depends on cleanup idempotency and effective-owner resolution from the foundational/US1 work.
 - Polish T043-T047 follows the selected stories.
 
 ## Parallel Opportunities
 
 - T002-T003, T007-T009, and T011-T015 can run in parallel.
 - After the foundational checkpoint, US1 backend tests and US2 provider tests can proceed in parallel when shared cleanup contracts are stable.
-- US3 UI work can proceed in parallel with US4 repository/service work after status and eligibility models are agreed.
 - Documentation, signature audits, and generated-artifact verification are parallelizable near completion.
 
 ## Implementation Strategy
@@ -108,5 +93,4 @@
 1. Deliver US1 as the MVP: local transactional release, explicit Stripe failures, bounded retries, arrears cleanup, and tests.
 2. Add US2 provider independence and durable transition recovery.
 3. Add US3 truthful API/UI state and regenerated contracts.
-4. Add US4 automatic reconciliation and subscription recreation protection.
-5. Run polish, quickstart validation, and graph update before implementation handoff.
+4. Run polish, quickstart validation, and graph update before implementation handoff.

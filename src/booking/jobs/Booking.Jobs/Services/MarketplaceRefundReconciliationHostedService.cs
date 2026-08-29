@@ -64,12 +64,48 @@ public class MarketplaceRefundReconciliationHostedService(
             var service = scope.ServiceProvider.GetRequiredService<IMarketplaceRefundReconciliationService>();
             var operations = scope.ServiceProvider.GetRequiredService<IMarketplaceRefundOperationsService>();
             var payoutReconciliation = scope.ServiceProvider.GetRequiredService<IStripePayoutReconciliationService>();
-            await payoutReconciliation.RetryUnmatchedAsync(_stopping.Token);
-            await service.ReconcileAsync(_stopping.Token);
             var cleanup = scope.ServiceProvider.GetRequiredService<IMarketplaceBookingCleanupReconciliationService>();
-            await cleanup.ReconcileAsync(_stopping.Token);
             var accountingCleanup = scope.ServiceProvider.GetRequiredService<IMarketplaceBookingAccountingCleanupService>();
-            await accountingCleanup.ReconcileAsync(_stopping.Token);
+            try
+            {
+                await payoutReconciliation.RetryUnmatchedAsync(_stopping.Token);
+                await service.ReconcileAsync(_stopping.Token);
+            }
+            catch (OperationCanceledException) when (_stopping.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Provider refund reconciliation failed");
+            }
+
+            try
+            {
+                await cleanup.ReconcileAsync(_stopping.Token);
+            }
+            catch (OperationCanceledException) when (_stopping.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Marketplace booking cleanup reconciliation failed");
+            }
+
+            try
+            {
+                await accountingCleanup.ReconcileAsync(_stopping.Token);
+            }
+            catch (OperationCanceledException) when (_stopping.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Marketplace accounting cleanup reconciliation failed");
+            }
+
             await operations.LogOverdueBankTransferRefundsAsync(timeProvider.GetUtcNow(), _stopping.Token);
             await operations.RecordDashboardMetricsAsync(timeProvider.GetUtcNow(), _stopping.Token);
             logger.LogInformation("Refund reconciliation batch completed");

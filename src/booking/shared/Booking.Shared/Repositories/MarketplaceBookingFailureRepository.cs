@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
@@ -95,7 +96,14 @@ public class MarketplaceBookingFailureRepository(BookingDbContext dbContext, Tim
             .Where(item => item.ResourceReleaseStatus == MarketplaceBookingFailureResourceReleaseStatusConstants.Pending &&
                            (item.Category == MarketplaceBookingFailureCategoryConstants.PaymentFailed ||
                             item.Category == MarketplaceBookingFailureCategoryConstants.PaymentExpired) &&
-                           (item.BookingId != null || item.RecurringBookingId != null))
+                           ((item.BookingId != null && item.Booking!.MarketplaceBooking != null &&
+                             (item.Booking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.Rejected ||
+                              item.Booking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.Expired ||
+                              item.Booking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.RecordNeverCreated)) ||
+                            (item.RecurringBookingId != null && item.RecurringBooking!.MarketplaceBooking != null &&
+                             (item.RecurringBooking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.Rejected ||
+                              item.RecurringBooking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.Expired ||
+                              item.RecurringBooking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.RecordNeverCreated))))
             .OrderBy(item => item.FinalizedAt)
             .Take(maxCount)
             .ToListAsync(cancellationToken);

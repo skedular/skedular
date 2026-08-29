@@ -51,7 +51,13 @@ export function getFailureHeadline(failure: MarketplaceBookingFailureSummary): s
 }
 
 /** Returns customer-safe cleanup copy without exposing provider implementation details. */
-export function getFailureCleanupMessage(failure: Pick<MarketplaceBookingFailureSummary, 'resourceReleaseStatus' | 'accountingCleanupStatus'>): string {
+export function getFailureCleanupMessage(
+  failure: Pick<MarketplaceBookingFailureSummary, 'resourceReleaseStatus' | 'accountingCleanupStatus'> & { category: { type: string } },
+): string {
+  if (failure.category.type === 'AvailabilityConflict') {
+    return 'No reserved capacity was held for this booking.';
+  }
+
   if (failure.resourceReleaseStatus?.type !== 'RELEASED') {
     return 'We are releasing the reserved capacity. Check back shortly for the final status.';
   }

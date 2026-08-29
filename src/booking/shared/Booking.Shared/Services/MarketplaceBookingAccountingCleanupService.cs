@@ -26,24 +26,37 @@ public class MarketplaceBookingAccountingCleanupService(
                 if (failure.BookingId is not null)
                 {
                     var booking = await repositoryFactory.BookingRepository.GetByIdAsync(failure.BookingId, cancellationToken);
-                    if (booking is not null)
+                    if (booking is null)
                     {
-                        await accountingInvoiceCancellationService.CancelBookingAsync(booking, cancellationToken);
+                        throw new InvalidOperationException($"Booking {failure.BookingId} for marketplace failure {failure.Id} was not found.");
                     }
+
+                    await accountingInvoiceCancellationService.CancelBookingAsync(booking, cancellationToken);
                 }
                 else if (failure.RecurringBookingId is not null)
                 {
                     var recurringBooking =
                         await repositoryFactory.RecurringBookingRepository.GetByIdAsync(failure.RecurringBookingId, cancellationToken);
-                    if (recurringBooking is not null)
+                    if (recurringBooking is null)
                     {
-                        await accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, cancellationToken);
+                        throw new InvalidOperationException(
+                            $"Recurring booking {failure.RecurringBookingId} for marketplace failure {failure.Id} was not found.");
                     }
+
+                    await accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, cancellationToken);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Marketplace failure {failure.Id} has no accounting cleanup target.");
                 }
 
                 failure.AccountingCleanupStatus = MarketplaceBookingFailureAccountingCleanupStatusConstants.NotRequired;
                 repositoryFactory.MarketplaceBookingFailureRepository.Update(failure);
                 await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception exception)
             {

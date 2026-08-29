@@ -11,12 +11,12 @@ Make local resource release the authoritative, transactional boundary for market
 **Language/Version**: C# .NET 10; TypeScript 6 / React 19 / Next.js 16
 **Primary Dependencies**: Temporal workflows, EF Core/PostgreSQL repositories, Stripe and Xero integrations, HotChocolate/Fusion GraphQL, Relay 21, existing outbox/event infrastructure
 **Storage**: Booking-owned PostgreSQL persistence; extend marketplace failure/cleanup and accounting transition records as needed
-**Testing**: xUnit, AutoFixture/FakeItEasy `AutoFakeItEasyData` theories, repository-based integration tests, Vitest/React Testing Library
+**Testing**: xUnit, AutoFixture/FakeItEasy `AutoFakeItEasyData` theories, Vitest/React Testing Library; integration tests only where unit tests cannot prove essential merge safety
 **Target Platform**: Cloud-hosted Booking API, workers/jobs, and customer/operator web applications
 **Project Type**: Full-stack booking domain reliability feature
 **Performance Goals**: Local release uses at most five delayed/exponential-backoff Temporal retries; retry exhaustion immediately creates a reconciliation candidate, while recurring reconciliation processes remaining eligible terminal records within one configured run interval
 **Constraints**: No direct EF from workflows/activities/API/tests where prohibited; required parameters precede `CancellationToken`; generated contracts are regenerated, never hand-edited; American English copy
-**Scale/Scope**: Existing one-time and recurring marketplace bookings, subscription-linked payment ownership, historical orphaned allocations, and all listed payment/invoice failure paths
+**Scale/Scope**: Newly handled one-time and recurring marketplace bookings, subscription-linked payment ownership, and all listed payment/invoice failure paths
 
 ## Constitution Check
 

@@ -68,7 +68,10 @@ public class MarketplaceBookingFailureService(
             CustomerAction = finalization.CustomerAction,
             CorrelationId = finalization.CorrelationId,
             Reason = finalization.Reason,
-            ResourceReleaseStatus = MarketplaceBookingFailureResourceReleaseStatusConstants.Pending,
+            ResourceReleaseStatus = finalization.Category is MarketplaceBookingFailureCategoryConstants.PaymentFailed
+                or MarketplaceBookingFailureCategoryConstants.PaymentExpired
+                ? MarketplaceBookingFailureResourceReleaseStatusConstants.Pending
+                : MarketplaceBookingFailureResourceReleaseStatusConstants.Released,
             AccountingCleanupStatus = MarketplaceBookingFailureAccountingCleanupStatusConstants.NotRequired,
             ResolutionDeadlineAt = finalization.Scope is MarketplaceBookingFailureScopeConstants.InitialSeries
                 or MarketplaceBookingFailureScopeConstants.RecurringCycle

@@ -64,6 +64,7 @@ import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/
 import MarketplaceRefundStatusCard from '../marketplaceProductBooking/marketplace-refund-status-card';
 import { canRequestMarketplaceSubscriptionCancellation } from '../marketplaceProductBooking/marketplace-self-service-eligibility';
 import { getSubscriptionOccurrenceModificationLabel } from './subscription-occurrence-display';
+import { getFailureCleanupMessage } from '../marketplaceProductBooking/marketplace-booking-failure-eligibility';
 
 const toCustomerSubscriptionCancellationErrorMessage = (message: string) =>
   message.toLowerCase().includes('cancellation') && message.toLowerCase().includes('not allowed')
@@ -746,6 +747,14 @@ const MarketplaceProductSubscriptionDetails = ({
 
                 <Divider sx={{ my: 2.5 }} />
 
+                {subscription.failure ? (
+                  <Alert severity="warning" sx={{ mb: 2.5, borderRadius: 3 }}>
+                    <SubtitleIconTypography label={subscription.failure.category.name} />
+                    <BodyIconTypography label={subscription.failure.customerAction.name} sx={{ mt: 0.5 }} />
+                    <BodyIconTypography label={getFailureCleanupMessage(subscription.failure)} sx={{ mt: 0.5 }} />
+                  </Alert>
+                ) : null}
+
                 {subscription.refund ? (
                   <StackColumn spacing={2}>
                     <MarketplaceRefundStatusCard
@@ -883,10 +892,13 @@ const MarketplaceProductSubscriptionDetails = ({
                                 />
                               </StackRow>
                               {recurringBooking.failure ? (
-                                <BodyIconTypography
-                                  label={`${recurringBooking.failure.category.name}: ${recurringBooking.failure.customerAction.name}`}
-                                  sx={{ mt: 0.75, color: 'warning.main' }}
-                                />
+                                <StackColumn spacing={0.35} sx={{ mt: 0.75 }}>
+                                  <BodyIconTypography
+                                    label={`${recurringBooking.failure.category.name}: ${recurringBooking.failure.customerAction.name}`}
+                                    sx={{ color: 'warning.main' }}
+                                  />
+                                  <BodyIconTypography label={getFailureCleanupMessage(recurringBooking.failure)} sx={{ color: 'warning.main' }} />
+                                </StackColumn>
                               ) : null}
                               {recurringBooking.marketplaceBooking?.invoiceUrl ? (
                                 <Link

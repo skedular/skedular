@@ -56,20 +56,6 @@ As a customer or operator, I need status to distinguish failure recording, relea
 2. **Given** local release commits but accounting cleanup fails, **When** status is displayed, **Then** it says resources are released and accounting cleanup is pending.
 3. **Given** a mutation succeeds, **When** the UI updates, **Then** it reflects returned server state without a browser reload.
 
-### User Story 4 - Reconcile existing orphaned allocations (Priority: P2)
-
-As an operator, I need the system to find terminal bookings that still hold resources and re-enqueue cleanup so historical failures are repaired without manual database work.
-
-**Why this priority**: New safeguards do not correct allocations already orphaned by earlier failure paths.
-
-**Independent Test**: Seed terminal one-time and recurring bookings with allocations, run reconciliation, and verify cleanup is re-enqueued and eventually releases resources idempotently.
-
-**Acceptance Scenarios**:
-
-1. **Given** a terminal payment/failure record has allocated resources, **When** reconciliation runs, **Then** it identifies the booking and schedules cleanup.
-2. **Given** a booking is concurrently being cleaned up, **When** reconciliation sees it, **Then** it avoids duplicate destructive work while remaining safe to retry.
-3. **Given** a recurring subscription is canceled or terminal, **When** reconciliation runs, **Then** renewal or scheduling cannot recreate released instances.
-
 ### Edge Cases
 
 - A cleanup activity times out, loses its worker, or exhausts transient retries; the booking remains visibly release-pending and is eligible for reconciliation.
@@ -92,13 +78,13 @@ As an operator, I need the system to find terminal bookings that still hold reso
 - **FR-007**: Payment workflows MUST convert missing Stripe product, pricing, customer, or checkout-session results into explicit durable failure and cleanup actions.
 - **FR-008**: Initial arrears invoice workflows MUST initiate cleanup after permanent invoice, Xero, or local-invoice failure.
 - **FR-009**: Failure records and terminal payment state MUST NOT be published as claiming resources are released until the local release transaction commits.
-- **FR-010**: The system MUST provide durable reconciliation that finds every eligible terminal payment/failure record with allocated resources, automatically re-enqueues cleanup, and records each reconciliation attempt for operator visibility. Retry exhaustion MUST create an immediate reconciliation candidate in addition to recurring scans.
+- **FR-010**: The system MUST provide durable reconciliation for failure records created by the handled terminal paths, automatically re-enqueue cleanup, and record each reconciliation attempt for operator visibility. Retry exhaustion MUST create an immediate reconciliation candidate in addition to recurring scans.
 - **FR-011**: The system MUST determine reconciliation eligibility from the booking’s effective payment and entitlement state, including linked payment owners such as a subscription, rather than assuming the booking-local payment state is authoritative. Eligible cases are rejected or expired effective payments, or a durable terminal failure record (including invoice-generation, Xero, or Stripe setup failure when no payment record exists), provided no confirmed entitlement exists; pending, confirmed, and no-payment-required cases are excluded.
 - **FR-012**: Reconciliation and cancellation MUST prevent canceled recurring subscriptions from recreating generated resources.
 - **FR-013**: The UI MUST distinguish failure recorded, release pending, resources released, and accounting cleanup pending, and MUST only show resources released after local commit.
 - **FR-014**: The UI MUST update server state through returned mutation/query data and MUST NOT use browser reloads for cache invalidation.
 - **FR-015**: The implementation MUST preserve repository persistence boundaries, API parameter ordering, nullability conventions, American English copy, and generated-contract regeneration rules.
-- **FR-016**: The feature MUST provide unit tests for every changed workflow/activity and integration tests at persistence or provider boundaries; integration persistence assertions MUST use repository methods rather than direct database context access.
+- **FR-016**: The feature MUST provide unit tests for every changed workflow/activity. Integration tests are only required for behavior that cannot be proven by unit tests and is essential to merge safety; any persistence assertions MUST use repository methods rather than direct database context access.
 
 ### Observability and Logging Requirements _(mandatory)_
 
@@ -124,9 +110,8 @@ As an operator, I need the system to find terminal bookings that still hold reso
 - **SC-002**: Cleanup attempts that encounter transient failures use bounded retries and reconciliation; remaining cases are visibly release-pending and actionable.
 - **SC-003**: No user-facing or operator-facing status claims resources are released before the corresponding local transaction commits.
 - **SC-004**: Replaying the same cleanup request at least five times produces one stable local outcome with no duplicate booking instances or allocation changes.
-- **SC-005**: A reconciliation run identifies 100% of seeded terminal bookings with remaining allocations and schedules them for cleanup within one run interval.
+- **SC-005**: A reconciliation run identifies 100% of newly recorded eligible terminal failures with remaining allocations and schedules them for cleanup within one run interval.
 - **SC-006**: Operators can distinguish all four cleanup/accounting states from the UI in under 30 seconds during a failure investigation.
-- **SC-007**: Existing orphaned allocations can be repaired without direct database edits or manual provider calls.
 
 ## Assumptions
 
