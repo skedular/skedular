@@ -106,9 +106,9 @@ Subscription management is available to operators who have access to the organiz
 
 ## Marketplace purchase history
 
-Operators review marketplace purchases from the organization's **Marketplace purchases** area. This unified history includes both standalone marketplace Bookings and recurring Subscriptions, so a customer purchase can be followed from its commercial details through its related Booking activity in one place.
+Customers and authorized operators review marketplace purchases from the **Marketplace purchases** area. This unified list includes standalone marketplace Bookings, recurring Subscriptions, and credit entitlements. Subscription and credit-entitlement detail pages show backend-recorded lifecycle events, including creation, payment, renewal or credit consumption, cancellation, expiration, and refund-state changes.
 
-The history includes canceled and deleted purchases when they have historical activity. These entries remain available for lifecycle, payment, and refund review; deleting or canceling a purchase does not erase its historical record. Access is limited to authorized organization operators.
+The history includes canceled and deleted purchases when they have historical activity. These entries remain available for lifecycle, payment, and refund review; deleting or canceling a purchase does not erase its historical record. Customers can view their own purchases, while operators can view purchases permitted by their organization access. One-time Booking details remain unchanged and do not show the lifecycle-history tab.
 
 ## Managing Subscriptions in Skedular Spaces
 

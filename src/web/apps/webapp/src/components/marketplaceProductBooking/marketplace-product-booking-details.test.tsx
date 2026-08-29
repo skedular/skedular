@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { getFailureHeadline, hasRebookAction, isAvailabilityConflictFailure, type MarketplaceBookingFailureSummary } from './marketplace-booking-failure-eligibility';
 import { canRequestMarketplaceBookingCancellation, canRequestMarketplaceBookingModification, shouldEnterRefundLifecycle } from './marketplace-self-service-eligibility';
@@ -59,5 +61,15 @@ describe('MarketplaceProductBookingDetails failure presentation', () => {
 
     expect(isAvailabilityConflictFailure(availabilityFailure)).toBe(true);
     expect(isAvailabilityConflictFailure(paymentFailure)).toBe(false);
+  });
+});
+
+describe('MarketplaceProductBookingDetails history boundary', () => {
+  it('does not request or render marketplace purchase lifecycle history for one-time bookings', () => {
+    const source = readFileSync(resolve(process.cwd(), 'src/components/marketplaceProductBooking/marketplace-product-booking-details.tsx'), 'utf8');
+
+    expect(source).not.toContain('marketplacePurchaseHistory');
+    expect(source).not.toContain('MarketplacePurchaseHistoryEventList');
+    expect(source).toContain('RefundHistoryTimeline');
   });
 });

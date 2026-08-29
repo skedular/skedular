@@ -3,6 +3,7 @@ using Booking.Api.GraphQL.Booking;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
+using Booking.Shared.Models.Entitlements;
 using HotChocolate;
 using HotChocolate.Types;
 
@@ -34,7 +35,7 @@ public sealed class MarketplacePurchaseHistoryDetails
     public string? CancellationReason { get; set; }
     public string? RefundId { get; set; }
     public string? BookingId { get; set; }
-    public string? EntitlementStatus { get; set; }
+    public EntitlementStatus? EntitlementStatus { get; set; }
     public int CreditQuantity { get; set; }
     public int GrantedQuantity { get; set; }
     public int AvailableQuantity { get; set; }

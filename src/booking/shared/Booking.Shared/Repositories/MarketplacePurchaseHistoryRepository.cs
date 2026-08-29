@@ -4,6 +4,7 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Models.Entitlements;
 using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
@@ -14,6 +15,16 @@ namespace Booking.Shared.Repositories;
 
 public interface IMarketplacePurchaseHistoryRepository
 {
+    Task<MarketplacePurchaseHistoryEventModel> AppendEventAsync(
+        MarketplacePurchaseHistoryEventModel eventModel,
+        string idempotencyKey,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<MarketplacePurchaseHistoryEventModel>> GetEventsAsync(
+        string sourceType,
+        string sourceId,
+        CancellationToken cancellationToken);
+
     /// <summary>Creates or refreshes the one history row for a standalone marketplace booking.</summary>
     Task UpsertMarketplaceBookingAsync(Database.Entities.Booking booking, MarketplaceRefund? latestRefund,
         CancellationToken cancellationToken);
@@ -38,9 +49,131 @@ public interface IMarketplacePurchaseHistoryRepository
 }
 
 /// <summary>Pages the durable marketplace-purchase read projection without loading booking aggregates.</summary>
-public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, TimeProvider? timeProvider = null)
+public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, TimeProvider? timeProvider, IRandomHelper randomHelper)
     : IMarketplacePurchaseHistoryRepository
 {
+    public async Task<MarketplacePurchaseHistoryEventModel> AppendEventAsync(
+        MarketplacePurchaseHistoryEventModel eventModel,
+        string idempotencyKey,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(eventModel);
+        ArgumentException.ThrowIfNullOrWhiteSpace(idempotencyKey);
+        var sourceType = eventModel.SourceType switch
+        {
+            MarketplacePurchaseHistoryEligibleSourceType.Subscription => MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription,
+            MarketplacePurchaseHistoryEligibleSourceType.Entitlement => MarketplacePurchaseHistorySourceTypeConstants.EntitlementPurchase,
+            _ => throw new ArgumentOutOfRangeException(nameof(eventModel.SourceType)),
+        };
+
+        var existing = await dbContext.MarketplacePurchaseHistory.AsNoTracking()
+            .SingleOrDefaultAsync(item => item.SourceType == sourceType
+                                          && item.SourceId == eventModel.SourceId
+                                          && item.IdempotencyKey == idempotencyKey,
+                cancellationToken);
+        if (existing is not null)
+        {
+            return ToEventModel(existing);
+        }
+
+        var entity = new MarketplacePurchaseHistory
+        {
+            Id = randomHelper.Generate(),
+            EventId = eventModel.Id,
+            SourceType = sourceType,
+            SourceId = eventModel.SourceId,
+            EventType = eventModel.Type switch
+            {
+                MarketplacePurchaseHistoryEventType.PurchaseCreated => MarketplacePurchaseHistoryEventTypeConstants.PurchaseCreated,
+                MarketplacePurchaseHistoryEventType.SubscriptionStarted => MarketplacePurchaseHistoryEventTypeConstants.SubscriptionStarted,
+                MarketplacePurchaseHistoryEventType.SubscriptionRenewed => MarketplacePurchaseHistoryEventTypeConstants.SubscriptionRenewed,
+                MarketplacePurchaseHistoryEventType.CancellationScheduled => MarketplacePurchaseHistoryEventTypeConstants.CancellationScheduled,
+                MarketplacePurchaseHistoryEventType.CancellationCompleted => MarketplacePurchaseHistoryEventTypeConstants.CancellationCompleted,
+                MarketplacePurchaseHistoryEventType.EntitlementCreated => MarketplacePurchaseHistoryEventTypeConstants.EntitlementCreated,
+                MarketplacePurchaseHistoryEventType.EntitlementExpired => MarketplacePurchaseHistoryEventTypeConstants.EntitlementExpired,
+                MarketplacePurchaseHistoryEventType.CreditsConsumed => MarketplacePurchaseHistoryEventTypeConstants.CreditsConsumed,
+                MarketplacePurchaseHistoryEventType.PaymentStateChanged => MarketplacePurchaseHistoryEventTypeConstants.PaymentStateChanged,
+                MarketplacePurchaseHistoryEventType.RefundStateChanged => MarketplacePurchaseHistoryEventTypeConstants.RefundStateChanged,
+                _ => throw new ArgumentOutOfRangeException(nameof(eventModel.Type)),
+            },
+            IdempotencyKey = idempotencyKey,
+            OccurredAt = eventModel.OccurredAt,
+            RecordedAt = eventModel.RecordedAt,
+            PreviousPaymentStatus = eventModel.PreviousPaymentStatus?.ToPaymentStatus(),
+            PaymentStatus = eventModel.PaymentStatus?.ToPaymentStatus(),
+            PreviousRefundStatus = eventModel.PreviousRefundStatus?.ToMarketplaceRefundStatusName(),
+            RefundStatus = eventModel.RefundStatus?.ToMarketplaceRefundStatusName(),
+            LatestRefundId = eventModel.RefundId,
+            EventCreditQuantity = eventModel.CreditQuantity,
+            EventRemainingCreditQuantity = eventModel.RemainingCreditQuantity,
+            EventAmount = eventModel.Amount,
+            EventCurrency = eventModel.Currency.ToNullableCurrency(),
+            CancellationRequestedAt = eventModel.CancellationRequestedAt,
+            CancellationEffectiveAt = eventModel.CancellationEffectiveAt,
+            RenewalAt = eventModel.RenewalAt,
+            EventReason = eventModel.Reason,
+            EventSubscriptionStatus = eventModel.SubscriptionStatus?.ToMarketplaceBookingSubscriptionStatus(),
+            EventEntitlementStatus = eventModel.EntitlementStatus?.ToPersistedValue(),
+            EventAutoRenew = eventModel.AutoRenew,
+            EventCancelAtPeriodEnd = eventModel.CancelAtPeriodEnd,
+            EventIsDeleted = eventModel.IsDeleted,
+            CorrelationId = eventModel.CorrelationId,
+            CreatedAt = (timeProvider ?? TimeProvider.System).GetUtcNow(),
+        };
+        // A lifecycle projection may append its first event in the same unit of work
+        // that creates the snapshot. Prefer the tracked snapshot so the append does
+        // not depend on an earlier SaveChanges call.
+        var sourceSnapshot = dbContext.MarketplacePurchaseHistory.Local
+                                 .FirstOrDefault(item =>
+                                     item.SourceType == sourceType && item.SourceId == eventModel.SourceId && item.EventType == null)
+                             ?? await FindBySourceAsync(sourceType, eventModel.SourceId, cancellationToken);
+        if (sourceSnapshot is not null)
+        {
+            entity.OrganizationId = sourceSnapshot.OrganizationId;
+        }
+        else
+        {
+            throw new InvalidOperationException(
+                $"Cannot append marketplace purchase history event because source {eventModel.SourceId} has no purchase snapshot.");
+        }
+
+        await dbContext.MarketplacePurchaseHistory.AddAsync(entity, cancellationToken);
+        await RebuildSnapshotFromEventsAsync(sourceSnapshot, eventModel, cancellationToken);
+        try
+        {
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException)
+        {
+            var replay = await dbContext.MarketplacePurchaseHistory.AsNoTracking()
+                .SingleOrDefaultAsync(item => item.SourceType == entity.SourceType && item.SourceId == entity.SourceId
+                                                                                   && item.IdempotencyKey == idempotencyKey, cancellationToken);
+            if (replay is not null)
+            {
+                return ToEventModel(replay);
+            }
+
+            throw;
+        }
+
+        return eventModel;
+    }
+
+    public async Task<IReadOnlyList<MarketplacePurchaseHistoryEventModel>> GetEventsAsync(
+        string sourceType,
+        string sourceId,
+        CancellationToken cancellationToken)
+    {
+        _ = sourceType.ToEligibleSourceType();
+        var rows = await dbContext.MarketplacePurchaseHistory.AsNoTracking()
+            .Where(item => item.SourceType == sourceType && item.SourceId == sourceId && item.EventType != null)
+            .OrderByDescending(item => item.OccurredAt)
+            .ThenByDescending(item => item.RecordedAt)
+            .ThenByDescending(item => item.Id)
+            .ToListAsync(cancellationToken);
+        return rows.Select(ToEventModel).ToList();
+    }
+
     public async Task UpsertMarketplaceBookingAsync(Database.Entities.Booking booking, MarketplaceRefund? latestRefund,
         CancellationToken cancellationToken)
     {
@@ -93,6 +226,11 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
                                  ?? subscription.MarketplaceBooking;
         var row = await FindBySourceAsync(MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription, subscription.Id,
             cancellationToken);
+        var created = row is null;
+        var previousSubscriptionStatus = row?.SubscriptionStatus;
+        var previousPaymentStatus = row?.PaymentStatus;
+        var previousRenewalAt = row?.RenewalAt;
+        var previousCancelAtPeriodEnd = row?.CancelAtPeriodEnd;
         if (row is null)
         {
             row = (await dbContext.MarketplacePurchaseHistory.AddAsync(
@@ -117,6 +255,7 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         row.MarketplaceBookingId = null;
         row.MarketplaceBookingSubscriptionId = subscription.Id;
         row.SubscriptionStatus = subscription.Status;
+        row.RenewalAt = subscription.NextRenewalAt;
         row.AutoRenew = subscription.AutoRenew;
         row.CancelAtPeriodEnd = subscription.CancelAtPeriodEnd;
         row.EntitlementPurchaseId = null;
@@ -124,6 +263,71 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         row.CreditQuantity = 0;
         row.GrantedQuantity = 0;
         row.AvailableQuantity = 0;
+        if (created)
+        {
+            var occurredAt = subscription.CreatedAt;
+            await AppendEventAsync(new MarketplacePurchaseHistoryEventModel(
+                    $"marketplace-purchase-history-event:subscription:{subscription.Id}:created",
+                    subscription.Id,
+                    MarketplacePurchaseHistoryEligibleSourceType.Subscription,
+                    MarketplacePurchaseHistoryEventType.PurchaseCreated,
+                    occurredAt,
+                    (timeProvider ?? TimeProvider.System).GetUtcNow(),
+                    null, null, null, null, null, null, null, null, null, null, null, null, null,
+                    subscription.Status.ToMarketplaceBookingSubscriptionStatus(), null, subscription.AutoRenew,
+                    subscription.CancelAtPeriodEnd, subscription.DeletedAt.HasValue),
+                $"subscription:{subscription.Id}:purchase-created", cancellationToken);
+            if (subscription.Status == MarketplaceBookingSubscriptionStatusConstants.Active)
+            {
+                await AppendAsync(subscription.Id, MarketplacePurchaseHistoryEventType.SubscriptionStarted,
+                    subscription.StartedAt, row.PaymentStatus, null, null, null, null,
+                    $"subscription:{subscription.Id}:started:{subscription.StartedAt:O}", cancellationToken);
+            }
+        }
+        else
+        {
+            if (previousPaymentStatus != row.PaymentStatus)
+            {
+                await AppendAsync(subscription.Id, MarketplacePurchaseHistoryEventType.PaymentStateChanged,
+                    row.ActivityAt, row.PaymentStatus, null, null, null,
+                    null,
+                    $"subscription:{subscription.Id}:payment:{row.ActivityAt:O}", cancellationToken);
+            }
+
+            if (previousSubscriptionStatus != row.SubscriptionStatus &&
+                row.SubscriptionStatus == MarketplaceBookingSubscriptionStatusConstants.Active)
+            {
+                await AppendAsync(subscription.Id, MarketplacePurchaseHistoryEventType.SubscriptionStarted,
+                    row.ActivityAt, row.PaymentStatus, null, null,
+                    null, null, $"subscription:{subscription.Id}:started:{row.ActivityAt:O}", cancellationToken);
+            }
+
+            if (previousSubscriptionStatus != row.SubscriptionStatus &&
+                row.SubscriptionStatus == MarketplaceBookingSubscriptionStatusConstants.Cancelled)
+            {
+                var scheduled = (await GetEventsAsync(
+                        MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription, subscription.Id, cancellationToken))
+                    .FirstOrDefault(item => item.Type == MarketplacePurchaseHistoryEventType.CancellationScheduled);
+                await AppendAsync(subscription.Id, MarketplacePurchaseHistoryEventType.CancellationCompleted,
+                    row.ActivityAt, null, scheduled?.CancellationRequestedAt,
+                    scheduled?.CancellationEffectiveAt ?? row.ActivityAt, null, row.CancellationReason,
+                    $"subscription:{subscription.Id}:cancelled:{row.ActivityAt:O}", cancellationToken);
+            }
+
+            if (previousRenewalAt != row.RenewalAt && row.RenewalAt.HasValue)
+            {
+                await AppendAsync(subscription.Id, MarketplacePurchaseHistoryEventType.SubscriptionRenewed,
+                    row.RenewalAt.Value, row.PaymentStatus, null, null, row.RenewalAt,
+                    null, $"subscription:{subscription.Id}:renewed:{row.RenewalAt:O}", cancellationToken);
+            }
+
+            if (previousCancelAtPeriodEnd != row.CancelAtPeriodEnd && row.CancelAtPeriodEnd)
+            {
+                await AppendAsync(subscription.Id, MarketplacePurchaseHistoryEventType.CancellationScheduled,
+                    row.ActivityAt, null, row.ActivityAt, row.RenewalAt, row.RenewalAt, row.CancellationReason,
+                    $"subscription:{subscription.Id}:cancellation-scheduled", cancellationToken);
+            }
+        }
     }
 
     public async Task RefreshForEntitlementPurchaseAsync(string purchaseId, CancellationToken cancellationToken)
@@ -153,6 +357,10 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         }
 
         var row = await FindBySourceAsync(MarketplacePurchaseHistorySourceTypeConstants.EntitlementPurchase, purchase.Id, cancellationToken);
+        var created = row is null;
+        var previousPaymentStatus = row?.PaymentStatus;
+        var previousEntitlementStatus = row?.EntitlementStatus;
+        var previousAvailableQuantity = row?.AvailableQuantity;
         if (row is null)
         {
             row = (await dbContext.MarketplacePurchaseHistory.AddAsync(new MarketplacePurchaseHistory
@@ -179,7 +387,7 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         row.PaymentStatus = purchase.PaymentStatus;
         row.TotalAmount = purchase.Amount;
         row.Currency = purchase.Currency;
-        row.EntitlementStatus = entitlement?.Status.ToString();
+        row.EntitlementStatus = entitlement?.Status.ToPersistedValue();
         row.CreditQuantity = purchase.ProductPricing.EntitlementCreditQuantity ?? 0;
         row.GrantedQuantity = entitlement?.GrantedQuantity ?? 0;
         row.AvailableQuantity = entitlement is null
@@ -193,6 +401,101 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         row.IsDeleted = false;
         row.MarketplaceBookingId = null;
         row.MarketplaceBookingSubscriptionId = null;
+        if (created)
+        {
+            await AppendEventAsync(new MarketplacePurchaseHistoryEventModel(
+                    $"marketplace-purchase-history-event:entitlement:{purchase.Id}:created",
+                    purchase.Id,
+                    MarketplacePurchaseHistoryEligibleSourceType.Entitlement,
+                    MarketplacePurchaseHistoryEventType.PurchaseCreated,
+                    purchase.CreatedAt,
+                    (timeProvider ?? TimeProvider.System).GetUtcNow(),
+                    null, purchase.PaymentStatus.ToPaymentStatus(), null, null, null,
+                    purchase.ProductPricing.EntitlementCreditQuantity, entitlement?.GrantedQuantity,
+                    purchase.Amount, purchase.Currency switch
+                    {
+                        CurrencyConstants.Nzd => Currency.Nzd,
+                        CurrencyConstants.Usd => Currency.Usd,
+                        _ => null,
+                    }, null, null, null, "Entitlement purchase created", null,
+                    entitlement?.Status is null ? null : ToNullableEntitlementStatus(entitlement.Status)),
+                $"entitlement:{purchase.Id}:purchase-created", cancellationToken);
+
+            if (entitlement is not null)
+            {
+                await AppendEventAsync(new MarketplacePurchaseHistoryEventModel(
+                        $"marketplace-purchase-history-event:entitlement:{purchase.Id}:entitlement-created",
+                        purchase.Id, MarketplacePurchaseHistoryEligibleSourceType.Entitlement,
+                        MarketplacePurchaseHistoryEventType.EntitlementCreated,
+                        entitlement.CreatedAt, (timeProvider ?? TimeProvider.System).GetUtcNow(),
+                        null, purchase.PaymentStatus.ToPaymentStatus(), null, null, null,
+                        purchase.ProductPricing.EntitlementCreditQuantity, entitlement.GrantedQuantity,
+                        purchase.Amount, null, null, null, null, "Entitlement created", null,
+                        ToNullableEntitlementStatus(entitlement.Status)),
+                    $"entitlement:{purchase.Id}:entitlement-created", cancellationToken);
+            }
+        }
+        else if (previousPaymentStatus != row.PaymentStatus)
+        {
+            await AppendEventAsync(new MarketplacePurchaseHistoryEventModel(
+                    $"marketplace-purchase-history-event:entitlement:{purchase.Id}:payment:{row.ActivityAt:O}",
+                    purchase.Id, MarketplacePurchaseHistoryEligibleSourceType.Entitlement,
+                    MarketplacePurchaseHistoryEventType.PaymentStateChanged,
+                    row.ActivityAt, (timeProvider ?? TimeProvider.System).GetUtcNow(),
+                    ToNullablePaymentStatus(previousPaymentStatus), ToNullablePaymentStatus(row.PaymentStatus), null, null, null, null, null,
+                    row.TotalAmount, row.Currency switch
+                    {
+                        CurrencyConstants.Nzd => Currency.Nzd,
+                        CurrencyConstants.Usd => Currency.Usd,
+                        _ => null,
+                    }, null, null, null, "Entitlement payment state changed"),
+                $"entitlement:{purchase.Id}:payment:{row.ActivityAt:O}", cancellationToken);
+        }
+
+        if (!created && previousEntitlementStatus is null && row.EntitlementStatus is not null)
+        {
+            await AppendEventAsync(new MarketplacePurchaseHistoryEventModel(
+                    $"marketplace-purchase-history-event:entitlement:{purchase.Id}:entitlement-created:{row.ActivityAt:O}",
+                    purchase.Id, MarketplacePurchaseHistoryEligibleSourceType.Entitlement,
+                    MarketplacePurchaseHistoryEventType.EntitlementCreated,
+                    entitlement?.CreatedAt ?? row.ActivityAt, (timeProvider ?? TimeProvider.System).GetUtcNow(),
+                    null, ToNullablePaymentStatus(row.PaymentStatus), null, null, null,
+                    row.CreditQuantity, row.GrantedQuantity, row.TotalAmount, row.Currency switch
+                    {
+                        CurrencyConstants.Nzd => Currency.Nzd,
+                        CurrencyConstants.Usd => Currency.Usd,
+                        _ => null,
+                    }, null, null, null, "Entitlement created", null,
+                    entitlement?.Status is null ? null : ToNullableEntitlementStatus(entitlement.Status)),
+                $"entitlement:{purchase.Id}:entitlement-created:{row.ActivityAt:O}", cancellationToken);
+        }
+
+        if (!created && previousEntitlementStatus != row.EntitlementStatus &&
+            row.EntitlementStatus is not null &&
+            EntitlementLifecycleStateExtensions.EntitlementStatusFromPersistedValue(row.EntitlementStatus) == EntitlementStatus.Expired)
+        {
+            await AppendEventAsync(new MarketplacePurchaseHistoryEventModel(
+                    $"marketplace-purchase-history-event:entitlement:{purchase.Id}:expired:{row.ActivityAt:O}",
+                    purchase.Id, MarketplacePurchaseHistoryEligibleSourceType.Entitlement,
+                    MarketplacePurchaseHistoryEventType.EntitlementExpired,
+                    row.ActivityAt, (timeProvider ?? TimeProvider.System).GetUtcNow(),
+                    null, ToNullablePaymentStatus(row.PaymentStatus), null, null, null, row.CreditQuantity,
+                    row.AvailableQuantity, row.TotalAmount, null, null, null, null, "Entitlement expired", null,
+                    EntitlementStatus.Expired),
+                $"entitlement:{purchase.Id}:expired:{row.ActivityAt:O}", cancellationToken);
+        }
+
+        if (!created && previousAvailableQuantity.HasValue && row.AvailableQuantity < previousAvailableQuantity.Value)
+        {
+            await AppendEventAsync(new MarketplacePurchaseHistoryEventModel(
+                    $"marketplace-purchase-history-event:entitlement:{purchase.Id}:consumed:{row.ActivityAt:O}",
+                    purchase.Id, MarketplacePurchaseHistoryEligibleSourceType.Entitlement,
+                    MarketplacePurchaseHistoryEventType.CreditsConsumed,
+                    row.ActivityAt, (timeProvider ?? TimeProvider.System).GetUtcNow(),
+                    null, ToNullablePaymentStatus(row.PaymentStatus), null, null, null, previousAvailableQuantity - row.AvailableQuantity,
+                    row.AvailableQuantity, null, null, null, null, null, "Credits consumed"),
+                $"entitlement:{purchase.Id}:consumed:{row.ActivityAt:O}", cancellationToken);
+        }
     }
 
     public async Task RefreshForRefundAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
@@ -200,11 +503,16 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         // Refund transitions can be retried or delivered out of order. Always project
         // the durable latest refund for the source rather than whichever event invoked
         // this refresh, otherwise an older transition could regress the read model.
-        var latestRefund = await dbContext.MarketplaceRefund.AsNoTracking()
-            .Where(item => item.LocalEntityType == refund.LocalEntityType && item.LocalEntityId == refund.LocalEntityId)
-            .OrderByDescending(item => item.RequestedAt)
-            .ThenByDescending(item => item.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        var latestRefund = dbContext.MarketplaceRefund.Local
+                               .Where(item => item.LocalEntityType == refund.LocalEntityType && item.LocalEntityId == refund.LocalEntityId)
+                               .OrderByDescending(item => item.RequestedAt)
+                               .ThenByDescending(item => item.Id)
+                               .FirstOrDefault()
+                           ?? await dbContext.MarketplaceRefund.AsNoTracking()
+                               .Where(item => item.LocalEntityType == refund.LocalEntityType && item.LocalEntityId == refund.LocalEntityId)
+                               .OrderByDescending(item => item.RequestedAt)
+                               .ThenByDescending(item => item.Id)
+                               .FirstOrDefaultAsync(cancellationToken);
         switch (refund.LocalEntityType)
         {
             case MarketplaceRefundEntityTypeConstants.MarketplaceBooking:
@@ -252,6 +560,36 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
 
                     break;
                 }
+        }
+
+        if (latestRefund is not null && refund.LocalEntityType is
+                MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription or
+                MarketplaceRefundEntityTypeConstants.EntitlementPurchase)
+        {
+            var sourceType = refund.LocalEntityType == MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription
+                ? MarketplacePurchaseHistoryEligibleSourceType.Subscription
+                : MarketplacePurchaseHistoryEligibleSourceType.Entitlement;
+            var history = await FindBySourceAsync(
+                sourceType == MarketplacePurchaseHistoryEligibleSourceType.Subscription
+                    ? MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription
+                    : MarketplacePurchaseHistorySourceTypeConstants.EntitlementPurchase,
+                refund.LocalEntityId, cancellationToken);
+            if (history is not null)
+            {
+                var occurredAt = latestRefund.LastProcessedAt ?? latestRefund.RequestedAt;
+                await AppendEventAsync(new MarketplacePurchaseHistoryEventModel(
+                        $"marketplace-purchase-history-event:{refund.LocalEntityType}:{refund.LocalEntityId}:refund:{latestRefund.Id}:{latestRefund.Status}",
+                        refund.LocalEntityId, sourceType, MarketplacePurchaseHistoryEventType.RefundStateChanged,
+                        occurredAt, (timeProvider ?? TimeProvider.System).GetUtcNow(),
+                        null, null, null, latestRefund.Status.ToMarketplaceRefundStatus(), latestRefund.Id, null, null,
+                        latestRefund.RefundAmount, latestRefund.Currency switch
+                        {
+                            CurrencyConstants.Nzd => Currency.Nzd,
+                            CurrencyConstants.Usd => Currency.Usd,
+                            _ => null,
+                        }, null, null, null, latestRefund.Reason),
+                    $"{refund.LocalEntityType}:{refund.LocalEntityId}:refund:{latestRefund.Id}:{latestRefund.Status}", cancellationToken);
+            }
         }
     }
 
@@ -302,7 +640,12 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         IReadOnlyList<MarketplacePurchaseHistoryOrder>? orderBy,
         CancellationToken cancellationToken)
     {
-        var query = dbContext.MarketplacePurchaseHistory.AsNoTracking().AsQueryable();
+        // Event rows are read through the detail-history query. The purchases list retains
+        // exactly one current snapshot row per source and must not expose lifecycle events as
+        // duplicate purchases.
+        var query = dbContext.MarketplacePurchaseHistory.AsNoTracking()
+            .Where(item => item.EventType == null)
+            .AsQueryable();
         if (searchCriteria.OrganizationCustomDomain is not null)
         {
             query = query.Where(item => dbContext.Organization.Any(organization =>
@@ -410,6 +753,16 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
 
         var page = await query.ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderBy), item => item.SourceId, cancellationToken);
         var sourceIds = page.Item2.Select(edge => edge.Node.SourceId).ToList();
+        var derivedStates = sourceIds.Count == 0
+            ? new Dictionary<(string SourceType, string SourceId), MarketplacePurchaseHistoryCurrentState>()
+            : (await dbContext.MarketplacePurchaseHistory.AsNoTracking()
+                .Where(item => sourceIds.Contains(item.SourceId) && item.EventType != null)
+                .OrderBy(item => item.OccurredAt)
+                .ThenBy(item => item.RecordedAt)
+                .ThenBy(item => item.Id)
+                .ToListAsync(cancellationToken))
+            .GroupBy(item => (item.SourceType, item.SourceId))
+            .ToDictionary(group => group.Key, group => MarketplacePurchaseHistoryReducer.Reduce(group.Select(ToEventModel)));
         var latestRefunds = sourceIds.Count == 0
             ? new Dictionary<(string EntityType, string EntityId), (string Id, string Status)>()
             : await dbContext.MarketplaceRefund.AsNoTracking()
@@ -430,9 +783,126 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
                     }).First(),
                 })
                 .ToDictionaryAsync(item => (item.EntityType, item.EntityId), item => (item.Refund.Id, item.Refund.Status), cancellationToken);
-        return (page.Item1, [.. page.Item2.Select(edge => new Edge<MarketplacePurchaseHistoryRow>(ToRow(edge.Node, latestRefunds), edge.Cursor))],
+        return (page.Item1, [
+                .. page.Item2.Select(edge => new Edge<MarketplacePurchaseHistoryRow>(
+                    ToRow(edge.Node, latestRefunds, derivedStates.GetValueOrDefault((edge.Node.SourceType, edge.Node.SourceId))), edge.Cursor)),
+            ],
             page.Item3);
     }
+
+    private async Task RebuildSnapshotFromEventsAsync(
+        MarketplacePurchaseHistory snapshot,
+        MarketplacePurchaseHistoryEventModel appendedEvent,
+        CancellationToken cancellationToken)
+    {
+        var sourceType = appendedEvent.SourceType switch
+        {
+            MarketplacePurchaseHistoryEligibleSourceType.Subscription => MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription,
+            MarketplacePurchaseHistoryEligibleSourceType.Entitlement => MarketplacePurchaseHistorySourceTypeConstants.EntitlementPurchase,
+            _ => throw new ArgumentOutOfRangeException(nameof(appendedEvent.SourceType)),
+        };
+        var persistedEvents = await dbContext.MarketplacePurchaseHistory.AsNoTracking()
+            .Where(item => item.SourceType == sourceType && item.SourceId == appendedEvent.SourceId && item.EventType != null)
+            .ToListAsync(cancellationToken);
+        var state = MarketplacePurchaseHistoryReducer.Reduce(
+            persistedEvents.Select(ToEventModel).Append(appendedEvent));
+
+        snapshot.PurchasedAt = state.PurchasedAt ?? snapshot.PurchasedAt;
+        snapshot.ActivityAt = state.ActivityAt ?? snapshot.ActivityAt;
+        if (state.PaymentStatus.HasValue)
+        {
+            snapshot.PaymentStatus = state.PaymentStatus.Value.ToPaymentStatus();
+        }
+
+        if (state.RefundStatus.HasValue)
+        {
+            snapshot.LatestRefundId = state.RefundId;
+            snapshot.LatestRefundStatus = state.RefundStatus.Value.ToMarketplaceRefundStatusName();
+        }
+
+        if (state.CreditQuantity.HasValue)
+        {
+            snapshot.CreditQuantity = state.CreditQuantity.Value;
+        }
+
+        if (state.RemainingCreditQuantity.HasValue)
+        {
+            snapshot.AvailableQuantity = state.RemainingCreditQuantity.Value;
+        }
+
+        if (state.SubscriptionStatus.HasValue)
+        {
+            snapshot.SubscriptionStatus = state.SubscriptionStatus.Value.ToMarketplaceBookingSubscriptionStatus();
+        }
+
+        if (state.EntitlementStatus.HasValue)
+        {
+            snapshot.EntitlementStatus = state.EntitlementStatus.Value.ToPersistedValue();
+        }
+
+        if (state.AutoRenew.HasValue)
+        {
+            snapshot.AutoRenew = state.AutoRenew.Value;
+        }
+
+        if (state.CancelAtPeriodEnd.HasValue)
+        {
+            snapshot.CancelAtPeriodEnd = state.CancelAtPeriodEnd.Value;
+        }
+
+        if (state.IsDeleted.HasValue)
+        {
+            snapshot.IsDeleted = state.IsDeleted.Value;
+        }
+    }
+
+    private Task<MarketplacePurchaseHistoryEventModel> AppendAsync(
+        string sourceId,
+        MarketplacePurchaseHistoryEventType type,
+        DateTimeOffset occurredAt,
+        string? paymentStatus,
+        DateTimeOffset? cancellationRequestedAt,
+        DateTimeOffset? cancellationEffectiveAt,
+        DateTimeOffset? renewalAt,
+        string? reason,
+        string idempotencyKey,
+        CancellationToken cancellationToken) =>
+        AppendEventAsync(new MarketplacePurchaseHistoryEventModel(
+            $"marketplace-purchase-history-event:subscription:{sourceId}:{type}:{occurredAt:O}",
+            sourceId,
+            MarketplacePurchaseHistoryEligibleSourceType.Subscription,
+            type,
+            occurredAt,
+            (timeProvider ?? TimeProvider.System).GetUtcNow(),
+            null,
+            ToNullablePaymentStatus(paymentStatus),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            cancellationRequestedAt,
+            cancellationEffectiveAt,
+            renewalAt,
+            reason,
+            type switch
+            {
+                MarketplacePurchaseHistoryEventType.SubscriptionStarted => MarketplaceBookingSubscriptionStatus.Active,
+                MarketplacePurchaseHistoryEventType.CancellationCompleted => MarketplaceBookingSubscriptionStatus.Cancelled,
+                _ => null,
+            }, null, type == MarketplacePurchaseHistoryEventType.CancellationScheduled ? false : null,
+            type == MarketplacePurchaseHistoryEventType.CancellationScheduled ? true : null), idempotencyKey, cancellationToken);
+
+    private static MarketplacePurchaseHistoryEventModel ToEventModel(MarketplacePurchaseHistory item) =>
+        new(item.EventId!, item.SourceId, item.SourceType.ToEligibleSourceType(), item.EventType!.ToEventType(), item.OccurredAt!.Value,
+            item.RecordedAt!.Value, ToNullablePaymentStatus(item.PreviousPaymentStatus), ToNullablePaymentStatus(item.PaymentStatus),
+            ToNullableRefundStatus(item.PreviousRefundStatus), ToNullableRefundStatus(item.RefundStatus),
+            item.LatestRefundId, item.EventCreditQuantity, item.EventRemainingCreditQuantity, item.EventAmount,
+            item.EventCurrency.ToNullableCurrency(), item.CancellationRequestedAt, item.CancellationEffectiveAt, item.RenewalAt, item.EventReason,
+            item.EventSubscriptionStatus?.ToMarketplaceBookingSubscriptionStatus(), ToNullableEntitlementStatus(item.EventEntitlementStatus),
+            item.EventAutoRenew, item.EventCancelAtPeriodEnd, item.EventIsDeleted, item.CorrelationId);
 
     private static string ToSourceType(MarketplacePurchaseSourceType sourceType) => sourceType switch
     {
@@ -442,9 +912,29 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         _ => throw new ArgumentOutOfRangeException(nameof(sourceType), sourceType, "Unknown marketplace purchase source type."),
     };
 
+    private static PaymentStatus? ToNullablePaymentStatus(string? value) =>
+        value is null ? null : value.ToPaymentStatus();
+
+    private static EntitlementStatus? ToNullableEntitlementStatus(string? value) => value switch
+    {
+        null => null,
+        "PENDING" or nameof(EntitlementStatus.Pending) => EntitlementStatus.Pending,
+        "ACTIVE" or nameof(EntitlementStatus.Active) => EntitlementStatus.Active,
+        "EXPIRED" or nameof(EntitlementStatus.Expired) => EntitlementStatus.Expired,
+        "CANCELLED" or nameof(EntitlementStatus.Cancelled) => EntitlementStatus.Cancelled,
+        _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown entitlement status."),
+    };
+
+    private static EntitlementStatus? ToNullableEntitlementStatus(EntitlementStatus value) => value;
+
+    private static MarketplaceRefundStatus? ToNullableRefundStatus(string? value) =>
+        value is null ? null : value.ToMarketplaceRefundStatus();
+
     private async Task<MarketplacePurchaseHistory?> FindBySourceAsync(string sourceType, string sourceId, CancellationToken cancellationToken) =>
-        dbContext.MarketplacePurchaseHistory.Local.FirstOrDefault(item => item.SourceType == sourceType && item.SourceId == sourceId)
-        ?? await dbContext.MarketplacePurchaseHistory.SingleOrDefaultAsync(item => item.SourceType == sourceType && item.SourceId == sourceId,
+        dbContext.MarketplacePurchaseHistory.Local.FirstOrDefault(item =>
+            item.SourceType == sourceType && item.SourceId == sourceId && item.EventType == null)
+        ?? await dbContext.MarketplacePurchaseHistory.SingleOrDefaultAsync(
+            item => item.SourceType == sourceType && item.SourceId == sourceId && item.EventType == null,
             cancellationToken);
 
     private async Task<MarketplaceBookingEntity?> GetCurrentCycleMarketplaceBookingAsync(
@@ -503,11 +993,13 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
 
     private static MarketplacePurchaseHistoryRow ToRow(
         MarketplacePurchaseHistory item,
-        IReadOnlyDictionary<(string EntityType, string EntityId), (string Id, string Status)>? latestRefunds = null)
+        IReadOnlyDictionary<(string EntityType, string EntityId), (string Id, string Status)>? latestRefunds = null,
+        MarketplacePurchaseHistoryCurrentState? derivedState = null)
     {
         var refund = item.LatestRefundId is not null
             ? (item.LatestRefundId, item.LatestRefundStatus ?? string.Empty)
             : latestRefunds?.GetValueOrDefault((item.SourceType, item.SourceId));
+        var paymentStatus = derivedState?.PaymentStatus ?? item.PaymentStatus?.ToPaymentStatus() ?? PaymentStatus.NotSet;
         return new MarketplacePurchaseHistoryRow(
             item.SourceId,
             item.SourceType == MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription
@@ -515,10 +1007,16 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
                 : item.SourceType == MarketplacePurchaseHistorySourceTypeConstants.EntitlementPurchase
                     ? MarketplacePurchaseSourceType.Entitlement
                     : MarketplacePurchaseSourceType.Booking,
-            item.PurchasedAt, item.ActivityAt, item.BookingFrom, item.BookingUntil, item.PaymentStatus ?? string.Empty,
-            item.ProductVersionId, item.ProductTitle, item.TotalAmount, item.Currency, item.CustomerId, item.OrganizationId,
-            item.DeletedByCustomerId, item.CancellationReason, item.SubscriptionStatus, item.AutoRenew, item.CancelAtPeriodEnd,
-            item.IsDeleted, refund?.Id, item.EntitlementStatus, item.CreditQuantity, item.GrantedQuantity, item.AvailableQuantity);
+            derivedState?.PurchasedAt ?? item.PurchasedAt, derivedState?.ActivityAt ?? item.ActivityAt, item.BookingFrom, item.BookingUntil,
+            paymentStatus,
+            item.ProductVersionId, item.ProductTitle, item.TotalAmount, item.Currency?.ToCurrency(), item.CustomerId, item.OrganizationId,
+            item.DeletedByCustomerId, item.CancellationReason,
+            derivedState?.SubscriptionStatus ?? item.SubscriptionStatus?.ToMarketplaceBookingSubscriptionStatus(),
+            derivedState?.AutoRenew ?? item.AutoRenew, derivedState?.CancelAtPeriodEnd ?? item.CancelAtPeriodEnd,
+            derivedState?.IsDeleted ?? item.IsDeleted, derivedState?.RefundId ?? refund?.Id,
+            derivedState?.EntitlementStatus ?? ToNullableEntitlementStatus(item.EntitlementStatus),
+            derivedState?.CreditQuantity ?? item.CreditQuantity, item.GrantedQuantity,
+            derivedState?.RemainingCreditQuantity ?? item.AvailableQuantity);
     }
 
     private static List<KeysetPaginationField<MarketplacePurchaseHistory>> GetPaginationFields(

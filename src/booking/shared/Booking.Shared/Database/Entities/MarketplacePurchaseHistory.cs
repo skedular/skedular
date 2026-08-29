@@ -34,6 +34,31 @@ public class MarketplacePurchaseHistory : EntityBase
     public string? CancellationReason { get; set; }
     public string? LatestRefundStatus { get; set; }
 
+    // Event fields. A row represents one immutable lifecycle event for eligible purchases.
+    // EventId is the backend-owned event identifier. Id remains the standard entity primary key.
+    public string? EventId { get; set; }
+    public string? EventType { get; set; }
+    public string? IdempotencyKey { get; set; }
+    public DateTimeOffset? OccurredAt { get; set; }
+    public DateTimeOffset? RecordedAt { get; set; }
+    public string? CorrelationId { get; set; }
+    public string? PreviousPaymentStatus { get; set; }
+    public string? PreviousRefundStatus { get; set; }
+    public string? RefundStatus { get; set; }
+    public int? EventCreditQuantity { get; set; }
+    public int? EventRemainingCreditQuantity { get; set; }
+    public decimal? EventAmount { get; set; }
+    public string? EventCurrency { get; set; }
+    public DateTimeOffset? CancellationRequestedAt { get; set; }
+    public DateTimeOffset? CancellationEffectiveAt { get; set; }
+    public DateTimeOffset? RenewalAt { get; set; }
+    public string? EventReason { get; set; }
+    public string? EventSubscriptionStatus { get; set; }
+    public string? EventEntitlementStatus { get; set; }
+    public bool? EventAutoRenew { get; set; }
+    public bool? EventCancelAtPeriodEnd { get; set; }
+    public bool? EventIsDeleted { get; set; }
+
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? MarketplaceBookingId { get; set; }
     public virtual MarketplaceBooking? MarketplaceBooking { get; set; }
@@ -84,6 +109,19 @@ public class MarketplacePurchaseHistoryConfiguration : IEntityTypeConfiguration<
         builder.Property(item => item.EntitlementStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
         builder.Property(item => item.CancellationReason).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.LatestRefundStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.EventType).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.EventId).HasMaxLength(512);
+        // Refund lifecycle idempotency keys include the source type, source id, refund id, and status.
+        builder.Property(item => item.IdempotencyKey).HasMaxLength(512);
+        builder.Property(item => item.CorrelationId).HasMaxLength(Constants.MaxRefundCorrelationIdLength);
+        builder.Property(item => item.PreviousPaymentStatus).HasMaxLength(Constants.MaxBookingPaymentStatusLength);
+        builder.Property(item => item.PreviousRefundStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.RefundStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.EventAmount).HasColumnType("DECIMAL(18,4)");
+        builder.Property(item => item.EventCurrency).HasMaxLength(Constants.MaxCurrencyLength);
+        builder.Property(item => item.EventReason).HasMaxLength(Constants.MaxDescriptionLength);
+        builder.Property(item => item.EventSubscriptionStatus).HasMaxLength(Constants.MaxMarketplaceBookingSubscriptionStatusLength);
+        builder.Property(item => item.EventEntitlementStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
 
         builder.HasOne(item => item.MarketplaceBooking).WithMany().HasForeignKey(item => item.MarketplaceBookingId);
         builder.HasOne(item => item.MarketplaceBookingSubscription).WithMany().HasForeignKey(item => item.MarketplaceBookingSubscriptionId);
@@ -95,10 +133,12 @@ public class MarketplacePurchaseHistoryConfiguration : IEntityTypeConfiguration<
         builder.HasOne(item => item.LatestRefund).WithMany().HasForeignKey(item => item.LatestRefundId);
 
         builder.HasIndex(item => new
-        {
-            item.SourceType,
-            item.SourceId,
-        }).IsUnique();
+            {
+                item.SourceType,
+                item.SourceId,
+                item.IdempotencyKey,
+            }).IsUnique()
+            .HasFilter("\"IdempotencyKey\" IS NOT NULL");
         builder.HasIndex(item => new
         {
             item.OrganizationId,
@@ -106,12 +146,29 @@ public class MarketplacePurchaseHistoryConfiguration : IEntityTypeConfiguration<
             item.SourceType,
             item.SourceId,
         });
-        builder.HasIndex(item => item.MarketplaceBookingId).IsUnique().HasFilter("\"MarketplaceBookingId\" IS NOT NULL");
-        builder.HasIndex(item => item.MarketplaceBookingSubscriptionId).IsUnique().HasFilter("\"MarketplaceBookingSubscriptionId\" IS NOT NULL");
-        builder.HasIndex(item => item.EntitlementPurchaseId).IsUnique().HasFilter("\"EntitlementPurchaseId\" IS NOT NULL");
+        builder.HasIndex(item => new
+        {
+            item.SourceType,
+            item.SourceId,
+            item.OccurredAt,
+            item.RecordedAt,
+            item.Id,
+        }).HasFilter("\"EventType\" IS NOT NULL");
+        builder.HasIndex(item => new
+        {
+            item.SourceType,
+            item.SourceId,
+            item.EventType,
+            item.OccurredAt,
+        }).HasFilter("\"EventType\" IS NOT NULL");
+        builder.HasIndex(item => item.EventId).IsUnique().HasFilter("\"EventId\" IS NOT NULL");
+        builder.HasIndex(item => item.MarketplaceBookingId).HasFilter("\"MarketplaceBookingId\" IS NOT NULL");
+        builder.HasIndex(item => item.MarketplaceBookingSubscriptionId).HasFilter("\"MarketplaceBookingSubscriptionId\" IS NOT NULL");
+        builder.HasIndex(item => item.EntitlementPurchaseId).HasFilter("\"EntitlementPurchaseId\" IS NOT NULL");
         builder.HasIndex(item => item.ProductVersionId);
         builder.HasIndex(item => item.CustomerId);
         builder.HasIndex(item => item.DeletedByCustomerId);
-        builder.HasIndex(item => item.LatestRefundId).IsUnique().HasFilter("\"LatestRefundId\" IS NOT NULL");
+        builder.HasIndex(item => item.LatestRefundId)
+            .HasFilter("\"LatestRefundId\" IS NOT NULL");
     }
 }

@@ -414,6 +414,12 @@ type ConnectionOfMarketplacePurchaseHistoryEdge {
   totalCount: Int!
 }
 
+type ConnectionOfMarketplacePurchaseHistoryEventEdge {
+  pageInfo: PageInfo!
+  edges: [MarketplacePurchaseHistoryEventEdge!]!
+  totalCount: Int!
+}
+
 type ConnectionOfMarketplaceRefundEdge {
   pageInfo: PageInfo!
   edges: [MarketplaceRefundEdge!]!
@@ -483,6 +489,8 @@ type EntitlementDetails {
 
 type EntitlementPurchaseDetails {
   productVersion: ProductVersionDetails!
+  history(after: String, first: Int, before: String, last: Int): ConnectionOfMarketplacePurchaseHistoryEventEdge!
+    @cost(weight: "10")
   customerName: String @cost(weight: "10")
   entitlement: EntitlementDetails @cost(weight: "10")
   linkedBookings(after: String, first: Int, before: String, last: Int): ConnectionOfBookingEdge!
@@ -669,6 +677,8 @@ type MarketplaceBookingSubscriptionDetails @key(fields: "id") {
   failure: MarketplaceBookingFailureDetails @cost(weight: "10")
   cancellationAvailability: MarketplaceSubscriptionCancellationAvailabilityDetails!
     @cost(weight: "10")
+  history(after: String, first: Int, before: String, last: Int): ConnectionOfMarketplacePurchaseHistoryEventEdge!
+    @cost(weight: "10")
   bookingInstances(
     after: String
     first: Int
@@ -774,7 +784,7 @@ type MarketplacePurchaseHistoryDetails {
   cancellationReason: String
   refundId: String
   bookingId: String
-  entitlementStatus: String
+  entitlementStatus: EntitlementStatus
   creditQuantity: Int!
   grantedQuantity: Int!
   availableQuantity: Int!
@@ -783,6 +793,33 @@ type MarketplacePurchaseHistoryDetails {
 
 type MarketplacePurchaseHistoryEdge {
   node: MarketplacePurchaseHistoryDetails!
+  cursor: String!
+}
+
+type MarketplacePurchaseHistoryEventDetails {
+  id: String!
+  sourceId: String!
+  sourceType: MarketplacePurchaseHistoryEligibleSourceType!
+  type: MarketplacePurchaseHistoryEventType!
+  name: String!
+  occurredAt: DateTime!
+  recordedAt: DateTime!
+  cancellationRequestedAt: DateTime
+  cancellationEffectiveAt: DateTime
+  previousPaymentStatus: PaymentStatus
+  paymentStatus: PaymentStatus
+  refundId: String
+  previousRefundStatus: MarketplaceRefundStatus
+  refundStatus: MarketplaceRefundStatus
+  creditQuantity: Int
+  remainingCreditQuantity: Int
+  amount: Decimal
+  currency: Currency
+  reason: String
+}
+
+type MarketplacePurchaseHistoryEventEdge {
+  node: MarketplacePurchaseHistoryEventDetails!
   cursor: String!
 }
 
@@ -1751,6 +1788,24 @@ enum MarketplaceBookingSubscriptionStatus {
   EXPIRED
   RENEWAL_FAILED
   PAUSED
+}
+
+enum MarketplacePurchaseHistoryEligibleSourceType {
+  SUBSCRIPTION
+  ENTITLEMENT
+}
+
+enum MarketplacePurchaseHistoryEventType {
+  PURCHASE_CREATED
+  SUBSCRIPTION_STARTED
+  SUBSCRIPTION_RENEWED
+  CANCELLATION_SCHEDULED
+  CANCELLATION_COMPLETED
+  ENTITLEMENT_CREATED
+  ENTITLEMENT_EXPIRED
+  CREDITS_CONSUMED
+  PAYMENT_STATE_CHANGED
+  REFUND_STATE_CHANGED
 }
 
 enum MarketplacePurchaseHistoryOrderField {

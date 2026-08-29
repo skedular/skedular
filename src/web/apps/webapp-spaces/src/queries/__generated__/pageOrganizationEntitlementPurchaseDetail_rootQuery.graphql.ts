@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<06f038c44cbf85a5e10635a2d447e280>>
+ * @generated SignedSource<<0f73db488f18875989ae81df86c58af6>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,11 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type Currency = "NZD" | "USD" | "%future added value";
 export type EntitlementStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PENDING" | "%future added value";
+export type MarketplacePurchaseHistoryEventType = "CANCELLATION_COMPLETED" | "CANCELLATION_SCHEDULED" | "CREDITS_CONSUMED" | "ENTITLEMENT_CREATED" | "ENTITLEMENT_EXPIRED" | "PAYMENT_STATE_CHANGED" | "PURCHASE_CREATED" | "REFUND_STATE_CHANGED" | "SUBSCRIPTION_RENEWED" | "SUBSCRIPTION_STARTED" | "%future added value";
+export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
+export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type pageOrganizationEntitlementPurchaseDetail_rootQuery$variables = {
   linkedBookingsAfter?: string | null | undefined;
   purchaseId: string;
@@ -29,6 +33,28 @@ export type pageOrganizationEntitlementPurchaseDetail_rootQuery$data = {
       readonly status: EntitlementStatus;
     } | null | undefined;
     readonly entitlementId: string | null | undefined;
+    readonly history: {
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly amount: any | null | undefined;
+          readonly cancellationEffectiveAt: any | null | undefined;
+          readonly cancellationRequestedAt: any | null | undefined;
+          readonly creditQuantity: number | null | undefined;
+          readonly currency: Currency | null | undefined;
+          readonly id: string;
+          readonly name: string;
+          readonly occurredAt: any;
+          readonly paymentStatus: PaymentStatus | null | undefined;
+          readonly previousPaymentStatus: PaymentStatus | null | undefined;
+          readonly previousRefundStatus: MarketplaceRefundStatus | null | undefined;
+          readonly reason: string | null | undefined;
+          readonly refundId: string | null | undefined;
+          readonly refundStatus: MarketplaceRefundStatus | null | undefined;
+          readonly remainingCreditQuantity: number | null | undefined;
+          readonly type: MarketplacePurchaseHistoryEventType;
+        };
+      }>;
+    };
     readonly id: string;
     readonly invoiceNumber: string | null | undefined;
     readonly invoiceUrl: string | null | undefined;
@@ -103,7 +129,35 @@ v3 = {
   "name": "name",
   "storageKey": null
 },
-v4 = [
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "paymentStatus",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "creditQuantity",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "amount",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "currency",
+  "storageKey": null
+},
+v8 = [
   {
     "alias": null,
     "args": [
@@ -121,11 +175,120 @@ v4 = [
       (v2/*:: as any*/),
       {
         "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "paymentStatus",
-        "storageKey": null
+        "args": [
+          {
+            "kind": "Literal",
+            "name": "first",
+            "value": 100
+          }
+        ],
+        "concreteType": "ConnectionOfMarketplacePurchaseHistoryEventEdge",
+        "kind": "LinkedField",
+        "name": "history",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "MarketplacePurchaseHistoryEventEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MarketplacePurchaseHistoryEventDetails",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v2/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
+                    "storageKey": null
+                  },
+                  (v3/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "occurredAt",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "previousPaymentStatus",
+                    "storageKey": null
+                  },
+                  (v4/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "previousRefundStatus",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "refundStatus",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "refundId",
+                    "storageKey": null
+                  },
+                  (v5/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "remainingCreditQuantity",
+                    "storageKey": null
+                  },
+                  (v6/*:: as any*/),
+                  (v7/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cancellationRequestedAt",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cancellationEffectiveAt",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "reason",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": "history(first:100)"
       },
+      (v4/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -147,20 +310,8 @@ v4 = [
         "name": "serviceStartAt",
         "storageKey": null
       },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "amount",
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "currency",
-        "storageKey": null
-      },
+      (v6/*:: as any*/),
+      (v7/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -168,13 +319,7 @@ v4 = [
         "name": "pricingId",
         "storageKey": null
       },
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "creditQuantity",
-        "storageKey": null
-      },
+      (v5/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -459,7 +604,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "pageOrganizationEntitlementPurchaseDetail_rootQuery",
-    "selections": (v4/*:: as any*/),
+    "selections": (v8/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -471,19 +616,19 @@ return {
     ],
     "kind": "Operation",
     "name": "pageOrganizationEntitlementPurchaseDetail_rootQuery",
-    "selections": (v4/*:: as any*/)
+    "selections": (v8/*:: as any*/)
   },
   "params": {
-    "cacheID": "ef9643639ae22194c2031ca848e06747",
+    "cacheID": "7a362627e734158352085425a8dab49d",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationEntitlementPurchaseDetail_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationEntitlementPurchaseDetail_rootQuery(\n  $purchaseId: String!\n  $linkedBookingsAfter: String\n) {\n  entitlementPurchase(purchaseId: $purchaseId) {\n    id\n    paymentStatus\n    lifecycleState\n    paymentMethod\n    serviceStartAt\n    amount\n    currency\n    pricingId\n    creditQuantity\n    validityDays\n    customerId\n    customerName\n    organizationId\n    entitlementId\n    entitlement {\n      id\n      autoRenew\n      cancelAtPeriodEnd\n      status\n      nextRenewalAt\n      renewalFailureReason\n    }\n    invoiceNumber\n    invoiceUrl\n    linkedBookings(after: $linkedBookingsAfter, first: 10) {\n      totalCount\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        endCursor\n      }\n      edges {\n        node {\n          id\n          from\n          until\n          involvedCustomers {\n            id\n            name\n            givenName\n            middleName\n            familyName\n          }\n          bookingResources {\n            resource {\n              id\n              name\n            }\n          }\n          involvedLocations {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationEntitlementPurchaseDetail_rootQuery(\n  $purchaseId: String!\n  $linkedBookingsAfter: String\n) {\n  entitlementPurchase(purchaseId: $purchaseId) {\n    id\n    history(first: 100) {\n      edges {\n        node {\n          id\n          type\n          name\n          occurredAt\n          previousPaymentStatus\n          paymentStatus\n          previousRefundStatus\n          refundStatus\n          refundId\n          creditQuantity\n          remainingCreditQuantity\n          amount\n          currency\n          cancellationRequestedAt\n          cancellationEffectiveAt\n          reason\n        }\n      }\n    }\n    paymentStatus\n    lifecycleState\n    paymentMethod\n    serviceStartAt\n    amount\n    currency\n    pricingId\n    creditQuantity\n    validityDays\n    customerId\n    customerName\n    organizationId\n    entitlementId\n    entitlement {\n      id\n      autoRenew\n      cancelAtPeriodEnd\n      status\n      nextRenewalAt\n      renewalFailureReason\n    }\n    invoiceNumber\n    invoiceUrl\n    linkedBookings(after: $linkedBookingsAfter, first: 10) {\n      totalCount\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        endCursor\n      }\n      edges {\n        node {\n          id\n          from\n          until\n          involvedCustomers {\n            id\n            name\n            givenName\n            middleName\n            familyName\n          }\n          bookingResources {\n            resource {\n              id\n              name\n            }\n          }\n          involvedLocations {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9431892a09e4504e1094c86ab049a056";
+(node as any).hash = "443979aa9bdff8248d9e0740b6e2393e";
 
 export default node;

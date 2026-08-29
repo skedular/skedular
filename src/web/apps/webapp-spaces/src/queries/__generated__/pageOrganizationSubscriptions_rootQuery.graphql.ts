@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<12dfc5c883ae9e8a252666822327681d>>
+ * @generated SignedSource<<0f2c6225ff3214382b1a324e3ba33ce6>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type Currency = "NZD" | "USD" | "%future added value";
+export type EntitlementStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PENDING" | "%future added value";
 export type MarketplaceBookingSubscriptionCancellationMode = "AT_PERIOD_END" | "IMMEDIATE" | "%future added value";
 export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PAUSED" | "RENEWAL_FAILED" | "%future added value";
 export type MarketplacePurchaseHistoryOrderField = "ACTIVITY_AT" | "BOOKING_FROM" | "BOOKING_UNTIL" | "PURCHASED_AT" | "%future added value";
@@ -152,7 +153,7 @@ export type pageOrganizationSubscriptions_rootQuery$data = {
         readonly currency: Currency | null | undefined;
         readonly customerId: string | null | undefined;
         readonly deletedByCustomerId: string | null | undefined;
-        readonly entitlementStatus: string | null | undefined;
+        readonly entitlementStatus: EntitlementStatus | null | undefined;
         readonly grantedQuantity: number;
         readonly id: string;
         readonly isDeleted: boolean;

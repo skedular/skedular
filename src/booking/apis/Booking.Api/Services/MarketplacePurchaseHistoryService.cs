@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
+using Booking.Shared.Models.Entitlements;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Pagination;
@@ -11,6 +12,11 @@ namespace Booking.Api.Services;
 
 public interface IMarketplacePurchaseHistoryService
 {
+    Task<IReadOnlyList<MarketplacePurchaseHistoryEventModel>> GetEventsAsync(
+        MarketplacePurchaseHistoryEligibleSourceType sourceType,
+        string sourceId,
+        CancellationToken cancellationToken);
+
     Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplacePurchaseHistoryEntry>>, int)> GetPaginatedAsync(
         PaginationInputParam paginationInputParam,
         string? organizationCustomDomain,
@@ -22,10 +28,46 @@ public interface IMarketplacePurchaseHistoryService
 public class MarketplacePurchaseHistoryService(
     IRepositoryFactory repositoryFactory,
     IMarketplaceBookingService marketplaceBookingService,
+    IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+    IEntitlementPurchaseReadService entitlementPurchaseReadService,
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ILogger<MarketplacePurchaseHistoryService> logger) : IMarketplacePurchaseHistoryService
 {
+    public async Task<IReadOnlyList<MarketplacePurchaseHistoryEventModel>> GetEventsAsync(
+        MarketplacePurchaseHistoryEligibleSourceType sourceType,
+        string sourceId,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(sourceId);
+        var persistedSourceType = sourceType switch
+        {
+            MarketplacePurchaseHistoryEligibleSourceType.Subscription => MarketplacePurchaseHistorySourceTypeConstants
+                .MarketplaceBookingSubscription,
+            MarketplacePurchaseHistoryEligibleSourceType.Entitlement => MarketplacePurchaseHistorySourceTypeConstants.EntitlementPurchase,
+            _ => throw new ArgumentOutOfRangeException(nameof(sourceType)),
+        };
+
+        switch (sourceType)
+        {
+            case MarketplacePurchaseHistoryEligibleSourceType.Subscription:
+                await marketplaceBookingSubscriptionService.GetByIdAsync(sourceId, cancellationToken);
+                break;
+            case MarketplacePurchaseHistoryEligibleSourceType.Entitlement:
+                var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+                var purchase = await entitlementPurchaseReadService.GetAuthorizedAsync(sourceId, customerId, cancellationToken);
+                if (purchase is null)
+                {
+                    throw new UnauthorizedAccessException();
+                }
+
+                break;
+        }
+
+        return await repositoryFactory.MarketplacePurchaseHistoryRepository.GetEventsAsync(
+            persistedSourceType, sourceId, cancellationToken);
+    }
+
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplacePurchaseHistoryEntry>>, int)> GetPaginatedAsync(
         PaginationInputParam paginationInputParam,
         string? organizationCustomDomain,
@@ -69,7 +111,7 @@ public class MarketplacePurchaseHistoryService(
         foreach (var edge in rows)
         {
             var row = edge.Node;
-            var payment = row.PaymentStatus.ToPaymentStatus();
+            var payment = row.PaymentStatus;
             var lifecycle = row.IsDeleted
                 ? MarketplacePurchaseLifecycleState.Deleted
                 : row.SourceType == MarketplacePurchaseSourceType.Subscription
@@ -101,7 +143,7 @@ public class MarketplacePurchaseHistoryService(
                     row.ProductVersionId,
                     row.ProductTitle,
                     row.TotalAmount,
-                    row.Currency is null ? null : Enum.TryParse<Currency>(row.Currency, true, out var currency) ? currency : null,
+                    row.Currency,
                     row.CustomerId,
                     row.IsDeleted,
                     row.IsDeleted ? row.DeletedByCustomerId : null,
@@ -118,7 +160,7 @@ public class MarketplacePurchaseHistoryService(
         MarketplacePurchaseHistoryRow row,
         ILogger<MarketplacePurchaseHistoryService> logger)
     {
-        if (string.IsNullOrWhiteSpace(row.SubscriptionStatus))
+        if (row.SubscriptionStatus is null)
         {
             logger.LogWarning(
                 "Marketplace purchase {PurchaseId} has no subscription status; returning pending lifecycle for legacy data",
@@ -126,21 +168,7 @@ public class MarketplacePurchaseHistoryService(
             return MarketplacePurchaseLifecycleState.Pending;
         }
 
-        MarketplaceBookingSubscriptionStatus subscriptionStatus;
-        try
-        {
-            subscriptionStatus = row.SubscriptionStatus.ToMarketplaceBookingSubscriptionStatus();
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            logger.LogWarning(
-                "Marketplace purchase {PurchaseId} has an unknown subscription status {SubscriptionStatus}; returning pending lifecycle",
-                row.Id,
-                row.SubscriptionStatus);
-            return MarketplacePurchaseLifecycleState.Pending;
-        }
-
-        return subscriptionStatus switch
+        return row.SubscriptionStatus.Value switch
         {
             MarketplaceBookingSubscriptionStatus.Cancelled => MarketplacePurchaseLifecycleState.Cancelled,
             MarketplaceBookingSubscriptionStatus.Expired => MarketplacePurchaseLifecycleState.Expired,
@@ -151,14 +179,14 @@ public class MarketplacePurchaseHistoryService(
     }
 
     private static MarketplacePurchaseLifecycleState GetEntitlementLifecycle(MarketplacePurchaseHistoryRow row) =>
-        row.PaymentStatus.ToPaymentStatus() switch
+        row.PaymentStatus switch
         {
             PaymentStatus.Rejected => MarketplacePurchaseLifecycleState.PaymentFailed,
             PaymentStatus.Expired => MarketplacePurchaseLifecycleState.Expired,
             PaymentStatus.Pending => MarketplacePurchaseLifecycleState.Pending,
-            PaymentStatus.Confirmed when row.EntitlementStatus == "Active" => MarketplacePurchaseLifecycleState.Active,
-            _ when row.EntitlementStatus == "Cancelled" => MarketplacePurchaseLifecycleState.Cancelled,
-            _ when row.EntitlementStatus == "Expired" => MarketplacePurchaseLifecycleState.Expired,
+            PaymentStatus.Confirmed when row.EntitlementStatus == EntitlementStatus.Active => MarketplacePurchaseLifecycleState.Active,
+            _ when row.EntitlementStatus == EntitlementStatus.Cancelled => MarketplacePurchaseLifecycleState.Cancelled,
+            _ when row.EntitlementStatus == EntitlementStatus.Expired => MarketplacePurchaseLifecycleState.Expired,
             _ => MarketplacePurchaseLifecycleState.Pending,
         };
 }

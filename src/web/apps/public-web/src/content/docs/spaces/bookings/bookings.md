@@ -44,9 +44,9 @@ Open a Booking to edit its supported details. Depending on the Booking type and 
 
 ## Marketplace purchase history
 
-The organization's **Marketplace purchases** page is the unified history for marketplace activity. It lists standalone Bookings alongside Subscriptions and shows the customer, Product, booking window, amount, payment state, and lifecycle state where available. Canceled and deleted purchases remain visible when they have historical activity, allowing operators to review what happened without treating a removed purchase as erased history.
+The organization's **Marketplace purchases** page is the unified history for marketplace activity. It lists standalone Bookings alongside Subscriptions and credit entitlements and shows the customer, Product, booking window, amount, payment state, and lifecycle state where available. Canceled and deleted purchases remain visible when they have historical activity, allowing authorized users to review what happened without treating a removed purchase as erased history.
 
-Use the purchase history for the commercial overview and the Booking details for individual Resource reservations and scheduling changes. Access is limited to authorized organization operators.
+Use the purchase history for the commercial overview and the Booking details for individual Resource reservations and scheduling changes. Subscription and credit-entitlement detail pages render the backend-provided lifecycle history; the frontend does not reconstruct events from aggregate dates. Standalone one-time Booking details remain unchanged and do not receive a history tab. Customers can access their own purchases, while organization operators require the relevant authorization.
 
 ## Modify a marketplace Booking
 

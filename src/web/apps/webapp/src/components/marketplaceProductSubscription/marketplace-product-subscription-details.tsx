@@ -65,6 +65,7 @@ import MarketplaceRefundStatusCard from '../marketplaceProductBooking/marketplac
 import { canRequestMarketplaceSubscriptionCancellation } from '../marketplaceProductBooking/marketplace-self-service-eligibility';
 import { getSubscriptionOccurrenceModificationLabel } from './subscription-occurrence-display';
 import { getFailureCleanupMessage } from '../marketplaceProductBooking/marketplace-booking-failure-eligibility';
+import { MarketplacePurchaseHistoryEventList } from '@/components/marketplacePurchaseHistory/marketplace-purchase-history-event-list';
 
 const toCustomerSubscriptionCancellationErrorMessage = (message: string) =>
   message.toLowerCase().includes('cancellation') && message.toLowerCase().includes('not allowed')
@@ -92,6 +93,23 @@ const RootQuery = graphql`
     }
     marketplaceBookingSubscription(id: $subscriptionId) {
       id
+      history(first: 100) {
+        edges {
+          node {
+            id
+            type
+            name
+            occurredAt
+            cancellationRequestedAt
+            cancellationEffectiveAt
+            paymentStatus
+            refundStatus
+            creditQuantity
+            remainingCreditQuantity
+            reason
+          }
+        }
+      }
       cancellationPolicyOverridden
       cancellationOverrideReason
       cancellationAvailability {
@@ -922,6 +940,8 @@ const MarketplaceProductSubscriptionDetails = ({
                 <Divider sx={{ my: 3 }} />
 
                 <Box>
+                  <MarketplacePurchaseHistoryEventList events={subscription.history.edges.map(({ node }) => node)} />
+                  <Divider sx={{ my: 3 }} />
                   <CaptionIconTypography label="Related bookings" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
                   <LeadIconTypography label="Booking instances created from this subscription" sx={{ mt: 0.75 }} />
                   {relatedBookings.length > 0 ? (

@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.Entitlement;
+using Booking.Api.GraphQL.MarketplacePurchaseHistory;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
@@ -38,6 +39,50 @@ public class EntitlementPurchaseDetails
     public string? PaymentInstructions { get; set; }
     public string? PaymentAction { get; set; }
     public IReadOnlyList<string> InvoiceEmailList { get; set; } = [];
+
+    [GraphQLName("history")]
+    public async Task<Connection<MarketplacePurchaseHistoryEventEdge>> GetHistoryAsync(
+        string? after,
+        int? first,
+        string? before,
+        int? last,
+        [Service]
+        IMarketplacePurchaseHistoryService historyService,
+        CancellationToken cancellationToken) =>
+        ToConnection(await historyService.GetEventsAsync(MarketplacePurchaseHistoryEligibleSourceType.Entitlement, Id, cancellationToken), after,
+            first, before, last);
+
+    private static Connection<MarketplacePurchaseHistoryEventEdge> ToConnection(
+        IReadOnlyList<MarketplacePurchaseHistoryEventModel> events,
+        string? after,
+        int? first,
+        string? before,
+        int? last)
+    {
+        var offset = after is null ? 0 : int.TryParse(after, out var parsedAfter) ? parsedAfter + 1 : 0;
+        var count = first ?? Math.Max(events.Count - offset, 0);
+        if (before is not null && int.TryParse(before, out var parsedBefore))
+        {
+            var endExclusive = Math.Clamp(parsedBefore, 0, events.Count);
+            count = Math.Min(last ?? endExclusive, endExclusive);
+            offset = Math.Max(endExclusive - count, 0);
+        }
+
+        var page = events.Skip(Math.Max(offset, 0)).Take(Math.Max(count, 0)).ToList();
+        return new Connection<MarketplacePurchaseHistoryEventEdge>
+        {
+            Edges = page.Select((item, index) => new MarketplacePurchaseHistoryEventEdge(
+                MarketplacePurchaseHistoryEventDetails.From(item), (offset + index).ToString())).ToList(),
+            TotalCount = events.Count,
+            PageInfo = new PageInfo
+            {
+                HasPreviousPage = offset > 0,
+                HasNextPage = offset + page.Count < events.Count,
+                StartCursor = page.Count == 0 ? null : offset.ToString(),
+                EndCursor = page.Count == 0 ? null : (offset + page.Count - 1).ToString(),
+            },
+        };
+    }
 
     public async Task<string?> CustomerNameAsync(
         [Service]

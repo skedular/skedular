@@ -40,6 +40,7 @@ import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { graphql, useLazyLoadQuery, useMutation, useSubscription } from 'react-relay';
 import { useIntegratedPlatform } from '@skedular/shared';
+import { MarketplacePurchaseHistoryEventList } from '@/components/marketplacePurchaseHistory/marketplace-purchase-history-event-list';
 import { toast } from 'react-toastify';
 
 dayjs.extend(utc);
@@ -66,6 +67,23 @@ const RootQuery = graphql`
   query entitlementPurchaseDetails_rootQuery($purchaseId: String!) {
     entitlementPurchase(purchaseId: $purchaseId) {
       id
+      history(first: 100) {
+        edges {
+          node {
+            id
+            type
+            name
+            occurredAt
+            cancellationRequestedAt
+            cancellationEffectiveAt
+            paymentStatus
+            refundStatus
+            creditQuantity
+            remainingCreditQuantity
+            reason
+          }
+        }
+      }
       paymentStatus
       lifecycleState
       paymentMethod
@@ -329,6 +347,8 @@ const EntitlementPurchaseDetails = () => {
                     <DetailRow label="Purchase total" value={`${purchase.amount} ${purchase.currency}`} />
                   </StackColumn>
 
+                  <Divider sx={{ my: 3 }} />
+                  <MarketplacePurchaseHistoryEventList events={purchase.history.edges.map(({ node }) => node)} />
                   <Divider sx={{ my: 3 }} />
                   <CaptionIconTypography label="Related bookings" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
                   <LeadIconTypography label="Bookings made with these credits" sx={{ mt: 0.75 }} />
