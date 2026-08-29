@@ -255,6 +255,7 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         row.MarketplaceBookingId = null;
         row.MarketplaceBookingSubscriptionId = subscription.Id;
         row.SubscriptionStatus = subscription.Status;
+        row.RenewalAt = subscription.NextRenewalAt;
         row.AutoRenew = subscription.AutoRenew;
         row.CancelAtPeriodEnd = subscription.CancelAtPeriodEnd;
         row.EntitlementPurchaseId = null;
@@ -276,6 +277,12 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
                     subscription.Status.ToMarketplaceBookingSubscriptionStatus(), null, subscription.AutoRenew,
                     subscription.CancelAtPeriodEnd, subscription.DeletedAt.HasValue),
                 $"subscription:{subscription.Id}:purchase-created", cancellationToken);
+            if (subscription.Status == MarketplaceBookingSubscriptionStatusConstants.Active)
+            {
+                await AppendAsync(subscription.Id, MarketplacePurchaseHistoryEventType.SubscriptionStarted,
+                    subscription.StartedAt, row.PaymentStatus, null, null, null, null,
+                    $"subscription:{subscription.Id}:started:{subscription.StartedAt:O}", cancellationToken);
+            }
         }
         else
         {
@@ -445,6 +452,24 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
                 $"entitlement:{purchase.Id}:payment:{row.ActivityAt:O}", cancellationToken);
         }
 
+        if (!created && previousEntitlementStatus is null && row.EntitlementStatus is not null)
+        {
+            await AppendEventAsync(new MarketplacePurchaseHistoryEventModel(
+                    $"marketplace-purchase-history-event:entitlement:{purchase.Id}:entitlement-created:{row.ActivityAt:O}",
+                    purchase.Id, MarketplacePurchaseHistoryEligibleSourceType.Entitlement,
+                    MarketplacePurchaseHistoryEventType.EntitlementCreated,
+                    entitlement?.CreatedAt ?? row.ActivityAt, (timeProvider ?? TimeProvider.System).GetUtcNow(),
+                    null, ToNullablePaymentStatus(row.PaymentStatus), null, null, null,
+                    row.CreditQuantity, row.GrantedQuantity, row.TotalAmount, row.Currency switch
+                    {
+                        CurrencyConstants.Nzd => Currency.Nzd,
+                        CurrencyConstants.Usd => Currency.Usd,
+                        _ => null,
+                    }, null, null, null, "Entitlement created", null,
+                    entitlement?.Status is null ? null : ToNullableEntitlementStatus(entitlement.Status)),
+                $"entitlement:{purchase.Id}:entitlement-created:{row.ActivityAt:O}", cancellationToken);
+        }
+
         if (!created && previousEntitlementStatus != row.EntitlementStatus &&
             row.EntitlementStatus is not null &&
             EntitlementLifecycleStateExtensions.EntitlementStatusFromPersistedValue(row.EntitlementStatus) == EntitlementStatus.Expired)
@@ -478,11 +503,16 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         // Refund transitions can be retried or delivered out of order. Always project
         // the durable latest refund for the source rather than whichever event invoked
         // this refresh, otherwise an older transition could regress the read model.
-        var latestRefund = await dbContext.MarketplaceRefund.AsNoTracking()
-            .Where(item => item.LocalEntityType == refund.LocalEntityType && item.LocalEntityId == refund.LocalEntityId)
-            .OrderByDescending(item => item.RequestedAt)
-            .ThenByDescending(item => item.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        var latestRefund = dbContext.MarketplaceRefund.Local
+                               .Where(item => item.LocalEntityType == refund.LocalEntityType && item.LocalEntityId == refund.LocalEntityId)
+                               .OrderByDescending(item => item.RequestedAt)
+                               .ThenByDescending(item => item.Id)
+                               .FirstOrDefault()
+                           ?? await dbContext.MarketplaceRefund.AsNoTracking()
+                               .Where(item => item.LocalEntityType == refund.LocalEntityType && item.LocalEntityId == refund.LocalEntityId)
+                               .OrderByDescending(item => item.RequestedAt)
+                               .ThenByDescending(item => item.Id)
+                               .FirstOrDefaultAsync(cancellationToken);
         switch (refund.LocalEntityType)
         {
             case MarketplaceRefundEntityTypeConstants.MarketplaceBooking:

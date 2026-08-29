@@ -27,8 +27,10 @@ export const MarketplacePurchaseHistoryEventList = ({ events }: { events: Readon
           <BodyIconTypography label={new Date(event.occurredAt).toLocaleString()} />
           {event.paymentStatus ? <BodyIconTypography label={`Payment: ${event.paymentStatus}`} /> : null}
           {event.refundStatus ? <BodyIconTypography label={`Refund: ${event.refundStatus}`} /> : null}
-          {event.creditQuantity !== null ? <BodyIconTypography label={`Credits: ${event.creditQuantity}`} /> : null}
-          {event.remainingCreditQuantity !== null ? <BodyIconTypography label={`Remaining: ${event.remainingCreditQuantity}`} /> : null}
+          {event.creditQuantity !== null && event.creditQuantity !== undefined ? <BodyIconTypography label={`Credits: ${event.creditQuantity}`} /> : null}
+          {event.remainingCreditQuantity !== null && event.remainingCreditQuantity !== undefined ? (
+            <BodyIconTypography label={`Remaining: ${event.remainingCreditQuantity}`} />
+          ) : null}
           {event.cancellationRequestedAt ? (
             <BodyIconTypography
               label={`Cancellation requested: ${new Date(event.cancellationRequestedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}`}

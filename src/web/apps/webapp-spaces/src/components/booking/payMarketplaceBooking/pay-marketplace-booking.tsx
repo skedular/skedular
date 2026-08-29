@@ -423,6 +423,10 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
 
   const payment = <InvoiceDownloadLinks invoices={booking.arrearsInvoices ?? []} legacyInvoiceUrl={booking.marketplaceBooking?.invoiceUrl ?? null} size="body" />;
   const actions: PurchaseDetailAction[] = [{ label: 'Cancel booking', tone: 'destructive', onClick: handleCancelBookingClick }];
+  const checkoutUrl = booking.marketplaceBooking?.bookingCheckoutSession?.checkoutUrl;
+  if (checkoutUrl && booking.marketplaceBooking?.paymentStatus.type === 'PENDING' && booking.marketplaceBooking.paymentMethod?.type === 'CARD') {
+    actions.unshift({ label: 'Pay', onClick: () => router.push(checkoutUrl) });
+  }
   if (
     rootData.organizationBookingPermissions.canModifyPaymentMethod &&
     booking.marketplaceBooking?.isPaymentRequired &&

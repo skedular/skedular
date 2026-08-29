@@ -338,7 +338,7 @@ const Detail = ({ queryReference, organizationCustomDomain }: Props) => {
                   ...(entitlement.autoRenew ? [{ label: 'Cancel at period end', tone: 'destructive' as const, onClick: () => setShowCancelDialog(true) }] : []),
                 ]
               : []),
-            ...(purchase.paymentStatus === 'PENDING'
+            ...(purchase.paymentMethod === 'BANK_TRANSFER' && purchase.paymentStatus === 'PENDING'
               ? [
                   { label: 'Confirm payment', onClick: confirmPayment, disabled: isPaymentActionInFlight },
                   { label: 'Reject payment', tone: 'destructive' as const, onClick: rejectPayment, disabled: isPaymentActionInFlight },

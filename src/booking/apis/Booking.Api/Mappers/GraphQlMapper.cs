@@ -647,13 +647,16 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         if (billingPeriodMarketplaceBooking is not null)
         {
             marketplaceBooking.TotalAmount = billingPeriodMarketplaceBooking.TotalAmount;
-            if (marketplaceBooking.Currency is null && billingPeriodMarketplaceBooking.Currency is { } currency)
+            if (billingPeriodMarketplaceBooking.Currency is { } currency)
             {
                 marketplaceBooking.Currency = new CurrencyDetails
                 {
                     Type = currency,
                     Name = currency.ToCurrencyName(),
                 };
+                marketplaceBooking.TotalAmountToDisplay = billingPeriodMarketplaceBooking.TotalAmount is { } amount
+                    ? amount.ToRoundedPrice().ToPriceToDisplay(currency)
+                    : string.Empty;
             }
         }
 

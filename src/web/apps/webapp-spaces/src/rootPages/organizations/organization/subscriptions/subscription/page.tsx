@@ -21,7 +21,11 @@ import type { pageOrganizationSubscriptionDetail_makeRecurringBookingPaymentNotR
 import type { pageOrganizationSubscriptionDetail_rejectRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_rejectRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptionDetail_rootQuery } from '@/queries/__generated__/pageOrganizationSubscriptionDetail_rootQuery.graphql';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import Link from '@mui/material/Link';
+import TextField from '@mui/material/TextField';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -31,7 +35,7 @@ import TableRow from '@mui/material/TableRow';
 import type { SxProps, Theme } from '@mui/system';
 import Box from '@mui/system/Box';
 
-import { BodyIconTypography, SmallIconTypography, StackColumn, StackRow } from '@skedular/ui';
+import { BodyIconTypography, DefaultDialogTitle, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@skedular/ui';
 import dayjs from 'dayjs';
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -341,6 +345,11 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     const mode = rootData.marketplaceBookingSubscriptionCancellationModes.find((item) => item.type === 'AT_PERIOD_END');
     return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
   }, [rootData.marketplaceBookingSubscriptionCancellationModes]);
+  const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<{
+    mode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails;
+    productTitle: string;
+  } | null>(null);
+  const [cancellationOverrideReason, setCancellationOverrideReason] = useState('');
 
   const handleDeleteMarketplaceBookingSubscriptionClick = (
     subscriptionId: string,
@@ -496,7 +505,12 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           {
             label: 'Cancel now',
             tone: 'destructive',
-            onClick: () => (immediateCancellationMode ? handleDeleteMarketplaceBookingSubscriptionClick(subscription.id, productTitle, immediateCancellationMode.type) : undefined),
+            onClick: () => {
+              if (immediateCancellationMode) {
+                setCancellationOverrideReason('');
+                setPendingCancellationConfirmation({ mode: immediateCancellationMode, productTitle });
+              }
+            },
           },
           ...(subscription.autoRenew
             ? [
@@ -667,6 +681,38 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
             details: formatPurchaseHistoryEventDetails(node),
           }))}
         />
+        <Dialog open={pendingCancellationConfirmation !== null} onClose={() => setPendingCancellationConfirmation(null)}>
+          <DefaultDialogTitle title="Cancel subscription now" />
+          <DialogContent>
+            <DialogContentText>Cancel this subscription now? Future billing will stop immediately.</DialogContentText>
+            <TextField
+              label="Cancellation reason"
+              value={cancellationOverrideReason}
+              onChange={(event) => setCancellationOverrideReason(event.target.value)}
+              required
+              multiline
+              minRows={2}
+              fullWidth
+              helperText="Required when the cancellation policy would block this cancellation."
+              sx={{ mt: 2 }}
+            />
+            <TwoButtonsDialogActions
+              onPrimaryClicked={() => {
+                if (!pendingCancellationConfirmation || cancellationOverrideReason.trim() === '') return;
+                handleDeleteMarketplaceBookingSubscriptionClick(
+                  subscription.id,
+                  pendingCancellationConfirmation.productTitle,
+                  pendingCancellationConfirmation.mode.type,
+                  cancellationOverrideReason.trim(),
+                );
+                setPendingCancellationConfirmation(null);
+              }}
+              onSecondaryClicked={() => setPendingCancellationConfirmation(null)}
+              primaryLabel="Cancel now"
+              secondaryLabel="Keep subscription"
+            />
+          </DialogContent>
+        </Dialog>
       </RootShell>
     );
   }
