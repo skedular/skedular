@@ -576,6 +576,11 @@ type MarketplaceBookingDetails {
   id: ID!
 }
 
+type MarketplaceBookingFailureAccountingCleanupStatusDetails {
+  type: MarketplaceBookingFailureAccountingCleanupStatus!
+  name: String!
+}
+
 type MarketplaceBookingFailureChoiceDetails {
   type: String!
   name: String!
@@ -593,6 +598,13 @@ type MarketplaceBookingFailureDetails {
   resolutionDecidedAt: DateTime
   resolutionDecision: String
   allocatedRefundAmount: Decimal
+  resourceReleaseStatus: MarketplaceBookingFailureResourceReleaseStatusDetails!
+  accountingCleanupStatus: MarketplaceBookingFailureAccountingCleanupStatusDetails!
+}
+
+type MarketplaceBookingFailureResourceReleaseStatusDetails {
+  type: MarketplaceBookingFailureResourceReleaseStatus!
+  name: String!
 }
 
 type MarketplaceBookingInstanceEdge {
@@ -1684,6 +1696,19 @@ enum EntitlementStatus {
   ACTIVE
   EXPIRED
   CANCELLED
+}
+
+enum MarketplaceBookingFailureAccountingCleanupStatus {
+  UNKNOWN
+  NOT_REQUIRED
+  PENDING
+  TRANSITION_REQUIRED
+}
+
+enum MarketplaceBookingFailureResourceReleaseStatus {
+  UNKNOWN
+  PENDING
+  RELEASED
 }
 
 enum MarketplaceBookingModificationActorKind {

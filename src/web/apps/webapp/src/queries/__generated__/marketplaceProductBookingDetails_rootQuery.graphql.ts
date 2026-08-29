@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6fdb8c2c3a9d89300379d2bcc7777282>>
+ * @generated SignedSource<<afdf08f74cd78ef4c2e3d2c48a640cea>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,8 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type Currency = "NZD" | "USD" | "%future added value";
+export type MarketplaceBookingFailureAccountingCleanupStatus = "NOT_REQUIRED" | "PENDING" | "TRANSITION_REQUIRED" | "UNKNOWN" | "%future added value";
+export type MarketplaceBookingFailureResourceReleaseStatus = "PENDING" | "RELEASED" | "UNKNOWN" | "%future added value";
 export type MarketplaceBookingModificationActorKind = "CUSTOMER" | "ORGANIZATION_OPERATOR" | "%future added value";
 export type MarketplaceRefundEventType = "ACCOUNTING_PROJECTED" | "ACCOUNTING_PROJECTION_REQUIRED" | "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "SENT_TO_XERO" | "UNDER_REVIEW" | "%future added value";
 export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
@@ -65,6 +67,10 @@ export type marketplaceProductBookingDetails_rootQuery$data = {
         readonly checkoutUrl: string;
       } | null | undefined;
       readonly failure: {
+        readonly accountingCleanupStatus: {
+          readonly name: string;
+          readonly type: MarketplaceBookingFailureAccountingCleanupStatus;
+        };
         readonly allocatedRefundAmount: any | null | undefined;
         readonly category: {
           readonly name: string;
@@ -78,6 +84,10 @@ export type marketplaceProductBookingDetails_rootQuery$data = {
         readonly id: string;
         readonly resolutionDeadlineAt: any | null | undefined;
         readonly resolutionDecision: string | null | undefined;
+        readonly resourceReleaseStatus: {
+          readonly name: string;
+          readonly type: MarketplaceBookingFailureResourceReleaseStatus;
+        };
       } | null | undefined;
       readonly id: string;
       readonly invoiceNumber: string | null | undefined;
@@ -444,6 +454,26 @@ v20 = {
       "concreteType": "MarketplaceBookingFailureChoiceDetails",
       "kind": "LinkedField",
       "name": "customerAction",
+      "plural": false,
+      "selections": (v19/*:: as any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "MarketplaceBookingFailureResourceReleaseStatusDetails",
+      "kind": "LinkedField",
+      "name": "resourceReleaseStatus",
+      "plural": false,
+      "selections": (v19/*:: as any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "MarketplaceBookingFailureAccountingCleanupStatusDetails",
+      "kind": "LinkedField",
+      "name": "accountingCleanupStatus",
       "plural": false,
       "selections": (v19/*:: as any*/),
       "storageKey": null
@@ -1113,16 +1143,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2a069eb86e5526a7e7b05d452bf9bb7c",
+    "cacheID": "25b230f85117b2c0cb3d0274bae84da9",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBookingDetails_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductBookingDetails_rootQuery(\n  $bookingId: String!\n) {\n  ...modifyMarketplaceBookingDialog_query_378Z3H\n  booking(id: $bookingId) {\n    id\n    entityFrameworkVersion\n    from\n    until\n    deletedByCustomer {\n      id\n    }\n    cancellationAvailability {\n      canCancel\n      requiresReason\n      isPolicyOverride\n      unavailableReason\n      isCreditFunded\n      creditOutcome\n    }\n    cancellationPolicyOverridden\n    cancellationOverrideReason\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n      }\n    }\n    recurringBooking {\n      marketplaceBooking {\n        paymentStatus {\n          type\n        }\n        id\n      }\n      id\n    }\n    marketplaceBooking {\n      id\n      quantity\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        finalizedAt\n        customerAction {\n          type\n          name\n        }\n        resolutionDeadlineAt\n        resolutionDecision\n        allocatedRefundAmount\n      }\n      refund {\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        events {\n          id\n          eventType {\n            type\n            name\n          }\n          occurredAt\n          refundAmount\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          actorName\n          previousStatus\n          newStatus\n        }\n      }\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        type {\n          type\n          name\n        }\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        id\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    marketplaceBookingModifications {\n      id\n      occurredAt\n      actorKind\n      reason\n      originalFrom\n      originalUntil\n      resultFrom\n      resultUntil\n      originalResourceNames\n      resultResourceNames\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n\nfragment modifyMarketplaceBookingDialog_query_378Z3H on Query {\n  booking(id: $bookingId) {\n    marketplaceBookingResourceSelection {\n      canSelectResources\n      maximumResourceCount\n      availableResourceIds\n      eligibleLocations {\n        uniqueId\n        name\n      }\n      eligibleResources {\n        resource {\n          id\n          name\n        }\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query marketplaceProductBookingDetails_rootQuery(\n  $bookingId: String!\n) {\n  ...modifyMarketplaceBookingDialog_query_378Z3H\n  booking(id: $bookingId) {\n    id\n    entityFrameworkVersion\n    from\n    until\n    deletedByCustomer {\n      id\n    }\n    cancellationAvailability {\n      canCancel\n      requiresReason\n      isPolicyOverride\n      unavailableReason\n      isCreditFunded\n      creditOutcome\n    }\n    cancellationPolicyOverridden\n    cancellationOverrideReason\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n      }\n    }\n    recurringBooking {\n      marketplaceBooking {\n        paymentStatus {\n          type\n        }\n        id\n      }\n      id\n    }\n    marketplaceBooking {\n      id\n      quantity\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        finalizedAt\n        customerAction {\n          type\n          name\n        }\n        resourceReleaseStatus {\n          type\n          name\n        }\n        accountingCleanupStatus {\n          type\n          name\n        }\n        resolutionDeadlineAt\n        resolutionDecision\n        allocatedRefundAmount\n      }\n      refund {\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        events {\n          id\n          eventType {\n            type\n            name\n          }\n          occurredAt\n          refundAmount\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          actorName\n          previousStatus\n          newStatus\n        }\n      }\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        type {\n          type\n          name\n        }\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        id\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    marketplaceBookingModifications {\n      id\n      occurredAt\n      actorKind\n      reason\n      originalFrom\n      originalUntil\n      resultFrom\n      resultUntil\n      originalResourceNames\n      resultResourceNames\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n\nfragment modifyMarketplaceBookingDialog_query_378Z3H on Query {\n  booking(id: $bookingId) {\n    marketplaceBookingResourceSelection {\n      canSelectResources\n      maximumResourceCount\n      availableResourceIds\n      eligibleLocations {\n        uniqueId\n        name\n      }\n      eligibleResources {\n        resource {\n          id\n          name\n        }\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c52b46160fb61802cd806900f9c9d267";
+(node as any).hash = "a19dd27825ce0c808e43f80cd23315e7";
 
 export default node;

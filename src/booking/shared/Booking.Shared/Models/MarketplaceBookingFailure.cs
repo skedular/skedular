@@ -9,9 +9,13 @@ public sealed record MarketplaceBookingFailureSummary(
     DateTimeOffset FinalizedAt,
     DateTimeOffset? RequestedFrom,
     DateTimeOffset? RequestedUntil,
-    string CustomerAction)
+    string CustomerAction,
+    MarketplaceBookingFailureResourceReleaseStatus ResourceReleaseStatus = MarketplaceBookingFailureResourceReleaseStatus.Pending,
+    MarketplaceBookingFailureAccountingCleanupStatus AccountingCleanupStatus = MarketplaceBookingFailureAccountingCleanupStatus.NotRequired)
 {
     public static implicit operator MarketplaceBookingFailureSummary(MarketplaceBookingFailure failure) =>
         new(failure.Id, failure.Category, failure.Scope, failure.FinalizedAt, failure.RequestedFrom, failure.RequestedUntil,
-            failure.CustomerAction ?? string.Empty);
+            failure.CustomerAction ?? string.Empty,
+            failure.ResourceReleaseStatus.ToResourceReleaseStatus(),
+            failure.AccountingCleanupStatus.ToAccountingCleanupStatus());
 }

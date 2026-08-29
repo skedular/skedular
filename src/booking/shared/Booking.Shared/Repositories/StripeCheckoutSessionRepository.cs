@@ -44,8 +44,14 @@ public class StripeCheckoutSessionRepository(BookingDbContext dbContext, TimePro
 
     public async Task<StripeCheckoutSession?> GetByPaymentIntentIdAsync(
         string paymentIntentId, CancellationToken cancellationToken) =>
-        await DbContext.StripeCheckoutSession.FirstOrDefaultAsync(
-            query => query.PaymentIntentId == paymentIntentId, cancellationToken);
+        await DbContext.StripeCheckoutSession
+            .AsSingleQuery()
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query.Booking)
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query.RecurringBooking)
+            .ThenInclude(query => query!.MarketplaceBookingSubscription)
+            .FirstOrDefaultAsync(query => query.PaymentIntentId == paymentIntentId, cancellationToken);
 
     public StripeCheckoutSession Update(StripeCheckoutSession stripeCheckoutSession)
     {

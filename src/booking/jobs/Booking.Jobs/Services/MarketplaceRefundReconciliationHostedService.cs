@@ -66,6 +66,10 @@ public class MarketplaceRefundReconciliationHostedService(
             var payoutReconciliation = scope.ServiceProvider.GetRequiredService<IStripePayoutReconciliationService>();
             await payoutReconciliation.RetryUnmatchedAsync(_stopping.Token);
             await service.ReconcileAsync(_stopping.Token);
+            var cleanup = scope.ServiceProvider.GetRequiredService<IMarketplaceBookingCleanupReconciliationService>();
+            await cleanup.ReconcileAsync(_stopping.Token);
+            var accountingCleanup = scope.ServiceProvider.GetRequiredService<IMarketplaceBookingAccountingCleanupService>();
+            await accountingCleanup.ReconcileAsync(_stopping.Token);
             await operations.LogOverdueBankTransferRefundsAsync(timeProvider.GetUtcNow(), _stopping.Token);
             await operations.RecordDashboardMetricsAsync(timeProvider.GetUtcNow(), _stopping.Token);
             logger.LogInformation("Refund reconciliation batch completed");

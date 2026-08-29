@@ -2495,12 +2495,21 @@ type MarketplaceBookingDetails @fusion__type(schema: BOOKING_API) {
   totalAmountToDisplay: String! @fusion__field(schema: BOOKING_API)
 }
 
+type MarketplaceBookingFailureAccountingCleanupStatusDetails
+  @fusion__type(schema: BOOKING_API) {
+  name: String! @fusion__field(schema: BOOKING_API)
+  type: MarketplaceBookingFailureAccountingCleanupStatus!
+    @fusion__field(schema: BOOKING_API)
+}
+
 type MarketplaceBookingFailureChoiceDetails @fusion__type(schema: BOOKING_API) {
   name: String! @fusion__field(schema: BOOKING_API)
   type: String! @fusion__field(schema: BOOKING_API)
 }
 
 type MarketplaceBookingFailureDetails @fusion__type(schema: BOOKING_API) {
+  accountingCleanupStatus: MarketplaceBookingFailureAccountingCleanupStatusDetails!
+    @fusion__field(schema: BOOKING_API)
   allocatedRefundAmount: Decimal @fusion__field(schema: BOOKING_API)
   category: MarketplaceBookingFailureChoiceDetails!
     @fusion__field(schema: BOOKING_API)
@@ -2513,7 +2522,16 @@ type MarketplaceBookingFailureDetails @fusion__type(schema: BOOKING_API) {
   resolutionDeadlineAt: DateTime @fusion__field(schema: BOOKING_API)
   resolutionDecidedAt: DateTime @fusion__field(schema: BOOKING_API)
   resolutionDecision: String @fusion__field(schema: BOOKING_API)
+  resourceReleaseStatus: MarketplaceBookingFailureResourceReleaseStatusDetails!
+    @fusion__field(schema: BOOKING_API)
   scope: MarketplaceBookingFailureChoiceDetails!
+    @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplaceBookingFailureResourceReleaseStatusDetails
+  @fusion__type(schema: BOOKING_API) {
+  name: String! @fusion__field(schema: BOOKING_API)
+  type: MarketplaceBookingFailureResourceReleaseStatus!
     @fusion__field(schema: BOOKING_API)
 }
 
@@ -6436,6 +6454,21 @@ enum LocationRestrictedInformationPatchField @fusion__type(schema: LOCATION_API)
 enum LocationType @fusion__type(schema: LOCATION_API) {
   PRIVATE @fusion__enumValue(schema: LOCATION_API)
   MARKETPLACE @fusion__enumValue(schema: LOCATION_API)
+}
+
+enum MarketplaceBookingFailureAccountingCleanupStatus
+  @fusion__type(schema: BOOKING_API) {
+  UNKNOWN @fusion__enumValue(schema: BOOKING_API)
+  NOT_REQUIRED @fusion__enumValue(schema: BOOKING_API)
+  PENDING @fusion__enumValue(schema: BOOKING_API)
+  TRANSITION_REQUIRED @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum MarketplaceBookingFailureResourceReleaseStatus
+  @fusion__type(schema: BOOKING_API) {
+  UNKNOWN @fusion__enumValue(schema: BOOKING_API)
+  PENDING @fusion__enumValue(schema: BOOKING_API)
+  RELEASED @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum MarketplaceBookingModificationActorKind @fusion__type(schema: BOOKING_API) {

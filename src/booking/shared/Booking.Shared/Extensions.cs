@@ -87,6 +87,8 @@ public static class Extensions
                 .AddScoped<IMarketplaceRefundReconciliationService, MarketplaceRefundReconciliationService>()
                 .AddScoped<IMarketplaceRefundOperationsService, MarketplaceRefundOperationsService>()
                 .AddScoped<IMarketplaceBookingFailureService, MarketplaceBookingFailureService>()
+                .AddScoped<IMarketplaceBookingCleanupReconciliationService, MarketplaceBookingCleanupReconciliationService>()
+                .AddScoped<IMarketplaceBookingAccountingCleanupService, MarketplaceBookingAccountingCleanupService>()
                 .AddScoped<IMarketplacePartialBookingResolutionService, MarketplacePartialBookingResolutionService>()
                 .AddSingleton<IMarketplaceRefundOwnershipService, MarketplaceRefundOwnershipService>()
                 .AddScoped<IMarketplaceBookingFailureNotificationService, MarketplaceBookingFailureNotificationService>()

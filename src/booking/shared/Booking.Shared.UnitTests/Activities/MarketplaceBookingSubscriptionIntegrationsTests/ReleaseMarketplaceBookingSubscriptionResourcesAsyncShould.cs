@@ -97,7 +97,7 @@ public class ReleaseMarketplaceBookingSubscriptionResourcesAsyncShould
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => marketplaceBookingService.DeleteAsync(existingBooking, deletedByCustomer, false, null, false,
+        A.CallTo(() => marketplaceBookingService.DeleteWithoutAccountingAsync(existingBooking, deletedByCustomer, false, null,
                 environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => recurringBookingRepository.Remove(recurringBooking)).MustHaveHappenedOnceExactly();

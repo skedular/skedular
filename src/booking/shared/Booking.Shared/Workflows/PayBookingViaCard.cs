@@ -66,6 +66,7 @@ public class PayBookingViaCard
                 });
             if (upsertProductAndPricingResponse is null)
             {
+                await ReleaseBookingResourcesAsync(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed);
                 return;
             }
 
@@ -84,6 +85,7 @@ public class PayBookingViaCard
                 });
             if (upsertBookingRelatedStripeCustomerResponse is null)
             {
+                await ReleaseBookingResourcesAsync(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed);
                 return;
             }
 
@@ -103,23 +105,21 @@ public class PayBookingViaCard
                         MaximumInterval = TimeSpan.FromSeconds(5),
                     },
                 });
-            if (createCheckoutSessionAsyncResponse is null ||
-                createCheckoutSessionAsyncResponse.PaymentStatus.ToPaymentStatus() is PaymentStatus.Confirmed
-                    or PaymentStatus.NoPaymentRequired)
+            if (createCheckoutSessionAsyncResponse is null)
+            {
+                await ReleaseBookingResourcesAsync(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed);
+                return;
+            }
+
+            if (createCheckoutSessionAsyncResponse.PaymentStatus.ToPaymentStatus() is PaymentStatus.Confirmed
+                or PaymentStatus.NoPaymentRequired)
             {
                 return;
             }
 
             if (!await Workflow.WaitConditionAsync(() => _state.PaymentStatus is not null || _state.BookingDeleted, GetDelayDuration(args)))
             {
-                await Workflow.ExecuteActivityAsync(
-                    (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
-                        new ReleaseBookingResourcesInput(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentExpired)),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                    });
+                await ReleaseBookingResourcesAsync(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentExpired);
 
                 return;
             }
@@ -128,26 +128,12 @@ public class PayBookingViaCard
                                            _state.PaymentStatus.ToPaymentStatus() is not (PaymentStatus.Confirmed
                                                or PaymentStatus.NoPaymentRequired)))
             {
-                await Workflow.ExecuteActivityAsync(
-                    (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
-                        new ReleaseBookingResourcesInput(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                    });
+                await ReleaseBookingResourcesAsync(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed);
             }
         }
         catch (Exception)
         {
-            await Workflow.ExecuteActivityAsync(
-                (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
-                    new ReleaseBookingResourcesInput(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
-                new ActivityOptions
-                {
-                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                    TaskQueue = Workflow.Info.TaskQueue,
-                });
+            await ReleaseBookingResourcesAsync(args.BookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed);
         }
     }
 
@@ -186,5 +172,38 @@ public class PayBookingViaCard
         }
 
         return delayDuration;
+    }
+
+    private static async Task ReleaseBookingResourcesAsync(string bookingId, string failureCategory)
+    {
+        try
+        {
+            await Workflow.ExecuteActivityAsync(
+                (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
+                    new ReleaseBookingResourcesInput(bookingId, failureCategory)),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 5,
+                        InitialInterval = TimeSpan.FromSeconds(2),
+                        MaximumInterval = TimeSpan.FromSeconds(30),
+                        BackoffCoefficient = 2,
+                    },
+                });
+        }
+        catch
+        {
+            await Workflow.ExecuteActivityAsync(
+                (MarketplaceBookingCleanupIntegrations activity) => activity.EnqueueAsync(
+                    new EnqueueMarketplaceBookingCleanupInput(bookingId, null, null, failureCategory)),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                });
+        }
     }
 }

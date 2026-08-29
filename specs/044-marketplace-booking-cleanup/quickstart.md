@@ -8,6 +8,19 @@
 
 ## Validation
 
+### Terminal-release trace matrix
+
+| Failure source | Workflow | Local release activity | Durable failure source |
+|---|---|---|---|
+| One-time card rejection, expiry, or Stripe setup failure | `PayBookingViaCard` | `BookingIntegrations.ReleaseBookingResourcesAsync` | Marketplace booking failure; records `RecordNeverCreated` when no checkout session exists |
+| Recurring card rejection, expiry, or Stripe setup failure | `PayRecurringBookingViaCard` | `MarketplaceBookingSubscriptionIntegrations.ReleaseRecurringBookingResourcesAsync` | Subscription/recurring marketplace booking failure |
+| One-time bank-transfer expiry or failure | `PayBookingViaBankTransfer` | `BookingIntegrations.ReleaseBookingResourcesAsync` | Marketplace booking failure |
+| Recurring bank-transfer expiry or failure | `PayRecurringBookingViaBankTransfer` | `MarketplaceBookingSubscriptionIntegrations.ReleaseRecurringBookingResourcesAsync` | Subscription/recurring marketplace booking failure |
+| Initial arrears invoice permanent failure | `GenerateInitialArrearsBookingInvoice` | `BookingIntegrations.ReleaseBookingResourcesAsync` | Marketplace booking failure |
+| Initial recurring arrears invoice permanent failure | `GenerateInitialArrearsRecurringBookingInvoice` | `MarketplaceBookingSubscriptionIntegrations.ReleaseRecurringBookingResourcesAsync` | Subscription/recurring marketplace booking failure |
+
+All of these paths perform the local release before provider cancellation. Cleanup reconciliation claims durable candidates with a lease and enqueues the separate cleanup workflow, including failures where no payment record exists. Immediate enqueue directly from retry exhaustion remains a hardening validation target.
+
 1. Run focused Booking.Shared unit tests for card/bank-transfer workflows, arrears invoice workflows, release activities, failure service, and reconciliation decisions.
 2. Run Booking integration tests for local transaction release, recurring instance deletion, repository eligibility/lease behavior, and replay/concurrency. Assert persistence through repositories, not `DbContext`.
 3. Inject null Stripe product/pricing/customer/session responses and invoice/Xero setup failures that create no payment record; verify an explicit durable failure and cleanup eligibility.

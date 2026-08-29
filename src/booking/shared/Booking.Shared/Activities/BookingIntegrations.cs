@@ -20,6 +20,7 @@ using MarketplaceBookingFailureCategoryConstants = Booking.Shared.Models.Marketp
 using MarketplaceBookingFailureCustomerActionConstants = Booking.Shared.Models.MarketplaceBookingFailureCustomerActionConstants;
 using MarketplaceBookingFailureFinalization = Booking.Shared.Models.MarketplaceBookingFailureFinalization;
 using MarketplaceBookingFailureScopeConstants = Booking.Shared.Models.MarketplaceBookingFailureScopeConstants;
+using MarketplaceBookingFailureAccountingCleanupStatus = Booking.Shared.Models.MarketplaceBookingFailureAccountingCleanupStatus;
 
 namespace Booking.Shared.Activities;
 
@@ -251,7 +252,7 @@ public class BookingIntegrations(
         // Otherwise a confirmed payment is changed to Expired and the compensating refund
         // path is skipped.
         var wasAlreadyPaid = marketplaceBooking.PaymentStatus == PaymentStatusConstants.Confirmed;
-        await marketplaceBookingFailureService.FinalizeAsync(
+        var failure = await marketplaceBookingFailureService.FinalizeAsync(
             new MarketplaceBookingFailureFinalization(
                 null,
                 failureCategory,
@@ -297,13 +298,41 @@ public class BookingIntegrations(
                 new ProcessMarketplaceRefundInput(refundToProcess.Id, null), repositoryFactory.UnitOfWork);
         }
 
+        await marketplaceBookingFailureService.MarkResourcesReleasedAsync(
+            failure.Id,
+            MarketplaceBookingFailureAccountingCleanupStatus.Pending,
+            cancellationToken);
         await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingAsync(
             booking, refundToProcess, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        await accountingInvoiceCancellationService.CancelBookingAsync(booking, cancellationToken);
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await accountingInvoiceCancellationService.CancelBookingAsync(booking, cancellationToken);
+            await marketplaceBookingFailureService.MarkResourcesReleasedAsync(
+                failure.Id,
+                MarketplaceBookingFailureAccountingCleanupStatus.NotRequired,
+                cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            await marketplaceBookingFailureService.MarkResourcesReleasedAsync(
+                failure.Id,
+                MarketplaceBookingFailureAccountingCleanupStatus.TransitionRequired,
+                cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            logger.LogWarning(
+                exception,
+                "Marketplace booking resources were released but accounting cancellation requires a transition. BookingId={BookingId}, FailureId={FailureId}",
+                booking.Id,
+                failure.Id);
+        }
 
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);

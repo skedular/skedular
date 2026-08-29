@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Booking.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -19,6 +20,13 @@ public class MarketplaceBookingFailure : EntityBase
     public string? CustomerAction { get; set; }
     public string? CorrelationId { get; set; }
     public string? Reason { get; set; }
+    public string ResourceReleaseStatus { get; set; }
+    public string AccountingCleanupStatus { get; set; }
+    public int CleanupAttemptCount { get; set; }
+    public DateTimeOffset? CleanupLastAttemptAt { get; set; }
+    public string? CleanupLeaseOwner { get; set; }
+    public DateTimeOffset? CleanupLeaseExpiresAt { get; set; }
+    public DateTimeOffset? CleanupLeaseRenewedAt { get; set; }
 
     public DateTimeOffset? ResolutionDeadlineAt { get; set; }
     public DateTimeOffset? ResolutionDecidedAt { get; set; }
@@ -58,6 +66,13 @@ public class MarketplaceBookingFailureConfiguration : IEntityTypeConfiguration<M
         builder.Property(item => item.CustomerAction).HasMaxLength(Constants.MaxAccountingStatusLength);
         builder.Property(item => item.CorrelationId).HasMaxLength(Constants.MaxCorrelationIdLength);
         builder.Property(item => item.Reason).HasMaxLength(Constants.MaxDescriptionLength);
+        builder.Property(item => item.ResourceReleaseStatus)
+            .HasMaxLength(Constants.MaxAccountingStatusLength)
+            .HasDefaultValue(MarketplaceBookingFailureResourceReleaseStatusConstants.Pending);
+        builder.Property(item => item.AccountingCleanupStatus)
+            .HasMaxLength(Constants.MaxAccountingStatusLength)
+            .HasDefaultValue(MarketplaceBookingFailureAccountingCleanupStatusConstants.NotRequired);
+        builder.Property(item => item.CleanupLeaseOwner).HasMaxLength(Constants.MaxCorrelationIdLength);
         builder.Property(item => item.RequestedResourceIds).HasColumnType("jsonb");
         builder.Property(item => item.ResolutionDecision).HasMaxLength(Constants.MaxAccountingStatusLength);
         builder.Property(item => item.AllocatedRefundAmount).HasPrecision(18, 2);
@@ -74,6 +89,12 @@ public class MarketplaceBookingFailureConfiguration : IEntityTypeConfiguration<M
         builder.HasIndex(item => item.RecurringBookingId);
         builder.HasIndex(item => item.MarketplaceBookingSubscriptionId);
         builder.HasIndex(item => item.FinalizedAt);
+        builder.HasIndex(item => new
+        {
+            item.ResourceReleaseStatus,
+            item.CleanupLeaseExpiresAt,
+            item.FinalizedAt,
+        });
 
         // Expiry workers only need unresolved offers whose deadline has passed.
         builder.HasIndex(item => new

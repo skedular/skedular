@@ -42,6 +42,7 @@ import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from './marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from './marketplace-product-booking-payment-panel';
 import MarketplaceRefundStatusCard from './marketplace-refund-status-card';
+import { getFailureCleanupMessage } from './marketplace-booking-failure-eligibility';
 import { canRequestMarketplaceBookingModification } from './marketplace-self-service-eligibility';
 import { RefundHistoryTimeline } from '@/components/refund/RefundHistoryTimeline';
 
@@ -101,6 +102,14 @@ const RootQuery = graphql`
           }
           finalizedAt
           customerAction {
+            type
+            name
+          }
+          resourceReleaseStatus {
+            type
+            name
+          }
+          accountingCleanupStatus {
             type
             name
           }
@@ -227,6 +236,14 @@ const BookingSubscription = graphql`
           }
           finalizedAt
           customerAction {
+            type
+            name
+          }
+          resourceReleaseStatus {
+            type
+            name
+          }
+          accountingCleanupStatus {
             type
             name
           }
@@ -535,6 +552,7 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                   <Alert severity="warning" sx={{ mt: 3, borderRadius: 3 }}>
                     <SubtitleIconTypography label={marketplaceBooking.failure.category.name} />
                     <BodyIconTypography label={getMarketplaceBookingFailureMessage(marketplaceBooking.failure.category.type)} sx={{ mt: 0.5 }} />
+                    <BodyIconTypography label={getFailureCleanupMessage(marketplaceBooking.failure)} sx={{ mt: 0.5 }} />
                     {marketplaceBooking.failure.customerAction.type === 'Rebook' ? (
                       <Button onClick={() => router.back()} sx={{ mt: 1, textTransform: 'none' }} variant="outlined">
                         Start a new booking

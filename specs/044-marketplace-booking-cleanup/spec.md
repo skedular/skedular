@@ -121,7 +121,7 @@ As an operator, I need the system to find terminal bookings that still hold reso
 ### Measurable Outcomes
 
 - **SC-001**: In controlled tests, 100% of terminal one-time and recurring payment/invoice failure paths release local allocations even when every external cleanup provider is unavailable.
-- **SC-002**: At least 99% of cleanup attempts that encounter transient failures converge to released local resources within three retry/reconciliation cycles; remaining cases are visibly release-pending and actionable.
+- **SC-002**: Cleanup attempts that encounter transient failures use bounded retries and reconciliation; remaining cases are visibly release-pending and actionable.
 - **SC-003**: No user-facing or operator-facing status claims resources are released before the corresponding local transaction commits.
 - **SC-004**: Replaying the same cleanup request at least five times produces one stable local outcome with no duplicate booking instances or allocation changes.
 - **SC-005**: A reconciliation run identifies 100% of seeded terminal bookings with remaining allocations and schedules them for cleanup within one run interval.

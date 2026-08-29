@@ -365,6 +365,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             ResolutionDecidedAt = src.ResolutionDecidedAt,
             ResolutionDecision = src.ResolutionDecision,
             AllocatedRefundAmount = src.AllocatedRefundAmount,
+            ResourceReleaseStatus = ToResourceReleaseStatusDetails(src.ResourceReleaseStatus.ToResourceReleaseStatus()),
+            AccountingCleanupStatus = ToAccountingCleanupStatusDetails(src.AccountingCleanupStatus.ToAccountingCleanupStatus()),
         };
 
     public MarketplaceBookingFailureDetails MapTo(MarketplaceBookingFailureSummary src) =>
@@ -390,6 +392,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 Type = src.CustomerAction,
                 Name = src.CustomerAction.ToMarketplaceBookingFailureCustomerActionName(),
             },
+            ResourceReleaseStatus = ToResourceReleaseStatusDetails(src.ResourceReleaseStatus),
+            AccountingCleanupStatus = ToAccountingCleanupStatusDetails(src.AccountingCleanupStatus),
         };
 
     public BookingDetails MapTo(Shared.Models.Booking src) =>
@@ -1069,6 +1073,20 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                     Name = item.Location.Name.ToSafeString(),
                 },
         });
+
+    private static MarketplaceBookingFailureResourceReleaseStatusDetails ToResourceReleaseStatusDetails(
+        MarketplaceBookingFailureResourceReleaseStatus status) => new()
+    {
+        Type = status,
+        Name = status.ToDisplayName(),
+    };
+
+    private static MarketplaceBookingFailureAccountingCleanupStatusDetails ToAccountingCleanupStatusDetails(
+        MarketplaceBookingFailureAccountingCleanupStatus status) => new()
+    {
+        Type = status,
+        Name = status.ToDisplayName(),
+    };
 
     private static ProductPricing? GetPricing(EntitlementEntity source) =>
         source.EntitlementPurchase?.ProductPricing ??

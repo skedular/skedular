@@ -1,3 +1,4 @@
+using Booking.Shared.Models;
 using HotChocolate;
 
 namespace Booking.Api.GraphQL.Booking;
@@ -63,4 +64,24 @@ public class MarketplaceBookingFailureDetails
 
     [GraphQLName("allocatedRefundAmount")]
     public decimal? AllocatedRefundAmount { get; set; }
+
+    [GraphQLName("resourceReleaseStatus")]
+    public MarketplaceBookingFailureResourceReleaseStatusDetails ResourceReleaseStatus { get; set; } = new();
+
+    [GraphQLName("accountingCleanupStatus")]
+    public MarketplaceBookingFailureAccountingCleanupStatusDetails AccountingCleanupStatus { get; set; } = new();
+}
+
+[GraphQLName("MarketplaceBookingFailureResourceReleaseStatusDetails")]
+public class MarketplaceBookingFailureResourceReleaseStatusDetails
+{
+    public MarketplaceBookingFailureResourceReleaseStatus Type { get; set; }
+    public string Name { get; set; } = string.Empty;
+}
+
+[GraphQLName("MarketplaceBookingFailureAccountingCleanupStatusDetails")]
+public class MarketplaceBookingFailureAccountingCleanupStatusDetails
+{
+    public MarketplaceBookingFailureAccountingCleanupStatus Type { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

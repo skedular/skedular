@@ -108,11 +108,20 @@ const RootQuery = graphql`
         }
       }
       failure {
+        id
         category {
           type
           name
         }
         customerAction {
+          type
+          name
+        }
+        resourceReleaseStatus {
+          type
+          name
+        }
+        accountingCleanupStatus {
           type
           name
         }
@@ -206,11 +215,20 @@ const RootQuery = graphql`
         startDate
         endDate
         failure {
+          id
           category {
             type
             name
           }
           customerAction {
+            type
+            name
+          }
+          resourceReleaseStatus {
+            type
+            name
+          }
+          accountingCleanupStatus {
             type
             name
           }
