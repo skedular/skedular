@@ -1191,6 +1191,13 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("AccountingCleanupStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasDefaultValue("NotRequired");
+
                     b.Property<decimal?>("AllocatedRefundAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("numeric(18,2)");
@@ -1202,6 +1209,22 @@ namespace Booking.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
+
+                    b.Property<int>("CleanupAttemptCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("CleanupLastAttemptAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("CleanupLeaseExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CleanupLeaseOwner")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTimeOffset?>("CleanupLeaseRenewedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CorrelationId")
                         .HasMaxLength(200)
@@ -1268,6 +1291,13 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
+                    b.Property<string>("ResourceReleaseStatus")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasDefaultValue("Pending");
+
                     b.Property<string>("Scope")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -1297,6 +1327,8 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("ResolutionActorCustomerId");
 
                     b.HasIndex("ResolutionDecision", "ResolutionDeadlineAt");
+
+                    b.HasIndex("ResourceReleaseStatus", "CleanupLeaseExpiresAt", "FinalizedAt");
 
                     b.ToTable("MarketplaceBookingFailure");
                 });

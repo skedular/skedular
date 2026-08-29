@@ -197,7 +197,7 @@ const UpcomingBookings = ({ rootDataRelay, integratedPlatform }: { rootDataRelay
     rootDataRelay,
   );
   const bookings = useMemo(() => toNodes(data.upcomingBookings.edges), [data.upcomingBookings.edges]);
-  const days = useMemo(() => groupBookingsByDay(bookings), [bookings]);
+  const days = useMemo(() => groupBookingsByDay(bookings.slice(1)), [bookings]);
   return (
     <>
       <NextBooking booking={bookings[0]} integratedPlatform={integratedPlatform} />
@@ -491,7 +491,8 @@ const DateBlock = ({ date }: { date: string }) => (
 );
 const PaymentChip = ({ name, type }: { name: string; type: string }) => (
   <Chip
-    label={name}
+    label={type === 'CONFIRMED' || type === 'PENDING' ? name : 'Payment issue'}
+    title={name}
     color={type === 'CONFIRMED' ? 'success' : type === 'PENDING' ? 'warning' : 'default'}
     size="small"
     variant={type === 'CONFIRMED' || type === 'PENDING' ? 'filled' : 'outlined'}

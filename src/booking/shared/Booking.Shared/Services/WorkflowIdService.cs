@@ -25,6 +25,7 @@ public interface IWorkflowIdService
     string NotifyMarketplaceBookingModification(string modificationId);
     string ProcessMarketplaceRefund(string refundId);
     string ResolvePartialMarketplaceBooking(string failureId);
+    string MarketplaceBookingCleanup(string failureId);
 }
 
 public class WorkflowIdService(ITemporalHelperService temporalHelperService) : IWorkflowIdService
@@ -89,4 +90,7 @@ public class WorkflowIdService(ITemporalHelperService temporalHelperService) : I
 
     public string ResolvePartialMarketplaceBooking(string failureId) =>
         temporalHelperService.ToId($"marketplace-booking-partial-resolution:{failureId}");
+
+    public string MarketplaceBookingCleanup(string failureId) =>
+        temporalHelperService.ToId($"marketplace-booking-cleanup:{failureId}");
 }

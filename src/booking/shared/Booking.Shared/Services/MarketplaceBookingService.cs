@@ -113,6 +113,13 @@ public interface IMarketplaceBookingService
         bool createRefund,
         CancellationToken cancellationToken);
 
+    Task<Models.Booking> DeleteWithoutAccountingAsync(
+        Database.Entities.Booking existingBooking,
+        Customer? deletedByCustomer,
+        bool ignoreCancellationPolicy,
+        string? cancellationOverrideReason,
+        CancellationToken cancellationToken);
+
     /// <summary>
     ///     Adjusts the required resources for a booking.
     /// </summary>
@@ -1091,112 +1098,24 @@ public class MarketplaceBookingService(
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>The deleted booking model.</returns>
     /// <exception cref="BookingIsNotMarketplace">Thrown when the booking is not a marketplace booking.</exception>
-    public async Task<Models.Booking> DeleteAsync(
+    public Task<Models.Booking> DeleteAsync(
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         bool ignoreCancellationPolicy,
         string? cancellationOverrideReason,
         bool createRefund,
-        CancellationToken cancellationToken)
-    {
-        if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
-        {
-            throw new BookingIsNotMarketplace();
-        }
+        CancellationToken cancellationToken) =>
+        DeleteCoreAsync(existingBooking, deletedByCustomer, ignoreCancellationPolicy, cancellationOverrideReason, createRefund, true,
+            cancellationToken);
 
-        var cancellationPolicyOverridden = false;
-        if (deletedByCustomer is not null)
-        {
-            try
-            {
-                EnsureBookingCanStillBeCancelled(existingBooking);
-            }
-            catch (MarketplaceBookingCancellationNotAllowed) when
-                (ignoreCancellationPolicy && !string.IsNullOrWhiteSpace(cancellationOverrideReason))
-            {
-                cancellationPolicyOverridden = true;
-                logger.LogInformation(
-                    "Marketplace booking cancellation policy overridden by authorized operator. BookingId={BookingId}",
-                    existingBooking.Id);
-            }
-            catch (MarketplaceBookingCancellationNotAllowed) when (ignoreCancellationPolicy)
-            {
-                throw new MarketplaceBookingCancellationOverrideReasonRequired();
-            }
-        }
-
-        existingBooking.CancellationPolicyOverridden = cancellationPolicyOverridden || existingBooking.CancellationPolicyOverridden;
-        existingBooking.CancellationOverrideReason = existingBooking.CancellationPolicyOverridden
-            ? cancellationOverrideReason ?? existingBooking.CancellationOverrideReason
-            : null;
-
-        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
-
-        existingBooking.InvolvedResources.Clear();
-        existingBooking.DeletedByCustomer = deletedByCustomer;
-        existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
-        var deletedBooking = entityMapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
-
-        bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
-
-        var marketplaceBooking = existingBooking.MarketplaceBooking;
-        ArgumentNullException.ThrowIfNull(marketplaceBooking);
-
-        if (marketplaceBooking.IsPaymentRequired)
-        {
-            switch (marketplaceBooking.PaymentMethod.ToPaymentMethod())
-            {
-                case PaymentMethod.Card:
-                    temporalOutboxService.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
-                    break;
-
-                case PaymentMethod.BankTransfer:
-                    temporalOutboxService.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(marketplaceBooking.PaymentMethod), marketplaceBooking.PaymentMethod,
-                        $"Unexpected value for {nameof(marketplaceBooking.PaymentMethod)}: {marketplaceBooking.PaymentMethod}. Update enum mapping or caller input.");
-            }
-        }
-
-        var isCreditFunded = !string.IsNullOrWhiteSpace(marketplaceBooking.EntitlementId);
-        var refund = createRefund && !isCreditFunded
-            ? await marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken,
-                ignoreCancellationPolicy)
-            : null;
-
-        await accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken);
-        await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingAsync(
-            existingBooking, refund, cancellationToken);
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-        if (!string.IsNullOrWhiteSpace(marketplaceBooking.EntitlementId))
-        {
-            var creditRestoreQuote = marketplaceRefundPolicyService.GetQuote(
-                marketplaceBooking.ProductPricing,
-                existingBooking.From,
-                timeProvider.GetUtcNow());
-            await entitlementCancellationService.CancelBookingAsync(
-                deletedBooking.Id,
-                creditRestoreQuote.CanCancel,
-                cancellationOverrideReason ?? "Marketplace booking cancelled.",
-                true,
-                cancellationToken);
-        }
-
-        await transaction.CommitAsync(cancellationToken);
-
-        await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
-        if (refund is not null)
-        {
-            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, deletedBooking.Id, cancellationToken);
-        }
-
-        return deletedBooking;
-    }
+    public Task<Models.Booking> DeleteWithoutAccountingAsync(
+        Database.Entities.Booking existingBooking,
+        Customer? deletedByCustomer,
+        bool ignoreCancellationPolicy,
+        string? cancellationOverrideReason,
+        CancellationToken cancellationToken) =>
+        DeleteCoreAsync(existingBooking, deletedByCustomer, ignoreCancellationPolicy, cancellationOverrideReason, false, false,
+            cancellationToken);
 
     /// <summary>
     ///     Adjusts the required resources for a booking.
@@ -1316,6 +1235,118 @@ public class MarketplaceBookingService(
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
 
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+    }
+
+    private async Task<Models.Booking> DeleteCoreAsync(
+        Database.Entities.Booking existingBooking,
+        Customer? deletedByCustomer,
+        bool ignoreCancellationPolicy,
+        string? cancellationOverrideReason,
+        bool createRefund,
+        bool cancelAccounting,
+        CancellationToken cancellationToken)
+    {
+        if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
+        {
+            throw new BookingIsNotMarketplace();
+        }
+
+        var cancellationPolicyOverridden = false;
+        if (deletedByCustomer is not null)
+        {
+            try
+            {
+                EnsureBookingCanStillBeCancelled(existingBooking);
+            }
+            catch (MarketplaceBookingCancellationNotAllowed) when
+                (ignoreCancellationPolicy && !string.IsNullOrWhiteSpace(cancellationOverrideReason))
+            {
+                cancellationPolicyOverridden = true;
+                logger.LogInformation(
+                    "Marketplace booking cancellation policy overridden by authorized operator. BookingId={BookingId}",
+                    existingBooking.Id);
+            }
+            catch (MarketplaceBookingCancellationNotAllowed) when (ignoreCancellationPolicy)
+            {
+                throw new MarketplaceBookingCancellationOverrideReasonRequired();
+            }
+        }
+
+        existingBooking.CancellationPolicyOverridden = cancellationPolicyOverridden || existingBooking.CancellationPolicyOverridden;
+        existingBooking.CancellationOverrideReason = existingBooking.CancellationPolicyOverridden
+            ? cancellationOverrideReason ?? existingBooking.CancellationOverrideReason
+            : null;
+
+        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
+
+        existingBooking.InvolvedResources.Clear();
+        existingBooking.DeletedByCustomer = deletedByCustomer;
+        existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
+        var deletedBooking = entityMapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
+
+        bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
+
+        var marketplaceBooking = existingBooking.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+        if (marketplaceBooking.IsPaymentRequired)
+        {
+            switch (marketplaceBooking.PaymentMethod.ToPaymentMethod())
+            {
+                case PaymentMethod.Card:
+                    temporalOutboxService.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+                    break;
+
+                case PaymentMethod.BankTransfer:
+                    temporalOutboxService.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(marketplaceBooking.PaymentMethod), marketplaceBooking.PaymentMethod,
+                        $"Unexpected value for {nameof(marketplaceBooking.PaymentMethod)}: {marketplaceBooking.PaymentMethod}. Update enum mapping or caller input.");
+            }
+        }
+
+        var isCreditFunded = !string.IsNullOrWhiteSpace(marketplaceBooking.EntitlementId);
+        var refund = createRefund && !isCreditFunded
+            ? await marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken,
+                ignoreCancellationPolicy)
+            : null;
+
+        if (cancelAccounting)
+        {
+            await accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken);
+        }
+
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingAsync(
+            existingBooking, refund, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(marketplaceBooking.EntitlementId))
+        {
+            var creditRestoreQuote = marketplaceRefundPolicyService.GetQuote(
+                marketplaceBooking.ProductPricing,
+                existingBooking.From,
+                timeProvider.GetUtcNow());
+            await entitlementCancellationService.CancelBookingAsync(
+                deletedBooking.Id,
+                creditRestoreQuote.CanCancel,
+                cancellationOverrideReason ?? "Marketplace booking cancelled.",
+                true,
+                cancellationToken);
+        }
+
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
+        if (refund is not null)
+        {
+            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, deletedBooking.Id, cancellationToken);
+        }
+
+        return deletedBooking;
     }
 
     private static string ResolvePaymentStatus(Database.Entities.Booking booking)

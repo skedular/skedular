@@ -34,6 +34,8 @@ Availability can change between the public booking form's availability check and
 
 If payment has already been captured and the Booking cannot be created, the target workflow records the failure and starts a full refund. Customers and authorized organization stakeholders receive an outcome that explains whether the Booking was created, what happened to the payment, and what action is available next. Notification delivery is separate from the booking response and is designed to remain safe to retry.
 
+When payment or invoice setup fails before a payment record is created, the failure is still recorded against the Booking or Subscription. Resource release is completed locally before Stripe or Xero follow-up. Failure details show whether resources are still being released and whether accounting cleanup needs follow-up; provider availability does not change the authoritative local cancellation result.
+
 For a recurring series where only some requested dates remain available, the customer sees the successful and unavailable occurrences and the proposed unused amount. The confirmed decision window is 24 hours. If the customer accepts the partial series, the unavailable portion is refunded. If the customer rejects it or does not respond, the created occurrences are cancelled and the full payment is refunded. Treat the booking outcome and refund status as separate records while reviewing the case.
 
 See the [booking failure and refund lifecycle overview](/blog/reliable-bookings-honest-refunds) for the customer and operator flow, including the distinction between a cancelled Booking and a completed refund.

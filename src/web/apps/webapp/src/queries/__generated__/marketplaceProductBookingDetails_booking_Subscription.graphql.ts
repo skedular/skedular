@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a36c583ec515c74f273a798b7c199ff5>>
+ * @generated SignedSource<<f966d9acd9a21c9f8f26f857c2b12523>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,8 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
+export type MarketplaceBookingFailureAccountingCleanupStatus = "NOT_REQUIRED" | "PENDING" | "TRANSITION_REQUIRED" | "UNKNOWN" | "%future added value";
+export type MarketplaceBookingFailureResourceReleaseStatus = "PENDING" | "RELEASED" | "UNKNOWN" | "%future added value";
 export type MarketplaceBookingModificationActorKind = "CUSTOMER" | "ORGANIZATION_OPERATOR" | "%future added value";
 export type MarketplaceRefundEventType = "ACCOUNTING_PROJECTED" | "ACCOUNTING_PROJECTION_REQUIRED" | "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "SENT_TO_XERO" | "UNDER_REVIEW" | "%future added value";
 export type MarketplaceRefundStatus = "APPROVED" | "CANCELLED" | "COMPLETED" | "FAILED" | "PROCESSING" | "PROVIDER_PENDING" | "RECONCILIATION_REQUIRED" | "REJECTED" | "REQUESTED" | "UNDER_REVIEW" | "%future added value";
@@ -44,6 +46,10 @@ export type marketplaceProductBookingDetails_booking_Subscription$data = {
         readonly checkoutUrl: string;
       } | null | undefined;
       readonly failure: {
+        readonly accountingCleanupStatus: {
+          readonly name: string;
+          readonly type: MarketplaceBookingFailureAccountingCleanupStatus;
+        };
         readonly category: {
           readonly name: string;
           readonly type: string;
@@ -54,6 +60,10 @@ export type marketplaceProductBookingDetails_booking_Subscription$data = {
         };
         readonly finalizedAt: any;
         readonly id: string;
+        readonly resourceReleaseStatus: {
+          readonly name: string;
+          readonly type: MarketplaceBookingFailureResourceReleaseStatus;
+        };
       } | null | undefined;
       readonly id: string;
       readonly invoiceNumber: string | null | undefined;
@@ -355,6 +365,26 @@ v19 = {
           "concreteType": "MarketplaceBookingFailureChoiceDetails",
           "kind": "LinkedField",
           "name": "customerAction",
+          "plural": false,
+          "selections": (v10/*:: as any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceBookingFailureResourceReleaseStatusDetails",
+          "kind": "LinkedField",
+          "name": "resourceReleaseStatus",
+          "plural": false,
+          "selections": (v10/*:: as any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceBookingFailureAccountingCleanupStatusDetails",
+          "kind": "LinkedField",
+          "name": "accountingCleanupStatus",
           "plural": false,
           "selections": (v10/*:: as any*/),
           "storageKey": null
@@ -675,16 +705,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ee0c94a6879e1bc3d4529de7b923a586",
+    "cacheID": "8d72482770ce30276e198a5e1ed97364",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBookingDetails_booking_Subscription",
     "operationKind": "subscription",
-    "text": "subscription marketplaceProductBookingDetails_booking_Subscription(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    entityFrameworkVersion\n    from\n    until\n    deletedByCustomer {\n      id\n    }\n    cancellationAvailability {\n      canCancel\n      requiresReason\n      isPolicyOverride\n      unavailableReason\n      isCreditFunded\n      creditOutcome\n    }\n    cancellationPolicyOverridden\n    cancellationOverrideReason\n    marketplaceBooking {\n      id\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        finalizedAt\n        customerAction {\n          type\n          name\n        }\n      }\n      refund {\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        events {\n          id\n          eventType {\n            type\n            name\n          }\n          occurredAt\n          refundAmount\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          actorName\n          previousStatus\n          newStatus\n        }\n      }\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    marketplaceBookingModifications {\n      id\n      occurredAt\n      actorKind\n      reason\n      originalFrom\n      originalUntil\n      resultFrom\n      resultUntil\n      originalResourceNames\n      resultResourceNames\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n    id\n  }\n}\n"
+    "text": "subscription marketplaceProductBookingDetails_booking_Subscription(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    entityFrameworkVersion\n    from\n    until\n    deletedByCustomer {\n      id\n    }\n    cancellationAvailability {\n      canCancel\n      requiresReason\n      isPolicyOverride\n      unavailableReason\n      isCreditFunded\n      creditOutcome\n    }\n    cancellationPolicyOverridden\n    cancellationOverrideReason\n    marketplaceBooking {\n      id\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        finalizedAt\n        customerAction {\n          type\n          name\n        }\n        resourceReleaseStatus {\n          type\n          name\n        }\n        accountingCleanupStatus {\n          type\n          name\n        }\n      }\n      refund {\n        currency {\n          type\n          name\n        }\n        status {\n          type\n          name\n        }\n        requestedAt\n        lastProcessedAt\n        refundAmount\n        refundPercentage\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        requestedByCustomerName\n        events {\n          id\n          eventType {\n            type\n            name\n          }\n          occurredAt\n          refundAmount\n          currencyToDisplay\n          reason\n          lastError\n          externalRefundNumber\n          actorName\n          previousStatus\n          newStatus\n        }\n      }\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    marketplaceBookingModifications {\n      id\n      occurredAt\n      actorKind\n      reason\n      originalFrom\n      originalUntil\n      resultFrom\n      resultUntil\n      originalResourceNames\n      resultResourceNames\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a2fee66f61991727e1183472f1268c2e";
+(node as any).hash = "6360014c749f90ef7c595f5d13a4abab";
 
 export default node;

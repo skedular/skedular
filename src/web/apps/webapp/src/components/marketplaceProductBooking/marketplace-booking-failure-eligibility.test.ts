@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   getFailureHeadline,
+  getFailureCleanupMessage,
   hasRebookAction,
   isAvailabilityConflictFailure,
   isPaymentFailure,
@@ -72,6 +73,27 @@ describe('marketplace booking failure eligibility', () => {
     it('returns payment-expired copy for PaymentExpired', () => {
       const headline = getFailureHeadline(makeFailure('PaymentExpired'));
       expect(headline).toBe('Payment time expired');
+    });
+  });
+
+  describe('getFailureCleanupMessage', () => {
+    it('does not claim the capacity is released before the local commit', () => {
+      expect(
+        getFailureCleanupMessage({
+          ...makeFailure('PaymentFailed'),
+          resourceReleaseStatus: { type: 'PENDING', name: 'Pending' },
+        }),
+      ).toBe('We are releasing the reserved capacity. Check back shortly for the final status.');
+    });
+
+    it('separates committed capacity release from pending accounting work', () => {
+      expect(
+        getFailureCleanupMessage({
+          ...makeFailure('PaymentFailed'),
+          resourceReleaseStatus: { type: 'RELEASED', name: 'Released' },
+          accountingCleanupStatus: { type: 'PENDING', name: 'Pending' },
+        }),
+      ).toBe('The reserved capacity has been released. We are completing the related accounting update separately.');
     });
   });
 });

@@ -1,0 +1,33 @@
+# Quickstart: Validate Cleanup Reliability
+
+## Prerequisites
+
+- Repository dependencies and the Booking integration-test database are available.
+- Booking worker/job test dependencies are running.
+- Use branch `044-marketplace-booking-cleanup`.
+
+## Validation
+
+### Terminal-release trace matrix
+
+| Failure source | Workflow | Local release activity | Durable failure source |
+|---|---|---|---|
+| One-time card rejection, expiry, or Stripe setup failure | `PayBookingViaCard` | `BookingIntegrations.ReleaseBookingResourcesAsync` | Marketplace booking failure; records `RecordNeverCreated` when no checkout session exists |
+| Recurring card rejection, expiry, or Stripe setup failure | `PayRecurringBookingViaCard` | `MarketplaceBookingSubscriptionIntegrations.ReleaseRecurringBookingResourcesAsync` | Subscription/recurring marketplace booking failure |
+| One-time bank-transfer expiry or failure | `PayBookingViaBankTransfer` | `BookingIntegrations.ReleaseBookingResourcesAsync` | Marketplace booking failure |
+| Recurring bank-transfer expiry or failure | `PayRecurringBookingViaBankTransfer` | `MarketplaceBookingSubscriptionIntegrations.ReleaseRecurringBookingResourcesAsync` | Subscription/recurring marketplace booking failure |
+| Initial arrears invoice permanent failure | `GenerateInitialArrearsBookingInvoice` | `BookingIntegrations.ReleaseBookingResourcesAsync` | Marketplace booking failure |
+| Initial recurring arrears invoice permanent failure | `GenerateInitialArrearsRecurringBookingInvoice` | `MarketplaceBookingSubscriptionIntegrations.ReleaseRecurringBookingResourcesAsync` | Subscription/recurring marketplace booking failure |
+
+All of these paths perform the local release before provider cancellation. Cleanup reconciliation claims durable candidates with a lease and enqueues the separate cleanup workflow, including failures where no payment record exists. Retry exhaustion also enqueues cleanup immediately.
+
+1. Run focused Booking.Shared unit tests for card/bank-transfer workflows, arrears invoice workflows, release activities, failure service, and reconciliation decisions.
+2. Inject null Stripe product/pricing/customer/session responses and invoice/Xero setup failures that create no payment record; verify an explicit durable failure and cleanup eligibility.
+3. Inject Xero/accounting failure; verify local release commits before accounting becomes pending/transition-required.
+4. Verify local release retries at most five times with delayed/exponential backoff; exhaust them or simulate worker timeout, then verify immediate cleanup enqueue, recurring reconciliation, and eventual release.
+5. Verify status before and after local commit; confirm the UI never claims release early and mutation success updates Relay state without reload.
+6. If GraphQL/Relay contracts change, run `scripts/generate-graphql.sh` and the documented web Relay generator, then run affected web tests/type checks.
+
+Expected result: all newly handled terminal payment/invoice paths converge to released local resources, linked subscription ownership is honored, and provider cleanup is recoverable.
+
+See [data-model.md](data-model.md) and [contracts/cleanup-reliability.md](contracts/cleanup-reliability.md).

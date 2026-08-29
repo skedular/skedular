@@ -54,15 +54,7 @@ public class PayRecurringBookingViaBankTransfer
 
             if (!await Workflow.WaitConditionAsync(() => _state.PaymentStatus is not null || _state.RecurringBookingDeleted, GetDelayDuration(args)))
             {
-                await Workflow.ExecuteActivityAsync(
-                    (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
-                        new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId,
-                            MarketplaceBookingFailureCategoryConstants.PaymentExpired)),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                    });
+                await ReleaseRecurringBookingResourcesAsync(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentExpired);
 
                 return;
             }
@@ -75,28 +67,14 @@ public class PayRecurringBookingViaBankTransfer
             if (string.IsNullOrWhiteSpace(_state.PaymentStatus) ||
                 _state.PaymentStatus.ToPaymentStatus() is not (PaymentStatus.Confirmed or PaymentStatus.NoPaymentRequired))
             {
-                await Workflow.ExecuteActivityAsync(
-                    (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
-                        new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                    });
+                await ReleaseRecurringBookingResourcesAsync(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed);
 
                 return;
             }
         }
         catch (Exception)
         {
-            await Workflow.ExecuteActivityAsync(
-                (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
-                    new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed)),
-                new ActivityOptions
-                {
-                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                    TaskQueue = Workflow.Info.TaskQueue,
-                });
+            await ReleaseRecurringBookingResourcesAsync(args.RecurringBookingId, MarketplaceBookingFailureCategoryConstants.PaymentFailed);
 
             return;
         }
@@ -141,5 +119,38 @@ public class PayRecurringBookingViaBankTransfer
         }
 
         return delayDuration;
+    }
+
+    private static async Task ReleaseRecurringBookingResourcesAsync(string recurringBookingId, string failureCategory)
+    {
+        try
+        {
+            await Workflow.ExecuteActivityAsync(
+                (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
+                    new ReleaseRecurringBookingResourcesInput(recurringBookingId, failureCategory)),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy
+                    {
+                        MaximumAttempts = 5,
+                        InitialInterval = TimeSpan.FromSeconds(2),
+                        MaximumInterval = TimeSpan.FromSeconds(30),
+                        BackoffCoefficient = 2,
+                    },
+                });
+        }
+        catch
+        {
+            await Workflow.ExecuteActivityAsync(
+                (MarketplaceBookingCleanupIntegrations activity) => activity.EnqueueAsync(
+                    new EnqueueMarketplaceBookingCleanupInput(null, recurringBookingId, null, failureCategory)),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                });
+        }
     }
 }

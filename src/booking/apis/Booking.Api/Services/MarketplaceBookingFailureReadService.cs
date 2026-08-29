@@ -1,3 +1,4 @@
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using FailureModel = Booking.Shared.Models.MarketplaceBookingFailureSummary;
 using BookingEntity = Booking.Shared.Database.Entities.MarketplaceBookingFailure;
@@ -33,5 +34,7 @@ public sealed class MarketplaceBookingFailureReadService(IRepositoryFactory repo
     private static FailureModel? Map(BookingEntity? entity) => entity is null
         ? null
         : new FailureModel(entity.Id, entity.Category, entity.Scope, entity.FinalizedAt, entity.RequestedFrom, entity.RequestedUntil,
-            entity.CustomerAction ?? string.Empty);
+            entity.CustomerAction ?? string.Empty,
+            entity.ResourceReleaseStatus.ToResourceReleaseStatus(),
+            entity.AccountingCleanupStatus.ToAccountingCleanupStatus());
 }

@@ -20,6 +20,7 @@ using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using BookingModel = Booking.Shared.Models.Booking;
 using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
+using MarketplaceBookingFailureAccountingCleanupStatus = Booking.Shared.Models.MarketplaceBookingFailureAccountingCleanupStatus;
 
 namespace Booking.Shared.Activities;
 
@@ -166,10 +167,9 @@ public class MarketplaceBookingSubscriptionIntegrations(
         subscription.CancelAtPeriodEnd = false;
         repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(subscription);
 
-        foreach (var recurringBooking in subscription.RecurringBookings.Where(item => !item.IsDeleted()))
+        var recurringBookingsToRelease = subscription.RecurringBookings.Where(item => !item.IsDeleted()).ToList();
+        foreach (var recurringBooking in recurringBookingsToRelease)
         {
-            await CancelRecurringBookingBillingAsync(recurringBooking, cancellationToken);
-
             var existingBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
                 recurringBooking.Id,
                 from,
@@ -178,7 +178,12 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
             foreach (var existingBooking in existingBookings)
             {
-                await marketplaceBookingService.DeleteAsync(existingBooking, subscription.DeletedByCustomer, false, null, false, cancellationToken);
+                await marketplaceBookingService.DeleteWithoutAccountingAsync(
+                    existingBooking,
+                    subscription.DeletedByCustomer,
+                    false,
+                    null,
+                    cancellationToken);
             }
 
             recurringBooking.DeletedByCustomer = subscription.DeletedByCustomer;
@@ -189,6 +194,50 @@ public class MarketplaceBookingSubscriptionIntegrations(
         await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
             subscription, null, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        foreach (var recurringBooking in recurringBookingsToRelease)
+        {
+            try
+            {
+                await CancelRecurringBookingBillingAsync(recurringBooking, cancellationToken);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                var failure = await marketplaceBookingFailureService.FinalizeAsync(
+                    new MarketplaceBookingFailureFinalization(
+                        null,
+                        MarketplaceBookingFailureCategoryConstants.PaymentFailed,
+                        MarketplaceBookingFailureScopeConstants.RecurringCycle,
+                        timeProvider.GetUtcNow(),
+                        null,
+                        recurringBooking.Id,
+                        subscription.Id,
+                        recurringBooking.StartDate,
+                        recurringBooking.EndDate,
+                        [.. recurringBooking.RequestedResources.Select(item => item.Id)],
+                        MarketplaceBookingFailureCustomerActionConstants.None,
+                        null,
+                        "Recurring booking accounting cleanup could not be completed after local cancellation.",
+                        subscription.CreatedByCustomer?.Id,
+                        []),
+                    cancellationToken);
+                await marketplaceBookingFailureService.MarkResourcesReleasedAsync(
+                    failure.Id,
+                    MarketplaceBookingFailureAccountingCleanupStatus.TransitionRequired,
+                    cancellationToken);
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+                logger.LogWarning(
+                    exception,
+                    "Recurring marketplace booking was released locally but accounting cleanup requires a transition. RecurringBookingId={RecurringBookingId}, FailureId={FailureId}",
+                    recurringBooking.Id,
+                    failure.Id);
+            }
+        }
+
         // Cleanup happens asynchronously after the original delete mutation returns, so publish the
         // subscription topic again once release is complete. This lets the UI move from the
         // optimistic/local cancelled state to the fully persisted post-cleanup subscription state.
@@ -208,11 +257,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
             return;
         }
 
-        await accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, cancellationToken);
         await MarkRecurringBookingPaymentAsTerminalAsync(recurringBooking, cancellationToken);
         await MarkSubscriptionPaymentAsTerminalAsync(recurringBooking, args.FailureCategory, cancellationToken);
 
-        await marketplaceBookingFailureService.FinalizeAsync(
+        var failure = await marketplaceBookingFailureService.FinalizeAsync(
             new MarketplaceBookingFailureFinalization(
                 null,
                 args.FailureCategory,
@@ -243,7 +291,39 @@ public class MarketplaceBookingSubscriptionIntegrations(
             await marketplaceBookingService.DeleteAsync(existingBooking, null, false, null, false, cancellationToken);
         }
 
+        await marketplaceBookingFailureService.MarkResourcesReleasedAsync(
+            failure.Id,
+            MarketplaceBookingFailureAccountingCleanupStatus.Pending,
+            cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        try
+        {
+            await accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, cancellationToken);
+            await marketplaceBookingFailureService.MarkResourcesReleasedAsync(
+                failure.Id,
+                MarketplaceBookingFailureAccountingCleanupStatus.NotRequired,
+                cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            await marketplaceBookingFailureService.MarkResourcesReleasedAsync(
+                failure.Id,
+                MarketplaceBookingFailureAccountingCleanupStatus.TransitionRequired,
+                cancellationToken);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            logger.LogWarning(
+                exception,
+                "Recurring marketplace booking resources were released but accounting cancellation requires a transition. RecurringBookingId={RecurringBookingId}, FailureId={FailureId}",
+                recurringBooking.Id,
+                failure.Id);
+        }
+
         if (recurringBooking.MarketplaceBookingSubscription is not null)
         {
             await graphQlTopicEventSender.RaiseGraphqlChangeAsync(

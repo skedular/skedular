@@ -11,6 +11,8 @@ export interface MarketplaceBookingFailureSummary {
   category: { type: FailureCategoryType };
   customerAction: { type: FailureCustomerActionType };
   finalizedAt: string;
+  resourceReleaseStatus?: { type: 'UNKNOWN' | 'PENDING' | 'RELEASED' | '%future added value'; name: string };
+  accountingCleanupStatus?: { type: 'UNKNOWN' | 'NOT_REQUIRED' | 'PENDING' | 'TRANSITION_REQUIRED' | '%future added value'; name: string };
 }
 
 export function getFormFailureToastMessage(categoryType: string): string {
@@ -46,4 +48,27 @@ export function getFailureHeadline(failure: MarketplaceBookingFailureSummary): s
     return 'Payment time expired';
   }
   return 'Booking outcome';
+}
+
+/** Returns customer-safe cleanup copy without exposing provider implementation details. */
+export function getFailureCleanupMessage(
+  failure: Pick<MarketplaceBookingFailureSummary, 'resourceReleaseStatus' | 'accountingCleanupStatus'> & { category: { type: string } },
+): string {
+  if (failure.category.type === 'AvailabilityConflict') {
+    return 'No reserved capacity was held for this booking.';
+  }
+
+  if (failure.resourceReleaseStatus?.type !== 'RELEASED') {
+    return 'We are releasing the reserved capacity. Check back shortly for the final status.';
+  }
+
+  if (failure.accountingCleanupStatus?.type === 'TRANSITION_REQUIRED') {
+    return 'The reserved capacity has been released. A related accounting update needs follow-up, but it does not affect availability.';
+  }
+
+  if (failure.accountingCleanupStatus?.type === 'PENDING') {
+    return 'The reserved capacity has been released. We are completing the related accounting update separately.';
+  }
+
+  return 'The reserved capacity has been released.';
 }

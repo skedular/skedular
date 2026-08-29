@@ -41,6 +41,84 @@ public static class MarketplaceBookingFailureResolutionDecisionConstants
     public const string Expired = "Expired";
 }
 
+public static class MarketplaceBookingFailureResourceReleaseStatusConstants
+{
+    public const string Pending = "Pending";
+    public const string Released = "Released";
+}
+
+public enum MarketplaceBookingFailureResourceReleaseStatus
+{
+    Unknown,
+    Pending,
+    Released,
+}
+
+public static class MarketplaceBookingFailureAccountingCleanupStatusConstants
+{
+    public const string NotRequired = "NotRequired";
+    public const string Pending = "Pending";
+    public const string TransitionRequired = "TransitionRequired";
+}
+
+public enum MarketplaceBookingFailureAccountingCleanupStatus
+{
+    Unknown,
+    NotRequired,
+    Pending,
+    TransitionRequired,
+}
+
+public static class MarketplaceBookingFailureCleanupStatusExtensions
+{
+    public static MarketplaceBookingFailureResourceReleaseStatus ToResourceReleaseStatus(this string value) => value switch
+    {
+        MarketplaceBookingFailureResourceReleaseStatusConstants.Pending => MarketplaceBookingFailureResourceReleaseStatus.Pending,
+        MarketplaceBookingFailureResourceReleaseStatusConstants.Released => MarketplaceBookingFailureResourceReleaseStatus.Released,
+        _ => MarketplaceBookingFailureResourceReleaseStatus.Unknown,
+    };
+
+    public static string ToPersistedValue(this MarketplaceBookingFailureResourceReleaseStatus value) => value switch
+    {
+        MarketplaceBookingFailureResourceReleaseStatus.Pending => MarketplaceBookingFailureResourceReleaseStatusConstants.Pending,
+        MarketplaceBookingFailureResourceReleaseStatus.Released => MarketplaceBookingFailureResourceReleaseStatusConstants.Released,
+        _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown resource release status cannot be persisted."),
+    };
+
+    public static MarketplaceBookingFailureAccountingCleanupStatus ToAccountingCleanupStatus(this string value) => value switch
+    {
+        MarketplaceBookingFailureAccountingCleanupStatusConstants.NotRequired => MarketplaceBookingFailureAccountingCleanupStatus.NotRequired,
+        MarketplaceBookingFailureAccountingCleanupStatusConstants.Pending => MarketplaceBookingFailureAccountingCleanupStatus.Pending,
+        MarketplaceBookingFailureAccountingCleanupStatusConstants.TransitionRequired => MarketplaceBookingFailureAccountingCleanupStatus
+            .TransitionRequired,
+        _ => MarketplaceBookingFailureAccountingCleanupStatus.Unknown,
+    };
+
+    public static string ToPersistedValue(this MarketplaceBookingFailureAccountingCleanupStatus value) => value switch
+    {
+        MarketplaceBookingFailureAccountingCleanupStatus.NotRequired => MarketplaceBookingFailureAccountingCleanupStatusConstants.NotRequired,
+        MarketplaceBookingFailureAccountingCleanupStatus.Pending => MarketplaceBookingFailureAccountingCleanupStatusConstants.Pending,
+        MarketplaceBookingFailureAccountingCleanupStatus.TransitionRequired => MarketplaceBookingFailureAccountingCleanupStatusConstants
+            .TransitionRequired,
+        _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown accounting cleanup status cannot be persisted."),
+    };
+
+    public static string ToDisplayName(this MarketplaceBookingFailureResourceReleaseStatus value) => value switch
+    {
+        MarketplaceBookingFailureResourceReleaseStatus.Pending => "Pending",
+        MarketplaceBookingFailureResourceReleaseStatus.Released => "Released",
+        _ => "Unknown",
+    };
+
+    public static string ToDisplayName(this MarketplaceBookingFailureAccountingCleanupStatus value) => value switch
+    {
+        MarketplaceBookingFailureAccountingCleanupStatus.NotRequired => "Not required",
+        MarketplaceBookingFailureAccountingCleanupStatus.Pending => "Pending",
+        MarketplaceBookingFailureAccountingCleanupStatus.TransitionRequired => "Transition required",
+        _ => "Unknown",
+    };
+}
+
 public static class MarketplaceBookingFailureDeliveryAudienceConstants
 {
     public const string Customer = "Customer";

@@ -13,6 +13,11 @@ public interface IMarketplaceBookingFailureService
 {
     Task<MarketplaceBookingFailureSummary> FinalizeAsync(MarketplaceBookingFailureFinalization finalization, CancellationToken cancellationToken);
 
+    Task MarkResourcesReleasedAsync(
+        string failureId,
+        MarketplaceBookingFailureAccountingCleanupStatus accountingCleanupStatus,
+        CancellationToken cancellationToken);
+
     Task<MarketplaceBookingFailureSummary> ResolvePartialAsync(
         string failureId,
         string decision,
@@ -63,6 +68,11 @@ public class MarketplaceBookingFailureService(
             CustomerAction = finalization.CustomerAction,
             CorrelationId = finalization.CorrelationId,
             Reason = finalization.Reason,
+            ResourceReleaseStatus = finalization.Category is MarketplaceBookingFailureCategoryConstants.PaymentFailed
+                or MarketplaceBookingFailureCategoryConstants.PaymentExpired
+                ? MarketplaceBookingFailureResourceReleaseStatusConstants.Pending
+                : MarketplaceBookingFailureResourceReleaseStatusConstants.Released,
+            AccountingCleanupStatus = MarketplaceBookingFailureAccountingCleanupStatusConstants.NotRequired,
             ResolutionDeadlineAt = finalization.Scope is MarketplaceBookingFailureScopeConstants.InitialSeries
                 or MarketplaceBookingFailureScopeConstants.RecurringCycle
                 ? finalization.FinalizedAt.AddHours(24)
@@ -162,9 +172,27 @@ public class MarketplaceBookingFailureService(
         CancellationToken cancellationToken) =>
         await partialBookingResolutionService.ResolveAsync(failureId, decision, actorCustomerId, cancellationToken);
 
+    public async Task MarkResourcesReleasedAsync(
+        string failureId,
+        MarketplaceBookingFailureAccountingCleanupStatus accountingCleanupStatus,
+        CancellationToken cancellationToken)
+    {
+        var failure = await repositoryFactory.MarketplaceBookingFailureRepository.GetByIdAsync(failureId, cancellationToken);
+        if (failure is null)
+        {
+            return;
+        }
+
+        failure.ResourceReleaseStatus = MarketplaceBookingFailureResourceReleaseStatusConstants.Released;
+        failure.AccountingCleanupStatus = accountingCleanupStatus.ToPersistedValue();
+        repositoryFactory.MarketplaceBookingFailureRepository.Update(failure);
+    }
+
     private static MarketplaceBookingFailureSummary ToModel(MarketplaceBookingFailure failure) =>
         new(failure.Id, failure.Category, failure.Scope, failure.FinalizedAt, failure.RequestedFrom, failure.RequestedUntil,
-            failure.CustomerAction ?? string.Empty);
+            failure.CustomerAction ?? string.Empty,
+            failure.ResourceReleaseStatus.ToResourceReleaseStatus(),
+            failure.AccountingCleanupStatus.ToAccountingCleanupStatus());
 
     private static bool IsFailureKeyConflict(DbUpdateException exception) =>
         exception.InnerException?.Message.Contains("23505", StringComparison.Ordinal) == true ||

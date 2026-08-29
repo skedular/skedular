@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
@@ -20,6 +21,13 @@ public interface IMarketplaceBookingFailureRepository : IRepository<MarketplaceB
         CancellationToken cancellationToken);
 
     Task<IReadOnlyList<MarketplaceBookingFailure>> GetVisibleToCustomerAsync(string customerId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<MarketplaceBookingFailure>> GetCleanupCandidatesAsync(int maxCount, CancellationToken cancellationToken);
+    Task<IReadOnlyList<MarketplaceBookingFailure>> GetAccountingCleanupCandidatesAsync(int maxCount, CancellationToken cancellationToken);
+
+    Task<bool> TryClaimCleanupAsync(string failureId, string workerId, DateTimeOffset now, TimeSpan leaseDuration,
+        CancellationToken cancellationToken);
+
+    Task ReleaseCleanupLeaseAsync(string failureId, string workerId, CancellationToken cancellationToken);
 }
 
 public class MarketplaceBookingFailureRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -82,4 +90,59 @@ public class MarketplaceBookingFailureRepository(BookingDbContext dbContext, Tim
                 delivery.Channel == MarketplaceBookingFailureDeliveryChannelConstants.InApplication))
             .OrderByDescending(item => item.FinalizedAt)
             .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<MarketplaceBookingFailure>> GetCleanupCandidatesAsync(int maxCount, CancellationToken cancellationToken) =>
+        await DbContext.MarketplaceBookingFailure
+            .Where(item => item.ResourceReleaseStatus == MarketplaceBookingFailureResourceReleaseStatusConstants.Pending &&
+                           (item.Category == MarketplaceBookingFailureCategoryConstants.PaymentFailed ||
+                            item.Category == MarketplaceBookingFailureCategoryConstants.PaymentExpired) &&
+                           ((item.BookingId != null && item.Booking!.MarketplaceBooking != null &&
+                             (item.Booking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.Rejected ||
+                              item.Booking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.Expired ||
+                              item.Booking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.RecordNeverCreated)) ||
+                            (item.RecurringBookingId != null && item.RecurringBooking!.MarketplaceBooking != null &&
+                             (item.RecurringBooking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.Rejected ||
+                              item.RecurringBooking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.Expired ||
+                              item.RecurringBooking.MarketplaceBooking.PaymentStatus == PaymentStatusConstants.RecordNeverCreated))))
+            .OrderBy(item => item.FinalizedAt)
+            .Take(maxCount)
+            .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<MarketplaceBookingFailure>>
+        GetAccountingCleanupCandidatesAsync(int maxCount, CancellationToken cancellationToken) =>
+        await DbContext.MarketplaceBookingFailure
+            .Where(item => item.ResourceReleaseStatus == MarketplaceBookingFailureResourceReleaseStatusConstants.Released &&
+                           (item.AccountingCleanupStatus == MarketplaceBookingFailureAccountingCleanupStatusConstants.Pending ||
+                            item.AccountingCleanupStatus == MarketplaceBookingFailureAccountingCleanupStatusConstants.TransitionRequired) &&
+                           (item.BookingId != null || item.RecurringBookingId != null))
+            .OrderBy(item => item.FinalizedAt)
+            .Take(maxCount)
+            .ToListAsync(cancellationToken);
+
+    public async Task<bool> TryClaimCleanupAsync(
+        string failureId,
+        string workerId,
+        DateTimeOffset now,
+        TimeSpan leaseDuration,
+        CancellationToken cancellationToken)
+    {
+        var updated = await DbContext.MarketplaceBookingFailure
+            .Where(item => item.Id == failureId && item.ResourceReleaseStatus == MarketplaceBookingFailureResourceReleaseStatusConstants.Pending &&
+                           (item.CleanupLeaseOwner == null || item.CleanupLeaseExpiresAt <= now))
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(item => item.CleanupLeaseOwner, workerId)
+                .SetProperty(item => item.CleanupLeaseExpiresAt, now.Add(leaseDuration))
+                .SetProperty(item => item.CleanupLeaseRenewedAt, now)
+                .SetProperty(item => item.CleanupLastAttemptAt, now)
+                .SetProperty(item => item.CleanupAttemptCount, item => item.CleanupAttemptCount + 1), cancellationToken);
+        return updated == 1;
+    }
+
+    public async Task ReleaseCleanupLeaseAsync(string failureId, string workerId, CancellationToken cancellationToken) =>
+        await DbContext.MarketplaceBookingFailure
+            .Where(item => item.Id == failureId && item.CleanupLeaseOwner == workerId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(item => item.CleanupLeaseOwner, (string?)null)
+                .SetProperty(item => item.CleanupLeaseExpiresAt, (DateTimeOffset?)null)
+                .SetProperty(item => item.CleanupLeaseRenewedAt, (DateTimeOffset?)null), cancellationToken);
 }
