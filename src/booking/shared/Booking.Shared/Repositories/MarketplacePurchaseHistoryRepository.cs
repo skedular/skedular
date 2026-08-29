@@ -40,6 +40,7 @@ public interface IMarketplacePurchaseHistoryRepository
 
     /// <summary>Refreshes the root purchase affected by a marketplace payment update.</summary>
     Task RefreshForMarketplaceBookingAsync(string marketplaceBookingId, CancellationToken cancellationToken);
+    Task RefreshForMarketplaceBookingSubscriptionAsync(string subscriptionId, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplacePurchaseHistoryRow>>, int)> GetPaginatedRowsAsync(
         PaginationInputParam paginationInputParam,
@@ -634,6 +635,20 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         }
     }
 
+    public async Task RefreshForMarketplaceBookingSubscriptionAsync(string subscriptionId, CancellationToken cancellationToken)
+    {
+        var subscription = await dbContext.MarketplaceBookingSubscription.AsTracking()
+            .Include(item => item.MarketplaceBooking).ThenInclude(item => item!.ProductVersion).ThenInclude(item => item.Product)
+            .Include(item => item.MarketplaceBooking).ThenInclude(item => item!.PaidByCustomer)
+            .Include(item => item.ProductVersion).ThenInclude(item => item.Product)
+            .Include(item => item.DeletedByCustomer)
+            .SingleOrDefaultAsync(item => item.Id == subscriptionId, cancellationToken);
+        if (subscription is not null)
+        {
+            await UpsertMarketplaceBookingSubscriptionAsync(subscription, null, cancellationToken);
+        }
+    }
+
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplacePurchaseHistoryRow>>, int)> GetPaginatedRowsAsync(
         PaginationInputParam paginationInputParam,
         MarketplacePurchaseHistorySearchCriteria searchCriteria,
@@ -691,7 +706,32 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         if (searchCriteria.PaymentStatuses is { Count: > 0 })
         {
             var statuses = searchCriteria.PaymentStatuses.Select(item => item.ToPaymentStatus()).ToList();
-            query = query.Where(item => item.PaymentStatus != null && statuses.Contains(item.PaymentStatus));
+            var now = (timeProvider ?? TimeProvider.System).GetUtcNow();
+            query = query.Where(item =>
+                (item.SourceType != MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription &&
+                 item.PaymentStatus != null && statuses.Contains(item.PaymentStatus)) ||
+                (item.SourceType == MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription &&
+                 dbContext.RecurringBooking.Any(recurringBooking =>
+                     recurringBooking.MarketplaceBookingSubscription != null &&
+                     recurringBooking.MarketplaceBookingSubscription.Id == item.SourceId &&
+                     recurringBooking.MarketplaceBooking != null &&
+                     !recurringBooking.DeletedAt.HasValue &&
+                     statuses.Contains(recurringBooking.MarketplaceBooking.PaymentStatus) &&
+                     ((recurringBooking.StartDate <= now &&
+                       (!recurringBooking.EndDate.HasValue || recurringBooking.EndDate.Value >= now)) ||
+                      (!dbContext.RecurringBooking.Any(active =>
+                           active.MarketplaceBookingSubscription != null &&
+                           active.MarketplaceBookingSubscription.Id == item.SourceId &&
+                           active.MarketplaceBooking != null &&
+                           !active.DeletedAt.HasValue &&
+                           active.StartDate <= now &&
+                           (!active.EndDate.HasValue || active.EndDate.Value >= now)) &&
+                       recurringBooking.StartDate == dbContext.RecurringBooking
+                           .Where(latest => latest.MarketplaceBookingSubscription != null &&
+                                            latest.MarketplaceBookingSubscription.Id == item.SourceId &&
+                                            latest.MarketplaceBooking != null &&
+                                            !latest.DeletedAt.HasValue)
+                           .Max(latest => latest.StartDate))))));
         }
 
         if (searchCriteria.LifecycleStates is { Count: > 0 })
@@ -752,7 +792,28 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
         }
 
         var page = await query.ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderBy), item => item.SourceId, cancellationToken);
+        var nowForSubscriptionSelection = (timeProvider ?? TimeProvider.System).GetUtcNow();
         var sourceIds = page.Item2.Select(edge => edge.Node.SourceId).ToList();
+        var subscriptionIds = page.Item2
+            .Where(edge => edge.Node.SourceType == MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription)
+            .Select(edge => edge.Node.SourceId).ToList();
+        var currentSubscriptionPaymentStatuses = subscriptionIds.Count == 0
+            ? new Dictionary<string, string>()
+            : (await dbContext.RecurringBooking.AsNoTracking()
+                .Include(item => item.MarketplaceBooking)
+                .Include(item => item.MarketplaceBookingSubscription)
+                .Where(item => item.MarketplaceBookingSubscription != null &&
+                               subscriptionIds.Contains(item.MarketplaceBookingSubscription.Id) &&
+                               item.MarketplaceBooking != null)
+                .ToListAsync(cancellationToken))
+            .Where(item => item.MarketplaceBookingSubscription is not null && item.MarketplaceBooking is not null)
+            .GroupBy(item => item.MarketplaceBookingSubscription!.Id)
+            .ToDictionary(group => group.Key, group => group
+                .OrderByDescending(item => !item.DeletedAt.HasValue && item.StartDate <= nowForSubscriptionSelection &&
+                                           (!item.EndDate.HasValue || item.EndDate.Value >= nowForSubscriptionSelection))
+                .ThenByDescending(item => !item.DeletedAt.HasValue)
+                .ThenByDescending(item => item.StartDate)
+                .First().MarketplaceBooking!.PaymentStatus);
         var derivedStates = sourceIds.Count == 0
             ? new Dictionary<(string SourceType, string SourceId), MarketplacePurchaseHistoryCurrentState>()
             : (await dbContext.MarketplacePurchaseHistory.AsNoTracking()
@@ -785,7 +846,8 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
                 .ToDictionaryAsync(item => (item.EntityType, item.EntityId), item => (item.Refund.Id, item.Refund.Status), cancellationToken);
         return (page.Item1, [
                 .. page.Item2.Select(edge => new Edge<MarketplacePurchaseHistoryRow>(
-                    ToRow(edge.Node, latestRefunds, derivedStates.GetValueOrDefault((edge.Node.SourceType, edge.Node.SourceId))), edge.Cursor)),
+                    ToRow(edge.Node, latestRefunds, derivedStates.GetValueOrDefault((edge.Node.SourceType, edge.Node.SourceId)),
+                        currentSubscriptionPaymentStatuses.GetValueOrDefault(edge.Node.SourceId)), edge.Cursor)),
             ],
             page.Item3);
     }
@@ -994,12 +1056,14 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
     private static MarketplacePurchaseHistoryRow ToRow(
         MarketplacePurchaseHistory item,
         IReadOnlyDictionary<(string EntityType, string EntityId), (string Id, string Status)>? latestRefunds = null,
-        MarketplacePurchaseHistoryCurrentState? derivedState = null)
+        MarketplacePurchaseHistoryCurrentState? derivedState = null,
+        string? currentSubscriptionPaymentStatus = null)
     {
         var refund = item.LatestRefundId is not null
             ? (item.LatestRefundId, item.LatestRefundStatus ?? string.Empty)
             : latestRefunds?.GetValueOrDefault((item.SourceType, item.SourceId));
-        var paymentStatus = derivedState?.PaymentStatus ?? item.PaymentStatus?.ToPaymentStatus() ?? PaymentStatus.NotSet;
+        var paymentStatus = currentSubscriptionPaymentStatus?.ToPaymentStatus() ??
+                            derivedState?.PaymentStatus ?? item.PaymentStatus?.ToPaymentStatus() ?? PaymentStatus.NotSet;
         return new MarketplacePurchaseHistoryRow(
             item.SourceId,
             item.SourceType == MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription

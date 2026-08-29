@@ -65,6 +65,15 @@ public class RecurringBookingPaymentService(
         repositoryFactory.MarketplaceBookingRepository.Update(recurringBooking.MarketplaceBooking);
         await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingAsync(
             recurringBooking.MarketplaceBooking.Id, cancellationToken);
+        // The purchase-list row is owned by the subscription, while the payment
+        // status is stored on the billed recurring marketplace booking. Refresh
+        // the subscription projection explicitly so the list cannot retain the
+        // subscription template's NOT_SET status.
+        if (recurringBooking.MarketplaceBookingSubscription is not null)
+        {
+            await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForMarketplaceBookingSubscriptionAsync(
+                recurringBooking.MarketplaceBookingSubscription.Id, cancellationToken);
+        }
 
         if (recurringBooking.MarketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.Card)
         {
