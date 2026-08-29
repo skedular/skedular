@@ -1,5 +1,5 @@
 import { DayPicker } from '@/components/datePickers';
-import { getOrganizationBookingBaseLink, getOrganizationEntitlementPurchaseBaseLink, getOrganizationRefundBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
+import { getOrganizationPurchaseDetailLink, getOrganizationRefundBaseLink, getOrganizationSubscriptionBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import {
@@ -1055,14 +1055,7 @@ const RootPage = ({
                   <Box
                     key={node.id}
                     onClick={() => {
-                      const destination =
-                        node.sourceType === 'SUBSCRIPTION'
-                          ? getOrganizationSubscriptionBaseLink(integratedPlatform, organizationCustomDomain, node.sourceId)
-                          : node.sourceType === 'ENTITLEMENT'
-                            ? getOrganizationEntitlementPurchaseBaseLink(integratedPlatform, organizationCustomDomain, node.sourceId)
-                            : node.bookingId
-                              ? getOrganizationBookingBaseLink(integratedPlatform, organizationCustomDomain, node.bookingId)
-                              : null;
+                      const destination = getOrganizationPurchaseDetailLink(integratedPlatform, organizationCustomDomain, node);
 
                       if (destination) {
                         router.push(destination);

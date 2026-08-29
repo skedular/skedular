@@ -181,8 +181,70 @@ public class MarketplacePurchaseHistoryRepositoryShould(
             cancellationToken);
 
         var history = result.Item2.Single(item => item.Node.Id == subscription.Id).Node;
-        history.PaymentStatus.ShouldBe(PaymentStatusConstants.Confirmed);
+        history.PaymentStatus.ShouldBe(PaymentStatus.Confirmed);
         history.TotalAmount.ShouldBe(25m);
-        history.Currency.ShouldBe(Currency.Nzd.ToCurrency());
+        history.Currency.ShouldBe(Currency.Nzd);
     }
+
+    [Theory]
+    [AutoFakeItEasyData([typeof(SubscriptionFilterScenarioFixtureCustomizer)])]
+    public async Task Append_Subscription_Events_Idempotently_And_Read_Them_Newest_First(
+        SubscriptionFilterScenario scenario,
+        CancellationToken cancellationToken)
+    {
+        await infrastructureTestClient.ResetAsync(new ResetInput(), cancellationToken: cancellationToken);
+        await SubscriptionFilterScenarioSeeder.SeedAsync(repositoryFactory, scenario, cancellationToken);
+
+        var sourceId = scenario.ActiveConfirmed.Subscription.Id;
+        var older = CreateEvent("subscription-event-older", sourceId, DateTimeOffset.UtcNow.AddMinutes(-2),
+            MarketplacePurchaseHistoryEventType.PurchaseCreated);
+        var newer = CreateEvent("subscription-event-newer", sourceId, DateTimeOffset.UtcNow.AddMinutes(-1),
+            MarketplacePurchaseHistoryEventType.SubscriptionRenewed);
+
+        var first = await repositoryFactory.MarketplacePurchaseHistoryRepository.AppendEventAsync(older, "subscription-created-1", cancellationToken);
+        var replay = await repositoryFactory.MarketplacePurchaseHistoryRepository.AppendEventAsync(older with
+            {
+                Id = "different-id",
+            },
+            "subscription-created-1", cancellationToken);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.AppendEventAsync(newer, "subscription-renewed-1", cancellationToken);
+
+        replay.Id.ShouldBe(first.Id);
+        var events = await repositoryFactory.MarketplacePurchaseHistoryRepository.GetEventsAsync(
+            MarketplacePurchaseHistorySourceTypeConstants.MarketplaceBookingSubscription,
+            sourceId,
+            cancellationToken);
+
+        var eventIds = events.Select(item => item.Id).ToList();
+        eventIds.ShouldContain(first.Id);
+        eventIds.ShouldContain(newer.Id);
+        events.Single(item => item.Id == first.Id).Type.ShouldBe(MarketplacePurchaseHistoryEventType.PurchaseCreated);
+        events.Single(item => item.Id == newer.Id).Type.ShouldBe(MarketplacePurchaseHistoryEventType.SubscriptionRenewed);
+        eventIds.IndexOf(newer.Id).ShouldBeLessThan(eventIds.IndexOf(first.Id));
+    }
+
+    private static MarketplacePurchaseHistoryEventModel CreateEvent(
+        string id,
+        string sourceId,
+        DateTimeOffset occurredAt,
+        MarketplacePurchaseHistoryEventType type) => new(
+        id,
+        sourceId,
+        MarketplacePurchaseHistoryEligibleSourceType.Subscription,
+        type,
+        occurredAt,
+        occurredAt,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        type == MarketplacePurchaseHistoryEventType.SubscriptionRenewed ? occurredAt : null,
+        null);
 }

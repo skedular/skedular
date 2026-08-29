@@ -48,6 +48,7 @@ public interface IGraphQlMapper
     RecurringBookingDetails? MapTo(RecurringBooking? src);
     MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src);
     MarketplacePurchaseHistoryDetails MapTo(MarketplacePurchaseHistoryEntry src);
+    MarketplacePurchaseHistoryEventDetails MapTo(MarketplacePurchaseHistoryEventModel src);
     EntitlementDetails MapTo(EntitlementEntity src);
     EntitlementDetails MapTo(EntitlementModel src);
     EntitlementRefundDetails MapTo(EntitlementRefundLink src);
@@ -75,6 +76,42 @@ public interface IGraphQlMapper
 
 public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 {
+    public MarketplacePurchaseHistoryEventDetails MapTo(MarketplacePurchaseHistoryEventModel src) => new()
+    {
+        Id = src.Id,
+        SourceId = src.SourceId,
+        SourceType = src.SourceType,
+        Type = src.Type,
+        Name = src.Type switch
+        {
+            MarketplacePurchaseHistoryEventType.PurchaseCreated => "Purchase created",
+            MarketplacePurchaseHistoryEventType.SubscriptionStarted => "Subscription started",
+            MarketplacePurchaseHistoryEventType.SubscriptionRenewed => "Subscription renewed",
+            MarketplacePurchaseHistoryEventType.CancellationScheduled => "Cancellation scheduled",
+            MarketplacePurchaseHistoryEventType.CancellationCompleted => "Cancellation completed",
+            MarketplacePurchaseHistoryEventType.EntitlementCreated => "Entitlement created",
+            MarketplacePurchaseHistoryEventType.EntitlementExpired => "Entitlement expired",
+            MarketplacePurchaseHistoryEventType.CreditsConsumed => "Credits consumed",
+            MarketplacePurchaseHistoryEventType.PaymentStateChanged => "Payment state changed",
+            MarketplacePurchaseHistoryEventType.RefundStateChanged => "Refund state changed",
+            _ => throw new ArgumentOutOfRangeException(nameof(src.Type)),
+        },
+        OccurredAt = src.OccurredAt,
+        RecordedAt = src.RecordedAt,
+        CancellationRequestedAt = src.CancellationRequestedAt,
+        CancellationEffectiveAt = src.CancellationEffectiveAt,
+        PreviousPaymentStatus = src.PreviousPaymentStatus,
+        PaymentStatus = src.PaymentStatus,
+        RefundId = src.RefundId,
+        PreviousRefundStatus = src.PreviousRefundStatus,
+        RefundStatus = src.RefundStatus,
+        CreditQuantity = src.CreditQuantity,
+        RemainingCreditQuantity = src.RemainingCreditQuantity,
+        Amount = src.Amount,
+        Currency = src.Currency,
+        Reason = src.Reason,
+    };
+
     public EntitlementDetails MapTo(EntitlementModel src) => new()
     {
         Id = src.Id,
@@ -597,8 +634,30 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
                 MarketplaceBooking = src.MarketplaceBooking is null ? null : MapTo(src.MarketplaceBooking),
             };
 
-    public MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src) =>
-        new()
+    public MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src)
+    {
+        var marketplaceBooking = MapTo(src.MarketplaceBooking)!;
+        // The subscription is a container; the amount shown in its header belongs to
+        // the latest retained billing period. This also works for canceled subscriptions,
+        // whose period rows are loaded from soft-deleted history.
+        var billingPeriodMarketplaceBooking = src.RecurringBookings
+            .OrderByDescending(item => item.StartDate)
+            .Select(item => item.MarketplaceBooking)
+            .FirstOrDefault(item => item?.TotalAmount is not null);
+        if (billingPeriodMarketplaceBooking is not null)
+        {
+            marketplaceBooking.TotalAmount = billingPeriodMarketplaceBooking.TotalAmount;
+            if (marketplaceBooking.Currency is null && billingPeriodMarketplaceBooking.Currency is { } currency)
+            {
+                marketplaceBooking.Currency = new CurrencyDetails
+                {
+                    Type = currency,
+                    Name = currency.ToCurrencyName(),
+                };
+            }
+        }
+
+        return new MarketplaceBookingSubscriptionDetails
         {
             Id = src.Id,
             StartedAt = src.StartedAt,
@@ -614,7 +673,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             CancellationPolicyOverridden = src.CancellationPolicyOverridden,
             CancellationOverrideReason = src.CancellationOverrideReason,
             WeeklySelectedDays = [.. src.WeeklySelectedDays],
-            MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
+            MarketplaceBooking = marketplaceBooking,
             InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
             InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => (item.Id, item.CustomDomain.ToSafeString())),
             InvolvedTeamIds = src.InvolvedTeams.Select(item => item.Id),
@@ -623,6 +682,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             DeletedByCustomerId = src.DeletedByCustomer?.Id,
             RecurringBookings = [.. MapTo(src.RecurringBookings)],
         };
+    }
 
     public Shared.Models.Booking MapTo(AddPrivateBookingInput src)
     {

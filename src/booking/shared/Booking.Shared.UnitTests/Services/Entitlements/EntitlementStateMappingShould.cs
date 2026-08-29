@@ -13,6 +13,8 @@ public class EntitlementStateMappingShould
         "ENTITLEMENT".FromPersistedValue().ShouldBe(ProductPricingFulfillmentType.Entitlement);
         EntitlementStatus.Active.ToPersistedValue().ShouldBe("ACTIVE");
         EntitlementLifecycleStateExtensions.EntitlementStatusFromPersistedValue("ACTIVE").ShouldBe(EntitlementStatus.Active);
+        EntitlementStatus.Cancelled.ToPersistedValue().ShouldBe("CANCELLED");
+        EntitlementLifecycleStateExtensions.EntitlementStatusFromPersistedValue("CANCELLED").ShouldBe(EntitlementStatus.Cancelled);
         EntitlementRenewalStatus.Confirmed.ToPersistedValue().ShouldBe("CONFIRMED");
         EntitlementLifecycleStateExtensions.RenewalStatusFromPersistedValue("CONFIRMED").ShouldBe(EntitlementRenewalStatus.Confirmed);
         EntitlementRefundStatus.ManualSettlementRequired.ToPersistedValue().ShouldBe("MANUAL_SETTLEMENT_REQUIRED");

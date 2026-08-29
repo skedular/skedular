@@ -5,23 +5,17 @@ import { getOrganizationBookingBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { NotificationContent } from '@/components/notification';
 import { RootShell } from '@/components/rootShell';
+import { CustomerAvatar } from '@/components/avatars';
+import { formatPurchaseHistoryEventDetails, PurchaseDetailPage, type PurchaseDetailAction } from '@/components/purchaseDetail/purchase-detail-page';
 import type { pageOrganizationEntitlementPurchaseDetail_rootQuery } from '@/queries/__generated__/pageOrganizationEntitlementPurchaseDetail_rootQuery.graphql';
 import type { pageOrganizationEntitlementPurchaseDetail_setRenewalPolicyMutation } from '@/queries/__generated__/pageOrganizationEntitlementPurchaseDetail_setRenewalPolicyMutation.graphql';
 import type { pageOrganizationEntitlementPurchaseDetail_confirmEntitlementPurchaseMutation } from '@/queries/__generated__/pageOrganizationEntitlementPurchaseDetail_confirmEntitlementPurchaseMutation.graphql';
 import type { pageOrganizationEntitlementPurchaseDetail_rejectEntitlementPurchaseMutation } from '@/queries/__generated__/pageOrganizationEntitlementPurchaseDetail_rejectEntitlementPurchaseMutation.graphql';
 import type { pageOrganizationEntitlementPurchaseDetail_makeEntitlementPurchasePaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationEntitlementPurchaseDetail_makeEntitlementPurchasePaymentNotRequiredMutation.graphql';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Chip from '@mui/material/Chip';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import Divider from '@mui/material/Divider';
-import Link from '@mui/material/Link';
-import type { SxProps, Theme } from '@mui/system';
-import Box from '@mui/system/Box';
-import { BodyIconTypography, DefaultDialogTitle, PageHeaderPanel, StackColumn, StackRow, SubtitleIconTypography, TwoButtonsDialogActions } from '@skedular/ui';
+import { BodyIconTypography, DefaultDialogTitle, PageHeaderPanel, StackColumn, TwoButtonsDialogActions } from '@skedular/ui';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useParams } from 'next/navigation';
@@ -40,18 +34,32 @@ const formatBookingDateTime = (from: string, until: string) => {
     : `${start.format('D MMM YYYY, HH:mm')}–${end.format('HH:mm')}`;
 };
 
-const surfaceSx: SxProps<Theme> = {
-  borderRadius: 4,
-  border: 1,
-  borderColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(15, 23, 42, 0.08)' : theme.palette.divider),
-  backgroundColor: (theme) => (theme.palette.mode === 'light' ? 'rgba(255, 255, 255, 0.88)' : theme.palette.background.paper),
-  boxShadow: (theme) => (theme.palette.mode === 'light' ? '0 8px 24px rgba(15, 23, 42, 0.06)' : '0 1px 3px rgba(0, 0, 0, 0.24)'),
-};
-
 const RootQuery = graphql`
   query pageOrganizationEntitlementPurchaseDetail_rootQuery($purchaseId: String!, $linkedBookingsAfter: String) {
     entitlementPurchase(purchaseId: $purchaseId) {
       id
+      history(first: 100) {
+        edges {
+          node {
+            id
+            type
+            name
+            occurredAt
+            previousPaymentStatus
+            paymentStatus
+            previousRefundStatus
+            refundStatus
+            refundId
+            creditQuantity
+            remainingCreditQuantity
+            amount
+            currency
+            cancellationRequestedAt
+            cancellationEffectiveAt
+            reason
+          }
+        }
+      }
       paymentStatus
       lifecycleState
       paymentMethod
@@ -188,24 +196,9 @@ type Props = {
   onLinkedBookingAfterChange: (cursor: string | undefined) => void;
 };
 
-const SummaryRow = ({ label, value }: { label: string; value: string }) => (
-  <StackColumn spacing={0.35}>
-    <BodyIconTypography
-      label={label}
-      sx={{
-        opacity: 0.62,
-        textTransform: 'uppercase',
-        fontSize: '0.78rem',
-        letterSpacing: '0.06em',
-      }}
-    />
-    <BodyIconTypography label={value} sx={{ opacity: 0.88 }} />
-  </StackColumn>
-);
-
-const Detail = ({ queryReference, organizationCustomDomain, onLinkedBookingAfterChange }: Props) => {
+const Detail = ({ queryReference, organizationCustomDomain }: Props) => {
   const data = usePreloadedQuery<pageOrganizationEntitlementPurchaseDetail_rootQuery>(RootQuery, queryReference);
-  const [commitRenewalPolicy, isInFlight] = useMutation<pageOrganizationEntitlementPurchaseDetail_setRenewalPolicyMutation>(RenewalPolicyMutation);
+  const [commitRenewalPolicy] = useMutation<pageOrganizationEntitlementPurchaseDetail_setRenewalPolicyMutation>(RenewalPolicyMutation);
   const [commitConfirmPayment, isConfirmingPayment] = useMutation<pageOrganizationEntitlementPurchaseDetail_confirmEntitlementPurchaseMutation>(ConfirmPaymentMutation);
   const [commitRejectPayment, isRejectingPayment] = useMutation<pageOrganizationEntitlementPurchaseDetail_rejectEntitlementPurchaseMutation>(RejectPaymentMutation);
   const [commitMakePaymentNotRequired, isMakingPaymentNotRequired] =
@@ -225,7 +218,6 @@ const Detail = ({ queryReference, organizationCustomDomain, onLinkedBookingAfter
   const entitlement = purchase.entitlement;
   const usedCredits = linkedBookings?.totalCount ?? 0;
   const freeCredits = Math.max(purchase.creditQuantity - usedCredits, 0);
-  const isBankTransferPaymentPending = purchase.paymentMethod === 'BANK_TRANSFER' && purchase.paymentStatus === 'PENDING';
   const isPaymentActionInFlight = isConfirmingPayment || isRejectingPayment || isMakingPaymentNotRequired;
 
   const handlePaymentActionError = (error: string | null | undefined) => {
@@ -316,184 +308,61 @@ const Detail = ({ queryReference, organizationCustomDomain, onLinkedBookingAfter
 
   return (
     <RootShell>
-      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', p: 2 }}>
-        <StackColumn sx={{ width: '100%', maxWidth: 1200, mx: 'auto', pb: 4 }} spacing={2}>
-          <PageHeaderPanel title="Credit entitlement purchase" description="Review payment, entitlement usage, linked bookings, and renewal settings." />
-          <Box
-            sx={{
-              display: 'grid',
-              gap: 2,
-              gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1.1fr) 380px' },
-              alignItems: 'start',
-            }}
-          >
-            <StackColumn spacing={2}>
-              <Card sx={surfaceSx}>
-                <CardContent sx={{ p: 2.5 }}>
-                  <StackRow
-                    sx={{
-                      alignItems: 'flex-start',
-                      justifyContent: 'space-between',
-                      gap: 1,
-                      flexWrap: 'wrap',
-                    }}
-                  >
-                    <StackColumn spacing={0.5}>
-                      <SubtitleIconTypography label={`${purchase.creditQuantity} credit(s)`} />
-                      <BodyIconTypography label={customerLabel} sx={{ opacity: 0.84 }} />
-                      <BodyIconTypography
-                        label={`Credits valid ${dayjs.utc(purchase.serviceStartAt).format('D MMM YYYY')} – ${dayjs
-                          .utc(purchase.serviceStartAt)
-                          .add(purchase.validityDays, 'day')
-                          .format('D MMM YYYY')} (${purchase.validityDays} day(s))`}
-                        sx={{ opacity: 0.74 }}
-                      />
-                    </StackColumn>
-                    <Chip label={purchase.lifecycleState} variant="outlined" />
-                  </StackRow>
-                  <Divider sx={{ my: 2 }} />
-                  <StackColumn spacing={0.8}>
-                    <BodyIconTypography label={`Payment: ${purchase.paymentStatus} • Method: ${purchase.paymentMethod}`} />
-                    <BodyIconTypography label={`Amount: ${purchase.amount} ${purchase.currency} • Valid for ${purchase.validityDays} day(s)`} sx={{ opacity: 0.78 }} />
-                  </StackColumn>
-                  {entitlement ? (
-                    <Box sx={{ mt: 2, p: 2, borderRadius: 3, border: 1, borderColor: 'divider' }}>
-                      <StackRow sx={{ alignItems: 'center', justifyContent: 'space-between', gap: 1 }}>
-                        <SubtitleIconTypography label="Renewal" />
-                        {entitlement.status === 'CANCELLED' ? <Chip label="Cancelled" color="default" size="small" variant="outlined" /> : null}
-                      </StackRow>
-                      <BodyIconTypography
-                        label={
-                          entitlement.status === 'CANCELLED'
-                            ? 'This entitlement has been cancelled.'
-                            : entitlement.cancelAtPeriodEnd
-                              ? 'Renewal is scheduled to stop at the end of this credit period.'
-                              : entitlement.autoRenew
-                                ? `Auto-renew is enabled${entitlement.nextRenewalAt ? `; next renewal ${dayjs.utc(entitlement.nextRenewalAt).format('D MMM YYYY')}.` : '.'}`
-                                : 'Auto-renew is disabled for this entitlement.'
-                        }
-                        sx={{ mt: 0.75, opacity: 0.78 }}
-                      />
-                      {entitlement.renewalFailureReason ? <BodyIconTypography label={entitlement.renewalFailureReason} sx={{ mt: 0.75, color: 'error.main' }} /> : null}
-                      {entitlement.status === 'ACTIVE' ? (
-                        <StackRow sx={{ mt: 1.5, gap: 1, flexWrap: 'wrap' }}>
-                          <Button
-                            variant="contained"
-                            size="small"
-                            sx={{ textTransform: 'none' }}
-                            onClick={() => updateRenewalPolicy(!entitlement.autoRenew, false)}
-                            disabled={isInFlight}
-                          >
-                            {entitlement.autoRenew ? 'Disable auto-renew' : 'Enable auto-renew'}
-                          </Button>
-                          {entitlement.autoRenew ? (
-                            <Button
-                              variant="outlined"
-                              size="small"
-                              sx={{ textTransform: 'none' }}
-                              onClick={() => (entitlement.cancelAtPeriodEnd ? updateRenewalPolicy(true, false) : setShowCancelDialog(true))}
-                              disabled={isInFlight}
-                            >
-                              {entitlement.cancelAtPeriodEnd ? 'Keep renewing' : 'Cancel at period end'}
-                            </Button>
-                          ) : null}
-                        </StackRow>
-                      ) : null}
-                    </Box>
-                  ) : null}
-                </CardContent>
-              </Card>
-              <Card sx={surfaceSx}>
-                <CardContent sx={{ p: 2.5 }}>
-                  <SubtitleIconTypography label="Linked bookings" />
-                  <BodyIconTypography label="Bookings that consumed credits from this entitlement." sx={{ mt: 0.75, opacity: 0.78 }} />
-                  <StackColumn spacing={1} sx={{ mt: 2 }}>
-                    {linkedBookings?.edges.length ? (
-                      linkedBookings.edges.map(({ node: booking }) => (
-                        <StackRow
-                          key={booking.id}
-                          sx={{
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            gap: 1,
-                          }}
-                        >
-                          <StackColumn spacing={0.25}>
-                            <BodyIconTypography label={formatBookingDateTime(booking.from, booking.until)} />
-                            <BodyIconTypography label={booking.involvedLocations.map((location) => location.name).join(', ') || 'Location pending'} sx={{ opacity: 0.72 }} />
-                            <BodyIconTypography
-                              label={`Resources: ${booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Resources pending'}`}
-                              sx={{ opacity: 0.72 }}
-                            />
-                          </StackColumn>
-                          <Button
-                            component={Link}
-                            href={getOrganizationBookingBaseLink(undefined, organizationCustomDomain, booking.id)}
-                            size="small"
-                            sx={{ textTransform: 'none' }}
-                          >
-                            View
-                          </Button>
-                        </StackRow>
-                      ))
-                    ) : (
-                      <BodyIconTypography label="No linked bookings yet." sx={{ opacity: 0.72 }} />
-                    )}
-                  </StackColumn>
-                  {linkedBookings?.totalCount && linkedBookings.totalCount > 10 ? (
-                    <StackRow sx={{ justifyContent: 'flex-end', gap: 1, mt: 2 }}>
-                      <Button size="small" disabled={!linkedBookings.pageInfo.hasPreviousPage} onClick={() => onLinkedBookingAfterChange(undefined)} sx={{ textTransform: 'none' }}>
-                        Previous
-                      </Button>
-                      <Button
-                        size="small"
-                        disabled={!linkedBookings.pageInfo.hasNextPage}
-                        onClick={() => onLinkedBookingAfterChange(linkedBookings.pageInfo.endCursor ?? undefined)}
-                        sx={{ textTransform: 'none' }}
-                      >
-                        Next
-                      </Button>
-                    </StackRow>
-                  ) : null}
-                </CardContent>
-              </Card>
-            </StackColumn>
-            <Card sx={surfaceSx}>
-              <CardContent sx={{ p: 2.5 }}>
-                <SubtitleIconTypography label="Entitlement summary" />
-                <StackColumn spacing={1.25} sx={{ mt: 2 }}>
-                  <SummaryRow label="Payment status" value={purchase.paymentStatus} />
-                  <SummaryRow label="Payment method" value={purchase.paymentMethod} />
-                  {isBankTransferPaymentPending ? (
-                    <StackRow sx={{ flexWrap: 'wrap', gap: 1, pt: 1 }}>
-                      <Button size="small" variant="contained" disabled={isPaymentActionInFlight} onClick={confirmPayment}>
-                        Confirm payment
-                      </Button>
-                      <Button size="small" color="error" variant="outlined" disabled={isPaymentActionInFlight} onClick={rejectPayment}>
-                        Reject payment
-                      </Button>
-                      <Button size="small" variant="outlined" disabled={isPaymentActionInFlight} onClick={makePaymentNotRequired}>
-                        Payment not required
-                      </Button>
-                    </StackRow>
-                  ) : null}
-                  <SummaryRow label="Credits used" value={`${usedCredits}`} />
-                  <SummaryRow label="Credits free" value={`${freeCredits}`} />
-                  <SummaryRow label="Credits total" value={`${purchase.creditQuantity}`} />
-                  <SummaryRow label="Validity" value={`${purchase.validityDays} day(s)`} />
-                  {purchase.invoiceNumber || purchase.invoiceUrl ? (
-                    <InvoiceDownloadLinks invoices={[]} legacyInvoiceUrl={purchase.invoiceUrl} linkLabel="View invoice" emptyLabel="Invoice not available yet" size="body" />
-                  ) : null}
-                </StackColumn>
-              </CardContent>
-            </Card>
-          </Box>
-        </StackColumn>
-      </Box>
+      <PurchaseDetailPage
+        title="Purchase details"
+        purchaseType="Credit entitlement"
+        customer={customerLabel}
+        customerAvatar={<CustomerAvatar name={{ name: customerLabel }} size="small" />}
+        headline={`${purchase.creditQuantity} credits`}
+        status={purchase.lifecycleState}
+        statusColor={purchase.lifecycleState === 'ACTIVE' ? 'success' : 'warning'}
+        summary={[
+          { label: 'Payment', value: purchase.paymentStatus },
+          { label: 'Method', value: purchase.paymentMethod },
+          { label: 'Credits left', value: `${freeCredits} of ${purchase.creditQuantity}` },
+          { label: 'Validity', value: `${purchase.validityDays} days` },
+        ]}
+        payment={
+          <StackColumn spacing={1} sx={{ mt: 2 }}>
+            <BodyIconTypography label={`Amount: ${purchase.amount} ${purchase.currency}`} />
+            {purchase.invoiceUrl ? (
+              <InvoiceDownloadLinks invoices={[]} legacyInvoiceUrl={purchase.invoiceUrl} linkLabel="View invoice" emptyLabel="Invoice not available" size="body" />
+            ) : null}
+          </StackColumn>
+        }
+        actions={
+          [
+            ...(entitlement?.status === 'ACTIVE'
+              ? [
+                  { label: entitlement.autoRenew ? 'Disable auto-renew' : 'Enable auto-renew', onClick: () => updateRenewalPolicy(!entitlement.autoRenew, false) },
+                  ...(entitlement.autoRenew ? [{ label: 'Cancel at period end', tone: 'destructive' as const, onClick: () => setShowCancelDialog(true) }] : []),
+                ]
+              : []),
+            ...(purchase.paymentStatus === 'PENDING'
+              ? [
+                  { label: 'Confirm payment', onClick: confirmPayment, disabled: isPaymentActionInFlight },
+                  { label: 'Reject payment', tone: 'destructive' as const, onClick: rejectPayment, disabled: isPaymentActionInFlight },
+                  { label: 'Payment not required', onClick: makePaymentNotRequired, disabled: isPaymentActionInFlight },
+                ]
+              : []),
+          ] satisfies PurchaseDetailAction[]
+        }
+        linkedBookings={(linkedBookings?.edges ?? []).map(({ node }) => ({
+          id: node.id,
+          title: formatBookingDateTime(node.from, node.until),
+          meta: `${node.involvedLocations.map((location) => location.name).join(', ') || 'Location pending'} · ${node.bookingResources.map((item) => item.resource.name).join(', ') || 'Resources pending'}`,
+          href: getOrganizationBookingBaseLink(undefined, organizationCustomDomain, node.id),
+        }))}
+        history={purchase.history.edges.map(({ node }) => ({
+          title: node.name,
+          meta: new Date(node.occurredAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }),
+          details: formatPurchaseHistoryEventDetails(node),
+        }))}
+      />
       <Dialog open={showCancelDialog} onClose={() => setShowCancelDialog(false)}>
         <DefaultDialogTitle title="Cancel entitlement renewal" />
         <DialogContent>
-          <DialogContentText>Cancel future renewal for this entitlement? Existing credits and linked bookings remain available according to their current terms.</DialogContentText>
+          <DialogContentText>Cancel future renewal for this entitlement?</DialogContentText>
           <TwoButtonsDialogActions
             onPrimaryClicked={cancel}
             onSecondaryClicked={() => setShowCancelDialog(false)}

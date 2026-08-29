@@ -1,5 +1,6 @@
 ﻿using Booking.Shared.Database;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -51,7 +52,11 @@ public interface IRepositoryFactory
 
 public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepositoryFactory
 {
-    public RepositoryFactory(IDbContextFactory<BookingDbContext> dbContextFactory, TimeProvider timeProvider, ILoggerFactory loggerFactory)
+    public RepositoryFactory(
+        IDbContextFactory<BookingDbContext> dbContextFactory,
+        TimeProvider timeProvider,
+        ILoggerFactory loggerFactory,
+        IRandomHelper randomHelper)
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
@@ -59,7 +64,7 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         RecurringBookingRepository = new RecurringBookingRepository(_dbContext, timeProvider);
         BookingRepository = new BookingRepository(_dbContext, timeProvider);
         MarketplaceBookingRepository = new MarketplaceBookingRepository(_dbContext, timeProvider);
-        MarketplacePurchaseHistoryRepository = new MarketplacePurchaseHistoryRepository(_dbContext, timeProvider);
+        MarketplacePurchaseHistoryRepository = new MarketplacePurchaseHistoryRepository(_dbContext, timeProvider, randomHelper);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);

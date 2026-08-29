@@ -61,6 +61,15 @@ export const getOrganizationSubscriptionBaseLink = (integratedPlatform: string |
   `${getOrganizationBaseLink(integratedPlatform, id)}/purchases/${subscriptionId}`;
 export const getOrganizationEntitlementPurchaseBaseLink = (integratedPlatform: string | undefined, id: string, purchaseId: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/purchases/entitlements/${purchaseId}`;
+export const getOrganizationPurchaseDetailLink = (
+  integratedPlatform: string | undefined,
+  id: string,
+  purchase: { sourceType: string; sourceId: string; bookingId?: string | null },
+) => {
+  if (purchase.sourceType === 'SUBSCRIPTION') return getOrganizationSubscriptionBaseLink(integratedPlatform, id, purchase.sourceId);
+  if (purchase.sourceType === 'ENTITLEMENT') return getOrganizationEntitlementPurchaseBaseLink(integratedPlatform, id, purchase.sourceId);
+  return purchase.bookingId ? getOrganizationBookingBaseLink(integratedPlatform, id, purchase.bookingId) : null;
+};
 export const getOrganizationUsersBaseLink = (integratedPlatform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatform, id)}/users`;
 export const getOrganizationUserProfileBaseLink = (integratedPlatform: string | undefined, id: string, customerId: string) =>
   `${getOrganizationBaseLink(integratedPlatform, id)}/users/${customerId}?tab=profile&section=identity`;

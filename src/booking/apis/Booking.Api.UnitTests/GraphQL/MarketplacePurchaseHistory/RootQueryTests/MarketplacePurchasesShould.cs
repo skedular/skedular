@@ -144,6 +144,12 @@ public class MarketplacePurchasesShould
         public MarketplacePurchaseHistorySearchCriteria? Criteria { get; private set; }
         public IReadOnlyList<MarketplacePurchaseHistoryOrder>? Orders { get; private set; }
 
+        public Task<IReadOnlyList<MarketplacePurchaseHistoryEventModel>> GetEventsAsync(
+            MarketplacePurchaseHistoryEligibleSourceType sourceType,
+            string sourceId,
+            CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<MarketplacePurchaseHistoryEventModel>>([]);
+
         public Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplacePurchaseHistoryEntry>>, int)> GetPaginatedAsync(
             PaginationInputParam paginationInputParam,
             string? organizationCustomDomain,

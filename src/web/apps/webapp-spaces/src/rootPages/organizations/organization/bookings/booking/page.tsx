@@ -80,10 +80,10 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
 
   return (
     <RootShell>
-      {rootData.booking.channel.channel === 'MARKETPLACE' && shouldPay && (
+      {rootData.booking.channel.channel === 'MARKETPLACE' && shouldPay ? (
         <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
-      )}
-      {rootData.booking.channel.channel === 'MARKETPLACE' && !shouldPay && (
+      ) : null}
+      {rootData.booking.channel.channel === 'MARKETPLACE' && !shouldPay ? (
         <EditMarketplaceBooking
           rootDataRelay={rootData}
           rootDataBookingRelay={rootData}
@@ -91,7 +91,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, 
           page={forceModify}
           organizationCustomDomain={organizationCustomDomain}
         />
-      )}
+      ) : null}
       {rootData.booking.channel.channel === 'PRIVATE' &&
         (showRecurringPrivateBookingEditor ? (
           <EditPrivateRecurringBooking

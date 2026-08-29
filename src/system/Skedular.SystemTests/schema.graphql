@@ -1840,6 +1840,14 @@ type ConnectionOfMarketplacePurchaseHistoryEdge
   totalCount: Int! @fusion__field(schema: BOOKING_API)
 }
 
+type ConnectionOfMarketplacePurchaseHistoryEventEdge
+  @fusion__type(schema: BOOKING_API) {
+  edges: [MarketplacePurchaseHistoryEventEdge!]!
+    @fusion__field(schema: BOOKING_API)
+  pageInfo: PageInfo! @fusion__field(schema: BOOKING_API)
+  totalCount: Int! @fusion__field(schema: BOOKING_API)
+}
+
 type ConnectionOfMarketplaceRefundEdge @fusion__type(schema: BOOKING_API) {
   edges: [MarketplaceRefundEdge!]! @fusion__field(schema: BOOKING_API)
   pageInfo: PageInfo! @fusion__field(schema: BOOKING_API)
@@ -2131,6 +2139,15 @@ type EntitlementPurchaseDetails @fusion__type(schema: BOOKING_API) {
     @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
   entitlementId: String @fusion__field(schema: BOOKING_API)
+  history(
+    after: String @fusion__inputField(schema: BOOKING_API)
+    before: String @fusion__inputField(schema: BOOKING_API)
+    first: Int @fusion__inputField(schema: BOOKING_API)
+    last: Int @fusion__inputField(schema: BOOKING_API)
+  ): ConnectionOfMarketplacePurchaseHistoryEventEdge!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   id: String! @fusion__field(schema: BOOKING_API)
   invoiceEmailList: [String!]! @fusion__field(schema: BOOKING_API)
   invoiceNumber: String @fusion__field(schema: BOOKING_API)
@@ -2636,6 +2653,15 @@ type MarketplaceBookingSubscriptionDetails
     @cost(weight: "10")
     @fusion__cost(schema: BOOKING_API, weight: "10")
     @fusion__field(schema: BOOKING_API)
+  history(
+    after: String @fusion__inputField(schema: BOOKING_API)
+    before: String @fusion__inputField(schema: BOOKING_API)
+    first: Int @fusion__inputField(schema: BOOKING_API)
+    last: Int @fusion__inputField(schema: BOOKING_API)
+  ): ConnectionOfMarketplacePurchaseHistoryEventEdge!
+    @cost(weight: "10")
+    @fusion__cost(schema: BOOKING_API, weight: "10")
+    @fusion__field(schema: BOOKING_API)
   id: ID! @fusion__field(schema: BOOKING_API)
   involvedCustomers: [CustomerDetails!]! @fusion__field(schema: BOOKING_API)
   involvedOrganizations: [OrganizationDetails!]!
@@ -2743,7 +2769,7 @@ type MarketplacePurchaseHistoryDetails @fusion__type(schema: BOOKING_API) {
   currency: Currency @fusion__field(schema: BOOKING_API)
   customerId: String @fusion__field(schema: BOOKING_API)
   deletedByCustomerId: String @fusion__field(schema: BOOKING_API)
-  entitlementStatus: String @fusion__field(schema: BOOKING_API)
+  entitlementStatus: EntitlementStatus @fusion__field(schema: BOOKING_API)
   grantedQuantity: Int! @fusion__field(schema: BOOKING_API)
   id: String! @fusion__field(schema: BOOKING_API)
   isDeleted: Boolean! @fusion__field(schema: BOOKING_API)
@@ -2772,6 +2798,36 @@ type MarketplacePurchaseHistoryDetails @fusion__type(schema: BOOKING_API) {
 type MarketplacePurchaseHistoryEdge @fusion__type(schema: BOOKING_API) {
   cursor: String! @fusion__field(schema: BOOKING_API)
   node: MarketplacePurchaseHistoryDetails! @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplacePurchaseHistoryEventDetails @fusion__type(schema: BOOKING_API) {
+  amount: Decimal @fusion__field(schema: BOOKING_API)
+  cancellationEffectiveAt: DateTime @fusion__field(schema: BOOKING_API)
+  cancellationRequestedAt: DateTime @fusion__field(schema: BOOKING_API)
+  creditQuantity: Int @fusion__field(schema: BOOKING_API)
+  currency: Currency @fusion__field(schema: BOOKING_API)
+  id: String! @fusion__field(schema: BOOKING_API)
+  name: String! @fusion__field(schema: BOOKING_API)
+  occurredAt: DateTime! @fusion__field(schema: BOOKING_API)
+  paymentStatus: PaymentStatus @fusion__field(schema: BOOKING_API)
+  previousPaymentStatus: PaymentStatus @fusion__field(schema: BOOKING_API)
+  previousRefundStatus: MarketplaceRefundStatus
+    @fusion__field(schema: BOOKING_API)
+  reason: String @fusion__field(schema: BOOKING_API)
+  recordedAt: DateTime! @fusion__field(schema: BOOKING_API)
+  refundId: String @fusion__field(schema: BOOKING_API)
+  refundStatus: MarketplaceRefundStatus @fusion__field(schema: BOOKING_API)
+  remainingCreditQuantity: Int @fusion__field(schema: BOOKING_API)
+  sourceId: String! @fusion__field(schema: BOOKING_API)
+  sourceType: MarketplacePurchaseHistoryEligibleSourceType!
+    @fusion__field(schema: BOOKING_API)
+  type: MarketplacePurchaseHistoryEventType! @fusion__field(schema: BOOKING_API)
+}
+
+type MarketplacePurchaseHistoryEventEdge @fusion__type(schema: BOOKING_API) {
+  cursor: String! @fusion__field(schema: BOOKING_API)
+  node: MarketplacePurchaseHistoryEventDetails!
+    @fusion__field(schema: BOOKING_API)
 }
 
 type MarketplaceRefundDetails @fusion__type(schema: BOOKING_API) {
@@ -6512,6 +6568,25 @@ enum MarketplaceBookingSubscriptionStatus @fusion__type(schema: BOOKING_API) {
   EXPIRED @fusion__enumValue(schema: BOOKING_API)
   RENEWAL_FAILED @fusion__enumValue(schema: BOOKING_API)
   PAUSED @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum MarketplacePurchaseHistoryEligibleSourceType
+  @fusion__type(schema: BOOKING_API) {
+  SUBSCRIPTION @fusion__enumValue(schema: BOOKING_API)
+  ENTITLEMENT @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum MarketplacePurchaseHistoryEventType @fusion__type(schema: BOOKING_API) {
+  PURCHASE_CREATED @fusion__enumValue(schema: BOOKING_API)
+  SUBSCRIPTION_STARTED @fusion__enumValue(schema: BOOKING_API)
+  SUBSCRIPTION_RENEWED @fusion__enumValue(schema: BOOKING_API)
+  CANCELLATION_SCHEDULED @fusion__enumValue(schema: BOOKING_API)
+  CANCELLATION_COMPLETED @fusion__enumValue(schema: BOOKING_API)
+  ENTITLEMENT_CREATED @fusion__enumValue(schema: BOOKING_API)
+  ENTITLEMENT_EXPIRED @fusion__enumValue(schema: BOOKING_API)
+  CREDITS_CONSUMED @fusion__enumValue(schema: BOOKING_API)
+  PAYMENT_STATE_CHANGED @fusion__enumValue(schema: BOOKING_API)
+  REFUND_STATE_CHANGED @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum MarketplacePurchaseHistoryOrderField @fusion__type(schema: BOOKING_API) {

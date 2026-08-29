@@ -1819,9 +1819,19 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<bool>("CancelAtPeriodEnd")
                         .HasColumnType("boolean");
 
+                    b.Property<DateTimeOffset?>("CancellationEffectiveAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("CancellationReason")
                         .HasMaxLength(100000)
                         .HasColumnType("character varying(100000)");
+
+                    b.Property<DateTimeOffset?>("CancellationRequestedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -1852,8 +1862,54 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
+                    b.Property<decimal?>("EventAmount")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<bool?>("EventAutoRenew")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("EventCancelAtPeriodEnd")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("EventCreditQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("EventCurrency")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("EventEntitlementStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("EventId")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<bool?>("EventIsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("EventReason")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<int?>("EventRemainingCreditQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("EventSubscriptionStatus")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("EventType")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<int>("GrantedQuantity")
                         .HasColumnType("integer");
+
+                    b.Property<string>("IdempotencyKey")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
@@ -1874,6 +1930,9 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset?>("OccurredAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
@@ -1881,6 +1940,14 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("PaymentStatus")
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
+
+                    b.Property<string>("PreviousPaymentStatus")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("PreviousRefundStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("ProductTitle")
                         .HasMaxLength(100000)
@@ -1890,6 +1957,16 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset>("PurchasedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("RecordedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RefundStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTimeOffset?>("RenewalAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("SourceId")
@@ -1918,29 +1995,36 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("DeletedByCustomerId");
 
                     b.HasIndex("EntitlementPurchaseId")
-                        .IsUnique()
                         .HasFilter("\"EntitlementPurchaseId\" IS NOT NULL");
 
-                    b.HasIndex("LatestRefundId")
+                    b.HasIndex("EventId")
                         .IsUnique()
+                        .HasFilter("\"EventId\" IS NOT NULL");
+
+                    b.HasIndex("LatestRefundId")
                         .HasFilter("\"LatestRefundId\" IS NOT NULL");
 
                     b.HasIndex("MarketplaceBookingId")
-                        .IsUnique()
                         .HasFilter("\"MarketplaceBookingId\" IS NOT NULL");
 
                     b.HasIndex("MarketplaceBookingSubscriptionId")
-                        .IsUnique()
                         .HasFilter("\"MarketplaceBookingSubscriptionId\" IS NOT NULL");
 
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("ProductVersionId");
 
-                    b.HasIndex("SourceType", "SourceId")
-                        .IsUnique();
+                    b.HasIndex("SourceType", "SourceId", "IdempotencyKey")
+                        .IsUnique()
+                        .HasFilter("\"IdempotencyKey\" IS NOT NULL");
 
                     b.HasIndex("OrganizationId", "ActivityAt", "SourceType", "SourceId");
+
+                    b.HasIndex("SourceType", "SourceId", "EventType", "OccurredAt")
+                        .HasFilter("\"EventType\" IS NOT NULL");
+
+                    b.HasIndex("SourceType", "SourceId", "OccurredAt", "RecordedAt", "Id")
+                        .HasFilter("\"EventType\" IS NOT NULL");
 
                     b.ToTable("MarketplacePurchaseHistory");
                 });

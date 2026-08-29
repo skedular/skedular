@@ -60,8 +60,8 @@ const MarketplacePurchaseHistorySection = ({ items, integratedPlatform, isCustom
                 : getMarketplaceEntitlementPurchaseDetailsLink(integratedPlatform, isCustomDomain, organizationCustomDomain, item.sourceId);
           const title = item.productTitle ?? item.sourceTypeName;
           const date = item.bookingFrom
-            ? new Date(item.bookingFrom).toLocaleDateString(undefined, { dateStyle: 'medium' })
-            : new Date(item.activityAt).toLocaleDateString(undefined, { dateStyle: 'medium' });
+            ? new Date(item.bookingFrom).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+            : new Date(item.activityAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 
           return (
             <Link key={item.id} component={NextLink} href={href} underline="none" color="inherit" sx={{ display: 'block' }}>

@@ -1,5 +1,7 @@
+using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
 using Booking.Api.Mappers;
+using Booking.Shared.Models;
 
 namespace Booking.Api.UnitTests.Mappers.GraphQlMapperTests;
 
@@ -18,5 +20,46 @@ public class MapMarketplaceBookingSubscriptionShould
         var subscription = sut.MapTo(input);
 
         subscription.WeeklySelectedDays.ShouldBe([DayOfWeek.Tuesday, DayOfWeek.Thursday]);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Use_The_Latest_Billing_Period_Amount_For_The_Subscription_Header(GraphQlMapper sut)
+    {
+        var subscription = new MarketplaceBookingSubscription
+        {
+            Status = MarketplaceBookingSubscriptionStatus.Cancelled,
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                Quantity = 1,
+                ProductPricing = ProductPricing.Empty("subscription-pricing") with
+                {
+                    Price = 100m,
+                },
+            },
+            RecurringBookings =
+            [
+                new RecurringBooking
+                {
+                    StartDate = new DateTimeOffset(2026, 8, 31, 0, 0, 0, TimeSpan.Zero),
+                    MarketplaceBooking = new MarketplaceBooking
+                    {
+                        TotalAmount = 100m,
+                    },
+                },
+                new RecurringBooking
+                {
+                    StartDate = new DateTimeOffset(2026, 9, 7, 0, 0, 0, TimeSpan.Zero),
+                    MarketplaceBooking = new MarketplaceBooking
+                    {
+                        TotalAmount = 125m,
+                    },
+                },
+            ],
+        };
+
+        var result = sut.MapTo(subscription);
+
+        result.MarketplaceBooking.TotalAmount.ShouldBe(125m);
     }
 }

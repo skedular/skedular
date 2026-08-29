@@ -86,11 +86,11 @@ public class GetPaginatedAsyncShould
             TimeProvider.System.GetUtcNow(),
             null,
             null,
-            PaymentStatusConstants.Confirmed,
+            PaymentStatus.Confirmed,
             "product-version-1",
             "Hourly desk",
             10,
-            "NZD",
+            Currency.Nzd,
             "customer-1",
             "organization-1",
             null,
@@ -229,10 +229,11 @@ public class GetPaginatedAsyncShould
     {
         var scenarios = new[]
         {
-            (Status: "CANCELLED", Deleted: false, Expected: MarketplacePurchaseLifecycleState.Cancelled),
-            (Status: "EXPIRED", Deleted: false, Expected: MarketplacePurchaseLifecycleState.Expired),
-            (Status: "RENEWAL_FAILED", Deleted: false, Expected: MarketplacePurchaseLifecycleState.PaymentFailed),
-            (Status: null, Deleted: true, Expected: MarketplacePurchaseLifecycleState.Deleted),
+            (Status: MarketplaceBookingSubscriptionStatus.Cancelled, Deleted: false, Expected: MarketplacePurchaseLifecycleState.Cancelled),
+            (Status: MarketplaceBookingSubscriptionStatus.Expired, Deleted: false, Expected: MarketplacePurchaseLifecycleState.Expired), (
+                Status: MarketplaceBookingSubscriptionStatus.RenewalFailed, Deleted: false,
+                Expected: MarketplacePurchaseLifecycleState.PaymentFailed),
+            (Status: (MarketplaceBookingSubscriptionStatus?)null, Deleted: true, Expected: MarketplacePurchaseLifecycleState.Deleted),
         };
         foreach (var scenario in scenarios)
         {
@@ -264,7 +265,7 @@ public class GetPaginatedAsyncShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Warn_And_Return_Pending_For_Unknown_Legacy_Status(
+    public async Task Warn_And_Return_Pending_For_Missing_Status(
         [Frozen]
         IRepositoryFactory repositoryFactory,
         [Frozen]
@@ -280,7 +281,7 @@ public class GetPaginatedAsyncShould
         MarketplacePurchaseHistoryService sut,
         CancellationToken cancellationToken)
     {
-        var row = CreateRow("subscription-legacy", MarketplacePurchaseSourceType.Subscription, false, "UNKNOWN_STATUS");
+        var row = CreateRow("subscription-without-status", MarketplacePurchaseSourceType.Subscription, false, null);
         A.CallTo(() => repositoryFactory.MarketplacePurchaseHistoryRepository).Returns(historyRepository);
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(null, "example.test", false, false, cancellationToken))
@@ -304,18 +305,18 @@ public class GetPaginatedAsyncShould
     }
 
     private static MarketplacePurchaseHistoryRow CreateRow(string id, MarketplacePurchaseSourceType sourceType, bool isDeleted,
-        string? subscriptionStatus) => new(
+        MarketplaceBookingSubscriptionStatus? subscriptionStatus) => new(
         id,
         sourceType,
         TimeProvider.System.GetUtcNow().AddMinutes(-1),
         TimeProvider.System.GetUtcNow(),
         null,
         null,
-        PaymentStatusConstants.Confirmed,
+        PaymentStatus.Confirmed,
         "product-version-1",
         "Product",
         10,
-        "NZD",
+        Currency.Nzd,
         "customer-1",
         "organization-1",
         null,
