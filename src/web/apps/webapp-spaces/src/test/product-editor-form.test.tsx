@@ -348,6 +348,26 @@ describe('ProductEditorForm', () => {
     expect(screen.getByRole('button', { name: /Advanced/ })).toHaveAttribute('aria-expanded', 'true');
   });
 
+  it('shows booking rules for credit entitlement offers', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <ProductEditorForm
+        {...baseProps}
+        mode="edit"
+        values={{
+          ...baseProps.values,
+          pricingOptions: [{ ...baseProps.values.pricingOptions[0], fulfillmentType: 'ENTITLEMENT' }],
+        }}
+      />,
+    );
+    await user.click(screen.getByRole('tab', { name: 'Offers' }));
+
+    await user.click(screen.getByRole('button', { name: /Booking rules/ }));
+    expect(screen.getByRole('button', { name: /Booking rules/ })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByText(/booking limits that apply when customers use credits/)).toBeInTheDocument();
+  });
+
   it('provides field guidance for product relationships and offer rules', async () => {
     const user = userEvent.setup();
 

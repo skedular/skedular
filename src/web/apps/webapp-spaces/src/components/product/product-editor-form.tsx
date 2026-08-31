@@ -540,63 +540,65 @@ const ProductEditorForm = ({
         </StackColumn>
       </EditorSection>
 
-      {pricingOption.fulfillmentType === 'RESERVATION' ? (
-        <EditorSection
-          title="Booking rules"
-          description="Define availability, quantity, and booking duration."
-          summary={`${pricingOption.availableDays.length || 7} days · ${pricingOption.numberOfResourcesToBook || 1} resource${pricingOption.numberOfResourcesToBook === '1' ? '' : 's'} · ${formatDurationSummary(pricingOption.minDurationMinutes)}–${formatDurationSummary(pricingOption.maxDurationMinutes)}`}
-          expanded={expandedOfferSection === 'booking-rules'}
-          onChange={() => setOfferSection(expandedOfferSection === 'booking-rules' ? '' : 'booking-rules')}
+      <EditorSection
+        title="Booking rules"
+        description={
+          pricingOption.fulfillmentType === 'ENTITLEMENT'
+            ? 'Define the booking limits that apply when customers use credits from this offer.'
+            : 'Define availability, quantity, and booking duration.'
+        }
+        summary={`${pricingOption.availableDays.length || 7} days · ${pricingOption.numberOfResourcesToBook || 1} resource${pricingOption.numberOfResourcesToBook === '1' ? '' : 's'} · ${formatDurationSummary(pricingOption.minDurationMinutes)}–${formatDurationSummary(pricingOption.maxDurationMinutes)}`}
+        expanded={expandedOfferSection === 'booking-rules'}
+        onChange={() => setOfferSection(expandedOfferSection === 'booking-rules' ? '' : 'booking-rules')}
+      >
+        <CalendarDayPicker availableDays={pricingOption.availableDays} onChange={(availableDays) => changeNestedField(`pricingOptions[${index}].availableDays`, availableDays)} />
+        <FormFieldLabel
+          label="Number of Resources to Book"
+          help="How many matching resources are reserved for each booking. Increasing this can reduce availability because every booking consumes this many resources."
         >
-          <CalendarDayPicker availableDays={pricingOption.availableDays} onChange={(availableDays) => changeNestedField(`pricingOptions[${index}].availableDays`, availableDays)} />
+          <TextField
+            name={`pricingOptions[${index}].numberOfResourcesToBook`}
+            required
+            disabled={isEventProduct}
+            helperText={isEventProduct ? 'Ignored for event products. The full matching resource set will be booked.' : undefined}
+          />
+        </FormFieldLabel>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+          <DurationInput
+            label="Minimum booking duration"
+            help="The shortest time a customer can book for this offer. It must not exceed the maximum duration and is saved in minutes even when entered as hours."
+            value={pricingOption.minDurationMinutes}
+            onChange={(value) => changeNestedField(`pricingOptions[${index}].minDurationMinutes`, value)}
+            unit={pricingOption.minDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+            onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].minDurationDisplayUnit`, unit.toUpperCase())}
+            required
+          />
+          <DurationInput
+            label="Maximum booking duration"
+            help="The longest time a customer can book for this offer. It works with the minimum duration to define the allowed booking range and is saved in minutes."
+            value={pricingOption.maxDurationMinutes}
+            onChange={(value) => changeNestedField(`pricingOptions[${index}].maxDurationMinutes`, value)}
+            unit={pricingOption.maxDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+            onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].maxDurationDisplayUnit`, unit.toUpperCase())}
+            required
+          />
+        </Box>
+        {pricingOption.cadence === 'WEEKLY' ? (
           <FormFieldLabel
-            label="Number of Resources to Book"
-            help="How many matching resources are reserved for each booking. Increasing this can reduce availability because every booking consumes this many resources."
+            label="Required selected days per week"
+            help="For weekly offers, this requires customers to book a specific number of the selected weekdays. The calendar days above define the choices."
           >
             <TextField
-              name={`pricingOptions[${index}].numberOfResourcesToBook`}
-              required
-              disabled={isEventProduct}
-              helperText={isEventProduct ? 'Ignored for event products. The full matching resource set will be booked.' : undefined}
+              name={`pricingOptions[${index}].requiredDaysPerWeek`}
+              type="text"
+              slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
+              fieldProps={{ parse: sanitizeWeeklyRequiredDays }}
+              helperText={`Leave empty for unrestricted weekly booking; choose 1 to ${pricingOption.availableDays.length || 7}.`}
             />
           </FormFieldLabel>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
-            <DurationInput
-              label="Minimum booking duration"
-              help="The shortest time a customer can book for this offer. It must not exceed the maximum duration and is saved in minutes even when entered as hours."
-              value={pricingOption.minDurationMinutes}
-              onChange={(value) => changeNestedField(`pricingOptions[${index}].minDurationMinutes`, value)}
-              unit={pricingOption.minDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
-              onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].minDurationDisplayUnit`, unit.toUpperCase())}
-              required
-            />
-            <DurationInput
-              label="Maximum booking duration"
-              help="The longest time a customer can book for this offer. It works with the minimum duration to define the allowed booking range and is saved in minutes."
-              value={pricingOption.maxDurationMinutes}
-              onChange={(value) => changeNestedField(`pricingOptions[${index}].maxDurationMinutes`, value)}
-              unit={pricingOption.maxDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
-              onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].maxDurationDisplayUnit`, unit.toUpperCase())}
-              required
-            />
-          </Box>
-          {pricingOption.cadence === 'WEEKLY' ? (
-            <FormFieldLabel
-              label="Required selected days per week"
-              help="For weekly offers, this requires customers to book a specific number of the selected weekdays. The calendar days above define the choices."
-            >
-              <TextField
-                name={`pricingOptions[${index}].requiredDaysPerWeek`}
-                type="text"
-                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
-                fieldProps={{ parse: sanitizeWeeklyRequiredDays }}
-                helperText={`Leave empty for unrestricted weekly booking; choose 1 to ${pricingOption.availableDays.length || 7}.`}
-              />
-            </FormFieldLabel>
-          ) : null}
-          {pricingOption.cadence === 'WEEKLY' ? <SmallIconTypography label="Leave this field empty to keep the existing unrestricted weekly booking behavior." /> : null}
-        </EditorSection>
-      ) : null}
+        ) : null}
+        {pricingOption.cadence === 'WEEKLY' ? <SmallIconTypography label="Leave this field empty to keep the existing unrestricted weekly booking behavior." /> : null}
+      </EditorSection>
 
       <EditorSection
         title="Payments"
