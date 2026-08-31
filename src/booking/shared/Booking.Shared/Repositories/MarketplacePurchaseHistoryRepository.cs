@@ -40,6 +40,7 @@ public interface IMarketplacePurchaseHistoryRepository
 
     /// <summary>Refreshes the root purchase affected by a marketplace payment update.</summary>
     Task RefreshForMarketplaceBookingAsync(string marketplaceBookingId, CancellationToken cancellationToken);
+
     Task RefreshForMarketplaceBookingSubscriptionAsync(string subscriptionId, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplacePurchaseHistoryRow>>, int)> GetPaginatedRowsAsync(
@@ -781,8 +782,7 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
                  (subscriptionStatuses.Contains(item.SubscriptionStatus!) ||
                   (includePendingSubscription && !nonPendingSubscriptionStatuses.Contains(item.SubscriptionStatus!)))) ||
                 (item.SourceType == MarketplacePurchaseHistorySourceTypeConstants.EntitlementPurchase && !item.IsDeleted &&
-                 ((includeActiveEntitlement && item.PaymentStatus == PaymentStatusConstants.Confirmed &&
-                   item.EntitlementStatus == nameof(EntitlementStatus.Active)) ||
+                 ((includeActiveEntitlement && item.PaymentStatus == PaymentStatusConstants.Confirmed) ||
                   (includePendingEntitlement && (item.PaymentStatus == PaymentStatusConstants.Pending ||
                                                  item.EntitlementStatus == nameof(EntitlementStatus.Pending))) ||
                   (includePaymentFailedEntitlement && item.PaymentStatus == PaymentStatusConstants.Rejected) ||
