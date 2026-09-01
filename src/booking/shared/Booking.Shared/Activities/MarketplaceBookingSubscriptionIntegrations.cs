@@ -588,7 +588,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
             {
                 // Generated recurring marketplace instances always use the recurring-compatible
                 // daily booking cadence. The purchase cadence remains on the parent subscription/template.
-                BookingCadence = ResolveInstanceBookingCadence(marketplaceBooking.ProductPricing.PurchaseCadence),
             };
 
             booking.MarketplaceBooking = marketplaceBooking;
@@ -1071,7 +1070,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
     private MarketplaceBooking CreateRecurringMarketplaceBookingTemplate(MarketplaceBookingSubscription subscription)
     {
         var marketplaceBooking = subscription.MarketplaceBooking;
-        var bookingCadence = ResolveInstanceBookingCadence(marketplaceBooking.ProductPricing.PurchaseCadence);
         var requiresPaymentForCurrentCycle =
             marketplaceBooking.ProductPricing.BillingMode is ProductPricingBillingMode.Upfront or ProductPricingBillingMode.InArrears;
         var paymentExpiry = requiresPaymentForCurrentCycle
@@ -1091,7 +1089,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 Quantity = marketplaceBooking.Quantity,
                 ProductPricing = marketplaceBooking.ProductPricing with
                 {
-                    BookingCadence = bookingCadence,
                 },
                 PaymentMethod = marketplaceBooking.PaymentMethod,
                 PaymentExpiry = paymentExpiry,
@@ -1247,29 +1244,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
     {
         var from = ResolveRecurringInstanceFrom(subscription);
 
-        // For day-based subscriptions the workflow later replaces the concrete booking window
-        // with the location's actual opening hours. Shorter cadences keep their explicit time.
-        return ResolveInstanceBookingCadence(subscription.MarketplaceBooking.ProductPricing.PurchaseCadence) switch
-        {
-            ProductPricingCadence.PerMinute => from.AddMinutes(1),
-            ProductPricingCadence.Per15Minutes => from.AddMinutes(15),
-            ProductPricingCadence.Per30Minutes => from.AddMinutes(30),
-            ProductPricingCadence.PerHour => from.AddHours(1),
-            ProductPricingCadence.HalfDay => from.AddHours(4),
-            _ => new DateTimeOffset(from.UtcDateTime.Date.AddDays(1).AddTicks(-1), TimeSpan.Zero),
-        };
+        return new DateTimeOffset(from.UtcDateTime.Date.AddDays(1).AddTicks(-1), TimeSpan.Zero);
     }
-
-    private static ProductPricingCadence ResolveInstanceBookingCadence(ProductPricingCadence purchaseCadence) =>
-        purchaseCadence switch
-        {
-            ProductPricingCadence.PerMinute => ProductPricingCadence.PerMinute,
-            ProductPricingCadence.Per15Minutes => ProductPricingCadence.Per15Minutes,
-            ProductPricingCadence.Per30Minutes => ProductPricingCadence.Per30Minutes,
-            ProductPricingCadence.PerHour => ProductPricingCadence.PerHour,
-            ProductPricingCadence.HalfDay => ProductPricingCadence.HalfDay,
-            // Day-or-longer subscriptions are materialized one day at a time under the
-            // recurring marketplace flow while the purchase cadence stays on the parent object.
-            _ => ProductPricingCadence.Daily,
-        };
 }

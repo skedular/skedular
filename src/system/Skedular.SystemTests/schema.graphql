@@ -3910,9 +3910,6 @@ type ProductPricing
   billingMode: ProductPricingBillingMode!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
-  bookingCadence: ProductPricingCadence!
-    @fusion__field(schema: BOOKING_API)
-    @fusion__field(schema: MARKETPLACE_API)
   cancellationPolicyType: ProductPricingCancellationPolicyType!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
@@ -5504,7 +5501,6 @@ input ProductPricingInput @fusion__type(schema: MARKETPLACE_API) {
   acceptedPaymentMethods: [PaymentMethod!]! @fusion__inputField(schema: MARKETPLACE_API)
   availableDays: [DayOfWeek!] @fusion__inputField(schema: MARKETPLACE_API)
   billingMode: ProductPricingBillingMode! @fusion__inputField(schema: MARKETPLACE_API)
-  bookingCadence: ProductPricingCadence! @fusion__inputField(schema: MARKETPLACE_API)
   cancellationPolicyType: ProductPricingCancellationPolicyType! @fusion__inputField(schema: MARKETPLACE_API)
   cancellationRefundRules: [ProductPricingCancellationRefundRuleInput!]! @fusion__inputField(schema: MARKETPLACE_API)
   entitlementCreditQuantity: Int @fusion__inputField(schema: MARKETPLACE_API)
@@ -7965,31 +7961,16 @@ enum ProductPricingCadence
   NOT_SET
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
-  ONE_TIME
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  PER_MINUTE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  PER_HOUR
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
   DAILY
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   WEEKLY
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
+  FORTNIGHTLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
   MONTHLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  HALF_DAY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  PER15_MINUTES
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  PER30_MINUTES
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   TWO_MONTHS
@@ -8008,9 +7989,6 @@ enum ProductPricingCadence
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   YEARLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  FORTNIGHTLY
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
 }

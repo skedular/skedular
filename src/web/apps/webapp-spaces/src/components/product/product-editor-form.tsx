@@ -485,7 +485,7 @@ const ProductEditorForm = ({
         description={
           pricingOption.fulfillmentType === 'ENTITLEMENT'
             ? 'Credit entitlements are purchased once and provide credits customers can use later.'
-            : 'Reservations are purchased against a booking cadence and reserve resources or time.'
+            : 'Reservations use the selected purchase term and reserve resources or time.'
         }
         summary={`${prettifyEnum(pricingOption.fulfillmentType)} · ${prettifyEnum(pricingOption.cadence)}`}
         expanded={expandedOfferSection === 'fulfillment'}
@@ -502,7 +502,7 @@ const ProductEditorForm = ({
               name={`pricingOptions[${index}].fulfillmentType`}
               fieldProps={{
                 onChange: (event: { target: { value: string } }) => {
-                  if (event.target.value === 'ENTITLEMENT') form.change(`pricingOptions[${index}].cadence`, 'ONE_TIME');
+                  if (event.target.value === 'ENTITLEMENT') form.change(`pricingOptions[${index}].cadence`, 'NOT_SET');
                 },
               }}
             >
@@ -530,11 +530,11 @@ const ProductEditorForm = ({
             <StackColumn spacing={0.75}>
               <FormFieldLabel
                 label="Cadence"
-                help="One Time charges once. A repeating cadence describes when a recurring purchase renews. Booking cadence controls the resource schedule separately; auto-renewal is configured in Payments."
+                help="The purchase term defines the offer period. Auto-renewal, when enabled, repeats that term; it does not constrain the booking duration."
               >
                 <SingleChoiceProductPricingCadence rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].cadence`} required />
               </FormFieldLabel>
-              <SmallIconTypography label="Choose One time for a single purchase, or a repeating cadence such as Monthly. Auto-renewal is configured separately in Payments." />
+              <SmallIconTypography label="Choose a term of one day or longer. Auto-renewal is configured separately in Payments." />
             </StackColumn>
           )}
         </StackColumn>
@@ -957,7 +957,7 @@ const ProductEditorForm = ({
                 <Chip size="small" label={`${pricingOptions.length}`} />
               </StackRow>
               <SmallIconTypography label="Manage the purchase options available for this product." />
-              <Button fullWidth variant="outlined" startIcon={<AddRoundedIcon />} onClick={() => addOffer('ONE_TIME')} sx={{ textTransform: 'none' }}>
+              <Button fullWidth variant="outlined" startIcon={<AddRoundedIcon />} onClick={() => addOffer('DAILY')} sx={{ textTransform: 'none' }}>
                 Add offer
               </Button>
 

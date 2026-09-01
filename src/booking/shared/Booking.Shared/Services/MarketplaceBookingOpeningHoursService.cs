@@ -223,17 +223,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
     /// </summary>
     /// <param name="cadence">The product pricing cadence to evaluate.</param>
     /// <returns>True if location opening hours window should be used, false otherwise.</returns>
-    public bool ShouldUseLocationOpeningHoursWindow(ProductPricingCadence cadence) =>
-        cadence is ProductPricingCadence.Daily or
-            ProductPricingCadence.Weekly or
-            ProductPricingCadence.Fortnightly or
-            ProductPricingCadence.Monthly or
-            ProductPricingCadence.TwoMonths or
-            ProductPricingCadence.Quarterly or
-            ProductPricingCadence.FourMonths or
-            ProductPricingCadence.FiveMonths or
-            ProductPricingCadence.SixMonths or
-            ProductPricingCadence.Yearly;
+    public bool ShouldUseLocationOpeningHoursWindow(ProductPricingCadence cadence) => true;
 
     public (DateTimeOffset From, DateTimeOffset Until)? ResolveDailyBookingWindow(Resource resource, DateOnly bookingDay) =>
         ResolveBookingWindow(resource, bookingDay);
@@ -250,13 +240,6 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
     {
         var dayStart = new DateTimeOffset(bookingDay.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), TimeSpan.Zero);
         var dayEndExclusive = dayStart.AddDays(1);
-        if (!ShouldUseLocationOpeningHoursWindow(pricing.PurchaseCadence))
-        {
-            // Sub-daily metered pricing keeps its original duration model so reconciliation
-            // does not accidentally change the paid duration later.
-            return (dayStart, ResolveFallbackUntil(dayStart, pricing.BookingCadence));
-        }
-
         var openingHours = location.OpeningHours ?? OpeningHours.Default;
         if (openingHours.ClosedDates.Any(item => item.StartOfDay() == dayStart))
         {
@@ -420,11 +403,6 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
     {
         var dayStart = new DateTimeOffset(bookingDay.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), TimeSpan.Zero);
         var dayEndExclusive = dayStart.AddDays(1);
-        if (!ShouldUseLocationOpeningHoursWindow(pricing.PurchaseCadence))
-        {
-            return (dayStart, ResolveFallbackUntil(dayStart, pricing.BookingCadence));
-        }
-
         if (openingHours.ClosedDates.Any(item => item.StartOfDay() == dayStart))
         {
             return null;
@@ -477,22 +455,4 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
             bookingDay.ToDateTimeOffset(openingHoursDetails.From.Value.ToTimeSpan()),
             bookingDay.ToDateTimeOffset(openingHoursDetails.Until.Value.ToTimeSpan()));
     }
-
-    /// <summary>
-    ///     Resolves a fallback end time for bookings that don't use location opening hours.
-    ///     Uses the pricing cadence to determine the duration from the start time.
-    /// </summary>
-    /// <param name="from">The start time of the booking.</param>
-    /// <param name="cadence">The pricing cadence that determines the duration.</param>
-    /// <returns>The calculated end time.</returns>
-    private static DateTimeOffset ResolveFallbackUntil(DateTimeOffset from, ProductPricingCadence cadence) =>
-        cadence switch
-        {
-            ProductPricingCadence.PerMinute => from.AddMinutes(1),
-            ProductPricingCadence.Per15Minutes => from.AddMinutes(15),
-            ProductPricingCadence.Per30Minutes => from.AddMinutes(30),
-            ProductPricingCadence.PerHour => from.AddHours(1),
-            ProductPricingCadence.HalfDay => from.AddHours(4),
-            _ => from.AddDays(1),
-        };
 }

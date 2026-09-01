@@ -42,11 +42,11 @@ The Subscription keeps the Product Version and Price used for its current access
 
 ## When a Subscription is created
 
-The purchase cadence on the selected Product Price determines whether access is one-time or recurring. One-time, per-minute, 15-minute, 30-minute, hourly, and half-day purchase cadences create standalone Bookings. Daily, weekly, fortnightly, monthly, two-month, quarterly, four-month, five-month, six-month, and yearly purchase cadences use the Subscription workflow. Event Products cannot use subscription auto-renewal.
+Purchase cadence is the offer or contract term: Daily, Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, or Yearly. Auto-renewal determines whether that term repeats. Event Products cannot use subscription auto-renewal.
 
 This is the canonical model: the Customer chooses a Product and Price; recurring pricing creates a Subscription; the Subscription maintains the Booking series.
 
-Purchase cadence and Booking cadence describe different things. Purchase cadence sets the commercial access cycle. Booking cadence sets how often individual Resource reservations are created within that cycle. A monthly Subscription can therefore be fulfilled through daily Bookings.
+Individual booking duration is controlled only by the minimum and maximum duration. Customers select a start and end date/time, and any duration in that range is allowed while opening-hours, availability, and conflict rules remain enforced. Organization billing cycles may split longer terms for invoices and resource-booking slices; they do not replace purchase cadence.
 
 ## Booking generation and resource allocation
 
@@ -130,7 +130,7 @@ A Customer chooses a monthly desk Product and Price. Skedular creates a Subscrip
 
 - A Subscription is recurring customer access, not a Booking.
 - One Subscription can maintain many recurring Bookings.
-- Purchase cadence determines the Subscription cycle; Booking cadence determines reservation intervals.
+- Purchase cadence determines the offer term; auto-renewal determines whether it repeats.
 - Auto-renewal requires a Price that supports subscription auto-renewal.
 - Renewal rechecks the current Product Version and matching Price.
 - Booking Groups determine which Resources can fulfil generated Bookings.
@@ -150,11 +150,11 @@ No. A Booking reserves Resources for a specific period. A Subscription coordinat
 
 ### What creates a Subscription?
 
-Daily, weekly, fortnightly, monthly, two-month, quarterly, four-month, five-month, six-month, and yearly purchase cadences use the Subscription process. One-time, per-minute, 15-minute, 30-minute, hourly, and half-day purchase cadences use standalone Bookings.
+All supported purchase cadences are day-or-longer offer terms. Whether the purchase is renewed is controlled by auto-renewal, not by a second cadence field.
 
 ### Can a Subscription contain daily Bookings?
 
-Yes. Purchase cadence controls the access cycle, while Booking cadence controls individual reservations. A monthly Subscription can contain daily Bookings.
+Yes. Purchase cadence controls the access term, while minimum and maximum duration control each individual reservation. A monthly offer can contain bookings of any permitted duration.
 
 ### What happens when a Subscription renews?
 

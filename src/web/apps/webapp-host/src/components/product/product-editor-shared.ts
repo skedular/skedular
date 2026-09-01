@@ -104,7 +104,7 @@ export const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCar
   id: uuid(),
   title: null,
   subTitle: null,
-  cadence: 'ONE_TIME',
+  cadence: 'DAILY',
   fulfillmentType: 'RESERVATION',
   entitlementCreditQuantity: '',
   entitlementValidityDays: '',
@@ -135,35 +135,17 @@ export const toRequiredDaysPerWeekInput = (cadence: string, requiredDaysPerWeek:
 
 export const sanitizeWeeklyRequiredDays = (value: string) => value.replace(/[^0-9]/g, '').slice(0, 1);
 
-export const getDurationStepDetails = (cadence: string, bookingSlotSizeInMinutes: number) => {
+export const getDurationStepDetails = (cadence: string) => {
   switch (cadence) {
-    case 'PER15_MINUTE':
-      return {
-        durationStepMinutes: 15,
-        durationStepLabel: '15 minutes',
-      };
-
-    case 'PER30_MINUTES':
-      return {
-        durationStepMinutes: 30,
-        durationStepLabel: '30 minutes',
-      };
-
-    case 'PER_HOUR':
-      return {
-        durationStepMinutes: 60,
-        durationStepLabel: '1 hour (60 minutes)',
-      };
-
     default:
       return {
-        durationStepMinutes: bookingSlotSizeInMinutes,
-        durationStepLabel: `${bookingSlotSizeInMinutes} minutes`,
+        durationStepMinutes: 1,
+        durationStepLabel: '1 minute',
       };
   }
 };
 
-export const productSchema = (bookingSlotSizeInMinutes: number) =>
+export const productSchema = () =>
   object({
     ...listingMetadataSchemaShape,
     type: string().required('Please choose a product type.'),
@@ -191,7 +173,7 @@ export const productSchema = (bookingSlotSizeInMinutes: number) =>
             .test('is-not-greater-than-a-day', 'Minimum duration cannot be longer than one day.', (value) => Number(value) <= 60 * 24)
             .test('is-valid-duration-step', function (value) {
               const { cadence } = this.parent;
-              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence, bookingSlotSizeInMinutes);
+              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence);
               const minDurationMinutes = Number(value);
               if (isNaN(minDurationMinutes)) {
                 return true;
@@ -224,7 +206,7 @@ export const productSchema = (bookingSlotSizeInMinutes: number) =>
             .test('is-not-greater-than-a-day', 'Maximum duration cannot be longer than one day.', (value) => Number(value) <= 60 * 24)
             .test('is-valid-duration-step', function (value) {
               const { cadence } = this.parent;
-              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence, bookingSlotSizeInMinutes);
+              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence);
               const maxDurationMinutes = Number(value);
               if (isNaN(maxDurationMinutes)) {
                 return true;

@@ -64,7 +64,7 @@ const buildInitialValues = (data: QueryData): FormValues => {
     id: opt.id ?? crypto.randomUUID(),
     title: opt.listingMetadata?.title ?? '',
     price: opt.price != null ? String(opt.price) : '',
-    cadence: opt.bookingCadence ?? 'DAILY',
+    cadence: opt.purchaseCadence ?? 'DAILY',
     billingMode: opt.billingMode ?? 'UPFRONT',
     acceptedPaymentMethods: opt.acceptedPaymentMethods ? [...opt.acceptedPaymentMethods] : ['CARD'],
     availableDays: opt.availableDays ? [...opt.availableDays] : [],
@@ -135,7 +135,7 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
             pricingOptions {
               id
               price
-              bookingCadence
+              purchaseCadence
               billingMode
               acceptedPaymentMethods
               availableDays
@@ -378,7 +378,6 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
                 index: idx,
                 listingMetadata: { title: opt.title || vals.listingTitle.trim(), subTitle: '', about: vals.listingAbout.trim(), includedFeatures: [] },
                 purchaseCadence: opt.cadence,
-                bookingCadence: opt.cadence,
                 price: Number(opt.price),
                 isTaxInclusive: opt.isTaxInclusive,
                 acceptedPaymentMethods: opt.acceptedPaymentMethods.length > 0 ? opt.acceptedPaymentMethods : ['CARD'],

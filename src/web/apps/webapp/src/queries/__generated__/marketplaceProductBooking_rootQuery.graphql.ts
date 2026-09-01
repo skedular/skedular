@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<24b77252690848a1517e239f0541c7ca>>
+ * @generated SignedSource<<5aa3533864e27a93fe8920228bba3e69>>
  * @lightSyntaxTransform
  */
 
@@ -363,13 +363,6 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "bookingCadence",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "price",
                 "storageKey": null
               },
@@ -658,12 +651,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "21db8b4b7da982fa5d61beb6db6a8611",
+    "cacheID": "fd4cd0dc1ac7ca91dc6921ef28b3b877",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBooking_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductBooking_rootQuery(\n  $productId: String!\n  $organizationCustomDomain: String!\n) {\n  ...marketplaceProductBookingBreadcrumb_query_2SWcqy\n  organization(customDomain: $organizationCustomDomain) {\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  product(id: $productId) {\n    ...marketplaceProductBookingHero_product\n    id\n  }\n  ...marketplaceProductBookingForm_query_2SWcqy\n}\n\nfragment marketplaceProductBookingBreadcrumb_query_2SWcqy on Query {\n  product(id: $productId) {\n    id\n    listingMetadata {\n      title\n    }\n  }\n}\n\nfragment marketplaceProductBookingForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  entitlementPurchases {\n    id\n    paymentStatus\n    paymentMethod\n    paymentExpiry\n    amount\n    currency\n    paymentAction\n    invoiceNumber\n    invoiceUrl\n    paymentInstructions\n    linkedBookings(first: 1) {\n      edges {\n        node {\n          marketplaceBooking {\n            invoiceUrl\n            id\n          }\n          id\n        }\n      }\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      uniqueId\n      customerFacingTermsAndConditionsUrl\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      bookingCadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n      isTaxInclusive\n      billingMode\n      acceptedPaymentMethods\n      availableDays\n      fulfillmentType\n      supportsSubscriptionAutoRenewal\n    }\n  }\n}\n\nfragment marketplaceProductBookingHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
+    "text": "query marketplaceProductBooking_rootQuery(\n  $productId: String!\n  $organizationCustomDomain: String!\n) {\n  ...marketplaceProductBookingBreadcrumb_query_2SWcqy\n  organization(customDomain: $organizationCustomDomain) {\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  product(id: $productId) {\n    ...marketplaceProductBookingHero_product\n    id\n  }\n  ...marketplaceProductBookingForm_query_2SWcqy\n}\n\nfragment marketplaceProductBookingBreadcrumb_query_2SWcqy on Query {\n  product(id: $productId) {\n    id\n    listingMetadata {\n      title\n    }\n  }\n}\n\nfragment marketplaceProductBookingForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  entitlementPurchases {\n    id\n    paymentStatus\n    paymentMethod\n    paymentExpiry\n    amount\n    currency\n    paymentAction\n    invoiceNumber\n    invoiceUrl\n    paymentInstructions\n    linkedBookings(first: 1) {\n      edges {\n        node {\n          marketplaceBooking {\n            invoiceUrl\n            id\n          }\n          id\n        }\n      }\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      uniqueId\n      customerFacingTermsAndConditionsUrl\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n      isTaxInclusive\n      billingMode\n      acceptedPaymentMethods\n      availableDays\n      fulfillmentType\n      supportsSubscriptionAutoRenewal\n    }\n  }\n}\n\nfragment marketplaceProductBookingHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
   }
 };
 })();

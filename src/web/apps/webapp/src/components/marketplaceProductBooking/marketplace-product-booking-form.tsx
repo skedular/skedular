@@ -170,7 +170,6 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
               subTitle
             }
             purchaseCadence
-            bookingCadence
             price
             numberOfResourcesToBook
             minDurationMinutes
@@ -428,17 +427,8 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
       return 'N/A';
     }
 
-    const minutes = dateRangeValidation.until.diff(dateRangeValidation.from, 'minutes');
     const price = Number(selectedPricingOption.price);
-    let total = price * effectiveQuantity;
-
-    if (selectedPricingOption.bookingCadence === 'PER_MINUTE') {
-      total = price * effectiveQuantity * minutes;
-    }
-
-    if (selectedPricingOption.bookingCadence === 'PER_HOUR') {
-      total = (price / 60) * effectiveQuantity * minutes;
-    }
+    const total = price * effectiveQuantity;
 
     return formatPriceForDisplay(currencyLabel, total.toFixed(2), selectedPricingOption.purchaseCadence);
   }, [currencyLabel, dateRangeValidation, effectiveQuantity, selectedPricingOption]);
@@ -761,7 +751,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
 
             {!isPurchasingEntitlement ? (
               <TimeRangePicker
-                minutesStep={rootData.bookingSlotSizeInMinutes}
+                minutesStep={1}
                 value={timeRange}
                 onChange={(value) => {
                   if (value[0] && value[1]) {
@@ -884,7 +874,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
           cancellationPolicyType={selectedPricingOption?.cancellationPolicyType}
           cancellationRefundRules={selectedPricingOption?.cancellationRefundRules}
           dateLabel={toShortDate(selectedDate.toISOString())}
-          durationLabel={selectedPricingOption?.purchaseCadence === 'HALF_DAY' ? 'Half-day access' : durationLabel}
+          durationLabel={durationLabel}
           paymentLabel={paymentLabel}
           productType={rootData.product.type.type}
           quantity={effectiveQuantity}

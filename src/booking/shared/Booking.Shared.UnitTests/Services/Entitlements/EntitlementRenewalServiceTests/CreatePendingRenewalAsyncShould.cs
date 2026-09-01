@@ -13,7 +13,7 @@ public sealed class CreatePendingRenewalAsyncShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public async Task CreatePendingPurchaseUsingCurrentCompatiblePricing(
+    public async Task SkipEntitlementPurchaseRenewalEvenWhenLegacyStateRequestsAutoRenew(
         [Frozen]
         IRepositoryFactory repositoryFactory,
         [Frozen]
@@ -102,7 +102,7 @@ public sealed class CreatePendingRenewalAsyncShould
 
         var result = await sut.CreatePendingRenewalAsync(entitlementId, paymentExpiry, cancellationToken);
 
-        Assert.Same(renewal, result);
+        Assert.Null(result);
         A.CallTo(() => entitlementPurchaseService.CreatePendingAsync(
                 "customer-1",
                 "organization-1",
@@ -116,7 +116,7 @@ public sealed class CreatePendingRenewalAsyncShould
                 A<IReadOnlyCollection<string>>._,
                 true,
                 cancellationToken))
-            .MustHaveHappenedOnceExactly();
+            .MustNotHaveHappened();
     }
 
     [Theory]

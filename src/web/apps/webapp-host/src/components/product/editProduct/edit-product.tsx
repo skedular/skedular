@@ -192,7 +192,7 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   id: uuid(),
   title: null,
   subTitle: null,
-  cadence: 'ONE_TIME',
+  cadence: 'DAILY',
   fulfillmentType: 'RESERVATION',
   entitlementCreditQuantity: '',
   entitlementValidityDays: '',
@@ -214,35 +214,17 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
 
 const isEventType = (type?: string | null) => type === 'EVENT';
 
-const getDurationStepDetails = (cadence: string, bookingSlotSizeInMinutes: number) => {
+const getDurationStepDetails = (cadence: string) => {
   switch (cadence) {
-    case 'PER15_MINUTE':
-      return {
-        durationStepMinutes: 15,
-        durationStepLabel: '15 minutes',
-      };
-
-    case 'PER30_MINUTES':
-      return {
-        durationStepMinutes: 30,
-        durationStepLabel: '30 minutes',
-      };
-
-    case 'PER_HOUR':
-      return {
-        durationStepMinutes: 60,
-        durationStepLabel: '1 hour (60 minutes)',
-      };
-
     default:
       return {
-        durationStepMinutes: bookingSlotSizeInMinutes,
-        durationStepLabel: `${bookingSlotSizeInMinutes} minutes`,
+        durationStepMinutes: 1,
+        durationStepLabel: '1 minute',
       };
   }
 };
 
-const productSchema = (bookingSlotSizeInMinutes: number) =>
+const productSchema = () =>
   object({
     ...listingMetadataSchemaShape,
     type: string().required('Please choose a product type.'),
@@ -270,7 +252,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
             .test('is-not-greater-than-a-day', 'Minimum duration cannot be longer than one day.', (value) => Number(value) <= 60 * 24)
             .test('is-valid-duration-step', function (value) {
               const { cadence } = this.parent;
-              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence, bookingSlotSizeInMinutes);
+              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence);
 
               const minDurationMinutes = Number(value);
               if (isNaN(minDurationMinutes)) {
@@ -304,7 +286,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
             .test('is-not-greater-than-a-day', 'Maximum duration cannot be longer than one day.', (value) => Number(value) <= 60 * 24)
             .test('is-valid-duration-step', function (value) {
               const { cadence } = this.parent;
-              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence, bookingSlotSizeInMinutes);
+              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence);
 
               const maxDurationMinutes = Number(value);
               if (isNaN(maxDurationMinutes)) {
@@ -449,7 +431,6 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             }
             supportsSubscriptionAutoRenewal
             purchaseCadence
-            bookingCadence
             price
             availableDays
             requiredDaysPerWeek
@@ -554,7 +535,6 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             }
             supportsSubscriptionAutoRenewal
             purchaseCadence
-            bookingCadence
             price
             availableDays
             requiredDaysPerWeek
@@ -583,7 +563,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const productDetailsSchema = productSchema(rootData.bookingSlotSizeInMinutes);
+  const productDetailsSchema = productSchema();
   const validateProductDetails = makeValidate(productDetailsSchema);
   const requiredFields = makeRequired(productDetailsSchema);
 
@@ -727,7 +707,6 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               includedFeatures: [],
             },
             purchaseCadence: pricingOption.cadence as ProductPricingCadence,
-            bookingCadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
             availableDays: pricingOption.availableDays,
             requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
@@ -800,7 +779,6 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                 subTitle: pricingOption.subTitle ?? '',
               },
               purchaseCadence: pricingOption.cadence as ProductPricingCadence,
-              bookingCadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
               availableDays: pricingOption.availableDays,
               requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),

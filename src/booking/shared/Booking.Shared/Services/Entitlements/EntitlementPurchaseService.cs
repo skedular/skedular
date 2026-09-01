@@ -111,7 +111,7 @@ public sealed class EntitlementPurchaseService(
             timeProvider.GetUtcNow(),
             checkoutReturnUrl,
             invoiceEmailList,
-            pricing.SupportsSubscriptionAutoRenewal,
+            false,
             cancellationToken);
 
     public async Task<EntitlementPurchase?> GetByIdAsync(string purchaseId, CancellationToken cancellationToken) =>
@@ -124,7 +124,7 @@ public sealed class EntitlementPurchaseService(
         PaymentMethod paymentMethod, DateTimeOffset paymentExpiry, DateTimeOffset serviceStartAt, string? checkoutReturnUrl,
         IReadOnlyCollection<string> invoiceEmailList, CancellationToken cancellationToken) =>
         CreatePendingAsync(customerId, organizationId, productVersionId, pricing, currency, paymentMethod, paymentExpiry,
-            serviceStartAt, checkoutReturnUrl, invoiceEmailList, pricing.SupportsSubscriptionAutoRenewal, cancellationToken);
+            serviceStartAt, checkoutReturnUrl, invoiceEmailList, false, cancellationToken);
 
     public async Task SetCheckoutReturnUrlAsync(string purchaseId, string checkoutReturnUrl, CancellationToken cancellationToken)
     {
@@ -198,7 +198,7 @@ public sealed class EntitlementPurchaseService(
             CreatedAt = timeProvider.GetUtcNow(),
             PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
             PaymentMethod = paymentMethod.ToPaymentMethod(),
-            AutoRenew = autoRenew && pricing.SupportsSubscriptionAutoRenewal,
+            AutoRenew = false,
             PaymentExpiry = paymentExpiry,
             ServiceStartAt = serviceStartAt,
             Amount = pricing.Price,

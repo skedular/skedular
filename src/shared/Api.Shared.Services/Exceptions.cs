@@ -155,9 +155,6 @@ public class BookingIsNotMarketplaceType() : Exception("This booking is not a ma
 
 public class BookingMustStartAndEndWithinSameDay() : Exception("The booking must start and end on the same day.");
 
-public class MarketplaceBookingCadenceRequiresRecurringFlow()
-    : Exception("This booking schedule must be set up as a recurring booking.");
-
 public class MarketplaceBookingSubscriptionAutoRenewalNotSupported()
     : Exception("This pricing option does not support auto-renewal.");
 
@@ -233,6 +230,12 @@ public class ProductPricingMaxDurationIncrementInvalid(string durationStepLabel)
 
 public class ProductPricingMaxDurationMustNotBeLessThanMinDuration()
     : Exception("Maximum booking length can't be shorter than the minimum booking length.");
+
+public class MarketplaceBookingDurationMustBeAtLeastMinimum(int minimumMinutes)
+    : Exception($"The booking must be at least {minimumMinutes} minutes long.");
+
+public class MarketplaceBookingDurationMustNotExceedMaximum(int maximumMinutes)
+    : Exception($"The booking cannot be longer than {maximumMinutes} minutes.");
 
 public class ProductPricingAvailableDaysInvalid()
     : Exception("Available days must be unique calendar days from Monday through Sunday.");

@@ -109,7 +109,6 @@ public class MarketplaceBookingSubscriptionServiceShould
         var pricing = ProductPricing.Empty("weekly-price") with
         {
             PurchaseCadence = ProductPricingCadence.Weekly,
-            BookingCadence = ProductPricingCadence.Daily,
             RequiredDaysPerWeek = 2,
             AvailableDays = [DayOfWeek.Tuesday, DayOfWeek.Wednesday],
             AcceptedPaymentMethods = [PaymentMethod.Card],

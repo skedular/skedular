@@ -49,10 +49,11 @@ public sealed class EntitlementRenewalService(
             cancellationToken);
         if (sourcePurchase is null ||
             sourcePurchase.PaymentStatus != PaymentStatusConstants.Confirmed ||
+            sourcePurchase.ProductPricing.FulfillmentType == ProductPricingFulfillmentType.Entitlement ||
             !sourcePurchase.ProductPricing.SupportsSubscriptionAutoRenewal)
         {
             logger.LogInformation(
-                "Skipped entitlement renewal because the source purchase is missing or non-renewing. EntitlementId={EntitlementId}, PurchaseReference={PurchaseReference}",
+                "Skipped entitlement renewal because entitlements do not participate in recurring purchase-cadence logic or the source purchase is missing or non-renewing. EntitlementId={EntitlementId}, PurchaseReference={PurchaseReference}",
                 entitlementId,
                 entitlement.PurchaseReference);
             return null;

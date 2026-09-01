@@ -82,7 +82,6 @@ public class EventMapper : IEventMapper
             Index = src.Index,
             ListingMetadata = MapTo(src.ListingMetadata),
             PurchaseCadence = MapTo(src.PurchaseCadence),
-            BookingCadence = MapTo(src.BookingCadence),
             Price = Convert.ToDouble(src.Price),
             IsTaxInclusive = src.IsTaxInclusive,
             SupportsSubscriptionAutoRenewal = src.SupportsSubscriptionAutoRenewal,
@@ -135,12 +134,6 @@ public class EventMapper : IEventMapper
         src switch
         {
             ProductPricingCadence.NotSet => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.NotSet,
-            ProductPricingCadence.OneTime => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.OneTime,
-            ProductPricingCadence.PerMinute => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.PerMinute,
-            ProductPricingCadence.Per15Minutes => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Per15Minutes,
-            ProductPricingCadence.Per30Minutes => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Per30Minutes,
-            ProductPricingCadence.PerHour => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.PerHour,
-            ProductPricingCadence.HalfDay => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.HalfDay,
             ProductPricingCadence.Daily => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Daily,
             ProductPricingCadence.Weekly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Weekly,
             ProductPricingCadence.Fortnightly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Fortnightly,

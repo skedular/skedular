@@ -1012,7 +1012,6 @@ type ProductPricing @shareable {
   index: Int!
   listingMetadata: ListingMetadata!
   purchaseCadence: ProductPricingCadence!
-  bookingCadence: ProductPricingCadence!
   price: Decimal!
   isTaxInclusive: Boolean!
   supportsSubscriptionAutoRenewal: Boolean!
@@ -2090,22 +2089,16 @@ enum ProductPricingBillingMode {
 
 enum ProductPricingCadence {
   NOT_SET
-  ONE_TIME
-  PER_MINUTE
-  PER_HOUR
   DAILY
   WEEKLY
+  FORTNIGHTLY
   MONTHLY
-  HALF_DAY
-  PER15_MINUTES
-  PER30_MINUTES
   TWO_MONTHS
   QUARTERLY
   FOUR_MONTHS
   FIVE_MONTHS
   SIX_MONTHS
   YEARLY
-  FORTNIGHTLY
 }
 
 enum ProductPricingCancellationPolicyType {

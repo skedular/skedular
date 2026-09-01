@@ -727,7 +727,6 @@ public class EventMapper : IEventMapper
             src.Index,
             MapTo(src.ListingMetadata),
             MapTo(src.PurchaseCadence),
-            MapTo(src.BookingCadence),
             Convert.ToDecimal(src.Price),
             src.IsTaxInclusive,
             src.SupportsSubscriptionAutoRenewal,
@@ -775,12 +774,6 @@ public class EventMapper : IEventMapper
         src switch
         {
             ProductPricingCadence.NotSet => Api.Shared.Services.Models.ProductPricingCadence.NotSet,
-            ProductPricingCadence.OneTime => Api.Shared.Services.Models.ProductPricingCadence.OneTime,
-            ProductPricingCadence.PerMinute => Api.Shared.Services.Models.ProductPricingCadence.PerMinute,
-            ProductPricingCadence.Per15Minutes => Api.Shared.Services.Models.ProductPricingCadence.Per15Minutes,
-            ProductPricingCadence.Per30Minutes => Api.Shared.Services.Models.ProductPricingCadence.Per30Minutes,
-            ProductPricingCadence.PerHour => Api.Shared.Services.Models.ProductPricingCadence.PerHour,
-            ProductPricingCadence.HalfDay => Api.Shared.Services.Models.ProductPricingCadence.HalfDay,
             ProductPricingCadence.Daily => Api.Shared.Services.Models.ProductPricingCadence.Daily,
             ProductPricingCadence.Weekly => Api.Shared.Services.Models.ProductPricingCadence.Weekly,
             ProductPricingCadence.Fortnightly => Api.Shared.Services.Models.ProductPricingCadence.Fortnightly,

@@ -145,7 +145,7 @@ public sealed class EntitlementPurchaseServiceShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task PreserveAutoRenewWhenPricingSupportsIt(
+    public async Task IgnoreAutoRenewWhenPricingSupportsIt(
         [Frozen]
         IRepositoryFactory repositoryFactory,
         [Frozen]
@@ -177,7 +177,7 @@ public sealed class EntitlementPurchaseServiceShould
         await sut.CreatePendingAsync("customer", "organization", "product-version", pricing, "NZD", PaymentMethod.Card,
             TimeProvider.System.GetUtcNow().AddMinutes(30), TimeProvider.System.GetUtcNow(), null, [], true, cancellationToken);
 
-        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.That.Matches(item => item.AutoRenew)))
+        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.That.Matches(item => !item.AutoRenew)))
             .MustHaveHappenedOnceExactly();
     }
 

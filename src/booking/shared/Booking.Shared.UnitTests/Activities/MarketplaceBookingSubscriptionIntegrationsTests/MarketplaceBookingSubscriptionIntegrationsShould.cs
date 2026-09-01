@@ -148,7 +148,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -168,7 +167,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero));
@@ -235,7 +233,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                         BillingMode = ProductPricingBillingMode.Upfront,
                     },
@@ -257,7 +254,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
 
@@ -342,7 +338,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = ProductPricingCadence.Monthly,
-                    BookingCadence = ProductPricingCadence.Daily,
                     NumberOfResourcesToBook = 1,
                     BillingMode = ProductPricingBillingMode.Upfront,
                 },
@@ -364,7 +359,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
 
@@ -440,7 +434,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                         BillingMode = ProductPricingBillingMode.Upfront,
                     },
@@ -462,7 +455,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
 
@@ -530,7 +522,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -602,7 +593,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -623,7 +613,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero));
@@ -682,7 +671,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -705,7 +693,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 19, 8, 0, 0, TimeSpan.Zero));
@@ -839,7 +826,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = ProductPricingCadence.Daily,
-                    BookingCadence = ProductPricingCadence.Daily,
                     SupportsSubscriptionAutoRenewal = true,
                     NumberOfResourcesToBook = 1,
                 },
@@ -855,7 +841,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         var currentPricing = ProductPricing.Empty("pricing-1") with
         {
             PurchaseCadence = ProductPricingCadence.Daily,
-            BookingCadence = ProductPricingCadence.Daily,
             SupportsSubscriptionAutoRenewal = true,
             NumberOfResourcesToBook = 1,
         };
@@ -1026,7 +1011,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         var originalPricing = ProductPricing.Empty("pricing-original") with
         {
             PurchaseCadence = ProductPricingCadence.Weekly,
-            BookingCadence = ProductPricingCadence.Weekly,
             SupportsSubscriptionAutoRenewal = true,
             RequiredDaysPerWeek = 2,
         };
@@ -1137,7 +1121,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = ProductPricingCadence.Daily,
-                    BookingCadence = ProductPricingCadence.Daily,
                     NumberOfResourcesToBook = 1,
                 },
             },
@@ -1236,7 +1219,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = ProductPricingCadence.Daily,
-                    BookingCadence = ProductPricingCadence.Daily,
                     SupportsSubscriptionAutoRenewal = true,
                     NumberOfResourcesToBook = 1,
                 },

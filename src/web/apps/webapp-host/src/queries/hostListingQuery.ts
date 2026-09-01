@@ -25,7 +25,7 @@ export const hostListingLocationQuery = graphql`
         pricingOptions {
           id
           price
-          bookingCadence
+          purchaseCadence
           billingMode
           cancellationPolicyType
           minDurationMinutes

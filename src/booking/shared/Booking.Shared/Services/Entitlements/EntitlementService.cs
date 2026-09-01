@@ -65,8 +65,8 @@ public sealed class EntitlementService(
             throw new InvalidOperationException("Only active entitlements can change renewal policy.");
         }
 
-        entitlement.AutoRenew = autoRenew && !cancelAtPeriodEnd;
-        entitlement.CancelAtPeriodEnd = cancelAtPeriodEnd;
+        entitlement.AutoRenew = false;
+        entitlement.CancelAtPeriodEnd = false;
         entitlement.RenewalFailureReason = null;
         entitlement.NextRenewalAt = entitlement.AutoRenew ? entitlement.ExpiresAt : null;
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -77,7 +77,7 @@ public sealed class EntitlementService(
         string purchaseReference, string customerId, string organizationId, ProductPricing pricing,
         DateTimeOffset activatesAt, string currency, CancellationToken cancellationToken) =>
         GrantAsync(purchaseReference, customerId, organizationId, pricing, activatesAt, currency,
-            pricing.SupportsSubscriptionAutoRenewal, cancellationToken);
+            false, cancellationToken);
 
     public async Task<EntitlementModel> GrantAsync(
         string purchaseReference,
@@ -128,10 +128,8 @@ public sealed class EntitlementService(
             ActivatesAt = activatesAt,
             ExpiresAt = activatesAt.AddDays(pricing.EntitlementValidityDays.Value),
             Status = EntitlementStatus.Active,
-            AutoRenew = autoRenew && pricing.SupportsSubscriptionAutoRenewal,
-            NextRenewalAt = autoRenew && pricing.SupportsSubscriptionAutoRenewal
-                ? activatesAt.AddDays(pricing.EntitlementValidityDays.Value)
-                : null,
+            AutoRenew = false,
+            NextRenewalAt = null,
             NetPurchaseAmount = pricing.Price,
             Currency = currency,
             CreatedAt = now,

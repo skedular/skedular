@@ -225,6 +225,10 @@ public class ProductService(
 
         ApplyHostDefaults(existingOrganization, productVersion);
         Validate(productVersion.Type, productVersion.PricingOptions, existingOrganization.Type == OrganizationTypeConstants.Host);
+        logger.LogInformation(
+            "Validated marketplace pricing options. ProductType={ProductType}, PricingOptionCount={PricingOptionCount}",
+            productVersion.Type,
+            productVersion.PricingOptions.Count);
         EnsureSpacesOperationalAccess(existingOrganization, false);
         if (!await organizationAuthorizationService.CanModifyProductAsync(existingOrganization.Id, customer.Id, cancellationToken))
         {
@@ -513,6 +517,11 @@ public class ProductService(
     {
         ApplyHostDefaults(existingProduct.Organization, productVersion);
         Validate(productVersion.Type, productVersion.PricingOptions, existingProduct.Organization.Type == OrganizationTypeConstants.Host);
+        logger.LogInformation(
+            "Validated marketplace pricing options for update. ProductId={ProductId}, ProductType={ProductType}, PricingOptionCount={PricingOptionCount}",
+            existingProduct.Id,
+            productVersion.Type,
+            productVersion.PricingOptions.Count);
         EnsureSpacesOperationalAccess(existingProduct.Organization, false);
         if (customer is not null &&
             !await organizationAuthorizationService.CanModifyProductAsync(existingProduct.Organization.Id, customer.Id, cancellationToken))
@@ -647,15 +656,6 @@ public class ProductService(
         }
     }
 
-    private static (int DurationStepMinutes, string DurationStepLabel) GetDurationStepDetails(ProductPricingCadence cadence) =>
-        cadence switch
-        {
-            ProductPricingCadence.Per15Minutes => (15, "15-minute"),
-            ProductPricingCadence.Per30Minutes => (30, "30-minute"),
-            ProductPricingCadence.PerHour => (60, "60-minute"),
-            _ => (OpeningHoursDetails.BookingSlotSizeInMinutes, $"{OpeningHoursDetails.BookingSlotSizeInMinutes}-minute"),
-        };
-
     public static void Validate(ProductType productType, ProductPricing pricing, bool allowHostRecurringEvent)
     {
         if (pricing.AvailableDays is not null && pricing.AvailableDays.Distinct().Count() != pricing.AvailableDays.Count)
@@ -701,8 +701,6 @@ public class ProductService(
 
         ValidateCancellationPolicy(pricing);
 
-        var (durationStepMinutes, durationStepLabel) = GetDurationStepDetails(pricing.BookingCadence);
-
         if (pricing.MinDurationMinutes is not null && pricing.MaxDurationMinutes is not null)
         {
             if (pricing.MinDurationMinutes <= 0)
@@ -710,19 +708,9 @@ public class ProductService(
                 throw new ProductPricingMinDurationMustBePositive();
             }
 
-            if (pricing.MinDurationMinutes % durationStepMinutes != 0)
-            {
-                throw new ProductPricingMinDurationIncrementInvalid(durationStepLabel);
-            }
-
             if (pricing.MaxDurationMinutes <= 0)
             {
                 throw new ProductPricingMaxDurationMustBePositive();
-            }
-
-            if (pricing.MaxDurationMinutes % durationStepMinutes != 0)
-            {
-                throw new ProductPricingMaxDurationIncrementInvalid(durationStepLabel);
             }
 
             if (pricing.MaxDurationMinutes < pricing.MinDurationMinutes)
@@ -736,22 +724,12 @@ public class ProductService(
             {
                 throw new ProductPricingMinDurationMustBePositive();
             }
-
-            if (pricing.MinDurationMinutes % durationStepMinutes != 0)
-            {
-                throw new ProductPricingMinDurationIncrementInvalid(durationStepLabel);
-            }
         }
         else if (pricing.MinDurationMinutes is null && pricing.MaxDurationMinutes is not null)
         {
             if (pricing.MaxDurationMinutes <= 0)
             {
                 throw new ProductPricingMaxDurationMustBePositive();
-            }
-
-            if (pricing.MaxDurationMinutes % durationStepMinutes != 0)
-            {
-                throw new ProductPricingMaxDurationIncrementInvalid(durationStepLabel);
             }
         }
     }

@@ -50,19 +50,19 @@ Organization administrators configure shared financial infrastructure, including
 
 ### Product and Price
 
-The selected Product Price defines the commercial terms used by a purchase. These terms include whether the Price is Upfront or In Arrears, purchase cadence, booking cadence, accepted payment methods selected from Organization-supported methods, cancellation rules, and tax treatment where configured. Product and Price documentation explains the commercial options in detail.
+The selected Product Price defines the commercial terms used by a purchase. These terms include whether the Price is Upfront or In Arrears, purchase cadence, accepted payment methods selected from Organization-supported methods, cancellation rules, and tax treatment where configured. Product and Price documentation explains the commercial options in detail.
 
 ### Booking and Subscription
 
 The Booking or Subscription carries the selected terms into the access workflow. A Subscription applies them across recurring billing periods; a one-time Booking applies them to its purchase flow.
 
-## Purchase cadence, booking cadence, and billing cadence
+## Purchase cadence and billing cadence
 
 - **Purchase cadence** describes the access period the Customer buys, such as a week, month, or year.
-- **Booking cadence** describes how often Resource Bookings are generated within that access period.
+- **Auto-renewal** determines whether the selected purchase term repeats.
 - **Billing cadence** describes how often an in-arrears amount is invoiced or collected.
 
-These cadences describe different things and can be different. For example, a Subscription can represent a longer access period, generate regular Resource Bookings, and use the Organization's configured recurring invoice cadence.
+Booking duration comes from the customer's selected start and end times within the Product Price minimum and maximum. The Organization's billing cadence can split a longer purchase term into invoice and resource-booking slices.
 
 ## Upfront and in-arrears billing
 
@@ -76,7 +76,7 @@ With in-arrears billing, the billing period is allowed to run before the amount 
 
 ## Billing cadence and due dates
 
-The Organization's billing cadence controls how often in-arrears billing is grouped. The supported user-facing schedules are weekly, fortnightly, and monthly. Billing cadence is not the same as purchase or booking cadence.
+The Organization's billing cadence controls how often in-arrears billing is grouped and how longer purchase terms are sliced for invoices and resource-booking slices. The supported user-facing schedules are weekly, fortnightly, and monthly. Billing cadence does not replace purchase cadence.
 
 Invoice payment terms use an Organization-level due-date setting. The due date applies to invoices and payment paths that use invoice terms; it does not change how Stripe card authorization or provider settlement works.
 
@@ -137,7 +137,7 @@ Access to billing configuration and payment-management actions is permission-con
 
 - Billing is part of Commerce and is available in Skedular Spaces.
 - Billing and payment activity are different concepts.
-- Purchase cadence, booking cadence, and billing cadence describe different schedules.
+- Purchase cadence and billing cadence describe different schedules; booking duration comes from the selected start and end times within the configured limits.
 - Upfront and in-arrears billing make amounts due at different points in the access lifecycle.
 - Invoices exist when the configured billing workflow uses them.
 - Stripe manages card settlement through the connected Organization account.
@@ -158,7 +158,7 @@ Billing sets the timing and terms. Payment activity describes the method and cur
 
 ### What is the difference between purchase, booking, and billing cadence?
 
-Purchase cadence defines the access period, booking cadence defines generated Resource reservations, and billing cadence defines how often in-arrears amounts are grouped and collected.
+Purchase cadence defines the access period, auto-renewal defines repetition, and billing cadence defines how longer terms are grouped and collected in arrears.
 
 ### What is upfront billing?
 
@@ -198,7 +198,7 @@ Not automatically. Existing invoices and payment activity follow the applicable 
 
 ## Example
 
-A Customer purchases a six-month workspace membership. The Subscription represents six months of access, Resource Bookings are generated according to the booking cadence, and the Organization bills monthly in arrears. Each billing period creates the relevant financial activity. If the Customer pays by card, Stripe processes the payment through the connected account. If the Customer pays by bank transfer, the Customer pays the Organization directly and an operator confirms the payment in Skedular.
+A Customer purchases a six-month workspace membership. The Subscription represents six months of access, customers choose each booking's start and end times within the offer limits, and the Organization bills monthly in arrears. Each billing period creates the relevant financial activity. If the Customer pays by card, Stripe processes the payment through the connected account. If the Customer pays by bank transfer, the Customer pays the Organization directly and an operator confirms the payment in Skedular.
 
 ## Related Documentation
 

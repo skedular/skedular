@@ -368,12 +368,10 @@ public class MarketplaceBookingOpeningHoursServiceShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Identify_Day_Based_Subscription_Cadences(MarketplaceBookingOpeningHoursService sut)
+    public void Use_Location_Opening_Hours_For_All_Purchase_Terms(MarketplaceBookingOpeningHoursService sut)
     {
         sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.Daily).ShouldBeTrue();
         sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.Monthly).ShouldBeTrue();
-        sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.HalfDay).ShouldBeFalse();
-        sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.PerHour).ShouldBeFalse();
     }
 
     [Theory]
@@ -456,7 +454,6 @@ public class MarketplaceBookingOpeningHoursServiceShould
         ProductPricing.Empty("pricing-1") with
         {
             PurchaseCadence = purchaseCadence,
-            BookingCadence = purchaseCadence,
             NumberOfResourcesToBook = numberOfResourcesToBook,
         };
 }

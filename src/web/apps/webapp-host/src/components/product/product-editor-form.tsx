@@ -249,7 +249,7 @@ const ProductEditorForm = ({
               name={`pricingOptions[${index}].fulfillmentType`}
               fieldProps={{
                 onChange: (event: { target: { value: string } }) => {
-                  if (event.target.value === 'ENTITLEMENT') form.change(`pricingOptions[${index}].cadence`, 'ONE_TIME');
+                  if (event.target.value === 'ENTITLEMENT') form.change(`pricingOptions[${index}].cadence`, 'NOT_SET');
                 },
               }}
             >
@@ -571,7 +571,7 @@ const ProductEditorForm = ({
                   <SmallIconTypography label="Select one offer to edit. Add new ones only when the commercial model is genuinely different." />
                 </StackColumn>
                 <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
-                  <Button variant="outlined" onClick={() => addOffer('ONE_TIME')}>
+                  <Button variant="outlined" onClick={() => addOffer('DAILY')}>
                     Add One-Time Offer
                   </Button>
                   {!isEventProduct ? (
