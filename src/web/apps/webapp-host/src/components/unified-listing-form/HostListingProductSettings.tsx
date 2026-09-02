@@ -281,7 +281,12 @@ const HostListingProductSettings = ({
                         value={opt.requiredDaysPerWeek}
                         slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
                         error={Boolean(weeklyRequiredDaysErrors[index])}
-                        helperText={weeklyRequiredDaysErrors[index] ?? (opt.fulfillmentType === 'ENTITLEMENT' ? 'Leave empty for no weekly redemption limit; choose 1 to 7.' : `Leave empty for unrestricted weekly booking; choose 1 to ${opt.availableDays.length || 7} when required.`)}
+                        helperText={
+                          weeklyRequiredDaysErrors[index] ??
+                          (opt.fulfillmentType === 'ENTITLEMENT'
+                            ? 'Leave empty for no weekly redemption limit; choose 1 to 7.'
+                            : `Leave empty for unrestricted weekly booking; choose 1 to ${opt.availableDays.length || 7} when required.`)
+                        }
                         onChange={onChangePricingOption(index, 'requiredDaysPerWeek')}
                       />
                     </FormFieldLabel>
