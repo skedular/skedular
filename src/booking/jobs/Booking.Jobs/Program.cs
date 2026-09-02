@@ -68,7 +68,6 @@ public class Program
             .AddWorkflow<RunOrganizationArrearsBilling>()
             .AddWorkflow<RolloverSpacesBookingUsage>()
             .AddWorkflow<ExpireEntitlements>()
-            .AddWorkflow<PrepareEntitlementRenewal>()
             .AddWorkflow<MaintainAccountingInvoiceState>()
             .AddWorkflow<MaintainOrganizationArrearsInvoiceAccountingState>()
             .AddWorkflow<NotifyMarketplaceBookingFailure>()
@@ -89,7 +88,6 @@ public class Program
             .AddScopedActivities<PrivateRecurringBookingIntegrations>()
             .AddScopedActivities<SpacesBookingUsageRolloverIntegrations>()
             .AddScopedActivities<EntitlementExpiryIntegrations>()
-            .AddScopedActivities<EntitlementRenewalIntegrations>()
             .AddScopedActivities<StripeIntegrations>();
 
         services.AddHostedService<SpacesBookingUsageRolloverWorkflowHostedService>();

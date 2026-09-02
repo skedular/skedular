@@ -131,15 +131,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         ActivatesAt = src.ActivatesAt,
         ExpiresAt = src.ExpiresAt,
         Status = src.Status,
-        AutoRenew = src.AutoRenew,
-        CancelAtPeriodEnd = src.CancelAtPeriodEnd,
         Currency = src.Currency,
         Restrictions = src.ProductPricing is { } pricing ? MapToRestrictions(pricing, src.ProductId, src.ProductVersionId) : null,
-        RenewalStatus = src.RenewalFailureReason is not null ? EntitlementRenewalStatus.Failed :
-            src.CancelAtPeriodEnd ? EntitlementRenewalStatus.Cancelled :
-            src.AutoRenew ? EntitlementRenewalStatus.Pending : EntitlementRenewalStatus.NotRequired,
-        NextRenewalAt = src.NextRenewalAt,
-        RenewalFailureReason = src.RenewalFailureReason,
         PaymentAction = src.LifecycleState == EntitlementStatus.Pending ? "CONFIRM_PAYMENT" : null,
         Refund = src.Refund is null
             ? null
@@ -177,17 +170,10 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         ActivatesAt = src.ActivatesAt,
         ExpiresAt = src.ExpiresAt,
         Status = src.Status,
-        AutoRenew = src.AutoRenew,
-        CancelAtPeriodEnd = src.CancelAtPeriodEnd,
         Currency = src.Currency,
         Restrictions = src.EntitlementPurchase is { } purchase && GetPricing(src) is { } pricing
             ? MapToRestrictions(pricing, purchase.ProductVersion?.ProductId ?? string.Empty, purchase.ProductVersionId)
             : null,
-        RenewalStatus = src.RenewalFailureReason is not null ? EntitlementRenewalStatus.Failed :
-            src.CancelAtPeriodEnd ? EntitlementRenewalStatus.Cancelled :
-            src.AutoRenew ? EntitlementRenewalStatus.Pending : EntitlementRenewalStatus.NotRequired,
-        NextRenewalAt = src.NextRenewalAt,
-        RenewalFailureReason = src.RenewalFailureReason,
         Refund = src.RefundLinks.SingleOrDefault() is { } refund ? MapTo(refund) : null,
         Ledger = src.LedgerEntries.OrderByDescending(item => item.CreatedAt).Select(MapTo).ToList(),
         LinkedBookingIds = src.MarketplaceBookings

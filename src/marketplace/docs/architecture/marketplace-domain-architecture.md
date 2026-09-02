@@ -246,7 +246,7 @@ flowchart LR
 | Field | Description |
 |---|---|
 | `billingMode` | `Card`, `BankTransfer`, or `InArrears` |
-| `cadence` | `OneTime`, `Daily`, `Weekly`, `Monthly`, `Quarterly`, `Yearly` |
+| `purchaseCadence` | `Daily`, `Weekly`, `Fortnightly`, `Monthly`, `TwoMonths`, `Quarterly`, `FourMonths`, `FiveMonths`, `SixMonths`, `Yearly`; `NotSet` for credit entitlements |
 | `cancellationType` | Cancellation policy type (determines refund eligibility) |
 | Amount fields | Unit price in the product version's currency |
 

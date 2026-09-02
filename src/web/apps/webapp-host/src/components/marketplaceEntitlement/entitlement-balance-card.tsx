@@ -44,10 +44,6 @@ const EntitlementBalanceCard = ({
         entitlement {
           id
           status
-          autoRenew
-          cancelAtPeriodEnd
-          nextRenewalAt
-          renewalFailureReason
         }
         error
       }

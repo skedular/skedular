@@ -19,13 +19,8 @@ public sealed class EntitlementDetails
     public DateTimeOffset ActivatesAt { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
     public EntitlementStatus Status { get; set; }
-    public bool AutoRenew { get; set; }
-    public bool CancelAtPeriodEnd { get; set; }
     public string Currency { get; set; } = string.Empty;
     public EntitlementRestrictionsDetails? Restrictions { get; set; }
-    public EntitlementRenewalStatus RenewalStatus { get; set; }
-    public DateTimeOffset? NextRenewalAt { get; set; }
-    public string? RenewalFailureReason { get; set; }
     public string? PaymentAction { get; set; }
     public EntitlementRefundDetails? Refund { get; set; }
     public IReadOnlyList<CreditLedgerEntryDetails> Ledger { get; set; } = [];

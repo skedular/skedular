@@ -60,7 +60,7 @@ public sealed class EntitlementPurchasePaymentReconciliationService(
             purchase.ProductPricing,
             purchase.ServiceStartAt,
             purchase.Currency,
-            purchase.AutoRenew,
+            false,
             cancellationToken);
 
         logger.LogInformation(

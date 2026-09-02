@@ -17,7 +17,6 @@ public interface IEntitlementService
     Task<EntitlementModel?> GetByIdAsync(string entitlementId, CancellationToken cancellationToken);
     Task<IReadOnlyList<EntitlementModel>> GetForCustomerAsync(string customerId, CancellationToken cancellationToken);
     Task<IReadOnlyList<EntitlementModel>> GetForOrganizationAsync(string organizationId, CancellationToken cancellationToken);
-    Task<EntitlementModel> SetRenewalPolicyAsync(string entitlementId, bool autoRenew, bool cancelAtPeriodEnd, CancellationToken cancellationToken);
 
     Task<EntitlementModel> GrantAsync(
         string purchaseReference,
@@ -54,29 +53,6 @@ public sealed class EntitlementService(
         .. (await repositoryFactory.EntitlementRepository.GetForOrganizationAsync(organizationId, cancellationToken)).Select(entitlementModelMapper
             .Map),
     ];
-
-    public async Task<EntitlementModel> SetRenewalPolicyAsync(string entitlementId, bool autoRenew, bool cancelAtPeriodEnd,
-        CancellationToken cancellationToken)
-    {
-        if (autoRenew || cancelAtPeriodEnd)
-        {
-            throw new InvalidOperationException("Credit entitlements don't support auto-renewal.");
-        }
-
-        var entitlement = await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlementId, cancellationToken)
-                          ?? throw new KeyNotFoundException("The entitlement was not found.");
-        if (entitlement.Status != EntitlementStatus.Active)
-        {
-            throw new InvalidOperationException("Only active entitlements can change renewal policy.");
-        }
-
-        entitlement.AutoRenew = false;
-        entitlement.CancelAtPeriodEnd = false;
-        entitlement.RenewalFailureReason = null;
-        entitlement.NextRenewalAt = entitlement.AutoRenew ? entitlement.ExpiresAt : null;
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        return entitlementModelMapper.Map(entitlement);
-    }
 
     public Task<EntitlementModel> GrantAsync(
         string purchaseReference, string customerId, string organizationId, ProductPricing pricing,
@@ -133,8 +109,6 @@ public sealed class EntitlementService(
             ActivatesAt = activatesAt,
             ExpiresAt = activatesAt.AddDays(pricing.EntitlementValidityDays.Value),
             Status = EntitlementStatus.Active,
-            AutoRenew = false,
-            NextRenewalAt = null,
             NetPurchaseAmount = pricing.Price,
             Currency = currency,
             CreatedAt = now,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cf3a2bf53a132534513a0e3ac0cb5033>>
+ * @generated SignedSource<<f552e68a3e748d9e496e14f49ba36f2b>>
  * @lightSyntaxTransform
  */
 
@@ -21,11 +21,7 @@ export type pageOrganizationEntitlementPurchaseDetail_makeEntitlementPurchasePay
     readonly error: string | null | undefined;
     readonly purchase: {
       readonly entitlement: {
-        readonly autoRenew: boolean;
-        readonly cancelAtPeriodEnd: boolean;
         readonly id: string;
-        readonly nextRenewalAt: any | null | undefined;
-        readonly renewalFailureReason: string | null | undefined;
         readonly status: EntitlementStatus;
       } | null | undefined;
       readonly id: string;
@@ -112,35 +108,7 @@ v2 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "autoRenew",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cancelAtPeriodEnd",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "status",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "nextRenewalAt",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "renewalFailureReason",
                 "storageKey": null
               }
             ],
@@ -171,16 +139,16 @@ return {
     "selections": (v2/*:: as any*/)
   },
   "params": {
-    "cacheID": "33c8a410f299052383c0291717e51e8e",
+    "cacheID": "eb6f92fc07225c8fa973146ec4444f16",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationEntitlementPurchaseDetail_makeEntitlementPurchasePaymentNotRequiredMutation",
     "operationKind": "mutation",
-    "text": "mutation pageOrganizationEntitlementPurchaseDetail_makeEntitlementPurchasePaymentNotRequiredMutation(\n  $input: MakeEntitlementPurchasePaymentNotRequiredInput!\n) {\n  makeEntitlementPurchasePaymentNotRequired(input: $input) {\n    error\n    purchase {\n      id\n      paymentStatus\n      lifecycleState\n      entitlement {\n        id\n        autoRenew\n        cancelAtPeriodEnd\n        status\n        nextRenewalAt\n        renewalFailureReason\n      }\n    }\n  }\n}\n"
+    "text": "mutation pageOrganizationEntitlementPurchaseDetail_makeEntitlementPurchasePaymentNotRequiredMutation(\n  $input: MakeEntitlementPurchasePaymentNotRequiredInput!\n) {\n  makeEntitlementPurchasePaymentNotRequired(input: $input) {\n    error\n    purchase {\n      id\n      paymentStatus\n      lifecycleState\n      entitlement {\n        id\n        status\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3f67690e25eecb01b79e6ddac0d17e80";
+(node as any).hash = "96452cb33d51d85915aa144a905d2860";
 
 export default node;

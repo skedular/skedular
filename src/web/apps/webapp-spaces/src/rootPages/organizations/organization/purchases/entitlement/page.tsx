@@ -8,14 +8,10 @@ import { RootShell } from '@/components/rootShell';
 import { CustomerAvatar } from '@/components/avatars';
 import { formatPurchaseHistoryEventDetails, PurchaseDetailPage, type PurchaseDetailAction } from '@/components/purchaseDetail/purchase-detail-page';
 import type { pageOrganizationEntitlementPurchaseDetail_rootQuery } from '@/queries/__generated__/pageOrganizationEntitlementPurchaseDetail_rootQuery.graphql';
-import type { pageOrganizationEntitlementPurchaseDetail_setRenewalPolicyMutation } from '@/queries/__generated__/pageOrganizationEntitlementPurchaseDetail_setRenewalPolicyMutation.graphql';
 import type { pageOrganizationEntitlementPurchaseDetail_confirmEntitlementPurchaseMutation } from '@/queries/__generated__/pageOrganizationEntitlementPurchaseDetail_confirmEntitlementPurchaseMutation.graphql';
 import type { pageOrganizationEntitlementPurchaseDetail_rejectEntitlementPurchaseMutation } from '@/queries/__generated__/pageOrganizationEntitlementPurchaseDetail_rejectEntitlementPurchaseMutation.graphql';
 import type { pageOrganizationEntitlementPurchaseDetail_makeEntitlementPurchasePaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationEntitlementPurchaseDetail_makeEntitlementPurchasePaymentNotRequiredMutation.graphql';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import { BodyIconTypography, DefaultDialogTitle, PageHeaderPanel, StackColumn, TwoButtonsDialogActions } from '@skedular/ui';
+import { BodyIconTypography, PageHeaderPanel, StackColumn } from '@skedular/ui';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useParams } from 'next/navigation';
@@ -75,11 +71,7 @@ const RootQuery = graphql`
       entitlementId
       entitlement {
         id
-        autoRenew
-        cancelAtPeriodEnd
         status
-        nextRenewalAt
-        renewalFailureReason
       }
       invoiceNumber
       invoiceUrl
@@ -119,22 +111,6 @@ const RootQuery = graphql`
   }
 `;
 
-const RenewalPolicyMutation = graphql`
-  mutation pageOrganizationEntitlementPurchaseDetail_setRenewalPolicyMutation($input: SetEntitlementRenewalPolicyInput!) {
-    setEntitlementRenewalPolicy(input: $input) {
-      entitlement {
-        id
-        autoRenew
-        cancelAtPeriodEnd
-        status
-        nextRenewalAt
-        renewalFailureReason
-      }
-      error
-    }
-  }
-`;
-
 const ConfirmPaymentMutation = graphql`
   mutation pageOrganizationEntitlementPurchaseDetail_confirmEntitlementPurchaseMutation($input: ConfirmEntitlementPurchaseInput!) {
     confirmEntitlementPurchase(input: $input) {
@@ -145,11 +121,7 @@ const ConfirmPaymentMutation = graphql`
         lifecycleState
         entitlement {
           id
-          autoRenew
-          cancelAtPeriodEnd
           status
-          nextRenewalAt
-          renewalFailureReason
         }
       }
     }
@@ -179,11 +151,7 @@ const MakePaymentNotRequiredMutation = graphql`
         lifecycleState
         entitlement {
           id
-          autoRenew
-          cancelAtPeriodEnd
           status
-          nextRenewalAt
-          renewalFailureReason
         }
       }
     }
@@ -198,12 +166,10 @@ type Props = {
 
 const Detail = ({ queryReference, organizationCustomDomain }: Props) => {
   const data = usePreloadedQuery<pageOrganizationEntitlementPurchaseDetail_rootQuery>(RootQuery, queryReference);
-  const [commitRenewalPolicy] = useMutation<pageOrganizationEntitlementPurchaseDetail_setRenewalPolicyMutation>(RenewalPolicyMutation);
   const [commitConfirmPayment, isConfirmingPayment] = useMutation<pageOrganizationEntitlementPurchaseDetail_confirmEntitlementPurchaseMutation>(ConfirmPaymentMutation);
   const [commitRejectPayment, isRejectingPayment] = useMutation<pageOrganizationEntitlementPurchaseDetail_rejectEntitlementPurchaseMutation>(RejectPaymentMutation);
   const [commitMakePaymentNotRequired, isMakingPaymentNotRequired] =
     useMutation<pageOrganizationEntitlementPurchaseDetail_makeEntitlementPurchasePaymentNotRequiredMutation>(MakePaymentNotRequiredMutation);
-  const [showCancelDialog, setShowCancelDialog] = useState(false);
   const purchase = data.entitlementPurchase;
   const linkedBookings = data.entitlementPurchase?.linkedBookings;
 
@@ -215,7 +181,6 @@ const Detail = ({ queryReference, organizationCustomDomain }: Props) => {
     );
 
   const customerLabel = purchase.customerName || 'Customer unavailable';
-  const entitlement = purchase.entitlement;
   const usedCredits = linkedBookings?.totalCount ?? 0;
   const freeCredits = Math.max(purchase.creditQuantity - usedCredits, 0);
   const isPaymentActionInFlight = isConfirmingPayment || isRejectingPayment || isMakingPaymentNotRequired;
@@ -262,50 +227,6 @@ const Detail = ({ queryReference, organizationCustomDomain }: Props) => {
     });
   };
 
-  const cancel = () => {
-    if (!entitlement?.id) return;
-    commitRenewalPolicy({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          entitlementId: entitlement.id,
-          autoRenew: false,
-          cancelAtPeriodEnd: true,
-        },
-      },
-      onCompleted: (response) => {
-        if (response.setEntitlementRenewalPolicy.error) {
-          toast.error(<NotificationContent content={response.setEntitlementRenewalPolicy.error} />);
-        } else {
-          setShowCancelDialog(false);
-        }
-      },
-      onError: (error) => {
-        toast.error(<NotificationContent content={error.message} />);
-      },
-    });
-  };
-
-  const updateRenewalPolicy = (autoRenew: boolean, cancelAtPeriodEnd: boolean) => {
-    if (!entitlement?.id) return;
-    commitRenewalPolicy({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          entitlementId: entitlement.id,
-          autoRenew,
-          cancelAtPeriodEnd,
-        },
-      },
-      onCompleted: (response) => {
-        if (response.setEntitlementRenewalPolicy.error) toast.error(<NotificationContent content={response.setEntitlementRenewalPolicy.error} />);
-      },
-      onError: (error) => {
-        toast.error(<NotificationContent content={error.message} />);
-      },
-    });
-  };
-
   return (
     <RootShell>
       <PurchaseDetailPage
@@ -332,12 +253,6 @@ const Detail = ({ queryReference, organizationCustomDomain }: Props) => {
         }
         actions={
           [
-            ...(entitlement?.status === 'ACTIVE'
-              ? [
-                  { label: entitlement.autoRenew ? 'Disable auto-renew' : 'Enable auto-renew', onClick: () => updateRenewalPolicy(!entitlement.autoRenew, false) },
-                  ...(entitlement.autoRenew ? [{ label: 'Cancel at period end', tone: 'destructive' as const, onClick: () => setShowCancelDialog(true) }] : []),
-                ]
-              : []),
             ...(purchase.paymentMethod === 'BANK_TRANSFER' && purchase.paymentStatus === 'PENDING'
               ? [
                   { label: 'Confirm payment', onClick: confirmPayment, disabled: isPaymentActionInFlight },
@@ -359,18 +274,6 @@ const Detail = ({ queryReference, organizationCustomDomain }: Props) => {
           details: formatPurchaseHistoryEventDetails(node),
         }))}
       />
-      <Dialog open={showCancelDialog} onClose={() => setShowCancelDialog(false)}>
-        <DefaultDialogTitle title="Cancel entitlement renewal" />
-        <DialogContent>
-          <DialogContentText>Cancel future renewal for this entitlement?</DialogContentText>
-          <TwoButtonsDialogActions
-            onPrimaryClicked={cancel}
-            onSecondaryClicked={() => setShowCancelDialog(false)}
-            primaryLabel="Cancel renewal"
-            secondaryLabel="Keep entitlement"
-          />
-        </DialogContent>
-      </Dialog>
     </RootShell>
   );
 };

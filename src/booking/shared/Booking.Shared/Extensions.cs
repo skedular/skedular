@@ -74,7 +74,6 @@ public static class Extensions
                 .AddScoped<IEntitlementPurchasePaymentCancellationService, EntitlementPurchasePaymentCancellationService>()
                 .AddScoped<IEntitlementPurchasePaymentReconciliationService, EntitlementPurchasePaymentReconciliationService>()
                 .AddScoped<IEntitlementInvoiceService, EntitlementInvoiceService>()
-                .AddScoped<IEntitlementRenewalService, EntitlementRenewalService>()
                 .AddScoped<IEntitlementAdjustmentService, EntitlementAdjustmentService>()
                 .AddScoped<IHostCommissionService, HostCommissionService>()
                 .AddScoped<IHostStripeApplicationFeeService, HostStripeApplicationFeeService>()

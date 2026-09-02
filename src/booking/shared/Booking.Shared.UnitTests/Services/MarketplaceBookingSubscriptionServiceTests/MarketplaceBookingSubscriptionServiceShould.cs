@@ -117,6 +117,8 @@ public class MarketplaceBookingSubscriptionServiceShould
         var subscription = new Shared.Models.MarketplaceBookingSubscription
         {
             StartedAt = new DateTimeOffset(2026, 3, 16, 0, 0, 0, TimeSpan.Zero), // Monday
+            From = new TimeOnly(9, 0),
+            Until = new TimeOnly(10, 0),
             InvolvedCustomers =
             [
                 new Shared.Models.Customer

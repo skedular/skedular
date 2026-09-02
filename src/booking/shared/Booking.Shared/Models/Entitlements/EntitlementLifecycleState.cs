@@ -1,14 +1,5 @@
 namespace Booking.Shared.Models.Entitlements;
 
-public enum EntitlementRenewalStatus
-{
-    NotRequired = 0,
-    Pending = 1,
-    Confirmed = 2,
-    Failed = 3,
-    Cancelled = 4,
-}
-
 public enum EntitlementRefundStatus
 {
     NotEligible = 0,
@@ -36,26 +27,6 @@ public static class EntitlementLifecycleStateExtensions
         "EXPIRED" => EntitlementStatus.Expired,
         "CANCELLED" => EntitlementStatus.Cancelled,
         _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported entitlement status value."),
-    };
-
-    public static string ToPersistedValue(this EntitlementRenewalStatus value) => value switch
-    {
-        EntitlementRenewalStatus.NotRequired => "NOT_REQUIRED",
-        EntitlementRenewalStatus.Pending => "PENDING",
-        EntitlementRenewalStatus.Confirmed => "CONFIRMED",
-        EntitlementRenewalStatus.Failed => "FAILED",
-        EntitlementRenewalStatus.Cancelled => "CANCELLED",
-        _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported renewal status."),
-    };
-
-    public static EntitlementRenewalStatus RenewalStatusFromPersistedValue(string value) => value switch
-    {
-        "NOT_REQUIRED" => EntitlementRenewalStatus.NotRequired,
-        "PENDING" => EntitlementRenewalStatus.Pending,
-        "CONFIRMED" => EntitlementRenewalStatus.Confirmed,
-        "FAILED" => EntitlementRenewalStatus.Failed,
-        "CANCELLED" => EntitlementRenewalStatus.Cancelled,
-        _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported renewal status value."),
     };
 
     public static string ToPersistedValue(this EntitlementRefundStatus value) => value switch

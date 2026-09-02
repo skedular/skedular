@@ -190,8 +190,6 @@ type Mutation {
     @cost(weight: "10")
   cancelEntitlement(input: CancelEntitlementInput!): CancelEntitlementPayload!
     @cost(weight: "10")
-  setEntitlementRenewalPolicy(input: SetEntitlementRenewalPolicyInput!): SetEntitlementRenewalPolicyPayload!
-    @cost(weight: "10")
   createEntitlementPurchase(input: CreateEntitlementPurchaseInput!): EntitlementPurchasePayload!
     @cost(weight: "10")
   confirmEntitlementPurchase(input: ConfirmEntitlementPurchaseInput!): EntitlementPurchasePayload!
@@ -474,13 +472,8 @@ type EntitlementDetails {
   activatesAt: DateTime!
   expiresAt: DateTime!
   status: EntitlementStatus!
-  autoRenew: Boolean!
-  cancelAtPeriodEnd: Boolean!
   currency: String!
   restrictions: EntitlementRestrictionsDetails
-  renewalStatus: EntitlementRenewalStatus!
-  nextRenewalAt: DateTime
-  renewalFailureReason: String
   paymentAction: String
   refund: EntitlementRefundDetails
   ledger: [CreditLedgerEntryDetails!]!
@@ -1127,12 +1120,6 @@ type ResourceDetails @key(fields: "id") @shareable {
   id: ID!
 }
 
-type SetEntitlementRenewalPolicyPayload {
-  clientMutationId: String
-  entitlement: EntitlementDetails
-  error: String
-}
-
 type SpacesAccessErrorDetails {
   errorCode: String!
   status: SpacesSubscriptionStatus!
@@ -1595,13 +1582,6 @@ input RetryMarketplaceRefundInput {
   clientMutationId: String
 }
 
-input SetEntitlementRenewalPolicyInput {
-  clientMutationId: String
-  entitlementId: String!
-  autoRenew: Boolean!
-  cancelAtPeriodEnd: Boolean!
-}
-
 input UpdateMarketplaceBookingInput {
   clientMutationId: String
   id: String!
@@ -1719,14 +1699,6 @@ enum DayOfWeek {
 enum DurationDisplayUnit {
   MINUTES
   HOURS
-}
-
-enum EntitlementRenewalStatus {
-  NOT_REQUIRED
-  PENDING
-  CONFIRMED
-  FAILED
-  CANCELLED
 }
 
 enum EntitlementStatus {

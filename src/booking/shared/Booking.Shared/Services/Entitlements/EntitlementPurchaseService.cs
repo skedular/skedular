@@ -198,7 +198,6 @@ public sealed class EntitlementPurchaseService(
             CreatedAt = timeProvider.GetUtcNow(),
             PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
             PaymentMethod = paymentMethod.ToPaymentMethod(),
-            AutoRenew = false,
             PaymentExpiry = paymentExpiry,
             ServiceStartAt = serviceStartAt,
             Amount = pricing.Price,
@@ -241,7 +240,7 @@ public sealed class EntitlementPurchaseService(
                                           purchase.ProductPricing,
                                           purchase.ServiceStartAt,
                                           purchase.Currency,
-                                          purchase.AutoRenew,
+                                          false,
                                           cancellationToken) ??
                                       throw new InvalidOperationException("The entitlement purchase could not be completed.");
             await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForEntitlementPurchaseAsync(
@@ -261,7 +260,7 @@ public sealed class EntitlementPurchaseService(
                               purchase.ProductPricing,
                               purchase.ServiceStartAt,
                               purchase.Currency,
-                              purchase.AutoRenew,
+                              false,
                               cancellationToken) ??
                           throw new InvalidOperationException("The entitlement purchase could not be completed.");
 
@@ -454,22 +453,6 @@ public sealed class EntitlementPurchaseService(
 
             purchase.PaymentStatus = PaymentStatus.Expired.ToPaymentStatus();
             purchase.FailureReason = "Payment was not confirmed before the entitlement purchase deadline.";
-
-            if (!string.IsNullOrWhiteSpace(purchase.RenewalOfPurchaseId))
-            {
-                var sourcePurchase = await repositoryFactory.EntitlementPurchaseRepository.GetByIdAsync(
-                    purchase.RenewalOfPurchaseId,
-                    cancellationToken);
-                if (sourcePurchase?.EntitlementId is { } entitlementId)
-                {
-                    var entitlement = await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlementId, cancellationToken);
-                    if (entitlement is not null)
-                    {
-                        entitlement.RenewalFailureReason = purchase.FailureReason;
-                        entitlement.NextRenewalAt = null;
-                    }
-                }
-            }
         }
 
         if (purchases.Count > 0)

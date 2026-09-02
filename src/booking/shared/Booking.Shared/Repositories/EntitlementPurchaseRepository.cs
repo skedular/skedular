@@ -35,7 +35,6 @@ public interface IEntitlementPurchaseRepository : IRepository<EntitlementPurchas
     Task<IReadOnlyList<EntitlementPurchase>> GetForCustomerAsync(string customerId, CancellationToken cancellationToken);
     Task<IReadOnlyList<EntitlementPurchase>> GetForOrganizationAsync(string organizationId, CancellationToken cancellationToken);
     Task<IReadOnlyList<EntitlementPurchase>> GetExpiredPendingAsync(DateTimeOffset now, CancellationToken cancellationToken);
-    Task<EntitlementPurchase?> GetByRenewalReferenceAsync(string renewalReference, CancellationToken cancellationToken);
 }
 
 public sealed class EntitlementPurchaseRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -150,11 +149,4 @@ public sealed class EntitlementPurchaseRepository(BookingDbContext dbContext, Ti
             .Where(item => item.PaymentStatus == PaymentStatusConstants.Pending && item.PaymentExpiry <= now)
             .OrderBy(item => item.PaymentExpiry)
             .ToListAsync(cancellationToken);
-
-    public Task<EntitlementPurchase?> GetByRenewalReferenceAsync(string renewalReference, CancellationToken cancellationToken) =>
-        DbContext.EntitlementPurchase
-            .Include(item => item.Customer)
-            .Include(item => item.ProductVersion)
-            .ThenInclude(item => item.Product)
-            .SingleOrDefaultAsync(item => item.RenewalReference == renewalReference, cancellationToken);
 }

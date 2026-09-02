@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f73db488f18875989ae81df86c58af6>>
+ * @generated SignedSource<<1d1027223d68149f52443237a3b07eab>>
  * @lightSyntaxTransform
  */
 
@@ -25,11 +25,7 @@ export type pageOrganizationEntitlementPurchaseDetail_rootQuery$data = {
     readonly customerId: string;
     readonly customerName: string | null | undefined;
     readonly entitlement: {
-      readonly autoRenew: boolean;
-      readonly cancelAtPeriodEnd: boolean;
       readonly id: string;
-      readonly nextRenewalAt: any | null | undefined;
-      readonly renewalFailureReason: string | null | undefined;
       readonly status: EntitlementStatus;
     } | null | undefined;
     readonly entitlementId: string | null | undefined;
@@ -368,35 +364,7 @@ v8 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "autoRenew",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "cancelAtPeriodEnd",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
             "name": "status",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "nextRenewalAt",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "renewalFailureReason",
             "storageKey": null
           }
         ],
@@ -619,16 +587,16 @@ return {
     "selections": (v8/*:: as any*/)
   },
   "params": {
-    "cacheID": "7a362627e734158352085425a8dab49d",
+    "cacheID": "e5b1777e2cff949b6be004739245bb7d",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationEntitlementPurchaseDetail_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationEntitlementPurchaseDetail_rootQuery(\n  $purchaseId: String!\n  $linkedBookingsAfter: String\n) {\n  entitlementPurchase(purchaseId: $purchaseId) {\n    id\n    history(first: 100) {\n      edges {\n        node {\n          id\n          type\n          name\n          occurredAt\n          previousPaymentStatus\n          paymentStatus\n          previousRefundStatus\n          refundStatus\n          refundId\n          creditQuantity\n          remainingCreditQuantity\n          amount\n          currency\n          cancellationRequestedAt\n          cancellationEffectiveAt\n          reason\n        }\n      }\n    }\n    paymentStatus\n    lifecycleState\n    paymentMethod\n    serviceStartAt\n    amount\n    currency\n    pricingId\n    creditQuantity\n    validityDays\n    customerId\n    customerName\n    organizationId\n    entitlementId\n    entitlement {\n      id\n      autoRenew\n      cancelAtPeriodEnd\n      status\n      nextRenewalAt\n      renewalFailureReason\n    }\n    invoiceNumber\n    invoiceUrl\n    linkedBookings(after: $linkedBookingsAfter, first: 10) {\n      totalCount\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        endCursor\n      }\n      edges {\n        node {\n          id\n          from\n          until\n          involvedCustomers {\n            id\n            name\n            givenName\n            middleName\n            familyName\n          }\n          bookingResources {\n            resource {\n              id\n              name\n            }\n          }\n          involvedLocations {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationEntitlementPurchaseDetail_rootQuery(\n  $purchaseId: String!\n  $linkedBookingsAfter: String\n) {\n  entitlementPurchase(purchaseId: $purchaseId) {\n    id\n    history(first: 100) {\n      edges {\n        node {\n          id\n          type\n          name\n          occurredAt\n          previousPaymentStatus\n          paymentStatus\n          previousRefundStatus\n          refundStatus\n          refundId\n          creditQuantity\n          remainingCreditQuantity\n          amount\n          currency\n          cancellationRequestedAt\n          cancellationEffectiveAt\n          reason\n        }\n      }\n    }\n    paymentStatus\n    lifecycleState\n    paymentMethod\n    serviceStartAt\n    amount\n    currency\n    pricingId\n    creditQuantity\n    validityDays\n    customerId\n    customerName\n    organizationId\n    entitlementId\n    entitlement {\n      id\n      status\n    }\n    invoiceNumber\n    invoiceUrl\n    linkedBookings(after: $linkedBookingsAfter, first: 10) {\n      totalCount\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        endCursor\n      }\n      edges {\n        node {\n          id\n          from\n          until\n          involvedCustomers {\n            id\n            name\n            givenName\n            middleName\n            familyName\n          }\n          bookingResources {\n            resource {\n              id\n              name\n            }\n          }\n          involvedLocations {\n            uniqueId\n            name\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "443979aa9bdff8248d9e0740b6e2393e";
+(node as any).hash = "f57a93c01b80382011803ab4dfcee05e";
 
 export default node;

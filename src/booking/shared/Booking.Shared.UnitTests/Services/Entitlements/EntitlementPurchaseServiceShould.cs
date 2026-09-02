@@ -5,7 +5,6 @@ using Booking.Shared.Models.Entitlements;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Database;
-using EntitlementEntity = Booking.Shared.Database.Entities.Entitlement;
 using EntitlementPurchaseEntity = Booking.Shared.Database.Entities.EntitlementPurchase;
 
 namespace Booking.Shared.UnitTests.Services.Entitlements;
@@ -93,9 +92,6 @@ public sealed class EntitlementPurchaseServiceShould
 
         await sut.CreatePendingAsync("customer", "organization", "product-version", pricing, "NZD", PaymentMethod.Card,
             TimeProvider.System.GetUtcNow().AddMinutes(30), TimeProvider.System.GetUtcNow(), null, [], true, cancellationToken);
-
-        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.That.Matches(item => !item.AutoRenew)))
-            .MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -176,9 +172,6 @@ public sealed class EntitlementPurchaseServiceShould
 
         await sut.CreatePendingAsync("customer", "organization", "product-version", pricing, "NZD", PaymentMethod.Card,
             TimeProvider.System.GetUtcNow().AddMinutes(30), TimeProvider.System.GetUtcNow(), null, [], true, cancellationToken);
-
-        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.That.Matches(item => !item.AutoRenew)))
-            .MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -202,7 +195,6 @@ public sealed class EntitlementPurchaseServiceShould
             ServiceStartAt = TimeProvider.System.GetUtcNow(),
             Currency = "NZD",
             EntitlementId = "entitlement",
-            AutoRenew = true,
         };
         var entitlement = new EntitlementModel
         {
@@ -211,13 +203,13 @@ public sealed class EntitlementPurchaseServiceShould
         A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
         A.CallTo(() => purchaseRepository.GetByIdAsync("purchase", cancellationToken)).Returns(purchase);
         A.CallTo(() => entitlementService.GrantAsync("purchase", "customer", "organization", purchase.ProductPricing,
-            purchase.ServiceStartAt, "NZD", true, cancellationToken)).Returns(entitlement);
+            purchase.ServiceStartAt, "NZD", false, cancellationToken)).Returns(entitlement);
 
         var result = await sut.ConfirmAsync("purchase", TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.ShouldBe(entitlement);
         A.CallTo(() => entitlementService.GrantAsync("purchase", "customer", "organization", purchase.ProductPricing,
-            purchase.ServiceStartAt, "NZD", true, cancellationToken)).MustHaveHappenedOnceExactly();
+            purchase.ServiceStartAt, "NZD", false, cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
     }
 
@@ -450,53 +442,5 @@ public sealed class EntitlementPurchaseServiceShould
         thrown.ShouldBe(invoiceException);
         A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.Ignored)).MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
-    }
-
-    [Theory]
-    [AutoFakeItEasyData]
-    public async Task MarkSourceEntitlementWhenRenewalExpires(
-        [Frozen]
-        IRepositoryFactory repositoryFactory,
-        [Frozen]
-        IEntitlementPurchaseRepository purchaseRepository,
-        [Frozen]
-        IEntitlementRepository entitlementRepository,
-        [Frozen]
-        IEntitlementPurchasePaymentCancellationService paymentCancellationService,
-        [Frozen]
-        IUnitOfWork unitOfWork,
-        [Frozen]
-        TimeProvider timeProvider,
-        EntitlementPurchaseService sut,
-        CancellationToken cancellationToken)
-    {
-        var renewal = new EntitlementPurchaseEntity
-        {
-            Id = "renewal",
-            PaymentStatus = PaymentStatusConstants.Pending,
-            RenewalOfPurchaseId = "source-purchase",
-        };
-        var sourceEntitlement = new EntitlementEntity
-        {
-            Id = "entitlement",
-        };
-        var sourcePurchase = new EntitlementPurchaseEntity
-        {
-            Id = "source-purchase",
-            EntitlementId = "entitlement",
-        };
-        A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
-        A.CallTo(() => repositoryFactory.EntitlementRepository).Returns(entitlementRepository);
-        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => purchaseRepository.GetExpiredPendingAsync(A<DateTimeOffset>.Ignored, cancellationToken)).Returns([renewal]);
-        A.CallTo(() => purchaseRepository.GetByIdAsync("source-purchase", cancellationToken)).Returns(sourcePurchase);
-        A.CallTo(() => entitlementRepository.GetByIdAsync("entitlement", cancellationToken)).Returns(sourceEntitlement);
-        A.CallTo(() => timeProvider.GetUtcNow()).Returns(TimeProvider.System.GetUtcNow());
-
-        await sut.ExpirePendingAsync(cancellationToken);
-
-        sourceEntitlement.RenewalFailureReason.ShouldBe("Payment was not confirmed before the entitlement purchase deadline.");
-        sourceEntitlement.NextRenewalAt.ShouldBeNull();
-        A.CallTo(() => paymentCancellationService.CancelAsync(renewal, cancellationToken)).MustHaveHappenedOnceExactly();
     }
 }
