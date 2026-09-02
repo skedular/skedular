@@ -124,7 +124,11 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     /// </summary>
     /// <param name="marketplaceBookingSubscriptionId">The ID of the marketplace booking subscription.</param>
     /// <param name="unitOfWork">The unit of work for the operation.</param>
-    void SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(string marketplaceBookingSubscriptionId, IUnitOfWork unitOfWork);
+    void SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
+        string marketplaceBookingSubscriptionId,
+        TimeOnly from,
+        TimeOnly until,
+        IUnitOfWork unitOfWork);
 }
 
 /// <summary>
@@ -378,11 +382,13 @@ public class TemporalOutboxService(
 
     public void SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
         string marketplaceBookingSubscriptionId,
+        TimeOnly from,
+        TimeOnly until,
         IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
             workflowIdService.BookMarketplaceBookingSubscriptionResources(marketplaceBookingSubscriptionId),
             s_bookMarketplaceBookingSubscriptionResourcesMarketplaceBookingSubscriptionDeletedAsync,
-            new MarketplaceBookingSubscriptionDeletedArgs(marketplaceBookingSubscriptionId),
+            new MarketplaceBookingSubscriptionDeletedArgs(marketplaceBookingSubscriptionId, from, until),
             new WorkflowSignalOptions(),
             unitOfWork);
 
@@ -729,7 +735,10 @@ public class TemporalOutboxService(
             {
                 var workflowHandle = await temporalClient.StartWorkflowAsync(
                     (BookMarketplaceBookingSubscriptionResources workflow) =>
-                        workflow.ExecuteAsync(new BookMarketplaceBookingSubscriptionResourcesInput(input.MarketplaceBookingSubscriptionId)),
+                        workflow.ExecuteAsync(new BookMarketplaceBookingSubscriptionResourcesInput(
+                            input.MarketplaceBookingSubscriptionId,
+                            input.From,
+                            input.Until)),
                     new WorkflowOptions
                     {
                         Id = workflowIdService.BookMarketplaceBookingSubscriptionResources(input.MarketplaceBookingSubscriptionId),

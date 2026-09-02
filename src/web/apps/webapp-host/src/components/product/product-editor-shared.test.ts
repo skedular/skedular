@@ -33,7 +33,7 @@ describe('weekly price day-selection editor state', () => {
 
   it('accepts an exact count within the available weekly days', async () => {
     await expect(
-      productSchema(30).validateAt('pricingOptions[0].requiredDaysPerWeek', {
+      productSchema().validateAt('pricingOptions[0].requiredDaysPerWeek', {
         pricingOptions: [{ cadence: 'WEEKLY', availableDays: ['MONDAY', 'TUESDAY'], requiredDaysPerWeek: '2' }],
       }),
     ).resolves.toBe('2');
@@ -41,7 +41,7 @@ describe('weekly price day-selection editor state', () => {
 
   it('rejects a count greater than the available weekly days', async () => {
     await expect(
-      productSchema(30).validateAt('pricingOptions[0].requiredDaysPerWeek', {
+      productSchema().validateAt('pricingOptions[0].requiredDaysPerWeek', {
         pricingOptions: [{ cadence: 'WEEKLY', availableDays: ['MONDAY', 'TUESDAY'], requiredDaysPerWeek: '3' }],
       }),
     ).rejects.toThrow('Set the required number of selected days');
@@ -49,7 +49,7 @@ describe('weekly price day-selection editor state', () => {
 
   it('treats an empty available-day list as all seven weekdays', async () => {
     await expect(
-      productSchema(30).validateAt('pricingOptions[0].requiredDaysPerWeek', {
+      productSchema().validateAt('pricingOptions[0].requiredDaysPerWeek', {
         pricingOptions: [{ cadence: 'WEEKLY', availableDays: [], requiredDaysPerWeek: '7' }],
       }),
     ).resolves.toBe('7');
@@ -57,7 +57,7 @@ describe('weekly price day-selection editor state', () => {
 
   it('rejects a weekly count on nonweekly pricing', async () => {
     await expect(
-      productSchema(30).validateAt('pricingOptions[0].requiredDaysPerWeek', {
+      productSchema().validateAt('pricingOptions[0].requiredDaysPerWeek', {
         pricingOptions: [{ cadence: 'MONTHLY', availableDays: [], requiredDaysPerWeek: '1' }],
       }),
     ).rejects.toThrow('Set the required number of selected days');
@@ -77,7 +77,7 @@ describe('weekly price day-selection editor state', () => {
     });
 
     await expect(
-      productSchema(30).validateAt('pricingOptions', {
+      productSchema().validateAt('pricingOptions', {
         pricingOptions: [weeklyPricingOption('2'), weeklyPricingOption('3')],
       }),
     ).resolves.toHaveLength(2);

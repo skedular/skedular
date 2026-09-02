@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Enterprise.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace Booking.Shared.Services;
 
@@ -10,7 +11,8 @@ public interface IOrganizationArrearsChargeSegmentService
     IReadOnlyList<ArrearsChargeSegment> BuildInitialRecurringChargeSegments(RecurringBooking recurringBooking, OrganizationBillingCycle billingCycle);
 }
 
-public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsChargeSegmentService
+public class OrganizationArrearsChargeSegmentService(ILogger<OrganizationArrearsChargeSegmentService> logger)
+    : IOrganizationArrearsChargeSegmentService
 {
     public IReadOnlyList<ArrearsChargeSegment> BuildChargeSegments(Models.Booking booking, OrganizationBillingCycle billingCycle)
     {
@@ -33,7 +35,14 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
 
         var purchaseCadence = marketplaceBooking.ProductPricing.PurchaseCadence;
 
-        return ShouldSplitByBillingCycle(purchaseCadence, billingCycle)
+        var split = ShouldSplitByBillingCycle(purchaseCadence, billingCycle);
+        logger.LogInformation(
+            "Built arrears charge plan. BookingId={BookingId}, PurchaseCadence={PurchaseCadence}, BillingCycle={BillingCycle}, SplitByBillingCycle={SplitByBillingCycle}",
+            booking.Id,
+            purchaseCadence,
+            billingCycle,
+            split);
+        return split
             ? BuildInstallmentsByBillingCycle(booking, organizationId, customerId, currency, billingCycle)
             : [BuildSingleChargeSegment(booking, organizationId, customerId, currency)];
     }
@@ -214,58 +223,14 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
     {
         var marketplaceBooking = booking.MarketplaceBooking!;
         var pricing = marketplaceBooking.ProductPricing;
-        var totalMinutes = (decimal)(booking.Until - booking.From).TotalMinutes;
-
-        return pricing.BookingCadence switch
-        {
-            ProductPricingCadence.OneTime => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.HalfDay => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Daily => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Weekly => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Fortnightly => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Monthly => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.PerMinute => pricing.Price * marketplaceBooking.Quantity * totalMinutes,
-            ProductPricingCadence.Per15Minutes => pricing.Price * marketplaceBooking.Quantity * (totalMinutes / 15m),
-            ProductPricingCadence.Per30Minutes => pricing.Price * marketplaceBooking.Quantity * (totalMinutes / 30m),
-            ProductPricingCadence.PerHour => pricing.Price * marketplaceBooking.Quantity * (totalMinutes / 60m),
-            ProductPricingCadence.TwoMonths => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Quarterly => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.FourMonths => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.FiveMonths => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.SixMonths => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Yearly => pricing.Price * marketplaceBooking.Quantity,
-            _ => throw new ArgumentOutOfRangeException(null,
-                "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-        };
+        return pricing.Price * marketplaceBooking.Quantity;
     }
 
     private static decimal CalculateRecurringChargeAmount(RecurringBooking recurringBooking, BillingPeriod servicePeriod)
     {
         var marketplaceBooking = recurringBooking.MarketplaceBooking!;
         var pricing = marketplaceBooking.ProductPricing;
-        var totalMinutes = (decimal)(servicePeriod.EndExclusive - servicePeriod.StartInclusive).TotalMinutes;
-
-        return pricing.PurchaseCadence switch
-        {
-            ProductPricingCadence.OneTime => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.HalfDay => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Daily => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Weekly => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Fortnightly => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Monthly => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.PerMinute => pricing.Price * marketplaceBooking.Quantity * totalMinutes,
-            ProductPricingCadence.Per15Minutes => pricing.Price * marketplaceBooking.Quantity * (totalMinutes / 15m),
-            ProductPricingCadence.Per30Minutes => pricing.Price * marketplaceBooking.Quantity * (totalMinutes / 30m),
-            ProductPricingCadence.PerHour => pricing.Price * marketplaceBooking.Quantity * (totalMinutes / 60m),
-            ProductPricingCadence.TwoMonths => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Quarterly => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.FourMonths => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.FiveMonths => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.SixMonths => pricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.Yearly => pricing.Price * marketplaceBooking.Quantity,
-            _ => throw new ArgumentOutOfRangeException(null,
-                "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-        };
+        return pricing.Price * marketplaceBooking.Quantity;
     }
 
     private static bool ShouldSplitByBillingCycle(ProductPricingCadence cadence, OrganizationBillingCycle billingCycle) =>

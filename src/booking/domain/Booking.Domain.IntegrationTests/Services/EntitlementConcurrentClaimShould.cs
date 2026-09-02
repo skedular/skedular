@@ -123,7 +123,6 @@ public class EntitlementConcurrentClaimShould(
                     0,
                     ListingMetadata.Empty,
                     ProductPricingCadence.NotSet,
-                    ProductPricingCadence.NotSet,
                     0,
                     false,
                     false,

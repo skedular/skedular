@@ -28,7 +28,7 @@ The customer is a registered Skedular user who purchased the Product. Purchasing
 
 ## When a purchase creates a Subscription
 
-Spaces treats these purchase cadences as subscription cadences: **Daily**, **Weekly**, **Fortnightly**, **Monthly**, **Two months**, **Quarterly**, **Four months**, **Five months**, **Six months**, and **Yearly**. A Price with one of these cadences is handled as a Subscription purchase; auto-renewal remains a separate option when the Price supports it. A one-time or timed booking Price uses the Booking flow instead.
+Spaces supports these purchase terms: **Daily**, **Weekly**, **Fortnightly**, **Monthly**, **Two months**, **Quarterly**, **Four months**, **Five months**, **Six months**, and **Yearly**. Auto-renewal is separate: disabled means one term, while enabled repeats the selected term. Booking duration comes only from the customer's selected start/end times and the offer's minimum/maximum limits.
 
 The **purchase cadence** sets the length of the Subscription cycle. Recurring Booking instances are materialized for workspace use within that cycle, while the organization's billing mode and billing cycle determine when invoices are issued. These are related but separate settings. See [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing) for configuring Prices.
 

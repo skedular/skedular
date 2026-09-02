@@ -19,12 +19,14 @@ public class SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeletedSho
         TemporalOutboxService sut,
         IUnitOfWork unitOfWork,
         string marketplaceBookingSubscriptionId,
+        TimeOnly from,
+        TimeOnly until,
         string expectedWorkflowId)
     {
         A.CallTo(() => workflowIdService.BookMarketplaceBookingSubscriptionResources(marketplaceBookingSubscriptionId))
             .Returns(expectedWorkflowId);
 
-        sut.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(marketplaceBookingSubscriptionId, unitOfWork);
+        sut.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(marketplaceBookingSubscriptionId, from, until, unitOfWork);
 
         A.CallTo(() => temporalSignalOutboxWorkflowExecutor.Signal(
             expectedWorkflowId,

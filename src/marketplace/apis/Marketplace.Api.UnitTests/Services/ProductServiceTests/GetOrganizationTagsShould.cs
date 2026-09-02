@@ -60,7 +60,7 @@ public class GetOrganizationTagsShould
             PricingOptions =
             [
                 new ProductPricing(
-                    "pricing-1", 0, ListingMetadata.Empty, ProductPricingCadence.Daily, ProductPricingCadence.Daily,
+                    "pricing-1", 0, ListingMetadata.Empty, ProductPricingCadence.Daily,
                     100m, true, false, [PaymentMethod.Card], ProductPricingBillingMode.Upfront, null, null, 30, 0, 1,
                     ProductPricingCancellationPolicyType.NoCancellation, []),
             ],
@@ -157,8 +157,7 @@ public class GetOrganizationTagsShould
                     "pricing-1",
                     0,
                     ListingMetadata.Empty,
-                    ProductPricingCadence.PerHour,
-                    ProductPricingCadence.PerHour,
+                    ProductPricingCadence.Daily,
                     10m,
                     true,
                     false,

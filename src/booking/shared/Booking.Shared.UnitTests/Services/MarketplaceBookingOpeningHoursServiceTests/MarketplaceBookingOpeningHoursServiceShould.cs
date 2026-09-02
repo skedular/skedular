@@ -368,16 +368,6 @@ public class MarketplaceBookingOpeningHoursServiceShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Identify_Day_Based_Subscription_Cadences(MarketplaceBookingOpeningHoursService sut)
-    {
-        sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.Daily).ShouldBeTrue();
-        sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.Monthly).ShouldBeTrue();
-        sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.HalfDay).ShouldBeFalse();
-        sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.PerHour).ShouldBeFalse();
-    }
-
-    [Theory]
-    [AutoFakeItEasyData]
     public async Task Prefer_Previously_Assigned_Resources_When_They_Are_Still_Available(
         [Frozen]
         IRepositoryFactory repositoryFactory,
@@ -456,7 +446,6 @@ public class MarketplaceBookingOpeningHoursServiceShould
         ProductPricing.Empty("pricing-1") with
         {
             PurchaseCadence = purchaseCadence,
-            BookingCadence = purchaseCadence,
             NumberOfResourcesToBook = numberOfResourcesToBook,
         };
 }

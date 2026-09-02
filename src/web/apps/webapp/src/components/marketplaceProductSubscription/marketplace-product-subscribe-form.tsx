@@ -1,4 +1,4 @@
-import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toShortDate, useIntegratedPlatform } from '@skedular/shared';
+import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toOpeningHoursFromTime, toShortDate, useIntegratedPlatform } from '@skedular/shared';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { CustomerTermsAndConditionsPanel } from '@/components/marketplaceProduct';
@@ -21,6 +21,7 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import { Dayjs } from 'dayjs';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useMemo, useState } from 'react';
@@ -77,6 +78,8 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
               subTitle
             }
             purchaseCadence
+            minDurationMinutes
+            maxDurationMinutes
             price
             isTaxInclusive
             supportsSubscriptionAutoRenewal
@@ -185,6 +188,7 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
 
   const [selectedPricingId, setSelectedPricingId] = useState(initialPricingOptionId ?? '');
   const [startedAt, setStartedAt] = useState<Dayjs>(startOfDay());
+  const [timeRange, setTimeRange] = useState<[Dayjs | null, Dayjs | null]>([toOpeningHoursFromTime('09:00'), toOpeningHoursFromTime('10:00')]);
   const [quantity, setQuantity] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | ''>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>(() => [...(rootData.me?.emails ?? [])]);
@@ -252,6 +256,28 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
       return;
     }
 
+    const [timeFrom, timeUntil] = timeRange;
+    if (!timeFrom || !timeUntil) {
+      toast.error(<NotificationContent content="Select a booking start and end time to continue." />);
+      return;
+    }
+
+    const bookingFrom = startedAt.hour(timeFrom.hour()).minute(timeFrom.minute()).second(0).millisecond(0);
+    const bookingUntil = startedAt.hour(timeUntil.hour()).minute(timeUntil.minute()).second(0).millisecond(0);
+    const durationMinutes = bookingUntil.diff(bookingFrom, 'minutes');
+    if (durationMinutes <= 0) {
+      toast.error(<NotificationContent content="The booking end time must be after the start time." />);
+      return;
+    }
+    if (selectedPricingOption?.minDurationMinutes != null && durationMinutes < selectedPricingOption.minDurationMinutes) {
+      toast.error(<NotificationContent content={`Minimum duration is ${selectedPricingOption.minDurationMinutes} minutes.`} />);
+      return;
+    }
+    if (selectedPricingOption?.maxDurationMinutes != null && durationMinutes > selectedPricingOption.maxDurationMinutes) {
+      toast.error(<NotificationContent content={`Maximum duration is ${selectedPricingOption.maxDurationMinutes} minutes.`} />);
+      return;
+    }
+
     if (!isWeeklySelectionComplete(weeklySelectionRequired, weeklySelectedDays, requiredDaysPerWeek)) {
       toast.error(<NotificationContent content={weeklySelectionGuidance ?? 'Choose the required days per week to continue.'} />);
       return;
@@ -275,6 +301,8 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
           teamIds: [],
           requestedResourceIds: selectedResourceIds,
           startedAt: startedAt.utc().startOf('day').toISOString(),
+          from: timeFrom.format('HH:mm:ss'),
+          until: timeUntil.format('HH:mm:ss'),
           autoRenew: selectedPricingOption.supportsSubscriptionAutoRenewal ? autoRenew : false,
           cancelAtPeriodEnd: false,
           paymentMethod: effectivePaymentMethod as PaymentMethod,
@@ -382,6 +410,7 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
                 slotProps={{ textField: { helperText: getAvailableDaysGuidance(selectedPricingOption?.availableDays) } }}
                 sx={{ flex: 1 }}
               />
+              <TimeRangePicker minutesStep={1} value={timeRange} onChange={(value) => setTimeRange(value)} sx={{ flex: 1 }} />
             </Stack>
 
             {weeklySelectionRequired ? (

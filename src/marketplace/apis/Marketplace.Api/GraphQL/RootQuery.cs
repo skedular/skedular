@@ -45,36 +45,6 @@ public class RootQuery(IVersionService versionService)
     [
         new()
         {
-            Type = ProductPricingCadence.OneTime,
-            Name = ProductPricingCadence.OneTime.ToProductPricingCadenceName(),
-        },
-        new()
-        {
-            Type = ProductPricingCadence.PerMinute,
-            Name = ProductPricingCadence.PerMinute.ToProductPricingCadenceName(),
-        },
-        new()
-        {
-            Type = ProductPricingCadence.Per15Minutes,
-            Name = ProductPricingCadence.Per15Minutes.ToProductPricingCadenceName(),
-        },
-        new()
-        {
-            Type = ProductPricingCadence.Per30Minutes,
-            Name = ProductPricingCadence.Per30Minutes.ToProductPricingCadenceName(),
-        },
-        new()
-        {
-            Type = ProductPricingCadence.PerHour,
-            Name = ProductPricingCadence.PerHour.ToProductPricingCadenceName(),
-        },
-        new()
-        {
-            Type = ProductPricingCadence.HalfDay,
-            Name = ProductPricingCadence.HalfDay.ToProductPricingCadenceName(),
-        },
-        new()
-        {
             Type = ProductPricingCadence.Daily,
             Name = ProductPricingCadence.Daily.ToProductPricingCadenceName(),
         },

@@ -15,7 +15,6 @@ public class ProductVersionHelperServiceShould
         var pricing = ProductPricing.Empty("pricing-1") with
         {
             PurchaseCadence = ProductPricingCadence.Daily,
-            BookingCadence = ProductPricingCadence.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
@@ -24,7 +23,6 @@ public class ProductVersionHelperServiceShould
             ProductPricing.Empty("pricing-2") with
             {
                 PurchaseCadence = ProductPricingCadence.Daily,
-                BookingCadence = ProductPricingCadence.Daily,
                 NumberOfResourcesToBook = 1,
                 BillingMode = ProductPricingBillingMode.Upfront,
             },
@@ -44,14 +42,12 @@ public class ProductVersionHelperServiceShould
         var pricing = ProductPricing.Empty("pricing-1") with
         {
             PurchaseCadence = ProductPricingCadence.Daily,
-            BookingCadence = ProductPricingCadence.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
         var matchingPricing = ProductPricing.Empty("pricing-2") with
         {
             PurchaseCadence = ProductPricingCadence.Daily,
-            BookingCadence = ProductPricingCadence.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
@@ -70,7 +66,6 @@ public class ProductVersionHelperServiceShould
         var pricing = ProductPricing.Empty("pricing-1") with
         {
             PurchaseCadence = ProductPricingCadence.Daily,
-            BookingCadence = ProductPricingCadence.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
             AvailableDays = [DayOfWeek.Sunday],
@@ -94,7 +89,6 @@ public class ProductVersionHelperServiceShould
         var pricing = ProductPricing.Empty("pricing-2-days") with
         {
             PurchaseCadence = ProductPricingCadence.Weekly,
-            BookingCadence = ProductPricingCadence.Weekly,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
             RequiredDaysPerWeek = 2,
@@ -122,7 +116,6 @@ public class ProductVersionHelperServiceShould
         var pricing = ProductPricing.Empty("pricing-1") with
         {
             PurchaseCadence = ProductPricingCadence.Daily,
-            BookingCadence = ProductPricingCadence.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
@@ -130,8 +123,7 @@ public class ProductVersionHelperServiceShould
         {
             ProductPricing.Empty("pricing-2") with
             {
-                PurchaseCadence = ProductPricingCadence.PerHour,
-                BookingCadence = ProductPricingCadence.PerHour,
+                PurchaseCadence = ProductPricingCadence.Daily,
                 NumberOfResourcesToBook = 2,
                 BillingMode = ProductPricingBillingMode.InArrears,
             },
@@ -246,7 +238,7 @@ public class ProductVersionHelperServiceShould
             new StripeProduct
             {
                 Id = "pricing-2",
-                PricingCadence = ProductPricingCadence.PerHour.ToProductPricingCadence(),
+                PricingCadence = ProductPricingCadence.Daily.ToProductPricingCadence(),
                 NumberOfResourcesToBook = 2,
                 BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
             },

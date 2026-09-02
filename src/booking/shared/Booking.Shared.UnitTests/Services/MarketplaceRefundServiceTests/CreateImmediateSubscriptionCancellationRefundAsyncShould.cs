@@ -282,7 +282,6 @@ public class CreateImmediateSubscriptionCancellationRefundAsyncShould
             0,
             ListingMetadata.Empty,
             ProductPricingCadence.Monthly,
-            ProductPricingCadence.Monthly,
             80m,
             true,
             false,

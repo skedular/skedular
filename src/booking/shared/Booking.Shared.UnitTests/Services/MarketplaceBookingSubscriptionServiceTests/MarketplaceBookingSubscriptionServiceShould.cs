@@ -109,7 +109,6 @@ public class MarketplaceBookingSubscriptionServiceShould
         var pricing = ProductPricing.Empty("weekly-price") with
         {
             PurchaseCadence = ProductPricingCadence.Weekly,
-            BookingCadence = ProductPricingCadence.Daily,
             RequiredDaysPerWeek = 2,
             AvailableDays = [DayOfWeek.Tuesday, DayOfWeek.Wednesday],
             AcceptedPaymentMethods = [PaymentMethod.Card],
@@ -118,6 +117,8 @@ public class MarketplaceBookingSubscriptionServiceShould
         var subscription = new Shared.Models.MarketplaceBookingSubscription
         {
             StartedAt = new DateTimeOffset(2026, 3, 16, 0, 0, 0, TimeSpan.Zero), // Monday
+            From = new TimeOnly(9, 0),
+            Until = new TimeOnly(10, 0),
             InvolvedCustomers =
             [
                 new Shared.Models.Customer
@@ -316,8 +317,10 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Remove(existingSubscription)).MustNotHaveHappened();
         A.CallTo(() => temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
                 existingSubscription.Id,
+                A<TimeOnly>._,
+                A<TimeOnly>._,
                 unitOfWork))
-            .MustHaveHappenedOnceExactly();
+            .MustNotHaveHappened();
     }
 
     [Theory]
@@ -389,6 +392,8 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Remove(existingSubscription)).MustNotHaveHappened();
         A.CallTo(() => temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
                 existingSubscription.Id,
+                A<TimeOnly>._,
+                A<TimeOnly>._,
                 unitOfWork))
             .MustNotHaveHappened();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();

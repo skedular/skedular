@@ -24,7 +24,10 @@ using MarketplaceBookingFailureAccountingCleanupStatus = Booking.Shared.Models.M
 
 namespace Booking.Shared.Activities;
 
-public record AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput(string MarketplaceBookingSubscriptionId);
+public record AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput(
+    string MarketplaceBookingSubscriptionId,
+    TimeOnly From,
+    TimeOnly Until);
 
 public record AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsyncResponse(bool Deleted, bool Ended);
 
@@ -39,7 +42,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
     TimeProvider timeProvider,
     IRecurringBookingScheduleService recurringBookingScheduleService,
     IMarketplaceBookingService marketplaceBookingService,
-    IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
     IProductVersionHelperService productVersionHelperService,
     ITemporalService temporalService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
@@ -111,7 +113,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             return new AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsyncResponse(false, true);
         }
 
-        var currentCycleRecurringBooking = await EnsureCurrentCycleRecurringBookingAsync(subscription, cancellationToken);
+        var currentCycleRecurringBooking = await EnsureCurrentCycleRecurringBookingAsync(subscription, args.From, args.Until, cancellationToken);
         logger.LogInformation(
             "Marketplace booking subscription {MarketplaceBookingSubscriptionId} is reconciling recurring booking {RecurringBookingId}",
             subscription.Id,
@@ -407,12 +409,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
                                 subscription.CreatedByCustomer;
         ArgumentNullException.ThrowIfNull(updatedByCustomer);
 
-        var customer = recurringBooking.InvolvedCustomers.Count == 1
-            ? await repositoryFactory.CustomerRepository.GetByIdAsync(recurringBooking.InvolvedCustomers.First().Id, true, cancellationToken)
-            : null;
-        var preferredLocationId = existingBookingsToRefresh
-            .Select(marketplaceBookingOpeningHoursService.ResolveLocation)
-            .FirstOrDefault(item => item is not null)?.Id;
         var preferredResourceIds = await ResolvePreferredResourceIdsAsync(
             subscription,
             recurringBooking,
@@ -426,11 +422,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
             throw new MarketplaceEventProductRecurringBookingNotSupported();
         }
 
-        var requiredResourceCount =
-            recurringBooking.MarketplaceBooking.Quantity * recurringBooking.MarketplaceBooking.ProductPricing.NumberOfResourcesToBook;
-        var useOpeningHoursWindow = marketplaceBookingOpeningHoursService.ShouldUseLocationOpeningHoursWindow(
-            recurringBooking.MarketplaceBooking.ProductPricing.PurchaseCadence);
-
         foreach (var existingBooking in existingBookingsToRefresh)
         {
             // Existing marketplace instances keep the original time window they were created with.
@@ -441,42 +432,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
         var isInitialSeriesMaterialization = existingBookings.Count == 0 &&
                                              recurringBooking.StartDate.UtcDateTime.Date == subscription.StartedAt.UtcDateTime.Date;
-        var initialDailyPlans = new Dictionary<DateOnly, MarketplaceBookingDailyPlan>();
-        if (isInitialSeriesMaterialization && useOpeningHoursWindow)
-        {
-            foreach (var missingBookingDay in reconciliationPlan.MissingBookingDays)
-            {
-                if (!marketplaceBookingAvailableDaysService.IsAvailableOnBookingDate(
-                        recurringBooking.MarketplaceBooking.ProductPricing,
-                        missingBookingDay))
-                {
-                    continue;
-                }
-
-                var dailyPlan = await marketplaceBookingOpeningHoursService.TryResolveDailyPlanAsync(
-                    customer,
-                    recurringBooking.MarketplaceBooking.ProductVersion,
-                    recurringBooking.MarketplaceBooking.ProductPricing,
-                    missingBookingDay,
-                    requiredResourceCount,
-                    ResolveRequiredResourceIds(subscription),
-                    preferredResourceIds,
-                    preferredLocationId,
-                    cancellationToken);
-                if (dailyPlan is not null)
-                {
-                    initialDailyPlans.Add(missingBookingDay, dailyPlan);
-                    continue;
-                }
-
-                await FinalizeInitialSeriesAvailabilityFailureAsync(
-                    subscription,
-                    recurringBooking,
-                    cancellationToken);
-                return true;
-            }
-        }
-
         await using var initialSeriesTransaction = isInitialSeriesMaterialization
             ? await transactionBuilder.BeginTransactionAsync(
                 repositoryFactory.UnitOfWork,
@@ -507,78 +462,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
             var booking = entityMapper.MapTo(recurringBooking, missingBookingDay);
             booking.Id = randomHelper.Generate();
             var allowAutomaticResourceAssignment = true;
-            if (useOpeningHoursWindow)
-            {
-                // Missing marketplace instances are created only for days when a location is open
-                // and enough resources exist for the product tags.
-                // The opening-hours service will prefer resource-level overridden availability
-                // over the parent location opening hours when selecting the booking window.
-                var dailyPlan = initialDailyPlans.TryGetValue(missingBookingDay, out var initialDailyPlan)
-                    ? initialDailyPlan
-                    : await marketplaceBookingOpeningHoursService.TryResolveDailyPlanAsync(
-                        customer,
-                        recurringBooking.MarketplaceBooking.ProductVersion,
-                        recurringBooking.MarketplaceBooking.ProductPricing,
-                        missingBookingDay,
-                        requiredResourceCount,
-                        ResolveRequiredResourceIds(subscription),
-                        preferredResourceIds,
-                        preferredLocationId,
-                        cancellationToken);
-                if (dailyPlan is null)
-                {
-                    logger.LogWarning(
-                        "Finalizing recurring marketplace booking availability failure because no complete daily allocation is available. SubscriptionId={SubscriptionId}, RecurringBookingId={RecurringBookingId}, BookingDate={BookingDate}",
-                        subscription.Id,
-                        recurringBooking.Id,
-                        missingBookingDay);
-
-                    var failure = await marketplaceBookingFailureService.FinalizeAsync(
-                        new MarketplaceBookingFailureFinalization(
-                            null,
-                            MarketplaceBookingFailureCategoryConstants.AvailabilityConflict,
-                            MarketplaceBookingFailureScopeConstants.RecurringOccurrence,
-                            timeProvider.GetUtcNow(),
-                            null,
-                            recurringBooking.Id,
-                            subscription.Id,
-                            booking.From,
-                            booking.Until,
-                            ResolveRequiredResourceIds(subscription),
-                            MarketplaceBookingFailureCustomerActionConstants.ReviewSubscription,
-                            null,
-                            "The recurring booking occurrence could not be allocated because the requested capacity is no longer available.",
-                            recurringBooking.CreatedByCustomer?.Id,
-                            []),
-                        cancellationToken);
-                    await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-                    await graphQlTopicEventSender.RaiseGraphqlChangeAsync(
-                        Constants.MarketplaceBookingSubscriptionTopicName,
-                        subscription.Id,
-                        cancellationToken);
-                    logger.LogInformation(
-                        "Finalized recurring marketplace booking availability failure. FailureId={FailureId}, SubscriptionId={SubscriptionId}, RecurringBookingId={RecurringBookingId}, BookingDate={BookingDate}",
-                        failure.Id,
-                        subscription.Id,
-                        recurringBooking.Id,
-                        missingBookingDay);
-                    continue;
-                }
-
-                booking.From = dailyPlan.From;
-                booking.Until = dailyPlan.Until;
-                booking.Schedules = [new BookingSchedule(booking.From, booking.Until)];
-                booking.Resources =
-                [
-                    .. dailyPlan.Resources
-                        .Select(item => new ResourceCustomersPair(
-                            new Resource
-                            {
-                                Id = item.Id,
-                            },
-                            [.. booking.InvolvedCustomers])),
-                ];
-            }
 
             var marketplaceBooking = entityMapper.MapTo(recurringBooking.MarketplaceBooking)!;
             marketplaceBooking.Id = randomHelper.Generate();
@@ -588,7 +471,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
             {
                 // Generated recurring marketplace instances always use the recurring-compatible
                 // daily booking cadence. The purchase cadence remains on the parent subscription/template.
-                BookingCadence = ResolveInstanceBookingCadence(marketplaceBooking.ProductPricing.PurchaseCadence),
             };
 
             booking.MarketplaceBooking = marketplaceBooking;
@@ -746,6 +628,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
     private async Task<RecurringBooking> EnsureCurrentCycleRecurringBookingAsync(
         MarketplaceBookingSubscription subscription,
+        TimeOnly from,
+        TimeOnly until,
         CancellationToken cancellationToken)
     {
         var purchaseCadence = subscription.MarketplaceBooking.ProductPricing.PurchaseCadence;
@@ -761,6 +645,13 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 item.EndDate.Value.UtcDateTime.Date == cycleEnd.UtcDateTime.Date);
         if (existingRecurringBooking is not null)
         {
+            var (existingPatternFrom, existingPatternUntil) = Models.MarketplaceBookingSubscription.ResolveBookingWindow(
+                subscription.StartedAt,
+                from,
+                until);
+            existingRecurringBooking.From = existingPatternFrom;
+            existingRecurringBooking.Until = existingPatternUntil;
+
             await EnsureCurrentCyclePaymentWorkflowStartedAsync(existingRecurringBooking, cancellationToken);
             await EnsureInitialArrearsInvoiceStartedAsync(subscription, existingRecurringBooking, cycleStart, cancellationToken);
 
@@ -768,13 +659,17 @@ public class MarketplaceBookingSubscriptionIntegrations(
         }
 
         var recurringMarketplaceBooking = CreateRecurringMarketplaceBookingTemplate(subscription);
+        var (patternFrom, patternUntil) = Models.MarketplaceBookingSubscription.ResolveBookingWindow(
+            subscription.StartedAt,
+            from,
+            until);
 
         var recurringBooking = repositoryFactory.RecurringBookingRepository.Add(
             new RecurringBooking
             {
                 Id = randomHelper.Generate(),
-                From = ResolveRecurringInstanceFrom(subscription),
-                Until = ResolveRecurringInstanceUntil(subscription),
+                From = patternFrom,
+                Until = patternUntil,
                 Category = BookingCategory.WorkingFromCoworkingSpace.ToBookingCategory(),
                 Channel = BookingChannel.Marketplace.ToBookingChannel(),
                 Frequency = subscription.WeeklySelectedDays.Count == 0
@@ -1071,7 +966,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
     private MarketplaceBooking CreateRecurringMarketplaceBookingTemplate(MarketplaceBookingSubscription subscription)
     {
         var marketplaceBooking = subscription.MarketplaceBooking;
-        var bookingCadence = ResolveInstanceBookingCadence(marketplaceBooking.ProductPricing.PurchaseCadence);
         var requiresPaymentForCurrentCycle =
             marketplaceBooking.ProductPricing.BillingMode is ProductPricingBillingMode.Upfront or ProductPricingBillingMode.InArrears;
         var paymentExpiry = requiresPaymentForCurrentCycle
@@ -1091,7 +985,6 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 Quantity = marketplaceBooking.Quantity,
                 ProductPricing = marketplaceBooking.ProductPricing with
                 {
-                    BookingCadence = bookingCadence,
                 },
                 PaymentMethod = marketplaceBooking.PaymentMethod,
                 PaymentExpiry = paymentExpiry,
@@ -1238,38 +1131,5 @@ public class MarketplaceBookingSubscriptionIntegrations(
             ProductPricingCadence.SixMonths => start.AddMonths(6),
             ProductPricingCadence.Yearly => start.AddYears(1),
             _ => start.AddDays(1),
-        };
-
-    private static DateTimeOffset ResolveRecurringInstanceFrom(MarketplaceBookingSubscription subscription) =>
-        subscription.StartedAt;
-
-    private static DateTimeOffset ResolveRecurringInstanceUntil(MarketplaceBookingSubscription subscription)
-    {
-        var from = ResolveRecurringInstanceFrom(subscription);
-
-        // For day-based subscriptions the workflow later replaces the concrete booking window
-        // with the location's actual opening hours. Shorter cadences keep their explicit time.
-        return ResolveInstanceBookingCadence(subscription.MarketplaceBooking.ProductPricing.PurchaseCadence) switch
-        {
-            ProductPricingCadence.PerMinute => from.AddMinutes(1),
-            ProductPricingCadence.Per15Minutes => from.AddMinutes(15),
-            ProductPricingCadence.Per30Minutes => from.AddMinutes(30),
-            ProductPricingCadence.PerHour => from.AddHours(1),
-            ProductPricingCadence.HalfDay => from.AddHours(4),
-            _ => new DateTimeOffset(from.UtcDateTime.Date.AddDays(1).AddTicks(-1), TimeSpan.Zero),
-        };
-    }
-
-    private static ProductPricingCadence ResolveInstanceBookingCadence(ProductPricingCadence purchaseCadence) =>
-        purchaseCadence switch
-        {
-            ProductPricingCadence.PerMinute => ProductPricingCadence.PerMinute,
-            ProductPricingCadence.Per15Minutes => ProductPricingCadence.Per15Minutes,
-            ProductPricingCadence.Per30Minutes => ProductPricingCadence.Per30Minutes,
-            ProductPricingCadence.PerHour => ProductPricingCadence.PerHour,
-            ProductPricingCadence.HalfDay => ProductPricingCadence.HalfDay,
-            // Day-or-longer subscriptions are materialized one day at a time under the
-            // recurring marketplace flow while the purchase cadence stays on the parent object.
-            _ => ProductPricingCadence.Daily,
         };
 }

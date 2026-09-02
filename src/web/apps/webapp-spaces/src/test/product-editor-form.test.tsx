@@ -184,7 +184,7 @@ const baseProps = {
         title: 'Daily pass',
         subTitle: null,
         fulfillmentType: 'RESERVATION',
-        cadence: 'ONE_TIME',
+        cadence: 'DAILY',
         price: '25',
         numberOfResourcesToBook: '1',
         minDurationMinutes: '60',
@@ -274,7 +274,7 @@ describe('ProductEditorForm', () => {
     expect(onSetPrimaryFeatureImage).toHaveBeenCalledWith(secondImage);
   });
 
-  it('adds a one-time offer with one click', async () => {
+  it('adds a daily offer with one click', async () => {
     const user = userEvent.setup();
     const change = vi.fn();
 
@@ -284,7 +284,7 @@ describe('ProductEditorForm', () => {
 
     const nextPricingOptions = change.mock.calls.at(-1)?.[1] as Array<{ cadence: string }>;
     expect(nextPricingOptions).toHaveLength(2);
-    expect(nextPricingOptions[1]?.cadence).toBe('ONE_TIME');
+    expect(nextPricingOptions[1]?.cadence).toBe('DAILY');
   });
 
   it('duplicates and removes offers, while protecting the final offer', async () => {
@@ -317,7 +317,7 @@ describe('ProductEditorForm', () => {
     expect(screen.getByRole('menuitem', { name: 'Remove offer' })).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('switches between the offer sections and explains cadence separately from auto-renewal', async () => {
+  it('switches between the offer sections and explains purchase terms separately from auto-renewal', async () => {
     const user = userEvent.setup();
 
     render(
@@ -333,7 +333,7 @@ describe('ProductEditorForm', () => {
     await user.click(screen.getByRole('tab', { name: 'Offers' }));
 
     await user.click(screen.getByRole('button', { name: /Fulfillment/ }));
-    expect(screen.getByText(/Choose One time for a single purchase/)).toBeVisible();
+    expect(screen.getByText(/Choose a term of one day or longer/)).toBeVisible();
 
     await user.click(screen.getByRole('button', { name: /Booking rules/ }));
     expect(screen.getByRole('button', { name: /Booking rules/ })).toHaveAttribute('aria-expanded', 'true');

@@ -29,7 +29,7 @@ const HostLocations = ({ organizationId }: { organizationId: string }) => {
             id
             pricingOptions {
               billingMode
-              bookingCadence
+              purchaseCadence
               cancellationPolicyType
             }
           }
@@ -59,7 +59,7 @@ const HostLocations = ({ organizationId }: { organizationId: string }) => {
         // Listing setup state is derived from the linked hidden listing configuration.
         const firstProduct = location.products?.[0];
         const billingMode = firstProduct?.pricingOptions?.[0]?.billingMode;
-        const cadenceLabel = firstProduct?.pricingOptions?.[0]?.bookingCadence;
+        const cadenceLabel = firstProduct?.pricingOptions?.[0]?.purchaseCadence;
         const isReady = Boolean(firstProduct);
 
         return (

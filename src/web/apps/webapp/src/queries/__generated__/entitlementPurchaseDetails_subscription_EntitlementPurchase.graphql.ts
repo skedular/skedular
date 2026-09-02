@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d4f01a3a13a0be706355e11d85562db7>>
+ * @generated SignedSource<<7c16fd228b376846c39ceb53b349adb5>>
  * @lightSyntaxTransform
  */
 
@@ -18,12 +18,8 @@ export type entitlementPurchaseDetails_subscription_EntitlementPurchase$data = {
     readonly creditQuantity: number;
     readonly currency: string;
     readonly entitlement: {
-      readonly autoRenew: boolean;
       readonly availableQuantity: number;
-      readonly cancelAtPeriodEnd: boolean;
       readonly id: string;
-      readonly nextRenewalAt: any | null | undefined;
-      readonly renewalFailureReason: string | null | undefined;
       readonly status: EntitlementStatus;
     } | null | undefined;
     readonly id: string;
@@ -186,35 +182,7 @@ v2 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "autoRenew",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "cancelAtPeriodEnd",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
             "name": "status",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "nextRenewalAt",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "renewalFailureReason",
             "storageKey": null
           }
         ],
@@ -242,16 +210,16 @@ return {
     "selections": (v2/*:: as any*/)
   },
   "params": {
-    "cacheID": "37bc63ca1def9284af025637914063a5",
+    "cacheID": "e613672fd58886652b511fda6b8b5a40",
     "id": null,
     "metadata": {},
     "name": "entitlementPurchaseDetails_subscription_EntitlementPurchase",
     "operationKind": "subscription",
-    "text": "subscription entitlementPurchaseDetails_subscription_EntitlementPurchase(\n  $purchaseId: String!\n) {\n  entitlementPurchase(purchaseId: $purchaseId) {\n    id\n    paymentStatus\n    lifecycleState\n    paymentMethod\n    paymentExpiry\n    serviceStartAt\n    amount\n    currency\n    pricingId\n    creditQuantity\n    validityDays\n    invoiceNumber\n    invoiceUrl\n    paymentAction\n    entitlement {\n      id\n      availableQuantity\n      autoRenew\n      cancelAtPeriodEnd\n      status\n      nextRenewalAt\n      renewalFailureReason\n    }\n  }\n}\n"
+    "text": "subscription entitlementPurchaseDetails_subscription_EntitlementPurchase(\n  $purchaseId: String!\n) {\n  entitlementPurchase(purchaseId: $purchaseId) {\n    id\n    paymentStatus\n    lifecycleState\n    paymentMethod\n    paymentExpiry\n    serviceStartAt\n    amount\n    currency\n    pricingId\n    creditQuantity\n    validityDays\n    invoiceNumber\n    invoiceUrl\n    paymentAction\n    entitlement {\n      id\n      availableQuantity\n      status\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1d2d3296c877a9dcc36e27342a63c23a";
+(node as any).hash = "38b95c24d9e209d62671d4b81e876aa6";
 
 export default node;

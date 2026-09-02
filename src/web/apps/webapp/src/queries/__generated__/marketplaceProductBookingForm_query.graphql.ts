@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<35cb14afb33d9dcd45832cd79207a5b9>>
+ * @generated SignedSource<<06995c6f4cc054e13fa5c3fb30899571>>
  * @lightSyntaxTransform
  */
 
@@ -12,7 +12,7 @@ export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
@@ -70,7 +70,6 @@ export type marketplaceProductBookingForm_query$data = {
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly availableDays: ReadonlyArray<DayOfWeek> | null | undefined;
       readonly billingMode: ProductPricingBillingMode;
-      readonly bookingCadence: ProductPricingCadence;
       readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
       readonly cancellationRefundRules: ReadonlyArray<{
         readonly minutesBefore: number;
@@ -444,13 +443,6 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "bookingCadence",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
               "name": "price",
               "storageKey": null
             },
@@ -561,6 +553,6 @@ return {
 };
 })();
 
-(node as any).hash = "0815f962ab8b4c9f9c28a9c3c017e886";
+(node as any).hash = "7228389552f99727209383a658295816";
 
 export default node;

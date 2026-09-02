@@ -61,22 +61,16 @@ message CdnFile {
 
 enum ProductPricingCadence {
   ProductPricingCadence_NotSet       = 0;
-  ProductPricingCadence_OneTime      = 1;
-  ProductPricingCadence_PerMinute    = 2;
-  ProductPricingCadence_PerHour      = 3;
-  ProductPricingCadence_HalfDay      = 4;
-  ProductPricingCadence_Daily        = 5;
-  ProductPricingCadence_Weekly       = 6;
-  ProductPricingCadence_Monthly      = 7;
-  ProductPricingCadence_Per15Minutes = 8;
-  ProductPricingCadence_Per30Minutes = 9;
-  ProductPricingCadence_TwoMonths    = 10;
-  ProductPricingCadence_Quarterly    = 11;
-  ProductPricingCadence_FourMonths   = 12;
-  ProductPricingCadence_FiveMonths   = 13;
-  ProductPricingCadence_SixMonths    = 14;
-  ProductPricingCadence_Yearly       = 15;
-  ProductPricingCadence_Fortnightly  = 16;
+  ProductPricingCadence_Daily        = 1;
+  ProductPricingCadence_Weekly       = 2;
+  ProductPricingCadence_Fortnightly  = 3;
+  ProductPricingCadence_Monthly      = 4;
+  ProductPricingCadence_TwoMonths    = 5;
+  ProductPricingCadence_Quarterly    = 6;
+  ProductPricingCadence_FourMonths   = 7;
+  ProductPricingCadence_FiveMonths   = 8;
+  ProductPricingCadence_SixMonths    = 9;
+  ProductPricingCadence_Yearly       = 10;
 }
 
 enum ProductPricingBillingMode {
@@ -112,7 +106,6 @@ message ProductPricing {
   int32                                         index                                          = 2;
   ListingMetadata                               listingMetadata                                = 3;
   ProductPricingCadence                         purchaseCadence                                = 4;
-  ProductPricingCadence                         bookingCadence                                 = 5;
   double                                        price                                          = 6;
   bool                                          isTaxInclusive                                 = 7;
   Currency                                      currency                                       = 8;

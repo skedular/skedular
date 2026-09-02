@@ -48,6 +48,9 @@ vi.mock('react-relay', () => ({
 }));
 
 vi.mock('@mui/x-date-pickers/DatePicker', () => ({ DatePicker: () => <input aria-label="Start date" /> }));
+vi.mock('@mui/x-date-pickers-pro/TimeRangePicker', () => ({
+  TimeRangePicker: () => <input aria-label="Booking time range" />,
+}));
 vi.mock('@/hooks/use-known-params', () => ({ default: () => ({ isCustomDomain: false, organizationCustomDomain: 'example' }) }));
 vi.mock('@/components/marketplaceProduct', () => ({ CustomerTermsAndConditionsPanel: () => null }));
 vi.mock('./marketplace-product-subscribe-summary', () => ({ default: () => <div>Summary</div> }));

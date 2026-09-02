@@ -126,15 +126,15 @@ const getGraphqlResponse = (operationName: string | undefined, appId: WebAppId) 
   }
 
   if (operationName === 'hostLocationDetailsQuery') {
-    return { data: { location: { id: 'location-1', name: 'Garden Studio', timezone: 'Pacific/Auckland', type: { name: 'Marketplace' }, physicalAddress: { multilinesFormattedAddress: '1 Garden Lane, Auckland', latitude: -36.85, longitude: 174.76 }, extraMetadata: { peopleCapacity: { from: 1, to: 10 }, contactDetails: { contactEmails: [], contactPhones: [] } }, products: [{ id: 'product-1', inactive: false, listingMetadata: { title: 'Full-Day Studio Workshop' }, pricingOptions: [{ price: 120, bookingCadence: 'DAILY' }], currency: { name: 'USD' } }] } } };
+    return { data: { location: { id: 'location-1', name: 'Garden Studio', timezone: 'Pacific/Auckland', type: { name: 'Marketplace' }, physicalAddress: { multilinesFormattedAddress: '1 Garden Lane, Auckland', latitude: -36.85, longitude: 174.76 }, extraMetadata: { peopleCapacity: { from: 1, to: 10 }, contactDetails: { contactEmails: [], contactPhones: [] } }, products: [{ id: 'product-1', inactive: false, listingMetadata: { title: 'Full-Day Studio Workshop' }, pricingOptions: [{ price: 120, purchaseCadence: 'DAILY' }], currency: { name: 'USD' } }] } } };
   }
 
   if (operationName === 'hostLocationProductsQuery') {
-    return { data: { location: { id: 'location-1', name: 'Garden Studio', products: [{ id: 'product-1', inactive: false, type: { name: 'Event' }, currency: { name: 'USD' }, listingMetadata: { title: 'Full-Day Studio Workshop', about: 'Entire place' }, pricingOptions: [{ id: 'pricing-1', price: 120, bookingCadence: 'DAILY' }] }] } } };
+    return { data: { location: { id: 'location-1', name: 'Garden Studio', products: [{ id: 'product-1', inactive: false, type: { name: 'Event' }, currency: { name: 'USD' }, listingMetadata: { title: 'Full-Day Studio Workshop', about: 'Entire place' }, pricingOptions: [{ id: 'pricing-1', price: 120, purchaseCadence: 'DAILY' }] }] } } };
   }
 
   if (operationName === 'hostProductDetailsQuery') {
-    return { data: { product: { id: 'product-1', inactive: false, type: { name: 'Event' }, currency: { name: 'USD' }, listingMetadata: { title: 'Full-Day Studio Workshop', subTitle: '', about: 'Entire place', includedFeatures: [] }, pricingOptions: [{ id: 'pricing-1', price: 120, bookingCadence: 'DAILY', purchaseCadence: 'DAILY', acceptedPaymentMethods: ['CARD'] }] } } };
+    return { data: { product: { id: 'product-1', inactive: false, type: { name: 'Event' }, currency: { name: 'USD' }, listingMetadata: { title: 'Full-Day Studio Workshop', subTitle: '', about: 'Entire place', includedFeatures: [] }, pricingOptions: [{ id: 'pricing-1', price: 120, purchaseCadence: 'DAILY', acceptedPaymentMethods: ['CARD'] }] } } };
   }
 
   if (operationName === 'editHostLocationQuery') {

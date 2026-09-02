@@ -543,8 +543,9 @@ public class MarketplaceBookingService(
             (productVersionHelperService.FindMatchingPricing([.. productVersion.PricingOptions!], marketplaceBooking.ProductPricing) ??
              throw new ProductPricingNotFound()) with
             {
-                BookingCadence = marketplaceBooking.ProductPricing.BookingCadence,
             };
+
+        ValidateBookingDuration(booking, marketplaceBooking.ProductPricing);
 
         if (marketplaceBooking.ProductPricing.FulfillmentType == ProductPricingFulfillmentType.Entitlement &&
             marketplaceBooking.EntitlementId is null)
@@ -563,8 +564,6 @@ public class MarketplaceBookingService(
 
         marketplaceBooking.BillingMode = marketplaceBooking.ProductPricing.BillingMode;
         marketplaceBooking.Currency ??= productVersion.Currency.ToNullableCurrency();
-
-        ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.BookingCadence, recurringBooking);
 
         // Reject disallowed dates before asking any availability service to allocate slots.
         if (!marketplaceBookingAvailableDaysService.IsAvailable(
@@ -944,6 +943,7 @@ public class MarketplaceBookingService(
 
         var marketplaceBooking = existingBooking.MarketplaceBooking;
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
+        ValidateBookingDuration(booking, marketplaceBooking.ProductPricing);
         var existingCheckoutReturnUrl = marketplaceBooking.CheckoutReturnUrl;
         var existingStripeCheckoutSession = marketplaceBooking.StripeCheckoutSession;
 
@@ -958,8 +958,6 @@ public class MarketplaceBookingService(
         // That way marketplace admins on the product-owning organization do not lose visibility
         // if the caller only sends their own organizations back on update.
         organizations = MergeOrganizationsWithProductOwner(organizations, productVersion);
-
-        ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.BookingCadence, recurringBooking);
 
         var resourceIds = booking.Resources.Count == 0
             ? existingBooking.InvolvedResources.Select(item => item.Id).ToList()
@@ -1445,20 +1443,6 @@ public class MarketplaceBookingService(
         return failure.Id;
     }
 
-    /// <summary>
-    ///     Determines if the product pricing cadence represents a single instance booking.
-    /// </summary>
-    /// <param name="cadence">The product pricing cadence to check.</param>
-    /// <returns>True if the cadence is for single instance bookings, false otherwise.</returns>
-    private static bool IsSingleInstanceMarketplaceCadence(ProductPricingCadence cadence) =>
-        cadence is ProductPricingCadence.OneTime or
-            ProductPricingCadence.PerMinute or
-            ProductPricingCadence.Per15Minutes or
-            ProductPricingCadence.Per30Minutes or
-            ProductPricingCadence.PerHour or
-            ProductPricingCadence.HalfDay or
-            ProductPricingCadence.Daily;
-
     private static int ResolveRequestedResourceCount(bool isEventProduct, MarketplaceBooking marketplaceBooking) =>
         isEventProduct ? 0 : marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
 
@@ -1482,30 +1466,6 @@ public class MarketplaceBookingService(
     }
 
     /// <summary>
-    ///     Validates that the marketplace cadence is compatible with the booking flow (single or recurring).
-    /// </summary>
-    /// <param name="cadence">The product pricing cadence.</param>
-    /// <param name="recurringBooking">The recurring booking if applicable.</param>
-    /// <exception cref="MarketplaceBookingCadenceRequiresRecurringFlow">Thrown when cadence validation fails.</exception>
-    private static void ValidateMarketplaceCadenceForBookingFlow(ProductPricingCadence cadence, RecurringBooking? recurringBooking)
-    {
-        if (recurringBooking is null)
-        {
-            if (!IsSingleInstanceMarketplaceCadence(cadence))
-            {
-                throw new MarketplaceBookingCadenceRequiresRecurringFlow();
-            }
-
-            return;
-        }
-
-        if (cadence != ProductPricingCadence.Daily)
-        {
-            throw new MarketplaceBookingCadenceRequiresRecurringFlow();
-        }
-    }
-
-    /// <summary>
     ///     Validates that the booking window starts and ends within the same day.
     /// </summary>
     /// <param name="booking">The booking model to validate.</param>
@@ -1518,6 +1478,49 @@ public class MarketplaceBookingService(
         if (from.Date != until.Date && (from.Date.AddDays(1) != until.Date || until.TimeOfDay != TimeSpan.Zero))
         {
             throw new BookingMustStartAndEndWithinSameDay();
+        }
+    }
+
+    private void ValidateBookingDuration(Models.Booking booking, ProductPricing pricing)
+    {
+        var durationMinutes = (booking.Until - booking.From).TotalMinutes;
+        try
+        {
+            ValidateBookingDuration(booking.From, booking.Until, pricing);
+        }
+        catch (Exception exception) when (exception is InvalidOperationException or MarketplaceBookingDurationMustBeAtLeastMinimum
+                                              or MarketplaceBookingDurationMustNotExceedMaximum)
+        {
+            logger.LogInformation(
+                exception,
+                "Rejected marketplace booking duration. PricingId={PricingId}, DurationMinutes={DurationMinutes}",
+                pricing.Id,
+                durationMinutes);
+            throw;
+        }
+
+        logger.LogInformation(
+            "Accepted marketplace booking duration. PricingId={PricingId}, DurationMinutes={DurationMinutes}",
+            pricing.Id,
+            durationMinutes);
+    }
+
+    public static void ValidateBookingDuration(DateTimeOffset from, DateTimeOffset until, ProductPricing pricing)
+    {
+        var durationMinutes = (until - from).TotalMinutes;
+        if (durationMinutes <= 0)
+        {
+            throw new InvalidOperationException("The booking end time must be after the start time.");
+        }
+
+        if (pricing.MinDurationMinutes is { } minimumMinutes && durationMinutes < minimumMinutes)
+        {
+            throw new MarketplaceBookingDurationMustBeAtLeastMinimum(minimumMinutes);
+        }
+
+        if (pricing.MaxDurationMinutes is { } maximumMinutes && durationMinutes > maximumMinutes)
+        {
+            throw new MarketplaceBookingDurationMustNotExceedMaximum(maximumMinutes);
         }
     }
 

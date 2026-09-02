@@ -16,10 +16,6 @@ public class Entitlement : EntityBase
     public DateTimeOffset ActivatesAt { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
     public EntitlementStatus Status { get; set; }
-    public bool AutoRenew { get; set; }
-    public bool CancelAtPeriodEnd { get; set; }
-    public DateTimeOffset? NextRenewalAt { get; set; }
-    public string? RenewalFailureReason { get; set; }
     public decimal NetPurchaseAmount { get; set; }
     public string Currency { get; set; }
 
@@ -50,7 +46,6 @@ public class EntitlementConfiguration : IEntityTypeConfiguration<Entitlement>
         builder.Property(item => item.PurchaseReference).HasMaxLength(Constants.MaxLocalEntityLength);
         builder.Property(item => item.PricingId).HasMaxLength(Constants.MaxLocalEntityLength);
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
-        builder.Property(item => item.RenewalFailureReason).HasMaxLength(Constants.MaxAccountingErrorLength);
         builder.Property(item => item.NetPurchaseAmount).HasColumnType("DECIMAL(18,4)");
 
         builder.HasOne(item => item.Customer).WithMany().HasForeignKey(item => item.CustomerId);
@@ -62,7 +57,6 @@ public class EntitlementConfiguration : IEntityTypeConfiguration<Entitlement>
             item.Status,
         });
         builder.HasIndex(item => item.ExpiresAt);
-        builder.HasIndex(item => item.NextRenewalAt);
         builder.HasIndex(item => item.PurchaseReference).IsUnique();
     }
 }

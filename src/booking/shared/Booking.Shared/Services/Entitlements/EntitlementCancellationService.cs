@@ -195,9 +195,6 @@ public sealed class EntitlementCancellationService(
         }
 
         entitlement.Status = EntitlementStatus.Cancelled;
-        entitlement.AutoRenew = false;
-        entitlement.CancelAtPeriodEnd = false;
-        entitlement.NextRenewalAt = null;
         await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForEntitlementPurchaseAsync(
             entitlement.PurchaseReference,
             cancellationToken);
