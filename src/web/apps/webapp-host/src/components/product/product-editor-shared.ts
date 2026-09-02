@@ -277,7 +277,7 @@ export const productSchema = () =>
             if (cadence === 'DAILY') return !value;
             if (!value) return true;
             const required = Number(value);
-            const availableCount = availableDays.length || 7;
+            const availableCount = (this.parent as PricingOptionForm).fulfillmentType === 'ENTITLEMENT' ? 7 : availableDays.length || 7;
             return Number.isInteger(required) && required > 0 && required <= availableCount;
           }),
         }),

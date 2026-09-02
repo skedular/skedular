@@ -23,8 +23,8 @@
 
 - [x] Acceptance scenarios are defined
 - [x] Research findings and source-of-truth files are recorded
-- [x] Longer-cadence implementation is explicitly deferred with reasons
+- [x] Longer-cadence implementation is specified and implemented with explicit UTC boundary semantics
 
 ## Notes
 
-The requested broader implementation is not ready for safe coding because its business semantics are not defined consistently across booking, redemption, and subscription generation.
+The implementation uses exact selected weekdays for reservations/subscriptions and an at-most weekly redemption count for credit entitlements.

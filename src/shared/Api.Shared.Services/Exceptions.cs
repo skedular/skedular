@@ -243,8 +243,8 @@ public class MarketplaceBookingDurationMustNotExceedMaximum(int maximumMinutes)
 public class ProductPricingAvailableDaysInvalid()
     : Exception("Available days must be unique calendar days from Monday through Sunday.");
 
-public class ProductPricingWeeklyDaySelectionOnlySupportedForWeeklyPricing()
-    : Exception("Selected days per week can only be configured for weekly pricing.");
+public class ProductPricingWeeklyDaySelectionOnlySupportedForScheduledPricing()
+    : Exception("Selected days per week can only be configured for weekly or longer scheduled pricing.");
 
 public class ProductPricingWeeklyDaySelectionRangeInvalid()
     : Exception("Required selected days per week must be from 1 to 7 and fit within the available days.");

@@ -116,7 +116,7 @@ public sealed class EntitlementBookingService(
             if (!isIdempotentRetry && entitlement.ProductPricing?.RequiredDaysPerWeek is { } requiredDaysPerWeek &&
                 requiredDaysPerWeek > 0)
             {
-                var utcBookingAt = bookingAt.ToUniversalTime();
+                var utcBookingAt = booking.From.ToUniversalTime();
                 var weekStart = UtcCalendarWeek.Start(utcBookingAt);
                 var weekEnd = weekStart.AddDays(7);
                 if (UtcCalendarWeek.IsComplete(weekStart, entitlementEntity.ActivatesAt, entitlementEntity.ExpiresAt) &&

@@ -668,7 +668,7 @@ public class ProductService(
             if (pricing.FulfillmentType != ProductPricingFulfillmentType.Entitlement &&
                 !SupportsRequiredDaysPerWeek(pricing.PurchaseCadence))
             {
-                throw new ProductPricingWeeklyDaySelectionOnlySupportedForWeeklyPricing();
+                throw new ProductPricingWeeklyDaySelectionOnlySupportedForScheduledPricing();
             }
 
             var availableDayCount = pricing.FulfillmentType == ProductPricingFulfillmentType.Entitlement

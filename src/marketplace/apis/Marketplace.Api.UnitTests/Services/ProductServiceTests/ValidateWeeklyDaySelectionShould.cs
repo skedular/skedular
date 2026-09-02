@@ -55,7 +55,7 @@ public class ValidateWeeklyDaySelectionShould
             RequiredDaysPerWeek = 1,
         };
 
-        Should.Throw<ProductPricingWeeklyDaySelectionOnlySupportedForWeeklyPricing>(() =>
+        Should.Throw<ProductPricingWeeklyDaySelectionOnlySupportedForScheduledPricing>(() =>
             ProductService.Validate(ProductType.Resource, pricing, false));
     }
 

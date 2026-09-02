@@ -27,4 +27,8 @@ describe('location weekly price validation', () => {
   it('accepts a whole number for a longer purchase cadence', () => {
     expect(hasValidWeeklyRequiredDays('MONTHLY', '2', ['MONDAY', 'TUESDAY'])).toBe(true);
   });
+
+  it('allows multiple entitlement redemptions on one available day', () => {
+    expect(hasValidWeeklyRequiredDays('MONTHLY', '2', ['MONDAY'], 'ENTITLEMENT')).toBe(true);
+  });
 });
