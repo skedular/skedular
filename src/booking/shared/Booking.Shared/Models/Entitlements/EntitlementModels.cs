@@ -23,6 +23,7 @@ public sealed class EntitlementModel : ModelBase
     public EntitlementRefundModel? Refund { get; set; }
     public IReadOnlyList<CreditLedgerEntryModel> LedgerEntries { get; set; } = [];
     public IReadOnlyList<string> LinkedBookingIds { get; set; } = [];
+    public int? RemainingWeeklyRedemptions { get; set; }
 }
 
 public sealed class EntitlementRefundModel

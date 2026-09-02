@@ -665,12 +665,15 @@ public class ProductService(
 
         if (pricing.RequiredDaysPerWeek is not null)
         {
-            if (pricing.PurchaseCadence != ProductPricingCadence.Weekly)
+            if (pricing.FulfillmentType != ProductPricingFulfillmentType.Entitlement &&
+                !SupportsRequiredDaysPerWeek(pricing.PurchaseCadence))
             {
                 throw new ProductPricingWeeklyDaySelectionOnlySupportedForWeeklyPricing();
             }
 
-            var availableDayCount = pricing.AvailableDays is { Count: > 0 } ? pricing.AvailableDays.Count : 7;
+            var availableDayCount = pricing.FulfillmentType == ProductPricingFulfillmentType.Entitlement
+                ? 7
+                : pricing.AvailableDays is { Count: > 0 } ? pricing.AvailableDays.Count : 7;
             if (pricing.RequiredDaysPerWeek <= 0 ||
                 pricing.RequiredDaysPerWeek > 7 ||
                 pricing.RequiredDaysPerWeek > availableDayCount)
@@ -749,6 +752,13 @@ public class ProductService(
             ProductPricingCadence.FourMonths or
             ProductPricingCadence.FiveMonths or
             ProductPricingCadence.SixMonths or
+            ProductPricingCadence.Yearly;
+
+    private static bool SupportsRequiredDaysPerWeek(ProductPricingCadence cadence) =>
+        cadence is ProductPricingCadence.Weekly or ProductPricingCadence.Fortnightly or
+            ProductPricingCadence.Monthly or ProductPricingCadence.TwoMonths or
+            ProductPricingCadence.Quarterly or ProductPricingCadence.FourMonths or
+            ProductPricingCadence.FiveMonths or ProductPricingCadence.SixMonths or
             ProductPricingCadence.Yearly;
 
     /// <summary>

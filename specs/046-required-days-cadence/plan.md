@@ -1,35 +1,35 @@
 # Implementation Plan: Required Days Across Longer Cadences
 
-**Branch**: `046-required-days-cadence` | **Date**: 2026-08-31 | **Spec**: [spec.md](spec.md)
+**Branch**: `046-required-days-cadence` | **Date**: 2026-09-02 | **Spec**: [spec.md](spec.md)
 
 ## Summary
 
-Extend nullable `ProductPricing.RequiredDaysPerWeek` to all purchase cadences longer than one week. Reservations and subscriptions require exactly N bookings per complete UTC calendar week; credit entitlements allow at most N confirmed redemptions per complete UTC week. `availableDays` remains the allowed weekday set and boundary partial weeks are exempt.
+Extend `ProductPricing.RequiredDaysPerWeek` from weekly-only offers to supported purchase cadences longer than one week. Spec 047 removes sub-day cadences and makes credit entitlements cadence-free. Scheduled reservations/subscriptions use customer-selected weekdays and generate one booking occurrence per selected weekday in each applicable complete UTC week; entitlements use their validity period and allow at most N successful redemptions per complete UTC week. No booking or location timezone is stored or consulted.
 
 ## Technical Context
 
 **Language/Version**: C# .NET 10; TypeScript 6 / React 19 / Next.js 16
 **Primary Dependencies**: EF Core/PostgreSQL, HotChocolate/Fusion GraphQL, Kafka/protobuf events, Temporal, Relay, Vitest
-**Storage**: Existing ProductPricing JSON/event projections; Booking-owned durable entitlement/redemption history query or record
+**Storage**: Existing ProductPricing projections; Booking-owned entitlement redemption history/usage query with concurrency protection
 **Testing**: xUnit + AutoFakeItEasyData; repository-backed integration tests; Vitest + React Testing Library
-**Target Platform**: Skedular backend APIs, processors, workflows, and web product editors
+**Target Platform**: Marketplace/Booking APIs, processors, workflows, and Host/Spaces web editors
 **Project Type**: Full-stack web service
-**Performance Goals**: Weekly checks use bounded indexed history queries.
-**Constraints**: UTC weeks; no raw EF outside repositories; generated artifacts are regenerated, never hand-edited.
-**Scale/Scope**: All existing longer-than-weekly purchase cadences and both fulfillment types.
+**Performance Goals**: Weekly eligibility queries use indexed, bounded entitlement/booking history lookups.
+**Constraints**: Supported purchase cadences are Daily, Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, and Yearly; the setting is hidden for Daily and cadence-free entitlements use validity periods. UTC weeks; no raw EF outside repositories; generated artifacts are never hand-edited.
+**Scale/Scope**: Weekly and longer purchase cadences, scheduled reservations/subscriptions, and cadence-free credit entitlements.
 
 ## Constitution Check
 
-- [x] Contract-first: preserve existing fields; regenerate any affected GraphQL/event/Relay outputs.
-- [x] Domain boundaries: Marketplace owns pricing; Booking owns enforcement and redemption persistence through services/repositories.
-- [x] Testing: unit-first, with integration tests for durable counting and concurrency.
-- [x] Frontend: update Host/Spaces editors, Relay operations, and customer-facing documentation as needed.
-- [x] Pattern consistency: one shared UTC-week calculation path.
-- [x] Logging: configuration, eligibility, rejected redemption, and subscription-generation decisions are structured and non-sensitive.
+- [x] Contract-first: preserve existing fields where possible; regenerate GraphQL/protobuf/Relay outputs only from source definitions.
+- [x] Domain boundaries: Marketplace owns pricing; Booking owns booking and entitlement enforcement through services/repositories and events.
+- [x] Testing: unit-first; integration tests cover persistence and concurrent redemption boundaries.
+- [x] Frontend: update Host/Spaces editors and customer surfaces with Relay-safe mutations and American English copy.
+- [x] Pattern consistency: one UTC-week calculator and explicit lifecycle counting rules.
+- [x] Logging: structured logs cover validation, schedule generation, blocked redemption, release, retry, and recovery decisions.
 
 ## Phase 0: Research
 
-See [research.md](research.md). Existing model, GraphQL input, protobuf field, JSON serialization, event mappers, and editors already carry the value. The gap is longer-cadence enforcement and aggregate entitlement counting.
+See [research.md](research.md). Spec 047 is the authority for the supported cadence set and cadence-free entitlement model. Existing ProductPricing, GraphQL, protobuf, JSON, event mappers, and editors already carry the nullable field; new work is enforcement and UI gating.
 
 ## Phase 1: Design
 
@@ -37,7 +37,7 @@ See [data-model.md](data-model.md), [contracts/required-days.md](contracts/requi
 
 ## Project Structure
 
-Backend: `src/shared/Api.Shared.Services`, `src/marketplace/apis/Marketplace.Api`, `src/marketplace/shared/Marketplace.Shared`, `src/booking/shared/Booking.Shared`, and Booking integration tests. Frontend: product editors under `src/web/apps/webapp-host` and `src/web/apps/webapp-spaces`, with generated Relay artifacts.
+Backend changes belong in `src/marketplace/apis/Marketplace.Api`, `src/marketplace/shared/Marketplace.Shared`, `src/booking/shared/Booking.Shared`, `src/booking/processors/Booking.Processors`, and Booking integration tests. Frontend changes belong in `src/web/apps/webapp-host`, `src/web/apps/webapp-spaces`, and affected customer components under `src/web/apps/webapp`; generated Relay/schema outputs are regenerated.
 
 ## Complexity Tracking
 

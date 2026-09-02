@@ -55,12 +55,12 @@ describe('weekly price day-selection editor state', () => {
     ).resolves.toBe('7');
   });
 
-  it('rejects a weekly count on nonweekly pricing', async () => {
+  it('accepts a required-day count on longer calendar pricing', async () => {
     await expect(
       productSchema().validateAt('pricingOptions[0].requiredDaysPerWeek', {
         pricingOptions: [{ cadence: 'MONTHLY', availableDays: [], requiredDaysPerWeek: '1' }],
       }),
-    ).rejects.toThrow('Set the required number of selected days');
+    ).resolves.toBe('1');
   });
 
   it('allows separate weekly price tiers with different required day counts', async () => {

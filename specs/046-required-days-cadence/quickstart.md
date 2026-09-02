@@ -1,3 +1,3 @@
 # Quickstart Validation
 
-Configure reservation and entitlement pricing for every longer-than-weekly cadence. Verify editor validation, exact scheduled bookings, at-most-N entitlement redemptions under concurrency, UTC boundaries, exempt partial weeks, and `availableDays`. Run focused backend/frontend tests, then the relevant GraphQL/event/Relay generators when source contracts change.
+Configure reservation/subscription pricing for Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, and Yearly cadences; verify Daily hides the setting. Configure cadence-free entitlement pricing and verify its validity-period weekly limit. Verify exact scheduled occurrences, at-most-N successful redemptions under concurrency, cancellation/refund release, idempotent retries, UTC boundaries, `[start, end)` partial-week exemption, and `availableDays`. Run focused backend/frontend tests, then relevant generators when source contracts change.

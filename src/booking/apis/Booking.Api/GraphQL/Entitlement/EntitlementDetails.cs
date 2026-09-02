@@ -16,6 +16,7 @@ public sealed class EntitlementDetails
     public string ProductId { get; set; } = string.Empty;
     public int GrantedQuantity { get; set; }
     public int AvailableQuantity { get; set; }
+    public int? RemainingWeeklyRedemptions { get; set; }
     public DateTimeOffset ActivatesAt { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
     public EntitlementStatus Status { get; set; }

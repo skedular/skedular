@@ -264,7 +264,7 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
           ? {
               ...opt,
               [field]: value,
-              ...(field === 'cadence' && value !== 'WEEKLY' ? { requiredDaysPerWeek: '' } : {}),
+              ...(field === 'cadence' && value === 'DAILY' ? { requiredDaysPerWeek: '' } : {}),
             }
           : opt,
       ),
@@ -382,7 +382,7 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
                 isTaxInclusive: opt.isTaxInclusive,
                 acceptedPaymentMethods: opt.acceptedPaymentMethods.length > 0 ? opt.acceptedPaymentMethods : ['CARD'],
                 availableDays: opt.availableDays,
-                requiredDaysPerWeek: opt.cadence === 'WEEKLY' && opt.requiredDaysPerWeek.trim() ? Number(opt.requiredDaysPerWeek) : null,
+                requiredDaysPerWeek: opt.cadence !== 'DAILY' && opt.requiredDaysPerWeek.trim() ? Number(opt.requiredDaysPerWeek) : null,
                 minDurationMinutes: opt.minDurationMinutes.trim() ? Number(opt.minDurationMinutes) : null,
                 minDurationDisplayUnit: opt.minDurationDisplayUnit,
                 maxDurationMinutes: opt.maxDurationMinutes.trim() ? Number(opt.maxDurationMinutes) : null,

@@ -20,6 +20,7 @@ const QueryFragment = graphql`
       id
       pricingId
       availableQuantity
+      remainingWeeklyRedemptions
       grantedQuantity
       expiresAt
       status
@@ -56,6 +57,12 @@ const CustomerEntitlementsStrip = ({ integratedPlatform }: Props) => {
                   label={`${entitlement.availableQuantity} of ${entitlement.grantedQuantity} available · Valid until ${dayjs(entitlement.expiresAt).format('MMM D, YYYY')}`}
                   sx={{ mt: 0.5, opacity: 0.78 }}
                 />
+                {entitlement.remainingWeeklyRedemptions !== null ? (
+                  <SmallIconTypography
+                    label={`${entitlement.remainingWeeklyRedemptions} weekly redemption${entitlement.remainingWeeklyRedemptions === 1 ? '' : 's'} remaining`}
+                    sx={{ mt: 0.5, opacity: 0.78 }}
+                  />
+                ) : null}
                 {entitlement.restrictions?.availableDays.length ? (
                   <SmallIconTypography label={`Available on ${entitlement.restrictions.availableDays.join(', ')}`} sx={{ mt: 0.5, opacity: 0.78 }} />
                 ) : null}

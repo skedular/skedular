@@ -7,6 +7,9 @@
 - Use an at-most limit for credit entitlements because customers may redeem fewer credits.
 - Apply the rule to every existing purchase cadence longer than one week.
 - Use complete UTC calendar weeks; partial boundary weeks are exempt.
+- Spec 047 is authoritative: sub-day values and `BookingCadence` are removed; Daily is supported, and entitlements are cadence-free.
+- For scheduled offers, count every booking occurrence, including multiple time intervals on one day.
+- For entitlements, count successful redemptions; canceled, permanently failed, and refunded redemptions release capacity, and retries are idempotent.
 - Keep `availableDays` as the allowed weekday set; empty means every day.
 
 ## Rationale

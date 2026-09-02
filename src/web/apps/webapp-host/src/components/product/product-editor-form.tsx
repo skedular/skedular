@@ -195,7 +195,7 @@ const ProductEditorForm = ({
 
   useEffect(() => {
     values.pricingOptions.forEach((pricingOption, index) => {
-      if (pricingOption.cadence !== 'WEEKLY' && pricingOption.requiredDaysPerWeek) {
+      if (pricingOption.cadence === 'DAILY' && pricingOption.requiredDaysPerWeek) {
         form.change(`pricingOptions[${index}].requiredDaysPerWeek`, '');
       }
     });
@@ -272,6 +272,18 @@ const ProductEditorForm = ({
               <FormFieldLabel label="Validity (days)">
                 <TextField name={`pricingOptions[${index}].entitlementValidityDays`} />
               </FormFieldLabel>
+              <FormFieldLabel
+                label="Maximum redemptions per week"
+                help="The maximum number of successful credit redemptions allowed in each complete Monday-through-Sunday UTC week. Customers do not select weekdays for this limit."
+              >
+                <TextField
+                  name={`pricingOptions[${index}].requiredDaysPerWeek`}
+                  type="text"
+                  slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
+                  fieldProps={{ parse: sanitizeWeeklyRequiredDays }}
+                  helperText="Leave empty for unlimited weekly redemptions; choose 1 to 7."
+                />
+              </FormFieldLabel>
             </StackRow>
           ) : (
             <FormFieldLabel label="Purchase cadence">
@@ -297,7 +309,7 @@ const ProductEditorForm = ({
             label="Maximum booking duration"
             required
           />
-          {pricingOption.cadence === 'WEEKLY' ? (
+          {pricingOption.cadence !== 'DAILY' ? (
             <FormFieldLabel label="Required selected days per week">
               <TextField
                 name={`pricingOptions[${index}].requiredDaysPerWeek`}
@@ -308,7 +320,7 @@ const ProductEditorForm = ({
               />
             </FormFieldLabel>
           ) : null}
-          {pricingOption.cadence === 'WEEKLY' ? <SmallIconTypography label="Leave this field empty to keep the existing unrestricted weekly booking behavior." /> : null}
+          {pricingOption.cadence !== 'DAILY' ? <SmallIconTypography label="Leave this field empty to keep unrestricted weekly booking behavior." /> : null}
         </SettingsSectionCard>
       ) : null}
 

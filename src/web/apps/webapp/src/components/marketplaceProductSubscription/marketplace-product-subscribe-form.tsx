@@ -240,7 +240,7 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
   const totalLabel = selectedPricingOption ? formatPriceForDisplay(currencyLabel, Number(selectedPricingOption.price) * quantity, selectedPricingOption.purchaseCadence) : '';
   const billingModeLabel = selectedPricingOption?.billingMode === 'IN_ARREARS' ? 'First invoice due now, later cycles billed in arrears' : 'Payment due at checkout';
   const requiredDaysPerWeek = selectedPricingOption?.requiredDaysPerWeek ?? 0;
-  const weeklySelectionRequired = selectedPricingOption?.purchaseCadence === 'WEEKLY' && selectedPricingOption?.requiredDaysPerWeek != null;
+  const weeklySelectionRequired = selectedPricingOption?.purchaseCadence !== 'DAILY' && selectedPricingOption?.requiredDaysPerWeek != null;
   const eligibleSelectedDays = (
     selectedPricingOption?.availableDays?.length ? selectedPricingOption.availableDays : ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']
   ) as DayOfWeek[];

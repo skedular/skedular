@@ -1,5 +1,5 @@
 export const hasValidWeeklyRequiredDays = (cadence: string, requiredDaysPerWeek: string, availableDays: readonly string[]) => {
-  if (cadence !== 'WEEKLY' || !requiredDaysPerWeek.trim()) {
+  if (cadence === 'DAILY' || !requiredDaysPerWeek.trim()) {
     return true;
   }
 

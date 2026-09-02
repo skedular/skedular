@@ -469,6 +469,7 @@ type EntitlementDetails {
   productId: String!
   grantedQuantity: Int!
   availableQuantity: Int!
+  remainingWeeklyRedemptions: Int
   activatesAt: DateTime!
   expiresAt: DateTime!
   status: EntitlementStatus!

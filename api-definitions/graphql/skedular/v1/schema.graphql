@@ -2108,6 +2108,7 @@ type EntitlementDetails @fusion__type(schema: BOOKING_API) {
   productId: String! @fusion__field(schema: BOOKING_API)
   purchaseReference: String! @fusion__field(schema: BOOKING_API)
   refund: EntitlementRefundDetails @fusion__field(schema: BOOKING_API)
+  remainingWeeklyRedemptions: Int @fusion__field(schema: BOOKING_API)
   restrictions: EntitlementRestrictionsDetails
     @fusion__field(schema: BOOKING_API)
   status: EntitlementStatus! @fusion__field(schema: BOOKING_API)

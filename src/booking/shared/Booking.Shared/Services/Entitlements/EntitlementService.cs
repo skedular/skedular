@@ -40,19 +40,20 @@ public sealed class EntitlementService(
     ILogger<EntitlementService> logger,
     IDbTransactionBuilder transactionBuilder) : IEntitlementService
 {
-    public async Task<EntitlementModel?> GetByIdAsync(string entitlementId, CancellationToken cancellationToken) =>
-        await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlementId, cancellationToken) is { } entitlement
-            ? entitlementModelMapper.Map(entitlement)
-            : null;
+    public async Task<EntitlementModel?> GetByIdAsync(string entitlementId, CancellationToken cancellationToken)
+    {
+        var entitlement = await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlementId, cancellationToken);
+        return entitlement is null ? null : await MapWithWeeklyAllowanceAsync(entitlement, cancellationToken);
+    }
 
     public async Task<IReadOnlyList<EntitlementModel>> GetForCustomerAsync(string customerId, CancellationToken cancellationToken) =>
-        [.. (await repositoryFactory.EntitlementRepository.GetForCustomerAsync(customerId, cancellationToken)).Select(entitlementModelMapper.Map)];
+        await MapWithWeeklyAllowanceAsync(await repositoryFactory.EntitlementRepository.GetForCustomerAsync(customerId, cancellationToken),
+            cancellationToken);
 
     public async Task<IReadOnlyList<EntitlementModel>> GetForOrganizationAsync(string organizationId, CancellationToken cancellationToken) =>
-    [
-        .. (await repositoryFactory.EntitlementRepository.GetForOrganizationAsync(organizationId, cancellationToken)).Select(entitlementModelMapper
-            .Map),
-    ];
+        await MapWithWeeklyAllowanceAsync(await repositoryFactory.EntitlementRepository.GetForOrganizationAsync(organizationId, cancellationToken),
+            cancellationToken);
+
 
     public Task<EntitlementModel> GrantAsync(
         string purchaseReference, string customerId, string organizationId, ProductPricing pricing,
@@ -157,6 +158,38 @@ public sealed class EntitlementService(
         var persistedEntitlement = await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlement.Id, cancellationToken) ??
                                    throw new InvalidOperationException("The granted entitlement could not be reloaded.");
         return entitlementModelMapper.Map(persistedEntitlement);
+    }
+
+    private async Task<EntitlementModel> MapWithWeeklyAllowanceAsync(Entitlement entitlement, CancellationToken cancellationToken)
+    {
+        var model = entitlementModelMapper.Map(entitlement);
+        if (model.ProductPricing?.RequiredDaysPerWeek is { } limit && entitlement.ActivatesAt <= timeProvider.GetUtcNow() &&
+            entitlement.ExpiresAt > timeProvider.GetUtcNow())
+        {
+            var now = timeProvider.GetUtcNow();
+            var weekStart = UtcCalendarWeek.Start(now);
+            var weekEnd = weekStart.AddDays(7);
+            if (UtcCalendarWeek.IsComplete(weekStart, entitlement.ActivatesAt, entitlement.ExpiresAt))
+            {
+                model.RemainingWeeklyRedemptions = Math.Max(0,
+                    limit - await repositoryFactory.EntitlementRepository.CountSuccessfulRedemptionsAsync(entitlement.Id, weekStart, weekEnd,
+                        cancellationToken));
+            }
+        }
+
+        return model;
+    }
+
+    private async Task<IReadOnlyList<EntitlementModel>> MapWithWeeklyAllowanceAsync(IReadOnlyList<Entitlement> entitlements,
+        CancellationToken cancellationToken)
+    {
+        var result = new List<EntitlementModel>(entitlements.Count);
+        foreach (var entitlement in entitlements)
+        {
+            result.Add(await MapWithWeeklyAllowanceAsync(entitlement, cancellationToken));
+        }
+
+        return result;
     }
 
     private async Task LinkPurchaseAsync(string purchaseReference, string entitlementId, CancellationToken cancellationToken)
