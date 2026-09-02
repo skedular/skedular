@@ -629,7 +629,8 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                     entitlementCreditQuantity: (pricingOption as unknown as { entitlementCreditQuantity?: number | null }).entitlementCreditQuantity?.toString() ?? '',
                     entitlementValidityDays: (pricingOption as unknown as { entitlementValidityDays?: number | null }).entitlementValidityDays?.toString() ?? '',
                     price: pricingOption.price.toString(),
-                    supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
+                    supportsSubscriptionAutoRenewal:
+                      (pricingOption as unknown as { fulfillmentType?: string }).fulfillmentType === 'ENTITLEMENT' ? false : pricingOption.supportsSubscriptionAutoRenewal,
                     numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
                     minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',
                     minDurationDisplayUnit: pricingOption.minDurationDisplayUnit ?? null,
@@ -710,7 +711,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             price: Number(pricingOption.price),
             availableDays: pricingOption.availableDays,
             requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
-            supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
+            supportsSubscriptionAutoRenewal: isEventType(type) || pricingOption.fulfillmentType === 'ENTITLEMENT' ? false : pricingOption.supportsSubscriptionAutoRenewal,
             fulfillmentType: pricingOption.fulfillmentType as never,
             entitlementCreditQuantity:
               pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,
@@ -782,7 +783,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               price: Number(pricingOption.price),
               availableDays: pricingOption.availableDays,
               requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
-              supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
+              supportsSubscriptionAutoRenewal: isEventType(type) || pricingOption.fulfillmentType === 'ENTITLEMENT' ? false : pricingOption.supportsSubscriptionAutoRenewal,
               fulfillmentType: pricingOption.fulfillmentType as never,
               entitlementCreditQuantity:
                 pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,

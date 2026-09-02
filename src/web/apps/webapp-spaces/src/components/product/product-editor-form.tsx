@@ -502,7 +502,10 @@ const ProductEditorForm = ({
               name={`pricingOptions[${index}].fulfillmentType`}
               fieldProps={{
                 onChange: (event: { target: { value: string } }) => {
-                  if (event.target.value === 'ENTITLEMENT') form.change(`pricingOptions[${index}].cadence`, 'NOT_SET');
+                  if (event.target.value === 'ENTITLEMENT') {
+                    form.change(`pricingOptions[${index}].cadence`, 'NOT_SET');
+                    form.change(`pricingOptions[${index}].supportsSubscriptionAutoRenewal`, false);
+                  }
                 },
               }}
             >
@@ -614,7 +617,7 @@ const ProductEditorForm = ({
           >
             <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Price includes tax', value: 'isTaxInclusive' }} />
           </FormFieldLabel>
-          {!isEventProduct ? (
+          {!isEventProduct && pricingOption.fulfillmentType === 'RESERVATION' ? (
             <FormFieldLabel helpLabel="Auto-renew subscription" help="When enabled, eligible purchases renew automatically according to the purchase cadence.">
               <Switches name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`} data={{ label: 'Auto-renew subscription', value: 'supportsSubscriptionAutoRenewal' }} />
             </FormFieldLabel>

@@ -7,7 +7,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import { graphql, useMutation } from 'react-relay';
 import { memo, useState } from 'react';
-import type { entitlementBalanceCard_setRenewalPolicyMutation } from '@/queries/__generated__/entitlementBalanceCard_setRenewalPolicyMutation.graphql';
 import type { entitlementBalanceCard_cancelEntitlementMutation } from '@/queries/__generated__/entitlementBalanceCard_cancelEntitlementMutation.graphql';
 
 export type EntitlementBalanceCardProps = {
@@ -36,24 +35,7 @@ const EntitlementBalanceCard = ({
   renewalStatus,
   nextRenewalAt,
   renewalFailureReason,
-  autoRenew,
-  cancelAtPeriodEnd,
 }: EntitlementBalanceCardProps) => {
-  const [commit, inFlight] = useMutation<entitlementBalanceCard_setRenewalPolicyMutation>(graphql`
-    mutation entitlementBalanceCard_setRenewalPolicyMutation($input: SetEntitlementRenewalPolicyInput!) {
-      setEntitlementRenewalPolicy(input: $input) {
-        entitlement {
-          id
-          autoRenew
-          cancelAtPeriodEnd
-          status
-          nextRenewalAt
-          renewalFailureReason
-        }
-        error
-      }
-    }
-  `);
   const [error, setError] = useState<string | null>(null);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [cancelEntitlement, cancellationInFlight] = useMutation<entitlementBalanceCard_cancelEntitlementMutation>(graphql`
@@ -71,16 +53,6 @@ const EntitlementBalanceCard = ({
       }
     }
   `);
-  const updatePolicy = (nextAutoRenew: boolean, nextCancelAtPeriodEnd: boolean) => {
-    setError(null);
-    commit({
-      variables: { input: { clientMutationId: id, entitlementId: id, autoRenew: nextAutoRenew, cancelAtPeriodEnd: nextCancelAtPeriodEnd } },
-      onCompleted: (response) => {
-        if (response.setEntitlementRenewalPolicy.error) setError(response.setEntitlementRenewalPolicy.error);
-      },
-      onError: (err) => setError(err.message),
-    });
-  };
   const cancel = () => {
     setError(null);
     cancelEntitlement({
@@ -111,15 +83,7 @@ const EntitlementBalanceCard = ({
         {nextRenewalAt && <BodyIconTypography label={`Next renewal ${new Date(nextRenewalAt).toLocaleDateString()}`} />}
         {renewalFailureReason && <BodyIconTypography label={`Renewal needs attention: ${renewalFailureReason}`} />}
         {error && <BodyIconTypography label={error} sx={{ color: 'error.main' }} />}
-        <Button size="small" disabled={inFlight} onClick={() => updatePolicy(!autoRenew, false)}>
-          {autoRenew ? 'Disable auto-renew' : 'Enable auto-renew'}
-        </Button>
-        {autoRenew && (
-          <Button size="small" disabled={inFlight} onClick={() => updatePolicy(true, !cancelAtPeriodEnd)}>
-            {cancelAtPeriodEnd ? 'Keep renewing' : 'Cancel at period end'}
-          </Button>
-        )}
-        <Button color="error" size="small" disabled={inFlight || cancellationInFlight} onClick={() => setShowCancelDialog(true)}>
+        <Button color="error" size="small" disabled={cancellationInFlight} onClick={() => setShowCancelDialog(true)}>
           Cancel entitlement
         </Button>
       </StackColumn>

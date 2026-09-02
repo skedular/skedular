@@ -436,6 +436,8 @@ const SubscriptionUpdates = graphql`
         id
         startDate
         endDate
+        from
+        until
         marketplaceBooking {
           id
           quantity
@@ -715,7 +717,7 @@ const MarketplaceProductSubscriptionDetails = ({
 
                 <StackColumn spacing={2} sx={{ mt: 3 }}>
                   <DetailsRow label="Started" value={toStoredDate(subscription.startedAt)} />
-                  {currentCycle ? <DetailsRow label="Booking time" value={`${toStoredDate(currentCycle.from)} - ${toStoredDate(currentCycle.until)}`} /> : null}
+                  {currentCycle ? <DetailsRow label="Booking time" value={toStoredBookingTimeRange(currentCycle.from, currentCycle.until)} /> : null}
                   <DetailsRow
                     label="Next renewal"
                     value={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : (lifecycleDisplay?.nextRenewalFallbackLabel ?? 'Not scheduled')}
@@ -822,7 +824,7 @@ const MarketplaceProductSubscriptionDetails = ({
                 <StackColumn spacing={2}>
                   {currentCycle ? <DetailsRow label="Current period" value={`${toStoredDate(currentCycle.startDate)} - ${toStoredDate(currentCycle.endDate)}`} /> : null}
                   <DetailsRow label="Started" value={toStoredDate(subscription.startedAt)} />
-                  {currentCycle ? <DetailsRow label="Booking time" value={`${toStoredDate(currentCycle.from)} - ${toStoredDate(currentCycle.until)}`} /> : null}
+                  {currentCycle ? <DetailsRow label="Booking time" value={toStoredBookingTimeRange(currentCycle.from, currentCycle.until)} /> : null}
                   <DetailsRow
                     label="Next renewal"
                     value={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : (lifecycleDisplay?.nextRenewalFallbackLabel ?? 'Not scheduled')}

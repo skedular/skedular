@@ -452,7 +452,7 @@ const AddProduct = (props: Props) => {
             price: Number(pricingOption.price),
             availableDays: pricingOption.availableDays,
             requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
-            supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
+            supportsSubscriptionAutoRenewal: isEventType(type) || pricingOption.fulfillmentType === 'ENTITLEMENT' ? false : pricingOption.supportsSubscriptionAutoRenewal,
             fulfillmentType: pricingOption.fulfillmentType as never,
             entitlementCreditQuantity:
               pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,
@@ -526,7 +526,7 @@ const AddProduct = (props: Props) => {
               price: Number(pricingOption.price),
               availableDays: pricingOption.availableDays,
               requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
-              supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
+              supportsSubscriptionAutoRenewal: isEventType(type) || pricingOption.fulfillmentType === 'ENTITLEMENT' ? false : pricingOption.supportsSubscriptionAutoRenewal,
               fulfillmentType: pricingOption.fulfillmentType as never,
               entitlementCreditQuantity:
                 pricingOption.fulfillmentType === 'ENTITLEMENT' && pricingOption.entitlementCreditQuantity ? Number(pricingOption.entitlementCreditQuantity) : null,

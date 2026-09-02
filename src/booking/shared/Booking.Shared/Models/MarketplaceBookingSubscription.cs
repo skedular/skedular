@@ -40,11 +40,6 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
     {
         var resolvedFrom = new DateTimeOffset(termStart.Date.Add(from.ToTimeSpan()), termStart.Offset);
         var resolvedUntil = new DateTimeOffset(termStart.Date.Add(until.ToTimeSpan()), termStart.Offset);
-        if (resolvedUntil <= resolvedFrom)
-        {
-            resolvedUntil = resolvedUntil.AddDays(1);
-        }
-
         return (resolvedFrom, resolvedUntil);
     }
 

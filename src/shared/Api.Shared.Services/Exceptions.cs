@@ -213,6 +213,9 @@ public class ProductPricingEventRequiresExplicitTimeBooking()
 public class ProductPricingEventAutoRenewalNotSupported()
     : Exception("Event products can't use auto-renewal.");
 
+public class ProductPricingEntitlementAutoRenewalNotSupported()
+    : Exception("Credit entitlement offers can't use auto-renewal.");
+
 public class ProductPricingAcceptedPaymentMethodsRequired()
     : Exception("Please choose at least one accepted payment method.");
 

@@ -58,6 +58,11 @@ public sealed class EntitlementService(
     public async Task<EntitlementModel> SetRenewalPolicyAsync(string entitlementId, bool autoRenew, bool cancelAtPeriodEnd,
         CancellationToken cancellationToken)
     {
+        if (autoRenew || cancelAtPeriodEnd)
+        {
+            throw new InvalidOperationException("Credit entitlements don't support auto-renewal.");
+        }
+
         var entitlement = await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlementId, cancellationToken)
                           ?? throw new KeyNotFoundException("The entitlement was not found.");
         if (entitlement.Status != EntitlementStatus.Active)
