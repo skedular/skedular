@@ -47,17 +47,17 @@ Product versions hold the customer-facing listing metadata, feature images, curr
 
 ## Pricing
 
-A Product can contain multiple pricing options. Each option defines a price, purchase cadence, booking cadence, accepted payment methods, billing mode, duration limits, cancellation policy, and whether subscription auto-renewal is supported.
+A Product can contain multiple pricing options. Each option defines a price, purchase cadence, accepted payment methods, billing mode, duration limits, cancellation policy, and whether subscription auto-renewal is supported.
 
-Operators choose a purchase cadence such as one-time, per-minute, 15-minute, 30-minute, hourly, half-day, daily, weekly, fortnightly, monthly, quarterly, or yearly. Booking cadence controls the reservation interval and must use valid duration increments for the selected cadence. The purchase cadence describes how access is sold; the booking cadence describes how Resource reservations are created.
+Operators choose a purchase term of Daily, Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, or Yearly. Customers choose the booking start and end date/time; any duration within the configured minimum and maximum is allowed, with no cadence-based increment.
 
 Products define what is sold and under which commercial terms. [Commerce](/docs/shared/commerce) documents how resulting charges are billed, paid, invoiced, and settled.
 
 ## Booking and subscription behavior
 
-One-time, per-minute, 15-minute, 30-minute, hourly, and half-day purchase cadences create a Booking for the selected period. Daily, weekly, fortnightly, monthly, two-month, quarterly, four-month, five-month, six-month, and yearly purchase cadences use the Subscription process, which maintains recurring access and its Booking series. This is the canonical boundary: purchase cadence determines whether Skedular creates a single Booking or manages access through a Subscription, while Booking cadence determines the reservation interval.
+A purchase term repeats only when auto-renewal is enabled. Disabled auto-renewal makes a Daily offer a single one-day offer; enabled auto-renewal renews it daily. The same applies to longer terms. Organization billing cycles can split longer terms for invoice and resource-booking slices without replacing the purchase term.
 
-A Product's pricing option determines whether the purchase is one-time or recurring; see [Subscriptions](/docs/shared/marketplace/subscriptions) for the recurring lifecycle. Event Products are a separate Product type for fixed-time event bookings and cannot use subscription auto-renewal.
+Every supported reservation purchase term uses the Subscription lifecycle; auto-renewal determines whether the term repeats. Event Products are a separate Product type for fixed-time event bookings and cannot use subscription auto-renewal.
 
 ## Cancellation policies
 
@@ -91,7 +91,7 @@ Products are versioned so changes do not silently rewrite an offer already used 
 
 - Use clear customer-facing titles and descriptions.
 - Add Booking Groups that match the Resources customers should be able to book.
-- Keep pricing cadences and booking cadences aligned with the service you provide.
+- Keep the purchase term, available days, and minimum/maximum booking duration aligned with the service you provide.
 - Test cancellation terms and payment methods before activation.
 - Review the active Product version after changing tags, images, or pricing.
 
@@ -121,9 +121,9 @@ Booking Groups define eligibility. Resources with matching Booking Groups can fu
 
 Yes. A Product can have multiple pricing options, each with its own cadence, booking rules, payment methods, billing mode, and cancellation policy.
 
-### When does a Product create a Booking instead of a Subscription?
+### Which offers create a Subscription?
 
-One-time, per-minute, 15-minute, 30-minute, hourly, and half-day purchase cadences create a Booking. Daily, weekly, fortnightly, monthly, two-month, quarterly, four-month, five-month, six-month, and yearly purchase cadences use a Subscription to maintain recurring access and its Booking series.
+Every reservation offer with a supported purchase term creates a Subscription. With auto-renewal disabled, it covers one term; with auto-renewal enabled, it repeats the selected term. Credit-entitlement offers use `NOT_SET` for purchase cadence and are governed by credit quantity, validity, available days, and booking duration limits. They do not renew as subscriptions.
 
 ### Can I edit a Product after activation?
 

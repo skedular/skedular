@@ -66,7 +66,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         var result = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         result.Deleted.ShouldBeFalse();
         result.Ended.ShouldBeFalse();
@@ -88,7 +88,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         var result = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         result.Deleted.ShouldBeTrue();
         result.Ended.ShouldBeTrue();
@@ -111,7 +111,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         var result = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         result.Deleted.ShouldBeFalse();
         result.Ended.ShouldBeFalse();
@@ -148,7 +148,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -168,7 +167,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero));
@@ -190,7 +188,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         var result = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         result.Deleted.ShouldBeFalse();
         result.Ended.ShouldBeFalse();
@@ -235,7 +233,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                         BillingMode = ProductPricingBillingMode.Upfront,
                     },
@@ -257,7 +254,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
 
@@ -283,7 +279,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         _ = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         A.CallTo(() => temporalService.StartWorkflowPayRecurringBookingViaCardAsync(
                 A<PayRecurringBookingViaCardInput>.That.Matches(item =>
@@ -342,7 +338,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = ProductPricingCadence.Monthly,
-                    BookingCadence = ProductPricingCadence.Daily,
                     NumberOfResourcesToBook = 1,
                     BillingMode = ProductPricingBillingMode.Upfront,
                 },
@@ -364,7 +359,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
 
@@ -390,7 +384,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         _ = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         A.CallTo(() => temporalService.StartWorkflowPayRecurringBookingViaCardAsync(
                 A<PayRecurringBookingViaCardInput>.That.Matches(item =>
@@ -440,7 +434,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                         BillingMode = ProductPricingBillingMode.Upfront,
                     },
@@ -462,7 +455,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
 
@@ -488,7 +480,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         _ = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         A.CallTo(() => temporalService.StartWorkflowPayRecurringBookingViaBankTransferAsync(
                 A<PayRecurringBookingViaBankTransferInput>.That.Matches(item =>
@@ -530,7 +522,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -568,7 +559,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         await Should.ThrowAsync<MarketplaceEventProductRecurringBookingNotSupported>(async () =>
             await environment.RunAsync(() =>
                 sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                    new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1"))));
+                    new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0)))));
     }
 
     [Theory]
@@ -602,7 +593,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -623,7 +613,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero));
@@ -645,7 +634,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         var result = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         result.Deleted.ShouldBeFalse();
         result.Ended.ShouldBeTrue();
@@ -682,7 +671,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     ProductPricing.Empty("pricing-1") with
                     {
                         PurchaseCadence = ProductPricingCadence.Monthly,
-                        BookingCadence = ProductPricingCadence.Daily,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -705,7 +693,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly,
-            BookingCadence = ProductPricingCadence.Daily,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 19, 8, 0, 0, TimeSpan.Zero));
@@ -728,7 +715,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         var result = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         result.Deleted.ShouldBeFalse();
         result.Ended.ShouldBeTrue();
@@ -804,8 +791,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         [Frozen]
         IRecurringBookingScheduleService recurringBookingScheduleService,
         [Frozen]
-        IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
-        [Frozen]
         IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
         [Frozen]
         IMarketplaceBookingService marketplaceBookingService,
@@ -839,7 +824,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = ProductPricingCadence.Daily,
-                    BookingCadence = ProductPricingCadence.Daily,
                     SupportsSubscriptionAutoRenewal = true,
                     NumberOfResourcesToBook = 1,
                 },
@@ -855,7 +839,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         var currentPricing = ProductPricing.Empty("pricing-1") with
         {
             PurchaseCadence = ProductPricingCadence.Daily,
-            BookingCadence = ProductPricingCadence.Daily,
             SupportsSubscriptionAutoRenewal = true,
             NumberOfResourcesToBook = 1,
         };
@@ -940,30 +923,10 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<DateTimeOffset>._,
                 A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [new DateOnly(2026, 3, 17)], [], false));
-        A.CallTo(() => marketplaceBookingOpeningHoursService.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.Daily)).Returns(true);
         A.CallTo(() => marketplaceBookingAvailableDaysService.IsAvailableOnBookingDate(
                 A<ProductPricing>._,
                 A<DateOnly>._))
             .Returns(true);
-        A.CallTo(() => marketplaceBookingOpeningHoursService.TryResolveDailyPlanAsync(
-                customer,
-                renewedProductVersion,
-                A<ProductPricing>._,
-                new DateOnly(2026, 3, 17),
-                1,
-                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 0),
-                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "res-7" })),
-                null,
-                environment.CancellationTokenSource.Token))
-            .Returns(new MarketplaceBookingDailyPlan(
-                new DateTimeOffset(2026, 3, 17, 8, 0, 0, TimeSpan.Zero),
-                new DateTimeOffset(2026, 3, 17, 17, 0, 0, TimeSpan.Zero),
-                [
-                    new Resource
-                    {
-                        Id = "res-7",
-                    },
-                ]));
         A.CallTo(() => entityMapper.MapTo(A<RecurringBooking>._, new DateOnly(2026, 3, 17))).Returns(generatedBooking);
         A.CallTo(() => entityMapper.MapTo(A<MarketplaceBooking>._)).Returns(new Shared.Models.MarketplaceBooking
         {
@@ -991,19 +954,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
-
-        A.CallTo(() => marketplaceBookingOpeningHoursService.TryResolveDailyPlanAsync(
-                customer,
-                renewedProductVersion,
-                A<ProductPricing>._,
-                new DateOnly(2026, 3, 17),
-                1,
-                A<IReadOnlyList<string>>.That.Matches(ids => ids.Count == 0),
-                A<IReadOnlyList<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "res-7" })),
-                null,
-                environment.CancellationTokenSource.Token))
-            .MustHaveHappenedOnceExactly();
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
     }
 
     [Theory]
@@ -1026,7 +977,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         var originalPricing = ProductPricing.Empty("pricing-original") with
         {
             PurchaseCadence = ProductPricingCadence.Weekly,
-            BookingCadence = ProductPricingCadence.Weekly,
             SupportsSubscriptionAutoRenewal = true,
             RequiredDaysPerWeek = 2,
         };
@@ -1075,7 +1025,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         var result = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         result.Deleted.ShouldBeFalse();
         result.Ended.ShouldBeTrue();
@@ -1091,13 +1041,11 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Finalize_One_Initial_Series_Failure_Without_Materializing_Any_Occurrence_When_A_Required_Day_Is_Unavailable(
+    public async Task Avoid_The_Removed_Opening_Hours_Preflight_When_Reconciling_An_Initial_Series(
         [Frozen]
         IRepositoryFactory repositoryFactory,
         [Frozen]
         IRecurringBookingScheduleService recurringBookingScheduleService,
-        [Frozen]
-        IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
         [Frozen]
         IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
         [Frozen]
@@ -1137,7 +1085,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = ProductPricingCadence.Daily,
-                    BookingCadence = ProductPricingCadence.Daily,
                     NumberOfResourcesToBook = 1,
                 },
             },
@@ -1168,18 +1115,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<DateTimeOffset>._,
                 A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [DateOnly.FromDateTime(start.DateTime)], [], false));
-        A.CallTo(() => marketplaceBookingOpeningHoursService.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.Daily)).Returns(true);
-        A.CallTo(() => marketplaceBookingOpeningHoursService.TryResolveDailyPlanAsync(
-                A<Customer?>._,
-                A<ProductVersion>._,
-                A<ProductPricing>._,
-                DateOnly.FromDateTime(start.DateTime),
-                1,
-                A<IReadOnlyList<string>>._,
-                A<IReadOnlyList<string>>._,
-                A<string?>._,
-                environment.CancellationTokenSource.Token))
-            .Returns((MarketplaceBookingDailyPlan?)null);
         A.CallTo(() => marketplaceBookingAvailableDaysService.IsAvailableOnBookingDate(A<ProductPricing>._, DateOnly.FromDateTime(start.DateTime)))
             .Returns(true);
         A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(
@@ -1189,10 +1124,9 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             {
                 Id = "failure-initial",
             });
-
         var result = await environment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput(subscription.Id)));
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput(subscription.Id, new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
         result.Deleted.ShouldBeFalse();
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
@@ -1208,7 +1142,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     item.RecurringBookingId == recurringBooking.Id &&
                     item.MarketplaceBookingSubscriptionId == subscription.Id),
                 environment.CancellationTokenSource.Token))
-            .MustHaveHappenedOnceExactly();
+            .MustNotHaveHappened();
         A.CallTo(() => marketplaceBookingService.AddAsync(
                 A<Shared.Models.Booking>._,
                 A<Customer>._!,
@@ -1236,7 +1170,6 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = ProductPricingCadence.Daily,
-                    BookingCadence = ProductPricingCadence.Daily,
                     SupportsSubscriptionAutoRenewal = true,
                     NumberOfResourcesToBook = 1,
                 },

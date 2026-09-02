@@ -11,7 +11,6 @@ public class EntitlementPurchase : EntityBase
 {
     public string PaymentStatus { get; set; }
     public string PaymentMethod { get; set; }
-    public bool AutoRenew { get; set; }
     public DateTimeOffset? PaymentConfirmedAt { get; set; }
     public DateTimeOffset PaymentExpiry { get; set; }
     public DateTimeOffset ServiceStartAt { get; set; }
@@ -28,10 +27,6 @@ public class EntitlementPurchase : EntityBase
     public string? StripeAccountId { get; set; }
     public ICollection<string> InvoiceEmailList { get; set; } = [];
 
-    public string? RenewalOfPurchaseId { get; set; }
-    public virtual EntitlementPurchase? RenewalOfPurchase { get; set; }
-
-    public string? RenewalReference { get; set; }
     public string? FailureReason { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
@@ -61,7 +56,6 @@ public sealed class EntitlementPurchaseConfiguration : IEntityTypeConfiguration<
         builder.Property(item => item.PaymentStatus).HasMaxLength(Constants.MaxBookingPaymentStatusLength);
         builder.Property(item => item.PaymentMethod).HasMaxLength(Constants.MaxBookingMethodLength);
         builder.Property(item => item.FailureReason).HasMaxLength(Constants.MaxAccountingErrorLength);
-        builder.Property(item => item.RenewalReference).HasMaxLength(Constants.MaxLocalEntityLength);
         builder.Property(item => item.Amount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(item => item.ProductPricing).HasColumnType("jsonb");
@@ -80,13 +74,11 @@ public sealed class EntitlementPurchaseConfiguration : IEntityTypeConfiguration<
         builder.HasOne(item => item.ProductVersion).WithMany().HasForeignKey(item => item.ProductVersionId);
         builder.HasOne(item => item.Entitlement).WithOne(item => item.EntitlementPurchase)
             .HasForeignKey<EntitlementPurchase>(item => item.EntitlementId);
-        builder.HasOne(item => item.RenewalOfPurchase).WithMany().HasForeignKey(item => item.RenewalOfPurchaseId);
 
         builder.HasIndex(item => item.PaymentStatus);
         builder.HasIndex(item => item.PaymentExpiry);
         builder.HasIndex(item => item.CustomerId);
         builder.HasIndex(item => item.OrganizationId);
         builder.HasIndex(item => item.EntitlementId).IsUnique();
-        builder.HasIndex(item => item.RenewalReference).IsUnique();
     }
 }

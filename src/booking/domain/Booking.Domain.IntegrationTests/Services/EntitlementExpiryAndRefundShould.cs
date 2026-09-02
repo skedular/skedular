@@ -11,10 +11,7 @@ namespace Booking.Domain.IntegrationTests.Services;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Booking.Api")]
-public class EntitlementExpiryAndRefundShould(
-    IRepositoryFactory repositoryFactory,
-    IEntitlementExpiryService expiryService,
-    IEntitlementRenewalService renewalService)
+public class EntitlementExpiryAndRefundShould(IRepositoryFactory repositoryFactory, IEntitlementExpiryService expiryService)
 {
     [Theory]
     [AutoFakeItEasyData]
@@ -183,66 +180,5 @@ public class EntitlementExpiryAndRefundShould(
         (await expiryService.ExpireAsync(entitlementId, cancellationToken)).ShouldBeTrue();
         var persisted = await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlementId, cancellationToken);
         persisted!.RefundLinks.ShouldBeEmpty();
-    }
-
-    [Theory]
-    [AutoFakeItEasyData]
-    public async Task PersistPendingRenewalWithoutExtendingTheExpiredCycle(CancellationToken cancellationToken)
-    {
-        var key = Guid.NewGuid().ToString("N");
-        var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync($"customer-{key}", false, cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync($"organization-{key}", cancellationToken);
-        var product = await repositoryFactory.ProductRepository.UpsertNakedAsync($"product-{key}", organization, cancellationToken);
-        var productVersion = await repositoryFactory.ProductVersionRepository.UpsertNakedAsync($"version-{key}", product, cancellationToken);
-        var pricing = ProductPricing.Empty($"pricing-{key}") with
-        {
-            FulfillmentType = ProductPricingFulfillmentType.Entitlement,
-            EntitlementCreditQuantity = 2,
-            EntitlementValidityDays = 30,
-            SupportsSubscriptionAutoRenewal = true,
-        };
-        productVersion.PricingOptions = [pricing];
-        var purchase = repositoryFactory.EntitlementPurchaseRepository.Add(new EntitlementPurchase
-        {
-            Id = $"purchase-{key}",
-            CustomerId = customer.Id,
-            OrganizationId = organization.Id,
-            ProductVersionId = productVersion.Id,
-            ProductVersion = productVersion,
-            PaymentStatus = PaymentStatusConstants.Confirmed,
-            PaymentMethod = PaymentMethodConstants.Card,
-            PaymentExpiry = TimeProvider.System.GetUtcNow().AddDays(1),
-            Amount = pricing.Price,
-            Currency = "NZD",
-            ProductPricing = pricing,
-        });
-        var entitlementId = $"entitlement-{key}";
-        repositoryFactory.EntitlementRepository.Add(new Entitlement
-        {
-            Id = entitlementId,
-            CustomerId = customer.Id,
-            OrganizationId = organization.Id,
-            PurchaseReference = purchase.Id,
-            PricingId = pricing.Id,
-            GrantedQuantity = pricing.EntitlementCreditQuantity!.Value,
-            ActivatesAt = TimeProvider.System.GetUtcNow().AddDays(-30),
-            ExpiresAt = TimeProvider.System.GetUtcNow().AddMinutes(-1),
-            Status = EntitlementStatus.Active,
-            Currency = "NZD",
-        });
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-        var pendingRenewal = await renewalService.CreatePendingRenewalAsync(
-            entitlementId,
-            TimeProvider.System.GetUtcNow().AddHours(1),
-            cancellationToken);
-
-        pendingRenewal.ShouldBeNull();
-        var persisted = await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlementId, cancellationToken);
-        persisted!.ExpiresAt.ShouldBeLessThan(TimeProvider.System.GetUtcNow());
-        persisted.Status.ShouldBe(EntitlementStatus.Active);
-        (await repositoryFactory.EntitlementPurchaseRepository.GetForCustomerAsync(customer.Id, cancellationToken))
-            .Count(item => item.Id != purchase.Id)
-            .ShouldBe(0);
     }
 }

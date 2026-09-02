@@ -433,21 +433,7 @@ public class BookingInvoiceService(
             ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
             var pricing = ResolvePricing();
-            var totalMinutes = (decimal)(booking.Until - booking.From).TotalMinutes;
-
-            return pricing.BookingCadence switch
-            {
-                ProductPricingCadence.OneTime => marketplaceBooking.Quantity,
-                ProductPricingCadence.HalfDay => marketplaceBooking.Quantity,
-                ProductPricingCadence.Daily => marketplaceBooking.Quantity,
-                ProductPricingCadence.PerMinute => marketplaceBooking.Quantity * totalMinutes,
-                ProductPricingCadence.Per15Minutes => marketplaceBooking.Quantity * (totalMinutes / 15m),
-                ProductPricingCadence.Per30Minutes => marketplaceBooking.Quantity * (totalMinutes / 30m),
-                ProductPricingCadence.PerHour => marketplaceBooking.Quantity * (totalMinutes / 60m),
-                _ => throw new ArgumentOutOfRangeException(nameof(marketplaceBooking.ProductPricing),
-                    marketplaceBooking.ProductPricing,
-                    $"Unexpected value for {nameof(marketplaceBooking.ProductPricing)}: {marketplaceBooking.ProductPricing}. Update enum mapping or caller input."),
-            };
+            return marketplaceBooking.Quantity;
         }
 
         protected override decimal GetLineAmount()
@@ -462,7 +448,7 @@ public class BookingInvoiceService(
         protected override string GetUnitPriceLabel()
         {
             var pricing = ResolvePricing();
-            return $"{ResolveUnitPrice().ToRoundedPrice()} {pricing.BookingCadence.ToInvoicePriceUnitName()}";
+            return $"{ResolveUnitPrice().ToRoundedPrice()} {pricing.PurchaseCadence.ToInvoicePriceUnitName()}";
         }
 
         private ProductPricing ResolvePricing()

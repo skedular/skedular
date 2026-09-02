@@ -151,18 +151,15 @@ Offers define the different ways customers can purchase the same product.
 
 Examples include:
 
-- Per Minute
-- Hourly
-- Half Day
 - Daily
 - Weekly
 - Fortnightly
 - Monthly
 - Two Months
-- Three Months
 - Four Months
+- Five Months
 - Six Months
-- Annual
+- Yearly
 
 Rather than creating separate products for each duration, organizations simply add multiple offers to the same product.
 
@@ -174,13 +171,11 @@ Each offer has its own pricing.
 
 Examples include:
 
-| Offer    | Price |
-| -------- | ----: |
-| Hourly   |   $10 |
-| Half Day |   $30 |
-| Daily    |   $40 |
-| Weekly   |  $180 |
-| Monthly  |  $600 |
+| Offer   | Price |
+| ------- | ----: |
+| Daily   |   $40 |
+| Weekly  |  $180 |
+| Monthly |  $600 |
 
 Each offer can have completely independent pricing.
 

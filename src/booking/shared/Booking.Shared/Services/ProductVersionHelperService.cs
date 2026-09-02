@@ -42,7 +42,6 @@ public class ProductVersionHelperService : IProductVersionHelperService
         pricingOptions.FirstOrDefault(item => item.Id == pricing.Id) ??
         pricingOptions.FirstOrDefault(item =>
             item.PurchaseCadence == pricing.PurchaseCadence &&
-            item.BookingCadence == pricing.BookingCadence &&
             item.NumberOfResourcesToBook == pricing.NumberOfResourcesToBook &&
             item.BillingMode == pricing.BillingMode &&
             item.RequiredDaysPerWeek == pricing.RequiredDaysPerWeek);

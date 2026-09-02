@@ -51,10 +51,16 @@ const defaultValues: FormValues = {
 };
 
 const cadenceOptions = [
-  ['PER_HOUR', 'Hourly'],
   ['DAILY', 'Daily'],
   ['WEEKLY', 'Weekly'],
+  ['FORTNIGHTLY', 'Fortnightly'],
   ['MONTHLY', 'Monthly'],
+  ['TWO_MONTHS', 'Two months'],
+  ['QUARTERLY', 'Quarterly'],
+  ['FOUR_MONTHS', 'Four months'],
+  ['FIVE_MONTHS', 'Five months'],
+  ['SIX_MONTHS', 'Six months'],
+  ['YEARLY', 'Yearly'],
 ] as const;
 
 export const validateCreateListing = (values: FormValues) => {
@@ -176,11 +182,10 @@ const CreateLocationPage = () => {
                       includedFeatures: [],
                     },
                     purchaseCadence: values.cadence,
-                    bookingCadence: values.cadence,
                     price: pendingDraft.price,
                     isTaxInclusive: false,
                     acceptedPaymentMethods: ['CARD'],
-                    minDurationMinutes: values.cadence === 'PER_HOUR' ? 60 : null,
+                    minDurationMinutes: null,
                     maxDurationMinutes: null,
                     maxAllowedResourcesLockTimePaidViaCard: 15,
                     maxAllowedResourcesLockTimePaidViaBankTransfer: 0,

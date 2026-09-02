@@ -20,7 +20,6 @@ public interface IEntitlementRepository : IRepository<Entitlement>
     Task<CreditLedgerEntry?> GetConsumedByBookingIdAsync(string bookingId, CancellationToken cancellationToken);
     Task<bool> HasActiveMarketplaceBookingsAsync(string entitlementId, DateTimeOffset now, CancellationToken cancellationToken);
     Task<IReadOnlyList<Entitlement>> GetExpiredActiveAsync(DateTimeOffset now, CancellationToken cancellationToken);
-    Task<IReadOnlyList<Entitlement>> GetRenewalDueActiveAsync(DateTimeOffset now, CancellationToken cancellationToken);
     CreditLedgerEntry AddLedgerEntry(CreditLedgerEntry entry);
 }
 
@@ -114,14 +113,6 @@ public sealed class EntitlementRepository(BookingDbContext dbContext, TimeProvid
 
     public async Task<IReadOnlyList<Entitlement>> GetExpiredActiveAsync(DateTimeOffset now, CancellationToken cancellationToken) =>
         await DbContext.Entitlement.Where(item => item.Status == EntitlementStatus.Active && item.ExpiresAt <= now).ToListAsync(cancellationToken);
-
-    public async Task<IReadOnlyList<Entitlement>> GetRenewalDueActiveAsync(DateTimeOffset now, CancellationToken cancellationToken) =>
-        await DbContext.Entitlement
-            .Where(item => item.Status == EntitlementStatus.Active && item.AutoRenew && !item.CancelAtPeriodEnd)
-            .Where(item => item.NextRenewalAt.HasValue && item.NextRenewalAt <= now)
-            .OrderBy(item => item.NextRenewalAt)
-            .ThenBy(item => item.Id)
-            .ToListAsync(cancellationToken);
 
     private static bool IsActiveAtBookingLocation(BookingEntity booking, DateTimeOffset now)
     {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f411d17b403114a7d1d7cbc70b79797c>>
+ * @generated SignedSource<<6157d3bd9d3075dd23d110ecd1d5ee1c>>
  * @lightSyntaxTransform
  */
 
@@ -20,11 +20,7 @@ export type entitlementPurchaseDetails_cancelEntitlementMutation$variables = {
 export type entitlementPurchaseDetails_cancelEntitlementMutation$data = {
   readonly cancelEntitlement: {
     readonly entitlement: {
-      readonly autoRenew: boolean;
-      readonly cancelAtPeriodEnd: boolean;
       readonly id: string;
-      readonly nextRenewalAt: any | null | undefined;
-      readonly renewalFailureReason: string | null | undefined;
       readonly status: EntitlementStatus;
     } | null | undefined;
     readonly error: string | null | undefined;
@@ -79,34 +75,6 @@ v1 = [
             "kind": "ScalarField",
             "name": "status",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "autoRenew",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "cancelAtPeriodEnd",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "nextRenewalAt",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "renewalFailureReason",
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -140,16 +108,16 @@ return {
     "selections": (v1/*:: as any*/)
   },
   "params": {
-    "cacheID": "72507f57a58530f8ae3f7e1855c7f46b",
+    "cacheID": "64dba8c0b604b023017fa8448a55b9e8",
     "id": null,
     "metadata": {},
     "name": "entitlementPurchaseDetails_cancelEntitlementMutation",
     "operationKind": "mutation",
-    "text": "mutation entitlementPurchaseDetails_cancelEntitlementMutation(\n  $input: CancelEntitlementInput!\n) {\n  cancelEntitlement(input: $input) {\n    entitlement {\n      id\n      status\n      autoRenew\n      cancelAtPeriodEnd\n      nextRenewalAt\n      renewalFailureReason\n    }\n    error\n  }\n}\n"
+    "text": "mutation entitlementPurchaseDetails_cancelEntitlementMutation(\n  $input: CancelEntitlementInput!\n) {\n  cancelEntitlement(input: $input) {\n    entitlement {\n      id\n      status\n    }\n    error\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5b3c4c7ead376c134f4d957d2a540cb7";
+(node as any).hash = "110f94842aa1d8b845f8ac931b4038b3";
 
 export default node;

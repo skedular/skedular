@@ -9,11 +9,8 @@ public class EntitlementPurchase : ModelBase
     public string PaymentStatus { get; set; } = string.Empty;
     public DateTimeOffset? PaymentConfirmedAt { get; set; }
     public DateTimeOffset? CompletedAt { get; set; }
-    public string? RenewalOfPurchaseId { get; set; }
-    public string? RenewalReference { get; set; }
     public string? FailureReason { get; set; }
     public string PaymentMethod { get; set; } = string.Empty;
-    public bool AutoRenew { get; set; }
     public DateTimeOffset PaymentExpiry { get; set; }
     public DateTimeOffset ServiceStartAt { get; set; }
     public decimal Amount { get; set; }

@@ -1929,7 +1929,7 @@ const OrganizationLocation = ({ rootDataRelay, onReloadRequired, organizationCus
             <StackColumn spacing={1.5}>
               <StackColumn spacing={0.5}>
                 <LeadIconTypography label="Pricing" />
-                <BodyIconTypography label="Rates, booking cadences, and cancellation policies for this location." />
+                <BodyIconTypography label="Rates, purchase terms, and cancellation policies for this location." />
               </StackColumn>
               <Divider />
               <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>

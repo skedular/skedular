@@ -78,6 +78,7 @@ public class MarketplaceBookingSubscriptionService(
         }
 
         var marketplaceBooking = subscription.MarketplaceBooking;
+        var (bookingFrom, bookingUntil) = subscription.ResolveBookingWindow();
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
@@ -97,6 +98,7 @@ public class MarketplaceBookingSubscriptionService(
         marketplaceBooking.ProductPricing =
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions.ToList(), marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
+        MarketplaceBookingService.ValidateBookingDuration(bookingFrom, bookingUntil, marketplaceBooking.ProductPricing);
         try
         {
             subscription.WeeklySelectedDays = marketplaceBookingWeeklyDaySelectionService.Validate(
@@ -205,10 +207,17 @@ public class MarketplaceBookingSubscriptionService(
             marketplaceBookingEntity,
             productVersion));
 
+        var subscriptionFrom = subscription.From;
+        var subscriptionUntil = subscription.Until;
         subscription = entityMapper.MapTo(subscriptionEntity);
+        // The booking pattern is part of the subscription command, but is intentionally
+        // transient on the persisted subscription entity. Preserve it across the entity remap
+        // so the resource workflow receives the customer's selected times.
+        subscription.From = subscriptionFrom;
+        subscription.Until = subscriptionUntil;
 
         temporalOutboxService.StartBookMarketplaceBookingSubscriptionResources(
-            new BookMarketplaceBookingSubscriptionResourcesInput(subscription.Id),
+            new BookMarketplaceBookingSubscriptionResourcesInput(subscription.Id, subscription.From, subscription.Until),
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
@@ -350,9 +359,17 @@ public class MarketplaceBookingSubscriptionService(
                     refund?.Id,
                     refund?.Status);
 
-                temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
-                    existingSubscription.Id,
-                    repositoryFactory.UnitOfWork);
+                var recurringBooking = existingSubscription.RecurringBookings
+                    .OrderByDescending(item => item.StartDate)
+                    .FirstOrDefault();
+                if (recurringBooking is not null)
+                {
+                    temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
+                        existingSubscription.Id,
+                        TimeOnly.FromTimeSpan(recurringBooking.From.TimeOfDay),
+                        TimeOnly.FromTimeSpan(recurringBooking.Until.TimeOfDay),
+                        repositoryFactory.UnitOfWork);
+                }
 
                 await repositoryFactory.MarketplacePurchaseHistoryRepository.UpsertMarketplaceBookingSubscriptionAsync(
                     existingSubscription, refund, cancellationToken);

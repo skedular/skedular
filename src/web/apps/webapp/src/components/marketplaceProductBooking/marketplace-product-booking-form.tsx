@@ -17,9 +17,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import { TimeRangePicker } from '@mui/x-date-pickers-pro/TimeRangePicker';
 import type { DateRange } from '@mui/x-date-pickers-pro/models';
@@ -170,7 +168,6 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
               subTitle
             }
             purchaseCadence
-            bookingCadence
             price
             numberOfResourcesToBook
             minDurationMinutes
@@ -275,7 +272,6 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
   const [selectedPricingId, setSelectedPricingId] = useState(initialPricingOptionId ?? '');
   const [quantity, setQuantity] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | ''>('');
-  const [autoRenew, setAutoRenew] = useState(true);
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>(() => [...(rootData.me?.emails ?? [])]);
   const [availableResourcesCount, setAvailableResourcesCount] = useState<number | null>(null);
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
@@ -428,17 +424,8 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
       return 'N/A';
     }
 
-    const minutes = dateRangeValidation.until.diff(dateRangeValidation.from, 'minutes');
     const price = Number(selectedPricingOption.price);
-    let total = price * effectiveQuantity;
-
-    if (selectedPricingOption.bookingCadence === 'PER_MINUTE') {
-      total = price * effectiveQuantity * minutes;
-    }
-
-    if (selectedPricingOption.bookingCadence === 'PER_HOUR') {
-      total = (price / 60) * effectiveQuantity * minutes;
-    }
+    const total = price * effectiveQuantity;
 
     return formatPriceForDisplay(currencyLabel, total.toFixed(2), selectedPricingOption.purchaseCadence);
   }, [currencyLabel, dateRangeValidation, effectiveQuantity, selectedPricingOption]);
@@ -552,7 +539,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
             organizationId: rootData.product.organization.uniqueId,
             productVersionId: rootData.product.latestProductVersionId,
             pricingId: selectedPricingOption.id,
-            autoRenew: isPurchasingEntitlement && selectedPricingOption.supportsSubscriptionAutoRenewal ? autoRenew : false,
+            autoRenew: false,
             paymentMethod: submittedPaymentMethod as PaymentMethod,
             serviceStartAt: entitlementStartDate.utc().startOf('day').toISOString(),
             checkoutReturnUrl: new URL(
@@ -761,7 +748,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
 
             {!isPurchasingEntitlement ? (
               <TimeRangePicker
-                minutesStep={rootData.bookingSlotSizeInMinutes}
+                minutesStep={1}
                 value={timeRange}
                 onChange={(value) => {
                   if (value[0] && value[1]) {
@@ -802,10 +789,6 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
                 This pricing option is invoiced in arrears. You will receive an invoice in line with the organization&apos;s billing cycle, so there is nothing to choose here yet.
               </Alert>
             )}
-
-            {isPurchasingEntitlement && selectedPricingOption?.supportsSubscriptionAutoRenewal ? (
-              <FormControlLabel control={<Switch checked={autoRenew} onChange={(event) => setAutoRenew(event.target.checked)} />} label="Automatically renew this credit package" />
-            ) : null}
 
             <TextField
               label="Invoice emails"
@@ -884,7 +867,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
           cancellationPolicyType={selectedPricingOption?.cancellationPolicyType}
           cancellationRefundRules={selectedPricingOption?.cancellationRefundRules}
           dateLabel={toShortDate(selectedDate.toISOString())}
-          durationLabel={selectedPricingOption?.purchaseCadence === 'HALF_DAY' ? 'Half-day access' : durationLabel}
+          durationLabel={durationLabel}
           paymentLabel={paymentLabel}
           productType={rootData.product.type.type}
           quantity={effectiveQuantity}

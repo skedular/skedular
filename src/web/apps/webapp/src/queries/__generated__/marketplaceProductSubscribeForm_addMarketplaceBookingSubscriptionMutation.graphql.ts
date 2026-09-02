@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25bc6261d2fa3bb59bb14870e759440a>>
+ * @generated SignedSource<<ac10c74af5a87156d7f5d682b9333d1c>>
  * @lightSyntaxTransform
  */
 
@@ -19,6 +19,7 @@ export type AddMarketplaceBookingSubscriptionInput = {
   checkoutReturnUrl?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
+  from: any;
   id?: string | null | undefined;
   invoiceEmailList?: ReadonlyArray<string> | null | undefined;
   organizationCustomDomains?: ReadonlyArray<string> | null | undefined;
@@ -30,6 +31,7 @@ export type AddMarketplaceBookingSubscriptionInput = {
   requestedResourceIds?: ReadonlyArray<string> | null | undefined;
   startedAt: any;
   teamIds?: ReadonlyArray<string> | null | undefined;
+  until: any;
   weeklySelectedDays?: ReadonlyArray<DayOfWeek> | null | undefined;
 };
 export type marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation$variables = {

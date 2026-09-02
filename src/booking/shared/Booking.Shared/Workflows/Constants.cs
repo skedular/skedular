@@ -11,7 +11,6 @@ public class Constants
     public const string OrganizationArrearsBillingPrefix = "organization_arrears_billing";
     public const string SpacesBookingUsageRolloverPrefix = "spaces_booking_usage_rollover";
     public const string ExpireEntitlementsPrefix = "expire_entitlements";
-    public const string PrepareEntitlementRenewalPrefix = "prepare_entitlement_renewal";
     public const string MaintainOrganizationArrearsInvoiceAccountingStatePrefix = "maintain_organization_arrears_invoice_accounting_state";
     public const string MaintainAccountingInvoiceStatePrefix = "maintain_accounting_invoice_state";
     public const string GenerateLocationResourcesSlotsPrefix = "generate_location_resources_slots";

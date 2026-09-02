@@ -20,7 +20,7 @@ Pricing and availability work together to shape what renters can book. Pricing d
 
 ## Set your pricing
 
-Host lets you create one or more pricing options for the place. For each option, set a renter-facing label, a **Cadence**, and a **Price**. The available cadence choices are **One time**, **Hourly**, **Half day**, **Daily**, **Weekly**, **Fortnightly**, **Monthly**, **Quarterly**, and **Yearly**.
+Host lets you create one or more pricing options for the place. For each option, set a renter-facing label, a **Purchase term**, and a **Price**. The available terms are **Daily**, **Weekly**, **Fortnightly**, **Monthly**, **Two months**, **Quarterly**, **Four months**, **Five months**, **Six months**, and **Yearly**.
 
 You can also choose the place's **Currency** from the currencies shown in the Host editor and set whether the price is **Tax inclusive** or **Tax exclusive**. Keep each option easy for renters to compare. Payment connection and payment workflow guidance belongs in [Payments and refunds](/docs/host/payments-and-refunds).
 

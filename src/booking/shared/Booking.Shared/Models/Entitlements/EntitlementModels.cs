@@ -17,10 +17,6 @@ public sealed class EntitlementModel : ModelBase
     public DateTimeOffset ActivatesAt { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
     public EntitlementStatus Status { get; set; }
-    public bool AutoRenew { get; set; }
-    public bool CancelAtPeriodEnd { get; set; }
-    public DateTimeOffset? NextRenewalAt { get; set; }
-    public string? RenewalFailureReason { get; set; }
     public decimal NetPurchaseAmount { get; set; }
     public string Currency { get; set; } = string.Empty;
     public ProductPricing? ProductPricing { get; set; }

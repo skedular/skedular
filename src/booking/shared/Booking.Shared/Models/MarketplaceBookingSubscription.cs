@@ -10,6 +10,8 @@ public record MarketplaceBookingPaymentProjection(
 public class MarketplaceBookingSubscription : ModelBaseWithDeleted
 {
     public DateTimeOffset StartedAt { get; set; }
+    public TimeOnly From { get; set; }
+    public TimeOnly Until { get; set; }
     public DateTimeOffset? CancelledAt { get; set; }
     public DateTimeOffset? NextRenewalAt { get; set; }
     public MarketplaceBookingSubscriptionStatus Status { get; set; }
@@ -27,6 +29,19 @@ public class MarketplaceBookingSubscription : ModelBaseWithDeleted
     public Customer? LastModifiedByCustomer { get; set; }
     public Customer? DeletedByCustomer { get; set; }
     public IReadOnlyList<RecurringBooking> RecurringBookings { get; set; } = [];
+
+    public (DateTimeOffset From, DateTimeOffset Until) ResolveBookingWindow() =>
+        ResolveBookingWindow(StartedAt, From, Until);
+
+    public static (DateTimeOffset From, DateTimeOffset Until) ResolveBookingWindow(
+        DateTimeOffset termStart,
+        TimeOnly from,
+        TimeOnly until)
+    {
+        var resolvedFrom = new DateTimeOffset(termStart.Date.Add(from.ToTimeSpan()), termStart.Offset);
+        var resolvedUntil = new DateTimeOffset(termStart.Date.Add(until.ToTimeSpan()), termStart.Offset);
+        return (resolvedFrom, resolvedUntil);
+    }
 
     public MarketplaceBookingPaymentProjection? ResolveCurrentBillingWindowPaymentProjection(DateTimeOffset now)
     {

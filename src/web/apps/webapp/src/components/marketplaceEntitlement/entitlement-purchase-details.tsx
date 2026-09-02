@@ -10,7 +10,6 @@ import { errorNotificationOptions, NotificationContent } from '@/components/noti
 import { OrganizationStoreFrontRootShell } from '@/components/rootShell';
 import useKnownParams from '@/hooks/use-known-params';
 import type { entitlementPurchaseDetails_rootQuery } from '@/queries/__generated__/entitlementPurchaseDetails_rootQuery.graphql';
-import type { entitlementPurchaseDetails_setRenewalPolicyMutation } from '@/queries/__generated__/entitlementPurchaseDetails_setRenewalPolicyMutation.graphql';
 import type { entitlementPurchaseDetails_cancelEntitlementMutation } from '@/queries/__generated__/entitlementPurchaseDetails_cancelEntitlementMutation.graphql';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
@@ -119,11 +118,7 @@ const RootQuery = graphql`
       entitlement {
         id
         availableQuantity
-        autoRenew
-        cancelAtPeriodEnd
         status
-        nextRenewalAt
-        renewalFailureReason
       }
       linkedBookings(first: 10) {
         totalCount
@@ -174,28 +169,8 @@ const EntitlementPurchaseUpdates = graphql`
       entitlement {
         id
         availableQuantity
-        autoRenew
-        cancelAtPeriodEnd
         status
-        nextRenewalAt
-        renewalFailureReason
       }
-    }
-  }
-`;
-
-const RenewalPolicyMutation = graphql`
-  mutation entitlementPurchaseDetails_setRenewalPolicyMutation($input: SetEntitlementRenewalPolicyInput!) {
-    setEntitlementRenewalPolicy(input: $input) {
-      entitlement {
-        id
-        autoRenew
-        cancelAtPeriodEnd
-        status
-        nextRenewalAt
-        renewalFailureReason
-      }
-      error
     }
   }
 `;
@@ -206,10 +181,6 @@ const CancelEntitlementMutation = graphql`
       entitlement {
         id
         status
-        autoRenew
-        cancelAtPeriodEnd
-        nextRenewalAt
-        renewalFailureReason
       }
       error
     }
@@ -227,10 +198,8 @@ const EntitlementPurchaseDetails = () => {
     variables: { purchaseId: purchase?.id ?? purchaseId },
     subscription: EntitlementPurchaseUpdates,
   });
-  const [commitRenewalPolicy, isRenewalPolicyInFlight] = useMutation<entitlementPurchaseDetails_setRenewalPolicyMutation>(RenewalPolicyMutation);
   const [commitCancellation, isCancellationInFlight] = useMutation<entitlementPurchaseDetails_cancelEntitlementMutation>(CancelEntitlementMutation);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
-  const [showPeriodEndDialog, setShowPeriodEndDialog] = useState(false);
 
   if (!purchase) return <Loading />;
 
@@ -257,19 +226,6 @@ const EntitlementPurchaseDetails = () => {
       },
     });
   };
-  const cancelAtPeriodEnd = () => {
-    if (!purchase.entitlement?.id) return;
-    commitRenewalPolicy({
-      variables: { input: { clientMutationId: purchase.entitlement.id, entitlementId: purchase.entitlement.id, autoRenew: false, cancelAtPeriodEnd: true } },
-      onCompleted: (response) => {
-        if (response.setEntitlementRenewalPolicy.error) toast(<NotificationContent content={response.setEntitlementRenewalPolicy.error} />, errorNotificationOptions);
-        else {
-          setShowPeriodEndDialog(false);
-        }
-      },
-    });
-  };
-
   return (
     <OrganizationStoreFrontRootShell>
       <Box
@@ -322,18 +278,18 @@ const EntitlementPurchaseDetails = () => {
                       <SubscriptionCancellationSection
                         entityLabel="entitlement"
                         isCancelled={purchase.entitlement.status === 'CANCELLED'}
-                        cancelAtPeriodEnd={purchase.entitlement.cancelAtPeriodEnd || !purchase.entitlement.autoRenew}
+                        cancelAtPeriodEnd={false}
                         hasConfirmedPayment={purchase.paymentStatus === 'CONFIRMED'}
-                        isInFlight={isRenewalPolicyInFlight || isCancellationInFlight}
+                        isInFlight={isCancellationInFlight}
                         immediateCancellationMode={{ type: 'IMMEDIATE', name: 'Cancel now' }}
-                        atPeriodEndCancellationMode={{ type: 'AT_PERIOD_END', name: 'Cancel at period end' }}
+                        atPeriodEndCancellationMode={null}
                         cancellationBlockedMessage={
                           hasActiveLinkedBookings
                             ? `There ${activeLinkedBookingCount === 1 ? 'is' : 'are'} ${activeLinkedBookingCount} active or upcoming booking${activeLinkedBookingCount === 1 ? '' : 's'} linked to this entitlement. Cancel ${activeLinkedBookingCount === 1 ? 'it' : 'them'} from Related bookings below, then return here to cancel the entitlement.`
                             : undefined
                         }
                         onImmediateCancellationClick={() => setShowCancelDialog(true)}
-                        onAtPeriodEndCancellationClick={() => setShowPeriodEndDialog(true)}
+                        onAtPeriodEndCancellationClick={() => undefined}
                       />
                       <Divider />
                     </StackColumn>
@@ -439,20 +395,6 @@ const EntitlementPurchaseDetails = () => {
                 <TwoButtonsDialogActions
                   onPrimaryClicked={cancelEntitlement}
                   onSecondaryClicked={() => setShowCancelDialog(false)}
-                  primaryLabel="Confirm cancellation"
-                  secondaryLabel="Go back"
-                />
-              </DialogContent>
-            </Dialog>
-            <Dialog open={showPeriodEndDialog} onClose={() => setShowPeriodEndDialog(false)}>
-              <DefaultDialogTitle title="Cancel at period end" />
-              <DialogContent>
-                <DialogContentText>
-                  This entitlement will remain active for the current period, and no new period will be created. Confirm cancellation at the end of the current period?
-                </DialogContentText>
-                <TwoButtonsDialogActions
-                  onPrimaryClicked={cancelAtPeriodEnd}
-                  onSecondaryClicked={() => setShowPeriodEndDialog(false)}
                   primaryLabel="Confirm cancellation"
                   secondaryLabel="Go back"
                 />

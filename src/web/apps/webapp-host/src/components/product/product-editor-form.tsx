@@ -225,7 +225,7 @@ const ProductEditorForm = ({
 
   const renderOfferEditor = (pricingOption: PricingOptionForm, index: number) => (
     <StackColumn spacing={2}>
-      <SettingsSectionCard title="Offer Basics" description="Set the label customers will understand first, then set cadence and price.">
+      <SettingsSectionCard title="Offer Basics" description="Set the label customers will understand first, then set the purchase term and price.">
         <ListingMetadata fields={['title', 'subTitle']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
 
         <FormFieldLabel label="Price">
@@ -238,7 +238,7 @@ const ProductEditorForm = ({
         description={
           pricingOption.fulfillmentType === 'ENTITLEMENT'
             ? 'Credit entitlements are purchased once and provide credits customers can use later.'
-            : 'Reservations are purchased against a booking cadence and reserve resources or time.'
+            : 'Reservations are purchased for the selected purchase term and reserve resources or time.'
         }
       >
         <StackColumn spacing={2}>
@@ -249,7 +249,10 @@ const ProductEditorForm = ({
               name={`pricingOptions[${index}].fulfillmentType`}
               fieldProps={{
                 onChange: (event: { target: { value: string } }) => {
-                  if (event.target.value === 'ENTITLEMENT') form.change(`pricingOptions[${index}].cadence`, 'ONE_TIME');
+                  if (event.target.value === 'ENTITLEMENT') {
+                    form.change(`pricingOptions[${index}].cadence`, 'NOT_SET');
+                    form.change(`pricingOptions[${index}].supportsSubscriptionAutoRenewal`, false);
+                  }
                 },
               }}
             >
@@ -271,7 +274,7 @@ const ProductEditorForm = ({
               </FormFieldLabel>
             </StackRow>
           ) : (
-            <FormFieldLabel label="Cadence">
+            <FormFieldLabel label="Purchase cadence">
               <SingleChoiceProductPricingCadence rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].cadence`} required />
             </FormFieldLabel>
           )}
@@ -316,7 +319,7 @@ const ProductEditorForm = ({
         <FormFieldLabel>
           <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Is price tax inclusive?', value: 'isTaxInclusive' }} />
         </FormFieldLabel>
-        {!isEventProduct ? (
+        {!isEventProduct && pricingOption.fulfillmentType === 'RESERVATION' ? (
           <FormFieldLabel>
             <Switches
               name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`}
@@ -571,12 +574,12 @@ const ProductEditorForm = ({
                   <SmallIconTypography label="Select one offer to edit. Add new ones only when the commercial model is genuinely different." />
                 </StackColumn>
                 <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
-                  <Button variant="outlined" onClick={() => addOffer('ONE_TIME')}>
-                    Add One-Time Offer
+                  <Button variant="outlined" onClick={() => addOffer('DAILY')}>
+                    Add Daily Offer
                   </Button>
                   {!isEventProduct ? (
                     <Button variant="outlined" onClick={() => addOffer('MONTHLY')}>
-                      Add Recurring Offer
+                      Add Monthly Offer
                     </Button>
                   ) : null}
                 </StackRow>

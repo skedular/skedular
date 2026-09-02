@@ -244,22 +244,7 @@ public class StripeIntegrations(
         var lineItems = booking.Schedules.Select(schedule => new SessionLineItemOptions
         {
             Price = stripeProduct.StripePrice.StripePriceId,
-            Quantity = marketplaceBooking.ProductPricing.BookingCadence switch
-            {
-                ProductPricingCadence.OneTime => marketplaceBooking.Quantity,
-                ProductPricingCadence.HalfDay => marketplaceBooking.Quantity,
-                ProductPricingCadence.Daily => marketplaceBooking.Quantity,
-                ProductPricingCadence.PerMinute =>
-                    Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) * marketplaceBooking.Quantity,
-                ProductPricingCadence.Per15Minutes =>
-                    Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 15 * marketplaceBooking.Quantity,
-                ProductPricingCadence.Per30Minutes =>
-                    Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 30 * marketplaceBooking.Quantity,
-                ProductPricingCadence.PerHour =>
-                    Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 60 * marketplaceBooking.Quantity,
-                _ => throw new ArgumentOutOfRangeException(null,
-                    "Unexpected value encountered. Update enum mapping or caller input to include this case."),
-            },
+            Quantity = marketplaceBooking.Quantity,
         }).ToList();
 
         if (marketplaceBooking.StripeCheckoutSession is not null)

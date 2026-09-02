@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e3b9a06804926ab7fe39258541919d15>>
+ * @generated SignedSource<<55ab5d8393393d5809d672662d2867ec>>
  * @lightSyntaxTransform
  */
 
@@ -21,12 +21,8 @@ export type entitlementPurchaseDetails_rootQuery$data = {
     readonly creditQuantity: number;
     readonly currency: string;
     readonly entitlement: {
-      readonly autoRenew: boolean;
       readonly availableQuantity: number;
-      readonly cancelAtPeriodEnd: boolean;
       readonly id: string;
-      readonly nextRenewalAt: any | null | undefined;
-      readonly renewalFailureReason: string | null | undefined;
       readonly status: EntitlementStatus;
     } | null | undefined;
     readonly history: {
@@ -434,35 +430,7 @@ v23 = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "autoRenew",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "cancelAtPeriodEnd",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "status",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "nextRenewalAt",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "renewalFailureReason",
       "storageKey": null
     }
   ],
@@ -780,16 +748,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6c5d74eb5cb231de7203f4d2578047b4",
+    "cacheID": "cb556b5f90296fb1cf06d78cfb441630",
     "id": null,
     "metadata": {},
     "name": "entitlementPurchaseDetails_rootQuery",
     "operationKind": "query",
-    "text": "query entitlementPurchaseDetails_rootQuery(\n  $purchaseId: String!\n) {\n  entitlementPurchase(purchaseId: $purchaseId) {\n    id\n    history(first: 100) {\n      edges {\n        node {\n          id\n          type\n          name\n          occurredAt\n          cancellationRequestedAt\n          cancellationEffectiveAt\n          paymentStatus\n          refundStatus\n          creditQuantity\n          remainingCreditQuantity\n          reason\n        }\n      }\n    }\n    paymentStatus\n    lifecycleState\n    paymentMethod\n    paymentExpiry\n    serviceStartAt\n    pricingId\n    productVersion {\n      listingMetadata {\n        about\n        includedFeatures\n        subTitle\n        title\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      pricingOptions {\n        id\n        listingMetadata {\n          title\n        }\n      }\n      id\n    }\n    amount\n    currency\n    creditQuantity\n    validityDays\n    invoiceNumber\n    invoiceUrl\n    paymentAction\n    entitlement {\n      id\n      availableQuantity\n      autoRenew\n      cancelAtPeriodEnd\n      status\n      nextRenewalAt\n      renewalFailureReason\n    }\n    linkedBookings(first: 10) {\n      totalCount\n      edges {\n        node {\n          id\n          from\n          until\n          involvedLocations {\n            name\n          }\n          bookingResources {\n            resource {\n              name\n              id\n            }\n          }\n          marketplaceBooking {\n            quantity\n            paymentStatus {\n              name\n              type\n            }\n            id\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query entitlementPurchaseDetails_rootQuery(\n  $purchaseId: String!\n) {\n  entitlementPurchase(purchaseId: $purchaseId) {\n    id\n    history(first: 100) {\n      edges {\n        node {\n          id\n          type\n          name\n          occurredAt\n          cancellationRequestedAt\n          cancellationEffectiveAt\n          paymentStatus\n          refundStatus\n          creditQuantity\n          remainingCreditQuantity\n          reason\n        }\n      }\n    }\n    paymentStatus\n    lifecycleState\n    paymentMethod\n    paymentExpiry\n    serviceStartAt\n    pricingId\n    productVersion {\n      listingMetadata {\n        about\n        includedFeatures\n        subTitle\n        title\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      pricingOptions {\n        id\n        listingMetadata {\n          title\n        }\n      }\n      id\n    }\n    amount\n    currency\n    creditQuantity\n    validityDays\n    invoiceNumber\n    invoiceUrl\n    paymentAction\n    entitlement {\n      id\n      availableQuantity\n      status\n    }\n    linkedBookings(first: 10) {\n      totalCount\n      edges {\n        node {\n          id\n          from\n          until\n          involvedLocations {\n            name\n          }\n          bookingResources {\n            resource {\n              name\n              id\n            }\n          }\n          marketplaceBooking {\n            quantity\n            paymentStatus {\n              name\n              type\n            }\n            id\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3234e076467ee506215be6e2df9696d4";
+(node as any).hash = "a1ab3455f72c0ba6118f2cb736f45cae";
 
 export default node;

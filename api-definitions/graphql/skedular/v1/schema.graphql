@@ -1281,12 +1281,6 @@ type Mutation
     @cost(weight: "10")
     @fusion__cost(schema: CUSTOMER_API, weight: "10")
     @fusion__field(schema: CUSTOMER_API)
-  setEntitlementRenewalPolicy(
-    input: SetEntitlementRenewalPolicyInput! @fusion__inputField(schema: BOOKING_API)
-  ): SetEntitlementRenewalPolicyPayload!
-    @cost(weight: "10")
-    @fusion__cost(schema: BOOKING_API, weight: "10")
-    @fusion__field(schema: BOOKING_API)
   setOrganizationBankAccountAsDefault(
     input: SetOrganizationBankAccountAsDefaultInput! @fusion__inputField(schema: ORGANIZATION_API)
   ): OrganizationBankAccountPayload!
@@ -2099,9 +2093,7 @@ type DurationDisplayUnitDetails @fusion__type(schema: MARKETPLACE_API) {
 
 type EntitlementDetails @fusion__type(schema: BOOKING_API) {
   activatesAt: DateTime! @fusion__field(schema: BOOKING_API)
-  autoRenew: Boolean! @fusion__field(schema: BOOKING_API)
   availableQuantity: Int! @fusion__field(schema: BOOKING_API)
-  cancelAtPeriodEnd: Boolean! @fusion__field(schema: BOOKING_API)
   currency: String! @fusion__field(schema: BOOKING_API)
   customerId: String! @fusion__field(schema: BOOKING_API)
   expiresAt: DateTime! @fusion__field(schema: BOOKING_API)
@@ -2109,7 +2101,6 @@ type EntitlementDetails @fusion__type(schema: BOOKING_API) {
   id: String! @fusion__field(schema: BOOKING_API)
   ledger: [CreditLedgerEntryDetails!]! @fusion__field(schema: BOOKING_API)
   linkedBookingIds: [String!]! @fusion__field(schema: BOOKING_API)
-  nextRenewalAt: DateTime @fusion__field(schema: BOOKING_API)
   organizationCustomDomain: String! @fusion__field(schema: BOOKING_API)
   organizationId: String! @fusion__field(schema: BOOKING_API)
   paymentAction: String @fusion__field(schema: BOOKING_API)
@@ -2117,8 +2108,6 @@ type EntitlementDetails @fusion__type(schema: BOOKING_API) {
   productId: String! @fusion__field(schema: BOOKING_API)
   purchaseReference: String! @fusion__field(schema: BOOKING_API)
   refund: EntitlementRefundDetails @fusion__field(schema: BOOKING_API)
-  renewalFailureReason: String @fusion__field(schema: BOOKING_API)
-  renewalStatus: EntitlementRenewalStatus! @fusion__field(schema: BOOKING_API)
   restrictions: EntitlementRestrictionsDetails
     @fusion__field(schema: BOOKING_API)
   status: EntitlementStatus! @fusion__field(schema: BOOKING_API)
@@ -3910,9 +3899,6 @@ type ProductPricing
   billingMode: ProductPricingBillingMode!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
-  bookingCadence: ProductPricingCadence!
-    @fusion__field(schema: BOOKING_API)
-    @fusion__field(schema: MARKETPLACE_API)
   cancellationPolicyType: ProductPricingCancellationPolicyType!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
@@ -4231,12 +4217,6 @@ type ResourcesPayload @fusion__type(schema: LOCATION_API) {
 type RoomsOccupancyPercentage @fusion__type(schema: LOCATION_API) {
   date: DateTime! @fusion__field(schema: LOCATION_API)
   percentage: Float! @fusion__field(schema: LOCATION_API)
-}
-
-type SetEntitlementRenewalPolicyPayload @fusion__type(schema: BOOKING_API) {
-  clientMutationId: String @fusion__field(schema: BOOKING_API)
-  entitlement: EntitlementDetails @fusion__field(schema: BOOKING_API)
-  error: String @fusion__field(schema: BOOKING_API)
 }
 
 type SpacesAccessErrorDetails @fusion__type(schema: BOOKING_API) {
@@ -4606,6 +4586,7 @@ input AddMarketplaceBookingSubscriptionInput @fusion__type(schema: BOOKING_API) 
   checkoutReturnUrl: String @fusion__inputField(schema: BOOKING_API)
   clientMutationId: String @fusion__inputField(schema: BOOKING_API)
   customerIds: [String!]! @fusion__inputField(schema: BOOKING_API)
+  from: LocalTime! @fusion__inputField(schema: BOOKING_API)
   id: String @fusion__inputField(schema: BOOKING_API)
   invoiceEmailList: [String!] @fusion__inputField(schema: BOOKING_API)
   organizationCustomDomains: [String!] @fusion__inputField(schema: BOOKING_API)
@@ -4617,6 +4598,7 @@ input AddMarketplaceBookingSubscriptionInput @fusion__type(schema: BOOKING_API) 
   requestedResourceIds: [String!] @fusion__inputField(schema: BOOKING_API)
   startedAt: DateTime! @fusion__inputField(schema: BOOKING_API)
   teamIds: [String!] @fusion__inputField(schema: BOOKING_API)
+  until: LocalTime! @fusion__inputField(schema: BOOKING_API)
   weeklySelectedDays: [DayOfWeek!] @fusion__inputField(schema: BOOKING_API)
 }
 
@@ -5504,7 +5486,6 @@ input ProductPricingInput @fusion__type(schema: MARKETPLACE_API) {
   acceptedPaymentMethods: [PaymentMethod!]! @fusion__inputField(schema: MARKETPLACE_API)
   availableDays: [DayOfWeek!] @fusion__inputField(schema: MARKETPLACE_API)
   billingMode: ProductPricingBillingMode! @fusion__inputField(schema: MARKETPLACE_API)
-  bookingCadence: ProductPricingCadence! @fusion__inputField(schema: MARKETPLACE_API)
   cancellationPolicyType: ProductPricingCancellationPolicyType! @fusion__inputField(schema: MARKETPLACE_API)
   cancellationRefundRules: [ProductPricingCancellationRefundRuleInput!]! @fusion__inputField(schema: MARKETPLACE_API)
   entitlementCreditQuantity: Int @fusion__inputField(schema: MARKETPLACE_API)
@@ -5739,13 +5720,6 @@ input SetCustomerDefaultOrganizationInput @fusion__type(schema: CUSTOMER_API) {
   clientMutationId: String @fusion__inputField(schema: CUSTOMER_API)
   organizationCustomDomain: String @fusion__inputField(schema: CUSTOMER_API)
   organizationId: String @fusion__inputField(schema: CUSTOMER_API)
-}
-
-input SetEntitlementRenewalPolicyInput @fusion__type(schema: BOOKING_API) {
-  autoRenew: Boolean! @fusion__inputField(schema: BOOKING_API)
-  cancelAtPeriodEnd: Boolean! @fusion__inputField(schema: BOOKING_API)
-  clientMutationId: String @fusion__inputField(schema: BOOKING_API)
-  entitlementId: String! @fusion__inputField(schema: BOOKING_API)
 }
 
 input SetOrganizationBankAccountAsDefaultInput
@@ -6355,14 +6329,6 @@ enum EntitlementReasonCode @fusion__type(schema: ORGANIZATION_API) {
   LEGACY_OFFERING_UNCHANGED @fusion__enumValue(schema: ORGANIZATION_API)
   SPACES_BOOKING_QUOTA_REACHED @fusion__enumValue(schema: ORGANIZATION_API)
   SPACES_OFFERING_STATE_MISSING @fusion__enumValue(schema: ORGANIZATION_API)
-}
-
-enum EntitlementRenewalStatus @fusion__type(schema: BOOKING_API) {
-  NOT_REQUIRED @fusion__enumValue(schema: BOOKING_API)
-  PENDING @fusion__enumValue(schema: BOOKING_API)
-  CONFIRMED @fusion__enumValue(schema: BOOKING_API)
-  FAILED @fusion__enumValue(schema: BOOKING_API)
-  CANCELLED @fusion__enumValue(schema: BOOKING_API)
 }
 
 enum EntitlementStatus @fusion__type(schema: BOOKING_API) {
@@ -7965,31 +7931,16 @@ enum ProductPricingCadence
   NOT_SET
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
-  ONE_TIME
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  PER_MINUTE
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  PER_HOUR
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
   DAILY
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   WEEKLY
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
+  FORTNIGHTLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
   MONTHLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  HALF_DAY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  PER15_MINUTES
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  PER30_MINUTES
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   TWO_MONTHS
@@ -8008,9 +7959,6 @@ enum ProductPricingCadence
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   YEARLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  FORTNIGHTLY
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
 }

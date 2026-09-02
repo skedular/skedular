@@ -48,42 +48,4 @@ public sealed class RootMutation
             };
         }
     }
-
-    [UseResolverScope]
-    public async Task<SetEntitlementRenewalPolicyPayload> SetEntitlementRenewalPolicyAsync(
-        SetEntitlementRenewalPolicyInput input,
-        [Service]
-        IEntitlementReadService entitlementReadService,
-        [Service]
-        IEntitlementService entitlementService,
-        [Service]
-        IGraphQlMapper graphQlMapper,
-        [Service]
-        ICachedCustomerService cachedCustomerService,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            var actorId = await cachedCustomerService.GetIdAsync(cancellationToken);
-            var entitlement = await entitlementReadService.GetAuthorizedForRenewalAsync(input.EntitlementId, actorId, cancellationToken);
-            var updated = await entitlementService.SetRenewalPolicyAsync(
-                entitlement.Id,
-                input.AutoRenew,
-                input.CancelAtPeriodEnd,
-                cancellationToken);
-            return new SetEntitlementRenewalPolicyPayload
-            {
-                ClientMutationId = input.ClientMutationId,
-                Entitlement = graphQlMapper.MapTo(updated),
-            };
-        }
-        catch (Exception exception) when (exception is UnauthorizedAccessException or KeyNotFoundException or InvalidOperationException)
-        {
-            return new SetEntitlementRenewalPolicyPayload
-            {
-                ClientMutationId = input.ClientMutationId,
-                Error = exception.Message,
-            };
-        }
-    }
 }

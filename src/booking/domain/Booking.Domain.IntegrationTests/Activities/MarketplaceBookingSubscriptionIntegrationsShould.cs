@@ -109,8 +109,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould(IRepositoryFactory
                 PaymentStatus = PaymentStatusConstants.Confirmed,
                 ProductPricing = ProductPricing.Empty("pricing") with
                 {
-                    PurchaseCadence = ProductPricingCadence.OneTime,
-                    BookingCadence = ProductPricingCadence.OneTime,
+                    PurchaseCadence = ProductPricingCadence.Daily,
                 },
                 Quantity = 1,
                 PaymentMethod = PaymentMethod.Card.ToPaymentMethod(),
@@ -158,8 +157,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould(IRepositoryFactory
                 PaymentStatus = PaymentStatusConstants.Confirmed,
                 ProductPricing = ProductPricing.Empty("pricing") with
                 {
-                    PurchaseCadence = ProductPricingCadence.OneTime,
-                    BookingCadence = ProductPricingCadence.OneTime,
+                    PurchaseCadence = ProductPricingCadence.Daily,
                 },
                 Quantity = 1,
                 PaymentMethod = PaymentMethod.Card.ToPaymentMethod(),

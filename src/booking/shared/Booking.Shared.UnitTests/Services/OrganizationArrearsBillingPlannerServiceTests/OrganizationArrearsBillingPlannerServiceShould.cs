@@ -18,15 +18,13 @@ public class OrganizationArrearsBillingPlannerServiceShould
             new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero));
         var firstBooking = CreateBooking(
-            ProductPricingCadence.PerHour,
-            ProductPricingCadence.PerHour,
+            ProductPricingCadence.Daily,
             10m,
             1,
             new DateTimeOffset(2026, 3, 10, 8, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2026, 3, 10, 10, 0, 0, TimeSpan.Zero));
         var secondBooking = CreateBooking(
-            ProductPricingCadence.HalfDay,
-            ProductPricingCadence.HalfDay,
+            ProductPricingCadence.Daily,
             25m,
             1,
             new DateTimeOffset(2026, 3, 11, 8, 0, 0, TimeSpan.Zero),
@@ -80,8 +78,7 @@ public class OrganizationArrearsBillingPlannerServiceShould
             new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero));
         var booking = CreateBooking(
-            ProductPricingCadence.HalfDay,
-            ProductPricingCadence.HalfDay,
+            ProductPricingCadence.Daily,
             25m,
             1,
             new DateTimeOffset(2026, 3, 11, 8, 0, 0, TimeSpan.Zero),
@@ -109,7 +106,6 @@ public class OrganizationArrearsBillingPlannerServiceShould
 
     private static Shared.Models.Booking CreateBooking(
         ProductPricingCadence purchaseCadence,
-        ProductPricingCadence bookingCadence,
         decimal price,
         int quantity,
         DateTimeOffset from,
@@ -146,7 +142,6 @@ public class OrganizationArrearsBillingPlannerServiceShould
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = purchaseCadence,
-                    BookingCadence = bookingCadence,
                     Price = price,
                     BillingMode = billingMode,
                     ListingMetadata = ListingMetadata.Empty with

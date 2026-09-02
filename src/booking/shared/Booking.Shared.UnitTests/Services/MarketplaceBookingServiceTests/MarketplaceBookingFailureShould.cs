@@ -45,8 +45,7 @@ public class MarketplaceBookingFailureShould
         };
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.OneTime,
-            BookingCadence = ProductPricingCadence.OneTime,
+            PurchaseCadence = ProductPricingCadence.Daily,
             AcceptedPaymentMethods = [PaymentMethod.Card],
             BillingMode = ProductPricingBillingMode.Upfront,
             MaxAllowedResourcesLockTimePaidViaCard = 15,

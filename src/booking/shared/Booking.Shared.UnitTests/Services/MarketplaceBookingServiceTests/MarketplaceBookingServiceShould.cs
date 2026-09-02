@@ -150,8 +150,7 @@ public class MarketplaceBookingServiceShould
         };
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.OneTime,
-            BookingCadence = ProductPricingCadence.OneTime,
+            PurchaseCadence = ProductPricingCadence.Daily,
             AcceptedPaymentMethods = [PaymentMethod.Card],
             BillingMode = ProductPricingBillingMode.Upfront,
             MaxAllowedResourcesLockTimePaidViaCard = 15,
@@ -747,7 +746,6 @@ public class MarketplaceBookingServiceShould
                 },
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    BookingCadence = ProductPricingCadence.OneTime,
                 },
                 PaymentMethod = PaymentMethodConstants.Card,
             },
@@ -776,7 +774,6 @@ public class MarketplaceBookingServiceShould
                 },
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    BookingCadence = ProductPricingCadence.OneTime,
                 },
                 PaymentMethod = PaymentMethod.Card,
             },
@@ -891,8 +888,7 @@ public class MarketplaceBookingServiceShould
                 },
                 ProductPricing = pricing ?? ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.OneTime,
-                    BookingCadence = ProductPricingCadence.OneTime,
+                    PurchaseCadence = ProductPricingCadence.Daily,
                     NumberOfResourcesToBook = 1,
                 },
                 Quantity = quantity,
@@ -935,7 +931,6 @@ public class MarketplaceBookingServiceShould
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = ProductPricingCadence.Weekly,
-                    BookingCadence = ProductPricingCadence.Weekly,
                     NumberOfResourcesToBook = 1,
                 },
                 Quantity = 1,

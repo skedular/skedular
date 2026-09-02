@@ -45,7 +45,7 @@ Organization marketplace information belongs in [Marketplace setup](/docs/spaces
 
 ## Configure Prices and commercial terms
 
-Each Product can have multiple pricing options. The current cadence choices include **One time**, **Per 15 minutes**, **Per 30 minutes**, **Per minute**, **Per hour**, **Half day**, **Daily**, **Weekly**, **Fortnightly**, **Monthly**, **Two months**, **Quarterly**, **Four months**, **Five months**, **Six months**, and **Yearly**.
+Each Product can have multiple pricing options. Purchase cadence choices are **Daily**, **Weekly**, **Fortnightly**, **Monthly**, **Two months**, **Quarterly**, **Four months**, **Five months**, **Six months**, and **Yearly**.
 
 For each pricing option, configure the price, booking duration limits, the number of Resources to reserve, and whether tax is included. The pricing option also carries its billing mode, accepted payment methods, subscription auto-renewal setting, and cancellation policy with its refund rules. Where applicable, choose **Upfront** or **In arrears** billing.
 
@@ -57,7 +57,7 @@ Payment-provider connections, bank accounts, payouts, and accounting setup are d
 
 ## Understand Bookings and Subscriptions
 
-A pricing option with a one-time purchase cadence leads to a customer Booking for the selected time. A pricing option with a recurring purchase cadence, when configured for subscription auto-renewal, creates a Subscription and its associated recurring Booking instances; a Subscription is not simply a longer Booking. Operators manage the resulting activity in [Bookings](/docs/spaces/bookings) and [Subscriptions](/docs/spaces/bookings/subscriptions).
+A pricing option is a day-or-longer offer term. Auto-renewal controls whether that term repeats. Customers choose each booking's start and end date/time, and any duration between the minimum and maximum is allowed. Operators manage the resulting activity in [Bookings](/docs/spaces/bookings) and [Subscriptions](/docs/spaces/bookings/subscriptions).
 
 ## Activate a Product
 

@@ -73,14 +73,15 @@ type Props = {
 };
 
 const cadenceOptions = [
-  ['ONE_TIME', 'One time'],
-  ['PER_HOUR', 'Hourly'],
-  ['HALF_DAY', 'Half day'],
   ['DAILY', 'Daily'],
   ['WEEKLY', 'Weekly'],
   ['FORTNIGHTLY', 'Fortnightly'],
   ['MONTHLY', 'Monthly'],
+  ['TWO_MONTHS', 'Two months'],
   ['QUARTERLY', 'Quarterly'],
+  ['FOUR_MONTHS', 'Four months'],
+  ['FIVE_MONTHS', 'Five months'],
+  ['SIX_MONTHS', 'Six months'],
   ['YEARLY', 'Yearly'],
 ] as const;
 
@@ -162,7 +163,7 @@ const HostListingProductSettings = ({
 
           <StackColumn spacing={2}>
             {/* Rate */}
-            <SettingsSectionCard title="Rate" description="Set the customer-facing label, booking cadence, and price for this option.">
+            <SettingsSectionCard title="Rate" description="Set the customer-facing label, purchase term, and price for this option.">
               <StackColumn spacing={2}>
                 <FormFieldLabel label="Customer-facing label (optional)">
                   <TextField fullWidth value={opt.title} onChange={onChangePricingOption(index, 'title')} placeholder="e.g. Daily rate, Weekend rate" />

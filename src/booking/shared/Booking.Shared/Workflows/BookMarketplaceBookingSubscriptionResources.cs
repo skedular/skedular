@@ -4,11 +4,17 @@ using Temporalio.Workflows;
 
 namespace Booking.Shared.Workflows;
 
-public record BookMarketplaceBookingSubscriptionResourcesInput(string MarketplaceBookingSubscriptionId);
+public record BookMarketplaceBookingSubscriptionResourcesInput(
+    string MarketplaceBookingSubscriptionId,
+    TimeOnly From,
+    TimeOnly Until);
 
 public record BookMarketplaceBookingSubscriptionResourcesState(bool MarketplaceBookingSubscriptionDeleted);
 
-public record MarketplaceBookingSubscriptionDeletedArgs(string MarketplaceBookingSubscriptionId);
+public record MarketplaceBookingSubscriptionDeletedArgs(
+    string MarketplaceBookingSubscriptionId,
+    TimeOnly From,
+    TimeOnly Until);
 
 [Workflow]
 public class BookMarketplaceBookingSubscriptionResources
@@ -29,7 +35,10 @@ public class BookMarketplaceBookingSubscriptionResources
 
             var response = await Workflow.ExecuteActivityAsync(
                 (MarketplaceBookingSubscriptionIntegrations activity) => activity.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-                    new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput(args.MarketplaceBookingSubscriptionId)),
+                    new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput(
+                        args.MarketplaceBookingSubscriptionId,
+                        args.From,
+                        args.Until)),
                 ResourceActivityOptions());
             if (response.Deleted)
             {

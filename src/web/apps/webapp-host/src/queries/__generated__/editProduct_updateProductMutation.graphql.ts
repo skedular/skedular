@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<baf75b6df2be623807e760f1b8fe3f0a>>
+ * @generated SignedSource<<5583caee9ae4f71c9f6aa6ea7440615b>>
  * @lightSyntaxTransform
  */
 
@@ -14,7 +14,7 @@ export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPatchField = "CURRENCY" | "FEATURE_IMAGES" | "LISTING_METADATA" | "PRICING_OPTIONS" | "TAGS" | "TYPE" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
@@ -48,7 +48,6 @@ export type ProductPricingInput = {
   acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
   availableDays?: ReadonlyArray<DayOfWeek> | null | undefined;
   billingMode: ProductPricingBillingMode;
-  bookingCadence: ProductPricingCadence;
   cancellationPolicyType: ProductPricingCancellationPolicyType;
   cancellationRefundRules: ReadonlyArray<ProductPricingCancellationRefundRuleInput>;
   entitlementCreditQuantity?: number | null | undefined;
@@ -114,7 +113,6 @@ export type editProduct_updateProductMutation$data = {
       readonly pricingOptions: ReadonlyArray<{
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
         readonly availableDays: ReadonlyArray<DayOfWeek> | null | undefined;
-        readonly bookingCadence: ProductPricingCadence;
         readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
         readonly cancellationRefundRules: ReadonlyArray<{
           readonly displayUnit: DurationDisplayUnit | null | undefined;
@@ -188,7 +186,6 @@ export type editProduct_updateProductMutation$rawResponse = {
       readonly pricingOptions: ReadonlyArray<{
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
         readonly availableDays: ReadonlyArray<DayOfWeek> | null | undefined;
-        readonly bookingCadence: ProductPricingCadence;
         readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
         readonly cancellationRefundRules: ReadonlyArray<{
           readonly displayUnit: DurationDisplayUnit | null | undefined;
@@ -483,13 +480,6 @@ v8 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "bookingCadence",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "price",
                 "storageKey": null
               },
@@ -651,16 +641,16 @@ return {
     "selections": (v8/*:: as any*/)
   },
   "params": {
-    "cacheID": "b7e33ca32b7bc9e8c01a792b69bfec89",
+    "cacheID": "a156cb17036f65dd24c83f7f5c7789c4",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        id\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        availableDays\n        requiredDaysPerWeek\n        numberOfResourcesToBook\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          displayUnit\n          refundPercentage\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        id\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        price\n        availableDays\n        requiredDaysPerWeek\n        numberOfResourcesToBook\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          displayUnit\n          refundPercentage\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "45a1b00d0c64ff910ba35a470ce0a172";
+(node as any).hash = "19ee55dfa7a99a93c19dc2ab86130e7a";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6f53b2f7fe24da3c0fb04cb5c6116676>>
+ * @generated SignedSource<<2ffb78b074ec0633becb71c12eef0eb8>>
  * @lightSyntaxTransform
  */
 
@@ -14,7 +14,7 @@ export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPatchField = "CURRENCY" | "FEATURE_IMAGES" | "LISTING_METADATA" | "PRICING_OPTIONS" | "TAGS" | "TYPE" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
@@ -48,7 +48,6 @@ export type ProductPricingInput = {
   acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
   availableDays?: ReadonlyArray<DayOfWeek> | null | undefined;
   billingMode: ProductPricingBillingMode;
-  bookingCadence: ProductPricingCadence;
   cancellationPolicyType: ProductPricingCancellationPolicyType;
   cancellationRefundRules: ReadonlyArray<ProductPricingCancellationRefundRuleInput>;
   entitlementCreditQuantity?: number | null | undefined;
