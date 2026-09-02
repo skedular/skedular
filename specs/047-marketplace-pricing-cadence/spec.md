@@ -1,8 +1,8 @@
 # Feature Specification: Marketplace Pricing Cadence Simplification
 
-**Feature Branch**: `047-marketplace-pricing-cadence`  
-**Created**: 2026-08-31  
-**Status**: Draft  
+**Feature Branch**: `047-marketplace-pricing-cadence`
+**Created**: 2026-08-31
+**Status**: Draft
 **Input**: User description: "Redesign marketplace pricing so `PurchaseCadence` is the only cadence field. Remove `BookingCadence` entirely, remove sub-day cadence values, make booking duration depend only on min/max duration, and make credit entitlements cadence-free."
 
 ## Clarifications

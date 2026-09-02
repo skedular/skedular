@@ -315,8 +315,10 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Remove(existingSubscription)).MustNotHaveHappened();
         A.CallTo(() => temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
                 existingSubscription.Id,
+                A<TimeOnly>._,
+                A<TimeOnly>._,
                 unitOfWork))
-            .MustHaveHappenedOnceExactly();
+            .MustNotHaveHappened();
     }
 
     [Theory]
@@ -388,6 +390,8 @@ public class MarketplaceBookingSubscriptionServiceShould
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Remove(existingSubscription)).MustNotHaveHappened();
         A.CallTo(() => temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
                 existingSubscription.Id,
+                A<TimeOnly>._,
+                A<TimeOnly>._,
                 unitOfWork))
             .MustNotHaveHappened();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();

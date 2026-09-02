@@ -856,6 +856,8 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
         {
             Id = src.Id.ToSafeString(),
             StartedAt = src.StartedAt,
+            From = src.From,
+            Until = src.Until,
             Status = MarketplaceBookingSubscriptionStatus.Active,
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,

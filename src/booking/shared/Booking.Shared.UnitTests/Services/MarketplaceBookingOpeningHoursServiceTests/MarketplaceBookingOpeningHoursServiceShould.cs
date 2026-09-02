@@ -368,14 +368,6 @@ public class MarketplaceBookingOpeningHoursServiceShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Use_Location_Opening_Hours_For_All_Purchase_Terms(MarketplaceBookingOpeningHoursService sut)
-    {
-        sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.Daily).ShouldBeTrue();
-        sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.Monthly).ShouldBeTrue();
-    }
-
-    [Theory]
-    [AutoFakeItEasyData]
     public async Task Prefer_Previously_Assigned_Resources_When_They_Are_Still_Available(
         [Frozen]
         IRepositoryFactory repositoryFactory,

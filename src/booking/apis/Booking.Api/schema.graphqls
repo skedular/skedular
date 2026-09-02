@@ -1205,6 +1205,8 @@ input AddMarketplaceBookingSubscriptionInput {
   teamIds: [String!]
   requestedResourceIds: [String!]
   startedAt: DateTime!
+  from: LocalTime!
+  until: LocalTime!
   autoRenew: Boolean!
   cancelAtPeriodEnd: Boolean!
   paymentMethod: PaymentMethod!

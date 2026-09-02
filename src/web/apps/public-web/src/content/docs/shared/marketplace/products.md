@@ -57,7 +57,7 @@ Products define what is sold and under which commercial terms. [Commerce](/docs/
 
 A purchase term repeats only when auto-renewal is enabled. Disabled auto-renewal makes a Daily offer a single one-day offer; enabled auto-renewal renews it daily. The same applies to longer terms. Organization billing cycles can split longer terms for invoice and resource-booking slices without replacing the purchase term.
 
-A Product's pricing option determines whether the purchase is one-time or recurring; see [Subscriptions](/docs/shared/marketplace/subscriptions) for the recurring lifecycle. Event Products are a separate Product type for fixed-time event bookings and cannot use subscription auto-renewal.
+Every supported reservation purchase term uses the Subscription lifecycle; auto-renewal determines whether the term repeats. Event Products are a separate Product type for fixed-time event bookings and cannot use subscription auto-renewal.
 
 ## Cancellation policies
 
@@ -121,9 +121,9 @@ Booking Groups define eligibility. Resources with matching Booking Groups can fu
 
 Yes. A Product can have multiple pricing options, each with its own cadence, booking rules, payment methods, billing mode, and cancellation policy.
 
-### When does a Product create a Booking instead of a Subscription?
+### Which offers create a Subscription?
 
-Credit-entitlement offers use `NOT_SET` for purchase cadence and are governed by credit quantity, validity, available days, and booking duration limits. They do not renew as subscriptions.
+Every reservation offer with a supported purchase term creates a Subscription. With auto-renewal disabled, it covers one term; with auto-renewal enabled, it repeats the selected term. Credit-entitlement offers use `NOT_SET` for purchase cadence and are governed by credit quantity, validity, available days, and booking duration limits. They do not renew as subscriptions.
 
 ### Can I edit a Product after activation?
 

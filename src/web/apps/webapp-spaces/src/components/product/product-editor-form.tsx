@@ -615,10 +615,7 @@ const ProductEditorForm = ({
             <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Price includes tax', value: 'isTaxInclusive' }} />
           </FormFieldLabel>
           {!isEventProduct ? (
-            <FormFieldLabel
-              helpLabel="Auto-renew subscription"
-              help="When enabled, eligible recurring purchases renew automatically according to the purchase cadence. It is independent from the booking cadence."
-            >
+            <FormFieldLabel helpLabel="Auto-renew subscription" help="When enabled, eligible purchases renew automatically according to the purchase cadence.">
               <Switches name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`} data={{ label: 'Auto-renew subscription', value: 'supportsSubscriptionAutoRenewal' }} />
             </FormFieldLabel>
           ) : null}

@@ -54,14 +54,6 @@ public interface IMarketplaceBookingOpeningHoursService
     Location? ResolveLocation(Database.Entities.Booking booking);
 
     /// <summary>
-    ///     Determines whether location opening hours window should be used for the given pricing cadence.
-    ///     Only day-based pass products should stretch to the full opening-hours window.
-    /// </summary>
-    /// <param name="cadence">The product pricing cadence to evaluate.</param>
-    /// <returns>True if location opening hours window should be used, false otherwise.</returns>
-    bool ShouldUseLocationOpeningHoursWindow(ProductPricingCadence cadence);
-
-    /// <summary>
     ///     Resolves the effective daily opening-hours booking window for a specific resource.
     ///     Resource-level available-hours overrides take precedence over the parent location.
     /// </summary>
@@ -223,8 +215,6 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
     /// </summary>
     /// <param name="cadence">The product pricing cadence to evaluate.</param>
     /// <returns>True if location opening hours window should be used, false otherwise.</returns>
-    public bool ShouldUseLocationOpeningHoursWindow(ProductPricingCadence cadence) => true;
-
     public (DateTimeOffset From, DateTimeOffset Until)? ResolveDailyBookingWindow(Resource resource, DateOnly bookingDay) =>
         ResolveBookingWindow(resource, bookingDay);
 

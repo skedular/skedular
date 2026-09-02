@@ -74,7 +74,7 @@ test.describe('webapp-host core UI flows', () => {
     await page.getByLabel('Name').fill('Full-Day Studio Workshop');
     await page.getByLabel('Price').fill('120');
     await page.getByLabel('Currency').fill('USD');
-    await page.getByLabel('Booking cadence').selectOption('DAILY');
+    await page.getByLabel('Purchase cadence').selectOption('DAILY');
 
     await captureStepScreenshot(page, testInfo, appId, 'create-product', 'filled-form');
 

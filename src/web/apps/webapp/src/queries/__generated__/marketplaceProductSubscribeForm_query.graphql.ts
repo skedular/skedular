@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bdb981986de57de453b460f3573ab542>>
+ * @generated SignedSource<<3c35b8da1dc9f6db29a3c399225150de>>
  * @lightSyntaxTransform
  */
 
@@ -58,6 +58,8 @@ export type marketplaceProductSubscribeForm_query$data = {
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
+      readonly maxDurationMinutes: number | null | undefined;
+      readonly minDurationMinutes: number | null | undefined;
       readonly numberOfResourcesToBook: number;
       readonly price: any;
       readonly purchaseCadence: ProductPricingCadence;
@@ -276,6 +278,20 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "minDurationMinutes",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "maxDurationMinutes",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "price",
               "storageKey": null
             },
@@ -372,6 +388,6 @@ return {
 };
 })();
 
-(node as any).hash = "21777b06fb4515ca216270c9e1699997";
+(node as any).hash = "62946cd0720e5507a0e6fa0005e96fd3";
 
 export default node;

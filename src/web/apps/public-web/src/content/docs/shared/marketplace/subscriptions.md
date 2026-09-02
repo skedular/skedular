@@ -44,7 +44,7 @@ The Subscription keeps the Product Version and Price used for its current access
 
 Purchase cadence is the offer or contract term: Daily, Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, or Yearly. Auto-renewal determines whether that term repeats. Event Products cannot use subscription auto-renewal.
 
-This is the canonical model: the Customer chooses a Product and Price; recurring pricing creates a Subscription; the Subscription maintains the Booking series.
+This is the canonical model: the Customer chooses a Product and Price; every supported reservation purchase term creates a Subscription; the Subscription maintains the Booking series.
 
 Individual booking duration is controlled only by the minimum and maximum duration. Customers select a start and end date/time, and any duration in that range is allowed while opening-hours, availability, and conflict rules remain enforced. Organization billing cycles may split longer terms for invoices and resource-booking slices; they do not replace purchase cadence.
 
@@ -142,7 +142,7 @@ A Customer chooses a monthly desk Product and Price. Skedular creates a Subscrip
 
 ### What is a Subscription in Skedular?
 
-A Subscription is the ongoing customer access created from recurring marketplace pricing. Its recurring Bookings reserve the Resources needed to fulfil that access.
+A Subscription is the customer access created from a supported marketplace reservation purchase term. Its recurring Bookings reserve the Resources needed to fulfill that access.
 
 ### Is a Subscription the same as a Booking?
 

@@ -17,14 +17,14 @@ Remove `BookingCadence` and all sub-day/one-time `ProductPricingCadence` values 
   the iteration process.
 -->
 
-**Language/Version**: C# .NET 10; TypeScript 6.0.3; React 19.2.6; Next.js 16.2.6  
-**Primary Dependencies**: HotChocolate/Fusion GraphQL, EF Core/PostgreSQL, Kafka/protobuf event contracts, Temporal workflows, Relay 21, React Testing Library/Vitest  
-**Storage**: Marketplace-owned PostgreSQL product/product-version persistence; replicated pricing JSON/event state in consuming domains  
-**Testing**: xUnit with AutoFixture/FakeItEasy; repository-layer integration tests; Vitest and React Testing Library; generated schema/client validation  
-**Target Platform**: Cloud-hosted ASP.NET Core APIs and Next.js web applications  
-**Project Type**: Full-stack marketplace pricing and booking platform  
-**Performance Goals**: Preserve existing pricing, booking, renewal, and billing response/workflow performance; no new network round trips required by the model change  
-**Constraints**: Contract-first generation; no direct EF from transport/application layers; explicit enum mappings; `CancellationToken` last; no `window.location.reload()` after successful Relay mutations; American English; production has no removed-term data  
+**Language/Version**: C# .NET 10; TypeScript 6.0.3; React 19.2.6; Next.js 16.2.6
+**Primary Dependencies**: HotChocolate/Fusion GraphQL, EF Core/PostgreSQL, Kafka/protobuf event contracts, Temporal workflows, Relay 21, React Testing Library/Vitest
+**Storage**: Marketplace-owned PostgreSQL product/product-version persistence; replicated pricing JSON/event state in consuming domains
+**Testing**: xUnit with AutoFixture/FakeItEasy; repository-layer integration tests; Vitest and React Testing Library; generated schema/client validation
+**Target Platform**: Cloud-hosted ASP.NET Core APIs and Next.js web applications
+**Project Type**: Full-stack marketplace pricing and booking platform
+**Performance Goals**: Preserve existing pricing, booking, renewal, and billing response/workflow performance; no new network round trips required by the model change
+**Constraints**: Contract-first generation; no direct EF from transport/application layers; explicit enum mappings; `CancellationToken` last; no `window.location.reload()` after successful Relay mutations; American English; production has no removed-term data
 **Scale/Scope**: All marketplace pricing options, product versions, subscriptions, entitlements, booking consumers, billing projections, APIs, web apps, generated artifacts, and affected tests
 
 ## Constitution Check

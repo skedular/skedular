@@ -30,6 +30,12 @@ public class AddMarketplaceBookingSubscriptionInput
     [GraphQLName("startedAt")]
     public DateTimeOffset StartedAt { get; set; }
 
+    [GraphQLName("from")]
+    public TimeOnly From { get; set; }
+
+    [GraphQLName("until")]
+    public TimeOnly Until { get; set; }
+
     [GraphQLName("autoRenew")]
     public bool AutoRenew { get; set; }
 

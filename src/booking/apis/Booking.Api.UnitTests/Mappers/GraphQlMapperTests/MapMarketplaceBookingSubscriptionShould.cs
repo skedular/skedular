@@ -24,6 +24,23 @@ public class MapMarketplaceBookingSubscriptionShould
 
     [Theory]
     [AutoFakeItEasyData]
+    public void Preserve_Selected_Booking_End_Time(GraphQlMapper sut)
+    {
+        var until = new TimeOnly(10, 0);
+        var input = new AddMarketplaceBookingSubscriptionInput
+        {
+            StartedAt = new DateTimeOffset(2026, 9, 1, 0, 0, 0, TimeSpan.Zero),
+            From = new TimeOnly(9, 0),
+            Until = until,
+        };
+
+        var subscription = sut.MapTo(input);
+
+        subscription.Until.ShouldBe(until);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public void Use_The_Latest_Billing_Period_Amount_For_The_Subscription_Header(GraphQlMapper sut)
     {
         var subscription = new MarketplaceBookingSubscription
