@@ -22,6 +22,7 @@ public interface IEntitlementRepository : IRepository<Entitlement>
 
     Task<int> CountSuccessfulRedemptionsAsync(string entitlementId, DateTimeOffset weekStart, DateTimeOffset weekEnd,
         CancellationToken cancellationToken);
+
     Task<IReadOnlyDictionary<string, int>> CountSuccessfulRedemptionsAsync(IReadOnlyCollection<string> entitlementIds,
         DateTimeOffset weekStart, DateTimeOffset weekEnd, CancellationToken cancellationToken);
 
@@ -129,7 +130,11 @@ public sealed class EntitlementRepository(BookingDbContext dbContext, TimeProvid
                                (release.TransactionType == CreditLedgerTransactionType.Released.ToPersistedValue() ||
                                 release.TransactionType == CreditLedgerTransactionType.Forfeited.ToPersistedValue())))
             .GroupBy(item => item.EntitlementId)
-            .Select(group => new { EntitlementId = group.Key, Quantity = group.Sum(item => item.Quantity) })
+            .Select(group => new
+            {
+                EntitlementId = group.Key,
+                Quantity = group.Sum(item => item.Quantity),
+            })
             .ToDictionaryAsync(item => item.EntitlementId, item => item.Quantity, cancellationToken);
 
     public Task<CreditLedgerEntry?> GetConsumedByBookingIdAsync(string bookingId, CancellationToken cancellationToken) =>

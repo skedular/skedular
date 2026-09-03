@@ -673,7 +673,9 @@ public class ProductService(
 
             var availableDayCount = pricing.FulfillmentType == ProductPricingFulfillmentType.Entitlement
                 ? 7
-                : pricing.AvailableDays is { Count: > 0 } ? pricing.AvailableDays.Count : 7;
+                : pricing.AvailableDays is { Count: > 0 }
+                    ? pricing.AvailableDays.Count
+                    : 7;
             if (pricing.RequiredDaysPerWeek <= 0 ||
                 pricing.RequiredDaysPerWeek > 7 ||
                 pricing.RequiredDaysPerWeek > availableDayCount)

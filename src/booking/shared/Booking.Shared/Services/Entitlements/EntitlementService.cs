@@ -163,7 +163,8 @@ public sealed class EntitlementService(
     private async Task<EntitlementModel> MapWithWeeklyAllowanceAsync(Entitlement entitlement, CancellationToken cancellationToken)
     {
         var model = entitlementModelMapper.Map(entitlement);
-        if (entitlement.Status == EntitlementStatus.Active && model.ProductPricing?.RequiredDaysPerWeek is { } limit && entitlement.ActivatesAt <= timeProvider.GetUtcNow() &&
+        if (entitlement.Status == EntitlementStatus.Active && model.ProductPricing?.RequiredDaysPerWeek is { } limit &&
+            entitlement.ActivatesAt <= timeProvider.GetUtcNow() &&
             entitlement.ExpiresAt > timeProvider.GetUtcNow())
         {
             var now = timeProvider.GetUtcNow();
@@ -190,7 +191,8 @@ public sealed class EntitlementService(
         var limitedEntitlements = mapped.Where(item => item.Entity.Status == EntitlementStatus.Active &&
                                                        item.Model.ProductPricing?.RequiredDaysPerWeek is not null &&
                                                        item.Entity.ActivatesAt <= now && item.Entity.ExpiresAt > now &&
-                                                       UtcCalendarWeek.IsComplete(weekStart, item.Entity.ActivatesAt, item.Entity.ExpiresAt)).ToList();
+                                                       UtcCalendarWeek.IsComplete(weekStart, item.Entity.ActivatesAt, item.Entity.ExpiresAt))
+            .ToList();
         var counts = limitedEntitlements.Count == 0
             ? new Dictionary<string, int>()
             : await repositoryFactory.EntitlementRepository.CountSuccessfulRedemptionsAsync(
@@ -203,6 +205,7 @@ public sealed class EntitlementService(
             {
                 model.RemainingWeeklyRedemptions = Math.Max(0, limit - count);
             }
+
             result.Add(model);
         }
 

@@ -57,6 +57,7 @@ public class ConsumeAsyncShould
         {
             Id = "booking-1",
             MarketplaceBooking = new MarketplaceBooking(),
+            From = TimeProvider.System.GetUtcNow(),
             InvolvedCustomers =
             [
                 new Customer
@@ -100,7 +101,7 @@ public class ConsumeAsyncShould
         A.CallTo(() => dbTransactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, IsolationLevel.Serializable, cancellationToken))
             .Returns(dbContextTransaction);
 
-        await sut.ConsumeAsync("customer-1", "booking-1", "key-1", TimeProvider.System.GetUtcNow(), cancellationToken);
+        await sut.ConsumeAsync("customer-1", "booking-1", "key-1", booking.From, cancellationToken);
 
         Assert.Equal(entry.Id, booking.ConsumingCreditLedgerEntryId);
         Assert.Equal(entitlement.Id, booking.MarketplaceBooking!.EntitlementId);
