@@ -22,7 +22,7 @@
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.15.0"/>
         <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.15.0"/>
         <!-- Required by Confluent's protobuf serdes for descriptor/reflection types such as FileDescriptorSet. -->
-        <PackageReference Include="protobuf-net.Reflection" Version="3.4.19"/>
+        <PackageReference Include="protobuf-net.Reflection" Version="3.4.21"/>
 
         <!-- Database / PostgreSQL -->
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
@@ -39,18 +39,18 @@
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.100.11"/>
 
         <!-- gRPC / Protobuf -->
-        <PackageReference Include="Google.Protobuf" Version="3.36.0"/>
+        <PackageReference Include="Google.Protobuf" Version="3.36.1"/>
         <PackageReference Include="Grpc.AspNetCore" Version="2.83.0"/>
         <PackageReference Include="Grpc.Net.Client" Version="2.83.0"/>
 
         <!-- GraphQL (HotChocolate) -->
-        <PackageReference Include="HotChocolate" Version="16.6.1"/>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="16.6.1"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="16.6.1"/>
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="16.6.1"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="16.6.1"/>
-        <PackageReference Include="HotChocolate.Diagnostics" Version="16.6.1"/>
-        <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="16.6.1"/>
+        <PackageReference Include="HotChocolate" Version="16.6.3"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="16.6.3"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="16.6.3"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="16.6.3"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="16.6.3"/>
+        <PackageReference Include="HotChocolate.Diagnostics" Version="16.6.3"/>
+        <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="16.6.3"/>
 
         <!-- ASP.NET Core -->
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.11"/>
@@ -121,7 +121,7 @@
         <PackageReference Include="WorkOS.net" Version="6.2.0"/>
 
         <!-- Payments / Accounting -->
-        <PackageReference Include="Stripe.net" Version="52.4.0"/>
+        <PackageReference Include="Stripe.net" Version="52.4.1"/>
         <PackageReference Include="Xero.NetStandard.OAuth2" Version="18.1.0"/>
         <PackageReference Include="Xero.NetStandard.OAuth2Client" Version="1.6.1"/>
 
@@ -133,8 +133,8 @@
         <PackageReference Include="QuestPDF" Version="2026.8.0"/>
 
         <!-- Image Processing -->
-        <PackageReference Include="SkiaSharp" Version="4.151.1"/>
-        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.151.1"/>
+        <PackageReference Include="SkiaSharp" Version="4.151.2"/>
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.151.2"/>
 
         <!-- API Documentation -->
         <PackageReference Include="NSwag.AspNetCore" Version="14.7.1"/>
@@ -153,8 +153,8 @@
         <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0"/>
         <PackageReference Include="Azure.Identity" Version="1.21.0"/>
         <PackageReference Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-rc5"/>
-        <PackageReference Include="Microsoft.Agents.AI.AzureAI.Persistent" Version="1.19.0-preview.260822.1"/>
-        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.19.0"/>
+        <PackageReference Include="Microsoft.Agents.AI.AzureAI.Persistent" Version="1.20.0-preview.260831.1"/>
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.20.0"/>
         <PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.2.0"/>
         <PackageReference Include="OpenAI" Version="2.13.0"/>
 
