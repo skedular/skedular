@@ -22,16 +22,57 @@ public class ValidateWeeklyDaySelectionShould
         Should.Throw<ProductPricingWeeklyDaySelectionRangeInvalid>(() => ProductService.Validate(ProductType.Resource, pricing, false));
     }
 
-    [Fact]
-    public void Reject_Weekly_Bounds_For_A_NonWeekly_Price()
+    [Theory]
+    [InlineData(ProductPricingCadence.Weekly)]
+    [InlineData(ProductPricingCadence.Fortnightly)]
+    [InlineData(ProductPricingCadence.Monthly)]
+    [InlineData(ProductPricingCadence.TwoMonths)]
+    [InlineData(ProductPricingCadence.Quarterly)]
+    [InlineData(ProductPricingCadence.FourMonths)]
+    [InlineData(ProductPricingCadence.FiveMonths)]
+    [InlineData(ProductPricingCadence.SixMonths)]
+    [InlineData(ProductPricingCadence.Yearly)]
+    public void Accept_Required_Days_For_Supported_Calendar_Price(ProductPricingCadence cadence)
     {
         var pricing = ProductPricing.Empty("monthly") with
         {
-            PurchaseCadence = ProductPricingCadence.Monthly,
+            PurchaseCadence = cadence,
+            RequiredDaysPerWeek = 1,
+            AcceptedPaymentMethods = [PaymentMethod.Card],
+            BillingMode = ProductPricingBillingMode.Upfront,
+            CancellationPolicyType = ProductPricingCancellationPolicyType.NoCancellation,
+        };
+
+        Should.NotThrow(() => ProductService.Validate(ProductType.Resource, pricing, false));
+    }
+
+    [Fact]
+    public void Reject_Required_Days_For_Daily_Price()
+    {
+        var pricing = ProductPricing.Empty("daily") with
+        {
+            PurchaseCadence = ProductPricingCadence.Daily,
             RequiredDaysPerWeek = 1,
         };
 
-        Should.Throw<ProductPricingWeeklyDaySelectionOnlySupportedForWeeklyPricing>(() =>
+        Should.Throw<ProductPricingWeeklyDaySelectionOnlySupportedForScheduledPricing>(() =>
             ProductService.Validate(ProductType.Resource, pricing, false));
+    }
+
+    [Fact]
+    public void Allow_Multiple_Entitlement_Redemptions_On_One_Available_Day()
+    {
+        var pricing = ProductPricing.Empty("entitlement") with
+        {
+            FulfillmentType = ProductPricingFulfillmentType.Entitlement,
+            PurchaseCadence = ProductPricingCadence.NotSet,
+            AvailableDays = [DayOfWeek.Monday],
+            RequiredDaysPerWeek = 2,
+            AcceptedPaymentMethods = [PaymentMethod.Card],
+            BillingMode = ProductPricingBillingMode.Upfront,
+            CancellationPolicyType = ProductPricingCancellationPolicyType.NoCancellation,
+        };
+
+        Should.NotThrow(() => ProductService.Validate(ProductType.Resource, pricing, false));
     }
 }

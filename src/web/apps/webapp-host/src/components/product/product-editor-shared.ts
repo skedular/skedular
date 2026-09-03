@@ -131,7 +131,7 @@ export const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCar
 export const isEventType = (type?: string | null) => type === 'EVENT';
 
 export const toRequiredDaysPerWeekInput = (cadence: string, requiredDaysPerWeek: string) =>
-  cadence === 'WEEKLY' && requiredDaysPerWeek.trim() ? Number(requiredDaysPerWeek) : null;
+  cadence !== 'DAILY' && requiredDaysPerWeek.trim() ? Number(requiredDaysPerWeek) : null;
 
 export const sanitizeWeeklyRequiredDays = (value: string) => value.replace(/[^0-9]/g, '').slice(0, 1);
 
@@ -274,10 +274,10 @@ export const productSchema = () =>
           acceptedPaymentMethods: array().min(1, 'Choose at least one accepted payment method.').required('Please choose at least one accepted payment method.'),
           requiredDaysPerWeek: string().test('weekly-day-selection', 'Set the required number of selected days from 1 up to the enabled weekdays.', function (value) {
             const { cadence, availableDays } = this.parent as PricingOptionForm;
-            if (cadence !== 'WEEKLY') return !value;
+            if (cadence === 'DAILY') return !value;
             if (!value) return true;
             const required = Number(value);
-            const availableCount = availableDays.length || 7;
+            const availableCount = (this.parent as PricingOptionForm).fulfillmentType === 'ENTITLEMENT' ? 7 : availableDays.length || 7;
             return Number.isInteger(required) && required > 0 && required <= availableCount;
           }),
         }),
@@ -293,7 +293,7 @@ export const productSchema = () =>
 
           const combinations = new Set<string>();
           for (const pricingOption of value) {
-            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}|${pricingOption.cadence === 'WEEKLY' ? pricingOption.requiredDaysPerWeek : ''}`;
+            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}|${pricingOption.cadence === 'DAILY' ? '' : pricingOption.requiredDaysPerWeek}`;
             if (combinations.has(combination)) {
               return false;
             }

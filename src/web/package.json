@@ -5,7 +5,7 @@
   "engines": {
     "node": "^22"
   },
-  "packageManager": "pnpm@11.24.0",
+  "packageManager": "pnpm@11.25.0",
   "scripts": {
     "dev": "turbo run dev",
     "dev:teams": "turbo run dev:teams",
@@ -70,7 +70,7 @@
     "eslint": "^9.39.2",
     "eslint-plugin-turbo": "^2.10.12",
     "global": "^4.4.0",
-    "next": "^16.3.3",
+    "next": "^16.3.4",
     "turbo": "^2.10.12"
   }
 }

@@ -1,6 +1,6 @@
-using HotChocolate;
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
+using HotChocolate;
 
 namespace Booking.Api.GraphQL.MarketplacePurchaseHistory;
 

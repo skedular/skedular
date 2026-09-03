@@ -128,6 +128,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
             .Where(item => item.TransactionType is CreditLedgerTransactionType.Consumed or CreditLedgerTransactionType.Forfeited
                 or CreditLedgerTransactionType.Expired)
             .Sum(item => item.Quantity),
+        RemainingWeeklyRedemptions = src.RemainingWeeklyRedemptions,
         ActivatesAt = src.ActivatesAt,
         ExpiresAt = src.ExpiresAt,
         Status = src.Status,

@@ -112,6 +112,24 @@ public sealed class EntitlementBookingService(
                 throw new EntitlementCreditUnavailable();
             }
 
+            var isIdempotentRetry = entitlementEntity.LedgerEntries.Any(item => item.ReferenceKey == idempotencyKey);
+            if (!isIdempotentRetry && entitlement.ProductPricing?.RequiredDaysPerWeek is { } requiredDaysPerWeek &&
+                requiredDaysPerWeek > 0)
+            {
+                var utcBookingAt = booking.From.ToUniversalTime();
+                var weekStart = UtcCalendarWeek.Start(utcBookingAt);
+                var weekEnd = weekStart.AddDays(7);
+                if (UtcCalendarWeek.IsComplete(weekStart, entitlementEntity.ActivatesAt, entitlementEntity.ExpiresAt) &&
+                    await repositoryFactory.EntitlementRepository.CountSuccessfulRedemptionsAsync(
+                        entitlementEntity.Id, weekStart, weekEnd, cancellationToken) >= requiredDaysPerWeek)
+                {
+                    logger.LogWarning(
+                        "Entitlement redemption rejected because the weekly allowance is exhausted. EntitlementId={EntitlementId}, BookingId={BookingId}, UtcWeekStart={UtcWeekStart}, RequiredDaysPerWeek={RequiredDaysPerWeek}",
+                        entitlementEntity.Id, bookingId, weekStart, requiredDaysPerWeek);
+                    throw new EntitlementCreditUnavailable();
+                }
+            }
+
             var entry = creditLedgerService.AddConsumption(entitlementEntity, bookingId, idempotencyKey, timeProvider.GetUtcNow());
             repositoryFactory.EntitlementRepository.AddLedgerEntry(entry);
             booking.ConsumingCreditLedgerEntryId = entry.Id;

@@ -23,4 +23,12 @@ describe('location weekly price validation', () => {
     expect(hasValidWeeklyRequiredDays('WEEKLY', '', ['MONDAY', 'TUESDAY'])).toBe(true);
     expect(hasValidWeeklyRequiredDays('WEEKLY', '2', ['MONDAY', 'TUESDAY'])).toBe(true);
   });
+
+  it('accepts a whole number for a longer purchase cadence', () => {
+    expect(hasValidWeeklyRequiredDays('MONTHLY', '2', ['MONDAY', 'TUESDAY'])).toBe(true);
+  });
+
+  it('allows multiple entitlement redemptions on one available day', () => {
+    expect(hasValidWeeklyRequiredDays('MONTHLY', '2', ['MONDAY'], 'ENTITLEMENT')).toBe(true);
+  });
 });

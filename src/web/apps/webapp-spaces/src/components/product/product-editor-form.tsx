@@ -393,7 +393,7 @@ const ProductEditorForm = ({
 
   useEffect(() => {
     values.pricingOptions.forEach((pricingOption, index) => {
-      if (pricingOption.cadence !== 'WEEKLY' && pricingOption.requiredDaysPerWeek) {
+      if (pricingOption.cadence === 'DAILY' && pricingOption.requiredDaysPerWeek) {
         form.change(`pricingOptions[${index}].requiredDaysPerWeek`, '');
       }
     });
@@ -586,21 +586,37 @@ const ProductEditorForm = ({
             required
           />
         </Box>
-        {pricingOption.cadence === 'WEEKLY' ? (
+        {pricingOption.cadence !== 'DAILY' ? (
           <FormFieldLabel
-            label="Required selected days per week"
-            help="For weekly offers, this requires customers to book a specific number of the selected weekdays. The calendar days above define the choices."
+            label={pricingOption.fulfillmentType === 'ENTITLEMENT' ? 'Maximum redemptions per week' : 'Required selected days per week'}
+            help={
+              pricingOption.fulfillmentType === 'ENTITLEMENT'
+                ? 'This limits successful credit redemptions in each complete Monday-through-Sunday UTC week. Customers do not select weekdays for this limit.'
+                : 'This requires customers to book a specific number of the selected weekdays each week. The calendar days above define the choices.'
+            }
           >
             <TextField
               name={`pricingOptions[${index}].requiredDaysPerWeek`}
               type="text"
               slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
               fieldProps={{ parse: sanitizeWeeklyRequiredDays }}
-              helperText={`Leave empty for unrestricted weekly booking; choose 1 to ${pricingOption.availableDays.length || 7}.`}
+              helperText={
+                pricingOption.fulfillmentType === 'ENTITLEMENT'
+                  ? 'Leave empty for unlimited weekly redemptions; choose 1 to 7.'
+                  : `Leave empty for unrestricted weekly booking; choose 1 to ${pricingOption.availableDays.length || 7}.`
+              }
             />
           </FormFieldLabel>
         ) : null}
-        {pricingOption.cadence === 'WEEKLY' ? <SmallIconTypography label="Leave this field empty to keep the existing unrestricted weekly booking behavior." /> : null}
+        {pricingOption.cadence !== 'DAILY' ? (
+          <SmallIconTypography
+            label={
+              pricingOption.fulfillmentType === 'ENTITLEMENT'
+                ? 'Leave this field empty for unlimited weekly redemptions.'
+                : 'Leave this field empty to keep unrestricted weekly booking behavior.'
+            }
+          />
+        ) : null}
       </EditorSection>
 
       <EditorSection

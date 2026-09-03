@@ -6,12 +6,21 @@ namespace Booking.Shared.UnitTests.Services.MarketplaceBookingWeeklyDaySelection
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class UsesFixedWeeklyScheduleShould
 {
-    [Fact]
-    public void Use_Selected_Weekly_Days_Instead_Of_The_Subscription_Start_Date()
+    [Theory]
+    [InlineData(ProductPricingCadence.Weekly)]
+    [InlineData(ProductPricingCadence.Fortnightly)]
+    [InlineData(ProductPricingCadence.Monthly)]
+    [InlineData(ProductPricingCadence.TwoMonths)]
+    [InlineData(ProductPricingCadence.Quarterly)]
+    [InlineData(ProductPricingCadence.FourMonths)]
+    [InlineData(ProductPricingCadence.FiveMonths)]
+    [InlineData(ProductPricingCadence.SixMonths)]
+    [InlineData(ProductPricingCadence.Yearly)]
+    public void Use_Selected_Days_For_A_Supported_Calendar_Cadence(ProductPricingCadence cadence)
     {
         var weeklyPricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            PurchaseCadence = cadence,
             RequiredDaysPerWeek = 2,
         };
 
@@ -24,7 +33,7 @@ public class UsesFixedWeeklyScheduleShould
         MarketplaceBookingWeeklyDaySelectionService.UsesFixedWeeklySchedule(
                 weeklyPricing with
                 {
-                    PurchaseCadence = ProductPricingCadence.Monthly,
+                    PurchaseCadence = ProductPricingCadence.Daily,
                 },
                 [DayOfWeek.Tuesday, DayOfWeek.Wednesday])
             .ShouldBeFalse();

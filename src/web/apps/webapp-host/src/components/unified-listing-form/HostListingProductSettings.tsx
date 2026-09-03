@@ -271,17 +271,22 @@ const HostListingProductSettings = ({
                   />
                 </Grid>
               </Grid>
-              {opt.cadence === 'WEEKLY' ? (
+              {opt.cadence !== 'DAILY' ? (
                 <Grid container spacing={2} sx={{ mt: 0.5 }}>
                   <Grid size={{ xs: 12, md: 6 }}>
-                    <FormFieldLabel label="Required selected days per week">
+                    <FormFieldLabel label={opt.fulfillmentType === 'ENTITLEMENT' ? 'Maximum redemptions per week' : 'Required selected days per week'}>
                       <TextField
                         fullWidth
                         type="text"
                         value={opt.requiredDaysPerWeek}
                         slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
                         error={Boolean(weeklyRequiredDaysErrors[index])}
-                        helperText={weeklyRequiredDaysErrors[index] ?? `Leave empty for unrestricted weekly booking; choose 1 to ${opt.availableDays.length || 7} when required.`}
+                        helperText={
+                          weeklyRequiredDaysErrors[index] ??
+                          (opt.fulfillmentType === 'ENTITLEMENT'
+                            ? 'Leave empty for no weekly redemption limit; choose 1 to 7.'
+                            : `Leave empty for unrestricted weekly booking; choose 1 to ${opt.availableDays.length || 7} when required.`)
+                        }
                         onChange={onChangePricingOption(index, 'requiredDaysPerWeek')}
                       />
                     </FormFieldLabel>

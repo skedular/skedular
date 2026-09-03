@@ -184,7 +184,7 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
       Object.fromEntries(
         values.pricingOptions.map((pricingOption, index) => [
           index,
-          getWeeklyRequiredDaysError(pricingOption.cadence, pricingOption.requiredDaysPerWeek, pricingOption.availableDays),
+          getWeeklyRequiredDaysError(pricingOption.cadence, pricingOption.requiredDaysPerWeek, pricingOption.availableDays, pricingOption.fulfillmentType),
         ]),
       ),
     [values.pricingOptions],
@@ -264,7 +264,7 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
           ? {
               ...opt,
               [field]: value,
-              ...(field === 'cadence' && value !== 'WEEKLY' ? { requiredDaysPerWeek: '' } : {}),
+              ...(field === 'cadence' && value === 'DAILY' ? { requiredDaysPerWeek: '' } : {}),
             }
           : opt,
       ),
@@ -353,7 +353,11 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
   const executeSaveProduct = useCallback(
     (vals: FormValues) => {
       if (!productReady || !product) return Promise.resolve();
-      if (vals.pricingOptions.some((pricingOption) => !hasValidWeeklyRequiredDays(pricingOption.cadence, pricingOption.requiredDaysPerWeek, pricingOption.availableDays))) {
+      if (
+        vals.pricingOptions.some(
+          (pricingOption) => !hasValidWeeklyRequiredDays(pricingOption.cadence, pricingOption.requiredDaysPerWeek, pricingOption.availableDays, pricingOption.fulfillmentType),
+        )
+      ) {
         return Promise.reject(new Error('Required selected days per week must be a whole number between 1 and the available-day count.'));
       }
 
@@ -382,7 +386,7 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
                 isTaxInclusive: opt.isTaxInclusive,
                 acceptedPaymentMethods: opt.acceptedPaymentMethods.length > 0 ? opt.acceptedPaymentMethods : ['CARD'],
                 availableDays: opt.availableDays,
-                requiredDaysPerWeek: opt.cadence === 'WEEKLY' && opt.requiredDaysPerWeek.trim() ? Number(opt.requiredDaysPerWeek) : null,
+                requiredDaysPerWeek: opt.cadence !== 'DAILY' && opt.requiredDaysPerWeek.trim() ? Number(opt.requiredDaysPerWeek) : null,
                 minDurationMinutes: opt.minDurationMinutes.trim() ? Number(opt.minDurationMinutes) : null,
                 minDurationDisplayUnit: opt.minDurationDisplayUnit,
                 maxDurationMinutes: opt.maxDurationMinutes.trim() ? Number(opt.maxDurationMinutes) : null,

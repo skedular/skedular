@@ -293,7 +293,7 @@ const productSchema = () =>
 
           const seenCombinations = new Set<string>();
           for (const pricingOption of value as PricingOptionForm[]) {
-            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}|${pricingOption.cadence === 'WEEKLY' ? pricingOption.requiredDaysPerWeek : ''}`;
+            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}|${pricingOption.cadence === 'DAILY' ? '' : pricingOption.requiredDaysPerWeek}`;
             if (seenCombinations.has(combination)) {
               return false;
             }

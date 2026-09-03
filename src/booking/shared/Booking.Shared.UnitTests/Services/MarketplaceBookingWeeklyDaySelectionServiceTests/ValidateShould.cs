@@ -25,6 +25,21 @@ public class ValidateShould
 
     [Theory]
     [AutoFakeItEasyData]
+    public void Accept_A_Valid_Selection_For_A_Long_Cadence(MarketplaceBookingWeeklyDaySelectionService sut)
+    {
+        var pricing = ProductPricing.Empty("monthly") with
+        {
+            PurchaseCadence = ProductPricingCadence.Monthly,
+            AvailableDays = [DayOfWeek.Monday, DayOfWeek.Wednesday],
+            RequiredDaysPerWeek = 2,
+        };
+
+        sut.Validate(pricing, [DayOfWeek.Monday, DayOfWeek.Wednesday])
+            .ShouldBe([DayOfWeek.Monday, DayOfWeek.Wednesday]);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public void Reject_A_Duplicate_Selection(MarketplaceBookingWeeklyDaySelectionService sut)
     {
         var pricing = ProductPricing.Empty("weekly") with

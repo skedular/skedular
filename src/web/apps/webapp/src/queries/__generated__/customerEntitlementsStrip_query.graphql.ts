@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f49b06cbaee9cdc823a272105e0e686>>
+ * @generated SignedSource<<c5f00ed89a87668b29aef46a2dc6848c>>
  * @lightSyntaxTransform
  */
 
@@ -18,6 +18,7 @@ export type customerEntitlementsStrip_query$data = {
     readonly grantedQuantity: number;
     readonly id: string;
     readonly pricingId: string;
+    readonly remainingWeeklyRedemptions: number | null | undefined;
     readonly restrictions: {
       readonly availableDays: ReadonlyArray<DayOfWeek>;
       readonly productId: string;
@@ -59,6 +60,13 @@ var v0 = [
         "args": null,
         "kind": "ScalarField",
         "name": "availableQuantity",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "remainingWeeklyRedemptions",
         "storageKey": null
       },
       {
@@ -129,16 +137,16 @@ return {
     "selections": (v0/*:: as any*/)
   },
   "params": {
-    "cacheID": "71a0f61bc50e0a0426edf373d4759b25",
+    "cacheID": "76ea0b976611efaac5aaa2ee1582ad56",
     "id": null,
     "metadata": {},
     "name": "customerEntitlementsStrip_query",
     "operationKind": "query",
-    "text": "query customerEntitlementsStrip_query {\n  myEntitlements {\n    id\n    pricingId\n    availableQuantity\n    grantedQuantity\n    expiresAt\n    status\n    restrictions {\n      productId\n      availableDays\n    }\n  }\n}\n"
+    "text": "query customerEntitlementsStrip_query {\n  myEntitlements {\n    id\n    pricingId\n    availableQuantity\n    remainingWeeklyRedemptions\n    grantedQuantity\n    expiresAt\n    status\n    restrictions {\n      productId\n      availableDays\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b419f5858961ef2c924182321d670010";
+(node as any).hash = "084337bb23cd6ad56752c877fdbce6c2";
 
 export default node;

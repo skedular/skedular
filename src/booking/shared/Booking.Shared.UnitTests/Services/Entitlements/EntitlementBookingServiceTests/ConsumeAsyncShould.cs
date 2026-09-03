@@ -1,13 +1,13 @@
 using System.Data;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
-using Booking.Shared.Mappers;
 using Booking.Shared.Models.Entitlements;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 
 namespace Booking.Shared.UnitTests.Services.Entitlements.EntitlementBookingServiceTests;
 
@@ -35,6 +35,8 @@ public class ConsumeAsyncShould
         IUnitOfWork unitOfWork,
         [Frozen]
         IDbContextTransaction dbContextTransaction,
+        [Frozen]
+        ILogger<EntitlementBookingService> logger,
         EntitlementBookingService sut,
         CancellationToken cancellationToken)
     {
@@ -55,6 +57,7 @@ public class ConsumeAsyncShould
         {
             Id = "booking-1",
             MarketplaceBooking = new MarketplaceBooking(),
+            From = TimeProvider.System.GetUtcNow(),
             InvolvedCustomers =
             [
                 new Customer
@@ -62,6 +65,10 @@ public class ConsumeAsyncShould
                     Id = "customer-1",
                 },
             ],
+        };
+        var pricing = ProductPricing.Empty("entitlement") with
+        {
+            RequiredDaysPerWeek = 1,
         };
         var entry = new CreditLedgerEntry
         {
@@ -75,18 +82,32 @@ public class ConsumeAsyncShould
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => bookingRepository.GetByIdAsync("booking-1", cancellationToken)).Returns(booking);
         A.CallTo(() => entitlementEligibilityService.SelectAsync("customer-1", A<string>._, A<DateTimeOffset>._, cancellationToken))
-            .Returns(new EntityMapper(TimeProvider.System).MapTo(entitlement));
+            .Returns(new EntitlementModel
+            {
+                Id = entitlement.Id,
+                CustomerId = entitlement.CustomerId,
+                ProductPricing = pricing,
+                ActivatesAt = entitlement.ActivatesAt,
+                ExpiresAt = entitlement.ExpiresAt,
+                Status = entitlement.Status,
+            });
         A.CallTo(() => entitlementRepository.GetByIdAsync(entitlement.Id, cancellationToken)).Returns(entitlement);
+        A.CallTo(() => entitlementRepository.CountSuccessfulRedemptionsAsync(
+                entitlement.Id, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
+            .Returns(0);
         A.CallTo(() => creditLedgerService.GetAvailableCredits(entitlement)).Returns(1);
         A.CallTo(() => creditLedgerService.AddConsumption(entitlement, "booking-1", "key-1", A<DateTimeOffset>._)).Returns(entry);
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).Returns(1);
         A.CallTo(() => dbTransactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, IsolationLevel.Serializable, cancellationToken))
             .Returns(dbContextTransaction);
 
-        await sut.ConsumeAsync("customer-1", "booking-1", "key-1", TimeProvider.System.GetUtcNow(), cancellationToken);
+        await sut.ConsumeAsync("customer-1", "booking-1", "key-1", booking.From, cancellationToken);
 
         Assert.Equal(entry.Id, booking.ConsumingCreditLedgerEntryId);
         Assert.Equal(entitlement.Id, booking.MarketplaceBooking!.EntitlementId);
         A.CallTo(() => bookingRepository.Update(booking)).MustHaveHappenedOnceExactly();
+        A.CallTo(logger)
+            .Where(call => call.Method.Name == nameof(ILogger.Log) && call.GetArgument<LogLevel>(0) == LogLevel.Information)
+            .MustHaveHappened();
     }
 }

@@ -5,6 +5,7 @@ describe('weekly price mapping', () => {
   it('sends the exact weekly count and clears it for other cadences', () => {
     expect(toRequiredDaysPerWeekInput('WEEKLY', '2')).toBe(2);
     expect(toRequiredDaysPerWeekInput('WEEKLY', '  ')).toBeNull();
-    expect(toRequiredDaysPerWeekInput('MONTHLY', '2')).toBeNull();
+    expect(toRequiredDaysPerWeekInput('MONTHLY', '2')).toBe(2);
+    expect(toRequiredDaysPerWeekInput('DAILY', '2')).toBeNull();
   });
 });

@@ -44,6 +44,7 @@ const RootQuery = graphql`
       pricingId
       organizationCustomDomain
       availableQuantity
+      remainingWeeklyRedemptions
       grantedQuantity
       activatesAt
       expiresAt
@@ -221,6 +222,9 @@ const EntitlementBookingForm = ({ entitlement, meId, router }: EntitlementBookin
           <CardContent>
             <StackColumn spacing={1}>
               <SubtitleIconTypography label={`${entitlement.availableQuantity} of ${entitlement.grantedQuantity} credits available`} />
+              {entitlement.remainingWeeklyRedemptions !== null ? (
+                <SubtitleIconTypography label={`${entitlement.remainingWeeklyRedemptions} weekly redemption${entitlement.remainingWeeklyRedemptions === 1 ? '' : 's'} remaining`} />
+              ) : null}
               <BodyIconTypography label={`Expires ${dayjs(entitlement.expiresAt).format('MMM D, YYYY')}`} sx={{ opacity: 0.75 }} />
               {!hasRestrictions ? <Alert severity="error">This entitlement is missing its booking restrictions and cannot be used until it is refreshed.</Alert> : null}
               {entitlement.restrictions?.availableDays.length ? (

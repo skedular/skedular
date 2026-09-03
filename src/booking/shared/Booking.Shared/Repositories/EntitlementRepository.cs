@@ -19,6 +19,13 @@ public interface IEntitlementRepository : IRepository<Entitlement>
     Task<IReadOnlyList<Entitlement>> GetForOrganizationAsync(string organizationId, CancellationToken cancellationToken);
     Task<CreditLedgerEntry?> GetConsumedByBookingIdAsync(string bookingId, CancellationToken cancellationToken);
     Task<bool> HasActiveMarketplaceBookingsAsync(string entitlementId, DateTimeOffset now, CancellationToken cancellationToken);
+
+    Task<int> CountSuccessfulRedemptionsAsync(string entitlementId, DateTimeOffset weekStart, DateTimeOffset weekEnd,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, int>> CountSuccessfulRedemptionsAsync(IReadOnlyCollection<string> entitlementIds,
+        DateTimeOffset weekStart, DateTimeOffset weekEnd, CancellationToken cancellationToken);
+
     Task<IReadOnlyList<Entitlement>> GetExpiredActiveAsync(DateTimeOffset now, CancellationToken cancellationToken);
     CreditLedgerEntry AddLedgerEntry(CreditLedgerEntry entry);
 }
@@ -92,6 +99,43 @@ public sealed class EntitlementRepository(BookingDbContext dbContext, TimeProvid
             .ToListAsync(cancellationToken);
 
     public CreditLedgerEntry AddLedgerEntry(CreditLedgerEntry entry) => DbContext.CreditLedgerEntry.Add(entry).Entity;
+
+    public Task<int> CountSuccessfulRedemptionsAsync(
+        string entitlementId,
+        DateTimeOffset weekStart,
+        DateTimeOffset weekEnd,
+        CancellationToken cancellationToken) =>
+        DbContext.CreditLedgerEntry
+            .Where(item => item.EntitlementId == entitlementId &&
+                           item.TransactionType == CreditLedgerTransactionType.Consumed.ToPersistedValue() &&
+                           item.Booking != null && item.Booking.From >= weekStart && item.Booking.From < weekEnd &&
+                           !DbContext.CreditLedgerEntry.Any(release =>
+                               release.BookingId == item.BookingId &&
+                               (release.TransactionType == CreditLedgerTransactionType.Released.ToPersistedValue() ||
+                                release.TransactionType == CreditLedgerTransactionType.Forfeited.ToPersistedValue())))
+            .Select(item => item.Quantity)
+            .SumAsync(cancellationToken);
+
+    public async Task<IReadOnlyDictionary<string, int>> CountSuccessfulRedemptionsAsync(
+        IReadOnlyCollection<string> entitlementIds,
+        DateTimeOffset weekStart,
+        DateTimeOffset weekEnd,
+        CancellationToken cancellationToken) =>
+        await DbContext.CreditLedgerEntry
+            .Where(item => entitlementIds.Contains(item.EntitlementId) &&
+                           item.TransactionType == CreditLedgerTransactionType.Consumed.ToPersistedValue() &&
+                           item.Booking != null && item.Booking.From >= weekStart && item.Booking.From < weekEnd &&
+                           !DbContext.CreditLedgerEntry.Any(release =>
+                               release.BookingId == item.BookingId &&
+                               (release.TransactionType == CreditLedgerTransactionType.Released.ToPersistedValue() ||
+                                release.TransactionType == CreditLedgerTransactionType.Forfeited.ToPersistedValue())))
+            .GroupBy(item => item.EntitlementId)
+            .Select(group => new
+            {
+                EntitlementId = group.Key,
+                Quantity = group.Sum(item => item.Quantity),
+            })
+            .ToDictionaryAsync(item => item.EntitlementId, item => item.Quantity, cancellationToken);
 
     public Task<CreditLedgerEntry?> GetConsumedByBookingIdAsync(string bookingId, CancellationToken cancellationToken) =>
         DbContext.CreditLedgerEntry

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<222cfb9604731cd33407f83c98a1a220>>
+ * @generated SignedSource<<1faa1cd6b0b3caacce120fcb3a222462>>
  * @lightSyntaxTransform
  */
 
@@ -23,6 +23,7 @@ export type entitlementBookingPage_rootQuery$data = {
     readonly organizationCustomDomain: string;
     readonly pricingId: string;
     readonly productId: string;
+    readonly remainingWeeklyRedemptions: number | null | undefined;
     readonly restrictions: {
       readonly availableDays: ReadonlyArray<DayOfWeek>;
       readonly maxDurationMinutes: number | null | undefined;
@@ -110,6 +111,13 @@ v2 = [
         "args": null,
         "kind": "ScalarField",
         "name": "availableQuantity",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "remainingWeeklyRedemptions",
         "storageKey": null
       },
       {
@@ -208,16 +216,16 @@ return {
     "selections": (v2/*:: as any*/)
   },
   "params": {
-    "cacheID": "78cf6a84875ff86e4a53bddfca16dd5b",
+    "cacheID": "403231bc66378850c2868ab6edf18dba",
     "id": null,
     "metadata": {},
     "name": "entitlementBookingPage_rootQuery",
     "operationKind": "query",
-    "text": "query entitlementBookingPage_rootQuery(\n  $entitlementId: String!\n) {\n  me {\n    id\n  }\n  entitlement(id: $entitlementId) {\n    id\n    productId\n    pricingId\n    organizationCustomDomain\n    availableQuantity\n    grantedQuantity\n    activatesAt\n    expiresAt\n    status\n    restrictions {\n      productVersionId\n      availableDays\n      minDurationMinutes\n      maxDurationMinutes\n      numberOfResourcesToBook\n    }\n  }\n}\n"
+    "text": "query entitlementBookingPage_rootQuery(\n  $entitlementId: String!\n) {\n  me {\n    id\n  }\n  entitlement(id: $entitlementId) {\n    id\n    productId\n    pricingId\n    organizationCustomDomain\n    availableQuantity\n    remainingWeeklyRedemptions\n    grantedQuantity\n    activatesAt\n    expiresAt\n    status\n    restrictions {\n      productVersionId\n      availableDays\n      minDurationMinutes\n      maxDurationMinutes\n      numberOfResourcesToBook\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "df674e716ce9cf86910b6474ee77fdfc";
+(node as any).hash = "97541754334cfc688e6a9b4d02f5fe00";
 
 export default node;
