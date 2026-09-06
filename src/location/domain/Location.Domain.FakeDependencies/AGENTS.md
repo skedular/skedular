@@ -11,5 +11,5 @@ This file applies to `location/domain/Location.Domain.FakeDependencies`.
 ## Boundary
 
 - Put location-specific fake dependency behavior and scenarios here when integration tests need them.
-- Keep generic test helpers in `shared/Testing.Shared.IntegrationTests`.
+- Keep generic test helpers in `shared/Enterprise.Shared.IntegrationTesting`.
 - Keep generic local infrastructure bootstrapping in `shared/Infrastructure.Shared`.

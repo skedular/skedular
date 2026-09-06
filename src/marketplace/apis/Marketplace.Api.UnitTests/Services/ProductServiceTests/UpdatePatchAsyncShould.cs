@@ -1,3 +1,4 @@
+using Enterprise.Shared.UnitTesting.Assertions;
 using Marketplace.Api.Models;
 using Marketplace.Api.Services;
 using Marketplace.Api.Services.Authorization;
@@ -5,7 +6,6 @@ using Marketplace.Shared.Mappers;
 using Marketplace.Shared.Models;
 using Marketplace.Shared.Repositories;
 using Microsoft.Extensions.Logging;
-using Testing.Shared.Assertions;
 using ListingMetadataModel = Api.Shared.Services.Models.ListingMetadata;
 using CustomerEntity = Marketplace.Shared.Database.Entities.Customer;
 using CustomerModel = Marketplace.Shared.Models.Customer;

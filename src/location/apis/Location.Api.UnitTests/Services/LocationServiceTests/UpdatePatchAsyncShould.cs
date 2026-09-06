@@ -1,3 +1,4 @@
+using Enterprise.Shared.UnitTesting.Assertions;
 using Location.Api.Models;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
@@ -6,7 +7,6 @@ using Location.Shared.Mappers;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Microsoft.Extensions.Logging;
-using Testing.Shared.Assertions;
 
 namespace Location.Api.UnitTests.Services.LocationServiceTests;
 

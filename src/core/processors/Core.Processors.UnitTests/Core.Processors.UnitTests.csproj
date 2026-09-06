@@ -27,7 +27,7 @@
 
     <ItemGroup>
         <ProjectReference Include="../Core.Processors/Core.Processors.csproj"/>
-        <ProjectReference Include="../../../shared/Testing.Shared/Testing.Shared.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared.UnitTesting/Enterprise.Shared.UnitTesting.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

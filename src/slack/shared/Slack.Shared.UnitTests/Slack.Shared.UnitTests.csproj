@@ -31,7 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../shared/Testing.Shared/Testing.Shared.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared.UnitTesting/Enterprise.Shared.UnitTesting.csproj"/>
         <ProjectReference Include="../Slack.Shared/Slack.Shared.csproj"/>
     </ItemGroup>
 

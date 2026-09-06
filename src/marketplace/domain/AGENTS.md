@@ -21,7 +21,7 @@ This file covers `marketplace/domain/`.
 ## Fake Dependencies
 
 - Put marketplace-specific fake dependency behavior in `Marketplace.Domain.FakeDependencies`.
-- Generic test helpers belong in `shared/Testing.Shared.IntegrationTests`.
+- Generic test helpers belong in `shared/Enterprise.Shared.IntegrationTesting`.
 - Keep the control API scenario-oriented; prefer configuring domain scenarios over per-method fake setup.
 
 ## Agent Rule

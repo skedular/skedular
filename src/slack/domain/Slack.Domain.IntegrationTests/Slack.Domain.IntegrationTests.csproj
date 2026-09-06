@@ -45,7 +45,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../shared/Testing.Shared.IntegrationTests/Testing.Shared.IntegrationTests.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared.IntegrationTesting/Enterprise.Shared.IntegrationTesting.csproj"/>
         <ProjectReference Include="../../shared/Slack.Shared/Slack.Shared.csproj"/>
         <ProjectReference Include="../Slack.Domain.AppHost/Slack.Domain.AppHost.csproj"/>
     </ItemGroup>

@@ -12,7 +12,7 @@ This file applies to `booking/domain/Booking.Domain.FakeDependencies`.
 
 - Put booking-specific fake dependency behavior here.
 - Put booking-specific fake scenarios here.
-- Do not move generic test helpers here if they can live in `shared/Testing.Shared.IntegrationTests`.
+- Do not move generic test helpers here if they can live in `shared/Enterprise.Shared.IntegrationTesting`.
 - Do not move generic local infrastructure bootstrapping here if it belongs in `shared/Infrastructure.Shared`.
 
 ## Control API

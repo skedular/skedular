@@ -1,8 +1,8 @@
 using Api.Shared.Services.Models;
 using Customer.Api.Models;
 using Customer.Api.Services;
+using Enterprise.Shared.UnitTesting.Assertions;
 using Microsoft.Extensions.Logging;
-using Testing.Shared.Assertions;
 using CustomerEntity = Customer.Shared.Database.Entities.Customer;
 using CustomerModel = Customer.Shared.Models.Customer;
 

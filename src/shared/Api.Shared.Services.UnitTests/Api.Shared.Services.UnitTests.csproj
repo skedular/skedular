@@ -33,7 +33,7 @@
 
     <ItemGroup>
         <ProjectReference Include="../Api.Shared.Services/Api.Shared.Services.csproj"/>
-        <ProjectReference Include="../Testing.Shared/Testing.Shared.csproj"/>
+        <ProjectReference Include="../Enterprise.Shared.UnitTesting/Enterprise.Shared.UnitTesting.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

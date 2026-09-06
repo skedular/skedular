@@ -8,6 +8,8 @@ using Aspire.Hosting.Testing;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.PostgreSql;
+using Enterprise.Shared.IntegrationTesting;
+using Enterprise.Shared.IntegrationTesting.Aspire;
 using Enterprise.Shared.Kafka;
 using Flurl;
 using Microsoft.Extensions.Configuration;
@@ -18,8 +20,6 @@ using Microsoft.Extensions.Hosting.Internal;
 using Projects;
 using Slack.Shared;
 using Slack.Shared.Database;
-using Testing.Shared.IntegrationTests;
-using Testing.Shared.IntegrationTests.Aspire;
 
 namespace Slack.Domain.IntegrationTests;
 

@@ -2,6 +2,7 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.UnitTesting.Assertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
@@ -14,7 +15,6 @@ using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services.Cache;
-using Testing.Shared.Assertions;
 using IndustrySubCategory = Organization.Shared.Database.Entities.IndustrySubCategory;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 

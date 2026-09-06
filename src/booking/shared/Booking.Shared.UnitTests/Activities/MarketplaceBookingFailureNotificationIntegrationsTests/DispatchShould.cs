@@ -5,11 +5,11 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Email;
+using Enterprise.Shared.UnitTesting.Assertions;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Temporalio.Exceptions;
 using Temporalio.Testing;
-using Testing.Shared.Assertions;
 
 namespace Booking.Shared.UnitTests.Activities.MarketplaceBookingFailureNotificationIntegrationsTests;
 

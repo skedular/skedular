@@ -12,6 +12,8 @@ using Enterprise.Shared;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.PostgreSql;
+using Enterprise.Shared.IntegrationTesting;
+using Enterprise.Shared.IntegrationTesting.Aspire;
 using Enterprise.Shared.Kafka;
 using Flurl;
 using Microsoft.Extensions.Configuration;
@@ -22,8 +24,6 @@ using Microsoft.Extensions.Hosting.Internal;
 using Organization.Shared;
 using Organization.Shared.Database;
 using Projects;
-using Testing.Shared.IntegrationTests;
-using Testing.Shared.IntegrationTests.Aspire;
 
 namespace Organization.Domain.IntegrationTests;
 

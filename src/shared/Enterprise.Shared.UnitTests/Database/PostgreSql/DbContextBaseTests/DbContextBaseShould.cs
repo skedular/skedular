@@ -1,7 +1,7 @@
 using Enterprise.Shared.Database;
+using Enterprise.Shared.UnitTesting.Database.TestSupport;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Testing.Shared.Database.TestSupport;
 
 namespace Enterprise.Shared.UnitTests.Database.PostgreSql.DbContextBaseTests;
 

@@ -44,7 +44,7 @@
         <ProjectReference Include="../../msteams/shared/MsTeams.Shared/MsTeams.Shared.csproj"/>
         <ProjectReference Include="../../organization/shared/Organization.Shared/Organization.Shared.csproj"/>
         <ProjectReference Include="../../shared/Api.Shared.Clients/Api.Shared.Clients.csproj"/>
-        <ProjectReference Include="../../shared/Testing.Shared.IntegrationTests/Testing.Shared.IntegrationTests.csproj"/>
+        <ProjectReference Include="../../shared/Enterprise.Shared.IntegrationTesting/Enterprise.Shared.IntegrationTesting.csproj"/>
         <ProjectReference Include="../../slack/shared/Slack.Shared/Slack.Shared.csproj"/>
         <ProjectReference Include="../../team/shared/Team.Shared/Team.Shared.csproj"/>
     </ItemGroup>

@@ -36,6 +36,7 @@ using Core.Shared.Database;
 using Customer.Shared.Database;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.PostgreSql;
+using Enterprise.Shared.IntegrationTesting.Aspire;
 using Enterprise.Shared.Kafka;
 using Flurl;
 using Location.Shared.Database;
@@ -50,7 +51,6 @@ using Organization.Shared.Database;
 using Projects;
 using Slack.Shared.Database;
 using Team.Shared.Database;
-using Testing.Shared.IntegrationTests.Aspire;
 
 namespace Skedular.SystemTests;
 

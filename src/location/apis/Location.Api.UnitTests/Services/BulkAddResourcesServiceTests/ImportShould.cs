@@ -1,5 +1,6 @@
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.UnitTesting.Assertions;
 using Location.Api.Models;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
@@ -8,7 +9,6 @@ using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using Testing.Shared.Assertions;
 using Resource = Location.Shared.Models.Resource;
 using OrganizationTagEntity = Location.Shared.Database.Entities.OrganizationTag;
 using LocationEntity = Location.Shared.Database.Entities.Location;

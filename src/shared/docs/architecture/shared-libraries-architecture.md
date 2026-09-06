@@ -1,6 +1,6 @@
 # Skedular Shared Libraries — Architecture
 
-This document covers every shared library under `shared/`.  It explains their
+This document covers every shared library under `shared/`. It explains their
 responsibilities, how they depend on each other, which domain projects reference them,
 and what the internal structure of each library looks like.
 
@@ -32,8 +32,8 @@ flowchart LR
         ASC["Api.Shared.Clients"]
         ASS["Api.Shared.Services"]
         IS["Infrastructure.Shared"]
-        TS["Testing.Shared"]
-        TSI["Testing.Shared\n.IntegrationTests"]
+        TS["Enterprise.Shared.UnitTesting"]
+        TSI["Enterprise.Shared.UnitTesting\n.IntegrationTests"]
     end
 
     BookingShared --> ES
@@ -76,7 +76,7 @@ flowchart LR
 
 ## 2. Enterprise.Shared — Component Map
 
-`Enterprise.Shared` is the foundational cross-cutting library.  Every domain shared
+`Enterprise.Shared` is the foundational cross-cutting library. Every domain shared
 library and every infrastructure project depends on it.
 
 ```mermaid
@@ -250,14 +250,14 @@ flowchart TB
 
 ---
 
-## 6. Testing.Shared and Testing.Shared.IntegrationTests
+## 6. Enterprise.Shared.UnitTesting and Enterprise.Shared.IntegrationTesting
 
 These libraries provide test infrastructure shared across all unit and integration test
 projects.
 
 ```mermaid
 flowchart LR
-    subgraph TS["Testing.Shared"]
+    subgraph TS["Enterprise.Shared.UnitTesting"]
         direction TB
         AF["AutoFakeItEasyDataAttribute\nInlineAutoFakeItEasyDataAttribute\n• xUnit + AutoFixture + FakeItEasy\n  data-driven test attributes"]
         CL["ConsoleLogger\n• ILogger backed by Console\n  for test output"]
@@ -266,7 +266,7 @@ flowchart LR
         Cat["CategoryNames.cs\n• xUnit trait category constants"]
     end
 
-    subgraph TSI["Testing.Shared.IntegrationTests"]
+    subgraph TSI["Enterprise.Shared.IntegrationTesting"]
         direction TB
         Asp["Aspire/\n• DistributedApplication\n  test app host helpers\n• WaitFor / WaitForCompletion\n  readiness extensions"]
         Ev["Eventually.cs\n• retry-until-true helper\n  for eventual consistency assertions"]
@@ -289,32 +289,32 @@ flowchart LR
 
 ## 7. Directory Reference
 
-| Path | Library | Role |
-|---|---|---|
-| `shared/Enterprise.Shared/` | Enterprise.Shared | Foundational cross-cutting library |
-| `shared/Enterprise.Shared/Kafka/` | Enterprise.Shared | Kafka produce/consume helpers |
-| `shared/Enterprise.Shared/Temporal/` | Enterprise.Shared | Temporal configuration + helpers |
-| `shared/Enterprise.Shared/Database/` | Enterprise.Shared | EF Core base entities, repositories, interceptors |
-| `shared/Enterprise.Shared/Security/` | Enterprise.Shared | Security middleware, SSO, JWT contracts, gRPC auth |
-| `shared/Enterprise.Shared/IdentityProviders/` | Enterprise.Shared | WorkOS, Cognito, Google, Azure Entra token validators |
-| `shared/Enterprise.Shared/Cookie/` | Enterprise.Shared | Cookie encryption wrapper and cookie config |
-| `shared/Enterprise.Shared/Encryption/` | Enterprise.Shared | Shared low-level encryption primitives |
-| `shared/Enterprise.Shared/Cache/` | Enterprise.Shared | Redis helpers |
-| `shared/Enterprise.Shared/GraphQL/` | Enterprise.Shared | HotChocolate helpers |
-| `shared/Enterprise.Shared/Payment/` | Enterprise.Shared | Stripe helpers |
-| `shared/Enterprise.Shared/Accounting/` | Enterprise.Shared | Xero token encryption, `AddXeroServices` |
-| `shared/Enterprise.Shared/Azure/` | Enterprise.Shared | Azure Entra / Graph API helpers |
-| `shared/Enterprise.Shared/Outbox/` | Enterprise.Shared | Kafka + Temporal outbox patterns |
-| `shared/Enterprise.Shared/Telemetry/` | Enterprise.Shared | OpenTelemetry setup |
-| `shared/Enterprise.Shared/Ai/` | Enterprise.Shared | AI provider helpers |
-| `shared/Api.Shared.Clients/` | Api.Shared.Clients | Generated OpenAPI clients + event topics + gRPC stubs |
-| `shared/Api.Shared.Clients/Events/Skedular/` | Api.Shared.Clients | Typed Kafka topic definitions (9 topics) |
-| `shared/Api.Shared.Clients/OpenApi/Skedular/` | Api.Shared.Clients | Generated HTTP API clients (10 domains) |
-| `shared/Api.Shared.Clients/Grpc/` | Api.Shared.Clients | Generated gRPC client stubs (Core) |
-| `shared/Api.Shared.Services/` | Api.Shared.Services | Generated OpenAPI controller bases + shared models |
-| `shared/Api.Shared.Services/OpenApi/Skedular/` | Api.Shared.Services | Generated controller base classes (10 domains) |
-| `shared/Api.Shared.Services/Offering/` | Api.Shared.Services | Offering definitions + feature flags |
-| `shared/Api.Shared.Services/Models/` | Api.Shared.Services | Shared request/response value objects |
-| `shared/Infrastructure.Shared/` | Infrastructure.Shared | EF Core migration host (MigrationService + job) |
-| `shared/Testing.Shared/` | Testing.Shared | xUnit unit test helpers (AutoFixture, generators, assertions) |
-| `shared/Testing.Shared.IntegrationTests/` | Testing.Shared.IntegrationTests | Aspire integration test base, Eventually helper, gRPC/HTTP helpers |
+| Path                                           | Library                              | Role                                                               |
+| ---------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------ |
+| `shared/Enterprise.Shared/`                    | Enterprise.Shared                    | Foundational cross-cutting library                                 |
+| `shared/Enterprise.Shared/Kafka/`              | Enterprise.Shared                    | Kafka produce/consume helpers                                      |
+| `shared/Enterprise.Shared/Temporal/`           | Enterprise.Shared                    | Temporal configuration + helpers                                   |
+| `shared/Enterprise.Shared/Database/`           | Enterprise.Shared                    | EF Core base entities, repositories, interceptors                  |
+| `shared/Enterprise.Shared/Security/`           | Enterprise.Shared                    | Security middleware, SSO, JWT contracts, gRPC auth                 |
+| `shared/Enterprise.Shared/IdentityProviders/`  | Enterprise.Shared                    | WorkOS, Cognito, Google, Azure Entra token validators              |
+| `shared/Enterprise.Shared/Cookie/`             | Enterprise.Shared                    | Cookie encryption wrapper and cookie config                        |
+| `shared/Enterprise.Shared/Encryption/`         | Enterprise.Shared                    | Shared low-level encryption primitives                             |
+| `shared/Enterprise.Shared/Cache/`              | Enterprise.Shared                    | Redis helpers                                                      |
+| `shared/Enterprise.Shared/GraphQL/`            | Enterprise.Shared                    | HotChocolate helpers                                               |
+| `shared/Enterprise.Shared/Payment/`            | Enterprise.Shared                    | Stripe helpers                                                     |
+| `shared/Enterprise.Shared/Accounting/`         | Enterprise.Shared                    | Xero token encryption, `AddXeroServices`                           |
+| `shared/Enterprise.Shared/Azure/`              | Enterprise.Shared                    | Azure Entra / Graph API helpers                                    |
+| `shared/Enterprise.Shared/Outbox/`             | Enterprise.Shared                    | Kafka + Temporal outbox patterns                                   |
+| `shared/Enterprise.Shared/Telemetry/`          | Enterprise.Shared                    | OpenTelemetry setup                                                |
+| `shared/Enterprise.Shared/Ai/`                 | Enterprise.Shared                    | AI provider helpers                                                |
+| `shared/Api.Shared.Clients/`                   | Api.Shared.Clients                   | Generated OpenAPI clients + event topics + gRPC stubs              |
+| `shared/Api.Shared.Clients/Events/Skedular/`   | Api.Shared.Clients                   | Typed Kafka topic definitions (9 topics)                           |
+| `shared/Api.Shared.Clients/OpenApi/Skedular/`  | Api.Shared.Clients                   | Generated HTTP API clients (10 domains)                            |
+| `shared/Api.Shared.Clients/Grpc/`              | Api.Shared.Clients                   | Generated gRPC client stubs (Core)                                 |
+| `shared/Api.Shared.Services/`                  | Api.Shared.Services                  | Generated OpenAPI controller bases + shared models                 |
+| `shared/Api.Shared.Services/OpenApi/Skedular/` | Api.Shared.Services                  | Generated controller base classes (10 domains)                     |
+| `shared/Api.Shared.Services/Offering/`         | Api.Shared.Services                  | Offering definitions + feature flags                               |
+| `shared/Api.Shared.Services/Models/`           | Api.Shared.Services                  | Shared request/response value objects                              |
+| `shared/Infrastructure.Shared/`                | Infrastructure.Shared                | EF Core migration host (MigrationService + job)                    |
+| `shared/Enterprise.Shared.UnitTesting/`        | Enterprise.Shared.UnitTesting        | xUnit unit test helpers (AutoFixture, generators, assertions)      |
+| `shared/Enterprise.Shared.IntegrationTesting/` | Enterprise.Shared.IntegrationTesting | Aspire integration test base, Eventually helper, gRPC/HTTP helpers |

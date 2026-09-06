@@ -20,6 +20,7 @@ using OrganizationBillingCycleModel = Api.Shared.Services.Models.OrganizationBil
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+using Enterprise.Shared.UnitTesting;
 using Microsoft.Extensions.Logging;
 
 namespace Booking.Shared.UnitTests.Services.XeroInvoiceServiceTests;

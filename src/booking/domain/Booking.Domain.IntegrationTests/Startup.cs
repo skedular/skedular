@@ -17,6 +17,8 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Encryption;
 using Enterprise.Shared.GraphQL;
+using Enterprise.Shared.IntegrationTesting;
+using Enterprise.Shared.IntegrationTesting.Aspire;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Payment;
@@ -34,8 +36,6 @@ using Microsoft.Extensions.Hosting.Internal;
 using OpenTelemetry.Context.Propagation;
 using Projects;
 using Temporalio.Client;
-using Testing.Shared.IntegrationTests;
-using Testing.Shared.IntegrationTests.Aspire;
 
 namespace Booking.Domain.IntegrationTests;
 

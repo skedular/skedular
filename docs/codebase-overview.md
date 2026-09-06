@@ -93,15 +93,15 @@ Run `make generate` to regenerate all surfaces in the correct order.
 
 `shared/` contains cross-cutting .NET projects consumed by all domains:
 
-| Project                 | Purpose                                                                                            |
-| ----------------------- | -------------------------------------------------------------------------------------------------- |
-| `Api.Shared`            | Portable (netstandard2.0) shared event contracts, Kafka topic attributes, and metadata factories   |
-| `Api.Shared.Clients`    | Typed clients and protobuf event metadata for inter-service communication; depends on `Api.Shared` |
-| `Api.Shared.Services`   | Generated OpenAPI controller bases, shared middleware, service extensions                          |
-| `Enterprise.Shared`     | Xero SDK factory, token encryption, and other enterprise-level services                            |
-| `Infrastructure.Shared` | Common EF helpers, outbox patterns, and persistence utilities                                      |
-| `Testing.Shared`        | Test fixtures, builders, and helpers shared across all test projects                               |
-| `Skedularctl`           | CLI tool for developer tasks                                                                       |
+| Project                         | Purpose                                                                                            |
+| ------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `Api.Shared`                    | Portable (netstandard2.0) shared event contracts, Kafka topic attributes, and metadata factories   |
+| `Api.Shared.Clients`            | Typed clients and protobuf event metadata for inter-service communication; depends on `Api.Shared` |
+| `Api.Shared.Services`           | Generated OpenAPI controller bases, shared middleware, service extensions                          |
+| `Enterprise.Shared`             | Xero SDK factory, token encryption, and other enterprise-level services                            |
+| `Infrastructure.Shared`         | Common EF helpers, outbox patterns, and persistence utilities                                      |
+| `Enterprise.Shared.UnitTesting` | Test fixtures, builders, and helpers shared across all test projects                               |
+| `Skedularctl`                   | CLI tool for developer tasks                                                                       |
 
 ---
 

@@ -1,11 +1,11 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.UnitTesting.Assertions;
 using Location.Shared.Activities;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
 using Microsoft.Extensions.Logging;
 using Temporalio.Testing;
-using Testing.Shared.Assertions;
 using LocationResource = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Shared.UnitTests.Activities.LocationDailyAnalyticsTests;

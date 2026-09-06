@@ -32,7 +32,7 @@
 
     <ItemGroup>
         <ProjectReference Include="../Location.Jobs/Location.Jobs.csproj"/>
-        <ProjectReference Include="../../../shared/Testing.Shared/Testing.Shared.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared.UnitTesting/Enterprise.Shared.UnitTesting.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -8,7 +8,7 @@ using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services.Cache;
-using static Testing.Shared.Assertions.LogAssertions;
+using static Enterprise.Shared.UnitTesting.Assertions.LogAssertions;
 
 namespace Organization.Api.UnitTests.Services.OrganizationOwnershipServiceTests;
 

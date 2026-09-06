@@ -10,6 +10,8 @@ using Aspire.Hosting.Testing;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.PostgreSql;
+using Enterprise.Shared.IntegrationTesting;
+using Enterprise.Shared.IntegrationTesting.Aspire;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Random;
 using Flurl;
@@ -21,8 +23,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
 using Projects;
-using Testing.Shared.IntegrationTests;
-using Testing.Shared.IntegrationTests.Aspire;
 
 namespace Location.Domain.IntegrationTests;
 

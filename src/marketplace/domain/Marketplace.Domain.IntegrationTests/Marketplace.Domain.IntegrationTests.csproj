@@ -45,7 +45,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../shared/Testing.Shared.IntegrationTests/Testing.Shared.IntegrationTests.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared.IntegrationTesting/Enterprise.Shared.IntegrationTesting.csproj"/>
         <ProjectReference Include="../../shared/Marketplace.Shared/Marketplace.Shared.csproj"/>
         <ProjectReference Include="../Marketplace.Domain.AppHost/Marketplace.Domain.AppHost.csproj"/>
     </ItemGroup>

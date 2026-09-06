@@ -14,6 +14,7 @@ using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using Xero.NetStandard.OAuth2.Api;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+using Enterprise.Shared.UnitTesting;
 
 namespace Booking.Shared.UnitTests.Services.AccountingInvoiceCancellationServiceTests;
 

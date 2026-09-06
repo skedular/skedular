@@ -1,6 +1,0 @@
-﻿using AutoFixture.Xunit3;
-
-namespace Testing.Shared;
-
-public class InlineAutoFakeItEasyDataAttribute(Type[]? fixtureCustomizers = null, params object[] objects)
-    : InlineAutoDataAttribute(() => AutoFakeItEasyDataAttribute.CreateFixture(fixtureCustomizers), objects);

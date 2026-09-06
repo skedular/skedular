@@ -1,3 +1,4 @@
+using Enterprise.Shared.UnitTesting.Assertions;
 using Microsoft.Extensions.Logging;
 using Team.Api.Models;
 using Team.Api.Services;
@@ -6,7 +7,6 @@ using Team.Shared.Database.Entities;
 using Team.Shared.Mappers;
 using Team.Shared.Repositories;
 using Team.Shared.Services.Cache;
-using Testing.Shared.Assertions;
 
 namespace Team.Api.UnitTests.Services.TeamServiceTests;
 

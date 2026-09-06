@@ -16,8 +16,8 @@ shared/
   Enterprise.Shared.UnitTests/
   Infrastructure.Shared/      # Local Aspire-based infrastructure bootstrapping for dev/tests
   Skedularctl/                # CLI tool for repo-level maintenance tasks
-  Testing.Shared/             # Shared test helpers (non-integration)
-  Testing.Shared.IntegrationTests/ # Shared Aspire integration-test base
+  Enterprise.Shared.UnitTesting/             # Shared test helpers (non-integration)
+  Enterprise.Shared.IntegrationTesting/ # Shared Aspire integration-test base
   WebScrapper/                # Web scraping utility
   infrastructure/             # Low-level infrastructure scripts/configs
   infrastructure-azure-entra/ # Azure Entra-specific infrastructure configs
@@ -58,10 +58,10 @@ shared/
 - Aspire-based local infrastructure bootstrapping used by domain app hosts and integration test hosts.
 - See `Infrastructure.Shared/AGENTS.md`.
 
-### `Testing.Shared.IntegrationTests`
+### `Enterprise.Shared.IntegrationTesting`
 
 - Base classes and helpers for Aspire-hosted integration test projects across domains.
-- See `Testing.Shared.IntegrationTests/AGENTS.md`.
+- See `Enterprise.Shared.IntegrationTesting/AGENTS.md`.
 
 ### `Skedularctl``, `Api.Shared.Clients`, `Api.Shared.Services`, or `Enterprise.Shared`.
 

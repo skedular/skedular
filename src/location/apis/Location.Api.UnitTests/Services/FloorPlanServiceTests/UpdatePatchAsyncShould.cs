@@ -1,3 +1,4 @@
+using Enterprise.Shared.UnitTesting.Assertions;
 using Location.Api.Models;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
@@ -5,7 +6,6 @@ using Location.Shared.Models;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Microsoft.Extensions.Logging;
-using Testing.Shared.Assertions;
 using FloorPlan = Location.Shared.Database.Entities.FloorPlan;
 
 namespace Location.Api.UnitTests.Services.FloorPlanServiceTests;

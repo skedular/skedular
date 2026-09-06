@@ -1,8 +1,8 @@
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.FileStorage;
+using Enterprise.Shared.UnitTesting.Fixtures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Testing.Shared.Fixtures;
 
 namespace Enterprise.Shared.UnitTests.FileStorage.ExtensionsTests;
 

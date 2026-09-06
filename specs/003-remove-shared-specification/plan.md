@@ -59,7 +59,7 @@ shared/
 │       ├── PostgreSql/RepositoryBase.cs
 │       └── SqlServer/RepositoryBase.cs
 ├── Enterprise.Shared.UnitTests/
-└── Testing.Shared/
+└── Enterprise.Shared.UnitTesting/
 
 organization/
 ├── apis/Organization.Api/Services/

@@ -457,8 +457,8 @@
         <Project Path="shared/Enterprise.Shared/Enterprise.Shared.csproj"/>
         <Project Path="shared/Infrastructure.Shared/Infrastructure.Shared.csproj"/>
         <Project Path="shared/Skedularctl/Skedularctl.csproj"/>
-        <Project Path="shared/Testing.Shared.IntegrationTests/Testing.Shared.IntegrationTests.csproj"/>
-        <Project Path="shared/Testing.Shared/Testing.Shared.csproj"/>
+        <Project Path="shared/Enterprise.Shared.IntegrationTesting/Enterprise.Shared.IntegrationTesting.csproj"/>
+        <Project Path="shared/Enterprise.Shared.UnitTesting/Enterprise.Shared.UnitTesting.csproj"/>
         <Project Path="shared/WebScrapper/WebScrapper.csproj"/>
     </Folder>
     <Folder Name="/solution-items/">

@@ -1,7 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Services;
 using Microsoft.Extensions.Logging;
-using static Testing.Shared.Assertions.LogAssertions;
+using static Enterprise.Shared.UnitTesting.Assertions.LogAssertions;
 
 namespace Booking.Shared.UnitTests.Services.HostCommissionServiceTests;
 
