@@ -3,7 +3,7 @@ using Booking.Processors.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Customer = Booking.Shared.Models.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using OrganizationTag = Booking.Shared.Database.Entities.OrganizationTag;

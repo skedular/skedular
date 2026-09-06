@@ -6,7 +6,7 @@ using Customer.Shared.Database;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.PostgreSql;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Enterprise.Shared.Temporal;
 using CustomerReadinessKey = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Key;
 using CustomerReadinessEvent = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Event;

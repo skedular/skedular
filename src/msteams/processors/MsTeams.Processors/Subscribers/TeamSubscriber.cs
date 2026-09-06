@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Team.V1;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Repositories;
 using Team = MsTeams.Shared.Database.Entities.Team;

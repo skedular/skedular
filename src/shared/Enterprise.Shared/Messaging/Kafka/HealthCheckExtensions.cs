@@ -1,0 +1,38 @@
+﻿using Confluent.Kafka;
+using Enterprise.Shared.Messaging.Kafka.Configurations;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Enterprise.Shared.Messaging.Kafka;
+
+public static class HealthCheckExtensions
+{
+    /// <param name="services">The service collection to configure.</param>
+    extension(IServiceCollection services)
+    {
+        /// <summary>
+        ///     Checks for Kafka connectivity.
+        ///     Pass in your bootstrapServers list.
+        ///     This binds to the "services" tag that outputs to /health/readiness
+        /// </summary>
+        public IHealthChecksBuilder AddKafkaBrokerHealthCheck(KafkaConfiguration kafkaConfiguration, int healthCheckTimeOutInSeconds = 5
+        )
+        {
+            var producerConfig = new ProducerConfig
+            {
+                BootstrapServers = kafkaConfiguration.BootstrapServers,
+                SecurityProtocol = kafkaConfiguration.SecurityProtocol,
+                SaslMechanism = kafkaConfiguration.SaslMechanism,
+                SaslUsername = kafkaConfiguration.SaslUsername,
+                SaslPassword = kafkaConfiguration.SaslPassword,
+            };
+
+            return services
+                .AddHealthChecks()
+                .AddKafka(
+                    producerConfig,
+                    tags: [HealthCheck.Constants.ReadinessTag],
+                    timeout: TimeSpan.FromSeconds(healthCheckTimeOutInSeconds)
+                );
+        }
+    }
+}

@@ -4,7 +4,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.PostgreSql;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Enterprise.Shared.Payment;
 using Enterprise.Shared.Temporal;
 using Organization.Processors.Subscribers;

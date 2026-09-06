@@ -6,8 +6,8 @@ using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.GraphQL.Configurations;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.IdentityProviders.Configurations;
-using Enterprise.Shared.Kafka.Configurations;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging.Kafka.Configurations;
+using Enterprise.Shared.Messaging.Kafka.Consume;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Pagination;
@@ -59,7 +59,7 @@ public class ConfigurationPocoShould
     [Fact]
     public void SchemaRegistryConfiguration_defaults()
     {
-        var config = new SchemaRegistryConfiguration();
+        var config = new KafkaSchemaRegistryConfiguration();
         config.Url.ShouldBe(string.Empty);
         config.ApiKey.ShouldBe(string.Empty);
         config.SecretKey.ShouldBe(string.Empty);
@@ -70,7 +70,7 @@ public class ConfigurationPocoShould
     [Fact]
     public void RetryTopicSetting_defaults()
     {
-        var setting = new RetryTopicSetting();
+        var setting = new KafkaRetryTopicSetting();
         setting.Topic.ShouldBe(string.Empty);
         setting.RetryDelaySeconds.ShouldBe(0);
     }

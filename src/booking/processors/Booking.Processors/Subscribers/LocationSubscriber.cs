@@ -6,7 +6,7 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Constants = Api.Shared.Services.Constants;
 using Location = Booking.Shared.Database.Entities.Location;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Type;

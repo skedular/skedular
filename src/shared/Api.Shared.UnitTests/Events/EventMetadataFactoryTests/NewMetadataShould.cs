@@ -1,4 +1,4 @@
-using Api.Shared.Events;
+using Api.Shared.Events.Kafka;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Api.Shared.UnitTests.Events.EventMetadataFactoryTests;
@@ -8,7 +8,7 @@ public enum SampleEventType
     Created = 1,
 }
 
-public class SampleMetadata : IEventMetadata<SampleEventType>
+public class SampleMetadata : IKafkaEventMetadata<SampleEventType>
 {
     public string Id { get; set; } = string.Empty;
     public string DomainSource { get; set; } = string.Empty;
@@ -25,7 +25,7 @@ public class NewMetadataShould
     [AutoFakeItEasyData]
     public void Populate_all_fields(string domainSource, string appSource, string correlationId)
     {
-        var metadata = EventMetadataFactory.NewMetadata<SampleMetadata, SampleEventType>(
+        var metadata = KafkaEventMetadataFactory.NewMetadata<SampleMetadata, SampleEventType>(
             domainSource, appSource, SampleEventType.Created, correlationId);
 
         metadata.DomainSource.ShouldBe(domainSource);
@@ -42,7 +42,7 @@ public class NewMetadataShould
     {
         var id = Guid.CreateVersion7();
 
-        var metadata = EventMetadataFactory.NewMetadata<SampleMetadata, SampleEventType>(
+        var metadata = KafkaEventMetadataFactory.NewMetadata<SampleMetadata, SampleEventType>(
             domainSource, appSource, SampleEventType.Created, null, id);
 
         metadata.Id.ShouldBe(id.ToString());
@@ -52,7 +52,7 @@ public class NewMetadataShould
     [AutoFakeItEasyData]
     public void Generate_correlation_id_when_null(string domainSource, string appSource)
     {
-        var metadata = EventMetadataFactory.NewMetadata<SampleMetadata, SampleEventType>(
+        var metadata = KafkaEventMetadataFactory.NewMetadata<SampleMetadata, SampleEventType>(
             domainSource, appSource, SampleEventType.Created, null);
 
         metadata.CorrelationId.ShouldNotBeNullOrWhiteSpace();
@@ -62,7 +62,7 @@ public class NewMetadataShould
     [AutoFakeItEasyData]
     public void Generate_correlation_id_when_whitespace(string domainSource, string appSource)
     {
-        var metadata = EventMetadataFactory.NewMetadata<SampleMetadata, SampleEventType>(
+        var metadata = KafkaEventMetadataFactory.NewMetadata<SampleMetadata, SampleEventType>(
             domainSource, appSource, SampleEventType.Created, "   ");
 
         metadata.CorrelationId.ShouldNotBeNullOrWhiteSpace();

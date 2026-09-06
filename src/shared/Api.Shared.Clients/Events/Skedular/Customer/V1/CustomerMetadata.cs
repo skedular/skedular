@@ -1,4 +1,4 @@
-using Api.Shared.Events;
+using Api.Shared.Events.Kafka;
 
 namespace Api.Shared.Clients.Events.Skedular.Customer.V1;
 
@@ -11,23 +11,23 @@ file static class CustomerMetadataShape
 }
 
 [KafkaTopic(3, 1, 3, 3)]
-public partial class Key : IEvent
+public partial class Key : IKafkaEvent
 {
-    string IEvent.TopicName => CustomerMetadataShape.TopicName;
-    string IEvent.RetryTopicNamePrefix => CustomerMetadataShape.RetryTopicNamePrefix;
-    int IEvent.RetryTopicCount => CustomerMetadataShape.RetryTopicCount;
-    string IEvent.DeadLetterTopicName => CustomerMetadataShape.DeadLetterTopicName;
-    string? IEvent.CorrelationId => null;
+    string IKafkaEvent.TopicName => CustomerMetadataShape.TopicName;
+    string IKafkaEvent.RetryTopicNamePrefix => CustomerMetadataShape.RetryTopicNamePrefix;
+    int IKafkaEvent.RetryTopicCount => CustomerMetadataShape.RetryTopicCount;
+    string IKafkaEvent.DeadLetterTopicName => CustomerMetadataShape.DeadLetterTopicName;
+    string? IKafkaEvent.CorrelationId => null;
 }
 
 [KafkaTopic(3, 1, 3, 3)]
-public partial class Event : IEvent
+public partial class Event : IKafkaEvent
 {
-    string IEvent.TopicName => CustomerMetadataShape.TopicName;
-    string IEvent.RetryTopicNamePrefix => CustomerMetadataShape.RetryTopicNamePrefix;
-    int IEvent.RetryTopicCount => CustomerMetadataShape.RetryTopicCount;
-    string IEvent.DeadLetterTopicName => CustomerMetadataShape.DeadLetterTopicName;
-    string? IEvent.CorrelationId => Metadata.CorrelationId;
+    string IKafkaEvent.TopicName => CustomerMetadataShape.TopicName;
+    string IKafkaEvent.RetryTopicNamePrefix => CustomerMetadataShape.RetryTopicNamePrefix;
+    int IKafkaEvent.RetryTopicCount => CustomerMetadataShape.RetryTopicCount;
+    string IKafkaEvent.DeadLetterTopicName => CustomerMetadataShape.DeadLetterTopicName;
+    string? IKafkaEvent.CorrelationId => Metadata.CorrelationId;
 
     public static Metadata NewMetadata(
         string domainSource,
@@ -35,7 +35,7 @@ public partial class Event : IEvent
         Type type,
         string? correlationId,
         Guid? id = null) =>
-        EventMetadataFactory.NewMetadata<Metadata, Type>(domainSource, appSource, type, correlationId, id);
+        KafkaEventMetadataFactory.NewMetadata<Metadata, Type>(domainSource, appSource, type, correlationId, id);
 }
 
-public sealed partial class Metadata : IEventMetadata<Type>;
+public sealed partial class Metadata : IKafkaEventMetadata<Type>;

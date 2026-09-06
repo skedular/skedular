@@ -5,7 +5,7 @@ using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services.Cache;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Organization = Customer.Shared.Database.Entities.Organization;
 using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;

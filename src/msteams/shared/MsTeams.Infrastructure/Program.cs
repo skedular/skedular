@@ -1,6 +1,6 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Database.PostgreSql;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using MsTeams.Infrastructure.Services;
 using MsTeams.Shared;
 using MsTeams.Shared.Database;

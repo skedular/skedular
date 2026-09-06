@@ -3,7 +3,7 @@ using Customer.Processors.Subscribers;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services.Cache;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using ValueDomain = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Domain;
 using ValueType = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Type;
 

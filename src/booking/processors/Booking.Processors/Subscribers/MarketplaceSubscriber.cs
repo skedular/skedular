@@ -2,7 +2,7 @@
 using Booking.Processors.Mappers;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using Type = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Type;

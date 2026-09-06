@@ -1,7 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Kafka.Produce;
+using Enterprise.Shared.Messaging.Kafka.Produce;
 using Enterprise.Shared.Models;
 using Location.Shared.Mappers;
 using Event = Api.Shared.Clients.Events.Skedular.Location.V1.Event;

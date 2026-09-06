@@ -5,7 +5,7 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Stripe;
 using MarketplaceRefundStatusConstants = Booking.Shared.Models.MarketplaceRefundStatusConstants;
 using BookingInternalEvent = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event;

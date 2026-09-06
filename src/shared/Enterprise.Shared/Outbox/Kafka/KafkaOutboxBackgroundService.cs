@@ -2,8 +2,8 @@
 using System.Text;
 using Confluent.Kafka;
 using Enterprise.Shared.Database.Interceptors;
-using Enterprise.Shared.Kafka.Configurations;
-using Enterprise.Shared.Kafka.Produce;
+using Enterprise.Shared.Messaging.Kafka.Configurations;
+using Enterprise.Shared.Messaging.Kafka.Produce;
 using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Telemetry.Configurations;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,7 @@ namespace Enterprise.Shared.Outbox.Kafka;
 /// </summary>
 public class KafkaOutboxBackgroundService<TDbContext>(
     IOutboxDbContextAccessor<TDbContext> contextAccessor,
-    IProducerFactory producerFactory,
+    IKafkaProducerFactory kafkaProducerFactory,
     IActivityAccessor activityAccessor,
     KafkaConfiguration kafkaConfiguration,
     ILogger<KafkaOutboxBackgroundService<TDbContext>> logger,
@@ -43,7 +43,7 @@ public class KafkaOutboxBackgroundService<TDbContext>(
     // Claimed rows are leased by moving LastRetry into the future.
     private readonly TimeSpan _processingLeaseTime = TimeSpan.FromMinutes(1);
 
-    private readonly IProducer<byte[]?, byte[]> _producer = producerFactory.Build<byte[]?, byte[]>(kafkaConfiguration);
+    private readonly IProducer<byte[]?, byte[]> _producer = kafkaProducerFactory.Build<byte[]?, byte[]>(kafkaConfiguration);
 
     // Idle poll interval when no Kafka rows are ready to be sent.
     private readonly TimeSpan _retryTime = TimeSpan.FromSeconds(1);

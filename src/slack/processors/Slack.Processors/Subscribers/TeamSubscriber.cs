@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Team.V1;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Slack.Processors.Mappers;
 using Slack.Shared.Repositories;
 using Team = Slack.Shared.Database.Entities.Team;

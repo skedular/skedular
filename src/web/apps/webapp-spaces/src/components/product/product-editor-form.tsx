@@ -104,7 +104,8 @@ type EditorSectionProps = {
 };
 
 const editorStepIds = new Set<ProductEditorStep['id']>(['basics', 'offers', 'review']);
-const editorSectionIds = new Set(['presentation', 'classification', 'offer-basics', 'fulfillment', 'booking-rules', 'payments', 'cancellation', 'advanced']);
+const editorSectionIds = new Set(['presentation', 'classification', 'offer-basics', 'term-booking', 'payments', 'cancellation', 'advanced']);
+const termBookingSectionId = 'term-booking';
 const collapsedSectionQueryValue = 'none';
 
 const EditorSection = ({ title, description, summary, expanded, onChange, children }: PropsWithChildren<EditorSectionProps>) => (
@@ -484,17 +485,18 @@ const ProductEditorForm = ({
       </EditorSection>
 
       <EditorSection
-        title="Fulfillment"
+        title="Term & booking"
         description={
           pricingOption.fulfillmentType === 'ENTITLEMENT'
-            ? 'Credit entitlements are purchased once and provide credits customers can use later.'
-            : 'Reservations use the selected membership term and reserve resources or time.'
+            ? 'Configure how credit entitlements remain available and how customers can use them.'
+            : 'Configure how long the offer lasts and how customers can reserve resources or time.'
         }
-        summary={`${prettifyEnum(pricingOption.fulfillmentType)} · ${prettifyEnum(pricingOption.membershipTerm)}`}
-        expanded={expandedOfferSection === 'fulfillment'}
-        onChange={() => setOfferSection(expandedOfferSection === 'fulfillment' ? '' : 'fulfillment')}
+        summary={`${prettifyEnum(pricingOption.fulfillmentType)} · ${prettifyEnum(pricingOption.membershipTerm)} · ${pricingOption.availableDays.length || 7} days`}
+        expanded={expandedOfferSection === termBookingSectionId}
+        onChange={() => setOfferSection(expandedOfferSection === termBookingSectionId ? '' : termBookingSectionId)}
       >
         <StackColumn spacing={2}>
+          <BodyIconTypography label="Offer term" />
           <FormFieldLabel
             label="Fulfillment type"
             help="Reservation offers book time or resources. Entitlement offers grant credits customers can use later. This choice controls which fields appear below."
@@ -543,83 +545,79 @@ const ProductEditorForm = ({
               <SmallIconTypography label="Choose a term of one day or longer. Auto-renewal is configured separately in Payments." />
             </StackColumn>
           )}
-        </StackColumn>
-      </EditorSection>
 
-      <EditorSection
-        title="Booking rules"
-        description={
-          pricingOption.fulfillmentType === 'ENTITLEMENT'
-            ? 'Define the booking limits that apply when customers use credits from this offer.'
-            : 'Define availability, quantity, and booking duration.'
-        }
-        summary={`${pricingOption.availableDays.length || 7} days · ${pricingOption.numberOfResourcesToBook || 1} resource${pricingOption.numberOfResourcesToBook === '1' ? '' : 's'} · ${formatDurationSummary(pricingOption.minDurationMinutes)}–${formatDurationSummary(pricingOption.maxDurationMinutes)}`}
-        expanded={expandedOfferSection === 'booking-rules'}
-        onChange={() => setOfferSection(expandedOfferSection === 'booking-rules' ? '' : 'booking-rules')}
-      >
-        <CalendarDayPicker availableDays={pricingOption.availableDays} onChange={(availableDays) => changeNestedField(`pricingOptions[${index}].availableDays`, availableDays)} />
-        <FormFieldLabel
-          label="Number of Resources to Book"
-          help="How many matching resources are reserved for each booking. Increasing this can reduce availability because every booking consumes this many resources."
-        >
-          <TextField
-            name={`pricingOptions[${index}].numberOfResourcesToBook`}
-            required
-            disabled={isEventProduct}
-            helperText={isEventProduct ? 'Ignored for event products. The full matching resource set will be booked.' : undefined}
-          />
-        </FormFieldLabel>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
-          <DurationInput
-            label="Minimum booking duration"
-            help="The shortest time a customer can book for this offer. It must not exceed the maximum duration and is saved in minutes even when entered as hours."
-            value={pricingOption.minDurationMinutes}
-            onChange={(value) => changeNestedField(`pricingOptions[${index}].minDurationMinutes`, value)}
-            unit={pricingOption.minDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
-            onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].minDurationDisplayUnit`, unit.toUpperCase())}
-            required
-          />
-          <DurationInput
-            label="Maximum booking duration"
-            help="The longest time a customer can book for this offer. It works with the minimum duration to define the allowed booking range and is saved in minutes."
-            value={pricingOption.maxDurationMinutes}
-            onChange={(value) => changeNestedField(`pricingOptions[${index}].maxDurationMinutes`, value)}
-            unit={pricingOption.maxDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
-            onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].maxDurationDisplayUnit`, unit.toUpperCase())}
-            required
-          />
-        </Box>
-        {pricingOption.membershipTerm !== 'DAILY' ? (
-          <FormFieldLabel
-            label={pricingOption.fulfillmentType === 'ENTITLEMENT' ? 'Maximum redemptions per week' : 'Required selected days per week'}
-            help={
-              pricingOption.fulfillmentType === 'ENTITLEMENT'
-                ? 'This limits successful credit redemptions in each complete Monday-through-Sunday UTC week. Customers do not select weekdays for this limit.'
-                : 'This requires customers to book a specific number of the selected weekdays each week. The calendar days above define the choices.'
-            }
-          >
-            <TextField
-              name={`pricingOptions[${index}].requiredDaysPerWeek`}
-              type="text"
-              slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
-              fieldProps={{ parse: sanitizeWeeklyRequiredDays }}
-              helperText={
-                pricingOption.fulfillmentType === 'ENTITLEMENT'
-                  ? 'Leave empty for unlimited weekly redemptions; choose 1 to 7.'
-                  : `Leave empty for unrestricted weekly booking; choose 1 to ${pricingOption.availableDays.length || 7}.`
-              }
-            />
-          </FormFieldLabel>
-        ) : null}
-        {pricingOption.membershipTerm !== 'DAILY' ? (
+          <BodyIconTypography label="Booking rules" />
           <SmallIconTypography
             label={
               pricingOption.fulfillmentType === 'ENTITLEMENT'
-                ? 'Leave this field empty for unlimited weekly redemptions.'
-                : 'Leave this field empty to keep unrestricted weekly booking behavior.'
+                ? 'Define the booking limits that apply when customers use credits from this offer.'
+                : 'Define availability, quantity, and booking duration.'
             }
           />
-        ) : null}
+          <CalendarDayPicker availableDays={pricingOption.availableDays} onChange={(availableDays) => changeNestedField(`pricingOptions[${index}].availableDays`, availableDays)} />
+          <FormFieldLabel
+            label="Number of Resources to Book"
+            help="How many matching resources are reserved for each booking. Increasing this can reduce availability because every booking consumes this many resources."
+          >
+            <TextField
+              name={`pricingOptions[${index}].numberOfResourcesToBook`}
+              required
+              disabled={isEventProduct}
+              helperText={isEventProduct ? 'Ignored for event products. The full matching resource set will be booked.' : undefined}
+            />
+          </FormFieldLabel>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+            <DurationInput
+              label="Minimum booking duration"
+              help="The shortest time a customer can book for this offer. It must not exceed the maximum duration and is saved in minutes even when entered as hours."
+              value={pricingOption.minDurationMinutes}
+              onChange={(value) => changeNestedField(`pricingOptions[${index}].minDurationMinutes`, value)}
+              unit={pricingOption.minDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+              onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].minDurationDisplayUnit`, unit.toUpperCase())}
+              required
+            />
+            <DurationInput
+              label="Maximum booking duration"
+              help="The longest time a customer can book for this offer. It works with the minimum duration to define the allowed booking range and is saved in minutes."
+              value={pricingOption.maxDurationMinutes}
+              onChange={(value) => changeNestedField(`pricingOptions[${index}].maxDurationMinutes`, value)}
+              unit={pricingOption.maxDurationDisplayUnit?.toLowerCase() as 'minutes' | 'hours' | undefined}
+              onUnitChange={(unit) => changeNestedField(`pricingOptions[${index}].maxDurationDisplayUnit`, unit.toUpperCase())}
+              required
+            />
+          </Box>
+          {pricingOption.membershipTerm !== 'DAILY' ? (
+            <FormFieldLabel
+              label={pricingOption.fulfillmentType === 'ENTITLEMENT' ? 'Maximum redemptions per week' : 'Required selected days per week'}
+              help={
+                pricingOption.fulfillmentType === 'ENTITLEMENT'
+                  ? 'This limits successful credit redemptions in each complete Monday-through-Sunday UTC week. Customers do not select weekdays for this limit.'
+                  : 'This requires customers to book a specific number of the selected weekdays each week. The calendar days above define the choices.'
+              }
+            >
+              <TextField
+                name={`pricingOptions[${index}].requiredDaysPerWeek`}
+                type="text"
+                slotProps={{ htmlInput: { inputMode: 'numeric', pattern: '[0-9]*', maxLength: 1 } }}
+                fieldProps={{ parse: sanitizeWeeklyRequiredDays }}
+                helperText={
+                  pricingOption.fulfillmentType === 'ENTITLEMENT'
+                    ? 'Leave empty for unlimited weekly redemptions; choose 1 to 7.'
+                    : `Leave empty for unrestricted weekly booking; choose 1 to ${pricingOption.availableDays.length || 7}.`
+                }
+              />
+            </FormFieldLabel>
+          ) : null}
+          {pricingOption.membershipTerm !== 'DAILY' ? (
+            <SmallIconTypography
+              label={
+                pricingOption.fulfillmentType === 'ENTITLEMENT'
+                  ? 'Leave this field empty for unlimited weekly redemptions.'
+                  : 'Leave this field empty to keep unrestricted weekly booking behavior.'
+              }
+            />
+          ) : null}
+        </StackColumn>
       </EditorSection>
 
       <EditorSection

@@ -1,7 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Kafka.Produce;
+using Enterprise.Shared.Messaging.Kafka.Produce;
 using Enterprise.Shared.Models;
 using Organization.Shared.Mappers;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Event;

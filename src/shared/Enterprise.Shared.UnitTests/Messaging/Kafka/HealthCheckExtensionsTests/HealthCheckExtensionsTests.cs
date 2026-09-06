@@ -1,0 +1,36 @@
+﻿using Enterprise.Shared.Messaging.Kafka;
+using Enterprise.Shared.Messaging.Kafka.Configurations;
+using Enterprise.Shared.UnitTesting.Fixtures;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
+
+namespace Enterprise.Shared.UnitTests.Messaging.Kafka.HealthCheckExtensionsTests;
+
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
+public class HealthCheckExtensionsTests
+{
+    [Theory]
+    [AutoFakeItEasyData([typeof(ServiceCollectionFixtureCustomizer)])]
+    public void AddKafkaBrokerHealthCheck_Should_Register_HealthCheck_with_services_tag(ServiceCollection serviceCollection)
+    {
+        const string BootstrapServers = "fakebootstrapservers";
+        var kafkaConfiguration = new KafkaConfiguration
+        {
+            BootstrapServers = BootstrapServers,
+        };
+
+        serviceCollection.AddKafkaBrokerHealthCheck(kafkaConfiguration);
+
+        // act
+        var services = serviceCollection.BuildServiceProvider();
+
+        var registration = services
+            .GetRequiredService<IOptions<HealthCheckServiceOptions>>()
+            .Value
+            .Registrations
+            .First();
+
+        registration.Tags.ShouldContain(HealthCheck.Constants.ReadinessTag);
+    }
+}

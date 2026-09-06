@@ -6,7 +6,7 @@ using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;

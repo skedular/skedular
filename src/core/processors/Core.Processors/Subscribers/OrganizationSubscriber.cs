@@ -3,7 +3,7 @@ using Core.Processors.Mappers;
 using Core.Shared.Models;
 using Core.Shared.Repositories;
 using Core.Shared.Services.Cache;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Organization = Core.Shared.Database.Entities.Organization;
 using OrganizationMember = Core.Shared.Database.Entities.OrganizationMember;
 using Type = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;

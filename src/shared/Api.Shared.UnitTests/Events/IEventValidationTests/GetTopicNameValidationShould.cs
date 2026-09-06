@@ -1,9 +1,9 @@
-using Api.Shared.Events;
+using Api.Shared.Events.Kafka;
 
 namespace Api.Shared.UnitTests.Events.IEventValidationTests;
 
 [KafkaTopic(1, 1, 1, 1)]
-file sealed class ValidEvent : IEvent
+file sealed class ValidKafkaEvent : IKafkaEvent
 {
     public string TopicName => "booking.created";
     public string RetryTopicNamePrefix => "booking.created.retry";
@@ -13,7 +13,7 @@ file sealed class ValidEvent : IEvent
 }
 
 [KafkaTopic(1, 1, 1, 1)]
-file sealed class CorrelationEvent : IEvent
+file sealed class CorrelationKafkaEvent : IKafkaEvent
 {
     public string TopicName => "booking.created";
     public string RetryTopicNamePrefix => "booking.created.retry";
@@ -30,21 +30,21 @@ public class GetTopicNameValidationShould
         // Event whose TopicName has spaces (invalid Kafka topic chars)
         Should.Throw<ArgumentException>(() =>
         {
-            IEvent e = new ValidEvent();
+            IKafkaEvent e = new ValidKafkaEvent();
             e.GetTopicName("invalid environment name with spaces");
         });
 
     [Fact]
     public void Return_retry_topic_count()
     {
-        IEvent e = new ValidEvent();
+        IKafkaEvent e = new ValidKafkaEvent();
         e.GetRetryTopicCount().ShouldBe(2);
     }
 
     [Fact]
     public void Return_custom_correlation_id()
     {
-        IEvent e = new CorrelationEvent();
+        IKafkaEvent e = new CorrelationKafkaEvent();
         e.GetCorrelationId().ShouldBe("test-correlation");
     }
 }

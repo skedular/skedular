@@ -1,6 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Team.V1;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Team.Shared.Repositories;
 
 namespace Team.Infrastructure.Services;

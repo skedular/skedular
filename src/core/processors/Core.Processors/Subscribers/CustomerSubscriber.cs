@@ -3,7 +3,7 @@ using Core.Processors.Mappers;
 using Core.Shared.Publishers;
 using Core.Shared.Repositories;
 using Core.Shared.Services.Cache;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Customer = Core.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;

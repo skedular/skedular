@@ -1,5 +1,5 @@
 ﻿using Enterprise.Shared;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 
 namespace Infrastructure.Shared;
 

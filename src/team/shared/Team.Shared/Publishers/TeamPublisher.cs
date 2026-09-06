@@ -1,7 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Team.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Kafka.Produce;
+using Enterprise.Shared.Messaging.Kafka.Produce;
 using Enterprise.Shared.Models;
 using Microsoft.Extensions.Logging;
 using Team.Shared.Mappers;

@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Organization.V1;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Slack.Processors.Mappers;
 using Slack.Shared.Models;
 using Slack.Shared.Repositories;

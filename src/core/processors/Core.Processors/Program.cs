@@ -7,7 +7,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.FileStorage;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 
 namespace Core.Processors;
 

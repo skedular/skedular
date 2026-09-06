@@ -1,7 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Customer.Shared.Repositories;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using CustomerReadiness_V1_Value_Event = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Event;
 
 namespace Customer.Infrastructure.Services;

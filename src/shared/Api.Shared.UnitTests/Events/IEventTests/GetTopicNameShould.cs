@@ -1,9 +1,9 @@
-using Api.Shared.Events;
+using Api.Shared.Events.Kafka;
 
 namespace Api.Shared.UnitTests.Events.IEventTests;
 
 [KafkaTopic(1, 1, 1, 1)]
-public class TopicEvent : IEvent
+public class TopicKafkaEvent : IKafkaEvent
 {
     public string TopicName => "booking.created";
     public string RetryTopicNamePrefix => "booking.created.retry";
@@ -25,7 +25,7 @@ public class GetTopicNameShould
             environment = "local";
         }
 
-        IEvent e = new TopicEvent();
+        IKafkaEvent e = new TopicKafkaEvent();
 
         e.GetTopicName(environment).ShouldBe($"{environment}.booking.created");
     }
@@ -33,7 +33,7 @@ public class GetTopicNameShould
     [Fact]
     public void Return_bare_topic_name_when_environment_empty()
     {
-        IEvent e = new TopicEvent();
+        IKafkaEvent e = new TopicKafkaEvent();
 
         e.GetTopicName(string.Empty).ShouldBe("booking.created");
     }
@@ -41,7 +41,7 @@ public class GetTopicNameShould
     [Fact]
     public void Return_bare_retry_name_when_environment_empty()
     {
-        IEvent e = new TopicEvent();
+        IKafkaEvent e = new TopicKafkaEvent();
 
         e.GetRetryTopicName(string.Empty, 0).ShouldBe("booking.created.retry.0");
     }
@@ -56,7 +56,7 @@ public class GetTopicNameShould
             environment = "local";
         }
 
-        IEvent e = new TopicEvent();
+        IKafkaEvent e = new TopicKafkaEvent();
 
         e.GetRetryTopicName(environment, 1).ShouldBe($"{environment}.booking.created.retry.1");
     }
@@ -64,7 +64,7 @@ public class GetTopicNameShould
     [Fact]
     public void Return_dead_letter_name_when_environment_empty()
     {
-        IEvent e = new TopicEvent();
+        IKafkaEvent e = new TopicKafkaEvent();
 
         e.GetDeadLetterTopicName(string.Empty).ShouldBe("booking.created.dead-letter");
     }
@@ -79,7 +79,7 @@ public class GetTopicNameShould
             environment = "local";
         }
 
-        IEvent e = new TopicEvent();
+        IKafkaEvent e = new TopicKafkaEvent();
 
         e.GetDeadLetterTopicName(environment).ShouldBe($"{environment}.booking.created.dead-letter");
     }
@@ -87,7 +87,7 @@ public class GetTopicNameShould
     [Fact]
     public void Return_null_correlation_id_by_default()
     {
-        IEvent e = new TopicEvent();
+        IKafkaEvent e = new TopicKafkaEvent();
 
         e.GetCorrelationId().ShouldBeNull();
     }

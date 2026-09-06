@@ -4,7 +4,7 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.GraphQL;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Security.Token;

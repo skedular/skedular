@@ -1,5 +1,5 @@
 ﻿using Confluent.Kafka;
-using Enterprise.Shared.Kafka.Telemetry;
+using Enterprise.Shared.Messaging.Kafka.Telemetry;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagatorFunctions.HeaderPropagatorFunctionsTests;
 
@@ -8,7 +8,7 @@ public class ExtractShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void Extract_Values(HeaderPropagatorFunctions functions)
+    public void Extract_Values(KafkaHeaderPropagatorFunctions functions)
     {
         var destination = new Headers
         {
@@ -20,7 +20,7 @@ public class ExtractShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Extract_Nothing_When_Not_Present(HeaderPropagatorFunctions functions)
+    public void Extract_Nothing_When_Not_Present(KafkaHeaderPropagatorFunctions functions)
     {
         var destination = new Headers
         {
@@ -32,7 +32,7 @@ public class ExtractShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Extract_All_Matching_Fields(HeaderPropagatorFunctions functions)
+    public void Extract_All_Matching_Fields(KafkaHeaderPropagatorFunctions functions)
     {
         var destination = new Headers
         {

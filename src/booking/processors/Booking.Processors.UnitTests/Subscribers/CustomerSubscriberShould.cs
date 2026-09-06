@@ -4,7 +4,7 @@ using Booking.Processors.Subscribers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using ValueMetadata = Api.Shared.Clients.Events.Skedular.Customer.V1.Metadata;
 using ValueType = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
 using CustomerModel = Booking.Shared.Models.Customer;

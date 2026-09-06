@@ -10,7 +10,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.IntegrationTesting;
 using Enterprise.Shared.IntegrationTesting.Aspire;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Flurl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

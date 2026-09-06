@@ -4,7 +4,7 @@ using Customer.Processors.Mappers;
 using Customer.Shared.Database.Entities;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services.Cache;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Location = Customer.Shared.Database.Entities.Location;
 using Type = Api.Shared.Clients.Events.Skedular.Location.V1.Type;
 

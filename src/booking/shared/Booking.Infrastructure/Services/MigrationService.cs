@@ -1,7 +1,7 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Event;
 using Value_Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event;
 

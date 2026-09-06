@@ -3,7 +3,7 @@ using Core.Shared;
 using Core.Shared.Database;
 using Enterprise.Shared;
 using Enterprise.Shared.Database.PostgreSql;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 
 namespace Core.Infrastructure;
 

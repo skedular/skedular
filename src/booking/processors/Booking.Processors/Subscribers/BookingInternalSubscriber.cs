@@ -6,7 +6,7 @@ using Booking.Shared.Services.Entitlements;
 using Booking.Shared.Workflows;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Stripe;
 using Stripe.Checkout;
 using Constants = Booking.Shared.GraphQL.Constants;

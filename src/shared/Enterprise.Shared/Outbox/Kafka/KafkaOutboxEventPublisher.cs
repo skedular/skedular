@@ -1,14 +1,14 @@
-using Api.Shared.Events;
+using Api.Shared.Events.Kafka;
 using Confluent.Kafka;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.Messaging.Kafka.Configurations;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Telemetry;
 using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Outbox.Kafka;
 
-public interface IKafkaOutboxEventPublisher<in TKey, in TEvent> where TEvent : IEvent
+public interface IKafkaOutboxEventPublisher<in TKey, in TEvent> where TEvent : IKafkaEvent
 {
     void Publish(TKey key, TEvent @event, IUnitOfWork unitOfWork);
 }
@@ -22,7 +22,7 @@ public class KafkaOutboxEventPublisher<TKey, TEvent>(
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
     ILogger<KafkaOutboxEventPublisher<TKey, TEvent>> logger)
-    : IKafkaOutboxEventPublisher<TKey, TEvent> where TEvent : class, IEvent
+    : IKafkaOutboxEventPublisher<TKey, TEvent> where TEvent : class, IKafkaEvent
 {
     public void Publish(TKey key, TEvent @event, IUnitOfWork unitOfWork)
     {

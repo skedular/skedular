@@ -1,4 +1,4 @@
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +18,7 @@ public static class Extensions
         ///     non-pooled factory, or direct singleton instance) via <see cref="IOutboxDbContextAccessor{TDbContext}" />.
         ///     <para>
         ///         Prerequisites: <see cref="Microsoft.EntityFrameworkCore.IDbContextFactory{TDbContext}" /> or
-        ///         singleton <typeparamref name="TDbContext" />, and <see cref="Enterprise.Shared.Kafka.Produce.IProducerFactory" />
+        ///         singleton <typeparamref name="TDbContext" />, and <see cref="IProducerFactory" />
         ///         must be registered.
         ///     </para>
         ///     <para>

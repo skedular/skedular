@@ -1,5 +1,5 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using MsTeams.Processors.Mappers;
 using MsTeams.Shared.Repositories;
 using Location = MsTeams.Shared.Database.Entities.Location;

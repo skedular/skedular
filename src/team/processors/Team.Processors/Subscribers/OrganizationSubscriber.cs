@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Team.Processors.Mappers;
 using Team.Shared.Models;
 using Team.Shared.Repositories;

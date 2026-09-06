@@ -3,7 +3,7 @@ using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.PostgreSql;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Enterprise.Shared.Temporal;
 using Team.Processors.Subscribers;
 using Team.Shared;

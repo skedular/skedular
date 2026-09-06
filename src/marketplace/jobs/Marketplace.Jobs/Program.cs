@@ -2,7 +2,7 @@ using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.PostgreSql;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Marketplace.Shared;

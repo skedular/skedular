@@ -1,9 +1,9 @@
-using Api.Shared.Events;
+using Api.Shared.Events.Kafka;
 
 namespace Api.Shared.UnitTests.Events.KafkaTopicHelperTests;
 
 [KafkaTopic(4, 3, 1, 1)]
-public class SampleEvent : IEvent
+public class SampleKafkaEvent : IKafkaEvent
 {
     public string TopicName => "test.sample";
     public string RetryTopicNamePrefix => "test.sample.retry";
@@ -12,7 +12,7 @@ public class SampleEvent : IEvent
     public string? CorrelationId => null;
 }
 
-public class EventWithoutAttribute : IEvent
+public class KafkaEventWithoutAttribute : IKafkaEvent
 {
     public string TopicName => "test.no-attr";
     public string RetryTopicNamePrefix => "test.no-attr.retry";
@@ -27,7 +27,7 @@ public class GetKafkaTopicInfoShould
     [Fact]
     public void Return_attribute_when_present()
     {
-        var info = KafkaTopicHelper.GetKafkaTopicInfo<SampleEvent>();
+        var info = KafkaTopicAttributeHelper.GetKafkaTopicInfo<SampleKafkaEvent>();
 
         info.ShouldNotBeNull();
         info.TopicPartitionCount.ShouldBe(4);
@@ -38,5 +38,5 @@ public class GetKafkaTopicInfoShould
 
     [Fact]
     public void Throw_when_attribute_missing() =>
-        Should.Throw<ArgumentNullException>(() => KafkaTopicHelper.GetKafkaTopicInfo<EventWithoutAttribute>());
+        Should.Throw<ArgumentNullException>(KafkaTopicAttributeHelper.GetKafkaTopicInfo<KafkaEventWithoutAttribute>);
 }

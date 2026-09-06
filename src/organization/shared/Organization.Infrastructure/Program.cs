@@ -1,6 +1,6 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Database.PostgreSql;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Organization.Infrastructure.Services;
 using Organization.Shared;
 using Organization.Shared.Database;

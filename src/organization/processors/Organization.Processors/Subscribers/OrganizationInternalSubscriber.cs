@@ -1,6 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1;
 using Api.Shared.Services;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Enterprise.Shared.Random;
 using Organization.Processors.Mappers;
 using Organization.Shared.Database.Entities;

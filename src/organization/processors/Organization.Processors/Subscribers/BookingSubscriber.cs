@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Enterprise.Shared.Sanitization;
 using Organization.Shared.Services;
 using Organization.Shared.Workflows;

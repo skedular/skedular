@@ -1,6 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Kafka.Consume;
+using Enterprise.Shared.Messaging;
 using Marketplace.Processors.Mappers;
 using Marketplace.Processors.Subscribers;
 using Marketplace.Shared.Publishers;

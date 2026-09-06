@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Confluent.Kafka;
-using Enterprise.Shared.Kafka.Telemetry;
+using Enterprise.Shared.Messaging.Kafka.Telemetry;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagatorFunctions.HeaderPropagatorFunctionsTests;
 
@@ -9,7 +9,7 @@ public class InjectShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void Add_New_Values(HeaderPropagatorFunctions functions)
+    public void Add_New_Values(KafkaHeaderPropagatorFunctions functions)
     {
         var destination = new Headers();
         functions.Inject(destination, "my key", "my value");
@@ -20,7 +20,7 @@ public class InjectShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Overwrite_Previous_Keys(HeaderPropagatorFunctions functions)
+    public void Overwrite_Previous_Keys(KafkaHeaderPropagatorFunctions functions)
     {
         // we need to overwrite keys where the message has been previously sent, such as retries
         var destination = new Headers

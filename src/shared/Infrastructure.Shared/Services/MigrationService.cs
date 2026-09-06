@@ -1,5 +1,5 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Event;
 using Location_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Location.V1.Event;
 using Marketplace_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Event;

@@ -19,7 +19,7 @@ using Enterprise.Shared.Encryption;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.IntegrationTesting;
 using Enterprise.Shared.IntegrationTesting.Aspire;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Payment;
 using Enterprise.Shared.Random;

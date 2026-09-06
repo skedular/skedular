@@ -2,7 +2,7 @@ using Api.Shared.Clients.Events.Skedular.Booking.V1;
 using Booking.Shared.Mappers;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Kafka.Produce;
+using Enterprise.Shared.Messaging.Kafka.Produce;
 using Enterprise.Shared.Models;
 using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Event;
 using Type = Api.Shared.Clients.Events.Skedular.Booking.V1.Type;

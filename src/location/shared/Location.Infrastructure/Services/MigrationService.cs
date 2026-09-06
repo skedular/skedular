@@ -1,6 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Kafka;
+using Enterprise.Shared.Messaging.Kafka;
 using Location.Shared.Repositories;
 
 namespace Location.Infrastructure.Services;

@@ -317,7 +317,7 @@ describe('ProductEditorForm', () => {
     expect(screen.getByRole('menuitem', { name: 'Remove offer' })).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('switches between the offer sections and explains membership terms separately from auto-renewal', async () => {
+  it('groups the offer term and booking rules while explaining membership terms separately from auto-renewal', async () => {
     const user = userEvent.setup();
 
     render(
@@ -332,11 +332,9 @@ describe('ProductEditorForm', () => {
     );
     await user.click(screen.getByRole('tab', { name: 'Offers' }));
 
-    await user.click(screen.getByRole('button', { name: /Fulfillment/ }));
+    await user.click(screen.getByRole('button', { name: /Term & booking/ }));
     expect(screen.getByText(/Choose a term of one day or longer/)).toBeVisible();
-
-    await user.click(screen.getByRole('button', { name: /Booking rules/ }));
-    expect(screen.getByRole('button', { name: /Booking rules/ })).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByText('Booking rules')).toBeVisible();
 
     await user.click(screen.getByRole('button', { name: /Payments/ }));
     expect(screen.getByRole('button', { name: /Payments/ })).toHaveAttribute('aria-expanded', 'true');
@@ -363,8 +361,7 @@ describe('ProductEditorForm', () => {
     );
     await user.click(screen.getByRole('tab', { name: 'Offers' }));
 
-    await user.click(screen.getByRole('button', { name: /Booking rules/ }));
-    expect(screen.getByRole('button', { name: /Booking rules/ })).toHaveAttribute('aria-expanded', 'true');
+    await user.click(screen.getByRole('button', { name: /Term & booking/ }));
     expect(screen.getByText(/booking limits that apply when customers use credits/)).toBeInTheDocument();
   });
 
@@ -378,7 +375,7 @@ describe('ProductEditorForm', () => {
     expect(screen.getByText(/matching resources and bookings behave/)).toBeInTheDocument();
 
     await user.click(screen.getByRole('tab', { name: 'Offers' }));
-    await user.click(screen.getByRole('button', { name: /Fulfillment/ }));
+    await user.click(screen.getByRole('button', { name: /Term & booking/ }));
     await user.click(screen.getByRole('button', { name: 'Help for Membership term' }));
     expect(screen.getByRole('button', { name: 'Help for Membership term' })).toBeInTheDocument();
   });
