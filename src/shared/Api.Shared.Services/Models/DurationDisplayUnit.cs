@@ -1,6 +1,3 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
 namespace Api.Shared.Services.Models;
 
 public enum DurationDisplayUnit
@@ -41,13 +38,4 @@ public static class DurationDisplayUnitExtensions
         DurationDisplayUnitConstants.Hours => DurationDisplayUnit.Hours,
         _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unsupported duration display unit."),
     };
-}
-
-public sealed class DurationDisplayUnitJsonConverter : JsonConverter<DurationDisplayUnit?>
-{
-    public override DurationDisplayUnit? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) =>
-        reader.TokenType == JsonTokenType.Null ? null : reader.GetString().ToDurationDisplayUnit();
-
-    public override void Write(Utf8JsonWriter writer, DurationDisplayUnit? value, JsonSerializerOptions options) =>
-        writer.WriteStringValue(value?.ToDurationDisplayUnit());
 }

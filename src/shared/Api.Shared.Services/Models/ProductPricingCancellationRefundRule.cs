@@ -7,7 +7,7 @@ namespace Api.Shared.Services.Models;
 public record ProductPricingCancellationRefundRule(
     int MinutesBefore,
     int RefundPercentage,
-    [property: JsonConverter(typeof(DurationDisplayUnitJsonConverter))]
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     DurationDisplayUnit? DisplayUnit = null)
 {
     public static ProductPricingCancellationRefundRule Empty => new(int.MinValue, int.MinValue);
