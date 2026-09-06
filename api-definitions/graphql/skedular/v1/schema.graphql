@@ -323,6 +323,8 @@ type Query
     @cost(weight: "10")
     @fusion__cost(schema: CUSTOMER_API, weight: "10")
     @fusion__field(schema: CUSTOMER_API)
+  membershipTerms: [MembershipTermDetails!]!
+    @fusion__field(schema: MARKETPLACE_API)
   msTeamsVersion: Version! @fusion__field(schema: MSTEAMS_API)
   myEntitlements: [EntitlementDetails!]!
     @cost(weight: "10")
@@ -523,8 +525,6 @@ type Query
     @fusion__cost(schema: MARKETPLACE_API, weight: "10")
     @fusion__field(schema: MARKETPLACE_API)
   productPricingBillingModes: [ProductPricingBillingModeDetails!]!
-    @fusion__field(schema: MARKETPLACE_API)
-  productPricingCadences: [ProductPricingCadenceDetails!]!
     @fusion__field(schema: MARKETPLACE_API)
   productPricingCancellationTypes: [ProductPricingCancellationTypeDetails!]!
     @fusion__field(schema: MARKETPLACE_API)
@@ -2946,6 +2946,11 @@ type MarketplaceSubscriptionCancellationAvailabilityDetails
     @fusion__field(schema: BOOKING_API)
 }
 
+type MembershipTermDetails @fusion__type(schema: MARKETPLACE_API) {
+  name: String! @fusion__field(schema: MARKETPLACE_API)
+  type: MembershipTerm! @fusion__field(schema: MARKETPLACE_API)
+}
+
 type ModifyMarketplaceBookingPayload @fusion__type(schema: BOOKING_API) {
   accessError: SpacesAccessErrorDetails @fusion__field(schema: BOOKING_API)
   availabilityError: BookingAvailabilityErrorDetails
@@ -3945,6 +3950,9 @@ type ProductPricing
   maxDurationMinutes: Int
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
+  membershipTerm: MembershipTerm!
+    @fusion__field(schema: BOOKING_API)
+    @fusion__field(schema: MARKETPLACE_API)
   minDurationDisplayUnit: DurationDisplayUnit
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
@@ -3955,9 +3963,6 @@ type ProductPricing
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
   price: Decimal!
-    @fusion__field(schema: BOOKING_API)
-    @fusion__field(schema: MARKETPLACE_API)
-  purchaseCadence: ProductPricingCadence!
     @fusion__field(schema: BOOKING_API)
     @fusion__field(schema: MARKETPLACE_API)
   requiredDaysPerWeek: Int
@@ -3971,11 +3976,6 @@ type ProductPricing
 type ProductPricingBillingModeDetails @fusion__type(schema: MARKETPLACE_API) {
   name: String! @fusion__field(schema: MARKETPLACE_API)
   type: ProductPricingBillingMode! @fusion__field(schema: MARKETPLACE_API)
-}
-
-type ProductPricingCadenceDetails @fusion__type(schema: MARKETPLACE_API) {
-  name: String! @fusion__field(schema: MARKETPLACE_API)
-  type: ProductPricingCadence! @fusion__field(schema: MARKETPLACE_API)
 }
 
 type ProductPricingCancellationRefundRule
@@ -5502,11 +5502,11 @@ input ProductPricingInput @fusion__type(schema: MARKETPLACE_API) {
   maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit @fusion__inputField(schema: MARKETPLACE_API)
   maxDurationDisplayUnit: DurationDisplayUnit @fusion__inputField(schema: MARKETPLACE_API)
   maxDurationMinutes: Int @fusion__inputField(schema: MARKETPLACE_API)
+  membershipTerm: MembershipTerm! @fusion__inputField(schema: MARKETPLACE_API)
   minDurationDisplayUnit: DurationDisplayUnit @fusion__inputField(schema: MARKETPLACE_API)
   minDurationMinutes: Int @fusion__inputField(schema: MARKETPLACE_API)
   numberOfResourcesToBook: Int! @fusion__inputField(schema: MARKETPLACE_API)
   price: Decimal! @fusion__inputField(schema: MARKETPLACE_API)
-  purchaseCadence: ProductPricingCadence! @fusion__inputField(schema: MARKETPLACE_API)
   requiredDaysPerWeek: Int @fusion__inputField(schema: MARKETPLACE_API)
   supportsSubscriptionAutoRenewal: Boolean! @fusion__inputField(schema: MARKETPLACE_API)
 }
@@ -6618,6 +6618,44 @@ enum MarketplaceRefundStatus @fusion__type(schema: BOOKING_API) {
   FAILED @fusion__enumValue(schema: BOOKING_API)
   CANCELLED @fusion__enumValue(schema: BOOKING_API)
   RECONCILIATION_REQUIRED @fusion__enumValue(schema: BOOKING_API)
+}
+
+enum MembershipTerm
+  @fusion__type(schema: BOOKING_API)
+  @fusion__type(schema: MARKETPLACE_API) {
+  NOT_SET
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  DAILY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  WEEKLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  FORTNIGHTLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  MONTHLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  TWO_MONTHS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  QUARTERLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  FOUR_MONTHS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  FIVE_MONTHS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  SIX_MONTHS
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
+  YEARLY
+    @fusion__enumValue(schema: BOOKING_API)
+    @fusion__enumValue(schema: MARKETPLACE_API)
 }
 
 enum OrderDirection
@@ -7922,44 +7960,6 @@ enum ProductPricingBillingMode
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
   IN_ARREARS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-}
-
-enum ProductPricingCadence
-  @fusion__type(schema: BOOKING_API)
-  @fusion__type(schema: MARKETPLACE_API) {
-  NOT_SET
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  DAILY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  WEEKLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  FORTNIGHTLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  MONTHLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  TWO_MONTHS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  QUARTERLY
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  FOUR_MONTHS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  FIVE_MONTHS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  SIX_MONTHS
-    @fusion__enumValue(schema: BOOKING_API)
-    @fusion__enumValue(schema: MARKETPLACE_API)
-  YEARLY
     @fusion__enumValue(schema: BOOKING_API)
     @fusion__enumValue(schema: MARKETPLACE_API)
 }

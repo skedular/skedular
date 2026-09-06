@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3c35b8da1dc9f6db29a3c399225150de>>
+ * @generated SignedSource<<6c465db070cb6f8fdedea2a158b5c133>>
  * @lightSyntaxTransform
  */
 
@@ -10,9 +10,9 @@
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
@@ -59,10 +59,10 @@ export type marketplaceProductSubscribeForm_query$data = {
         readonly title: string | null | undefined;
       };
       readonly maxDurationMinutes: number | null | undefined;
+      readonly membershipTerm: MembershipTerm;
       readonly minDurationMinutes: number | null | undefined;
       readonly numberOfResourcesToBook: number;
       readonly price: any;
-      readonly purchaseCadence: ProductPricingCadence;
       readonly requiredDaysPerWeek: number | null | undefined;
       readonly supportsSubscriptionAutoRenewal: boolean;
     }>;
@@ -271,7 +271,7 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "purchaseCadence",
+              "name": "membershipTerm",
               "storageKey": null
             },
             {
@@ -388,6 +388,6 @@ return {
 };
 })();
 
-(node as any).hash = "62946cd0720e5507a0e6fa0005e96fd3";
+(node as any).hash = "739d10919dfccc909cf4d313fc538596";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4a59c63e05768c90b6dfeeeb150e49b6>>
+ * @generated SignedSource<<a220fb00f70b479ea44c6b354c22662c>>
  * @lightSyntaxTransform
  */
 
@@ -11,10 +11,10 @@ import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPatchField = "CURRENCY" | "FEATURE_IMAGES" | "LISTING_METADATA" | "PRICING_OPTIONS" | "TAGS" | "TYPE" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
@@ -63,11 +63,11 @@ export type ProductPricingInput = {
   maxAllowedResourcesLockTimePaidViaCardDisplayUnit?: DurationDisplayUnit | null | undefined;
   maxDurationDisplayUnit?: DurationDisplayUnit | null | undefined;
   maxDurationMinutes?: number | null | undefined;
+  membershipTerm: MembershipTerm;
   minDurationDisplayUnit?: DurationDisplayUnit | null | undefined;
   minDurationMinutes?: number | null | undefined;
   numberOfResourcesToBook: number;
   price: any;
-  purchaseCadence: ProductPricingCadence;
   requiredDaysPerWeek?: number | null | undefined;
   supportsSubscriptionAutoRenewal: boolean;
 };

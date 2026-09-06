@@ -129,7 +129,7 @@ export const reliableBookingsHonestRefundsArticle: ResourceArticle = {
         "Record whether the booking succeeded, partially succeeded, or failed.",
         "Notify the relevant customer, host, or organization administrator.",
         "Determine whether payment must be fully or partially returned.",
-        "Calculate the refundable amount using the original purchase terms.",
+        "Calculate the refundable amount using the original membership terms.",
         "Submit the refund through the correct payment provider.",
         "Track the provider result until completion.",
         "Send unresolved outcomes for reconciliation or human review.",

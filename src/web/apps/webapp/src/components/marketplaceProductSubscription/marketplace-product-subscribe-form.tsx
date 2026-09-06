@@ -77,7 +77,7 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
               title
               subTitle
             }
-            purchaseCadence
+            membershipTerm
             minDurationMinutes
             maxDurationMinutes
             price
@@ -182,7 +182,7 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
   }, [searchParams]);
 
   const subscriptionPricingOptions = useMemo(
-    () => [...(rootData.product?.pricingOptions ?? [])].filter((option) => isSubscriptionCadence(option.purchaseCadence)).sort((left, right) => left.index - right.index),
+    () => [...(rootData.product?.pricingOptions ?? [])].filter((option) => isSubscriptionCadence(option.membershipTerm)).sort((left, right) => left.index - right.index),
     [rootData.product?.pricingOptions],
   );
 
@@ -237,10 +237,10 @@ const MarketplaceProductSubscribeForm = ({ bookingAvailable, bookingAvailability
     [subscriptionPricingOptions],
   );
 
-  const totalLabel = selectedPricingOption ? formatPriceForDisplay(currencyLabel, Number(selectedPricingOption.price) * quantity, selectedPricingOption.purchaseCadence) : '';
+  const totalLabel = selectedPricingOption ? formatPriceForDisplay(currencyLabel, Number(selectedPricingOption.price) * quantity, selectedPricingOption.membershipTerm) : '';
   const billingModeLabel = selectedPricingOption?.billingMode === 'IN_ARREARS' ? 'First invoice due now, later cycles billed in arrears' : 'Payment due at checkout';
   const requiredDaysPerWeek = selectedPricingOption?.requiredDaysPerWeek ?? 0;
-  const weeklySelectionRequired = selectedPricingOption?.purchaseCadence !== 'DAILY' && selectedPricingOption?.requiredDaysPerWeek != null;
+  const weeklySelectionRequired = selectedPricingOption?.membershipTerm !== 'DAILY' && selectedPricingOption?.requiredDaysPerWeek != null;
   const eligibleSelectedDays = (
     selectedPricingOption?.availableDays?.length ? selectedPricingOption.availableDays : ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']
   ) as DayOfWeek[];

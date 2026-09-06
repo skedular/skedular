@@ -148,14 +148,14 @@ This file applies to the whole repository.
   days.
 - Booking owns the downstream invoice-export behavior for those billing modes, including recurring Xero repeating
   invoice templates.
-- Booking must treat invoice due days as separate from billing cycle and recurring purchase cadence.
+- Booking must treat invoice due days as separate from billing cycle and recurring membership term.
 - Billing cycle decides arrears cadence boundaries.
-- Recurring purchase cadence is the starting point for recurring invoice cadence, but booking may split a longer
+- Recurring membership term is the starting point for recurring invoice cadence, but booking may split a longer
   recurring cadence down to the organization billing cycle for recurring invoice export.
 - Invoice due days decide when each generated invoice is payable.
 - For `RepeatingInvoices`, booking must calculate the effective recurring invoice cadence:
-    - if purchase cadence is shorter than or equal to the organization billing cycle, invoice on purchase cadence
-    - if purchase cadence is longer than the organization billing cycle, split it down to the organization billing cycle
+    - if membership term is shorter than or equal to the organization billing cycle, invoice on membership term
+    - if membership term is longer than the organization billing cycle, split it down to the organization billing cycle
 - Do not coerce a short recurring cadence such as a daily pass into a longer org billing cycle template.
 - When a longer recurring cadence is split down to the org billing cycle, split the recurring invoice amount to the
   per-installment amount too instead of reusing the full recurring charge on every repeating invoice.
@@ -252,7 +252,7 @@ This file applies to the whole repository.
     1. ensures the current cycle recurring booking exists
     2. repairs or removes future generated booking instances that no longer match the schedule
     3. creates any missing future booking days for the current cycle
-- Renewal is driven from `NextRenewalAt` and the subscription purchase cadence, not from the per-instance booking
+- Renewal is driven from `NextRenewalAt` and the subscription membership term, not from the per-instance booking
   cadence.
 - On renewal, booking shared reloads the current `ProductVersion` and re-matches pricing so the renewed cycle stays
   aligned with the product's current pricing options.

@@ -301,7 +301,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
               listingMetadata {
                 title
               }
-              purchaseCadence
+              membershipTerm
               price
               isTaxInclusive
               availableDays
@@ -450,11 +450,11 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           .map((option) => ({
             id: option.id,
             title: option.listingMetadata.title ?? '',
-            cadence: option.purchaseCadence,
-            amountLabel: formatPriceForDisplay(currencyLabel, option.price, option.purchaseCadence),
+            cadence: option.membershipTerm,
+            amountLabel: formatPriceForDisplay(currencyLabel, option.price, option.membershipTerm),
             taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
             availableDays: option.availableDays ?? [],
-            bookingLabel: isSubscriptionCadence(option.purchaseCadence) ? 'Choose plan' : 'Book this option',
+            bookingLabel: isSubscriptionCadence(option.membershipTerm) ? 'Choose plan' : 'Book this option',
           })),
       };
     });

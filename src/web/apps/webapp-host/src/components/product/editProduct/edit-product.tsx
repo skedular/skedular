@@ -7,9 +7,9 @@ import type { editProduct_query$key } from '@/queries/__generated__/editProduct_
 import type {
   Currency,
   editProduct_updateProductMutation,
+  MembershipTerm,
   PaymentMethod,
   ProductPatchField,
-  ProductPricingCadence,
   ProductType,
 } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
 import Box from '@mui/material/Box';
@@ -44,7 +44,7 @@ type PricingOptionForm = {
   id: string;
   title: string | null;
   subTitle: string | null;
-  cadence: string;
+  membershipTerm: string;
   fulfillmentType: string;
   entitlementCreditQuantity: string;
   entitlementValidityDays: string;
@@ -192,7 +192,7 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   id: uuid(),
   title: null,
   subTitle: null,
-  cadence: 'DAILY',
+  membershipTerm: 'DAILY',
   fulfillmentType: 'RESERVATION',
   entitlementCreditQuantity: '',
   entitlementValidityDays: '',
@@ -214,8 +214,8 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
 
 const isEventType = (type?: string | null) => type === 'EVENT';
 
-const getDurationStepDetails = (cadence: string) => {
-  switch (cadence) {
+const getDurationStepDetails = (membershipTerm: string) => {
+  switch (membershipTerm) {
     default:
       return {
         durationStepMinutes: 1,
@@ -236,7 +236,7 @@ const productSchema = () =>
       .of(
         object({
           ...listingMetadataSchemaShape,
-          cadence: string().required('Please choose how often this pricing applies.'),
+          membershipTerm: string().required('Please choose how often this pricing applies.'),
           price: string()
             .matches(/^\d+(\.\d{1,2})?$/, 'Enter a valid price.')
             .required('Please enter a price.')
@@ -251,8 +251,8 @@ const productSchema = () =>
             .test('is-greater-than-zero', 'Minimum booking length must be more than zero.', (value) => Number(value) > 0)
             .test('is-not-greater-than-a-day', 'Minimum duration cannot be longer than one day.', (value) => Number(value) <= 60 * 24)
             .test('is-valid-duration-step', function (value) {
-              const { cadence } = this.parent;
-              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence);
+              const { membershipTerm } = this.parent;
+              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(membershipTerm);
 
               const minDurationMinutes = Number(value);
               if (isNaN(minDurationMinutes)) {
@@ -285,8 +285,8 @@ const productSchema = () =>
             .test('is-greater-than-zero', 'Maximum booking length must be more than zero.', (value) => Number(value) > 0)
             .test('is-not-greater-than-a-day', 'Maximum duration cannot be longer than one day.', (value) => Number(value) <= 60 * 24)
             .test('is-valid-duration-step', function (value) {
-              const { cadence } = this.parent;
-              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence);
+              const { membershipTerm } = this.parent;
+              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(membershipTerm);
 
               const maxDurationMinutes = Number(value);
               if (isNaN(maxDurationMinutes)) {
@@ -357,7 +357,7 @@ const productSchema = () =>
       )
       .min(1, 'Add at least one pricing option.')
       .test(
-        'is-unique-cadence-numberOfResourcesToBook-and-billingMode',
+        'is-unique-membershipTerm-numberOfResourcesToBook-and-billingMode',
         'Each pricing option must use a different combination of frequency, quantity, and billing mode.',
         (value) => {
           if (!value || value.length === 0) {
@@ -366,7 +366,7 @@ const productSchema = () =>
 
           const seenCombinations = new Set<string>();
           for (const pricingOption of value as PricingOptionForm[]) {
-            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}|${pricingOption.cadence === 'DAILY' ? '' : pricingOption.requiredDaysPerWeek}`;
+            const combination = `${pricingOption.membershipTerm}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}|${pricingOption.membershipTerm === 'DAILY' ? '' : pricingOption.requiredDaysPerWeek}`;
             if (seenCombinations.has(combination)) {
               return false;
             }
@@ -430,7 +430,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               subTitle
             }
             supportsSubscriptionAutoRenewal
-            purchaseCadence
+            membershipTerm
             price
             availableDays
             requiredDaysPerWeek
@@ -457,7 +457,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             entitlementValidityDays
           }
         }
-        productPricingCadences {
+        membershipTerms {
           type
           name
         }
@@ -476,7 +476,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         ...multipleChoicesProductTags_query
         ...singleChoiceCurrency_query
         ...multipleChoicesPaymentMethodTypes_query
-        ...singleChoiceProductPricingCadence_query
+        ...singleChoiceMembershipTerm_query
         ...singleChoiceProductPricingCancellationType_query
         ...multipleChoicesAmenities_query
         ...singleChoiceProductType_query
@@ -534,7 +534,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               subTitle
             }
             supportsSubscriptionAutoRenewal
-            purchaseCadence
+            membershipTerm
             price
             availableDays
             requiredDaysPerWeek
@@ -624,7 +624,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                     id: pricingOption.id,
                     title: pricingOption.listingMetadata.title ?? null,
                     subTitle: pricingOption.listingMetadata.subTitle ?? null,
-                    cadence: pricingOption.purchaseCadence,
+                    membershipTerm: pricingOption.membershipTerm,
                     fulfillmentType: (pricingOption as unknown as { fulfillmentType?: string }).fulfillmentType ?? 'RESERVATION',
                     entitlementCreditQuantity: (pricingOption as unknown as { entitlementCreditQuantity?: number | null }).entitlementCreditQuantity?.toString() ?? '',
                     entitlementValidityDays: (pricingOption as unknown as { entitlementValidityDays?: number | null }).entitlementValidityDays?.toString() ?? '',
@@ -707,10 +707,10 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               subTitle: pricingOption.subTitle ?? '',
               includedFeatures: [],
             },
-            purchaseCadence: pricingOption.cadence as ProductPricingCadence,
+            membershipTerm: pricingOption.membershipTerm as MembershipTerm,
             price: Number(pricingOption.price),
             availableDays: pricingOption.availableDays,
-            requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
+            requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.membershipTerm, pricingOption.requiredDaysPerWeek),
             supportsSubscriptionAutoRenewal: isEventType(type) || pricingOption.fulfillmentType === 'ENTITLEMENT' ? false : pricingOption.supportsSubscriptionAutoRenewal,
             fulfillmentType: pricingOption.fulfillmentType as never,
             entitlementCreditQuantity:
@@ -779,10 +779,10 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                 title: pricingOption.title ?? '',
                 subTitle: pricingOption.subTitle ?? '',
               },
-              purchaseCadence: pricingOption.cadence as ProductPricingCadence,
+              membershipTerm: pricingOption.membershipTerm as MembershipTerm,
               price: Number(pricingOption.price),
               availableDays: pricingOption.availableDays,
-              requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.cadence, pricingOption.requiredDaysPerWeek),
+              requiredDaysPerWeek: toRequiredDaysPerWeekInput(pricingOption.membershipTerm, pricingOption.requiredDaysPerWeek),
               supportsSubscriptionAutoRenewal: isEventType(type) || pricingOption.fulfillmentType === 'ENTITLEMENT' ? false : pricingOption.supportsSubscriptionAutoRenewal,
               fulfillmentType: pricingOption.fulfillmentType as never,
               entitlementCreditQuantity:

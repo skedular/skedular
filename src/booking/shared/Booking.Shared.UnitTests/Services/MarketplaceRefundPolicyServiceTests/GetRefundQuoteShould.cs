@@ -134,7 +134,7 @@ public class GetRefundQuoteShould
             "pricing-1",
             0,
             ListingMetadata.Empty,
-            ProductPricingCadence.Daily,
+            MembershipTerm.Daily,
             100m,
             true,
             false,

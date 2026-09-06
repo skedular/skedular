@@ -334,7 +334,7 @@ public class MarketplaceBookingSubscriptionService(
                 existingSubscription.AutoRenew = false;
                 existingSubscription.NextRenewalAt ??= ResolveNextRenewalAt(
                     existingSubscription.StartedAt,
-                    existingSubscription.MarketplaceBooking.ProductPricing.PurchaseCadence);
+                    existingSubscription.MarketplaceBooking.ProductPricing.MembershipTerm);
                 existingSubscription.ModifiedAt = timeProvider.GetUtcNow();
             }
             else
@@ -501,20 +501,20 @@ public class MarketplaceBookingSubscriptionService(
         }
     }
 
-    private static DateTimeOffset ResolveNextRenewalAt(DateTimeOffset startedAt, ProductPricingCadence cadence) =>
-        cadence switch
+    private static DateTimeOffset ResolveNextRenewalAt(DateTimeOffset startedAt, MembershipTerm membershipTerm) =>
+        membershipTerm switch
         {
-            ProductPricingCadence.Daily => startedAt.AddDays(1),
-            ProductPricingCadence.Weekly => startedAt.AddDays(7),
-            ProductPricingCadence.Fortnightly => startedAt.AddDays(14),
-            ProductPricingCadence.Monthly => startedAt.AddMonths(1),
-            ProductPricingCadence.TwoMonths => startedAt.AddMonths(2),
-            ProductPricingCadence.Quarterly => startedAt.AddMonths(3),
-            ProductPricingCadence.FourMonths => startedAt.AddMonths(4),
-            ProductPricingCadence.FiveMonths => startedAt.AddMonths(5),
-            ProductPricingCadence.SixMonths => startedAt.AddMonths(6),
-            ProductPricingCadence.Yearly => startedAt.AddYears(1),
-            _ => throw new ArgumentOutOfRangeException(nameof(cadence), cadence,
-                $"Unexpected value for {nameof(cadence)}: {cadence}. Update enum mapping or caller input."),
+            MembershipTerm.Daily => startedAt.AddDays(1),
+            MembershipTerm.Weekly => startedAt.AddDays(7),
+            MembershipTerm.Fortnightly => startedAt.AddDays(14),
+            MembershipTerm.Monthly => startedAt.AddMonths(1),
+            MembershipTerm.TwoMonths => startedAt.AddMonths(2),
+            MembershipTerm.Quarterly => startedAt.AddMonths(3),
+            MembershipTerm.FourMonths => startedAt.AddMonths(4),
+            MembershipTerm.FiveMonths => startedAt.AddMonths(5),
+            MembershipTerm.SixMonths => startedAt.AddMonths(6),
+            MembershipTerm.Yearly => startedAt.AddYears(1),
+            _ => throw new ArgumentOutOfRangeException(nameof(membershipTerm), membershipTerm,
+                $"Unexpected value for {nameof(membershipTerm)}: {membershipTerm}. Update enum mapping or caller input."),
         };
 }

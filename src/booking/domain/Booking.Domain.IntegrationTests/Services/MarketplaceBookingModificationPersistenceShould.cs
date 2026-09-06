@@ -64,7 +64,7 @@ public class MarketplaceBookingModificationPersistenceShould(
                 ProductVersion = productVersion,
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Daily,
+                    MembershipTerm = MembershipTerm.Daily,
                     NumberOfResourcesToBook = 0,
                 },
                 Quantity = 1,
@@ -144,7 +144,7 @@ public class MarketplaceBookingModificationPersistenceShould(
                 ProductVersion = productVersion,
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Daily,
+                    MembershipTerm = MembershipTerm.Daily,
                     NumberOfResourcesToBook = 0,
                 },
                 Quantity = 1,
@@ -231,7 +231,7 @@ public class MarketplaceBookingModificationPersistenceShould(
                 ProductVersion = productVersion,
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Daily,
+                    MembershipTerm = MembershipTerm.Daily,
                     NumberOfResourcesToBook = 0,
                     Price = originalPrice,
                 },
@@ -342,7 +342,7 @@ public class MarketplaceBookingModificationPersistenceShould(
                 {
                     FulfillmentType = ProductPricingFulfillmentType.Entitlement,
                     EntitlementCreditQuantity = 1,
-                    PurchaseCadence = ProductPricingCadence.Daily,
+                    MembershipTerm = MembershipTerm.Daily,
                     NumberOfResourcesToBook = 0,
                 },
                 Quantity = 1,

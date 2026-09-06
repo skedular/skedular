@@ -167,7 +167,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
               title
               subTitle
             }
-            purchaseCadence
+            membershipTerm
             price
             numberOfResourcesToBook
             minDurationMinutes
@@ -265,7 +265,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
   }, [searchParams]);
 
   const bookingPricingOptions = useMemo(
-    () => [...(rootData.product?.pricingOptions ?? [])].filter((option) => !isSubscriptionCadence(option.purchaseCadence)).sort((left, right) => left.index - right.index),
+    () => [...(rootData.product?.pricingOptions ?? [])].filter((option) => !isSubscriptionCadence(option.membershipTerm)).sort((left, right) => left.index - right.index),
     [rootData.product?.pricingOptions],
   );
 
@@ -427,7 +427,7 @@ const MarketplaceProductBookingForm = ({ bookingAvailable, bookingAvailabilityMe
     const price = Number(selectedPricingOption.price);
     const total = price * effectiveQuantity;
 
-    return formatPriceForDisplay(currencyLabel, total.toFixed(2), selectedPricingOption.purchaseCadence);
+    return formatPriceForDisplay(currencyLabel, total.toFixed(2), selectedPricingOption.membershipTerm);
   }, [currencyLabel, dateRangeValidation, effectiveQuantity, selectedPricingOption]);
 
   const durationLabel = dateRangeValidation.valid ? `${dateRangeValidation.until.diff(dateRangeValidation.from, 'minutes')} minutes` : 'Invalid time';

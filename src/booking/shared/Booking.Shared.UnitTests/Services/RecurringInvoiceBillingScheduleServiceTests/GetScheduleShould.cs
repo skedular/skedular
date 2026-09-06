@@ -24,14 +24,14 @@ public class GetScheduleShould
             TotalAmount = 58m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Daily,
+                MembershipTerm = MembershipTerm.Daily,
             },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
 
-        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence);
-        result.Cadence.ShouldBe(ProductPricingCadence.Daily);
+        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm);
+        result.MembershipTerm.ShouldBe(MembershipTerm.Daily);
         result.InvoiceAmount.ShouldBe(58m);
     }
 
@@ -51,14 +51,14 @@ public class GetScheduleShould
             TotalAmount = 100m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Monthly,
+                MembershipTerm = MembershipTerm.Monthly,
             },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
 
-        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence);
-        result.Cadence.ShouldBe(ProductPricingCadence.Monthly);
+        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm);
+        result.MembershipTerm.ShouldBe(MembershipTerm.Monthly);
         result.InvoiceAmount.ShouldBe(100m);
     }
 
@@ -78,14 +78,14 @@ public class GetScheduleShould
             TotalAmount = 600m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.SixMonths,
+                MembershipTerm = MembershipTerm.SixMonths,
             },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
 
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
-        result.Cadence.ShouldBe(ProductPricingCadence.Monthly);
+        result.MembershipTerm.ShouldBe(MembershipTerm.Monthly);
         result.InvoiceAmount.ShouldBe(600m);
     }
 
@@ -105,14 +105,14 @@ public class GetScheduleShould
             TotalAmount = 300m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Quarterly,
+                MembershipTerm = MembershipTerm.Quarterly,
             },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Weekly);
 
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
-        result.Cadence.ShouldBe(ProductPricingCadence.Weekly);
+        result.MembershipTerm.ShouldBe(MembershipTerm.Weekly);
         result.InvoiceAmount.ShouldBe(300m);
     }
 
@@ -131,7 +131,7 @@ public class GetScheduleShould
         {
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.SixMonths,
+                MembershipTerm = MembershipTerm.SixMonths,
                 Price = 600m,
             },
         };
@@ -139,7 +139,7 @@ public class GetScheduleShould
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
 
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
-        result.Cadence.ShouldBe(ProductPricingCadence.Monthly);
+        result.MembershipTerm.ShouldBe(MembershipTerm.Monthly);
         result.InvoiceAmount.ShouldBe(100m);
     }
 
@@ -159,15 +159,15 @@ public class GetScheduleShould
             Quantity = 3,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Daily,
+                MembershipTerm = MembershipTerm.Daily,
                 Price = 20m,
             },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
 
-        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence);
-        result.Cadence.ShouldBe(ProductPricingCadence.Daily);
+        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm);
+        result.MembershipTerm.ShouldBe(MembershipTerm.Daily);
         result.InvoiceAmount.ShouldBe(60m);
     }
 }

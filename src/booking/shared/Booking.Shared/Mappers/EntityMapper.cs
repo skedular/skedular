@@ -237,7 +237,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper, IEntitleme
         new()
         {
             Name = productVersion.ListingMetadata?.Title ?? "Name not set",
-            UnitLabel = pricing.PurchaseCadence.ToStripePriceUnitName(),
+            UnitLabel = pricing.MembershipTerm.ToStripePriceUnitName(),
             TaxCode = "txcd_10103001",
             Metadata = new Dictionary<string, string>
             {

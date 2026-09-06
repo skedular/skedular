@@ -47,7 +47,7 @@ public class XeroRecurringInvoiceTransitionService : IXeroRecurringInvoiceTransi
                 return new XeroRecurringInvoiceTransitionDecision(
                     XeroRecurringInvoiceExportPath.FreezeExistingRepeatingInvoice,
                     AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
-                    "Existing recurring Xero repeating invoice remains active because the current cadence can no longer be represented as a repeating template.");
+                    "Existing recurring Xero repeating invoice remains active because the current membership term can no longer be represented as a repeating template.");
             }
 
             if (!string.Equals(existingLink!.RepeatingScheduleSource, desiredSchedule.Source, StringComparison.Ordinal) ||

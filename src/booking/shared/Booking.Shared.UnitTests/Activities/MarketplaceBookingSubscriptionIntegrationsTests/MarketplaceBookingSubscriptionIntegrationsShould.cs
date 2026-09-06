@@ -147,7 +147,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing =
                     ProductPricing.Empty("pricing-1") with
                     {
-                        PurchaseCadence = ProductPricingCadence.Monthly,
+                        MembershipTerm = MembershipTerm.Monthly,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -166,7 +166,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.Quantity = 1;
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
-            PurchaseCadence = ProductPricingCadence.Monthly,
+            MembershipTerm = MembershipTerm.Monthly,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero));
@@ -232,7 +232,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing =
                     ProductPricing.Empty("pricing-1") with
                     {
-                        PurchaseCadence = ProductPricingCadence.Monthly,
+                        MembershipTerm = MembershipTerm.Monthly,
                         NumberOfResourcesToBook = 1,
                         BillingMode = ProductPricingBillingMode.Upfront,
                     },
@@ -253,7 +253,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.PaymentMethod = PaymentMethod.Card.ToPaymentMethod();
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
-            PurchaseCadence = ProductPricingCadence.Monthly,
+            MembershipTerm = MembershipTerm.Monthly,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
 
@@ -337,7 +337,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 PaymentExpiry = new DateTimeOffset(2026, 3, 18, 10, 0, 0, TimeSpan.Zero),
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Monthly,
+                    MembershipTerm = MembershipTerm.Monthly,
                     NumberOfResourcesToBook = 1,
                     BillingMode = ProductPricingBillingMode.Upfront,
                 },
@@ -358,7 +358,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.PaymentMethod = PaymentMethod.Card.ToPaymentMethod();
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
-            PurchaseCadence = ProductPricingCadence.Monthly,
+            MembershipTerm = MembershipTerm.Monthly,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
 
@@ -433,7 +433,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing =
                     ProductPricing.Empty("pricing-1") with
                     {
-                        PurchaseCadence = ProductPricingCadence.Monthly,
+                        MembershipTerm = MembershipTerm.Monthly,
                         NumberOfResourcesToBook = 1,
                         BillingMode = ProductPricingBillingMode.Upfront,
                     },
@@ -454,7 +454,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.PaymentMethod = PaymentMethod.BankTransfer.ToPaymentMethod();
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
-            PurchaseCadence = ProductPricingCadence.Monthly,
+            MembershipTerm = MembershipTerm.Monthly,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
 
@@ -521,7 +521,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing =
                     ProductPricing.Empty("pricing-1") with
                     {
-                        PurchaseCadence = ProductPricingCadence.Monthly,
+                        MembershipTerm = MembershipTerm.Monthly,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -592,7 +592,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing =
                     ProductPricing.Empty("pricing-1") with
                     {
-                        PurchaseCadence = ProductPricingCadence.Monthly,
+                        MembershipTerm = MembershipTerm.Monthly,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -612,7 +612,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.Quantity = 1;
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
-            PurchaseCadence = ProductPricingCadence.Monthly,
+            MembershipTerm = MembershipTerm.Monthly,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero));
@@ -670,7 +670,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 ProductPricing =
                     ProductPricing.Empty("pricing-1") with
                     {
-                        PurchaseCadence = ProductPricingCadence.Monthly,
+                        MembershipTerm = MembershipTerm.Monthly,
                         NumberOfResourcesToBook = 1,
                     },
                 ProductVersion = new ProductVersion
@@ -692,7 +692,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         subscription.MarketplaceBooking.Quantity = 1;
         subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
         {
-            PurchaseCadence = ProductPricingCadence.Monthly,
+            MembershipTerm = MembershipTerm.Monthly,
         };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 19, 8, 0, 0, TimeSpan.Zero));
@@ -823,7 +823,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             {
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Daily,
+                    MembershipTerm = MembershipTerm.Daily,
                     SupportsSubscriptionAutoRenewal = true,
                     NumberOfResourcesToBook = 1,
                 },
@@ -838,7 +838,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         };
         var currentPricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             SupportsSubscriptionAutoRenewal = true,
             NumberOfResourcesToBook = 1,
         };
@@ -976,7 +976,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         var environment = new ActivityEnvironment();
         var originalPricing = ProductPricing.Empty("pricing-original") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
             SupportsSubscriptionAutoRenewal = true,
             RequiredDaysPerWeek = 2,
         };
@@ -1084,7 +1084,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 },
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Daily,
+                    MembershipTerm = MembershipTerm.Daily,
                     NumberOfResourcesToBook = 1,
                 },
             },
@@ -1169,7 +1169,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             {
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Daily,
+                    MembershipTerm = MembershipTerm.Daily,
                     SupportsSubscriptionAutoRenewal = true,
                     NumberOfResourcesToBook = 1,
                 },

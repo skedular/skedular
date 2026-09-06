@@ -17,7 +17,7 @@ export type PricingOptionForm = {
   id: string;
   title: string | null;
   subTitle: string | null;
-  cadence: string;
+  membershipTerm: string;
   price: string;
   numberOfResourcesToBook: string;
   minDurationMinutes: string;
@@ -104,7 +104,7 @@ export const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCar
   id: uuid(),
   title: null,
   subTitle: null,
-  cadence: 'DAILY',
+  membershipTerm: 'DAILY',
   price: '',
   numberOfResourcesToBook: '1',
   minDurationMinutes: '',
@@ -128,13 +128,13 @@ export const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCar
   maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit: null,
 });
 
-export const isSubscriptionCadence = (cadence?: string | null) =>
-  !!cadence && new Set(['DAILY', 'WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'TWO_MONTHS', 'QUARTERLY', 'FOUR_MONTHS', 'FIVE_MONTHS', 'SIX_MONTHS', 'YEARLY']).has(cadence);
+export const isSubscriptionCadence = (membershipTerm?: string | null) =>
+  !!membershipTerm && new Set(['DAILY', 'WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'TWO_MONTHS', 'QUARTERLY', 'FOUR_MONTHS', 'FIVE_MONTHS', 'SIX_MONTHS', 'YEARLY']).has(membershipTerm);
 
 export const isEventType = (type?: string | null) => type === 'EVENT';
 
-export const toRequiredDaysPerWeekInput = (cadence: string, requiredDaysPerWeek: string) =>
-  cadence !== 'DAILY' && requiredDaysPerWeek.trim() ? Number(requiredDaysPerWeek) : null;
+export const toRequiredDaysPerWeekInput = (membershipTerm: string, requiredDaysPerWeek: string) =>
+  membershipTerm !== 'DAILY' && requiredDaysPerWeek.trim() ? Number(requiredDaysPerWeek) : null;
 
 export const sanitizeWeeklyRequiredDays = (value: string) => value.replace(/[^0-9]/g, '').slice(0, 1);
 
@@ -160,7 +160,7 @@ export const productSchema = () =>
       .of(
         object({
           ...listingMetadataSchemaShape,
-          cadence: string().required('Please choose how often this pricing applies.'),
+          membershipTerm: string().required('Please choose how often this pricing applies.'),
           price: string()
             .matches(/^\d+(\.\d{1,2})?$/, 'Enter a valid price.')
             .required('Please enter a price.')
@@ -175,8 +175,8 @@ export const productSchema = () =>
             .test('is-greater-than-zero', 'Minimum booking length must be more than zero.', (value) => Number(value) > 0)
             .test('is-not-greater-than-a-day', 'Minimum duration cannot be longer than one day.', (value) => Number(value) <= 60 * 24)
             .test('is-valid-duration-step', function (value) {
-              const { cadence } = this.parent;
-              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence);
+              const { membershipTerm } = this.parent;
+              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(membershipTerm);
               const minDurationMinutes = Number(value);
               if (isNaN(minDurationMinutes)) {
                 return true;
@@ -208,8 +208,8 @@ export const productSchema = () =>
             .test('is-greater-than-zero', 'Maximum booking length must be more than zero.', (value) => Number(value) > 0)
             .test('is-not-greater-than-a-day', 'Maximum duration cannot be longer than one day.', (value) => Number(value) <= 60 * 24)
             .test('is-valid-duration-step', function (value) {
-              const { cadence } = this.parent;
-              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence);
+              const { membershipTerm } = this.parent;
+              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(membershipTerm);
               const maxDurationMinutes = Number(value);
               if (isNaN(maxDurationMinutes)) {
                 return true;
@@ -276,8 +276,8 @@ export const productSchema = () =>
             .test('is-not-not-set', 'Please choose a billing mode.', (value) => value !== 'NOT_SET'),
           acceptedPaymentMethods: array().min(1, 'Choose at least one accepted payment method.').required('Please choose at least one accepted payment method.'),
           requiredDaysPerWeek: string().test('weekly-day-selection', 'Set the required number of selected days from 1 up to the enabled weekdays.', function (value) {
-            const { cadence, availableDays } = this.parent as PricingOptionForm;
-            if (cadence === 'DAILY') return !value;
+            const { membershipTerm, availableDays } = this.parent as PricingOptionForm;
+            if (membershipTerm === 'DAILY') return !value;
             if (!value) return true;
             const required = Number(value);
             const availableCount = (this.parent as PricingOptionForm).fulfillmentType === 'ENTITLEMENT' ? 7 : availableDays.length || 7;
@@ -287,7 +287,7 @@ export const productSchema = () =>
       )
       .min(1, 'Add at least one pricing option.')
       .test(
-        'is-unique-cadence-numberOfResourcesToBook-and-billingMode',
+        'is-unique-membershipTerm-numberOfResourcesToBook-and-billingMode',
         'Each pricing option must use a different combination of frequency, quantity, and billing mode.',
         (value) => {
           if (!value || value.length === 0) {
@@ -296,7 +296,7 @@ export const productSchema = () =>
 
           const combinations = new Set<string>();
           for (const pricingOption of value) {
-            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}|${pricingOption.cadence === 'DAILY' ? '' : pricingOption.requiredDaysPerWeek}`;
+            const combination = `${pricingOption.membershipTerm}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}|${pricingOption.membershipTerm === 'DAILY' ? '' : pricingOption.requiredDaysPerWeek}`;
             if (combinations.has(combination)) {
               return false;
             }
@@ -314,6 +314,6 @@ export const productSchema = () =>
           return true;
         }
 
-        return pricingOptions.every((pricingOption) => !isSubscriptionCadence(pricingOption.cadence) && !pricingOption.supportsSubscriptionAutoRenewal);
+        return pricingOptions.every((pricingOption) => !isSubscriptionCadence(pricingOption.membershipTerm) && !pricingOption.supportsSubscriptionAutoRenewal);
       }),
   });

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<43fba869c00a443da9e7c1f1de5ee259>>
+ * @generated SignedSource<<1a25ac7439d4a1be29bea8e507e2c0fe>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type productCard_ProductDetails$data = {
   readonly currency: {
@@ -35,8 +35,8 @@ export type productCard_ProductDetails$data = {
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };
+    readonly membershipTerm: MembershipTerm;
     readonly price: any;
-    readonly purchaseCadence: ProductPricingCadence;
     readonly supportsSubscriptionAutoRenewal: boolean;
   }>;
   readonly " $fragmentType": "productCard_ProductDetails";
@@ -174,7 +174,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "purchaseCadence",
+          "name": "membershipTerm",
           "storageKey": null
         },
         {
@@ -207,6 +207,6 @@ return {
 };
 })();
 
-(node as any).hash = "91843735e512709e38830aecbd9b2ce1";
+(node as any).hash = "efe1c6411a15e4fec220da464bfb0fca";
 
 export default node;

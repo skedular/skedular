@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<93c23926dde028daa0ff258b67337e28>>
+ * @generated SignedSource<<4dea26455c4b54088e1560c6aa32b827>>
  * @lightSyntaxTransform
  */
 
@@ -9,20 +9,20 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type productCard_query$data = {
   readonly currencies: ReadonlyArray<{
     readonly name: string;
     readonly type: Currency;
   }>;
+  readonly membershipTerms: ReadonlyArray<{
+    readonly name: string;
+    readonly type: MembershipTerm;
+  }>;
   readonly organization: {
     readonly canModify: boolean;
   } | null | undefined;
-  readonly productPricingCadences: ReadonlyArray<{
-    readonly name: string;
-    readonly type: ProductPricingCadence;
-  }>;
   readonly " $fragmentType": "productCard_query";
 };
 export type productCard_query$key = {
@@ -85,9 +85,9 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "ProductPricingCadenceDetails",
+      "concreteType": "MembershipTermDetails",
       "kind": "LinkedField",
-      "name": "productPricingCadences",
+      "name": "membershipTerms",
       "plural": true,
       "selections": (v0/*:: as any*/),
       "storageKey": null
@@ -108,6 +108,6 @@ return {
 };
 })();
 
-(node as any).hash = "9ecfe8e3dbf1976be97169e465aae52c";
+(node as any).hash = "6fa99000bf4433bd69a95ea426c2961e";
 
 export default node;

@@ -6,12 +6,12 @@
 ## Phase 1: Setup
 
 - [X] T001 Review current ProductPricing, event, GraphQL, editor, booking, entitlement, and subscription paths in the files listed in `specs/046-required-days-cadence/research.md`.
-- [X] T002 [P] Add focused test fixtures for longer purchase cadences and UTC week boundaries in `src/booking/shared/Booking.Shared.UnitTests/`.
+- [X] T002 [P] Add focused test fixtures for longer membership terms and UTC week boundaries in `src/booking/shared/Booking.Shared.UnitTests/`.
 
 ## Phase 2: Foundational
 
 - [X] T003 Implement a shared UTC-only calendar-week calculator and `[start, end)` complete-boundary predicate, without timezone persistence or location-timezone lookup, in `src/booking/shared/Booking.Shared/Services/`.
-- [X] T004 [P] Add validation and editor gating for Weekly and longer supported purchase cadences, hide the field for Daily, and keep cadence-free entitlements governed by validity in `src/marketplace/apis/Marketplace.Api/Services/ProductService.cs`.
+- [X] T004 [P] Add validation and editor gating for Weekly and longer supported membership terms, hide the field for Daily, and keep cadence-free entitlements governed by validity in `src/marketplace/apis/Marketplace.Api/Services/ProductService.cs`.
 - [X] T005 [P] Add unit tests for UTC week keys, complete boundary weeks, available-day limits, and cadence validation in `src/booking/shared/Booking.Shared.UnitTests/` and `src/marketplace/apis/Marketplace.Api.UnitTests/Services/`.
 - [X] T006 Define structured logging properties for pricing validation and weekly eligibility decisions in the owning Booking/Marketplace services, and add runtime log assertions to the relevant unit tests.
 

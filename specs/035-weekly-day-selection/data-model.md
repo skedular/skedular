@@ -7,7 +7,7 @@
 | `availableDays` | Existing unique collection of calendar-day codes | Empty means all seven days are eligible. It remains a price availability rule. |
 | `requiredDaysPerWeek` | Nullable positive integer | Only weekly purchase pricing may set it; it requires exactly that many selected days and must not exceed the available-day count when restricted. |
 
-This weekly-specific value is not a generic cadence field. Fortnightly, monthly, and other pricing cadences receive no new behavior from it.
+This weekly-specific value is not a generic cadence field. Fortnightly, monthly, and other pricing membership terms receive no new behavior from it.
 
 ## MarketplaceBookingSubscription / Current Recurring Schedule
 

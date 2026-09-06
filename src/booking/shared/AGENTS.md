@@ -75,14 +75,14 @@ The code paths are separate enough that it is easy to fix one and leave the othe
   supported invoiceable flows.
 - When org Xero billing mode is `RepeatingInvoices`, only the recurring marketplace booking invoice path should switch
   to Xero repeating invoice templates.
-- Keep the organization billing cycle and recurring purchase cadence separate in that mode. They are not interchangeable
+- Keep the organization billing cycle and recurring membership term separate in that mode. They are not interchangeable
   inputs.
 - Keep invoice due days separate from both of them. Invoice due days are payment terms, not cadence.
 - Under `RepeatingInvoices`, booking must first calculate the effective invoice cadence before building a Xero repeating
   template:
-    - if the product purchase cadence is shorter than or equal to the organization billing cycle, invoice on the
-      purchase cadence
-    - if the product purchase cadence is longer than the organization billing cycle, split the recurring charge down to
+    - if the product membership term is shorter than or equal to the organization billing cycle, invoice on the
+      membership term
+    - if the product membership term is longer than the organization billing cycle, split the recurring charge down to
       the organization billing cycle
 - That means short cadences like daily or weekly must not be coerced into a monthly repeating invoice just because the
   organization billing cycle is monthly.
@@ -93,8 +93,8 @@ The code paths are separate enough that it is easy to fix one and leave the othe
     - normal Xero invoice exports
     - Xero repeating invoice templates
 - In practice:
-    - the effective repeating cadence is the smaller of the purchase cadence and the organization billing cycle
-    - longer purchase cadences are split to organization-cycle installments before export
+    - the effective repeating cadence is the smaller of the membership term and the organization billing cycle
+    - longer membership terms are split to organization-cycle installments before export
 - Supported effective recurring cadences for Xero repeating templates are `Weekly`, `Fortnightly`, `Monthly`,
   `TwoMonths`, `Quarterly`, `FourMonths`, `FiveMonths`, `SixMonths`, and `Yearly`.
 - If the effective recurring cadence is daily or otherwise not representable by Xero repeating invoices, fall back to
@@ -238,7 +238,7 @@ The code paths are separate enough that it is easy to fix one and leave the othe
     - repairs required resources for existing generated marketplace bookings
     - removes obsolete or duplicate future generated bookings
     - materializes missing future booking days inside the current cycle
-- Auto-renew uses the subscription purchase cadence and `NextRenewalAt` to advance cycles.
+- Auto-renew uses the subscription membership term and `NextRenewalAt` to advance cycles.
 - Renewal reloads the current `ProductVersion` and re-matches pricing through product-version pricing selection; if no
   compatible auto-renewable pricing remains, the subscription moves to renewal failed rather than renewing incorrectly.
 - Existing recurring instances with `HasRecurringInstanceOverrides == true` are intentionally excluded from automatic

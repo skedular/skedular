@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<43e3152f6e2f244316a6aa28638e3682>>
+ * @generated SignedSource<<04fd7916aef5905de598cd8bab71ad8f>>
  * @lightSyntaxTransform
  */
 
@@ -11,9 +11,9 @@ import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type locationPricingEditQuery$variables = {
@@ -62,10 +62,10 @@ export type locationPricingEditQuery$data = {
         readonly maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationMinutes: number | null | undefined;
+        readonly membershipTerm: MembershipTerm;
         readonly minDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
         readonly price: any;
-        readonly purchaseCadence: ProductPricingCadence;
         readonly requiredDaysPerWeek: number | null | undefined;
         readonly supportsSubscriptionAutoRenewal: boolean;
       }>;
@@ -217,7 +217,7 @@ v3 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "purchaseCadence",
+                "name": "membershipTerm",
                 "storageKey": null
               },
               {
@@ -425,16 +425,16 @@ return {
     "selections": (v3/*:: as any*/)
   },
   "params": {
-    "cacheID": "2988eb96ffc464a94b3551bd2e5d30ef",
+    "cacheID": "f2aa005ff1dda0e2d1a1bf6c3fbaadb5",
     "id": null,
     "metadata": {},
     "name": "locationPricingEditQuery",
     "operationKind": "query",
-    "text": "query locationPricingEditQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    id\n    canModify\n    products {\n      id\n      currency {\n        type\n      }\n      listingMetadata {\n        title\n        about\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      pricingOptions {\n        id\n        price\n        purchaseCadence\n        billingMode\n        acceptedPaymentMethods\n        availableDays\n        requiredDaysPerWeek\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          displayUnit\n          refundPercentage\n        }\n        isTaxInclusive\n        supportsSubscriptionAutoRenewal\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        fulfillmentType\n        entitlementCreditQuantity\n        entitlementValidityDays\n        listingMetadata {\n          title\n          subTitle\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query locationPricingEditQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    id\n    canModify\n    products {\n      id\n      currency {\n        type\n      }\n      listingMetadata {\n        title\n        about\n      }\n      featureImages {\n        original {\n          url\n        }\n      }\n      pricingOptions {\n        id\n        price\n        membershipTerm\n        billingMode\n        acceptedPaymentMethods\n        availableDays\n        requiredDaysPerWeek\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          displayUnit\n          refundPercentage\n        }\n        isTaxInclusive\n        supportsSubscriptionAutoRenewal\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        fulfillmentType\n        entitlementCreditQuantity\n        entitlementValidityDays\n        listingMetadata {\n          title\n          subTitle\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "394bce1ceca3d10771bc1ab143c1a6e9";
+(node as any).hash = "4fe02ed7e7441cbcb9fb7fb40bebf7a5";
 
 export default node;

@@ -64,7 +64,7 @@ const buildInitialValues = (data: QueryData): FormValues => {
     id: opt.id ?? crypto.randomUUID(),
     title: opt.listingMetadata?.title ?? '',
     price: opt.price != null ? String(opt.price) : '',
-    cadence: opt.purchaseCadence ?? 'DAILY',
+    cadence: opt.membershipTerm ?? 'DAILY',
     billingMode: opt.billingMode ?? 'UPFRONT',
     acceptedPaymentMethods: opt.acceptedPaymentMethods ? [...opt.acceptedPaymentMethods] : ['CARD'],
     availableDays: opt.availableDays ? [...opt.availableDays] : [],
@@ -135,7 +135,7 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
             pricingOptions {
               id
               price
-              purchaseCadence
+              membershipTerm
               billingMode
               acceptedPaymentMethods
               availableDays
@@ -381,7 +381,7 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
                 id: opt.id,
                 index: idx,
                 listingMetadata: { title: opt.title || vals.listingTitle.trim(), subTitle: '', about: vals.listingAbout.trim(), includedFeatures: [] },
-                purchaseCadence: opt.cadence,
+                membershipTerm: opt.cadence,
                 price: Number(opt.price),
                 isTaxInclusive: opt.isTaxInclusive,
                 acceptedPaymentMethods: opt.acceptedPaymentMethods.length > 0 ? opt.acceptedPaymentMethods : ['CARD'],
@@ -478,7 +478,7 @@ export const PricingPage = ({ embedded = false }: { embedded?: boolean }) => {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ justifyContent: 'space-between', alignItems: { sm: 'center' } }}>
             <Box>
               <MediumHeadingIconTypography label="Pricing and booking" />
-              <BodyIconTypography label="Manage rates, cadences, cancellation policies, and booking rules." />
+              <BodyIconTypography label="Manage rates, membership terms, cancellation policies, and booking rules." />
             </Box>
             <Box>
               {displayedSaveStatus === 'saving' && <SmallIconTypography label="Saving…" />}

@@ -12,7 +12,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
     public void Build_Single_Per_Hour_Charge_Segment_For_In_Arrears_Booking(OrganizationArrearsChargeSegmentService sut)
     {
         var booking = CreateBooking(
-            ProductPricingCadence.Daily,
+            MembershipTerm.Daily,
             10m,
             2,
             new DateTimeOffset(2026, 3, 22, 8, 0, 0, TimeSpan.Zero),
@@ -30,7 +30,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
     public void Prorate_Partial_Per_Hour_Charge_Segment_For_In_Arrears_Booking(OrganizationArrearsChargeSegmentService sut)
     {
         var booking = CreateBooking(
-            ProductPricingCadence.Daily,
+            MembershipTerm.Daily,
             10m,
             2,
             new DateTimeOffset(2026, 3, 22, 8, 0, 0, TimeSpan.Zero),
@@ -49,7 +49,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
         OrganizationArrearsChargeSegmentService sut)
     {
         var booking = CreateBooking(
-            ProductPricingCadence.Quarterly,
+            MembershipTerm.Quarterly,
             100m,
             1,
             new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero),
@@ -72,7 +72,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
     public void Ignore_Upfront_Bookings(OrganizationArrearsChargeSegmentService sut)
     {
         var booking = CreateBooking(
-            ProductPricingCadence.Daily,
+            MembershipTerm.Daily,
             10m,
             1,
             new DateTimeOffset(2026, 3, 22, 8, 0, 0, TimeSpan.Zero),
@@ -89,7 +89,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
     public void Split_Six_Month_Cadence_Into_Weekly_Installments_When_Billing_Cycle_Is_Weekly(OrganizationArrearsChargeSegmentService sut)
     {
         var booking = CreateBooking(
-            ProductPricingCadence.SixMonths,
+            MembershipTerm.SixMonths,
             260m,
             1,
             new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero),
@@ -112,7 +112,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
     public void Prorate_Short_Final_Weekly_Period_When_Billing_Cycle_Is_Weekly(OrganizationArrearsChargeSegmentService sut)
     {
         var booking = CreateBooking(
-            ProductPricingCadence.Monthly,
+            MembershipTerm.Monthly,
             100m,
             1,
             new DateTimeOffset(2026, 1, 1, 0, 0, 0, TimeSpan.Zero),
@@ -130,7 +130,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
     public void Align_Weekly_Installments_To_Monday_Billing_Boundaries(OrganizationArrearsChargeSegmentService sut)
     {
         var booking = CreateBooking(
-            ProductPricingCadence.Monthly,
+            MembershipTerm.Monthly,
             140m,
             1,
             new DateTimeOffset(2026, 1, 7, 0, 0, 0, TimeSpan.Zero),
@@ -158,7 +158,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
     public void Mark_Weekly_Boundary_Segment_As_Earned_Inside_The_Current_Billing_Period(OrganizationArrearsChargeSegmentService sut)
     {
         var booking = CreateBooking(
-            ProductPricingCadence.Monthly,
+            MembershipTerm.Monthly,
             140m,
             1,
             new DateTimeOffset(2026, 1, 7, 0, 0, 0, TimeSpan.Zero),
@@ -179,7 +179,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
     public void Align_Fortnightly_Installments_To_Fortnight_Billing_Boundaries(OrganizationArrearsChargeSegmentService sut)
     {
         var booking = CreateBooking(
-            ProductPricingCadence.Quarterly,
+            MembershipTerm.Quarterly,
             280m,
             1,
             new DateTimeOffset(2026, 3, 25, 0, 0, 0, TimeSpan.Zero),
@@ -208,7 +208,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
         OrganizationArrearsChargeSegmentService sut)
     {
         var recurringBooking = CreateRecurringBooking(
-            ProductPricingCadence.Quarterly,
+            MembershipTerm.Quarterly,
             1450m,
             1,
             new DateTimeOffset(2026, 3, 29, 0, 0, 0, TimeSpan.Zero),
@@ -235,7 +235,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
     }
 
     private static Shared.Models.Booking CreateBooking(
-        ProductPricingCadence purchaseCadence,
+        MembershipTerm membershipTerm,
         decimal price,
         int quantity,
         DateTimeOffset from,
@@ -283,7 +283,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
                     },
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = purchaseCadence,
+                    MembershipTerm = membershipTerm,
                     Price = price,
                     BillingMode = billingMode,
                     ListingMetadata = ListingMetadata.Empty with
@@ -295,7 +295,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
         };
 
     private static RecurringBooking CreateRecurringBooking(
-        ProductPricingCadence purchaseCadence,
+        MembershipTerm membershipTerm,
         decimal price,
         int quantity,
         DateTimeOffset startDate,
@@ -343,7 +343,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
                     },
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = purchaseCadence,
+                    MembershipTerm = membershipTerm,
                     Price = price,
                     BillingMode = billingMode,
                     ListingMetadata = ListingMetadata.Empty with

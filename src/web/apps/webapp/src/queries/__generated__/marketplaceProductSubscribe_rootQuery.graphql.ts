@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<93505f23672a6db1c5702a5652da8b8e>>
+ * @generated SignedSource<<9aec70d6831ed6b8ab07f3ce2d39d315>>
  * @lightSyntaxTransform
  */
 
@@ -342,7 +342,7 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "purchaseCadence",
+                "name": "membershipTerm",
                 "storageKey": null
               },
               {
@@ -508,12 +508,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fac3fda3e4cf41956bfb454d5ab0dc11",
+    "cacheID": "85c4001047d39e6feac3d4791d5661bf",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscribe_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductSubscribe_rootQuery(\n  $productId: String!\n  $organizationCustomDomain: String!\n) {\n  ...marketplaceProductSubscribeBreadcrumb_query_2SWcqy\n  organization(customDomain: $organizationCustomDomain) {\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  product(id: $productId) {\n    ...marketplaceProductSubscribeHero_product\n    id\n  }\n  ...marketplaceProductSubscribeForm_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeBreadcrumb_query_2SWcqy on Query {\n  product(id: $productId) {\n    id\n    listingMetadata {\n      title\n    }\n  }\n}\n\nfragment marketplaceProductSubscribeForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      customerFacingTermsAndConditionsUrl\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      minDurationMinutes\n      maxDurationMinutes\n      price\n      isTaxInclusive\n      supportsSubscriptionAutoRenewal\n      billingMode\n      acceptedPaymentMethods\n      availableDays\n      requiredDaysPerWeek\n      numberOfResourcesToBook\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n    }\n  }\n}\n\nfragment marketplaceProductSubscribeHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
+    "text": "query marketplaceProductSubscribe_rootQuery(\n  $productId: String!\n  $organizationCustomDomain: String!\n) {\n  ...marketplaceProductSubscribeBreadcrumb_query_2SWcqy\n  organization(customDomain: $organizationCustomDomain) {\n    spacesPublicBookingAvailability {\n      available\n      message\n    }\n    id\n  }\n  product(id: $productId) {\n    ...marketplaceProductSubscribeHero_product\n    id\n  }\n  ...marketplaceProductSubscribeForm_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeBreadcrumb_query_2SWcqy on Query {\n  product(id: $productId) {\n    id\n    listingMetadata {\n      title\n    }\n  }\n}\n\nfragment marketplaceProductSubscribeForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      customerFacingTermsAndConditionsUrl\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      membershipTerm\n      minDurationMinutes\n      maxDurationMinutes\n      price\n      isTaxInclusive\n      supportsSubscriptionAutoRenewal\n      billingMode\n      acceptedPaymentMethods\n      availableDays\n      requiredDaysPerWeek\n      numberOfResourcesToBook\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n    }\n  }\n}\n\nfragment marketplaceProductSubscribeHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
   }
 };
 })();

@@ -1,9 +1,9 @@
-import { PaletteModeContext, getRelayErrorMessage, useIntegratedPlatform } from '@skedular/shared';
-import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 import { EllipseMenuIcon, ProductIcon } from '@/components/icons';
 import { getOrganizationProductBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
+import { getRelayErrorMessage, PaletteModeContext, useIntegratedPlatform } from '@skedular/shared';
+import { BodyIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@skedular/ui';
 
 import { emerald, flame } from '@skedular/ui';
 
@@ -19,13 +19,13 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
+import Image from 'next/image';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import Image from 'next/image';
 
 type Props = {
   rootDataRelay: productCard_query$key;
@@ -41,7 +41,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
         organization(customDomain: $organizationCustomDomain) {
           canModify
         }
-        productPricingCadences {
+        membershipTerms {
           type
           name
         }
@@ -79,7 +79,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
             title
             subTitle
           }
-          purchaseCadence
+          membershipTerm
           price
           isTaxInclusive
           supportsSubscriptionAutoRenewal
@@ -357,7 +357,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
                 <SmallIconTypography label="No pricing options configured." />
               ) : (
                 previewPricingOptions.map((pricingOption) => {
-                  const cadence = rootData.productPricingCadences.find((item) => item.type === pricingOption.purchaseCadence)?.name ?? pricingOption.purchaseCadence;
+                  const cadence = rootData.membershipTerms.find((item) => item.type === pricingOption.membershipTerm)?.name ?? pricingOption.membershipTerm;
 
                   return (
                     <Box

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f37b970283ac76923b7f7f0a3f38c913>>
+ * @generated SignedSource<<04f110bc8f1463959c936108c8c01a17>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type hostOperationsProductsQuery$variables = {
   organizationId: string;
 };
@@ -28,8 +28,8 @@ export type hostOperationsProductsQuery$data = {
       };
       readonly pricingOptions: ReadonlyArray<{
         readonly id: string;
+        readonly membershipTerm: MembershipTerm;
         readonly price: any;
-        readonly purchaseCadence: ProductPricingCadence;
       }>;
       readonly type: {
         readonly name: string;
@@ -165,7 +165,7 @@ v4 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "purchaseCadence",
+                "name": "membershipTerm",
                 "storageKey": null
               }
             ],
@@ -196,16 +196,16 @@ return {
     "selections": (v4/*:: as any*/)
   },
   "params": {
-    "cacheID": "59f251b926c949e40065df0d957d512d",
+    "cacheID": "476f46005990d89c4dfd50d0265c34f0",
     "id": null,
     "metadata": {},
     "name": "hostOperationsProductsQuery",
     "operationKind": "query",
-    "text": "query hostOperationsProductsQuery(\n  $organizationId: String!\n) {\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    products {\n      id\n      inactive\n      listingMetadata {\n        title\n        about\n      }\n      type {\n        name\n      }\n      currency {\n        name\n      }\n      pricingOptions {\n        id\n        price\n        purchaseCadence\n      }\n    }\n  }\n}\n"
+    "text": "query hostOperationsProductsQuery(\n  $organizationId: String!\n) {\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    products {\n      id\n      inactive\n      listingMetadata {\n        title\n        about\n      }\n      type {\n        name\n      }\n      currency {\n        name\n      }\n      pricingOptions {\n        id\n        price\n        membershipTerm\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c2abf967e2d35faeaddd383ea2400293";
+(node as any).hash = "49f34459c3132115f39211208cea4ead";
 
 export default node;

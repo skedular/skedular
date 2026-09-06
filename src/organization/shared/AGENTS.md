@@ -49,7 +49,7 @@ This file covers `organization/shared/`.
 - `organization/shared/` also owns the persisted org-level invoice payment-terms settings, including default invoice due
   days.
 - `organization/shared/` also should not decide whether recurring repeating schedules use organization billing cycle or
-  recurring purchase cadence. That split belongs to booking-owned recurring invoice behavior.
+  recurring membership term. That split belongs to booking-owned recurring invoice behavior.
 - `organization/shared/` should not treat invoice due days as a substitute for billing cycle or recurring cadence.
   Booking consumes the org setting and applies it to generated invoices as payment terms.
 - `organization/shared/` should not try to auto-migrate existing recurring Xero exports when org billing mode or org

@@ -14,7 +14,7 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
@@ -22,7 +22,7 @@ public class ProductVersionHelperServiceShould
         {
             ProductPricing.Empty("pricing-2") with
             {
-                PurchaseCadence = ProductPricingCadence.Daily,
+                MembershipTerm = MembershipTerm.Daily,
                 NumberOfResourcesToBook = 1,
                 BillingMode = ProductPricingBillingMode.Upfront,
             },
@@ -41,13 +41,13 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
         var matchingPricing = ProductPricing.Empty("pricing-2") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
@@ -65,7 +65,7 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
             AvailableDays = [DayOfWeek.Sunday],
@@ -88,7 +88,7 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-2-days") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
             RequiredDaysPerWeek = 2,
@@ -115,7 +115,7 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
@@ -123,7 +123,7 @@ public class ProductVersionHelperServiceShould
         {
             ProductPricing.Empty("pricing-2") with
             {
-                PurchaseCadence = ProductPricingCadence.Daily,
+                MembershipTerm = MembershipTerm.Daily,
                 NumberOfResourcesToBook = 2,
                 BillingMode = ProductPricingBillingMode.InArrears,
             },
@@ -141,7 +141,7 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
@@ -149,7 +149,7 @@ public class ProductVersionHelperServiceShould
         {
             Id = "stripe-product-1",
             ProductPricingId = "pricing-1",
-            PricingCadence = ProductPricingCadence.Daily.ToProductPricingCadence(),
+            MembershipTerm = MembershipTerm.Daily.ToMembershipTerms(),
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
         };
@@ -167,7 +167,7 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
@@ -175,7 +175,7 @@ public class ProductVersionHelperServiceShould
         {
             Id = "stripe-product-2",
             ProductPricingId = "pricing-2",
-            PricingCadence = ProductPricingCadence.Daily.ToProductPricingCadence(),
+            MembershipTerm = MembershipTerm.Daily.ToMembershipTerms(),
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
         };
@@ -193,7 +193,7 @@ public class ProductVersionHelperServiceShould
     {
         var twoDayPricing = ProductPricing.Empty("pricing-2-days") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
             RequiredDaysPerWeek = 2,
@@ -229,7 +229,7 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             NumberOfResourcesToBook = 1,
             BillingMode = ProductPricingBillingMode.Upfront,
         };
@@ -238,7 +238,7 @@ public class ProductVersionHelperServiceShould
             new StripeProduct
             {
                 Id = "pricing-2",
-                PricingCadence = ProductPricingCadence.Daily.ToProductPricingCadence(),
+                MembershipTerm = MembershipTerm.Daily.ToMembershipTerms(),
                 NumberOfResourcesToBook = 2,
                 BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
             },

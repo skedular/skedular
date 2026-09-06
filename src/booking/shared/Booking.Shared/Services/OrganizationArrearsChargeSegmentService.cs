@@ -33,13 +33,13 @@ public class OrganizationArrearsChargeSegmentService(ILogger<OrganizationArrears
             return [];
         }
 
-        var purchaseCadence = marketplaceBooking.ProductPricing.PurchaseCadence;
+        var membershipTerm = marketplaceBooking.ProductPricing.MembershipTerm;
 
-        var split = ShouldSplitByBillingCycle(purchaseCadence, billingCycle);
+        var split = ShouldSplitByBillingCycle(membershipTerm, billingCycle);
         logger.LogInformation(
-            "Built arrears charge plan. BookingId={BookingId}, PurchaseCadence={PurchaseCadence}, BillingCycle={BillingCycle}, SplitByBillingCycle={SplitByBillingCycle}",
+            "Built arrears charge plan. BookingId={BookingId}, MembershipTerm={MembershipTerm}, BillingCycle={BillingCycle}, SplitByBillingCycle={SplitByBillingCycle}",
             booking.Id,
-            purchaseCadence,
+            membershipTerm,
             billingCycle,
             split);
         return split
@@ -69,9 +69,9 @@ public class OrganizationArrearsChargeSegmentService(ILogger<OrganizationArrears
         }
 
         var servicePeriod = new BillingPeriod(recurringBooking.StartDate, recurringBooking.EndDate.Value.AddDays(1));
-        var purchaseCadence = marketplaceBooking.ProductPricing.PurchaseCadence;
+        var membershipTerm = marketplaceBooking.ProductPricing.MembershipTerm;
 
-        return ShouldSplitByBillingCycle(purchaseCadence, billingCycle)
+        return ShouldSplitByBillingCycle(membershipTerm, billingCycle)
             ? BuildRecurringInstallmentsByBillingCycle(recurringBooking, organizationId, customerId, currency, billingCycle, servicePeriod)
             : [BuildSingleRecurringChargeSegment(recurringBooking, organizationId, customerId, currency, servicePeriod)];
     }
@@ -233,30 +233,30 @@ public class OrganizationArrearsChargeSegmentService(ILogger<OrganizationArrears
         return pricing.Price * marketplaceBooking.Quantity;
     }
 
-    private static bool ShouldSplitByBillingCycle(ProductPricingCadence cadence, OrganizationBillingCycle billingCycle) =>
+    private static bool ShouldSplitByBillingCycle(MembershipTerm cadence, OrganizationBillingCycle billingCycle) =>
         billingCycle switch
         {
-            OrganizationBillingCycle.Weekly => cadence is ProductPricingCadence.Fortnightly or
-                ProductPricingCadence.Monthly or
-                ProductPricingCadence.TwoMonths or
-                ProductPricingCadence.Quarterly or
-                ProductPricingCadence.FourMonths or
-                ProductPricingCadence.FiveMonths or
-                ProductPricingCadence.SixMonths or
-                ProductPricingCadence.Yearly,
-            OrganizationBillingCycle.Fortnightly => cadence is ProductPricingCadence.Monthly or
-                ProductPricingCadence.TwoMonths or
-                ProductPricingCadence.Quarterly or
-                ProductPricingCadence.FourMonths or
-                ProductPricingCadence.FiveMonths or
-                ProductPricingCadence.SixMonths or
-                ProductPricingCadence.Yearly,
-            OrganizationBillingCycle.Monthly => cadence is ProductPricingCadence.TwoMonths or
-                ProductPricingCadence.Quarterly or
-                ProductPricingCadence.FourMonths or
-                ProductPricingCadence.FiveMonths or
-                ProductPricingCadence.SixMonths or
-                ProductPricingCadence.Yearly,
+            OrganizationBillingCycle.Weekly => cadence is MembershipTerm.Fortnightly or
+                MembershipTerm.Monthly or
+                MembershipTerm.TwoMonths or
+                MembershipTerm.Quarterly or
+                MembershipTerm.FourMonths or
+                MembershipTerm.FiveMonths or
+                MembershipTerm.SixMonths or
+                MembershipTerm.Yearly,
+            OrganizationBillingCycle.Fortnightly => cadence is MembershipTerm.Monthly or
+                MembershipTerm.TwoMonths or
+                MembershipTerm.Quarterly or
+                MembershipTerm.FourMonths or
+                MembershipTerm.FiveMonths or
+                MembershipTerm.SixMonths or
+                MembershipTerm.Yearly,
+            OrganizationBillingCycle.Monthly => cadence is MembershipTerm.TwoMonths or
+                MembershipTerm.Quarterly or
+                MembershipTerm.FourMonths or
+                MembershipTerm.FiveMonths or
+                MembershipTerm.SixMonths or
+                MembershipTerm.Yearly,
             _ => false,
         };
 

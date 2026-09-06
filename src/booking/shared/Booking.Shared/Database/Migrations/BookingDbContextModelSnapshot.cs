@@ -647,12 +647,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset>("ActivatesAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("AutoRenew")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("CancelAtPeriodEnd")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -684,9 +678,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<decimal>("NetPurchaseAmount")
                         .HasColumnType("DECIMAL(18,4)");
 
-                    b.Property<DateTimeOffset?>("NextRenewalAt")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -702,10 +693,6 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<string>("RenewalFailureReason")
-                        .HasMaxLength(10000)
-                        .HasColumnType("character varying(10000)");
-
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -716,8 +703,6 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("ExpiresAt");
 
                     b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("NextRenewalAt");
 
                     b.HasIndex("OrganizationId");
 
@@ -737,9 +722,6 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<bool>("AutoRenew")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("CheckoutReturnUrl")
                         .HasMaxLength(2000)
@@ -817,13 +799,6 @@ namespace Booking.Shared.Database.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(100)");
 
-                    b.Property<string>("RenewalOfPurchaseId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("RenewalReference")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
                     b.Property<DateTimeOffset>("ServiceStartAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -861,11 +836,6 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("PaymentStatus");
 
                     b.HasIndex("ProductVersionId");
-
-                    b.HasIndex("RenewalOfPurchaseId");
-
-                    b.HasIndex("RenewalReference")
-                        .IsUnique();
 
                     b.ToTable("EntitlementPurchase");
                 });
@@ -3482,16 +3452,16 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
+                    b.Property<string>("MembershipTerm")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("NumberOfResourcesToBook")
                         .HasColumnType("integer");
-
-                    b.Property<string>("PricingCadence")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("ProductPricingId")
                         .IsRequired()
@@ -3520,11 +3490,11 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
+                    b.HasIndex("MembershipTerm");
+
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("NumberOfResourcesToBook");
-
-                    b.HasIndex("PricingCadence");
 
                     b.HasIndex("ProductPricingId");
 
@@ -4241,10 +4211,6 @@ namespace Booking.Shared.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Booking.Shared.Database.Entities.EntitlementPurchase", "RenewalOfPurchase")
-                        .WithMany()
-                        .HasForeignKey("RenewalOfPurchaseId");
-
                     b.Navigation("Customer");
 
                     b.Navigation("Entitlement");
@@ -4252,8 +4218,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("Organization");
 
                     b.Navigation("ProductVersion");
-
-                    b.Navigation("RenewalOfPurchase");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.EntitlementRefundLink", b =>

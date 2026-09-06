@@ -4,26 +4,30 @@ import {
   MultipleChoicesPaymentMethodTypes,
   MultipleChoicesProductTags,
   SingleChoiceCurrency,
+  SingleChoiceMembershipTerm,
   SingleChoiceProductPricingBillingMode,
-  SingleChoiceProductPricingCadence,
   SingleChoiceProductType,
 } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import CalendarDayPicker from '@/components/product/calendar-day-picker';
-import { DurationInput, FeatureImageGallery, FieldHelp } from '@skedular/ui';
 import {
   createCancellationRefundRule,
   createPricingOption,
   isEventType,
+  CancellationRefundRuleForm,
   PricingOptionForm,
   ProductDetails,
   sanitizeWeeklyRequiredDays,
 } from '@/components/product/product-editor-shared';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import Box from '@mui/material/Box';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -32,18 +36,17 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useTheme } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
-import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   BodyIconTypography,
   defaultButtonStyle,
   defaultPadding,
+  DurationInput,
+  FeatureImageGallery,
+  FieldHelp,
   FormFieldLabel,
   FormStackColumn,
   LeadIconTypography,
@@ -55,9 +58,9 @@ import {
   StackRow,
 } from '@skedular/ui';
 import { Switches, TextField } from 'mui-rff';
-import { memo, useEffect, useMemo, useState } from 'react';
-import type { PropsWithChildren } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import type { PropsWithChildren } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { v7 as uuid } from 'uuid';
 
 type Props = {
@@ -67,7 +70,7 @@ type Props = {
     defaultMaxAllowedResourcesLockTimePaidViaCard: number;
     defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number;
   };
-  values: ProductDetails;
+  values: Omit<ProductDetails, 'pricingOptions'> & { pricingOptions: PricingOptionForm[] };
   errors: unknown;
   form: { change: (name: string, nextValue: unknown) => void };
   requiredFields: Record<string, boolean>;
@@ -180,7 +183,7 @@ const OfferSummary = ({ pricingOption, index }: { pricingOption: PricingOptionFo
   const title = pricingOption.title?.trim() || `Offer ${index + 1}`;
   const summaryBits = [
     pricingOption.price ? `${pricingOption.price}` : 'No price',
-    prettifyEnum(pricingOption.cadence),
+    prettifyEnum(pricingOption.membershipTerm),
     `${pricingOption.numberOfResourcesToBook || '1'} resource${pricingOption.numberOfResourcesToBook === '1' ? '' : 's'}`,
     prettifyEnum(pricingOption.billingMode),
   ];
@@ -393,16 +396,16 @@ const ProductEditorForm = ({
 
   useEffect(() => {
     values.pricingOptions.forEach((pricingOption, index) => {
-      if (pricingOption.cadence === 'DAILY' && pricingOption.requiredDaysPerWeek) {
+      if (pricingOption.membershipTerm === 'DAILY' && pricingOption.requiredDaysPerWeek) {
         form.change(`pricingOptions[${index}].requiredDaysPerWeek`, '');
       }
     });
   }, [form, values.pricingOptions]);
 
-  const addOffer = (cadence: string) => {
+  const addOffer = (membershipTerm: string) => {
     const nextOffer = {
       ...createPricingOption(rootDataRelay.defaultMaxAllowedResourcesLockTimePaidViaCard, rootDataRelay.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer),
-      cadence,
+      membershipTerm,
     };
     const nextPricingOptions = [...(values?.pricingOptions ?? []), nextOffer];
     form.change('pricingOptions', nextPricingOptions);
@@ -425,7 +428,7 @@ const ProductEditorForm = ({
       title: source.title ? `${source.title} copy` : null,
       acceptedPaymentMethods: [...source.acceptedPaymentMethods],
       availableDays: [...source.availableDays],
-      cancellationRefundRules: source.cancellationRefundRules.map((rule) => ({ ...rule })),
+      cancellationRefundRules: source.cancellationRefundRules.map((rule: CancellationRefundRuleForm) => ({ ...rule })),
     };
     const nextPricingOptions = [...pricingOptions, duplicate];
     form.change('pricingOptions', nextPricingOptions);
@@ -485,9 +488,9 @@ const ProductEditorForm = ({
         description={
           pricingOption.fulfillmentType === 'ENTITLEMENT'
             ? 'Credit entitlements are purchased once and provide credits customers can use later.'
-            : 'Reservations use the selected purchase term and reserve resources or time.'
+            : 'Reservations use the selected membership term and reserve resources or time.'
         }
-        summary={`${prettifyEnum(pricingOption.fulfillmentType)} · ${prettifyEnum(pricingOption.cadence)}`}
+        summary={`${prettifyEnum(pricingOption.fulfillmentType)} · ${prettifyEnum(pricingOption.membershipTerm)}`}
         expanded={expandedOfferSection === 'fulfillment'}
         onChange={() => setOfferSection(expandedOfferSection === 'fulfillment' ? '' : 'fulfillment')}
       >
@@ -503,7 +506,7 @@ const ProductEditorForm = ({
               fieldProps={{
                 onChange: (event: { target: { value: string } }) => {
                   if (event.target.value === 'ENTITLEMENT') {
-                    form.change(`pricingOptions[${index}].cadence`, 'NOT_SET');
+                    form.change(`pricingOptions[${index}].membershipTerm`, 'NOT_SET');
                     form.change(`pricingOptions[${index}].supportsSubscriptionAutoRenewal`, false);
                   }
                 },
@@ -532,10 +535,10 @@ const ProductEditorForm = ({
           ) : (
             <StackColumn spacing={0.75}>
               <FormFieldLabel
-                label="Cadence"
-                help="The purchase term defines the offer period. Auto-renewal, when enabled, repeats that term; it does not constrain the booking duration."
+                label="Membership term"
+                help="The membership term defines the offer period. Auto-renewal, when enabled, repeats that term; it does not constrain the booking duration."
               >
-                <SingleChoiceProductPricingCadence rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].cadence`} required />
+                <SingleChoiceMembershipTerm rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].membershipTerm`} required />
               </FormFieldLabel>
               <SmallIconTypography label="Choose a term of one day or longer. Auto-renewal is configured separately in Payments." />
             </StackColumn>
@@ -586,7 +589,7 @@ const ProductEditorForm = ({
             required
           />
         </Box>
-        {pricingOption.cadence !== 'DAILY' ? (
+        {pricingOption.membershipTerm !== 'DAILY' ? (
           <FormFieldLabel
             label={pricingOption.fulfillmentType === 'ENTITLEMENT' ? 'Maximum redemptions per week' : 'Required selected days per week'}
             help={
@@ -608,7 +611,7 @@ const ProductEditorForm = ({
             />
           </FormFieldLabel>
         ) : null}
-        {pricingOption.cadence !== 'DAILY' ? (
+        {pricingOption.membershipTerm !== 'DAILY' ? (
           <SmallIconTypography
             label={
               pricingOption.fulfillmentType === 'ENTITLEMENT'
@@ -634,7 +637,7 @@ const ProductEditorForm = ({
             <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Price includes tax', value: 'isTaxInclusive' }} />
           </FormFieldLabel>
           {!isEventProduct && pricingOption.fulfillmentType === 'RESERVATION' ? (
-            <FormFieldLabel helpLabel="Auto-renew subscription" help="When enabled, eligible purchases renew automatically according to the purchase cadence.">
+            <FormFieldLabel helpLabel="Auto-renew subscription" help="When enabled, eligible purchases renew automatically according to the membership term.">
               <Switches name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`} data={{ label: 'Auto-renew subscription', value: 'supportsSubscriptionAutoRenewal' }} />
             </FormFieldLabel>
           ) : null}
@@ -645,7 +648,7 @@ const ProductEditorForm = ({
           </FormFieldLabel>
           <FormFieldLabel
             label="Billing mode"
-            help="Upfront collects payment before service. In Arrears allows booking first and settles payment afterward. This is separate from purchase cadence."
+            help="Upfront collects payment before service. In Arrears allows booking first and settles payment afterward. This is separate from membership term."
           >
             <SingleChoiceProductPricingBillingMode rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].billingMode`} required />
           </FormFieldLabel>
@@ -884,7 +887,7 @@ const ProductEditorForm = ({
               </StackColumn>
               <FormFieldLabel
                 label="Title"
-                help="The product name customers see before choosing an offer. Keep it broad enough to describe the product, not a specific price or cadence."
+                help="The product name customers see before choosing an offer. Keep it broad enough to describe the product, not a specific price or membership term."
                 required={requiredFields.title}
               >
                 <TextField name="title" required={requiredFields.title} placeholder="For example, Premium Meeting Room" />
@@ -935,7 +938,7 @@ const ProductEditorForm = ({
 
           {isEventProduct ? (
             <Box sx={{ borderRadius: 2, backgroundColor: 'action.hover', p: 1.5 }}>
-              <BodyIconTypography label="Event products support explicit-time bookings only. Recurring plan cadences are unavailable, and the full matching booking-group resource set is reserved." />
+              <BodyIconTypography label="Event products support explicit-time bookings only. Recurring plan membership terms are unavailable, and the full matching booking-group resource set is reserved." />
             </Box>
           ) : null}
 
@@ -1007,7 +1010,7 @@ const ProductEditorForm = ({
                         </StackRow>
                         <BodyIconTypography label={formatOfferPrice(pricingOption.price, values.currency)} />
                         <StackRow sx={{ gap: 0.5, flexWrap: 'wrap' }}>
-                          <Chip size="small" label={prettifyEnum(pricingOption.cadence)} />
+                          <Chip size="small" label={prettifyEnum(pricingOption.membershipTerm)} />
                           <Chip size="small" label={`${pricingOption.numberOfResourcesToBook || 1} resource${pricingOption.numberOfResourcesToBook === '1' ? '' : 's'}`} />
                         </StackRow>
                         <SmallIconTypography label={prettifyEnum(pricingOption.billingMode)} />

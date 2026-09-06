@@ -88,7 +88,7 @@ export const getPublicOrigin = (request: NextRequest) => {
   return request.nextUrl.origin;
 };
 
-const monthlyPricingCadenceMonthCount: Record<string, number> = {
+const monthlyMembershipTermMonthCount: Record<string, number> = {
   TWO_MONTHS: 2,
   QUARTERLY: 3,
   FOUR_MONTHS: 4,
@@ -97,12 +97,12 @@ const monthlyPricingCadenceMonthCount: Record<string, number> = {
   YEARLY: 12,
 };
 
-export const getMonthlyPricingCadenceMonthCount = (cadence?: string | null) => {
+export const getMonthlyMembershipTermMonthCount = (cadence?: string | null) => {
   if (!cadence) {
     return null;
   }
 
-  return monthlyPricingCadenceMonthCount[cadence] ?? null;
+  return monthlyMembershipTermMonthCount[cadence] ?? null;
 };
 
 const formatCompactNumber = (value: number) => {
@@ -111,7 +111,7 @@ const formatCompactNumber = (value: number) => {
 
 export const formatPriceForDisplay = (currencyLabel: string | null | undefined, amount: number | string, cadence?: string | null) => {
   const numericAmount = Number(amount);
-  const months = getMonthlyPricingCadenceMonthCount(cadence);
+  const months = getMonthlyMembershipTermMonthCount(cadence);
   const displayAmount = months ? numericAmount / months : numericAmount;
   const formattedAmount = Number.isFinite(displayAmount) ? formatCompactNumber(displayAmount) : `${amount}`;
   const prefix = currencyLabel ? `${currencyLabel} ` : '';

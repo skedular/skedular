@@ -150,7 +150,7 @@ public class MarketplaceBookingServiceShould
         };
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             AcceptedPaymentMethods = [PaymentMethod.Card],
             BillingMode = ProductPricingBillingMode.Upfront,
             MaxAllowedResourcesLockTimePaidViaCard = 15,
@@ -888,7 +888,7 @@ public class MarketplaceBookingServiceShould
                 },
                 ProductPricing = pricing ?? ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Daily,
+                    MembershipTerm = MembershipTerm.Daily,
                     NumberOfResourcesToBook = 1,
                 },
                 Quantity = quantity,
@@ -930,7 +930,7 @@ public class MarketplaceBookingServiceShould
                 },
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Weekly,
+                    MembershipTerm = MembershipTerm.Weekly,
                     NumberOfResourcesToBook = 1,
                 },
                 Quantity = 1,

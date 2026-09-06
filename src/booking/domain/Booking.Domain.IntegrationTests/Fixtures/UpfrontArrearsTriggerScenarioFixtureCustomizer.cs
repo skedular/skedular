@@ -51,7 +51,7 @@ public class UpfrontArrearsTriggerScenarioFixtureCustomizer : IFixtureCustomizer
                     NewId(),
                     0,
                     new ListingMetadata("Desk access", "Dedicated desk", null, []),
-                    ProductPricingCadence.Daily,
+                    MembershipTerm.Daily,
                     125m,
                     false,
                     false,

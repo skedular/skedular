@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<69a3d7f106ceec59259277ef978d38fd>>
+ * @generated SignedSource<<102f43ef0ab80398d84fe19f2a03847a>>
  * @lightSyntaxTransform
  */
 
@@ -8,8 +8,8 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type locationsHostDataQuery$variables = {
   organizationId: string;
@@ -26,7 +26,7 @@ export type locationsHostDataQuery$data = {
       readonly pricingOptions: ReadonlyArray<{
         readonly billingMode: ProductPricingBillingMode;
         readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
-        readonly purchaseCadence: ProductPricingCadence;
+        readonly membershipTerm: MembershipTerm;
       }>;
     }>;
     readonly timezone: string | null | undefined;
@@ -108,7 +108,7 @@ v6 = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "purchaseCadence",
+          "name": "membershipTerm",
           "storageKey": null
         },
         {
@@ -199,16 +199,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b661aac5c6eee8c19b2114eb9c66eacc",
+    "cacheID": "f13d87b7a44dc09775a382a8c27b14d8",
     "id": null,
     "metadata": {},
     "name": "locationsHostDataQuery",
     "operationKind": "query",
-    "text": "query locationsHostDataQuery(\n  $organizationId: String!\n) {\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    timezone\n    physicalAddress {\n      multilinesFormattedAddress\n      id\n    }\n    products {\n      id\n      pricingOptions {\n        billingMode\n        purchaseCadence\n        cancellationPolicyType\n      }\n    }\n  }\n}\n"
+    "text": "query locationsHostDataQuery(\n  $organizationId: String!\n) {\n  myLocations(organizationId: $organizationId) {\n    id\n    name\n    timezone\n    physicalAddress {\n      multilinesFormattedAddress\n      id\n    }\n    products {\n      id\n      pricingOptions {\n        billingMode\n        membershipTerm\n        cancellationPolicyType\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bc3bf380a46a4c643aa5bb08a297c394";
+(node as any).hash = "3fbe0ee54922b3c83710f6aa39860ec0";
 
 export default node;

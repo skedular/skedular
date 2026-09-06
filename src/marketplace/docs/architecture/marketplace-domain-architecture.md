@@ -137,7 +137,7 @@ marketplace/
 │       │       ├── ProductDetails.cs
 │       │       ├── ProductVersionDetails.cs
 │       │       ├── ProductPricingBillingModeDetails.cs
-│       │       ├── ProductPricingCadenceDetails.cs
+│       │       ├── MembershipTermDetails.cs
 │       │       ├── ProductPricingCancellationTypeDetails.cs
 │       │       └── RootQuery.cs / RootMutation.cs
 │       ├── Grpc/MarketplaceGrpcService.cs          # gRPC (GraphQL topic + version)
@@ -246,7 +246,7 @@ flowchart LR
 | Field | Description |
 |---|---|
 | `billingMode` | `Card`, `BankTransfer`, or `InArrears` |
-| `purchaseCadence` | `Daily`, `Weekly`, `Fortnightly`, `Monthly`, `TwoMonths`, `Quarterly`, `FourMonths`, `FiveMonths`, `SixMonths`, `Yearly`; `NotSet` for credit entitlements |
+| `membershipTerm` | `Daily`, `Weekly`, `Fortnightly`, `Monthly`, `TwoMonths`, `Quarterly`, `FourMonths`, `FiveMonths`, `SixMonths`, `Yearly`; `NotSet` for credit entitlements |
 | `cancellationType` | Cancellation policy type (determines refund eligibility) |
 | Amount fields | Unit price in the product version's currency |
 

@@ -34,7 +34,7 @@ describe('weekly price day-selection editor state', () => {
   it('accepts an exact count within the available weekly days', async () => {
     await expect(
       productSchema().validateAt('pricingOptions[0].requiredDaysPerWeek', {
-        pricingOptions: [{ cadence: 'WEEKLY', availableDays: ['MONDAY', 'TUESDAY'], requiredDaysPerWeek: '2' }],
+        pricingOptions: [{ membershipTerm: 'WEEKLY', availableDays: ['MONDAY', 'TUESDAY'], requiredDaysPerWeek: '2' }],
       }),
     ).resolves.toBe('2');
   });
@@ -42,7 +42,7 @@ describe('weekly price day-selection editor state', () => {
   it('rejects a count greater than the available weekly days', async () => {
     await expect(
       productSchema().validateAt('pricingOptions[0].requiredDaysPerWeek', {
-        pricingOptions: [{ cadence: 'WEEKLY', availableDays: ['MONDAY', 'TUESDAY'], requiredDaysPerWeek: '3' }],
+        pricingOptions: [{ membershipTerm: 'WEEKLY', availableDays: ['MONDAY', 'TUESDAY'], requiredDaysPerWeek: '3' }],
       }),
     ).rejects.toThrow('Set the required number of selected days');
   });
@@ -50,7 +50,7 @@ describe('weekly price day-selection editor state', () => {
   it('treats an empty available-day list as all seven weekdays', async () => {
     await expect(
       productSchema().validateAt('pricingOptions[0].requiredDaysPerWeek', {
-        pricingOptions: [{ cadence: 'WEEKLY', availableDays: [], requiredDaysPerWeek: '7' }],
+        pricingOptions: [{ membershipTerm: 'WEEKLY', availableDays: [], requiredDaysPerWeek: '7' }],
       }),
     ).resolves.toBe('7');
   });
@@ -58,7 +58,7 @@ describe('weekly price day-selection editor state', () => {
   it('accepts a required-day count on longer calendar pricing', async () => {
     await expect(
       productSchema().validateAt('pricingOptions[0].requiredDaysPerWeek', {
-        pricingOptions: [{ cadence: 'MONTHLY', availableDays: [], requiredDaysPerWeek: '1' }],
+        pricingOptions: [{ membershipTerm: 'MONTHLY', availableDays: [], requiredDaysPerWeek: '1' }],
       }),
     ).resolves.toBe('1');
   });
@@ -66,7 +66,7 @@ describe('weekly price day-selection editor state', () => {
   it('allows separate weekly price tiers with different required day counts', async () => {
     const weeklyPricingOption = (requiredDaysPerWeek: string) => ({
       ...createPricingOption(15),
-      cadence: 'WEEKLY',
+      membershipTerm: 'WEEKLY',
       price: '100',
       minDurationMinutes: '30',
       maxDurationMinutes: '60',

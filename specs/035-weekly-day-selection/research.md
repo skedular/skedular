@@ -2,7 +2,7 @@
 
 ## Decision: Extend `ProductPricing` with a weekly-specific nullable exact count
 
-Add `requiredDaysPerWeek` as an optional exact selected-day count on the existing shared `ProductPricing` model and product-version event shape. It is valid only when the price purchase cadence is weekly; no generic period-count field is introduced.
+Add `requiredDaysPerWeek` as an optional exact selected-day count on the existing shared `ProductPricing` model and product-version event shape. It is valid only when the price membership term is weekly; no generic period-count field is introduced.
 
 **Rationale**: `ProductPricing` already owns `availableDays`, cadence, resource count, and recurring commerce settings. Explicit weekly names protect future fortnightly and monthly work from accidental reuse.
 

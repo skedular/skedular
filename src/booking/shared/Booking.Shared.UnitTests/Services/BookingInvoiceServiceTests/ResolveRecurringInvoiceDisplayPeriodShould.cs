@@ -22,13 +22,13 @@ public class ResolveRecurringInvoiceDisplayPeriodShould
             {
                 ProductPricing = ProductPricing.Empty(pricingId) with
                 {
-                    PurchaseCadence = ProductPricingCadence.Quarterly,
+                    MembershipTerm = MembershipTerm.Quarterly,
                 },
             },
         };
         var billingDefinition = new RecurringInvoiceBillingDefinition(
-            XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
-            ProductPricingCadence.Quarterly,
+            XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
+            MembershipTerm.Quarterly,
             300m);
 
         var result = BookingInvoiceService.ResolveRecurringInvoiceDisplayPeriod(recurringBooking, billingDefinition);
@@ -50,13 +50,13 @@ public class ResolveRecurringInvoiceDisplayPeriodShould
             {
                 ProductPricing = ProductPricing.Empty(pricingId) with
                 {
-                    PurchaseCadence = ProductPricingCadence.SixMonths,
+                    MembershipTerm = MembershipTerm.SixMonths,
                 },
             },
         };
         var billingDefinition = new RecurringInvoiceBillingDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
-            ProductPricingCadence.Monthly,
+            MembershipTerm.Monthly,
             100m);
 
         var result = BookingInvoiceService.ResolveRecurringInvoiceDisplayPeriod(recurringBooking, billingDefinition);
@@ -78,13 +78,13 @@ public class ResolveRecurringInvoiceDisplayPeriodShould
             {
                 ProductPricing = ProductPricing.Empty(pricingId) with
                 {
-                    PurchaseCadence = ProductPricingCadence.Monthly,
+                    MembershipTerm = MembershipTerm.Monthly,
                 },
             },
         };
         var billingDefinition = new RecurringInvoiceBillingDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
-            ProductPricingCadence.Weekly,
+            MembershipTerm.Weekly,
             25m);
 
         var result = BookingInvoiceService.ResolveRecurringInvoiceDisplayPeriod(recurringBooking, billingDefinition);

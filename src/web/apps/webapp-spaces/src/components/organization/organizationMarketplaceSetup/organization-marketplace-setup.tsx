@@ -130,7 +130,8 @@ const xeroBillingModeLabels: Record<string, string> = {
 const xeroBillingModeGuidance: Record<string, string> = {
   DISABLED: 'Skedular stays on the local invoice flow and does not export invoices into Xero.',
   ENABLED: 'Skedular exports supported invoices into Xero as normal invoices. Customers can still review and pay each invoice separately.',
-  REPEATING_INVOICES: 'Recurring bookings create a Xero repeating invoice template for supported cadences. Xero then manages the scheduled follow-up invoices from that template.',
+  REPEATING_INVOICES:
+    'Recurring bookings create a Xero repeating invoice template for supported membership terms. Xero then manages the scheduled follow-up invoices from that template.',
 };
 
 const organizationBillingSettingsSchema = object({
@@ -1525,8 +1526,8 @@ const OrganizationMarketplaceSetup = ({
                     {selectedXeroBillingMode === 'REPEATING_INVOICES' && (
                       <>
                         <SmallIconTypography label="Recurring in-arrears bookings use the organization billing cycle for the repeating schedule." />
-                        <SmallIconTypography label="Other recurring bookings use the product purchase cadence. If Xero cannot represent that cadence, Skedular falls back to a normal Xero invoice." />
-                        <SmallIconTypography label="Supported recurring purchase cadences for repeating templates are weekly, fortnightly, monthly, two to six months, and yearly." />
+                        <SmallIconTypography label="Other recurring bookings use the product membership term. If Xero cannot represent that term, Skedular falls back to a normal Xero invoice." />
+                        <SmallIconTypography label="Supported recurring membership terms for repeating templates are weekly, fortnightly, monthly, two to six months, and yearly." />
                       </>
                     )}
                     <FormFieldLabel label="Default Sales Account Code">

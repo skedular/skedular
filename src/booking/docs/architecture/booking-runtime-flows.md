@@ -174,7 +174,7 @@ flowchart TD
 
     H --> I{"Matching pricing still exists and supports renewal?"}
     I -->|No| J["Set status = RenewalFailed"]
-    I -->|Yes| K["Advance NextRenewalAt by purchase cadence"]
+    I -->|Yes| K["Advance NextRenewalAt by membership term"]
     K --> L["Create or ensure next-cycle recurring booking"]
     L --> M["Start recurring payment/invoice path for that cycle"]
 ```
@@ -186,9 +186,9 @@ This is the booking-owned decision that sits before invoice delivery.
 ```mermaid
 flowchart TD
     A["Recurring booking cycle"] --> B["RecurringInvoiceBillingScheduleService"]
-    B --> C{"Purchase cadence longer than org billing cycle?"}
+    B --> C{"membership term longer than org billing cycle?"}
 
-    C -->|No| D["Use purchase cadence as invoice cadence"]
+    C -->|No| D["Use membership term as invoice cadence"]
     C -->|Yes| E["Split by organization billing cycle"]
 
     D --> F["Invoice amount = full recurring charge"]

@@ -13,7 +13,7 @@ public class ValidateShould
     {
         var pricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
             AvailableDays = [DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday],
             RequiredDaysPerWeek = 2,
         };
@@ -29,7 +29,7 @@ public class ValidateShould
     {
         var pricing = ProductPricing.Empty("monthly") with
         {
-            PurchaseCadence = ProductPricingCadence.Monthly,
+            MembershipTerm = MembershipTerm.Monthly,
             AvailableDays = [DayOfWeek.Monday, DayOfWeek.Wednesday],
             RequiredDaysPerWeek = 2,
         };
@@ -44,7 +44,7 @@ public class ValidateShould
     {
         var pricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
             RequiredDaysPerWeek = 1,
         };
 
@@ -58,7 +58,7 @@ public class ValidateShould
     {
         var pricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
             AvailableDays = [DayOfWeek.Tuesday],
             RequiredDaysPerWeek = 1,
         };
@@ -73,7 +73,7 @@ public class ValidateShould
     {
         var pricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
             AvailableDays = [],
             RequiredDaysPerWeek = 1,
         };
@@ -89,7 +89,7 @@ public class ValidateShould
     {
         var pricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
             RequiredDaysPerWeek = 2,
         };
 
@@ -102,7 +102,7 @@ public class ValidateShould
     {
         var pricing = ProductPricing.Empty("daily") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             RequiredDaysPerWeek = 1,
         };
 
@@ -115,7 +115,7 @@ public class ValidateShould
     {
         var pricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
         };
 
         var result = sut.Validate(pricing, [DayOfWeek.Monday]);

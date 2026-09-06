@@ -92,7 +92,7 @@ const Products = ({ organizationId }: { organizationId: string }) => {
             pricingOptions {
               id
               price
-              purchaseCadence
+              membershipTerm
             }
           }
         }
@@ -110,7 +110,7 @@ const Products = ({ organizationId }: { organizationId: string }) => {
         listingMetadata: { title?: string | null; about?: string | null };
         type: { name: string };
         currency: { name: string };
-        pricingOptions: ReadonlyArray<{ id: string; price: number; purchaseCadence: string }>;
+        pricingOptions: ReadonlyArray<{ id: string; price: number; membershipTerm: string }>;
       }>;
     }> | null;
   };
@@ -140,7 +140,7 @@ const Products = ({ organizationId }: { organizationId: string }) => {
                   <Stack spacing={1} sx={{ alignItems: { sm: 'flex-end' } }}>
                     <Chip label={product.inactive ? 'Draft' : 'Active'} color={product.inactive ? 'default' : 'success'} size="small" />
                     {product.pricingOptions.map((pricing) => (
-                      <SmallIconTypography key={pricing.id} label={`${pricing.price} ${product.currency.name} · ${pricing.purchaseCadence}`} />
+                      <SmallIconTypography key={pricing.id} label={`${pricing.price} ${product.currency.name} · ${pricing.membershipTerm}`} />
                     ))}
                     <Button component={Link} href={`/products/${product.id}/edit?locationId=${location.id}`}>
                       Edit product

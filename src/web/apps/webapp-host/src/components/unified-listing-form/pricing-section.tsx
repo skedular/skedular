@@ -51,9 +51,9 @@ const PricingSection = ({ disabled = false }: PricingSectionProps) => (
           </Box>
           <Box sx={{ flex: 1 }}>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-              Purchase Term
+              membership term
             </Typography>
-            <TextField name="pricingOptions.0.cadence" label="Cadence" placeholder="e.g., DAILY" disabled={disabled} fullWidth />
+            <TextField name="pricingOptions.0.membershipTerm" label="Membership term" placeholder="e.g., DAILY" disabled={disabled} fullWidth />
           </Box>
         </Stack>
 

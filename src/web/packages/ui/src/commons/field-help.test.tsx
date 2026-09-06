@@ -7,11 +7,11 @@ describe('FieldHelp', () => {
   it('reveals contextual guidance when activated', async () => {
     const user = userEvent.setup();
 
-    render(<FieldHelp label="Cadence">This controls when a recurring offer renews.</FieldHelp>);
+    render(<FieldHelp label="Membership term">This controls when a recurring offer renews.</FieldHelp>);
 
-    await user.click(screen.getByRole('button', { name: 'Help for Cadence' }));
+    await user.click(screen.getByRole('button', { name: 'Help for Membership term' }));
 
-    expect(screen.getByText('Cadence')).toBeInTheDocument();
+    expect(screen.getByText('Membership term')).toBeInTheDocument();
     expect(screen.getByText('This controls when a recurring offer renews.')).toBeInTheDocument();
   });
 });

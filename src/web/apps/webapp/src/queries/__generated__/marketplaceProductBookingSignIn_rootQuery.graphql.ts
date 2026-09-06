@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<abce0b9054c49e3076975c210099387d>>
+ * @generated SignedSource<<aa39cdccc451ac58a2eb16ba2037077b>>
  * @lightSyntaxTransform
  */
 
@@ -234,7 +234,7 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "purchaseCadence",
+                "name": "membershipTerm",
                 "storageKey": null
               },
               {
@@ -267,12 +267,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2dbe8cdb48d3d8a0b3cc1259e90d9f24",
+    "cacheID": "af0c9905acd1f416fc8a298f481fb5f4",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBookingSignIn_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductBookingSignIn_rootQuery(\n  $productId: String!\n) {\n  ...marketplaceProductSubscribeAuthGate_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeAuthGate_query_2SWcqy on Query {\n  currencies {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    type {\n      type\n      name\n    }\n    listingMetadata {\n      title\n      subTitle\n      about\n    }\n    currency {\n      type\n      name\n    }\n    featureImages {\n      original {\n        url\n      }\n    }\n    amenities {\n      id\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      price\n      supportsSubscriptionAutoRenewal\n      billingMode\n    }\n  }\n}\n"
+    "text": "query marketplaceProductBookingSignIn_rootQuery(\n  $productId: String!\n) {\n  ...marketplaceProductSubscribeAuthGate_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeAuthGate_query_2SWcqy on Query {\n  currencies {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    type {\n      type\n      name\n    }\n    listingMetadata {\n      title\n      subTitle\n      about\n    }\n    currency {\n      type\n      name\n    }\n    featureImages {\n      original {\n        url\n      }\n    }\n    amenities {\n      id\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      membershipTerm\n      price\n      supportsSubscriptionAutoRenewal\n      billingMode\n    }\n  }\n}\n"
   }
 };
 })();

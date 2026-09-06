@@ -26,7 +26,7 @@ public class GetScheduleShould
             TotalAmount = 600m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.SixMonths,
+                MembershipTerm = MembershipTerm.SixMonths,
             },
         };
 
@@ -56,7 +56,7 @@ public class GetScheduleShould
             TotalAmount = 1200m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Yearly,
+                MembershipTerm = MembershipTerm.Yearly,
             },
         };
 
@@ -86,14 +86,14 @@ public class GetScheduleShould
             TotalAmount = 100m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Weekly,
+                MembershipTerm = MembershipTerm.Weekly,
             },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
 
         result.ShouldNotBeNull();
-        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence);
+        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm);
         result.Unit.ShouldBe(Schedule.UnitEnum.WEEKLY);
         result.Period.ShouldBe(1);
         result.InvoiceAmount.ShouldBe(100m);
@@ -116,7 +116,7 @@ public class GetScheduleShould
             TotalAmount = 1200m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Yearly,
+                MembershipTerm = MembershipTerm.Yearly,
             },
         };
 
@@ -145,7 +145,7 @@ public class GetScheduleShould
             TotalAmount = 300m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Quarterly,
+                MembershipTerm = MembershipTerm.Quarterly,
             },
         };
 
@@ -175,14 +175,14 @@ public class GetScheduleShould
             TotalAmount = 140m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Fortnightly,
+                MembershipTerm = MembershipTerm.Fortnightly,
             },
         };
 
         var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
 
         result.ShouldNotBeNull();
-        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence);
+        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm);
         result.Unit.ShouldBe(Schedule.UnitEnum.WEEKLY);
         result.Period.ShouldBe(2);
     }
@@ -204,7 +204,7 @@ public class GetScheduleShould
             TotalAmount = 200m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.TwoMonths,
+                MembershipTerm = MembershipTerm.TwoMonths,
             },
         };
 
@@ -234,7 +234,7 @@ public class GetScheduleShould
             TotalAmount = 400m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.FourMonths,
+                MembershipTerm = MembershipTerm.FourMonths,
             },
         };
 
@@ -264,7 +264,7 @@ public class GetScheduleShould
             TotalAmount = 500m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.FiveMonths,
+                MembershipTerm = MembershipTerm.FiveMonths,
             },
         };
 
@@ -294,7 +294,7 @@ public class GetScheduleShould
             TotalAmount = 600m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.SixMonths,
+                MembershipTerm = MembershipTerm.SixMonths,
             },
         };
 
@@ -324,7 +324,7 @@ public class GetScheduleShould
             TotalAmount = 1200m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Yearly,
+                MembershipTerm = MembershipTerm.Yearly,
             },
         };
 
@@ -353,7 +353,7 @@ public class GetScheduleShould
             TotalAmount = 100m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Yearly,
+                MembershipTerm = MembershipTerm.Yearly,
             },
         };
 
@@ -377,7 +377,7 @@ public class GetScheduleShould
             TotalAmount = 58m,
             ProductPricing = ProductPricing.Empty(pricingId) with
             {
-                PurchaseCadence = ProductPricingCadence.Daily,
+                MembershipTerm = MembershipTerm.Daily,
             },
         };
 

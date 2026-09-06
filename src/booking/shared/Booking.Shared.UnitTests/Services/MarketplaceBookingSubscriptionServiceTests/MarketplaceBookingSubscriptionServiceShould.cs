@@ -108,7 +108,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         };
         var pricing = ProductPricing.Empty("weekly-price") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
             RequiredDaysPerWeek = 2,
             AvailableDays = [DayOfWeek.Tuesday, DayOfWeek.Wednesday],
             AcceptedPaymentMethods = [PaymentMethod.Card],
@@ -430,7 +430,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         existingSubscription.AutoRenew = true;
         existingSubscription.MarketplaceBooking.ProductPricing = existingSubscription.MarketplaceBooking.ProductPricing with
         {
-            PurchaseCadence = ProductPricingCadence.Monthly,
+            MembershipTerm = MembershipTerm.Monthly,
         };
         var updatedSubscription = new Shared.Models.MarketplaceBookingSubscription
         {

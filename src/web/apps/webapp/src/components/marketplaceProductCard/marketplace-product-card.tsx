@@ -53,7 +53,7 @@ const MarketplaceProductCard = ({ organizationCustomDomain, productRelay }: Prop
             title
             subTitle
           }
-          purchaseCadence
+          membershipTerm
           price
           isTaxInclusive
           availableDays
@@ -72,8 +72,8 @@ const MarketplaceProductCard = ({ organizationCustomDomain, productRelay }: Prop
         .map((option) => ({
           id: option.id,
           title: option.listingMetadata.title ?? '',
-          cadence: option.purchaseCadence,
-          amountLabel: formatPriceForDisplay(product.currency.name, option.price, option.purchaseCadence),
+          cadence: option.membershipTerm,
+          amountLabel: formatPriceForDisplay(product.currency.name, option.price, option.membershipTerm),
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
           availableDays: option.availableDays ?? [],
         })),

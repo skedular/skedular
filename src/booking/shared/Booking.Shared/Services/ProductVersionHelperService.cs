@@ -41,7 +41,7 @@ public class ProductVersionHelperService : IProductVersionHelperService
     public ProductPricing? FindMatchingPricing(IEnumerable<ProductPricing> pricingOptions, ProductPricing pricing) =>
         pricingOptions.FirstOrDefault(item => item.Id == pricing.Id) ??
         pricingOptions.FirstOrDefault(item =>
-            item.PurchaseCadence == pricing.PurchaseCadence &&
+            item.MembershipTerm == pricing.MembershipTerm &&
             item.NumberOfResourcesToBook == pricing.NumberOfResourcesToBook &&
             item.BillingMode == pricing.BillingMode &&
             item.RequiredDaysPerWeek == pricing.RequiredDaysPerWeek);

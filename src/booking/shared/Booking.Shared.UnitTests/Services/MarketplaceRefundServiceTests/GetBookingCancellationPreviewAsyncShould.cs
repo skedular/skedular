@@ -103,7 +103,7 @@ public class GetBookingCancellationPreviewAsyncShould
             "pricing-1",
             0,
             ListingMetadata.Empty,
-            ProductPricingCadence.Daily,
+            MembershipTerm.Daily,
             120m,
             true,
             false,

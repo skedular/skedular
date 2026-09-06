@@ -9,11 +9,12 @@ using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Product
 using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingBillingMode;
 using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Currency;
 using ListingMetadata = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ListingMetadata;
+using MembershipTerm = Api.Shared.Services.Models.MembershipTerm;
 using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.PaymentMethod;
 using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductType;
-using ProductPricingCadence = Api.Shared.Services.Models.ProductPricingCadence;
 using ProductPricingCancellationPolicyType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationPolicyType;
 using ProductPricingCancellationRefundRule = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationRefundRule;
+using ProductPricingFulfillmentType = Api.Shared.Services.Models.ProductPricingFulfillmentType;
 
 namespace Marketplace.Shared.Mappers;
 
@@ -81,7 +82,7 @@ public class EventMapper : IEventMapper
             Id = src.Id,
             Index = src.Index,
             ListingMetadata = MapTo(src.ListingMetadata),
-            PurchaseCadence = MapTo(src.PurchaseCadence),
+            MembershipTerm = MapTo(src.MembershipTerm),
             Price = Convert.ToDouble(src.Price),
             IsTaxInclusive = src.IsTaxInclusive,
             SupportsSubscriptionAutoRenewal = src.SupportsSubscriptionAutoRenewal,
@@ -130,20 +131,20 @@ public class EventMapper : IEventMapper
                 $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };
 
-    private static Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence MapTo(ProductPricingCadence src) =>
+    private static Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm MapTo(MembershipTerm src) =>
         src switch
         {
-            ProductPricingCadence.NotSet => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.NotSet,
-            ProductPricingCadence.Daily => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Daily,
-            ProductPricingCadence.Weekly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Weekly,
-            ProductPricingCadence.Fortnightly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Fortnightly,
-            ProductPricingCadence.Monthly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Monthly,
-            ProductPricingCadence.TwoMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.TwoMonths,
-            ProductPricingCadence.Quarterly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Quarterly,
-            ProductPricingCadence.FourMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.FourMonths,
-            ProductPricingCadence.FiveMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.FiveMonths,
-            ProductPricingCadence.SixMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.SixMonths,
-            ProductPricingCadence.Yearly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence.Yearly,
+            MembershipTerm.NotSet => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.NotSet,
+            MembershipTerm.Daily => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Daily,
+            MembershipTerm.Weekly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Weekly,
+            MembershipTerm.Fortnightly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Fortnightly,
+            MembershipTerm.Monthly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Monthly,
+            MembershipTerm.TwoMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.TwoMonths,
+            MembershipTerm.Quarterly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Quarterly,
+            MembershipTerm.FourMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.FourMonths,
+            MembershipTerm.FiveMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.FiveMonths,
+            MembershipTerm.SixMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.SixMonths,
+            MembershipTerm.Yearly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Yearly,
             _ => throw new ArgumentOutOfRangeException(null,
                 "Unexpected value encountered. Update enum mapping or caller input to include this case."),
         };

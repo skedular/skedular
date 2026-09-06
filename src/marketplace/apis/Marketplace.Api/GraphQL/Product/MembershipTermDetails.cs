@@ -3,11 +3,11 @@ using HotChocolate;
 
 namespace Marketplace.Api.GraphQL.Product;
 
-[GraphQLName("ProductPricingCadenceDetails")]
-public class ProductPricingCadenceDetails
+[GraphQLName("MembershipTermDetails")]
+public class MembershipTermDetails
 {
     [GraphQLName("type")]
-    public ProductPricingCadence Type { get; set; }
+    public MembershipTerm Type { get; set; }
 
     [GraphQLName("name")]
     public string Name { get; set; } = string.Empty;

@@ -7,7 +7,7 @@
 
 ## Decision
 
-The existing field has coherent semantics for weekly offers: an exact number of distinct selected calendar weekdays, constrained by `availableDays`. The expanded rule uses complete UTC calendar weeks for every longer-than-weekly purchase cadence. Reservations and generated subscriptions require exactly N booking occurrences per complete week; credit entitlements enforce at most N successful redemptions per complete week because customers may legitimately use fewer credits.
+The existing field has coherent semantics for weekly offers: an exact number of distinct selected calendar weekdays, constrained by `availableDays`. The expanded rule uses complete UTC calendar weeks for every longer-than-weekly membership term. Reservations and generated subscriptions require exactly N booking occurrences per complete week; credit entitlements enforce at most N successful redemptions per complete week because customers may legitimately use fewer credits.
 
 The field name remains appropriate. No ProductPricing migration is required; enforcement needs a shared UTC-week rule and durable entitlement redemption counting.
 
@@ -17,21 +17,21 @@ The field name remains appropriate. No ProductPricing migration is required; enf
 
 - Q: Should `requiredDaysPerWeek` mean exactly N bookings per calendar week, with partial weeks at the beginning or end of a longer offer exempt? → A: Yes; use exactly N bookings per calendar week, constrained by `availableDays`, with boundary partial weeks exempt.
 - Q: Should this rule apply to both reservation offers and credit-entitlement offers? → A: Yes; support both, with entitlement redemption counting confirmed redemptions in each complete calendar week.
-- Q: Should the new rule apply to every purchase cadence longer than one week, including all existing fortnightly, monthly, multi-month, and yearly cadence values? → A: Yes; support every existing purchase cadence whose period is longer than one week.
+- Q: Should the new rule apply to every membership term longer than one week, including all existing fortnightly, monthly, multi-month, and yearly cadence values? → A: Yes; support every existing membership term whose period is longer than one week.
 - Q: What timezone should define calendar weeks for location-independent offers? → A: UTC; use UTC calendar weeks for v1 so reservations, subscriptions, and credit redemptions share one stable rule without storing location state.
 - Q: For credit-entitlement offers, should `requiredDaysPerWeek` enforce a maximum of N redemptions per complete UTC week rather than require exactly N redemptions? → A: Yes; scheduled reservations/subscriptions use exactly N, while entitlements allow at most N redemptions.
 - Q: Should scheduled offers derive bookings from the customer’s selected weekdays while entitlement offers simply block redemption after N weekly credits are spent? → A: Yes; selected weekdays define reservation/subscription bookings, while entitlement redemption is limited by the weekly count and does not ask the customer to select weekdays.
 - Q: When should an entitlement redemption stop consuming the weekly allowance? → A: Count successful redemption bookings; release canceled or permanently failed redemptions.
 - Q: Should the start and end of a longer offer’s eligible period be based on the purchase or subscription period timestamps? → A: Yes; use the actual period timestamps, enforce only full Monday-Sunday UTC weeks, and exempt first/last partial weeks.
-- Q: Should `requiredDaysPerWeek` be enabled for every booking cadence when the purchase cadence is longer than one week, including hourly and other time-based bookings? → A: Yes; support every booking cadence and count booking occurrences, including time-based bookings. **Historical clarification superseded by Spec 047**; sub-day cadences and `BookingCadence` are out of scope for this feature.
+- Q: Should `requiredDaysPerWeek` be enabled for every booking cadence when the membership term is longer than one week, including hourly and other time-based bookings? → A: Yes; support every booking cadence and count booking occurrences, including time-based bookings. **Historical clarification superseded by Spec 047**; sub-day cadences and `BookingCadence` are out of scope for this feature.
 
 ### Session 2026-09-02
 
-- Q: For cadence-free credit entitlements, should `requiredDaysPerWeek` apply across each complete UTC week within the entitlement’s validity period, independent of purchase cadence? → A: Yes; use the entitlement validity period as the active window and enforce at most N successful redemptions per complete UTC week.
-- Q: Should `requiredDaysPerWeek` remain available for weekly offers and purchase cadences longer than one week, but be hidden for daily offers? → A: Yes; keep it for weekly and longer purchase cadences, hide it for daily offers, and use entitlement validity periods separately.
+- Q: For cadence-free credit entitlements, should `requiredDaysPerWeek` apply across each complete UTC week within the entitlement’s validity period, independent of membership term? → A: Yes; use the entitlement validity period as the active window and enforce at most N successful redemptions per complete UTC week.
+- Q: Should `requiredDaysPerWeek` remain available for weekly offers and membership terms longer than one week, but be hidden for daily offers? → A: Yes; keep it for weekly and longer membership terms, hide it for daily offers, and use entitlement validity periods separately.
 - Q: Should all active references to entitlement usage use “successful redemption”? → A: Yes; use successful redemption for a redemption that creates a booking and consumes one credit.
 - Q: Should `BookingCadence` be removed from this feature’s data model and documentation? → A: Yes; booking duration follows Spec 047’s duration rules.
-- Q: Should FR-006c say “Weekly and longer supported purchase cadences”? → A: Yes.
+- Q: Should FR-006c say “Weekly and longer supported membership terms”? → A: Yes.
 - Q: Should direct reservation creation enforce the same selected-weekday-to-booking-occurrence rule as subscription generation? → A: Yes; both flows create one occurrence per selected weekday per applicable complete UTC week.
 - Q: Should refund-release behavior be covered primarily by unit tests, with focused repository integration only when necessary? → A: Yes.
 - Q: Should all entitlement-limit references use the term “successful redemption” instead of “confirmed redemption”? → A: Yes; use “successful redemption” consistently, meaning a redemption that creates the booking and consumes one entitlement credit.
@@ -88,9 +88,9 @@ As a customer using a credit entitlement, I can redeem credits without selecting
 ### Functional Requirements
 
 - **FR-001**: The system MUST preserve the existing exact-count semantics for weekly `requiredDaysPerWeek`.
-- **FR-002**: The system MUST allow `requiredDaysPerWeek` on Weekly and longer supported purchase cadences and interpret it as exactly that many booking occurrences in each complete calendar week covered by the offer; cadence-free entitlements use their validity period instead.
+- **FR-002**: The system MUST allow `requiredDaysPerWeek` on Weekly and longer supported membership terms and interpret it as exactly that many booking occurrences in each complete calendar week covered by the offer; cadence-free entitlements use their validity period instead.
 - **FR-003**: The system MUST preserve the value through the existing model, JSON serialization, marketplace event projection, booking projection, and product-version matching.
-- **FR-004**: The system MUST expose the existing field in product editors and read models for weekly and longer purchase cadences, hide it for daily offers, and support it for cadence-free entitlements through validity-period rules.
+- **FR-004**: The system MUST expose the existing field in product editors and read models for weekly and longer membership terms, hide it for daily offers, and support it for cadence-free entitlements through validity-period rules.
 - **FR-005**: The system MUST preserve existing weekly validation for direct bookings, subscriptions, and entitlement redemption dates; longer-cadence behavior is defined by FR-005a through FR-006c.
 - **FR-005a**: The system MUST enforce exactly N weekly booking occurrences for reservations and subscriptions, and at most N successful weekly redemptions for credit entitlements, using UTC history within each complete calendar week.
 - **FR-005b**: The system MUST preserve the existing weekday-selection UI for scheduled offers and MUST NOT require weekday selection for credit-entitlement redemption.
@@ -100,7 +100,7 @@ As a customer using a credit entitlement, I can redeem credits without selecting
 - **FR-005f**: The system MUST release weekly entitlement allowance for refunded redemptions and cover the release behavior with unit tests, adding focused persistence integration coverage only where necessary.
 - **FR-005g**: The system MUST expose the remaining weekly entitlement allowance in the entitlement read model and customer UI without requiring weekday selection.
 - **FR-006b**: The system MUST derive complete-week eligibility from the actual purchase or subscription period timestamps, not calendar-month boundaries.
-- **FR-006c**: The system MUST support Weekly and longer supported purchase cadences; daily offers do not expose the setting, and cadence-free entitlements are governed by validity rather than purchase cadence.
+- **FR-006c**: The system MUST support Weekly and longer supported membership terms; daily offers do not expose the setting, and cadence-free entitlements are governed by validity rather than membership term.
 - **FR-006**: The system MUST exempt partial calendar weeks at the beginning and end of a longer offer from the exact weekly requirement.
 - **FR-006a**: The system MUST use UTC calendar-week boundaries for all supported reservation bookings, subscriptions, and credit-entitlement redemptions without storing or consulting a booking or location timezone.
 
@@ -112,7 +112,7 @@ As a customer using a credit entitlement, I can redeem credits without selecting
 
 ## Key Entities
 
-- **ProductPricing**: The versioned offer pricing rule containing purchase cadence, booking duration limits, available weekdays, and the existing weekly exact-day requirement.
+- **ProductPricing**: The versioned offer pricing rule containing membership term, booking duration limits, available weekdays, and the existing weekly exact-day requirement.
 - **Entitlement**: A purchased credit balance whose redemption uses the offer’s date-availability rules and whose successful redemptions are counted against an at-most-N weekly limit.
 - **Recurring subscription**: A recurring offer whose generated bookings inherit the pricing rule and selected weekly schedule.
 
@@ -129,7 +129,7 @@ As a customer using a credit entitlement, I can redeem credits without selecting
 
 - “Required” means exact count for scheduled reservations/subscriptions; for credit entitlements it is an upper bound because redemption is optional.
 - `availableDays` is a set of allowed calendar weekdays, not a quota.
-- Weekly and longer supported purchase cadences are eligible, including weekly, fortnightly, monthly, two-, three-, four-, five-, and six-month, quarterly, and yearly values; Daily hides the setting and cadence-free entitlements use validity.
+- Weekly and longer supported membership terms are eligible, including weekly, fortnightly, monthly, two-, three-, four-, five-, and six-month, quarterly, and yearly values; Daily hides the setting and cadence-free entitlements use validity.
 - UTC is the single calendar-week timezone for v1; location selection is not required.
 - A Booking-owned durable query or usage record may be added to enforce entitlement redemption limits.
 

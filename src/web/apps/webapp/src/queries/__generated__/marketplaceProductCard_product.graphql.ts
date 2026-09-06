@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f52898749fe9e838bd87141f5580f0b4>>
+ * @generated SignedSource<<eb541753502b4bc0ab183a64a6cc8613>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceProductCard_product$data = {
   readonly currency: {
@@ -34,8 +34,8 @@ export type marketplaceProductCard_product$data = {
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };
+    readonly membershipTerm: MembershipTerm;
     readonly price: any;
-    readonly purchaseCadence: ProductPricingCadence;
   }>;
   readonly " $fragmentType": "marketplaceProductCard_product";
 };
@@ -153,7 +153,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "purchaseCadence",
+          "name": "membershipTerm",
           "storageKey": null
         },
         {
@@ -186,6 +186,6 @@ return {
 };
 })();
 
-(node as any).hash = "7eb0cea6dd4bbd9096ea09c232f7c925";
+(node as any).hash = "a8bd1f5db01fdc7815b898e811c6395d";
 
 export default node;

@@ -21,7 +21,7 @@ public enum OrganizationXeroBillingMode
     /// <summary>
     ///     Xero owns recurring invoice template creation for supported recurring booking flows. For recurring
     ///     in-arrears bookings, the repeating schedule follows the organization's billing cycle. For other recurring
-    ///     bookings, the repeating schedule follows the recurring purchase cadence.
+    ///     bookings, the repeating schedule follows the recurring membership term.
     /// </summary>
     RepeatingInvoices,
 }

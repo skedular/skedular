@@ -55,7 +55,7 @@ const LocationPage = () => {
             }
             pricingOptions {
               price
-              purchaseCadence
+              membershipTerm
             }
             currency {
               name

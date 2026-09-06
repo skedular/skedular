@@ -116,7 +116,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
                 BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
                 ProductPricing = ProductPricing.Empty(pricingId) with
                 {
-                    PurchaseCadence = ProductPricingCadence.Monthly,
+                    MembershipTerm = MembershipTerm.Monthly,
                 },
                 ProductVersion = new ProductVersion
                 {
@@ -146,7 +146,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             OrganizationId = organizationId,
             ExternalInvoiceId = existingTemplateId,
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
-            RepeatingScheduleSource = Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            RepeatingScheduleSource = Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
             RepeatingScheduleUnit = nameof(Schedule.UnitEnum.MONTHLY),
             RepeatingSchedulePeriod = 3,
         };
@@ -159,7 +159,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             BillingMode = XeroBillingModeConstants.RepeatingInvoices,
         };
         var desiredSchedule = new XeroRepeatingInvoiceScheduleDefinition(
-            Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
             Schedule.UnitEnum.MONTHLY,
             1,
             100m);
@@ -302,7 +302,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
                 BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
                 ProductPricing = ProductPricing.Empty(pricingId) with
                 {
-                    PurchaseCadence = ProductPricingCadence.Monthly,
+                    MembershipTerm = MembershipTerm.Monthly,
                 },
                 ProductVersion = new ProductVersion
                 {
@@ -332,14 +332,14 @@ public class HandleRecurringBookingInvoiceAsyncShould
             BillingMode = XeroBillingModeConstants.RepeatingInvoices,
         };
         var desiredSchedule = new XeroRepeatingInvoiceScheduleDefinition(
-            Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
             Schedule.UnitEnum.MONTHLY,
             1,
             100m);
         var transitionDecision = new XeroRecurringInvoiceTransitionDecision(
             XeroRecurringInvoiceExportPath.FreezeExistingRepeatingInvoice,
             AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
-            "Purchase cadence without auto-renew should not keep a Xero repeating template.");
+            "membership term without auto-renew should not keep a Xero repeating template.");
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -463,7 +463,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
                 BillingMode = ProductPricingBillingMode.InArrears.ToProductPricingBillingMode(),
                 ProductPricing = ProductPricing.Empty(pricingId) with
                 {
-                    PurchaseCadence = ProductPricingCadence.Monthly,
+                    MembershipTerm = MembershipTerm.Monthly,
                 },
                 ProductVersion = new ProductVersion
                 {

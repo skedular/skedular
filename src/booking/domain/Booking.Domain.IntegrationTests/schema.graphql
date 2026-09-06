@@ -1005,7 +1005,7 @@ type ProductPricing @shareable {
   id: String!
   index: Int!
   listingMetadata: ListingMetadata!
-  purchaseCadence: ProductPricingCadence!
+  membershipTerm: MembershipTerm!
   price: Decimal!
   isTaxInclusive: Boolean!
   supportsSubscriptionAutoRenewal: Boolean!
@@ -1846,6 +1846,20 @@ enum MarketplaceRefundStatus {
   RECONCILIATION_REQUIRED
 }
 
+enum MembershipTerm {
+  NOT_SET
+  DAILY
+  WEEKLY
+  FORTNIGHTLY
+  MONTHLY
+  TWO_MONTHS
+  QUARTERLY
+  FOUR_MONTHS
+  FIVE_MONTHS
+  SIX_MONTHS
+  YEARLY
+}
+
 enum OrderDirection {
   ASCENDING
   DESCENDING
@@ -2060,20 +2074,6 @@ enum ProductPricingBillingMode {
   NOT_SET
   UPFRONT
   IN_ARREARS
-}
-
-enum ProductPricingCadence {
-  NOT_SET
-  DAILY
-  WEEKLY
-  FORTNIGHTLY
-  MONTHLY
-  TWO_MONTHS
-  QUARTERLY
-  FOUR_MONTHS
-  FIVE_MONTHS
-  SIX_MONTHS
-  YEARLY
 }
 
 enum ProductPricingCancellationPolicyType {
