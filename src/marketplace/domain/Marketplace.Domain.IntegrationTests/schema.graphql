@@ -25,7 +25,7 @@ type Query {
   defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   durationDisplayUnits: [DurationDisplayUnitDetails!]!
   productPricingFulfillmentTypes: [ProductPricingFulfillmentTypeDetails!]!
-  productPricingCadences: [ProductPricingCadenceDetails!]!
+  membershipTerms: [MembershipTermDetails!]!
   productPricingBillingModes: [ProductPricingBillingModeDetails!]!
   paymentMethods: [PaymentMethodTypeDetails!]!
   productPricingCancellationTypes: [ProductPricingCancellationTypeDetails!]!
@@ -86,6 +86,11 @@ type Marketplace_OrganizationDetails {
   logoUrl: String
 }
 
+type MembershipTermDetails {
+  type: MembershipTerm!
+  name: String!
+}
+
 type OrganizationTagDetails @key(fields: "id") @shareable {
   name: String!
   type: OrganizationTagType
@@ -133,7 +138,7 @@ type ProductPricing @shareable {
   id: String!
   index: Int!
   listingMetadata: ListingMetadata!
-  purchaseCadence: ProductPricingCadence!
+  membershipTerm: MembershipTerm!
   price: Decimal!
   isTaxInclusive: Boolean!
   supportsSubscriptionAutoRenewal: Boolean!
@@ -159,11 +164,6 @@ type ProductPricing @shareable {
 
 type ProductPricingBillingModeDetails {
   type: ProductPricingBillingMode!
-  name: String!
-}
-
-type ProductPricingCadenceDetails {
-  type: ProductPricingCadence!
   name: String!
 }
 
@@ -273,7 +273,7 @@ input ProductPricingInput {
   id: String!
   index: Int!
   listingMetadata: ListingMetadataInput!
-  purchaseCadence: ProductPricingCadence!
+  membershipTerm: MembershipTerm!
   price: Decimal!
   isTaxInclusive: Boolean!
   supportsSubscriptionAutoRenewal: Boolean!
@@ -334,6 +334,20 @@ enum DayOfWeek {
 enum DurationDisplayUnit {
   MINUTES
   HOURS
+}
+
+enum MembershipTerm {
+  NOT_SET
+  DAILY
+  WEEKLY
+  FORTNIGHTLY
+  MONTHLY
+  TWO_MONTHS
+  QUARTERLY
+  FOUR_MONTHS
+  FIVE_MONTHS
+  SIX_MONTHS
+  YEARLY
 }
 
 enum OrderDirection {
@@ -536,20 +550,6 @@ enum ProductPricingBillingMode {
   NOT_SET
   UPFRONT
   IN_ARREARS
-}
-
-enum ProductPricingCadence {
-  NOT_SET
-  DAILY
-  WEEKLY
-  FORTNIGHTLY
-  MONTHLY
-  TWO_MONTHS
-  QUARTERLY
-  FOUR_MONTHS
-  FIVE_MONTHS
-  SIX_MONTHS
-  YEARLY
 }
 
 enum ProductPricingCancellationPolicyType {

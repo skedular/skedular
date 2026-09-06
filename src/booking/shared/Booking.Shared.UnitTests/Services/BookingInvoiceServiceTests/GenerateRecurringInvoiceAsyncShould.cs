@@ -76,7 +76,7 @@ public class GenerateRecurringInvoiceAsyncShould
                 BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
                 ProductPricing = ProductPricing.Empty(pricingId) with
                 {
-                    PurchaseCadence = ProductPricingCadence.Quarterly,
+                    MembershipTerm = MembershipTerm.Quarterly,
                 },
                 ProductVersion = new ProductVersionEntity
                 {
@@ -124,7 +124,7 @@ public class GenerateRecurringInvoiceAsyncShould
         };
         var billingDefinition = new RecurringInvoiceBillingDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
-            ProductPricingCadence.Weekly,
+            MembershipTerm.Weekly,
             23.0769m);
 
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);

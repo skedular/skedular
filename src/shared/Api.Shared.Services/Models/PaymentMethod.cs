@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
+
 namespace Api.Shared.Services.Models;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum PaymentMethod
 {
     Card = 0,

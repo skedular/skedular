@@ -1,7 +1,7 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/core/fetch';
 import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata } from '@/components/listingMetadata';
-import { SingleChoiceCurrency, SingleChoiceProductPricingCadence, SingleChoiceProductPricingCancellationType } from '@/components/organization';
+import { SingleChoiceCurrency, SingleChoiceMembershipTerm, SingleChoiceProductPricingCancellationType } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import CalendarDayPicker from '@/components/product/calendar-day-picker';
 import { DurationField } from '@/components/product/duration-input';
@@ -39,8 +39,8 @@ import {
   StickyReviewRail,
 } from '@skedular/ui';
 import { Switches, TextField } from 'mui-rff';
-import { memo, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { memo, useEffect, useMemo, useState } from 'react';
 
 type Props = {
   mode: 'add' | 'edit';
@@ -49,7 +49,7 @@ type Props = {
     defaultMaxAllowedResourcesLockTimePaidViaCard: number;
     defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number;
   };
-  values: ProductDetails;
+  values: Omit<ProductDetails, 'pricingOptions'> & { pricingOptions: PricingOptionForm[] };
   errors: unknown;
   form: { change: (name: string, nextValue: unknown) => void };
   requiredFields: Record<string, boolean>;
@@ -103,7 +103,12 @@ const summarizeErrors = (errors: unknown): string[] => {
 
 const OfferSummary = ({ pricingOption, index }: { pricingOption: PricingOptionForm; index: number }) => {
   const title = pricingOption.title?.trim() || `Offer ${index + 1}`;
-  const summaryBits = [pricingOption.price ? `${pricingOption.price}` : 'No price', prettifyEnum(pricingOption.cadence), 'Entire place', prettifyEnum(pricingOption.billingMode)];
+  const summaryBits = [
+    pricingOption.price ? `${pricingOption.price}` : 'No price',
+    prettifyEnum(pricingOption.membershipTerm),
+    'Entire place',
+    prettifyEnum(pricingOption.billingMode),
+  ];
 
   return (
     <StackColumn spacing={0.5}>
@@ -195,16 +200,16 @@ const ProductEditorForm = ({
 
   useEffect(() => {
     values.pricingOptions.forEach((pricingOption, index) => {
-      if (pricingOption.cadence === 'DAILY' && pricingOption.requiredDaysPerWeek) {
+      if (pricingOption.membershipTerm === 'DAILY' && pricingOption.requiredDaysPerWeek) {
         form.change(`pricingOptions[${index}].requiredDaysPerWeek`, '');
       }
     });
   }, [form, values.pricingOptions]);
 
-  const addOffer = (cadence: string) => {
+  const addOffer = (membershipTerm: string) => {
     const nextOffer = {
       ...createPricingOption(rootDataRelay.defaultMaxAllowedResourcesLockTimePaidViaCard),
-      cadence,
+      membershipTerm,
     };
     const nextPricingOptions = [...(values?.pricingOptions ?? []), nextOffer];
     form.change('pricingOptions', nextPricingOptions);
@@ -225,7 +230,7 @@ const ProductEditorForm = ({
 
   const renderOfferEditor = (pricingOption: PricingOptionForm, index: number) => (
     <StackColumn spacing={2}>
-      <SettingsSectionCard title="Offer Basics" description="Set the label customers will understand first, then set the purchase term and price.">
+      <SettingsSectionCard title="Offer Basics" description="Set the label customers will understand first, then set the membership term and price.">
         <ListingMetadata fields={['title', 'subTitle']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
 
         <FormFieldLabel label="Price">
@@ -238,7 +243,7 @@ const ProductEditorForm = ({
         description={
           pricingOption.fulfillmentType === 'ENTITLEMENT'
             ? 'Credit entitlements are purchased once and provide credits customers can use later.'
-            : 'Reservations are purchased for the selected purchase term and reserve resources or time.'
+            : 'Reservations are purchased for the selected membership term and reserve resources or time.'
         }
       >
         <StackColumn spacing={2}>
@@ -250,7 +255,7 @@ const ProductEditorForm = ({
               fieldProps={{
                 onChange: (event: { target: { value: string } }) => {
                   if (event.target.value === 'ENTITLEMENT') {
-                    form.change(`pricingOptions[${index}].cadence`, 'NOT_SET');
+                    form.change(`pricingOptions[${index}].membershipTerm`, 'NOT_SET');
                     form.change(`pricingOptions[${index}].supportsSubscriptionAutoRenewal`, false);
                   }
                 },
@@ -286,8 +291,8 @@ const ProductEditorForm = ({
               </FormFieldLabel>
             </StackRow>
           ) : (
-            <FormFieldLabel label="Purchase cadence">
-              <SingleChoiceProductPricingCadence rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].cadence`} required />
+            <FormFieldLabel label="membership term">
+              <SingleChoiceMembershipTerm rootDataRelay={rootDataRelay as never} name={`pricingOptions[${index}].membershipTerm`} required />
             </FormFieldLabel>
           )}
         </StackColumn>
@@ -309,7 +314,7 @@ const ProductEditorForm = ({
             label="Maximum booking duration"
             required
           />
-          {pricingOption.cadence !== 'DAILY' ? (
+          {pricingOption.membershipTerm !== 'DAILY' ? (
             <FormFieldLabel label="Required selected days per week">
               <TextField
                 name={`pricingOptions[${index}].requiredDaysPerWeek`}
@@ -320,7 +325,7 @@ const ProductEditorForm = ({
               />
             </FormFieldLabel>
           ) : null}
-          {pricingOption.cadence !== 'DAILY' ? <SmallIconTypography label="Leave this field empty to keep unrestricted weekly booking behavior." /> : null}
+          {pricingOption.membershipTerm !== 'DAILY' ? <SmallIconTypography label="Leave this field empty to keep unrestricted weekly booking behavior." /> : null}
         </SettingsSectionCard>
       ) : null}
 
@@ -606,7 +611,7 @@ const ProductEditorForm = ({
                     <Box sx={{ textAlign: 'left' }}>
                       <OfferSummary pricingOption={pricingOption} index={index} />
                     </Box>
-                    <Chip size="small" label={prettifyEnum(pricingOption.cadence)} />
+                    <Chip size="small" label={prettifyEnum(pricingOption.membershipTerm)} />
                   </Button>
                 ))}
               </StackColumn>

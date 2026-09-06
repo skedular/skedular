@@ -139,7 +139,7 @@ public class UpdateProductPatchSaveShould(
                     productVersionId,
                     0,
                     ListingMetadata.Empty,
-                    ProductPricingCadence.Daily,
+                    MembershipTerm.Daily,
                     10m,
                     true,
                     false,

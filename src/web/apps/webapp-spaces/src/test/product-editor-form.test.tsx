@@ -142,7 +142,7 @@ vi.mock('@/components/organization', () => ({
   MultipleChoicesProductTags: () => <div>Product tags</div>,
   SingleChoiceCurrency: () => <div>Currency</div>,
   SingleChoiceProductPricingBillingMode: () => <div>Billing mode</div>,
-  SingleChoiceProductPricingCadence: () => <div>Cadence</div>,
+  SingleChoiceMembershipTerm: () => <div>Membership term</div>,
   SingleChoiceProductPricingCancellationType: () => <div>Cancellation type</div>,
   SingleChoiceProductType: () => <div>Product type</div>,
 }));
@@ -184,7 +184,7 @@ const baseProps = {
         title: 'Daily pass',
         subTitle: null,
         fulfillmentType: 'RESERVATION',
-        cadence: 'DAILY',
+        membershipTerm: 'DAILY',
         price: '25',
         numberOfResourcesToBook: '1',
         minDurationMinutes: '60',
@@ -282,14 +282,14 @@ describe('ProductEditorForm', () => {
     await user.click(screen.getByRole('tab', { name: 'Offers' }));
     await user.click(screen.getByRole('button', { name: 'Add offer' }));
 
-    const nextPricingOptions = change.mock.calls.at(-1)?.[1] as Array<{ cadence: string }>;
+    const nextPricingOptions = change.mock.calls.at(-1)?.[1] as Array<{ membershipTerm: string }>;
     expect(nextPricingOptions).toHaveLength(2);
-    expect(nextPricingOptions[1]?.cadence).toBe('DAILY');
+    expect(nextPricingOptions[1]?.membershipTerm).toBe('DAILY');
   });
 
   it('duplicates and removes offers, while protecting the final offer', async () => {
     const user = userEvent.setup();
-    const secondOffer = { ...baseProps.values.pricingOptions[0], id: 'offer-2', title: 'Weekly pass', cadence: 'WEEKLY' };
+    const secondOffer = { ...baseProps.values.pricingOptions[0], id: 'offer-2', title: 'Weekly pass', membershipTerm: 'WEEKLY' };
     const change = vi.fn();
 
     const { unmount } = render(
@@ -317,7 +317,7 @@ describe('ProductEditorForm', () => {
     expect(screen.getByRole('menuitem', { name: 'Remove offer' })).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('switches between the offer sections and explains purchase terms separately from auto-renewal', async () => {
+  it('switches between the offer sections and explains membership terms separately from auto-renewal', async () => {
     const user = userEvent.setup();
 
     render(
@@ -379,8 +379,8 @@ describe('ProductEditorForm', () => {
 
     await user.click(screen.getByRole('tab', { name: 'Offers' }));
     await user.click(screen.getByRole('button', { name: /Fulfillment/ }));
-    await user.click(screen.getByRole('button', { name: 'Help for Cadence' }));
-    expect(screen.getByRole('button', { name: 'Help for Cadence' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Help for Membership term' }));
+    expect(screen.getByRole('button', { name: 'Help for Membership term' })).toBeInTheDocument();
   });
 
   it('uses review and create as the final add-product step and only shows submit there', async () => {

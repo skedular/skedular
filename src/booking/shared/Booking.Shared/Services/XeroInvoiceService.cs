@@ -1107,7 +1107,7 @@ public class XeroInvoiceService(
             return BookingInvoiceService.BuildBookingInvoiceLineDescription(
                 productVersion,
                 marketplaceBooking.ProductPricing,
-                $"{marketplaceBooking.ProductPricing.PurchaseCadence.ToProductPricingCadenceName()} pass{Environment.NewLine}" +
+                $"{marketplaceBooking.ProductPricing.MembershipTerm.ToMembershipTermName()} pass{Environment.NewLine}" +
                 $"{displayStart.ToShortDate()} - {displayEnd.ToShortDate()}");
         }
 

@@ -7,20 +7,20 @@ namespace Booking.Shared.UnitTests.Services.MarketplaceBookingWeeklyDaySelection
 public class UsesFixedWeeklyScheduleShould
 {
     [Theory]
-    [InlineData(ProductPricingCadence.Weekly)]
-    [InlineData(ProductPricingCadence.Fortnightly)]
-    [InlineData(ProductPricingCadence.Monthly)]
-    [InlineData(ProductPricingCadence.TwoMonths)]
-    [InlineData(ProductPricingCadence.Quarterly)]
-    [InlineData(ProductPricingCadence.FourMonths)]
-    [InlineData(ProductPricingCadence.FiveMonths)]
-    [InlineData(ProductPricingCadence.SixMonths)]
-    [InlineData(ProductPricingCadence.Yearly)]
-    public void Use_Selected_Days_For_A_Supported_Calendar_Cadence(ProductPricingCadence cadence)
+    [InlineData(MembershipTerm.Weekly)]
+    [InlineData(MembershipTerm.Fortnightly)]
+    [InlineData(MembershipTerm.Monthly)]
+    [InlineData(MembershipTerm.TwoMonths)]
+    [InlineData(MembershipTerm.Quarterly)]
+    [InlineData(MembershipTerm.FourMonths)]
+    [InlineData(MembershipTerm.FiveMonths)]
+    [InlineData(MembershipTerm.SixMonths)]
+    [InlineData(MembershipTerm.Yearly)]
+    public void Use_Selected_Days_For_A_Supported_Calendar_Cadence(MembershipTerm cadence)
     {
         var weeklyPricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = cadence,
+            MembershipTerm = cadence,
             RequiredDaysPerWeek = 2,
         };
 
@@ -33,7 +33,7 @@ public class UsesFixedWeeklyScheduleShould
         MarketplaceBookingWeeklyDaySelectionService.UsesFixedWeeklySchedule(
                 weeklyPricing with
                 {
-                    PurchaseCadence = ProductPricingCadence.Daily,
+                    MembershipTerm = MembershipTerm.Daily,
                 },
                 [DayOfWeek.Tuesday, DayOfWeek.Wednesday])
             .ShouldBeFalse();

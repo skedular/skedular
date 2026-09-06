@@ -17,21 +17,21 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
                     "recurring-booking-previous",
                     new DateTimeOffset(2026, 3, 31, 0, 0, 0, TimeSpan.Zero),
                     new DateTimeOffset(2026, 3, 31, 0, 0, 0, TimeSpan.Zero),
-                    ProductPricingCadence.Daily,
+                    MembershipTerm.Daily,
                     PaymentStatus.Confirmed,
                     "INV-PREVIOUS"),
                 CreateRecurringBooking(
                     "recurring-booking-1",
                     new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
                     new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
-                    ProductPricingCadence.Daily,
+                    MembershipTerm.Daily,
                     PaymentStatus.Confirmed,
                     "INV-APR-1"),
                 CreateRecurringBooking(
                     "recurring-booking-2",
                     new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero),
                     new DateTimeOffset(2026, 4, 2, 0, 0, 0, TimeSpan.Zero),
-                    ProductPricingCadence.Daily,
+                    MembershipTerm.Daily,
                     PaymentStatus.Pending,
                     "INV-APR-2"),
             ]);
@@ -54,21 +54,21 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
                     "recurring-booking-april",
                     new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
                     new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
-                    ProductPricingCadence.Daily,
+                    MembershipTerm.Daily,
                     PaymentStatus.Pending,
                     "INV-APR"),
                 CreateRecurringBooking(
                     "recurring-booking-may-1",
                     new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero),
                     new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero),
-                    ProductPricingCadence.Daily,
+                    MembershipTerm.Daily,
                     PaymentStatus.Confirmed,
                     "INV-MAY-1"),
                 CreateRecurringBooking(
                     "recurring-booking-may-2",
                     new DateTimeOffset(2026, 5, 2, 0, 0, 0, TimeSpan.Zero),
                     new DateTimeOffset(2026, 5, 2, 0, 0, 0, TimeSpan.Zero),
-                    ProductPricingCadence.Daily,
+                    MembershipTerm.Daily,
                     PaymentStatus.Confirmed,
                     "INV-MAY-2"),
             ]);
@@ -91,7 +91,7 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
                     "recurring-booking-quarterly",
                     new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
                     new DateTimeOffset(2026, 6, 30, 0, 0, 0, TimeSpan.Zero),
-                    ProductPricingCadence.Quarterly,
+                    MembershipTerm.Quarterly,
                     PaymentStatus.Confirmed,
                     "INV-Q2"),
             ]);
@@ -132,7 +132,7 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
                 PaymentStatus = PaymentStatus.Pending,
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Monthly,
+                    MembershipTerm = MembershipTerm.Monthly,
                 },
                 ProductVersion = new ProductVersion
                 {
@@ -153,7 +153,7 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
         string id,
         DateTimeOffset startDate,
         DateTimeOffset endDate,
-        ProductPricingCadence purchaseCadence,
+        MembershipTerm membershipTerm,
         PaymentStatus paymentStatus,
         string invoiceNumber) =>
         new()
@@ -169,7 +169,7 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
                 InvoiceNumber = invoiceNumber,
                 ProductPricing = ProductPricing.Empty($"pricing-{id}") with
                 {
-                    PurchaseCadence = purchaseCadence,
+                    MembershipTerm = membershipTerm,
                 },
                 ProductVersion = new ProductVersion
                 {

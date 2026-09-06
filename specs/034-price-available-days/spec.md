@@ -105,7 +105,7 @@ Customers and administrators can understand what an available-day restriction me
 - **FR-009**: The system MUST apply the same available-day rule to future instance generation, repair or extension activities, and automatic renewal for restricted prices.
 - **FR-009a**: The system MUST retain the available-day rule active when a subscription period was purchased for all generation within that period, and MUST use the latest price rule only when the subscription enters a renewal period.
 - **FR-010**: The system MUST require both the price's available-day rule and all pre-existing resource availability, opening-hours, conflict detection, and product-resource matching rules before a booking can be created.
-- **FR-011**: The system MUST retain existing pricing cadence, subscription, booking, renewal, validation, and availability behavior when a price has no available-day restriction.
+- **FR-011**: The system MUST retain existing pricing membership term, subscription, booking, renewal, validation, and availability behavior when a price has no available-day restriction.
 - **FR-012**: The system MUST preserve existing active subscriptions, historical bookings, and other previously persisted data without requiring administrators to update unrestricted prices.
 - **FR-013**: The system MUST make the available-day rule available to appropriate administrative and customer-facing views without exposing internal-only information.
 - **FR-014**: The public Skedular website documentation MUST explain optional price-level day-of-the-week restrictions, their relationship to resource availability, and their effect on recurring booking generation.

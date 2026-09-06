@@ -6,18 +6,18 @@ This file is for agents editing `booking/shared/Booking.Shared/`.
 
 ### First invoice behavior
 
-For a recurring in-arrears subscription, the first invoice is not the full purchase cadence amount.
+For a recurring in-arrears subscription, the first invoice is not the full membership term amount.
 
 Current expected behavior:
 
-- If purchase cadence is larger than the organization billing cycle, split into billing-cycle installments.
+- If membership term is larger than the organization billing cycle, split into billing-cycle installments.
 - The initial recurring split is stepped from the subscription start date.
 - The installment amounts are equal-split by installment count, with rounding remainder applied to the last installment.
 
 Example:
 
 - organization billing cycle: monthly
-- purchase cadence: quarterly
+- membership term: quarterly
 - price: `1450`
 - expected installments: `483.33`, `483.33`, `483.34`
 
@@ -90,8 +90,8 @@ Relevant code:
   amount as an exclusive line.
 - For recurring marketplace bookings sent through Xero:
     - always create the first concrete invoice immediately
-    - only create a repeating template when the subscription is auto-renewing or when the purchase cadence is being
-      split by the organization billing cycle
+    - only create a repeating template when the subscription is auto-renewing or when the membership term is being split
+      by the organization billing cycle
     - when a repeating template is used, it must start from the next billing boundary so it never duplicates the
       immediately-created first invoice
 

@@ -68,7 +68,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
               title
               subTitle
             }
-            purchaseCadence
+            membershipTerm
             price
             supportsSubscriptionAutoRenewal
             billingMode
@@ -99,7 +99,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
     const pricingOptions = [...(rootData.product?.pricingOptions ?? [])];
 
     return pricingOptions
-      .filter((option) => (mode === 'subscription' ? isSubscriptionCadence(option.purchaseCadence) : !isSubscriptionCadence(option.purchaseCadence)))
+      .filter((option) => (mode === 'subscription' ? isSubscriptionCadence(option.membershipTerm) : !isSubscriptionCadence(option.membershipTerm)))
       .sort((left, right) => left.index - right.index);
   }, [mode, rootData.product?.pricingOptions]);
 
@@ -155,7 +155,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
   }
 
   const productLink = getMarketplaceProductLink(integratedPlatform, isCustomDomain, organizationCustomDomain, product.id, selectedResourceIds);
-  const priceLabel = formatPriceForDisplay(currencyLabel, selectedPricingOption.price, selectedPricingOption.purchaseCadence);
+  const priceLabel = formatPriceForDisplay(currencyLabel, selectedPricingOption.price, selectedPricingOption.membershipTerm);
   const pricingTitle = selectedPricingOption.listingMetadata.title ?? selectedPricingOption.listingMetadata.subTitle ?? 'Pricing option';
 
   return (

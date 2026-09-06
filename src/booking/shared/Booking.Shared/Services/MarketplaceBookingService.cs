@@ -1387,20 +1387,20 @@ public class MarketplaceBookingService(
     }
 
     private static DateTimeOffset ResolveCycleStart(DateTimeOffset cycleEnd, RecurringBooking recurringBooking) =>
-        recurringBooking.MarketplaceBooking?.ProductPricing.PurchaseCadence switch
+        recurringBooking.MarketplaceBooking?.ProductPricing.MembershipTerm switch
         {
-            ProductPricingCadence.Monthly => cycleEnd.AddMonths(-1),
-            ProductPricingCadence.Weekly => cycleEnd.AddDays(-7),
-            ProductPricingCadence.Fortnightly => cycleEnd.AddDays(-14),
+            MembershipTerm.Monthly => cycleEnd.AddMonths(-1),
+            MembershipTerm.Weekly => cycleEnd.AddDays(-7),
+            MembershipTerm.Fortnightly => cycleEnd.AddDays(-14),
             _ => cycleEnd.AddDays(-1),
         };
 
     private static DateTimeOffset ResolveCycleEnd(DateTimeOffset cycleStart, RecurringBooking recurringBooking) =>
-        recurringBooking.MarketplaceBooking?.ProductPricing.PurchaseCadence switch
+        recurringBooking.MarketplaceBooking?.ProductPricing.MembershipTerm switch
         {
-            ProductPricingCadence.Monthly => cycleStart.AddMonths(1),
-            ProductPricingCadence.Weekly => cycleStart.AddDays(7),
-            ProductPricingCadence.Fortnightly => cycleStart.AddDays(14),
+            MembershipTerm.Monthly => cycleStart.AddMonths(1),
+            MembershipTerm.Weekly => cycleStart.AddDays(7),
+            MembershipTerm.Fortnightly => cycleStart.AddDays(14),
             _ => cycleStart.AddDays(1),
         };
 

@@ -666,7 +666,7 @@ public class ProductService(
         if (pricing.RequiredDaysPerWeek is not null)
         {
             if (pricing.FulfillmentType != ProductPricingFulfillmentType.Entitlement &&
-                !SupportsRequiredDaysPerWeek(pricing.PurchaseCadence))
+                !SupportsRequiredDaysPerWeek(pricing.MembershipTerm))
             {
                 throw new ProductPricingWeeklyDaySelectionOnlySupportedForScheduledPricing();
             }
@@ -684,7 +684,7 @@ public class ProductService(
             }
         }
 
-        if (!allowHostRecurringEvent && productType == ProductType.Event && IsSubscriptionCadence(pricing.PurchaseCadence))
+        if (!allowHostRecurringEvent && productType == ProductType.Event && IsSubscriptionCadence(pricing.MembershipTerm))
         {
             throw new ProductPricingEventRequiresExplicitTimeBooking();
         }
@@ -744,24 +744,24 @@ public class ProductService(
         }
     }
 
-    private static bool IsSubscriptionCadence(ProductPricingCadence cadence) =>
-        cadence is ProductPricingCadence.Daily or
-            ProductPricingCadence.Weekly or
-            ProductPricingCadence.Fortnightly or
-            ProductPricingCadence.Monthly or
-            ProductPricingCadence.TwoMonths or
-            ProductPricingCadence.Quarterly or
-            ProductPricingCadence.FourMonths or
-            ProductPricingCadence.FiveMonths or
-            ProductPricingCadence.SixMonths or
-            ProductPricingCadence.Yearly;
+    private static bool IsSubscriptionCadence(MembershipTerm cadence) =>
+        cadence is MembershipTerm.Daily or
+            MembershipTerm.Weekly or
+            MembershipTerm.Fortnightly or
+            MembershipTerm.Monthly or
+            MembershipTerm.TwoMonths or
+            MembershipTerm.Quarterly or
+            MembershipTerm.FourMonths or
+            MembershipTerm.FiveMonths or
+            MembershipTerm.SixMonths or
+            MembershipTerm.Yearly;
 
-    private static bool SupportsRequiredDaysPerWeek(ProductPricingCadence cadence) =>
-        cadence is ProductPricingCadence.Weekly or ProductPricingCadence.Fortnightly or
-            ProductPricingCadence.Monthly or ProductPricingCadence.TwoMonths or
-            ProductPricingCadence.Quarterly or ProductPricingCadence.FourMonths or
-            ProductPricingCadence.FiveMonths or ProductPricingCadence.SixMonths or
-            ProductPricingCadence.Yearly;
+    private static bool SupportsRequiredDaysPerWeek(MembershipTerm cadence) =>
+        cadence is MembershipTerm.Weekly or MembershipTerm.Fortnightly or
+            MembershipTerm.Monthly or MembershipTerm.TwoMonths or
+            MembershipTerm.Quarterly or MembershipTerm.FourMonths or
+            MembershipTerm.FiveMonths or MembershipTerm.SixMonths or
+            MembershipTerm.Yearly;
 
     /// <summary>
     ///     Validates that a pricing option cancellation policy is internally consistent.

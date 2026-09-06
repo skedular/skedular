@@ -1,8 +1,8 @@
-# Research: Marketplace Pricing Cadence Simplification
+# Research: Marketplace pricing membership term Simplification
 
-## Decision: Preserve `PurchaseCadence` as the sole offer-term field
+## Decision: Preserve `MembershipTerm` as the sole offer-term field
 
-**Rationale**: The existing shared `ProductPricing` record contains both `PurchaseCadence` and `BookingCadence`, while subscription and billing code already uses `PurchaseCadence` for term-level behavior. Removing the duplicate field makes one value authoritative without introducing the later `PurchaseTerm` rename.
+**Rationale**: The existing shared `ProductPricing` record contains both `MembershipTerm` and `BookingCadence`, while subscription and billing code already uses `MembershipTerm` for term-level behavior. Removing the duplicate field makes one value authoritative without introducing the later `PurchaseTerm` rename.
 
 **Alternatives considered**: Retain both fields with validation; rejected because the feature explicitly removes `BookingCadence`. Rename to `PurchaseTerm`; deferred to a later migration as required by the specification.
 
@@ -16,7 +16,7 @@
 
 **Rationale**: This preserves existing `MinDurationMinutes` and `MaxDurationMinutes` while removing cadence-derived duration steps. Opening hours, resource availability, and conflict checks remain independent validation stages.
 
-**Alternatives considered**: Infer duration from purchase cadence or retain a duration step; rejected because purchase terms and individual booking duration represent different business concepts.
+**Alternatives considered**: Infer duration from membership term or retain a duration step; rejected because membership terms and individual booking duration represent different business concepts.
 
 ## Decision: Remove obsolete persisted/contract representations directly
 

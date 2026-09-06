@@ -59,18 +59,18 @@ message CdnFile {
   int32  width  = 3;
 }
 
-enum ProductPricingCadence {
-  ProductPricingCadence_NotSet       = 0;
-  ProductPricingCadence_Daily        = 1;
-  ProductPricingCadence_Weekly       = 2;
-  ProductPricingCadence_Fortnightly  = 3;
-  ProductPricingCadence_Monthly      = 4;
-  ProductPricingCadence_TwoMonths    = 5;
-  ProductPricingCadence_Quarterly    = 6;
-  ProductPricingCadence_FourMonths   = 7;
-  ProductPricingCadence_FiveMonths   = 8;
-  ProductPricingCadence_SixMonths    = 9;
-  ProductPricingCadence_Yearly       = 10;
+enum MembershipTerm {
+  MembershipTerm_NotSet      = 0;
+  MembershipTerm_Daily       = 1;
+  MembershipTerm_Weekly      = 2;
+  MembershipTerm_Fortnightly = 3;
+  MembershipTerm_Monthly     = 4;
+  MembershipTerm_TwoMonths   = 5;
+  MembershipTerm_Quarterly   = 6;
+  MembershipTerm_FourMonths  = 7;
+  MembershipTerm_FiveMonths  = 8;
+  MembershipTerm_SixMonths   = 9;
+  MembershipTerm_Yearly      = 10;
 }
 
 enum ProductPricingBillingMode {
@@ -105,7 +105,7 @@ message ProductPricing {
   string                                        id                                             = 1;
   int32                                         index                                          = 2;
   ListingMetadata                               listingMetadata                                = 3;
-  ProductPricingCadence                         purchaseCadence                                = 4;
+  MembershipTerm                                membershipTerm                                 = 4;
   double                                        price                                          = 6;
   bool                                          isTaxInclusive                                 = 7;
   Currency                                      currency                                       = 8;
@@ -119,11 +119,11 @@ message ProductPricing {
   bool                                          supportsSubscriptionAutoRenewal                = 16;
   ProductPricingCancellationPolicyType          cancellationPolicyType                         = 17;
   repeated ProductPricingCancellationRefundRule cancellationRefundRules                        = 18;
-  repeated string                                availableDays                                 = 19;
-  int32                                          requiredDaysPerWeek                           = 20;
-  ProductPricingFulfillmentType                 fulfillmentType                               = 21;
-  int32                                          entitlementCreditQuantity                      = 22;
-  int32                                          entitlementValidityDays                        = 24;
+  repeated string                               availableDays                                  = 19;
+  int32                                         requiredDaysPerWeek                            = 20;
+  ProductPricingFulfillmentType                 fulfillmentType                                = 21;
+  int32                                         entitlementCreditQuantity                      = 22;
+  int32                                         entitlementValidityDays                        = 24;
 }
 
 message ProductPricingCancellationRefundRule {

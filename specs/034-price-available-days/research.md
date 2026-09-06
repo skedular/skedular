@@ -11,7 +11,7 @@
 **Alternatives considered**:
 
 - Product-wide day rules — rejected because each price can have distinct booking rules.
-- A new recurrence model — rejected because existing pricing cadence and subscription scheduling remain authoritative.
+- A new recurrence model — rejected because existing pricing membership term and subscription scheduling remain authoritative.
 - A separate database table — rejected because price options are already versioned and replicated as JSON collections.
 
 ### Preserve current-period price snapshots; refresh on renewal

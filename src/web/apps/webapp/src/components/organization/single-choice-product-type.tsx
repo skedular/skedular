@@ -11,7 +11,7 @@ type Props = {
   required?: boolean;
 };
 
-type ProductPricingCadenceDetails = {
+type MembershipTermDetails = {
   type: string;
   name: string;
 };
@@ -29,8 +29,8 @@ const SingleChoiceProductType = ({ rootDataRelay, name, required }: Props) => {
     rootDataRelay,
   );
 
-  const items = useMemo<ProductPricingCadenceDetails[]>(() => rootData.productTypes.map((item) => item), [rootData.productTypes]);
-  const filter = createFilterOptions<ProductPricingCadenceDetails>();
+  const items = useMemo<MembershipTermDetails[]>(() => rootData.productTypes.map((item) => item), [rootData.productTypes]);
+  const filter = createFilterOptions<MembershipTermDetails>();
 
   return (
     <Autocomplete
@@ -38,10 +38,10 @@ const SingleChoiceProductType = ({ rootDataRelay, name, required }: Props) => {
       multiple={false}
       required={required}
       options={items}
-      getOptionValue={(option) => (option as ProductPricingCadenceDetails).type}
-      getOptionLabel={(option: string | ProductPricingCadenceDetails) => (option as ProductPricingCadenceDetails).name}
+      getOptionValue={(option) => (option as MembershipTermDetails).type}
+      getOptionLabel={(option: string | MembershipTermDetails) => (option as MembershipTermDetails).name}
       renderOption={(props, option) => {
-        const castedOption = option as ProductPricingCadenceDetails;
+        const castedOption = option as MembershipTermDetails;
 
         return (
           <li {...props} key={castedOption.type}>
@@ -49,7 +49,7 @@ const SingleChoiceProductType = ({ rootDataRelay, name, required }: Props) => {
           </li>
         );
       }}
-      filterOptions={(options, params) => filter(options as ProductPricingCadenceDetails[], params)}
+      filterOptions={(options, params) => filter(options as MembershipTermDetails[], params)}
       selectOnFocus
       clearOnBlur
       handleHomeEndKeys

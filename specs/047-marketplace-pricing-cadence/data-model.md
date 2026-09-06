@@ -1,4 +1,4 @@
-# Data Model: Marketplace Pricing Cadence Simplification
+# Data Model: Marketplace pricing membership term Simplification
 
 ## ProductPricing
 
@@ -6,17 +6,17 @@ The shared marketplace pricing value remains the canonical offer model.
 
 | Field | Rule |
 |---|---|
-| `PurchaseCadence` | Required for reservation offers; one supported term of one day or longer. Remains the existing public name. |
+| `MembershipTerm` | Required for reservation offers; one supported term of one day or longer. Remains the existing public name. |
 | `BookingCadence` | Removed entirely from the model, persistence, events, serializers, APIs, projections, workflows, frontend models, and tests. |
 | `MinDurationMinutes` | Optional lower bound for an individual booking interval. |
 | `MaxDurationMinutes` | Optional upper bound for an individual booking interval. |
-| `SupportsSubscriptionAutoRenewal` | Determines whether the selected purchase term repeats. |
+| `SupportsSubscriptionAutoRenewal` | Determines whether the selected membership term repeats. |
 | `FulfillmentType` | Distinguishes reservation offers from credit entitlements. |
 | `EntitlementCreditQuantity` | Credit quantity for entitlement offers. |
 | `EntitlementValidityDays` | Validity period for entitlement offers. |
 | `AvailableDays` | Allowed entitlement/booking days where applicable. |
 
-## ProductPricingCadence
+## MembershipTerm
 
 Supported values:
 
@@ -26,9 +26,9 @@ Supported values:
 
 ## Purchase and renewal lifecycle
 
-- A non-renewing offer creates one purchase term, including a Daily one-day term.
-- A renewing offer creates subsequent terms using `PurchaseCadence`.
-- Organization billing cycle may slice invoices and resource bookings inside a longer purchase term but does not alter the purchase term.
+- A non-renewing offer creates one membership term, including a Daily one-day term.
+- A renewing offer creates subsequent terms using `MembershipTerm`.
+- Organization billing cycle may slice invoices and resource bookings inside a longer membership term but does not alter the membership term.
 - Credit entitlements have no cadence lifecycle and are excluded from subscription renewal and recurring purchase processing.
 
 ## Booking duration validation

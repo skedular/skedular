@@ -45,13 +45,13 @@ Organization marketplace information belongs in [Marketplace setup](/docs/spaces
 
 ## Configure Prices and commercial terms
 
-Each Product can have multiple pricing options. Purchase cadence choices are **Daily**, **Weekly**, **Fortnightly**, **Monthly**, **Two months**, **Quarterly**, **Four months**, **Five months**, **Six months**, and **Yearly**.
+Each Product can have multiple pricing options. membership term choices are **Daily**, **Weekly**, **Fortnightly**, **Monthly**, **Two months**, **Quarterly**, **Four months**, **Five months**, **Six months**, and **Yearly**.
 
 For each pricing option, configure the price, booking duration limits, the number of Resources to reserve, and whether tax is included. The pricing option also carries its billing mode, accepted payment methods, subscription auto-renewal setting, and cancellation policy with its refund rules. Where applicable, choose **Upfront** or **In arrears** billing.
 
 Use **Available days** on an individual Price to limit it to selected calendar days. **Sunday** through **Saturday** are equal choices, not workweek-only weekdays. Leave the selection empty for **Every day**. This rule is checked against the booking start date before the usual opening-hours, matching-Resource, and conflict checks. Customers can see the selected days and are guided away from dates the Price does not allow.
 
-For a **Weekly** Price, you can set the exact number of days the Customer must choose per week. Leave it empty to preserve unrestricted weekly behavior. This value is not a replacement for Available days: Available days define the permitted pool, while the Customer’s selection creates their fixed weekly schedule. Do not use this weekly field for fortnightly or monthly Prices; those cadences will have their own configuration when supported.
+For a **Weekly** Price, you can set the exact number of days the Customer must choose per week. Leave it empty to preserve unrestricted weekly behavior. This value is not a replacement for Available days: Available days define the permitted pool, while the Customer’s selection creates their fixed weekly schedule. Do not use this weekly field for fortnightly or monthly Prices; those membership terms will have their own configuration when supported.
 
 Payment-provider connections, bank accounts, payouts, and accounting setup are documented under [Billing and payments](/docs/spaces/billing-and-payments).
 

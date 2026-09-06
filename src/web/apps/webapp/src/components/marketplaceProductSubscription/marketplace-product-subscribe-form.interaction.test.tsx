@@ -29,7 +29,7 @@ vi.mock('react-relay', () => ({
           id: 'weekly-two-days',
           index: 0,
           listingMetadata: { title: 'Two days', subTitle: null },
-          purchaseCadence: 'WEEKLY',
+          membershipTerm: 'WEEKLY',
           price: 100,
           isTaxInclusive: true,
           supportsSubscriptionAutoRenewal: true,

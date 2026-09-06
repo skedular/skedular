@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f7501f5cc26dc3851dc3aa38fc532d2>>
+ * @generated SignedSource<<a670e5ec8ba096d311e95696bdd2247f>>
  * @lightSyntaxTransform
  */
 
@@ -11,9 +11,9 @@ import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
@@ -63,11 +63,11 @@ export type ProductPricingInput = {
   maxAllowedResourcesLockTimePaidViaCardDisplayUnit?: DurationDisplayUnit | null | undefined;
   maxDurationDisplayUnit?: DurationDisplayUnit | null | undefined;
   maxDurationMinutes?: number | null | undefined;
+  membershipTerm: MembershipTerm;
   minDurationDisplayUnit?: DurationDisplayUnit | null | undefined;
   minDurationMinutes?: number | null | undefined;
   numberOfResourcesToBook: number;
   price: any;
-  purchaseCadence: ProductPricingCadence;
   requiredDaysPerWeek?: number | null | undefined;
   supportsSubscriptionAutoRenewal: boolean;
 };
@@ -131,11 +131,11 @@ export type addProduct_addProductMutation$data = {
         readonly maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationMinutes: number | null | undefined;
+        readonly membershipTerm: MembershipTerm;
         readonly minDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
-        readonly purchaseCadence: ProductPricingCadence;
         readonly supportsSubscriptionAutoRenewal: boolean;
       }>;
       readonly productTags: ReadonlyArray<{
@@ -202,11 +202,11 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly maxDurationMinutes: number | null | undefined;
+        readonly membershipTerm: MembershipTerm;
         readonly minDurationDisplayUnit: DurationDisplayUnit | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
-        readonly purchaseCadence: ProductPricingCadence;
         readonly supportsSubscriptionAutoRenewal: boolean;
       }>;
       readonly productTags: ReadonlyArray<{
@@ -468,7 +468,7 @@ v8 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "purchaseCadence",
+                "name": "membershipTerm",
                 "storageKey": null
               },
               {
@@ -629,16 +629,16 @@ return {
     "selections": (v8/*:: as any*/)
   },
   "params": {
-    "cacheID": "4590fc32e7d33db7ca0c13b7995c647c",
+    "cacheID": "9079d15c37de35e6168fdd86e83889f8",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n          displayUnit\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        billingMode\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        membershipTerm\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        minDurationDisplayUnit\n        maxDurationMinutes\n        maxDurationDisplayUnit\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n          displayUnit\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaCardDisplayUnit\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        maxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit\n        billingMode\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "da7de31c0120e4c41348cc05a110d56c";
+(node as any).hash = "5606d95f68bf3723d8fc707da45e32f3";
 
 export default node;

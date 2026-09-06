@@ -215,10 +215,10 @@ Current MVP rule:
   invoice export path
 - the current MVP creates a Xero repeating invoice template for supported recurring bookings; it does not model a
   separate first normal invoice plus a second stored repeating-schedule object in Skedular
-- the organization billing cycle and the recurring product purchase cadence are separate inputs
+- the organization billing cycle and the recurring product membership term are separate inputs
 - for recurring invoice export, booking first calculates the effective invoice cadence:
-  - if purchase cadence is shorter than or equal to the organization billing cycle, invoice on the purchase cadence
-  - if purchase cadence is longer than the organization billing cycle, split the recurring charge down to the
+  - if membership term is shorter than or equal to the organization billing cycle, invoice on the membership term
+  - if membership term is longer than the organization billing cycle, split the recurring charge down to the
     organization billing cycle
 - this means short cadences such as a daily pass must not be coerced into a monthly repeating invoice template just
   because the organization billing cycle is monthly
@@ -232,7 +232,7 @@ Current MVP rule:
   - invoice PDFs
   - normal Xero invoice exports
   - Xero repeating invoice templates
-- invoice due days do not replace organization billing cycle or recurring purchase cadence
+- invoice due days do not replace organization billing cycle or recurring membership term
   (`Weekly`, `Fortnightly`, or `Monthly`)
 - supported effective recurring cadences for Xero repeating templates are `Weekly`, `Fortnightly`, `Monthly`,
   `TwoMonths`, `Quarterly`, `FourMonths`, `FiveMonths`, `SixMonths`, and `Yearly`

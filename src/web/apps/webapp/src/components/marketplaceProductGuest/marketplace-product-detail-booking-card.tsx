@@ -81,7 +81,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
             title
             subTitle
           }
-          purchaseCadence
+          membershipTerm
           price
           isTaxInclusive
           supportsSubscriptionAutoRenewal
@@ -130,14 +130,14 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
     const currencyLabel = rootData.currencies.find((item) => item.type === product.currency.type)?.name ?? product.currency.name;
 
     return [...product.pricingOptions]
-      .filter((pricingOption) => product.type.type !== 'EVENT' || !isSubscriptionCadence(pricingOption.purchaseCadence))
+      .filter((pricingOption) => product.type.type !== 'EVENT' || !isSubscriptionCadence(pricingOption.membershipTerm))
       .sort((left, right) => left.index - right.index)
       .map((pricingOption) => ({
         id: pricingOption.id,
         title: pricingOption.listingMetadata.title ?? '',
         subTitle: pricingOption.listingMetadata.subTitle ?? '',
-        cadence: pricingOption.purchaseCadence,
-        amountLabel: formatPriceForDisplay(currencyLabel, pricingOption.price, pricingOption.purchaseCadence),
+        cadence: pricingOption.membershipTerm,
+        amountLabel: formatPriceForDisplay(currencyLabel, pricingOption.price, pricingOption.membershipTerm),
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
         availableDays: pricingOption.availableDays ?? [],
         cancellationPolicyType: pricingOption.cancellationPolicyType,

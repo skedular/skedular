@@ -35,7 +35,7 @@ public class SubscriptionFilterScenarioFixtureCustomizer : IFixtureCustomizer
             NewId(),
             0,
             new ListingMetadata("Filter Product", "For filtering tests", null, []),
-            ProductPricingCadence.Monthly,
+            MembershipTerm.Monthly,
             10m,
             false,
             false,

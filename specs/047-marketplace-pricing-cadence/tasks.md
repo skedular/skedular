@@ -1,4 +1,4 @@
-# Tasks: Marketplace Pricing Cadence Simplification
+# Tasks: Marketplace pricing membership term Simplification
 
 **Input**: Design documents from `/specs/047-marketplace-pricing-cadence/`
 **Prerequisites**: [plan.md](plan.md), [spec.md](spec.md), [research.md](research.md), [data-model.md](data-model.md), [contracts/pricing-contracts.md](contracts/pricing-contracts.md), [quickstart.md](quickstart.md)
@@ -17,12 +17,12 @@
 
 **Purpose**: Change the shared model and source contracts before story-specific behavior can compile or regenerate.
 
-- [X] T004 Update `ProductPricing` to remove `BookingCadence` and preserve `PurchaseCadence`, min/max duration, renewal, and entitlement fields in `src/shared/Api.Shared.Services/Models/ProductPricing.cs`
-- [X] T005 Update `ProductPricingCadence` enum, constants, explicit conversions, display names, invoice names, and provider names to retain `NotSet` plus the ten supported values in `src/shared/Api.Shared.Services/Models/ProductPricingCadence.cs`
+- [X] T004 Update `ProductPricing` to remove `BookingCadence` and preserve `MembershipTerm`, min/max duration, renewal, and entitlement fields in `src/shared/Api.Shared.Services/Models/ProductPricing.cs`
+- [X] T005 Update `MembershipTerm` enum, constants, explicit conversions, display names, invoice names, and provider names to retain `NotSet` plus the ten supported values in `src/shared/Api.Shared.Services/Models/MembershipTerm.cs`
 - [X] T006 [P] Remove `bookingCadence` and obsolete enum members from the source event contract in `api-definitions/events/skedular/marketplace_v1_value.proto`
 - [X] T007 [P] Remove `bookingCadence` and obsolete enum values from marketplace and booking GraphQL source schemas in `src/marketplace/apis/Marketplace.Api/schema.graphqls` and `src/booking/apis/Booking.Api/schema.graphqls`
 - [X] T008 Confirm JSON-backed pricing persistence requires no relational migration: `ProductVersion.PricingOptions` remains JSONB and the removed field/value is handled by the updated JSON contract; no direct removal migration or model metadata is required because production contains no sub-day cadence values.
-- [X] T009 [P] Update event-to-model mappings to map only `PurchaseCadence` in `src/marketplace/shared/Marketplace.Shared/Mappers/EventMapper.cs` and `src/booking/processors/Booking.Processors/Mappers/EventMapper.cs`
+- [X] T009 [P] Update event-to-model mappings to map only `MembershipTerm` in `src/marketplace/shared/Marketplace.Shared/Mappers/EventMapper.cs` and `src/booking/processors/Booking.Processors/Mappers/EventMapper.cs`
 - [X] T010 Regenerate event, GraphQL, composed-schema, and affected client artifacts using the consuming `.csproj` builds for protobuf C# types, `scripts/generate-graphql.sh`, and the affected webapp generation scripts
 - [X] T011 [P] Regenerate Relay artifacts for affected web apps with `pnpm --dir src/web relay` and verify generated files are not hand-edited in `src/web/apps/webapp/**/__generated__`, `src/web/apps/webapp-host/**/__generated__`, and `src/web/apps/webapp-spaces/**/__generated__`
 - [X] T012 Add structured logging for pricing validation, renewal branching, duration rejection, and invalid legacy cadence handling in the owning marketplace and booking services.
@@ -31,23 +31,23 @@
 
 ## Phase 3: User Story 1 - Configure Clear Marketplace Offer Terms (Priority: P1) 🎯 MVP
 
-**Goal**: Make `PurchaseCadence` the sole offer/contract term and ensure auto-renewal and billing/resource slices use the correct independent concepts.
+**Goal**: Make `MembershipTerm` the sole offer/contract term and ensure auto-renewal and billing/resource slices use the correct independent concepts.
 
-**Independent Test**: Create/read pricing for all ten supported terms, verify removed values and `BookingCadence` are unavailable, verify non-renewing Daily is one term, renewing Daily renews daily, and longer terms retain their purchase term while billing/resource slices follow organization billing settings.
+**Independent Test**: Create/read pricing for all ten supported terms, verify removed values and `BookingCadence` are unavailable, verify non-renewing Daily is one term, renewing Daily renews daily, and longer terms retain their membership term while billing/resource slices follow organization billing settings.
 
 ### Tests for User Story 1
 
 - [X] T013 [P] [US1] Update product pricing model/mapping tests for the ten supported cadence values and removed-value rejection in the shared and marketplace unit-test surfaces.
 - [X] T014 [P] [US1] Cover product create/edit validation and supported cadence choices with unit tests and synchronized GraphQL schema wiring.
-- [X] T015 [P] [US1] Update event-to-model mappings and the affected projection/fixture coverage for the single purchase cadence field.
+- [X] T015 [P] [US1] Update event-to-model mappings and the affected projection/fixture coverage for the single membership term field.
 - [X] T016 [P] [US1] Adjust renewal and billing-slice behavior/tests for non-renewing and renewing day-or-longer terms.
 
 ### Implementation for User Story 1
 
-- [X] T017 [US1] Update marketplace product validation and pricing mapping to validate only the supported purchase terms and stop deriving duration steps from `BookingCadence` in `src/marketplace/apis/Marketplace.Api/Services/ProductService.cs`
-- [X] T018 [US1] Update subscription term boundaries and renewal decisions to use `PurchaseCadence` plus auto-renewal only in `src/booking/shared/Booking.Shared/Models/MarketplaceBookingSubscription.cs` and `src/booking/shared/Booking.Shared/Services/MarketplaceBookingSubscriptionService.cs`
+- [X] T017 [US1] Update marketplace product validation and pricing mapping to validate only the supported membership terms and stop deriving duration steps from `BookingCadence` in `src/marketplace/apis/Marketplace.Api/Services/ProductService.cs`
+- [X] T018 [US1] Update subscription term boundaries and renewal decisions to use `MembershipTerm` plus auto-renewal only in `src/booking/shared/Booking.Shared/Models/MarketplaceBookingSubscription.cs` and `src/booking/shared/Booking.Shared/Services/MarketplaceBookingSubscriptionService.cs`
 - [X] T019 [US1] Preserve organization billing-cycle slicing while removing booking-cadence branches from invoice and arrears planning in `src/booking/shared/Booking.Shared/Services/BookingInvoiceService.cs`, `src/booking/shared/Booking.Shared/Services/OrganizationArrearsBillingPlannerService.cs`, and `src/booking/shared/Booking.Shared/Services/OrganizationArrearsChargeSegmentService.cs`
-- [X] T020 [US1] Update recurring invoice and provider schedule mapping to use purchase cadence for term semantics and organization billing cycle for split slices.
+- [X] T020 [US1] Update recurring invoice and provider schedule mapping to use membership term for term semantics and organization billing cycle for split slices.
 - [X] T021 [US1] Remove `BookingCadence` and removed cadence values from marketplace and booking integration fixtures, test builders, refund fixtures, and product-version helpers under `src/booking/**/Fixtures`, `src/booking/**/UnitTests`, and `src/marketplace/**/IntegrationTests`
 - [X] T022 [US1] Update host and spaces pricing editors to render one cadence field and the ten supported choices in `src/web/apps/webapp-host/src/components/organization/single-choice-product-pricing-cadence.tsx`, `src/web/apps/webapp-spaces/src/components/organization/single-choice-product-pricing-cadence.tsx`, and related product editor files
 - [X] T024 [US1] Add structured logs for purchase-term validation, renewal/no-renewal decisions, and billing-slice branch decisions in the changed marketplace and booking services.
@@ -73,9 +73,9 @@
 - [X] T030 [US2] Preserve opening-hours, resource-availability, and conflict validation after duration validation in `src/booking/shared/Booking.Shared/Services/MarketplaceBookingOpeningHoursService.cs`, `src/booking/shared/Booking.Shared/Services/MarketplaceBookingService.cs`, and related services
 - [X] T031 [US2] Add structured duration-validation logs with pricing context and non-sensitive rejection reasons in `src/booking/shared/Booking.Shared/Services/MarketplaceBookingService.cs`.
 
-**Checkpoint**: User Story 2 accepts arbitrary valid date-time durations independently of purchase cadence.
+**Checkpoint**: User Story 2 accepts arbitrary valid date-time durations independently of membership term.
 
-## Phase 5: User Story 3 - Purchase Cadence-Free Credit Entitlements (Priority: P1)
+## Phase 5: User Story 3 - membership term-Free Credit Entitlements (Priority: P1)
 
 **Goal**: Represent entitlements with `NotSet`/null cadence and keep them out of subscription and recurring purchase processing.
 
@@ -104,7 +104,7 @@
 - [X] T040 [P] Search and update every public, customer-facing, and operator-facing documentation surface that refers to removed cadence values or cadence-based duration, including `src/marketplace/docs`, public-web content, help apps, and webapp documentation directories; if no reference exists in a surface, record that review in `specs/047-marketplace-pricing-cadence/quickstart.md`
 - [X] T041 Run all required generators and verify generated GraphQL, protobuf, client, and Relay outputs are synchronized using consuming `.csproj` builds for protobuf C# types, `scripts/generate-graphql.sh`, the affected webapp generation scripts, and `pnpm --dir src/web relay`
 - [X] T042 Run `git diff --check`, the full unit-test solution build, affected exact-name .NET tests, and affected frontend tests; record results against `specs/047-marketplace-pricing-cadence/quickstart.md`.
-- [X] T043 Run the documented manual repository-wide absence check across backend, contracts, generated outputs, every web app, tests, and public documentation for `BookingCadence`, `ProductPricingCadence.OneTime`, `PerMinute`, `Per15Minutes`, `Per30Minutes`, `PerHour`, and `HalfDay`; review `git status` and generated diffs in `specs/047-marketplace-pricing-cadence/quickstart.md`
+- [X] T043 Run the documented manual repository-wide absence check across backend, contracts, generated outputs, every web app, tests, and public documentation for `BookingCadence`, `MembershipTerm.OneTime`, `PerMinute`, `Per15Minutes`, `Per30Minutes`, `PerHour`, and `HalfDay`; review `git status` and generated diffs in `specs/047-marketplace-pricing-cadence/quickstart.md`
 
 ## Dependencies & Execution Order
 

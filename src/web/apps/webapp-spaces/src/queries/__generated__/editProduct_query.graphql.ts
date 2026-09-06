@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8b4977151884c2026e47e37913dc65c8>>
+ * @generated SignedSource<<d4b1d82b492c5b22698fbef6a173c547>>
  * @lightSyntaxTransform
  */
 
@@ -11,9 +11,9 @@ import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type DurationDisplayUnit = "HOURS" | "MINUTES" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
@@ -29,6 +29,10 @@ export type editProduct_query$data = {
   readonly durationDisplayUnits: ReadonlyArray<{
     readonly name: string;
     readonly type: DurationDisplayUnit;
+  }>;
+  readonly membershipTerms: ReadonlyArray<{
+    readonly name: string;
+    readonly type: MembershipTerm;
   }>;
   readonly product: {
     readonly amenities: ReadonlyArray<{
@@ -85,11 +89,11 @@ export type editProduct_query$data = {
       readonly maxAllowedResourcesLockTimePaidViaCardDisplayUnit: DurationDisplayUnit | null | undefined;
       readonly maxDurationDisplayUnit: DurationDisplayUnit | null | undefined;
       readonly maxDurationMinutes: number | null | undefined;
+      readonly membershipTerm: MembershipTerm;
       readonly minDurationDisplayUnit: DurationDisplayUnit | null | undefined;
       readonly minDurationMinutes: number | null | undefined;
       readonly numberOfResourcesToBook: number;
       readonly price: any;
-      readonly purchaseCadence: ProductPricingCadence;
       readonly requiredDaysPerWeek: number | null | undefined;
       readonly supportsSubscriptionAutoRenewal: boolean;
     }>;
@@ -103,11 +107,7 @@ export type editProduct_query$data = {
       readonly type: ProductType;
     };
   } | null | undefined;
-  readonly productPricingCadences: ReadonlyArray<{
-    readonly name: string;
-    readonly type: ProductPricingCadence;
-  }>;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingBillingMode_query" | "singleChoiceProductPricingCadence_query" | "singleChoiceProductPricingCancellationType_query" | "singleChoiceProductType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceMembershipTerm_query" | "singleChoiceProductPricingBillingMode_query" | "singleChoiceProductPricingCancellationType_query" | "singleChoiceProductType_query">;
   readonly " $fragmentType": "editProduct_query";
 };
 export type editProduct_query$key = {
@@ -352,7 +352,7 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "purchaseCadence",
+              "name": "membershipTerm",
               "storageKey": null
             },
             {
@@ -529,9 +529,9 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "ProductPricingCadenceDetails",
+      "concreteType": "MembershipTermDetails",
       "kind": "LinkedField",
-      "name": "productPricingCadences",
+      "name": "membershipTerms",
       "plural": true,
       "selections": (v4/*:: as any*/),
       "storageKey": null
@@ -600,7 +600,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "singleChoiceProductPricingCadence_query"
+      "name": "singleChoiceMembershipTerm_query"
     },
     {
       "args": null,
@@ -623,6 +623,6 @@ return {
 };
 })();
 
-(node as any).hash = "68f515d8fd4a57dba838f677c6160fcf";
+(node as any).hash = "ef1b5b62c4ca8aa1dc2752845c9c68bd";
 
 export default node;

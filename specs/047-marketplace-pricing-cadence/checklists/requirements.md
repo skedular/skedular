@@ -1,4 +1,4 @@
-# Specification Quality Checklist: Marketplace Pricing Cadence Simplification
+# Specification Quality Checklist: Marketplace pricing membership term Simplification
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-08-31

@@ -47,17 +47,17 @@ Product versions hold the customer-facing listing metadata, feature images, curr
 
 ## Pricing
 
-A Product can contain multiple pricing options. Each option defines a price, purchase cadence, accepted payment methods, billing mode, duration limits, cancellation policy, and whether subscription auto-renewal is supported.
+A Product can contain multiple pricing options. Each option defines a price, membership term, accepted payment methods, billing mode, duration limits, cancellation policy, and whether subscription auto-renewal is supported.
 
-Operators choose a purchase term of Daily, Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, or Yearly. Customers choose the booking start and end date/time; any duration within the configured minimum and maximum is allowed, with no cadence-based increment.
+Operators choose a membership term of Daily, Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, or Yearly. Customers choose the booking start and end date/time; any duration within the configured minimum and maximum is allowed, with no membership-term-based increment.
 
 Products define what is sold and under which commercial terms. [Commerce](/docs/shared/commerce) documents how resulting charges are billed, paid, invoiced, and settled.
 
 ## Booking and subscription behavior
 
-A purchase term repeats only when auto-renewal is enabled. Disabled auto-renewal makes a Daily offer a single one-day offer; enabled auto-renewal renews it daily. The same applies to longer terms. Organization billing cycles can split longer terms for invoice and resource-booking slices without replacing the purchase term.
+A membership term repeats only when auto-renewal is enabled. Disabled auto-renewal makes a Daily offer a single one-day offer; enabled auto-renewal renews it daily. The same applies to longer terms. Organization billing cycles can split longer terms for invoice and resource-booking slices without replacing the membership term.
 
-Every supported reservation purchase term uses the Subscription lifecycle; auto-renewal determines whether the term repeats. Event Products are a separate Product type for fixed-time event bookings and cannot use subscription auto-renewal.
+Every supported reservation membership term uses the Subscription lifecycle; auto-renewal determines whether the term repeats. Event Products are a separate Product type for fixed-time event bookings and cannot use subscription auto-renewal.
 
 ## Cancellation policies
 
@@ -91,7 +91,7 @@ Products are versioned so changes do not silently rewrite an offer already used 
 
 - Use clear customer-facing titles and descriptions.
 - Add Booking Groups that match the Resources customers should be able to book.
-- Keep the purchase term, available days, and minimum/maximum booking duration aligned with the service you provide.
+- Keep the membership term, available days, and minimum/maximum booking duration aligned with the service you provide.
 - Test cancellation terms and payment methods before activation.
 - Review the active Product version after changing tags, images, or pricing.
 
@@ -119,11 +119,11 @@ Booking Groups define eligibility. Resources with matching Booking Groups can fu
 
 ### Can a Product have multiple Prices?
 
-Yes. A Product can have multiple pricing options, each with its own cadence, booking rules, payment methods, billing mode, and cancellation policy.
+Yes. A Product can have multiple pricing options, each with its own membership term, booking rules, payment methods, billing mode, and cancellation policy.
 
 ### Which offers create a Subscription?
 
-Every reservation offer with a supported purchase term creates a Subscription. With auto-renewal disabled, it covers one term; with auto-renewal enabled, it repeats the selected term. Credit-entitlement offers use `NOT_SET` for purchase cadence and are governed by credit quantity, validity, available days, and booking duration limits. They do not renew as subscriptions.
+Every reservation offer with a supported membership term creates a Subscription. With auto-renewal disabled, it covers one term; with auto-renewal enabled, it repeats the selected term. Credit-entitlement offers use `NOT_SET` for membership term and are governed by credit quantity, validity, available days, and booking duration limits. They do not renew as subscriptions.
 
 ### Can I edit a Product after activation?
 

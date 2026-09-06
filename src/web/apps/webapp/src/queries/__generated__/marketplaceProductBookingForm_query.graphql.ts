@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<06995c6f4cc054e13fa5c3fb30899571>>
+ * @generated SignedSource<<476181f5660835f72eec0fe33def59ff>>
  * @lightSyntaxTransform
  */
 
@@ -10,9 +10,9 @@
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type ProductPricingFulfillmentType = "ENTITLEMENT" | "RESERVATION" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
@@ -84,10 +84,10 @@ export type marketplaceProductBookingForm_query$data = {
         readonly title: string | null | undefined;
       };
       readonly maxDurationMinutes: number | null | undefined;
+      readonly membershipTerm: MembershipTerm;
       readonly minDurationMinutes: number | null | undefined;
       readonly numberOfResourcesToBook: number;
       readonly price: any;
-      readonly purchaseCadence: ProductPricingCadence;
       readonly supportsSubscriptionAutoRenewal: boolean;
     }>;
     readonly type: {
@@ -436,7 +436,7 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "purchaseCadence",
+              "name": "membershipTerm",
               "storageKey": null
             },
             {
@@ -553,6 +553,6 @@ return {
 };
 })();
 
-(node as any).hash = "7228389552f99727209383a658295816";
+(node as any).hash = "d9e69830e7c0e2dfdbd7f9c28981d140";
 
 export default node;

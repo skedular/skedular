@@ -122,7 +122,7 @@ public class EntitlementConcurrentClaimShould(
                     "concurrency-pricing",
                     0,
                     ListingMetadata.Empty,
-                    ProductPricingCadence.NotSet,
+                    MembershipTerm.NotSet,
                     0,
                     false,
                     false,

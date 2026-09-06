@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8ba68515ee4a56db8f36d7149aef11e2>>
+ * @generated SignedSource<<f56d2b707087221b9cdde9819336c56a>>
  * @lightSyntaxTransform
  */
 
@@ -335,7 +335,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "purchaseCadence",
+                        "name": "membershipTerm",
                         "storageKey": null
                       },
                       {
@@ -400,9 +400,9 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "ProductPricingCadenceDetails",
+        "concreteType": "MembershipTermDetails",
         "kind": "LinkedField",
-        "name": "productPricingCadences",
+        "name": "membershipTerms",
         "plural": true,
         "selections": (v8/*:: as any*/),
         "storageKey": null
@@ -420,12 +420,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cd9954d7a44e33f933c6facbb6d1f97e",
+    "cacheID": "a248446d5bc00c1c503c339adc133109",
     "id": null,
     "metadata": {},
     "name": "organizationProducts_rootQuery",
     "operationKind": "query",
-    "text": "query organizationProducts_rootQuery(\n  $organizationCustomDomain: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        listingMetadata {\n          title\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  currency {\n    type\n  }\n  pricingOptions {\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment productCard_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    canModify\n    id\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n"
+    "text": "query organizationProducts_rootQuery(\n  $organizationCustomDomain: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        listingMetadata {\n          title\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  currency {\n    type\n  }\n  pricingOptions {\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    membershipTerm\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment productCard_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    canModify\n    id\n  }\n  membershipTerms {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

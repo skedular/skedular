@@ -4,7 +4,7 @@ import {
   decodeBase64,
   encodeBase64,
   formatPriceForDisplay,
-  getMonthlyPricingCadenceMonthCount,
+  getMonthlyMembershipTermMonthCount,
   stringCollectionToString,
   stringToMultiLines,
   toFixed,
@@ -73,21 +73,21 @@ describe('stringCollectionToString', () => {
   });
 });
 
-describe('getMonthlyPricingCadenceMonthCount', () => {
+describe('getMonthlyMembershipTermMonthCount', () => {
   it('returns 12 for YEARLY cadence', () => {
-    expect(getMonthlyPricingCadenceMonthCount('YEARLY')).toBe(12);
+    expect(getMonthlyMembershipTermMonthCount('YEARLY')).toBe(12);
   });
 
   it('returns 3 for QUARTERLY cadence', () => {
-    expect(getMonthlyPricingCadenceMonthCount('QUARTERLY')).toBe(3);
+    expect(getMonthlyMembershipTermMonthCount('QUARTERLY')).toBe(3);
   });
 
   it('returns null for unknown cadence', () => {
-    expect(getMonthlyPricingCadenceMonthCount('WEEKLY')).toBeNull();
+    expect(getMonthlyMembershipTermMonthCount('WEEKLY')).toBeNull();
   });
 
   it('returns null for null input', () => {
-    expect(getMonthlyPricingCadenceMonthCount(null)).toBeNull();
+    expect(getMonthlyMembershipTermMonthCount(null)).toBeNull();
   });
 });
 

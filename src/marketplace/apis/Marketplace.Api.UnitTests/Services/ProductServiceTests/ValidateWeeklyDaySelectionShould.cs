@@ -14,7 +14,7 @@ public class ValidateWeeklyDaySelectionShould
     {
         var pricing = ProductPricing.Empty("weekly") with
         {
-            PurchaseCadence = ProductPricingCadence.Weekly,
+            MembershipTerm = MembershipTerm.Weekly,
             AvailableDays = [DayOfWeek.Monday, DayOfWeek.Tuesday],
             RequiredDaysPerWeek = requiredDaysPerWeek,
         };
@@ -23,20 +23,20 @@ public class ValidateWeeklyDaySelectionShould
     }
 
     [Theory]
-    [InlineData(ProductPricingCadence.Weekly)]
-    [InlineData(ProductPricingCadence.Fortnightly)]
-    [InlineData(ProductPricingCadence.Monthly)]
-    [InlineData(ProductPricingCadence.TwoMonths)]
-    [InlineData(ProductPricingCadence.Quarterly)]
-    [InlineData(ProductPricingCadence.FourMonths)]
-    [InlineData(ProductPricingCadence.FiveMonths)]
-    [InlineData(ProductPricingCadence.SixMonths)]
-    [InlineData(ProductPricingCadence.Yearly)]
-    public void Accept_Required_Days_For_Supported_Calendar_Price(ProductPricingCadence cadence)
+    [InlineData(MembershipTerm.Weekly)]
+    [InlineData(MembershipTerm.Fortnightly)]
+    [InlineData(MembershipTerm.Monthly)]
+    [InlineData(MembershipTerm.TwoMonths)]
+    [InlineData(MembershipTerm.Quarterly)]
+    [InlineData(MembershipTerm.FourMonths)]
+    [InlineData(MembershipTerm.FiveMonths)]
+    [InlineData(MembershipTerm.SixMonths)]
+    [InlineData(MembershipTerm.Yearly)]
+    public void Accept_Required_Days_For_Supported_Calendar_Price(MembershipTerm cadence)
     {
         var pricing = ProductPricing.Empty("monthly") with
         {
-            PurchaseCadence = cadence,
+            MembershipTerm = cadence,
             RequiredDaysPerWeek = 1,
             AcceptedPaymentMethods = [PaymentMethod.Card],
             BillingMode = ProductPricingBillingMode.Upfront,
@@ -51,7 +51,7 @@ public class ValidateWeeklyDaySelectionShould
     {
         var pricing = ProductPricing.Empty("daily") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
+            MembershipTerm = MembershipTerm.Daily,
             RequiredDaysPerWeek = 1,
         };
 
@@ -65,7 +65,7 @@ public class ValidateWeeklyDaySelectionShould
         var pricing = ProductPricing.Empty("entitlement") with
         {
             FulfillmentType = ProductPricingFulfillmentType.Entitlement,
-            PurchaseCadence = ProductPricingCadence.NotSet,
+            MembershipTerm = MembershipTerm.NotSet,
             AvailableDays = [DayOfWeek.Monday],
             RequiredDaysPerWeek = 2,
             AcceptedPaymentMethods = [PaymentMethod.Card],

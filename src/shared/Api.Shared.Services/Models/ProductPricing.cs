@@ -9,32 +9,36 @@ public record ProductPricing(
     string Id,
     int Index,
     ListingMetadata ListingMetadata,
-    ProductPricingCadence PurchaseCadence,
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
+    MembershipTerm MembershipTerm,
     decimal Price,
     bool IsTaxInclusive,
     bool SupportsSubscriptionAutoRenewal,
     IReadOnlyList<PaymentMethod> AcceptedPaymentMethods,
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     ProductPricingBillingMode BillingMode,
     int? MinDurationMinutes,
     int? MaxDurationMinutes,
     int MaxAllowedResourcesLockTimePaidViaCard,
     int MaxAllowedResourcesLockTimePaidViaBankTransfer,
     int NumberOfResourcesToBook,
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     ProductPricingCancellationPolicyType CancellationPolicyType,
     IReadOnlyList<ProductPricingCancellationRefundRule> CancellationRefundRules,
     [property: JsonConverter(typeof(DayOfWeekListJsonConverter))]
     IReadOnlyList<DayOfWeek>? AvailableDays = null,
     int? RequiredDaysPerWeek = null,
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     ProductPricingFulfillmentType FulfillmentType = ProductPricingFulfillmentType.Reservation,
     int? EntitlementCreditQuantity = null,
     int? EntitlementValidityDays = null,
-    [property: JsonConverter(typeof(DurationDisplayUnitJsonConverter))]
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     DurationDisplayUnit? MinDurationDisplayUnit = null,
-    [property: JsonConverter(typeof(DurationDisplayUnitJsonConverter))]
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     DurationDisplayUnit? MaxDurationDisplayUnit = null,
-    [property: JsonConverter(typeof(DurationDisplayUnitJsonConverter))]
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     DurationDisplayUnit? MaxAllowedResourcesLockTimePaidViaCardDisplayUnit = null,
-    [property: JsonConverter(typeof(DurationDisplayUnitJsonConverter))]
+    [property: JsonConverter(typeof(JsonStringEnumConverter))]
     DurationDisplayUnit? MaxAllowedResourcesLockTimePaidViaBankTransferDisplayUnit = null)
 {
     public static ProductPricing Empty(string id) =>
@@ -42,7 +46,7 @@ public record ProductPricing(
             id,
             int.MinValue,
             ListingMetadata.Empty,
-            ProductPricingCadence.NotSet,
+            MembershipTerm.NotSet,
             int.MinValue,
             false,
             false,

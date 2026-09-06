@@ -285,7 +285,7 @@ public class GetImmediateSubscriptionCancellationPreviewAsyncShould
             "pricing-1",
             0,
             ListingMetadata.Empty,
-            ProductPricingCadence.Monthly,
+            MembershipTerm.Monthly,
             80m,
             true,
             false,

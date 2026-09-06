@@ -116,7 +116,7 @@ locations/[id]/
 
 1. **Current GraphQL Types**:
    - `ProductPricing` has `billingMode` (likely includes subscription mode)
-   - `ProductPricingCadenceDetails` handles billing cadence
+   - `MembershipTermDetails` handles billing cadence
 
 2. **Display Strategy**:
    - Show both per-booking and subscription options

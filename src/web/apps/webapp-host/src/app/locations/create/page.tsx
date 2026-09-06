@@ -4,7 +4,7 @@ import DashboardLayout from '@/components/dashboard-layout/DashboardLayout';
 import { useHostListingCoordinator } from '@/components/unified-listing-form';
 import type { createUnifiedHostLocationMutation } from '@/queries/__generated__/createUnifiedHostLocationMutation.graphql';
 import type { createUnifiedHostLocationOrganizationQuery } from '@/queries/__generated__/createUnifiedHostLocationOrganizationQuery.graphql';
-import type { ProductPricingCadence, ProductPricingCancellationPolicyType } from '@/queries/__generated__/createUnifiedHostUpdateProductMutation.graphql';
+import type { MembershipTerm, ProductPricingCancellationPolicyType } from '@/queries/__generated__/createUnifiedHostUpdateProductMutation.graphql';
 import { hostListingProductReadinessQuery } from '@/queries/hostListingProductReadiness';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -32,7 +32,7 @@ type FormValues = {
   listingAbout: string;
   price: string;
   currency: 'USD' | 'NZD';
-  cadence: ProductPricingCadence;
+  membershipTerm: MembershipTerm;
   cancellationPolicyType: ProductPricingCancellationPolicyType;
 };
 
@@ -46,11 +46,11 @@ const defaultValues: FormValues = {
   listingAbout: '',
   price: '',
   currency: 'USD',
-  cadence: 'DAILY',
+  membershipTerm: 'DAILY',
   cancellationPolicyType: 'NO_CANCELLATION',
 };
 
-const cadenceOptions = [
+const membershipTermOptions = [
   ['DAILY', 'Daily'],
   ['WEEKLY', 'Weekly'],
   ['FORTNIGHTLY', 'Fortnightly'],
@@ -181,7 +181,7 @@ const CreateLocationPage = () => {
                       about: pendingDraft.about,
                       includedFeatures: [],
                     },
-                    purchaseCadence: values.cadence,
+                    membershipTerm: values.membershipTerm,
                     price: pendingDraft.price,
                     isTaxInclusive: false,
                     acceptedPaymentMethods: ['CARD'],
@@ -191,7 +191,7 @@ const CreateLocationPage = () => {
                     maxAllowedResourcesLockTimePaidViaBankTransfer: 0,
                     numberOfResourcesToBook: 1,
                     billingMode: 'UPFRONT',
-                    supportsSubscriptionAutoRenewal: ['MONTHLY'].includes(values.cadence),
+                    supportsSubscriptionAutoRenewal: ['MONTHLY'].includes(values.membershipTerm),
                     cancellationPolicyType: values.cancellationPolicyType,
                     cancellationRefundRules: [],
                   },
@@ -262,7 +262,7 @@ const CreateLocationPage = () => {
           title: values.listingTitle.trim(),
           about: values.listingAbout.trim(),
           price: Number(values.price),
-          cadence: values.cadence,
+          membershipTerm: values.membershipTerm,
           cancellationPolicyType: values.cancellationPolicyType,
         });
 
@@ -365,8 +365,8 @@ const CreateLocationPage = () => {
                   </TextField>
                 </Grid>
                 <Grid size={{ xs: 12, md: 3 }}>
-                  <TextField select fullWidth label="Cadence" value={values.cadence} onChange={onChange('cadence')}>
-                    {cadenceOptions.map(([value, label]) => (
+                  <TextField select fullWidth label="Membership term" value={values.membershipTerm} onChange={onChange('membershipTerm')}>
+                    {membershipTermOptions.map(([value, label]) => (
                       <MenuItem key={value} value={value}>
                         {label}
                       </MenuItem>

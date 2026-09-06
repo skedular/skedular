@@ -50,7 +50,7 @@ Operators assign Booking Groups to Resources and select Booking Groups on a Prod
 
 ### Can I offer different Prices for the same Product?
 
-Yes. A Product can have multiple Prices with different durations, quantities, payment methods, billing modes, cancellation policies, and purchase cadences. Customers choose the Price that fits the offering.
+Yes. A Product can have multiple Prices with different durations, quantities, payment methods, billing modes, cancellation policies, and membership terms. Customers choose the Price that fits the offering.
 
 ### Can I change a Price after a customer has purchased it?
 

@@ -4,7 +4,7 @@ using XeroRepeatingInvoiceScheduleSourceConstants = Booking.Shared.Models.XeroRe
 
 namespace Booking.Shared.Services;
 
-public record RecurringInvoiceBillingDefinition(string Source, ProductPricingCadence Cadence, decimal InvoiceAmount);
+public record RecurringInvoiceBillingDefinition(string Source, MembershipTerm MembershipTerm, decimal InvoiceAmount);
 
 public interface IRecurringInvoiceBillingScheduleService
 {
@@ -21,36 +21,36 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
         MarketplaceBooking marketplaceBooking,
         OrganizationBillingCycle organizationBillingCycle)
     {
-        var purchaseCadence = marketplaceBooking.ProductPricing.PurchaseCadence;
-        var shouldSplitByBillingCycle = ShouldSplitByBillingCycle(purchaseCadence, organizationBillingCycle);
+        var membershipTerm = marketplaceBooking.ProductPricing.MembershipTerm;
+        var shouldSplitByBillingCycle = ShouldSplitByBillingCycle(membershipTerm, organizationBillingCycle);
 
         if (!shouldSplitByBillingCycle)
         {
             return new RecurringInvoiceBillingDefinition(
-                XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
-                purchaseCadence,
+                XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
+                membershipTerm,
                 CalculateTotalRecurringChargeAmount(marketplaceBooking));
         }
 
         return new RecurringInvoiceBillingDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             MapBillingCycleToCadence(organizationBillingCycle),
-            CalculateInstallmentAmount(recurringBooking, marketplaceBooking, purchaseCadence, organizationBillingCycle));
+            CalculateInstallmentAmount(recurringBooking, marketplaceBooking, membershipTerm, organizationBillingCycle));
     }
 
-    private static ProductPricingCadence MapBillingCycleToCadence(OrganizationBillingCycle organizationBillingCycle) =>
+    private static MembershipTerm MapBillingCycleToCadence(OrganizationBillingCycle organizationBillingCycle) =>
         organizationBillingCycle switch
         {
-            OrganizationBillingCycle.Weekly => ProductPricingCadence.Weekly,
-            OrganizationBillingCycle.Fortnightly => ProductPricingCadence.Fortnightly,
-            OrganizationBillingCycle.Monthly => ProductPricingCadence.Monthly,
+            OrganizationBillingCycle.Weekly => MembershipTerm.Weekly,
+            OrganizationBillingCycle.Fortnightly => MembershipTerm.Fortnightly,
+            OrganizationBillingCycle.Monthly => MembershipTerm.Monthly,
             _ => throw new ArgumentOutOfRangeException(nameof(organizationBillingCycle)),
         };
 
     private static decimal CalculateInstallmentAmount(
         RecurringBooking recurringBooking,
         MarketplaceBooking marketplaceBooking,
-        ProductPricingCadence purchaseCadence,
+        MembershipTerm membershipTerm,
         OrganizationBillingCycle organizationBillingCycle)
     {
         if (HasPersistedRecurringChargeAmount(marketplaceBooking))
@@ -59,7 +59,7 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
         }
 
         var totalAmount = CalculateTotalRecurringChargeAmount(marketplaceBooking);
-        var cycleEndExclusive = ResolveCycleEndExclusive(recurringBooking, purchaseCadence);
+        var cycleEndExclusive = ResolveCycleEndExclusive(recurringBooking, membershipTerm);
         var installmentCount = SplitIntoBillingCyclePeriodsFromStart(recurringBooking.StartDate, cycleEndExclusive, organizationBillingCycle).Count;
 
         return installmentCount <= 1
@@ -86,45 +86,45 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
         return decimal.Round(totalAmount, 4, MidpointRounding.AwayFromZero);
     }
 
-    private static DateTimeOffset ResolveCycleEndExclusive(RecurringBooking recurringBooking, ProductPricingCadence purchaseCadence) =>
-        recurringBooking.EndDate?.AddDays(1) ?? purchaseCadence switch
+    private static DateTimeOffset ResolveCycleEndExclusive(RecurringBooking recurringBooking, MembershipTerm membershipTerm) =>
+        recurringBooking.EndDate?.AddDays(1) ?? membershipTerm switch
         {
-            ProductPricingCadence.Weekly => recurringBooking.StartDate.AddDays(7),
-            ProductPricingCadence.Fortnightly => recurringBooking.StartDate.AddDays(14),
-            ProductPricingCadence.Monthly => recurringBooking.StartDate.AddMonths(1),
-            ProductPricingCadence.TwoMonths => recurringBooking.StartDate.AddMonths(2),
-            ProductPricingCadence.Quarterly => recurringBooking.StartDate.AddMonths(3),
-            ProductPricingCadence.FourMonths => recurringBooking.StartDate.AddMonths(4),
-            ProductPricingCadence.FiveMonths => recurringBooking.StartDate.AddMonths(5),
-            ProductPricingCadence.SixMonths => recurringBooking.StartDate.AddMonths(6),
-            ProductPricingCadence.Yearly => recurringBooking.StartDate.AddYears(1),
+            MembershipTerm.Weekly => recurringBooking.StartDate.AddDays(7),
+            MembershipTerm.Fortnightly => recurringBooking.StartDate.AddDays(14),
+            MembershipTerm.Monthly => recurringBooking.StartDate.AddMonths(1),
+            MembershipTerm.TwoMonths => recurringBooking.StartDate.AddMonths(2),
+            MembershipTerm.Quarterly => recurringBooking.StartDate.AddMonths(3),
+            MembershipTerm.FourMonths => recurringBooking.StartDate.AddMonths(4),
+            MembershipTerm.FiveMonths => recurringBooking.StartDate.AddMonths(5),
+            MembershipTerm.SixMonths => recurringBooking.StartDate.AddMonths(6),
+            MembershipTerm.Yearly => recurringBooking.StartDate.AddYears(1),
             _ => recurringBooking.StartDate.AddDays(1),
         };
 
-    private static bool ShouldSplitByBillingCycle(ProductPricingCadence cadence, OrganizationBillingCycle billingCycle) =>
+    private static bool ShouldSplitByBillingCycle(MembershipTerm membershipTerm, OrganizationBillingCycle billingCycle) =>
         billingCycle switch
         {
-            OrganizationBillingCycle.Weekly => cadence is ProductPricingCadence.Fortnightly or
-                ProductPricingCadence.Monthly or
-                ProductPricingCadence.TwoMonths or
-                ProductPricingCadence.Quarterly or
-                ProductPricingCadence.FourMonths or
-                ProductPricingCadence.FiveMonths or
-                ProductPricingCadence.SixMonths or
-                ProductPricingCadence.Yearly,
-            OrganizationBillingCycle.Fortnightly => cadence is ProductPricingCadence.Monthly or
-                ProductPricingCadence.TwoMonths or
-                ProductPricingCadence.Quarterly or
-                ProductPricingCadence.FourMonths or
-                ProductPricingCadence.FiveMonths or
-                ProductPricingCadence.SixMonths or
-                ProductPricingCadence.Yearly,
-            OrganizationBillingCycle.Monthly => cadence is ProductPricingCadence.TwoMonths or
-                ProductPricingCadence.Quarterly or
-                ProductPricingCadence.FourMonths or
-                ProductPricingCadence.FiveMonths or
-                ProductPricingCadence.SixMonths or
-                ProductPricingCadence.Yearly,
+            OrganizationBillingCycle.Weekly => membershipTerm is MembershipTerm.Fortnightly or
+                MembershipTerm.Monthly or
+                MembershipTerm.TwoMonths or
+                MembershipTerm.Quarterly or
+                MembershipTerm.FourMonths or
+                MembershipTerm.FiveMonths or
+                MembershipTerm.SixMonths or
+                MembershipTerm.Yearly,
+            OrganizationBillingCycle.Fortnightly => membershipTerm is MembershipTerm.Monthly or
+                MembershipTerm.TwoMonths or
+                MembershipTerm.Quarterly or
+                MembershipTerm.FourMonths or
+                MembershipTerm.FiveMonths or
+                MembershipTerm.SixMonths or
+                MembershipTerm.Yearly,
+            OrganizationBillingCycle.Monthly => membershipTerm is MembershipTerm.TwoMonths or
+                MembershipTerm.Quarterly or
+                MembershipTerm.FourMonths or
+                MembershipTerm.FiveMonths or
+                MembershipTerm.SixMonths or
+                MembershipTerm.Yearly,
             _ => throw new ArgumentOutOfRangeException(nameof(billingCycle)),
         };
 

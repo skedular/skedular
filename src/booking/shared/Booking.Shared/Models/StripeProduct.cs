@@ -6,7 +6,7 @@ namespace Booking.Shared.Models;
 public class StripeProduct : ModelBaseWithDeleted
 {
     public string ProductPricingId { get; set; } = string.Empty;
-    public ProductPricingCadence PricingCadence { get; set; }
+    public MembershipTerm MembershipTerm { get; set; }
     public ProductPricingBillingMode BillingMode { get; set; }
     public int NumberOfResourcesToBook { get; set; }
     public string StripeProductId { get; set; } = string.Empty;

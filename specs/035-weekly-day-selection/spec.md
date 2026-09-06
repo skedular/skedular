@@ -125,7 +125,7 @@ Administrators, customers, and public-web visitors can understand when a weekly 
 - **FR-002**: The system MUST treat the exact required-day value as an optional rule; it is not required for existing weekly behavior when absent.
 - **FR-003**: The system MUST accept only a required-day value greater than zero, no greater than seven, and no greater than the count of configured available days when that count is nonzero.
 - **FR-004**: The system MUST define the configured value explicitly as an exact required number of selected days **per week** for weekly prices, rather than as a generic count applicable to all pricing periods.
-- **FR-005**: The system MUST make the weekly parameters unavailable for non-weekly pricing cadences in this iteration; fortnightly, monthly, and other cadences MUST NOT inherit, interpret, or reuse them.
+- **FR-005**: The system MUST make the weekly parameters unavailable for non-weekly pricing membership terms in this iteration; fortnightly, monthly, and other cadences MUST NOT inherit, interpret, or reuse them.
 - **FR-006**: The system MUST keep the weekly day-selection rule, the price's available days, and a customer's selected weekdays as separate business information.
 - **FR-007**: When a weekly price has no available days configured, the system MUST treat all seven weekdays as available for validating the customer's selection.
 - **FR-008**: Any future fortnightly, monthly, or other cadence-specific day-selection feature MUST be specified and implemented with its own cadence-specific parameters and validation; it is outside the scope of this feature.
@@ -162,7 +162,7 @@ Administrators, customers, and public-web visitors can understand when a weekly 
 
 ### Key Entities _(include if feature involves data)_
 
-- **Weekly Price Day-Selection Rule**: An optional, weekly-specific exact count constraint owned by an eligible weekly product price; it is not a shared rule for other pricing cadences.
+- **Weekly Price Day-Selection Rule**: An optional, weekly-specific exact count constraint owned by an eligible weekly product price; it is not a shared rule for other pricing membership terms.
 - **Available-Day Rule**: The existing price-level list of weekdays on which the price may be used; when absent, every weekday is eligible for selection.
 - **Customer Weekday Selection**: The unique available weekdays chosen for one resulting purchase or recurring configuration; it establishes that customer's fixed weekly pattern.
 - **Recurring Purchase or Subscription Period**: The customer-owned period that retains the selected weekly pattern and determines where recurring instances are considered.

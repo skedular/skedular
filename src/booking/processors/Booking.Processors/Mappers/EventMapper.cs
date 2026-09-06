@@ -15,7 +15,6 @@ using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
 using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingBillingMode;
 using ProductPricingFulfillmentType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingFulfillmentType;
-using ProductPricingCadence = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCadence;
 using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
 using Team = Booking.Shared.Models.Team;
 using TeamMember = Booking.Shared.Database.Entities.TeamMember;
@@ -726,7 +725,7 @@ public class EventMapper : IEventMapper
             src.Id,
             src.Index,
             MapTo(src.ListingMetadata),
-            MapTo(src.PurchaseCadence),
+            MapTo(src.MembershipTerm),
             Convert.ToDecimal(src.Price),
             src.IsTaxInclusive,
             src.SupportsSubscriptionAutoRenewal,
@@ -770,20 +769,20 @@ public class EventMapper : IEventMapper
         Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationRefundRule src) =>
         new(src.MinutesBefore, src.RefundPercentage);
 
-    private static Api.Shared.Services.Models.ProductPricingCadence MapTo(ProductPricingCadence src) =>
+    private static MembershipTerm MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm src) =>
         src switch
         {
-            ProductPricingCadence.NotSet => Api.Shared.Services.Models.ProductPricingCadence.NotSet,
-            ProductPricingCadence.Daily => Api.Shared.Services.Models.ProductPricingCadence.Daily,
-            ProductPricingCadence.Weekly => Api.Shared.Services.Models.ProductPricingCadence.Weekly,
-            ProductPricingCadence.Fortnightly => Api.Shared.Services.Models.ProductPricingCadence.Fortnightly,
-            ProductPricingCadence.Monthly => Api.Shared.Services.Models.ProductPricingCadence.Monthly,
-            ProductPricingCadence.TwoMonths => Api.Shared.Services.Models.ProductPricingCadence.TwoMonths,
-            ProductPricingCadence.Quarterly => Api.Shared.Services.Models.ProductPricingCadence.Quarterly,
-            ProductPricingCadence.FourMonths => Api.Shared.Services.Models.ProductPricingCadence.FourMonths,
-            ProductPricingCadence.FiveMonths => Api.Shared.Services.Models.ProductPricingCadence.FiveMonths,
-            ProductPricingCadence.SixMonths => Api.Shared.Services.Models.ProductPricingCadence.SixMonths,
-            ProductPricingCadence.Yearly => Api.Shared.Services.Models.ProductPricingCadence.Yearly,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.NotSet => MembershipTerm.NotSet,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Daily => MembershipTerm.Daily,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Weekly => MembershipTerm.Weekly,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Fortnightly => MembershipTerm.Fortnightly,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Monthly => MembershipTerm.Monthly,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.TwoMonths => MembershipTerm.TwoMonths,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Quarterly => MembershipTerm.Quarterly,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.FourMonths => MembershipTerm.FourMonths,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.FiveMonths => MembershipTerm.FiveMonths,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.SixMonths => MembershipTerm.SixMonths,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.MembershipTerm.Yearly => MembershipTerm.Yearly,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src,
                 $"Unexpected value for {nameof(src)}: {src}. Update enum mapping or caller input."),
         };

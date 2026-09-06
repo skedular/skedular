@@ -4,7 +4,7 @@
 
 ## Summary
 
-Extend `ProductPricing.RequiredDaysPerWeek` from weekly-only offers to supported purchase cadences longer than one week. Spec 047 removes sub-day cadences and makes credit entitlements cadence-free. Scheduled reservations/subscriptions use customer-selected weekdays and generate one booking occurrence per selected weekday in each applicable complete UTC week; entitlements use their validity period and allow at most N successful redemptions per complete UTC week. No booking or location timezone is stored or consulted.
+Extend `ProductPricing.RequiredDaysPerWeek` from weekly-only offers to supported membership terms longer than one week. Spec 047 removes sub-day cadences and makes credit entitlements cadence-free. Scheduled reservations/subscriptions use customer-selected weekdays and generate one booking occurrence per selected weekday in each applicable complete UTC week; entitlements use their validity period and allow at most N successful redemptions per complete UTC week. No booking or location timezone is stored or consulted.
 
 ## Technical Context
 
@@ -15,8 +15,8 @@ Extend `ProductPricing.RequiredDaysPerWeek` from weekly-only offers to supported
 **Target Platform**: Marketplace/Booking APIs, processors, workflows, and Host/Spaces web editors
 **Project Type**: Full-stack web service
 **Performance Goals**: Weekly eligibility queries use indexed, bounded entitlement/booking history lookups.
-**Constraints**: Supported purchase cadences are Daily, Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, and Yearly; the setting is hidden for Daily and cadence-free entitlements use validity periods. UTC weeks; no raw EF outside repositories; generated artifacts are never hand-edited.
-**Scale/Scope**: Weekly and longer purchase cadences, scheduled reservations/subscriptions, and cadence-free credit entitlements.
+**Constraints**: Supported membership terms are Daily, Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, and Yearly; the setting is hidden for Daily and cadence-free entitlements use validity periods. UTC weeks; no raw EF outside repositories; generated artifacts are never hand-edited.
+**Scale/Scope**: Weekly and longer membership terms, scheduled reservations/subscriptions, and cadence-free credit entitlements.
 
 ## Constitution Check
 

@@ -63,9 +63,9 @@ const MarketplaceProductSubscribeSummary = ({
                 productType === 'EVENT'
                   ? autoRenew
                     ? 'Each cycle will reserve the full matching event resource set again, including across multiple locations. If one required resource is unavailable for a future cycle, that cycle cannot be materialized.'
-                    : 'This purchase reserves the full matching event resource set for the current cadence window only.'
+                    : 'This purchase reserves the full matching event resource set for the current membership-term window only.'
                   : autoRenew
-                    ? 'Your next cycle will use the latest matching pricing option for the same cadence.'
+                    ? 'Your next cycle will use the latest matching pricing option for the same membership term.'
                     : 'This purchase covers the current pricing period only. No additional renewal will be created.'
               }
               sx={{ opacity: 0.86 }}

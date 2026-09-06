@@ -41,57 +41,57 @@ public class RootQuery(IVersionService versionService)
         },
     ];
 
-    public IEnumerable<ProductPricingCadenceDetails> ProductPricingCadences =>
+    public IEnumerable<MembershipTermDetails> MembershipTerms =>
     [
         new()
         {
-            Type = ProductPricingCadence.Daily,
-            Name = ProductPricingCadence.Daily.ToProductPricingCadenceName(),
+            Type = MembershipTerm.Daily,
+            Name = MembershipTerm.Daily.ToMembershipTermName(),
         },
         new()
         {
-            Type = ProductPricingCadence.Weekly,
-            Name = ProductPricingCadence.Weekly.ToProductPricingCadenceName(),
+            Type = MembershipTerm.Weekly,
+            Name = MembershipTerm.Weekly.ToMembershipTermName(),
         },
         new()
         {
-            Type = ProductPricingCadence.Fortnightly,
-            Name = ProductPricingCadence.Fortnightly.ToProductPricingCadenceName(),
+            Type = MembershipTerm.Fortnightly,
+            Name = MembershipTerm.Fortnightly.ToMembershipTermName(),
         },
         new()
         {
-            Type = ProductPricingCadence.Monthly,
-            Name = ProductPricingCadence.Monthly.ToProductPricingCadenceName(),
+            Type = MembershipTerm.Monthly,
+            Name = MembershipTerm.Monthly.ToMembershipTermName(),
         },
         new()
         {
-            Type = ProductPricingCadence.TwoMonths,
-            Name = ProductPricingCadence.TwoMonths.ToProductPricingCadenceName(),
+            Type = MembershipTerm.TwoMonths,
+            Name = MembershipTerm.TwoMonths.ToMembershipTermName(),
         },
         new()
         {
-            Type = ProductPricingCadence.Quarterly,
-            Name = ProductPricingCadence.Quarterly.ToProductPricingCadenceName(),
+            Type = MembershipTerm.Quarterly,
+            Name = MembershipTerm.Quarterly.ToMembershipTermName(),
         },
         new()
         {
-            Type = ProductPricingCadence.FourMonths,
-            Name = ProductPricingCadence.FourMonths.ToProductPricingCadenceName(),
+            Type = MembershipTerm.FourMonths,
+            Name = MembershipTerm.FourMonths.ToMembershipTermName(),
         },
         new()
         {
-            Type = ProductPricingCadence.FiveMonths,
-            Name = ProductPricingCadence.FiveMonths.ToProductPricingCadenceName(),
+            Type = MembershipTerm.FiveMonths,
+            Name = MembershipTerm.FiveMonths.ToMembershipTermName(),
         },
         new()
         {
-            Type = ProductPricingCadence.SixMonths,
-            Name = ProductPricingCadence.SixMonths.ToProductPricingCadenceName(),
+            Type = MembershipTerm.SixMonths,
+            Name = MembershipTerm.SixMonths.ToMembershipTermName(),
         },
         new()
         {
-            Type = ProductPricingCadence.Yearly,
-            Name = ProductPricingCadence.Yearly.ToProductPricingCadenceName(),
+            Type = MembershipTerm.Yearly,
+            Name = MembershipTerm.Yearly.ToMembershipTermName(),
         },
     ];
 

@@ -849,17 +849,17 @@ public class MarketplaceRefundService(
     {
         ArgumentNullException.ThrowIfNull(recurringBooking.MarketplaceBooking);
 
-        return recurringBooking.MarketplaceBooking.ProductPricing.PurchaseCadence switch
+        return recurringBooking.MarketplaceBooking.ProductPricing.MembershipTerm switch
         {
-            ProductPricingCadence.Weekly => recurringBooking.StartDate.AddDays(7),
-            ProductPricingCadence.Fortnightly => recurringBooking.StartDate.AddDays(14),
-            ProductPricingCadence.Monthly => recurringBooking.StartDate.AddMonths(1),
-            ProductPricingCadence.TwoMonths => recurringBooking.StartDate.AddMonths(2),
-            ProductPricingCadence.Quarterly => recurringBooking.StartDate.AddMonths(3),
-            ProductPricingCadence.FourMonths => recurringBooking.StartDate.AddMonths(4),
-            ProductPricingCadence.FiveMonths => recurringBooking.StartDate.AddMonths(5),
-            ProductPricingCadence.SixMonths => recurringBooking.StartDate.AddMonths(6),
-            ProductPricingCadence.Yearly => recurringBooking.StartDate.AddYears(1),
+            MembershipTerm.Weekly => recurringBooking.StartDate.AddDays(7),
+            MembershipTerm.Fortnightly => recurringBooking.StartDate.AddDays(14),
+            MembershipTerm.Monthly => recurringBooking.StartDate.AddMonths(1),
+            MembershipTerm.TwoMonths => recurringBooking.StartDate.AddMonths(2),
+            MembershipTerm.Quarterly => recurringBooking.StartDate.AddMonths(3),
+            MembershipTerm.FourMonths => recurringBooking.StartDate.AddMonths(4),
+            MembershipTerm.FiveMonths => recurringBooking.StartDate.AddMonths(5),
+            MembershipTerm.SixMonths => recurringBooking.StartDate.AddMonths(6),
+            MembershipTerm.Yearly => recurringBooking.StartDate.AddYears(1),
             _ => recurringBooking.StartDate.AddDays(1),
         };
     }

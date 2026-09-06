@@ -210,17 +210,17 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
     // Half-day and shorter metered products stay out of this path to avoid pricing drift
     // and to keep their explicit time selection model intact.
     /// <summary>
-    ///     Determines whether location opening hours window should be used for the given pricing cadence.
+    ///     Determines whether location opening hours window should be used for the given membership term.
     ///     Only day-based pass products should stretch to the full opening-hours window.
     /// </summary>
-    /// <param name="cadence">The product pricing cadence to evaluate.</param>
+    /// <param name="membershipTerm">The product membership term to evaluate.</param>
     /// <returns>True if location opening hours window should be used, false otherwise.</returns>
     public (DateTimeOffset From, DateTimeOffset Until)? ResolveDailyBookingWindow(Resource resource, DateOnly bookingDay) =>
         ResolveBookingWindow(resource, bookingDay);
 
     /// <summary>
     ///     Resolves the booking window for a location on a specific booking day.
-    ///     Determines the available time window based on the location's opening hours and pricing cadence.
+    ///     Determines the available time window based on the location's opening hours and membership term.
     /// </summary>
     /// <param name="location">The location for which to resolve the booking window.</param>
     /// <param name="bookingDay">The date for the booking.</param>
@@ -330,7 +330,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
             .ToHashSet();
 
         return resources
-            // Keep cadence-generated marketplace bookings sticky when the same resource is
+            // Keep membership-term-generated marketplace bookings sticky when the same resource is
             // still available for the next generated instance in the same series.
             .OrderBy(resource => preferredGeneratedResourceIds.Contains(resource.Id) ? 0 : 1)
             .ThenBy(resource => preferredCustomerResourceIds.Contains(resource.Id) ? 0 : 1)

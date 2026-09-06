@@ -239,18 +239,18 @@ public class BookingInvoiceService(
         var periodStart = recurringBooking.CreatedAt > fullTermStart
             ? recurringBooking.CreatedAt
             : fullTermStart;
-        var periodEndExclusive = billingDefinition.Cadence switch
+        var periodEndExclusive = billingDefinition.MembershipTerm switch
         {
-            ProductPricingCadence.Daily => periodStart.AddDays(1),
-            ProductPricingCadence.Weekly => periodStart.AddDays(7),
-            ProductPricingCadence.Fortnightly => periodStart.AddDays(14),
-            ProductPricingCadence.Monthly => periodStart.AddMonths(1),
-            ProductPricingCadence.TwoMonths => periodStart.AddMonths(2),
-            ProductPricingCadence.Quarterly => periodStart.AddMonths(3),
-            ProductPricingCadence.FourMonths => periodStart.AddMonths(4),
-            ProductPricingCadence.FiveMonths => periodStart.AddMonths(5),
-            ProductPricingCadence.SixMonths => periodStart.AddMonths(6),
-            ProductPricingCadence.Yearly => periodStart.AddYears(1),
+            MembershipTerm.Daily => periodStart.AddDays(1),
+            MembershipTerm.Weekly => periodStart.AddDays(7),
+            MembershipTerm.Fortnightly => periodStart.AddDays(14),
+            MembershipTerm.Monthly => periodStart.AddMonths(1),
+            MembershipTerm.TwoMonths => periodStart.AddMonths(2),
+            MembershipTerm.Quarterly => periodStart.AddMonths(3),
+            MembershipTerm.FourMonths => periodStart.AddMonths(4),
+            MembershipTerm.FiveMonths => periodStart.AddMonths(5),
+            MembershipTerm.SixMonths => periodStart.AddMonths(6),
+            MembershipTerm.Yearly => periodStart.AddYears(1),
             _ => periodStart.AddDays(1),
         };
         var periodEndInclusive = periodEndExclusive.AddDays(-1);
@@ -448,7 +448,7 @@ public class BookingInvoiceService(
         protected override string GetUnitPriceLabel()
         {
             var pricing = ResolvePricing();
-            return $"{ResolveUnitPrice().ToRoundedPrice()} {pricing.PurchaseCadence.ToInvoicePriceUnitName()}";
+            return $"{ResolveUnitPrice().ToRoundedPrice()} {pricing.MembershipTerm.ToInvoicePriceUnitName()}";
         }
 
         private ProductPricing ResolvePricing()
@@ -546,7 +546,7 @@ public class BookingInvoiceService(
             return BuildBookingInvoiceLineDescription(
                 ProductVersion,
                 marketplaceBooking.ProductPricing,
-                $"{marketplaceBooking.ProductPricing.PurchaseCadence.ToProductPricingCadenceName()} pass{Environment.NewLine}" +
+                $"{marketplaceBooking.ProductPricing.MembershipTerm.ToMembershipTermName()} pass{Environment.NewLine}" +
                 $"{displayStart.ToShortDate()} - {displayEnd.ToShortDate()}");
         }
 
@@ -569,9 +569,9 @@ public class BookingInvoiceService(
                     OrganizationBillingCycle.Weekly => "weekly",
                     OrganizationBillingCycle.Fortnightly => "fortnightly",
                     OrganizationBillingCycle.Monthly => "monthly",
-                    _ => marketplaceBooking.ProductPricing.PurchaseCadence.ToInvoicePriceUnitName(),
+                    _ => marketplaceBooking.ProductPricing.MembershipTerm.ToInvoicePriceUnitName(),
                 }}"
-                : $"{unitPrice.ToRoundedPrice()} {billingDefinition.Cadence.ToInvoicePriceUnitName()}";
+                : $"{unitPrice.ToRoundedPrice()} {billingDefinition.MembershipTerm.ToInvoicePriceUnitName()}";
         }
 
         private (decimal TotalAmountExcludeTax, decimal TaxAmount, decimal TaxRatePercentage, decimal TotalAmount) CalculateRecurringAmounts()

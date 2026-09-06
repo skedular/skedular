@@ -470,7 +470,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             marketplaceBooking.ProductPricing = marketplaceBooking.ProductPricing with
             {
                 // Generated recurring marketplace instances always use the recurring-compatible
-                // daily booking cadence. The purchase cadence remains on the parent subscription/template.
+                // daily booking schedule. The membership term remains on the parent subscription/template.
             };
 
             booking.MarketplaceBooking = marketplaceBooking;
@@ -588,7 +588,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
         // Auto-renew creates a new recurring booking cycle with no instances yet. In that case
         // carry forward the latest assigned resources from the most recent previous cycle so the
-        // opening-hours service can keep the cadence sticky when those resources are still valid.
+        // opening-hours service can keep the membership term sticky when those resources are still valid.
         var previousRecurringBookings = subscription.RecurringBookings
             .Where(item => !item.IsDeleted())
             .Where(item => item.Id != recurringBooking.Id)
@@ -632,9 +632,9 @@ public class MarketplaceBookingSubscriptionIntegrations(
         TimeOnly until,
         CancellationToken cancellationToken)
     {
-        var purchaseCadence = subscription.MarketplaceBooking.ProductPricing.PurchaseCadence;
-        var cycleEndExclusive = subscription.NextRenewalAt ?? ResolveNextRenewalAt(subscription.StartedAt, purchaseCadence);
-        var cycleStart = ResolveCycleStart(cycleEndExclusive, purchaseCadence);
+        var membershipTerm = subscription.MarketplaceBooking.ProductPricing.MembershipTerm;
+        var cycleEndExclusive = subscription.NextRenewalAt ?? ResolveNextRenewalAt(subscription.StartedAt, membershipTerm);
+        var cycleStart = ResolveCycleStart(cycleEndExclusive, membershipTerm);
         var cycleEnd = cycleEndExclusive.AddDays(-1);
 
         var existingRecurringBooking = subscription.RecurringBookings
@@ -836,7 +836,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
         var now = timeProvider.GetUtcNow();
         var subscriptionStatus = subscription.Status.ToMarketplaceBookingSubscriptionStatus();
         var nextRenewalAt = subscription.NextRenewalAt ??
-                            ResolveNextRenewalAt(subscription.StartedAt, subscription.MarketplaceBooking.ProductPricing.PurchaseCadence);
+                            ResolveNextRenewalAt(subscription.StartedAt, subscription.MarketplaceBooking.ProductPricing.MembershipTerm);
         var hasChanges = subscription.NextRenewalAt != nextRenewalAt;
 
         subscription.NextRenewalAt = nextRenewalAt;
@@ -946,7 +946,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             subscription.MarketplaceBooking.ProductPricing = renewedProductPricing;
             subscription.ProductVersion = productVersion;
             subscription.Status = MarketplaceBookingSubscriptionStatus.Active.ToMarketplaceBookingSubscriptionStatus();
-            subscription.NextRenewalAt = ResolveNextRenewalAt(subscription.NextRenewalAt.Value, renewedProductPricing.PurchaseCadence);
+            subscription.NextRenewalAt = ResolveNextRenewalAt(subscription.NextRenewalAt.Value, renewedProductPricing.MembershipTerm);
             hasChanges = true;
         }
 
@@ -979,7 +979,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             {
                 Id = randomHelper.Generate(),
                 // Every subscription cycle starts unpaid. Upfront cycles charge the full
-                // cadence now, while in-arrears cycles charge only the first billing slice now.
+                // the membership term now, while in-arrears cycles charge only the first billing slice now.
                 PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
                 IsPaymentRequired = requiresPaymentForCurrentCycle,
                 Quantity = marketplaceBooking.Quantity,
@@ -1075,7 +1075,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
         // The subscription owns the billing period horizon. Reconciliation should therefore
         // always plan against the current subscription cycle, even if an existing recurring
         // booking record was created earlier with stale end-date data.
-        subscription.NextRenewalAt ?? ResolveNextRenewalAt(subscription.StartedAt, subscription.MarketplaceBooking.ProductPricing.PurchaseCadence);
+        subscription.NextRenewalAt ?? ResolveNextRenewalAt(subscription.StartedAt, subscription.MarketplaceBooking.ProductPricing.MembershipTerm);
 
     private static bool ShouldEndCurrentCycleProcessing(
         MarketplaceBookingSubscription subscription,
@@ -1097,39 +1097,39 @@ public class MarketplaceBookingSubscriptionIntegrations(
         }
 
         var cycleEndExclusive = subscription.NextRenewalAt ??
-                                ResolveNextRenewalAt(subscription.StartedAt, subscription.MarketplaceBooking.ProductPricing.PurchaseCadence);
+                                ResolveNextRenewalAt(subscription.StartedAt, subscription.MarketplaceBooking.ProductPricing.MembershipTerm);
         var lastCycleDay = cycleEndExclusive.AddDays(-1).UtcDateTime.Date;
 
         return from.UtcDateTime.Date >= lastCycleDay;
     }
 
-    private static DateTimeOffset ResolveCycleStart(DateTimeOffset cycleEndExclusive, ProductPricingCadence cadence) =>
-        cadence switch
+    private static DateTimeOffset ResolveCycleStart(DateTimeOffset cycleEndExclusive, MembershipTerm membershipTerm) =>
+        membershipTerm switch
         {
-            ProductPricingCadence.Weekly => cycleEndExclusive.AddDays(-7),
-            ProductPricingCadence.Fortnightly => cycleEndExclusive.AddDays(-14),
-            ProductPricingCadence.Monthly => cycleEndExclusive.AddMonths(-1),
-            ProductPricingCadence.TwoMonths => cycleEndExclusive.AddMonths(-2),
-            ProductPricingCadence.Quarterly => cycleEndExclusive.AddMonths(-3),
-            ProductPricingCadence.FourMonths => cycleEndExclusive.AddMonths(-4),
-            ProductPricingCadence.FiveMonths => cycleEndExclusive.AddMonths(-5),
-            ProductPricingCadence.SixMonths => cycleEndExclusive.AddMonths(-6),
-            ProductPricingCadence.Yearly => cycleEndExclusive.AddYears(-1),
+            MembershipTerm.Weekly => cycleEndExclusive.AddDays(-7),
+            MembershipTerm.Fortnightly => cycleEndExclusive.AddDays(-14),
+            MembershipTerm.Monthly => cycleEndExclusive.AddMonths(-1),
+            MembershipTerm.TwoMonths => cycleEndExclusive.AddMonths(-2),
+            MembershipTerm.Quarterly => cycleEndExclusive.AddMonths(-3),
+            MembershipTerm.FourMonths => cycleEndExclusive.AddMonths(-4),
+            MembershipTerm.FiveMonths => cycleEndExclusive.AddMonths(-5),
+            MembershipTerm.SixMonths => cycleEndExclusive.AddMonths(-6),
+            MembershipTerm.Yearly => cycleEndExclusive.AddYears(-1),
             _ => cycleEndExclusive.AddDays(-1),
         };
 
-    private static DateTimeOffset ResolveNextRenewalAt(DateTimeOffset start, ProductPricingCadence cadence) =>
-        cadence switch
+    private static DateTimeOffset ResolveNextRenewalAt(DateTimeOffset start, MembershipTerm membershipTerm) =>
+        membershipTerm switch
         {
-            ProductPricingCadence.Weekly => start.AddDays(7),
-            ProductPricingCadence.Fortnightly => start.AddDays(14),
-            ProductPricingCadence.Monthly => start.AddMonths(1),
-            ProductPricingCadence.TwoMonths => start.AddMonths(2),
-            ProductPricingCadence.Quarterly => start.AddMonths(3),
-            ProductPricingCadence.FourMonths => start.AddMonths(4),
-            ProductPricingCadence.FiveMonths => start.AddMonths(5),
-            ProductPricingCadence.SixMonths => start.AddMonths(6),
-            ProductPricingCadence.Yearly => start.AddYears(1),
+            MembershipTerm.Weekly => start.AddDays(7),
+            MembershipTerm.Fortnightly => start.AddDays(14),
+            MembershipTerm.Monthly => start.AddMonths(1),
+            MembershipTerm.TwoMonths => start.AddMonths(2),
+            MembershipTerm.Quarterly => start.AddMonths(3),
+            MembershipTerm.FourMonths => start.AddMonths(4),
+            MembershipTerm.FiveMonths => start.AddMonths(5),
+            MembershipTerm.SixMonths => start.AddMonths(6),
+            MembershipTerm.Yearly => start.AddYears(1),
             _ => start.AddDays(1),
         };
 }

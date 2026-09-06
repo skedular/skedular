@@ -163,14 +163,14 @@ const HostListingProductSettings = ({
 
           <StackColumn spacing={2}>
             {/* Rate */}
-            <SettingsSectionCard title="Rate" description="Set the customer-facing label, purchase term, and price for this option.">
+            <SettingsSectionCard title="Rate" description="Set the customer-facing label, membership term, and price for this option.">
               <StackColumn spacing={2}>
                 <FormFieldLabel label="Customer-facing label (optional)">
                   <TextField fullWidth value={opt.title} onChange={onChangePricingOption(index, 'title')} placeholder="e.g. Daily rate, Weekend rate" />
                 </FormFieldLabel>
                 <Grid container spacing={2}>
                   <Grid size={{ xs: 12, md: 6 }}>
-                    <FormFieldLabel label="Cadence">
+                    <FormFieldLabel label="Membership term">
                       <TextField select fullWidth required value={opt.cadence} onChange={onChangePricingOption(index, 'cadence')}>
                         {cadenceOptions.map(([value, label]) => (
                           <MenuItem key={value} value={value}>

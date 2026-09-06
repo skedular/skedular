@@ -52,17 +52,17 @@ The Product Price still controls the commercial amount and tax-inclusive or tax-
 
 When a supported Booking or recurring billing event requires an invoice, Skedular creates the local invoice and prepares an accounting export link. It then creates the corresponding Xero invoice with the configured Customer contact, Product and Booking description, amount, currency, due date, sales account, reference, and tax treatment from the Product Price.
 
-With **Billing Mode** set to **Disabled**, Skedular does not export invoices to Xero. With **Enabled**, it exports standard Xero invoices. With **Repeating Invoices**, it creates repeating templates when the cadence is supported and uses standard invoices as a fallback when it is not. For exported invoices and templates, the implementation's invoice-sending setting determines whether Xero creates them as **Authorized** or **Draft**. Skedular stores the relationship between the local invoice and the Xero invoice, including the Xero invoice number when available.
+With **Billing Mode** set to **Disabled**, Skedular does not export invoices to Xero. With **Enabled**, it exports standard Xero invoices. With **Repeating Invoices**, it creates repeating templates when the membership term is supported and uses standard invoices as a fallback when it is not. For exported invoices and templates, the implementation's invoice-sending setting determines whether Xero creates them as **Authorized** or **Draft**. Skedular stores the relationship between the local invoice and the Xero invoice, including the Xero invoice number when available.
 
 ## Booking and Subscription invoices
 
-One-time Booking invoices use the Customer who paid for the Booking and include the Product and Booking context needed for accounting. The first Subscription invoice is generated when the Subscription starts for both upfront and in-arrears billing. The invoice due date is calculated separately from the Subscription purchase cadence and the Organization billing cycle.
+One-time Booking invoices use the Customer who paid for the Booking and include the Product and Booking context needed for accounting. The first Subscription invoice is generated when the Subscription starts for both upfront and in-arrears billing. The invoice due date is calculated separately from the Subscription membership term and the Organization billing cycle.
 
 For later Subscription invoices, upfront billing follows the Subscription purchase period. In-arrears billing follows the Organization's configured billing cycle. Xero participates after Skedular has determined that an invoice is due; Xero does not determine the Subscription schedule.
 
 ## Repeating invoices
 
-When the Organization selects **Repeating Invoices**, Skedular can create a Xero repeating invoice for supported recurring cadences. The schedule follows the Product purchase cadence unless a longer cadence is split into the Organization billing cycle for in-arrears billing. The supported cadences are:
+When the Organization selects **Repeating Invoices**, Skedular can create a Xero repeating invoice for supported membership terms. The schedule follows the Product membership term unless a longer term is split into the Organization billing cycle for in-arrears billing. The supported membership terms are:
 
 - **Weekly**
 - **Fortnightly**
@@ -74,7 +74,7 @@ When the Organization selects **Repeating Invoices**, Skedular can create a Xero
 - **Six months**
 - **Yearly**
 
-If a cadence cannot be represented as a Xero repeating schedule, Skedular uses a standard Xero invoice instead. When a Subscription ends, its active repeating invoice is stopped. Existing repeating exports are not silently rewritten when billing settings change; Skedular keeps the existing export stable and requires an explicit transition where needed.
+If a membership term cannot be represented as a Xero repeating schedule, Skedular uses a standard Xero invoice instead. When a Subscription ends, its active repeating invoice is stopped. Existing repeating exports are not silently rewritten when billing settings change; Skedular keeps the existing export stable and requires an explicit transition where needed.
 
 ## Customer and Xero Contacts
 
@@ -96,7 +96,7 @@ The Xero section shows whether the connection is active, the selected tenant, th
 
 ## What Xero does not control
 
-Xero does not determine Product pricing, Booking Availability, Subscription purchase cadence, cancellation policy, Resource allocation, or Organization membership. Skedular owns those operational and commercial rules; Xero manages the connected accounting records.
+Xero does not determine Product pricing, Booking Availability, Subscription membership term, cancellation policy, Resource allocation, or Organization membership. Skedular owns those operational and commercial rules; Xero manages the connected accounting records.
 
 ## Next step
 

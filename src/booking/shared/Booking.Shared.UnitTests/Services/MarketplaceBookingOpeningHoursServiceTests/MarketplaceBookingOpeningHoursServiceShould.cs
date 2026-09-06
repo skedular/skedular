@@ -21,7 +21,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
     {
         var emptyIds = Array.Empty<string>();
         var bookingDay = new DateOnly(2026, 3, 16);
-        var pricing = CreatePricing(ProductPricingCadence.Daily);
+        var pricing = CreatePricing(MembershipTerm.Daily);
         var productTag = new OrganizationTag
         {
             Id = "tag-1",
@@ -101,7 +101,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
     {
         var emptyIds = Array.Empty<string>();
         var bookingDay = new DateOnly(2026, 3, 16);
-        var pricing = CreatePricing(ProductPricingCadence.Daily);
+        var pricing = CreatePricing(MembershipTerm.Daily);
         var productTag = new OrganizationTag
         {
             Id = "tag-1",
@@ -206,7 +206,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
             {
                 OrganizationTags = [productTag],
             },
-            CreatePricing(ProductPricingCadence.Daily),
+            CreatePricing(MembershipTerm.Daily),
             bookingDay,
             1,
             [],
@@ -229,7 +229,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
     {
         var emptyIds = Array.Empty<string>();
         var bookingDay = new DateOnly(2026, 3, 16);
-        var pricing = CreatePricing(ProductPricingCadence.Daily, 2);
+        var pricing = CreatePricing(MembershipTerm.Daily, 2);
         var productTag = new OrganizationTag
         {
             Id = "tag-1",
@@ -378,7 +378,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
     {
         var emptyIds = Array.Empty<string>();
         var bookingDay = new DateOnly(2026, 3, 16);
-        var pricing = CreatePricing(ProductPricingCadence.Daily);
+        var pricing = CreatePricing(MembershipTerm.Daily);
         var productTag = new OrganizationTag
         {
             Id = "tag-1",
@@ -442,10 +442,10 @@ public class MarketplaceBookingOpeningHoursServiceShould
         result.Resources.Select(item => item.Id).ShouldBe(["res-2"]);
     }
 
-    private static ProductPricing CreatePricing(ProductPricingCadence purchaseCadence, int numberOfResourcesToBook = 1) =>
+    private static ProductPricing CreatePricing(MembershipTerm membershipTerm, int numberOfResourcesToBook = 1) =>
         ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = purchaseCadence,
+            MembershipTerm = membershipTerm,
             NumberOfResourcesToBook = numberOfResourcesToBook,
         };
 }

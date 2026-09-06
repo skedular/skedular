@@ -24,7 +24,7 @@ describe('location weekly price validation', () => {
     expect(hasValidWeeklyRequiredDays('WEEKLY', '2', ['MONDAY', 'TUESDAY'])).toBe(true);
   });
 
-  it('accepts a whole number for a longer purchase cadence', () => {
+  it('accepts a whole number for a longer membership term', () => {
     expect(hasValidWeeklyRequiredDays('MONTHLY', '2', ['MONDAY', 'TUESDAY'])).toBe(true);
   });
 

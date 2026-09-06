@@ -212,12 +212,12 @@ public class DecideShould
         {
             ExternalInvoiceId = "repeating-1",
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
-            RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
             RepeatingScheduleUnit = Schedule.UnitEnum.MONTHLY.ToString(),
             RepeatingSchedulePeriod = 3,
         };
         var scheduleDefinition = new XeroRepeatingInvoiceScheduleDefinition(
-            XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
             Schedule.UnitEnum.MONTHLY,
             3,
             10m);
@@ -237,12 +237,12 @@ public class DecideShould
         var existingLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
-            RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
             RepeatingScheduleUnit = Schedule.UnitEnum.MONTHLY.ToString(),
             RepeatingSchedulePeriod = 3,
         };
         var scheduleDefinition = new XeroRepeatingInvoiceScheduleDefinition(
-            XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
             Schedule.UnitEnum.MONTHLY,
             3,
             10m);
@@ -262,7 +262,7 @@ public class DecideShould
         var existingLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
-            RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
             RepeatingScheduleUnit = Schedule.UnitEnum.MONTHLY.ToString(),
             RepeatingSchedulePeriod = 3,
         };

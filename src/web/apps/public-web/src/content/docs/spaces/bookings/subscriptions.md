@@ -22,15 +22,15 @@ updatedAt: 2026-08-07
 
 ## Understand Subscriptions in Spaces
 
-A Subscription is a longer-running commercial arrangement created when a customer purchases a Product Price with a subscription purchase cadence. Its scheduled workspace use is represented by associated Booking instances. A Booking is one reservation for a defined period; a Subscription groups the commercial arrangement and its recurring reservations.
+A Subscription is a longer-running commercial arrangement created when a customer purchases a Product Price with a subscription membership term. Its scheduled workspace use is represented by associated Booking instances. A Booking is one reservation for a defined period; a Subscription groups the commercial arrangement and its recurring reservations.
 
 The customer is a registered Skedular user who purchased the Product. Purchasing does not make the Customer an Organization member. See [Customers](/docs/shared/marketplace/customers) for the full distinction.
 
 ## When a purchase creates a Subscription
 
-Spaces supports these purchase terms: **Daily**, **Weekly**, **Fortnightly**, **Monthly**, **Two months**, **Quarterly**, **Four months**, **Five months**, **Six months**, and **Yearly**. Auto-renewal is separate: disabled means one term, while enabled repeats the selected term. Booking duration comes only from the customer's selected start/end times and the offer's minimum/maximum limits.
+Spaces supports these membership terms: **Daily**, **Weekly**, **Fortnightly**, **Monthly**, **Two months**, **Quarterly**, **Four months**, **Five months**, **Six months**, and **Yearly**. Auto-renewal is separate: disabled means one term, while enabled repeats the selected term. Booking duration comes only from the customer's selected start/end times and the offer's minimum/maximum limits.
 
-The **purchase cadence** sets the length of the Subscription cycle. Recurring Booking instances are materialized for workspace use within that cycle, while the organization's billing mode and billing cycle determine when invoices are issued. These are related but separate settings. See [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing) for configuring Prices.
+The **membership term** sets the length of the Subscription cycle. Recurring Booking instances are materialized for workspace use within that cycle, while the organization's billing mode and billing cycle determine when invoices are issued. These are related but separate settings. See [Products and pricing](/docs/spaces/products-and-marketplace/products-and-pricing) for configuring Prices.
 
 ## View and manage Subscriptions
 
@@ -54,7 +54,7 @@ If the selected Price has **Available days**, only those calendar days are mater
 
 For a weekly Price that requires Customer day selection, the Customer’s selected days are the fixed schedule for that Subscription. Skedular considers only those selected UTC calendar days; it does not substitute another available weekday when a selected day has no compatible Resource. The same selected pattern is retained on auto-renewal.
 
-Booking recurrence and billing cadence are separate. The Subscription purchase cadence determines the cycle, while the recurring flow materializes day-level Booking instances for day-or-longer plans. Skedular generates the first invoice when the Subscription starts for both **Upfront** and **In arrears** billing. After that, Upfront invoices follow the configured upfront billing behavior, while In arrears invoices follow the Organization's billing cycle. The invoice due date is a separate setting that determines when each generated invoice must be paid.
+Booking recurrence and billing cadence are separate. The Subscription membership term determines the cycle, while the recurring flow materializes day-level Booking instances for day-or-longer plans. Skedular generates the first invoice when the Subscription starts for both **Upfront** and **In arrears** billing. After that, Upfront invoices follow the configured upfront billing behavior, while In arrears invoices follow the Organization's billing cycle. The invoice due date is a separate setting that determines when each generated invoice must be paid.
 
 ## Resource assignment and availability
 

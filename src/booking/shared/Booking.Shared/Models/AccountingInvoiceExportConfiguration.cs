@@ -16,5 +16,5 @@ public static class AccountingInvoiceExportConfigurationStateConstants
 public static class XeroRepeatingInvoiceScheduleSourceConstants
 {
     public const string OrganizationBillingCycle = "OrganizationBillingCycle";
-    public const string PurchaseCadence = "PurchaseCadence";
+    public const string MembershipTerm = "MembershipTerm";
 }

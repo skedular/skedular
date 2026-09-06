@@ -24,7 +24,7 @@ updatedAt: 2026-08-07
 
 ## Overview
 
-A Subscription represents recurring customer access purchased through a Skedular Spaces Product. The selected Price supplies the purchase cadence and commercial terms. The Subscription keeps the access cycle active and maintains the recurring Bookings that reserve eligible Resources. Commerce handles the payment, invoice, billing, payout, and accounting records created for that access.
+A Subscription represents recurring customer access purchased through a Skedular Spaces Product. The selected Price supplies the membership term and commercial terms. The Subscription keeps the access cycle active and maintains the recurring Bookings that reserve eligible Resources. Commerce handles the payment, invoice, billing, payout, and accounting records created for that access.
 
 <aside class="documentation-callout" aria-label="Subscription core rule"><strong>Core rule</strong><p>A Subscription manages ongoing customer access; its Bookings reserve the individual Resource periods that fulfil that access.</p></aside>
 
@@ -32,7 +32,7 @@ A Subscription represents recurring customer access purchased through a Skedular
 
 <div class="documentation-concept-grid"><div><strong>📅 Booking</strong><small>Reserves one or more eligible Resources for a specific date and time or booking period.</small></div><div><strong>🔁 Subscription</strong><small>Represents the longer-running customer access that maintains a series of related Bookings.</small></div><div><strong>🪑 Resource</strong><small>The actual desk, room, parking space, or other entity reserved by each Booking.</small></div></div>
 
-One Subscription can have many recurring Bookings. A Booking can exist without a Subscription, such as a one-time marketplace purchase or a private booking. A Subscription is created for a recurring purchase cadence and can temporarily have no future Booking instances while its next cycle is being prepared.
+One Subscription can have many recurring Bookings. A Booking can exist without a Subscription, such as a one-time marketplace purchase or a private booking. A Subscription is created for a recurring membership term and can temporarily have no future Booking instances while its next cycle is being prepared.
 
 ## Subscription relationships
 
@@ -42,11 +42,11 @@ The Subscription keeps the Product Version and Price used for its current access
 
 ## When a Subscription is created
 
-Purchase cadence is the offer or contract term: Daily, Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, or Yearly. Auto-renewal determines whether that term repeats. Event Products cannot use subscription auto-renewal.
+membership term is the offer or contract term: Daily, Weekly, Fortnightly, Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, SixMonths, or Yearly. Auto-renewal determines whether that term repeats. Event Products cannot use subscription auto-renewal.
 
-This is the canonical model: the Customer chooses a Product and Price; every supported reservation purchase term creates a Subscription; the Subscription maintains the Booking series.
+This is the canonical model: the Customer chooses a Product and Price; every supported reservation membership term creates a Subscription; the Subscription maintains the Booking series.
 
-Individual booking duration is controlled only by the minimum and maximum duration. Customers select a start and end date/time, and any duration in that range is allowed while opening-hours, availability, and conflict rules remain enforced. Organization billing cycles may split longer terms for invoices and resource-booking slices; they do not replace purchase cadence.
+Individual booking duration is controlled only by the minimum and maximum duration. Customers select a start and end date/time, and any duration in that range is allowed while opening-hours, availability, and conflict rules remain enforced. Organization billing cycles may split longer terms for invoices and resource-booking slices; they do not replace membership term.
 
 ## Booking generation and resource allocation
 
@@ -70,11 +70,11 @@ Existing Booking instances are not the Subscription itself. They retain their ow
 
 An eligible customer or authorized organization operator can modify one confirmed or payment-not-required recurring Booking occurrence before it starts. The new date must remain in the current Subscription cycle. In Skedular Spaces, the actor can also select currently available Resources eligible for the purchased Product, up to the purchased Resource quantity. Skedular validates the complete proposal before saving; when it cannot fulfill the proposal, the original occurrence stays unchanged.
 
-The modified occurrence becomes an explicit override. It does not change the Subscription's Product, Price, quantity, purchase cadence, billing cadence, renewal, selected weekly days, or any other occurrence. Subscription maintenance preserves that override instead of restoring the original schedule. An operator must provide a reason, and the customer is notified of the completed operator change. Scheduler Host does not currently offer marketplace Subscriptions.
+The modified occurrence becomes an explicit override. It does not change the Subscription's Product, Price, quantity, membership term, billing cadence, renewal, selected weekly days, or any other occurrence. Subscription maintenance preserves that override instead of restoring the original schedule. An operator must provide a reason, and the customer is notified of the completed operator change. Scheduler Host does not currently offer marketplace Subscriptions.
 
 ## Renewal
 
-Renewal is triggered when the Subscription reaches its next renewal date, not by the cadence of each individual Booking. Skedular keeps the current cycle aligned and prepares the next cycle when its renewal time arrives.
+Renewal is triggered when the Subscription reaches its next renewal date, not by the membership term of each individual Booking. Skedular keeps the current cycle aligned and prepares the next cycle when its renewal time arrives.
 
 At renewal, Skedular checks the current Product Version for a Price matching the Subscription's recurring configuration. If no compatible auto-renewable Price remains, the Subscription moves to Renewal Failed instead of silently renewing with different terms. Auto-renewal must be enabled on both the Subscription and the selected Price.
 
@@ -98,7 +98,7 @@ The Spaces Subscription experience exposes these lifecycle states:
 
 ## Billing and payments
 
-Products and Prices define accepted payment methods, billing mode, and purchase cadence. Commerce owns payment collection, invoices, billing schedules, payouts, Stripe, Xero, and bank-account workflows. Subscription status and payment status are related but separate: a Subscription can remain a commercial access record while its current billing window is pending, paid, failed, or cancelled.
+Products and Prices define accepted payment methods, billing mode, and membership term. Commerce owns payment collection, invoices, billing schedules, payouts, Stripe, Xero, and bank-account workflows. Subscription status and payment status are related but separate: a Subscription can remain a commercial access record while its current billing window is pending, paid, failed, or cancelled.
 
 ## Who Can Manage Subscriptions
 
@@ -130,7 +130,7 @@ A Customer chooses a monthly desk Product and Price. Skedular creates a Subscrip
 
 - A Subscription is recurring customer access, not a Booking.
 - One Subscription can maintain many recurring Bookings.
-- Purchase cadence determines the offer term; auto-renewal determines whether it repeats.
+- membership term determines the offer term; auto-renewal determines whether it repeats.
 - Auto-renewal requires a Price that supports subscription auto-renewal.
 - Renewal rechecks the current Product Version and matching Price.
 - Booking Groups determine which Resources can fulfil generated Bookings.
@@ -142,7 +142,7 @@ A Customer chooses a monthly desk Product and Price. Skedular creates a Subscrip
 
 ### What is a Subscription in Skedular?
 
-A Subscription is the customer access created from a supported marketplace reservation purchase term. Its recurring Bookings reserve the Resources needed to fulfill that access.
+A Subscription is the customer access created from a supported marketplace reservation membership term. Its recurring Bookings reserve the Resources needed to fulfill that access.
 
 ### Is a Subscription the same as a Booking?
 
@@ -150,11 +150,11 @@ No. A Booking reserves Resources for a specific period. A Subscription coordinat
 
 ### What creates a Subscription?
 
-All supported purchase cadences are day-or-longer offer terms. Whether the purchase is renewed is controlled by auto-renewal, not by a second cadence field.
+All supported membership terms are day-or-longer offer terms. Whether the purchase is renewed is controlled by auto-renewal, not by a second membership-term field.
 
 ### Can a Subscription contain daily Bookings?
 
-Yes. Purchase cadence controls the access term, while minimum and maximum duration control each individual reservation. A monthly offer can contain bookings of any permitted duration.
+Yes. membership term controls the access term, while minimum and maximum duration control each individual reservation. A monthly offer can contain bookings of any permitted duration.
 
 ### What happens when a Subscription renews?
 

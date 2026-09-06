@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<41807333ac6bbe200e2682f112ee27a5>>
+ * @generated SignedSource<<c017414645fa97fa9081325b29164bcf>>
  * @lightSyntaxTransform
  */
 
@@ -10,8 +10,8 @@
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
@@ -51,10 +51,10 @@ export type marketplaceProductDetailBookingCard_product$data = {
       readonly title: string | null | undefined;
     };
     readonly maxDurationMinutes: number | null | undefined;
+    readonly membershipTerm: MembershipTerm;
     readonly minDurationMinutes: number | null | undefined;
     readonly numberOfResourcesToBook: number;
     readonly price: any;
-    readonly purchaseCadence: ProductPricingCadence;
     readonly supportsSubscriptionAutoRenewal: boolean;
   }>;
   readonly type: {
@@ -232,7 +232,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "purchaseCadence",
+          "name": "membershipTerm",
           "storageKey": null
         },
         {
@@ -332,6 +332,6 @@ return {
 };
 })();
 
-(node as any).hash = "bec1a8d95d7e5c7588a6378bd2bee5af";
+(node as any).hash = "f01f8f51c24105d6640e5a2b5ef57d09";
 
 export default node;

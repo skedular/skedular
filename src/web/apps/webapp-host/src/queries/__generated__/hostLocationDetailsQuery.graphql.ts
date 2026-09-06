@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b099fbdd27e50b94bcf6b0bd7348cec7>>
+ * @generated SignedSource<<220fead2237c1cc7e2e00692d7378bcb>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type MembershipTerm = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "MONTHLY" | "NOT_SET" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type hostLocationDetailsQuery$variables = {
   locationId: string;
 };
@@ -44,8 +44,8 @@ export type hostLocationDetailsQuery$data = {
         readonly title: string | null | undefined;
       };
       readonly pricingOptions: ReadonlyArray<{
+        readonly membershipTerm: MembershipTerm;
         readonly price: any;
-        readonly purchaseCadence: ProductPricingCadence;
       }>;
     }>;
     readonly timezone: string | null | undefined;
@@ -250,7 +250,7 @@ v12 = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "purchaseCadence",
+          "name": "membershipTerm",
           "storageKey": null
         }
       ],
@@ -377,16 +377,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e486fc897c076fd4f1dc7aafb2fee5a3",
+    "cacheID": "693028797ac33f69437209c4fa12b7db",
     "id": null,
     "metadata": {},
     "name": "hostLocationDetailsQuery",
     "operationKind": "query",
-    "text": "query hostLocationDetailsQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    id\n    name\n    timezone\n    type {\n      name\n    }\n    organization {\n      customDomain\n      id\n    }\n    physicalAddress {\n      multilinesFormattedAddress\n      latitude\n      longitude\n      id\n    }\n    extraMetadata {\n      peopleCapacity {\n        from\n        to\n      }\n      contactDetails {\n        contactEmails\n        contactPhones\n      }\n    }\n    products {\n      id\n      inactive\n      listingMetadata {\n        title\n      }\n      pricingOptions {\n        price\n        purchaseCadence\n      }\n      currency {\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query hostLocationDetailsQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    id\n    name\n    timezone\n    type {\n      name\n    }\n    organization {\n      customDomain\n      id\n    }\n    physicalAddress {\n      multilinesFormattedAddress\n      latitude\n      longitude\n      id\n    }\n    extraMetadata {\n      peopleCapacity {\n        from\n        to\n      }\n      contactDetails {\n        contactEmails\n        contactPhones\n      }\n    }\n    products {\n      id\n      inactive\n      listingMetadata {\n        title\n      }\n      pricingOptions {\n        price\n        membershipTerm\n      }\n      currency {\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7e4992acd6389ba4ff2438c9ddfc2780";
+(node as any).hash = "26467224e5ff4d22c2a49039d4f7fb9f";
 
 export default node;

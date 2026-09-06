@@ -1,4 +1,4 @@
-# Implementation Plan: Marketplace Pricing Cadence Simplification
+# Implementation Plan: Marketplace pricing membership term Simplification
 
 **Branch**: `047-marketplace-pricing-cadence` | **Date**: 2026-08-31 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `/specs/047-marketplace-pricing-cadence/spec.md`
@@ -7,7 +7,7 @@
 
 ## Summary
 
-Remove `BookingCadence` and all sub-day/one-time `ProductPricingCadence` values from the shared pricing model and every persisted, serialized, generated, projected, workflow, API, frontend, and test surface. Retain `PurchaseCadence` as the offer term, use auto-renewal to determine repetition, validate booking duration solely from the selected date-time interval against min/max limits, and represent credit entitlements as cadence-free. Existing production data requires no legacy conversion because no production pricing uses removed terms.
+Remove `BookingCadence` and all sub-day/one-time `MembershipTerm` values from the shared pricing model and every persisted, serialized, generated, projected, workflow, API, frontend, and test surface. Retain `MembershipTerm` as the offer term, use auto-renewal to determine repetition, validate booking duration solely from the selected date-time interval against min/max limits, and represent credit entitlements as cadence-free. Existing production data requires no legacy conversion because no production pricing uses removed terms.
 
 ## Technical Context
 
@@ -46,7 +46,7 @@ Answer each gate. If a gate fails, resolve the issue before proceeding.
       accurate when no documentation update is needed. For every mutation, document the Relay store-update
       strategy: return the rendered fields and stable ID in the payload; use a declarative connection update or
       targeted refetch for affected lists/counts; never use `window.location.reload()` after mutation success.
-- [x] **V. Pattern Consistency** — No new architectural pattern. The change consolidates existing pricing-term semantics into `PurchaseCadence`, reuses existing billing-cycle slicing, existing duration bounds, existing entitlement lifecycle, and existing generated-contract workflows.
+- [x] **V. Pattern Consistency** — No new architectural pattern. The change consolidates existing pricing-term semantics into `MembershipTerm`, reuses existing billing-cycle slicing, existing duration bounds, existing entitlement lifecycle, and existing generated-contract workflows.
 - [x] **VI. Logging** — Plan structured logs for pricing validation, renewal/no-renewal decisions, duration acceptance/rejection, legacy/unknown cadence failures, entitlement exclusion, and migration/recovery outcomes with correlation context and no sensitive data.
 
 ## Project Structure
@@ -78,7 +78,7 @@ api-definitions/
 └── graphql/skedular/v1/schema.graphql        # regenerated
 src/shared/Api.Shared.Services/Models/
 ├── ProductPricing.cs
-└── ProductPricingCadence.cs
+└── MembershipTerm.cs
 src/marketplace/
 ├── shared/Marketplace.Shared/Mappers/EventMapper.cs
 ├── shared/Marketplace.Shared/Database/       # pricing persistence/migrations

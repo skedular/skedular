@@ -12,13 +12,13 @@ export { default as OrganizationPaymentMethodSetupForm } from './organization-pa
 export { default as OrganizationSingleChoiceMemberRole } from './organization-single-choice-member-role';
 export { default as OrganizationTermsOfUse } from './organization-terms-of-use';
 export { default as SingleChoiceCurrency } from './single-choice-currency';
+export { default as SingleChoiceMembershipTerm } from './single-choice-membership-term';
 export { default as SingleChoiceOrganizationBillingCycle } from './single-choice-organization-billing-cycle';
 export { default as SingleChoiceOrganizationStripeConnectAccount } from './single-choice-organization-stripe-connect-account';
 export { default as SingleChoiceOrganizationType } from './single-choice-organization-type';
 export { default as SingleChoiceOrganizationXeroBillingMode } from './single-choice-organization-xero-billing-mode';
 export { default as SingleChoicePaymentMethodType } from './single-choice-payment-method-type';
 export { default as SingleChoiceProductPricingBillingMode } from './single-choice-product-pricing-billing-mode';
-export { default as SingleChoiceProductPricingCadence } from './single-choice-product-pricing-cadence';
 export { default as SingleChoiceProductPricingCancellationType } from './single-choice-product-pricing-cancellation-type';
 export { default as SingleChoiceProductType } from './single-choice-product-type';
 export { default as SingleChoiceResourceType } from './single-choice-resource-type';

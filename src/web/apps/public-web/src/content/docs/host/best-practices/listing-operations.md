@@ -27,7 +27,7 @@ Opening Hours define when new Bookings can normally be made, while existing Book
 
 ## Keep pricing simple and understandable
 
-Use clear renter-facing labels and pricing options that represent real choices. Keep each Cadence and Price easy to compare, apply the intended tax treatment, and choose cancellation policies deliberately. Price changes affect future Bookings; they do not rewrite the amount already agreed for an existing Booking. See [Pricing and availability](/docs/host/pricing-and-availability).
+Use clear renter-facing labels and pricing options that represent real choices. Keep each membership term and Price easy to compare, apply the intended tax treatment, and choose cancellation policies deliberately. Price changes affect future Bookings; they do not rewrite the amount already agreed for an existing Booking. See [Pricing and availability](/docs/host/pricing-and-availability).
 
 ## Set cancellation terms intentionally
 

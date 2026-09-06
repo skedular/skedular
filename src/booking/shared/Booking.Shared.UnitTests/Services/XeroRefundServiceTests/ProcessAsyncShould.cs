@@ -1099,7 +1099,7 @@ public class ProcessAsyncShould
                 Id = "subscription-marketplace-booking",
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
-                    PurchaseCadence = ProductPricingCadence.Monthly,
+                    MembershipTerm = MembershipTerm.Monthly,
                 },
                 ProductVersion = new ProductVersion
                 {
@@ -1128,7 +1128,7 @@ public class ProcessAsyncShould
                         ProductPricing =
                             ProductPricing.Empty("pricing-recurring-1") with
                             {
-                                PurchaseCadence = ProductPricingCadence.Daily,
+                                MembershipTerm = MembershipTerm.Daily,
                             },
                         ProductVersion = new ProductVersion
                         {
@@ -1155,7 +1155,7 @@ public class ProcessAsyncShould
                         ProductPricing =
                             ProductPricing.Empty("pricing-recurring-2") with
                             {
-                                PurchaseCadence = ProductPricingCadence.Daily,
+                                MembershipTerm = MembershipTerm.Daily,
                             },
                         ProductVersion = new ProductVersion
                         {

@@ -69,8 +69,8 @@ It also references the external systems that the booking domain coordinates with
 Recurring Xero note:
 
 - recurring marketplace billing always emits the first concrete invoice immediately
-- Xero repeating templates are only used for later cycles when auto-renew is enabled or when the purchase cadence must
-  be split by the organization billing cycle
+- Xero repeating templates are only used for later cycles when auto-renew is enabled or when the membership term must be
+  split by the organization billing cycle
 - when a repeating template exists, it starts from the next billing boundary rather than the first billed cycle
 
 ## System Context
@@ -405,7 +405,7 @@ sequenceDiagram
 Important behavior:
 
 - the workflow wakes daily, not continuously
-- renewal is driven by `NextRenewalAt` and the product pricing cadence
+- renewal is driven by `NextRenewalAt` and the product membership term
 - the workflow creates a new recurring cycle only when the subscription is still eligible to continue
 - if matching pricing/product configuration can no longer be found, renewal fails instead of silently mutating to
   another product
@@ -482,7 +482,7 @@ The recurring billing schedule is provider-agnostic inside Booking.Shared.
 The booking domain first decides:
 
 - what cadence invoices should be emitted on
-- whether a longer purchase cadence should be split by the organization billing cycle
+- whether a longer membership term should be split by the organization billing cycle
 - what amount each installment should carry
 
 That decision is owned by:
@@ -670,7 +670,7 @@ flowchart LR
 - Subscription resource reconciliation is daily, not fully reactive.
 - Overridden recurring instances are intentionally excluded from automatic repair/removal.
 - Local booking/subscription state is the source of truth; external accounting providers are downstream integrations.
-- Xero repeating templates are only used for supported recurring shapes; not every pricing cadence maps cleanly.
+- Xero repeating templates are only used for supported recurring shapes; not every membership term maps cleanly.
 - Already-issued invoices are not retracted when a booking or subscription is cancelled.
 
 ## Reading Guide

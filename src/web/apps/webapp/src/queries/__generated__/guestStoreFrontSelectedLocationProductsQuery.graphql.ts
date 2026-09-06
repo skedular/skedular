@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bb5f4f42da8472fea8444ac5b7777d91>>
+ * @generated SignedSource<<eee9cb0a162d6ff1fd5ba8de95401e6c>>
  * @lightSyntaxTransform
  */
 
@@ -171,7 +171,7 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "purchaseCadence",
+                    "name": "membershipTerm",
                     "storageKey": null
                   },
                   {
@@ -256,12 +256,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "286327ee577b6f5e4a590b4f0eab1e4d",
+    "cacheID": "73786741d736f7a32a23ec6bab7fb4b9",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontSelectedLocationProductsQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontSelectedLocationProductsQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    products {\n      id\n      pricingOptions {\n        index\n      }\n      ...marketplaceProductCard_product\n    }\n    id\n  }\n}\n\nfragment marketplaceProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    availableDays\n  }\n}\n"
+    "text": "query guestStoreFrontSelectedLocationProductsQuery(\n  $locationId: String!\n) {\n  location(id: $locationId) {\n    products {\n      id\n      pricingOptions {\n        index\n      }\n      ...marketplaceProductCard_product\n    }\n    id\n  }\n}\n\nfragment marketplaceProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    membershipTerm\n    price\n    isTaxInclusive\n    availableDays\n  }\n}\n"
   }
 };
 })();

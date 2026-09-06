@@ -9,6 +9,7 @@ export type HostListingCoordinatorState = {
     about?: string;
     price?: number;
     cadence?: string;
+    membershipTerm?: string;
     cancellationPolicyType?: string;
     imageUrls?: string[];
     minDurationMinutes?: number;
