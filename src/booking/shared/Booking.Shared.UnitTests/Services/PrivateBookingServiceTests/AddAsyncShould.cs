@@ -75,7 +75,7 @@ public class AddAsyncShould
         };
 
         A.CallTo(() => repositoryFactory.CustomerRepository.GetByIdsAsync(
-                A<IReadOnlyList<string>>._, true, A<CancellationToken>._))
+                A<IReadOnlyList<string>>._, true, cancellationToken))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Customer>>([
                 new Database.Entities.Customer
                 {
@@ -91,7 +91,7 @@ public class AddAsyncShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 Array.Empty<string>(),
-                A<CancellationToken>._))
+                cancellationToken))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Resource>>([
                 new Database.Entities.Resource
                 {
@@ -105,12 +105,12 @@ public class AddAsyncShould
                 Id = "booking-1",
             });
         A.CallTo(() => spacesBookingQuotaService.TryReserveBookingInstancesAsync(
-                "org-1", A<IReadOnlyList<DateTimeOffset>>._, A<CancellationToken>._))
+                "org-1", A<IReadOnlyList<DateTimeOffset>>._, cancellationToken))
             .Returns(Task.FromResult(new SpacesQuotaDecision(
                 false, SpacesQuotaReasonCode.FreeTierLimitExceeded, 1, 100, 100, 1, 0, 0,
                 new DateTimeOffset(2026, 6, 1, 0, 0, 0, TimeSpan.Zero),
                 new DateTimeOffset(2026, 7, 1, 0, 0, 0, TimeSpan.Zero))));
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, A<CancellationToken>._))
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken))
             .Returns(Task.FromResult(dbContextTransaction));
         A.CallTo(() => entityMapper.MapTo(A<Database.Entities.Booking>._))
             .Returns(booking);
@@ -183,7 +183,7 @@ public class AddAsyncShould
         };
 
         A.CallTo(() => repositoryFactory.CustomerRepository.GetByIdsAsync(
-                A<IReadOnlyList<string>>._, true, A<CancellationToken>._))
+                A<IReadOnlyList<string>>._, true, cancellationToken))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Customer>>([
                 new Database.Entities.Customer
                 {
@@ -199,7 +199,7 @@ public class AddAsyncShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 Array.Empty<string>(),
-                A<CancellationToken>._))
+                cancellationToken))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Resource>>([
                 new Database.Entities.Resource
                 {
@@ -213,12 +213,12 @@ public class AddAsyncShould
                 Id = "booking-1",
             });
         A.CallTo(() => spacesBookingQuotaService.TryReserveBookingInstancesAsync(
-                "org-1", A<IReadOnlyList<DateTimeOffset>>._, A<CancellationToken>._))
+                "org-1", A<IReadOnlyList<DateTimeOffset>>._, cancellationToken))
             .Returns(Task.FromResult(new SpacesQuotaDecision(
                 true, SpacesQuotaReasonCode.WithinQuota, 1, 50, 100, 1, 0, 50,
                 new DateTimeOffset(2026, 6, 1, 0, 0, 0, TimeSpan.Zero),
                 new DateTimeOffset(2026, 7, 1, 0, 0, 0, TimeSpan.Zero))));
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, A<CancellationToken>._))
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken))
             .Returns(Task.FromResult(dbContextTransaction));
         A.CallTo(() => entityMapper.MapTo(A<Database.Entities.Booking>._))
             .Returns(booking);
@@ -288,7 +288,7 @@ public class AddAsyncShould
         };
 
         A.CallTo(() => repositoryFactory.CustomerRepository.GetByIdsAsync(
-                A<IReadOnlyList<string>>._, true, A<CancellationToken>._))
+                A<IReadOnlyList<string>>._, true, cancellationToken))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Customer>>([
                 new Database.Entities.Customer
                 {
@@ -304,7 +304,7 @@ public class AddAsyncShould
                 A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._,
                 Array.Empty<string>(),
-                A<CancellationToken>._))
+                cancellationToken))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Resource>>([
                 new Database.Entities.Resource
                 {
@@ -317,7 +317,7 @@ public class AddAsyncShould
             {
                 Id = "booking-1",
             });
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, A<CancellationToken>._))
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken))
             .Returns(Task.FromResult(dbContextTransaction));
         A.CallTo(() => entityMapper.MapTo(A<Database.Entities.Booking>._))
             .Returns(booking);

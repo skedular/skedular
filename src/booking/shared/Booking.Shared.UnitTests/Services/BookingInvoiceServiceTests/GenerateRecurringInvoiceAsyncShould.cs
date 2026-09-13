@@ -129,8 +129,8 @@ public class GenerateRecurringInvoiceAsyncShould
 
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
-        A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, A<CancellationToken>._)).Returns(recurringBooking);
-        A.CallTo(() => productVersionRepository.GetByIdAsync(productVersionId, A<CancellationToken>._)).Returns(productVersion);
+        A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, cancellationToken)).Returns(recurringBooking);
+        A.CallTo(() => productVersionRepository.GetByIdAsync(productVersionId, cancellationToken)).Returns(productVersion);
         A.CallTo(() => recurringInvoiceBillingScheduleService.GetSchedule(
                 recurringBooking,
                 recurringBooking.MarketplaceBooking,

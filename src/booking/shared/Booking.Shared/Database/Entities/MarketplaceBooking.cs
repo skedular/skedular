@@ -27,6 +27,8 @@ public class MarketplaceBooking : EntityBase
     public string? InvoiceUrl { get; set; }
     public string? InvoiceNumber { get; set; }
     public string? CheckoutReturnUrl { get; set; }
+    public string? StripeInvoiceId { get; set; }
+    public string? StripePaymentIntentId { get; set; }
     public ICollection<string> InvoiceEmailList { get; set; } = [];
     public string BillingMode { get; set; }
 
@@ -78,6 +80,8 @@ public class MarketplaceBookingConfiguration : IEntityTypeConfiguration<Marketpl
         builder.Property(item => item.InvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.InvoiceNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
         builder.Property(item => item.CheckoutReturnUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.StripeInvoiceId).HasMaxLength(Constants.MaxExternalInvoiceIdLength);
+        builder.Property(item => item.StripePaymentIntentId).HasMaxLength(Constants.MaxRefundStripePaymentIntentIdLength);
         builder.Property(item => item.BillingMode).HasMaxLength(Constants.MaxProductPricingBillingModeLength);
         builder.Property(item => item.ProductPricing).HasColumnType("jsonb");
         builder.Property(item => item.InvoiceEmailList).HasColumnType("jsonb");

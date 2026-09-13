@@ -27,7 +27,7 @@ export default defineConfig({
     include: ['src/**/*.test.{ts,tsx}'],
     server: {
       deps: {
-        inline: true,
+        inline: [/^@mui\//, /^@emotion\//, /^react-transition-group/],
       },
     },
   },

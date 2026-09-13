@@ -3,7 +3,6 @@ using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace Booking.Shared.Repositories;
 
@@ -19,14 +18,14 @@ public static class ProductVersionExtensions
 {
     extension(IQueryable<ProductVersion> originalQuery)
     {
-        public IIncludableQueryable<ProductVersion, StripePrice?> AddDependentObjects() =>
+        public IQueryable<ProductVersion> AddDependentObjects() =>
             originalQuery
                 .AsSingleQuery()
                 .Include(query => query.Product)
                 .ThenInclude(query => query.Organization)
                 .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
                 .Include(query => query.StripeProducts)
-                .ThenInclude(query => query.StripePrice);
+                .ThenInclude(query => query.StripePrices);
     }
 }
 

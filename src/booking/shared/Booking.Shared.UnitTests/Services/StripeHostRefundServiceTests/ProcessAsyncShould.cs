@@ -247,9 +247,9 @@ public class ProcessAsyncShould
     }
 
     [Theory]
-    [InlineAutoFakeItEasyData(new Type[] { }, "pending", RefundStatus.ProviderPending)]
-    [InlineAutoFakeItEasyData(new Type[] { }, "succeeded", RefundStatus.Completed)]
-    [InlineAutoFakeItEasyData(new Type[] { }, "failed", RefundStatus.Failed)]
+    [InlineAutoFakeItEasyData([], "pending", RefundStatus.ProviderPending)]
+    [InlineAutoFakeItEasyData([], "succeeded", RefundStatus.Completed)]
+    [InlineAutoFakeItEasyData([], "failed", RefundStatus.Failed)]
     public async Task Reverse_The_Application_Fee_And_Map_Stripe_Status(
         string stripeStatus,
         string expectedStatus,

@@ -40,8 +40,8 @@ public class ValidateShould
     }
 
     [Theory]
-    [InlineAutoFakeItEasyData(new Type[] { }, 0)]
-    [InlineAutoFakeItEasyData(new Type[] { }, 1000)]
+    [InlineAutoFakeItEasyData([], 0)]
+    [InlineAutoFakeItEasyData([], 1000)]
     public void Reject_Out_Of_Range_Selected_Invoice_Due_Days(int invoiceDueInDays, OrganizationPatchMapper sut)
     {
         var request = new OrganizationPatchRequest(

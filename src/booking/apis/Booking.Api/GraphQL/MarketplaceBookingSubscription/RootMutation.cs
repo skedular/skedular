@@ -1,16 +1,72 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Booking;
 using Booking.Api.Mappers;
-using Booking.Api.Services;
 using Booking.Shared.Models;
+using Booking.Shared.Services;
 using HotChocolate;
 using HotChocolate.Types;
+using IMarketplaceBookingSubscriptionService = Booking.Api.Services.IMarketplaceBookingSubscriptionService;
 
 namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 
 [MutationType]
 public class RootMutation(IGraphQlMapper graphQlMapper)
 {
+    [UseResolverScope]
+    public async Task<MarketplaceBookingSubscriptionPayload> CreateMarketplaceBookingSubscriptionAutomaticPaymentRecoveryAsync(
+        CreateAutomaticPaymentRecoveryInput input,
+        [Service]
+        IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+        [Service]
+        IMarketplaceAutomaticPaymentStatusService automaticPaymentStatusService,
+        [Service]
+        IMarketplaceStripeBillingPortalService billingPortalService,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var subscription = await marketplaceBookingSubscriptionService.GetByIdAsync(input.SubscriptionId, cancellationToken);
+            if (!subscription.AutoRenew || subscription.MarketplaceBooking.PaymentMethod != PaymentMethod.Card)
+            {
+                return new MarketplaceBookingSubscriptionPayload
+                {
+                    ClientMutationId = input.ClientMutationId,
+                    Error = "Automatic payment recovery is only available for card-backed auto-renewing purchases.",
+                };
+            }
+
+            var automaticPaymentStatus = await automaticPaymentStatusService.GetForSubscriptionAsync(input.SubscriptionId, cancellationToken);
+            if (automaticPaymentStatus?.Status is not (MarketplaceAutomaticPaymentStatusType.PastDue
+                or MarketplaceAutomaticPaymentStatusType.ActionRequired or MarketplaceAutomaticPaymentStatusType.FinalizationFailed
+                or MarketplaceAutomaticPaymentStatusType.Incomplete))
+            {
+                return new MarketplaceBookingSubscriptionPayload
+                {
+                    ClientMutationId = input.ClientMutationId,
+                    Error = "Automatic payment recovery is not available for this subscription.",
+                };
+            }
+
+            return new MarketplaceBookingSubscriptionPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                AutomaticPaymentRecoveryUrl = await billingPortalService.CreateForSubscriptionAsync(
+                    input.SubscriptionId,
+                    input.ReturnUrl,
+                    cancellationToken),
+            };
+        }
+        catch (InvalidOperationException exception)
+        {
+            return new MarketplaceBookingSubscriptionPayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                Error = exception.Message,
+            };
+        }
+    }
+
     [UseResolverScope]
     public async Task<MarketplaceBookingSubscriptionPayload> AddMarketplaceBookingSubscriptionAsync(
         AddMarketplaceBookingSubscriptionInput input,
@@ -81,12 +137,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             return new MarketplaceBookingSubscriptionPayload
             {
                 ClientMutationId = input.ClientMutationId,
-                CancellationError =
-                    new CancellationErrorDetails
-                    {
-                        Code = CancellationErrorCode.OverrideReasonRequired,
-                        Message = exception.Message,
-                    },
+                CancellationError = new CancellationErrorDetails
+                {
+                    Code = CancellationErrorCode.OverrideReasonRequired,
+                    Message = exception.Message,
+                },
             };
         }
         catch (UnauthorizedAccessException exception)
@@ -106,12 +161,11 @@ public class RootMutation(IGraphQlMapper graphQlMapper)
             return new MarketplaceBookingSubscriptionPayload
             {
                 ClientMutationId = input.ClientMutationId,
-                CancellationError =
-                    new CancellationErrorDetails
-                    {
-                        Code = CancellationErrorCode.InvalidTerminalState,
-                        Message = exception.Message,
-                    },
+                CancellationError = new CancellationErrorDetails
+                {
+                    Code = CancellationErrorCode.InvalidTerminalState,
+                    Message = exception.Message,
+                },
             };
         }
     }

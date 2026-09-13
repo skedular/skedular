@@ -4,6 +4,7 @@ using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Grpc.Skedular.Booking.Graphql.V1;
 using Booking.Processors.Mappers;
 using Booking.Processors.Services;
+using Booking.Processors.Subscribers;
 using Enterprise.Shared.GraphQL;
 
 namespace Booking.Processors;
@@ -17,6 +18,7 @@ public static class Extensions
 
         public IServiceCollection AddServices() =>
             services
+                .AddScoped<IBookingStripeWebhookProcessor, BookingStripeWebhookProcessor>()
                 .AddSingleton<IGraphQlTopicEventSender, GraphQlTopicEventSender>();
 
         public IServiceCollection AddCrossDomainClients(IConfiguration configuration)

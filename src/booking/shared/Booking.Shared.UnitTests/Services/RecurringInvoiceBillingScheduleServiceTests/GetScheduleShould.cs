@@ -10,6 +10,46 @@ public class GetScheduleShould
 {
     [Theory]
     [AutoFakeItEasyData]
+    public void Return_Organization_Cycle_Installment_For_Stripe_Arrears_Subscription(
+        RecurringInvoiceBillingScheduleService sut,
+        string pricingId)
+    {
+        var pricing = ProductPricing.Empty(pricingId) with
+        {
+            MembershipTerm = MembershipTerm.SixMonths,
+            Price = 600m,
+            BillingMode = ProductPricingBillingMode.InArrears,
+        };
+
+        var result = sut.GetSchedule(pricing, 600m, OrganizationBillingCycle.Monthly);
+
+        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
+        result.MembershipTerm.ShouldBe(MembershipTerm.Monthly);
+        result.InvoiceAmount.ShouldBe(100m);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Keep_Full_Term_Amount_When_Stripe_Arrears_Term_Does_Not_Exceed_Billing_Cycle(
+        RecurringInvoiceBillingScheduleService sut,
+        string pricingId)
+    {
+        var pricing = ProductPricing.Empty(pricingId) with
+        {
+            MembershipTerm = MembershipTerm.Monthly,
+            Price = 100m,
+            BillingMode = ProductPricingBillingMode.InArrears,
+        };
+
+        var result = sut.GetSchedule(pricing, 100m, OrganizationBillingCycle.Monthly);
+
+        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm);
+        result.MembershipTerm.ShouldBe(MembershipTerm.Monthly);
+        result.InvoiceAmount.ShouldBe(100m);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public void Return_Purchase_Cadence_When_It_Is_Shorter_Than_Organization_Billing_Cycle(
         RecurringInvoiceBillingScheduleService sut,
         string pricingId)

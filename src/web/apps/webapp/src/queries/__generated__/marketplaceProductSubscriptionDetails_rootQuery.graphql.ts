@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c8e2ac49d6c9f68e27f143a9f374c06b>>
+ * @generated SignedSource<<37ad1561607863aed83e058f5377ac88>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
+export type MarketplaceAutomaticPaymentStatusType = "ACTION_REQUIRED" | "ACTIVE" | "CANCELED" | "DISCONNECTED" | "FAILED" | "FINALIZATION_FAILED" | "INCOMPLETE" | "PAST_DUE" | "PAUSED" | "PENDING" | "UNKNOWN" | "%future added value";
 export type MarketplaceBookingFailureAccountingCleanupStatus = "NOT_REQUIRED" | "PENDING" | "TRANSITION_REQUIRED" | "UNKNOWN" | "%future added value";
 export type MarketplaceBookingFailureResourceReleaseStatus = "PENDING" | "RELEASED" | "UNKNOWN" | "%future added value";
 export type MarketplaceBookingSubscriptionCancellationMode = "AT_PERIOD_END" | "IMMEDIATE" | "%future added value";
@@ -31,6 +32,12 @@ export type marketplaceProductSubscriptionDetails_rootQuery$data = {
       readonly invoiceUrl: string;
     }>;
     readonly autoRenew: boolean;
+    readonly automaticPaymentStatus: {
+      readonly cancelAtPeriodEnd: boolean;
+      readonly configured: boolean;
+      readonly currentPeriodEndsAt: any | null | undefined;
+      readonly status: MarketplaceAutomaticPaymentStatusType;
+    } | null | undefined;
     readonly cancelAtPeriodEnd: boolean;
     readonly cancellationAvailability: {
       readonly atPeriodEnd: {
@@ -400,10 +407,17 @@ v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "invoiceUrl",
+  "name": "cancelAtPeriodEnd",
   "storageKey": null
 },
 v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "invoiceUrl",
+  "storageKey": null
+},
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "MarketplaceBookingDetails",
@@ -419,7 +433,7 @@ v13 = {
       "name": "quantity",
       "storageKey": null
     },
-    (v12/*:: as any*/),
+    (v13/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -573,21 +587,21 @@ v13 = {
   ],
   "storageKey": null
 },
-v14 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "lastError",
   "storageKey": null
 },
-v15 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "externalRefundNumber",
   "storageKey": null
 },
-v16 = [
+v17 = [
   {
     "alias": null,
     "args": null,
@@ -800,11 +814,38 @@ v16 = [
         "name": "autoRenew",
         "storageKey": null
       },
+      (v12/*:: as any*/),
       {
         "alias": null,
         "args": null,
-        "kind": "ScalarField",
-        "name": "cancelAtPeriodEnd",
+        "concreteType": "MarketplaceAutomaticPaymentStatusDetails",
+        "kind": "LinkedField",
+        "name": "automaticPaymentStatus",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "configured",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "status",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "currentPeriodEndsAt",
+            "storageKey": null
+          },
+          (v12/*:: as any*/)
+        ],
         "storageKey": null
       },
       {
@@ -814,7 +855,7 @@ v16 = [
         "name": "weeklySelectedDays",
         "storageKey": null
       },
-      (v13/*:: as any*/),
+      (v14/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -861,8 +902,8 @@ v16 = [
           (v5/*:: as any*/),
           (v6/*:: as any*/),
           (v9/*:: as any*/),
-          (v14/*:: as any*/),
           (v15/*:: as any*/),
+          (v16/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -893,8 +934,8 @@ v16 = [
               (v4/*:: as any*/),
               (v6/*:: as any*/),
               (v9/*:: as any*/),
-              (v14/*:: as any*/),
               (v15/*:: as any*/),
+              (v16/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -990,7 +1031,7 @@ v16 = [
             "storageKey": null
           },
           (v11/*:: as any*/),
-          (v13/*:: as any*/)
+          (v14/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -1009,7 +1050,7 @@ v16 = [
             "name": "invoiceNumber",
             "storageKey": null
           },
-          (v12/*:: as any*/),
+          (v13/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -1037,7 +1078,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductSubscriptionDetails_rootQuery",
-    "selections": (v16/*:: as any*/),
+    "selections": (v17/*:: as any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -1046,19 +1087,19 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "marketplaceProductSubscriptionDetails_rootQuery",
-    "selections": (v16/*:: as any*/)
+    "selections": (v17/*:: as any*/)
   },
   "params": {
-    "cacheID": "5f816661c9802773904c97d51ac469a0",
+    "cacheID": "afa29e5a63bc58e972e4ad908d82e43f",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscriptionDetails_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductSubscriptionDetails_rootQuery(\n  $subscriptionId: String!\n) {\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  marketplaceBookingSubscriptionRefundPreview(subscriptionId: $subscriptionId) {\n    refundAmount\n    baseAmount\n    refundPercentage\n    currencyToDisplay\n    isRefundable\n  }\n  marketplaceBookingSubscription(id: $subscriptionId) {\n    id\n    history(first: 100) {\n      edges {\n        node {\n          id\n          type\n          name\n          occurredAt\n          cancellationRequestedAt\n          cancellationEffectiveAt\n          paymentStatus\n          refundStatus\n          creditQuantity\n          remainingCreditQuantity\n          reason\n        }\n      }\n    }\n    cancellationPolicyOverridden\n    cancellationOverrideReason\n    cancellationAvailability {\n      immediate {\n        canCancel\n        requiresReason\n        isPolicyOverride\n        unavailableReason\n      }\n      atPeriodEnd {\n        canCancel\n        requiresReason\n        isPolicyOverride\n        unavailableReason\n      }\n    }\n    failure {\n      id\n      category {\n        type\n        name\n      }\n      customerAction {\n        type\n        name\n      }\n      resourceReleaseStatus {\n        type\n        name\n      }\n      accountingCleanupStatus {\n        type\n        name\n      }\n    }\n    startedAt\n    nextRenewalAt\n    autoRenew\n    cancelAtPeriodEnd\n    weeklySelectedDays\n    marketplaceBooking {\n      id\n      quantity\n      invoiceUrl\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        id\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        organization {\n          customerFacingTermsAndConditionsUrl\n        }\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    refund {\n      currency {\n        type\n        name\n      }\n      status {\n        type\n        name\n      }\n      requestedAt\n      lastProcessedAt\n      refundAmount\n      refundPercentage\n      currencyToDisplay\n      reason\n      lastError\n      externalRefundNumber\n      requestedByCustomerName\n      events {\n        id\n        eventType {\n          type\n          name\n        }\n        occurredAt\n        refundAmount\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        actorName\n      }\n    }\n    status {\n      type\n      name\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    recurringBookings {\n      id\n      from\n      until\n      startDate\n      endDate\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        customerAction {\n          type\n          name\n        }\n        resourceReleaseStatus {\n          type\n          name\n        }\n        accountingCleanupStatus {\n          type\n          name\n        }\n      }\n      marketplaceBooking {\n        id\n        quantity\n        invoiceUrl\n        isPaymentRequired\n        paymentExpiry\n        productVersion {\n          id\n          listingMetadata {\n            title\n            subTitle\n            about\n            includedFeatures\n          }\n          featureImages {\n            original {\n              url\n            }\n          }\n          organization {\n            customerFacingTermsAndConditionsUrl\n          }\n        }\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          type\n          name\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
+    "text": "query marketplaceProductSubscriptionDetails_rootQuery(\n  $subscriptionId: String!\n) {\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  marketplaceBookingSubscriptionRefundPreview(subscriptionId: $subscriptionId) {\n    refundAmount\n    baseAmount\n    refundPercentage\n    currencyToDisplay\n    isRefundable\n  }\n  marketplaceBookingSubscription(id: $subscriptionId) {\n    id\n    history(first: 100) {\n      edges {\n        node {\n          id\n          type\n          name\n          occurredAt\n          cancellationRequestedAt\n          cancellationEffectiveAt\n          paymentStatus\n          refundStatus\n          creditQuantity\n          remainingCreditQuantity\n          reason\n        }\n      }\n    }\n    cancellationPolicyOverridden\n    cancellationOverrideReason\n    cancellationAvailability {\n      immediate {\n        canCancel\n        requiresReason\n        isPolicyOverride\n        unavailableReason\n      }\n      atPeriodEnd {\n        canCancel\n        requiresReason\n        isPolicyOverride\n        unavailableReason\n      }\n    }\n    failure {\n      id\n      category {\n        type\n        name\n      }\n      customerAction {\n        type\n        name\n      }\n      resourceReleaseStatus {\n        type\n        name\n      }\n      accountingCleanupStatus {\n        type\n        name\n      }\n    }\n    startedAt\n    nextRenewalAt\n    autoRenew\n    cancelAtPeriodEnd\n    automaticPaymentStatus {\n      configured\n      status\n      currentPeriodEndsAt\n      cancelAtPeriodEnd\n    }\n    weeklySelectedDays\n    marketplaceBooking {\n      id\n      quantity\n      invoiceUrl\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        id\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        organization {\n          customerFacingTermsAndConditionsUrl\n        }\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    refund {\n      currency {\n        type\n        name\n      }\n      status {\n        type\n        name\n      }\n      requestedAt\n      lastProcessedAt\n      refundAmount\n      refundPercentage\n      currencyToDisplay\n      reason\n      lastError\n      externalRefundNumber\n      requestedByCustomerName\n      events {\n        id\n        eventType {\n          type\n          name\n        }\n        occurredAt\n        refundAmount\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        actorName\n      }\n    }\n    status {\n      type\n      name\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    recurringBookings {\n      id\n      from\n      until\n      startDate\n      endDate\n      failure {\n        id\n        category {\n          type\n          name\n        }\n        customerAction {\n          type\n          name\n        }\n        resourceReleaseStatus {\n          type\n          name\n        }\n        accountingCleanupStatus {\n          type\n          name\n        }\n      }\n      marketplaceBooking {\n        id\n        quantity\n        invoiceUrl\n        isPaymentRequired\n        paymentExpiry\n        productVersion {\n          id\n          listingMetadata {\n            title\n            subTitle\n            about\n            includedFeatures\n          }\n          featureImages {\n            original {\n              url\n            }\n          }\n          organization {\n            customerFacingTermsAndConditionsUrl\n          }\n        }\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          type\n          name\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fe38120deef2a006c45d958de700311f";
+(node as any).hash = "6ea56ff1ff3d29d9e6ea57fb4bcac08a";
 
 export default node;

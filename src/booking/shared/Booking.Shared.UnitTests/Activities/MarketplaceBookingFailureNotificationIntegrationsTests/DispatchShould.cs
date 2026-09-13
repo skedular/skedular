@@ -39,7 +39,7 @@ public class DispatchShould
         IDbContextTransaction transaction,
         MarketplaceBookingFailureNotificationIntegrations sut)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var delivery = new MarketplaceBookingFailureDelivery
         {
             Id = "delivery-1",
@@ -60,24 +60,24 @@ public class DispatchShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureDeliveryRepository).Returns(deliveryRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureEventRepository).Returns(eventRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => failureRepository.GetByIdAsync(failure.Id, environment.CancellationTokenSource.Token)).Returns(failure);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, environment.CancellationTokenSource.Token)).Returns(transaction);
-        A.CallTo(() => notificationService.RenderAsync(failure, false, "there", environment.CancellationTokenSource.Token))
+        A.CallTo(() => failureRepository.GetByIdAsync(failure.Id, activityEnvironment.CancellationTokenSource.Token)).Returns(failure);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, activityEnvironment.CancellationTokenSource.Token)).Returns(transaction);
+        A.CallTo(() => notificationService.RenderAsync(failure, false, "there", activityEnvironment.CancellationTokenSource.Token))
             .Returns(("subject", "text", "html"));
         A.CallTo(() => emailService.SendRawEmailAsync(
                 A<string>._, A<string>._, A<string>._, A<string>._,
                 A<IReadOnlyList<string>>._, A<IReadOnlyList<string>>._,
                 A<IReadOnlyList<string>>._, A<IReadOnlyList<EmailAttachment>>._,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .ThrowsAsync(new InvalidOperationException("mail unavailable"));
 
-        await Should.ThrowAsync<ApplicationFailureException>(() => environment.RunAsync(() =>
+        await Should.ThrowAsync<ApplicationFailureException>(() => activityEnvironment.RunAsync(() =>
             sut.DispatchMarketplaceBookingFailureAsync(new DispatchMarketplaceBookingFailureNotificationsInput(failure.Id))));
 
         delivery.Status.ShouldBe(MarketplaceBookingFailureDeliveryStatusConstants.Failed);
         delivery.AttemptCount.ShouldBe(1);
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => transaction.CommitAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => transaction.CommitAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
         A.CallTo(() => eventRepository.Add(A<MarketplaceBookingFailureEvent>.That.Matches(item =>
             item.EventType == MarketplaceBookingFailureEventTypeConstants.DeliveryFailed))).MustHaveHappenedOnceExactly();
     }
@@ -103,7 +103,7 @@ public class DispatchShould
         ILogger<MarketplaceBookingFailureNotificationIntegrations> logger,
         MarketplaceBookingFailureNotificationIntegrations sut)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var delivery = new MarketplaceBookingFailureDelivery
         {
             Id = "delivery-1",
@@ -123,10 +123,10 @@ public class DispatchShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureDeliveryRepository).Returns(deliveryRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureEventRepository).Returns(eventRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => failureRepository.GetByIdAsync(failure.Id, environment.CancellationTokenSource.Token)).Returns(failure);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, environment.CancellationTokenSource.Token)).Returns(transaction);
+        A.CallTo(() => failureRepository.GetByIdAsync(failure.Id, activityEnvironment.CancellationTokenSource.Token)).Returns(failure);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, activityEnvironment.CancellationTokenSource.Token)).Returns(transaction);
 
-        await environment.RunAsync(() =>
+        await activityEnvironment.RunAsync(() =>
             sut.DispatchMarketplaceBookingFailureAsync(new DispatchMarketplaceBookingFailureNotificationsInput(failure.Id)));
 
         delivery.Status.ShouldBe(MarketplaceBookingFailureDeliveryStatusConstants.Sent);

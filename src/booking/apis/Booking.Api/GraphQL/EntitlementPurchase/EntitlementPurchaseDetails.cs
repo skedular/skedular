@@ -6,6 +6,7 @@ using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
 using Booking.Shared.Models.Entitlements;
+using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
@@ -18,6 +19,7 @@ namespace Booking.Api.GraphQL.EntitlementPurchase;
 public class EntitlementPurchaseDetails
 {
     public string Id { get; set; } = string.Empty;
+    public bool AutoRenew { get; set; }
     public string PaymentStatus { get; set; } = string.Empty;
     public string LifecycleState { get; set; } = string.Empty;
     public string PaymentMethod { get; set; } = string.Empty;
@@ -39,6 +41,15 @@ public class EntitlementPurchaseDetails
     public string? PaymentInstructions { get; set; }
     public string? PaymentAction { get; set; }
     public IReadOnlyList<string> InvoiceEmailList { get; set; } = [];
+
+    [GraphQLName("automaticPaymentStatus")]
+    public async Task<MarketplaceAutomaticPaymentStatusDetails?> GetAutomaticPaymentStatusAsync(
+        [Service]
+        IMarketplaceAutomaticPaymentStatusService automaticPaymentStatusService,
+        CancellationToken cancellationToken) =>
+        await automaticPaymentStatusService.GetForEntitlementAsync(Id, cancellationToken) is { } status
+            ? MarketplaceAutomaticPaymentStatusDetails.From(status)
+            : null;
 
     [GraphQLName("history")]
     public async Task<Connection<MarketplacePurchaseHistoryEventEdge>> GetHistoryAsync(

@@ -26,8 +26,8 @@ public class StartActivityFromContextShould
 
         A.CallTo(() => activitySource.StartActivity(
                 "something receive", ActivityKind.Consumer,
-                A<ActivityContext>.Ignored,
-                A<IEnumerable<KeyValuePair<string, object?>>>.Ignored))
+                A<ActivityContext>._,
+                A<IEnumerable<KeyValuePair<string, object?>>>._))
             .Invokes((
                     string _,
                     ActivityKind _,
@@ -64,8 +64,8 @@ public class StartActivityFromContextShould
 
         A.CallTo(() => activitySource.StartActivity(
                 "something receive", ActivityKind.Consumer,
-                A<ActivityContext>.Ignored,
-                A<IEnumerable<KeyValuePair<string, object?>>>.Ignored))
+                A<ActivityContext>._,
+                A<IEnumerable<KeyValuePair<string, object?>>>._))
             .Invokes((
                     string _,
                     ActivityKind _,

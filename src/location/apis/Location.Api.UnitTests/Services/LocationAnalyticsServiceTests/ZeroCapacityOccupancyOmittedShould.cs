@@ -15,9 +15,7 @@ public class ZeroCapacityOccupancyOmittedShould
 {
     private static LocationDbContext CreateInMemoryContext()
     {
-        var options = new DbContextOptionsBuilder<LocationDbContext>()
-            .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
-            .Options;
+        var options = new DbContextOptionsBuilder<LocationDbContext>().UseInMemoryDatabase(Guid.CreateVersion7().ToString()).Options;
         return new TestLocationDbContext(options, new CustomDbContextOptions<LocationDbContext>
         {
             IsPooled = false,
@@ -83,22 +81,20 @@ public class ZeroCapacityOccupancyOmittedShould
         A.CallTo(() => repositoryFactory.DailyResourceAvailabilitySnapshotRepository).Returns(snapshotRepository);
         A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
 
-        A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
-        A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(CustomerId);
-        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, A<CancellationToken>._)).Returns(true);
+        A.CallTo(() => locationRepository.GetByIdAsync(LocationId, cancellationToken)).Returns(location);
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(CustomerId);
+        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, cancellationToken)).Returns(true);
 
         // Repository returns both desk count recordings (one zero, one non-zero)
         A.CallTo(() => deskCountRepository.GetByLocationIdsAndDateRangeAsync(
-                A<IReadOnlyList<string>>.That.Contains(LocationId), from, until, A<CancellationToken>._))
+                A<IReadOnlyList<string>>.That.Contains(LocationId), from, until, cancellationToken))
             .Returns([deskDay1, deskDay2]);
 
         A.CallTo(() => roomCountRepository.GetByLocationIdsAndDateRangeAsync(
-                A<IReadOnlyList<string>>.That.Contains(LocationId), from, until, A<CancellationToken>._))
-            .Returns(Array.Empty<DailyRoomCountRecording>());
+                A<IReadOnlyList<string>>.That.Contains(LocationId), from, until, cancellationToken))
+            .Returns([]);
 
-        A.CallTo(() => snapshotRepository.GetByLocationIdAndDateRangeAsync(
-                LocationId, from, until, A<string?>._, A<CancellationToken>._))
-            .Returns(Array.Empty<DailyResourceAvailabilitySnapshot>());
+        A.CallTo(() => snapshotRepository.GetByLocationIdAndDateRangeAsync(LocationId, from, until, A<string?>._, cancellationToken)).Returns([]);
 
         // DailyBookingCountRecording (via DbContext) — empty for this test
         // DailyDeskBookingCountRecording — empty
@@ -142,10 +138,9 @@ public class ZeroCapacityOccupancyOmittedShould
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
-        A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
-        A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(CustomerId);
-        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, A<CancellationToken>._))
-            .Returns(false);
+        A.CallTo(() => locationRepository.GetByIdAsync(LocationId, cancellationToken)).Returns(location);
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(CustomerId);
+        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, cancellationToken)).Returns(false);
 
         var from = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero);
         var until = new DateTimeOffset(2026, 4, 7, 0, 0, 0, TimeSpan.Zero);

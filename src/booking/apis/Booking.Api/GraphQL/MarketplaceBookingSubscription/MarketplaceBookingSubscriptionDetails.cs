@@ -5,10 +5,12 @@ using Booking.Api.GraphQL.RecurringBooking;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
+using Booking.Shared.Services;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
+using IMarketplaceBookingSubscriptionService = Booking.Api.Services.IMarketplaceBookingSubscriptionService;
 
 namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 
@@ -65,6 +67,15 @@ public class MarketplaceBookingSubscriptionDetails : Node
 
     [GraphQLName("deletedByCustomerId")]
     public string? DeletedByCustomerId { get; set; }
+
+    [GraphQLName("automaticPaymentStatus")]
+    public async Task<MarketplaceAutomaticPaymentStatusDetails?> GetAutomaticPaymentStatusAsync(
+        [Service]
+        IMarketplaceAutomaticPaymentStatusService automaticPaymentStatusService,
+        CancellationToken cancellationToken) =>
+        await automaticPaymentStatusService.GetForSubscriptionAsync(Id, cancellationToken) is { } status
+            ? MarketplaceAutomaticPaymentStatusDetails.From(status)
+            : null;
 
     [GraphQLName("history")]
     public async Task<Connection<MarketplacePurchaseHistoryEventEdge>> GetHistoryAsync(

@@ -8,7 +8,6 @@ using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Microsoft.EntityFrameworkCore;
 using LocationEntity = Location.Shared.Database.Entities.Location;
-using RoomCountRecordingEntity = Location.Shared.Database.Entities.DailyRoomCountRecording;
 using ResourceAvailabilityClassificationConstants = Location.Shared.Models.ResourceAvailabilityClassificationConstants;
 
 namespace Location.Api.UnitTests.Services.LocationAnalyticsServiceTests;
@@ -18,9 +17,7 @@ public class SnapshotGroupingShould
 {
     private static LocationDbContext CreateInMemoryContext()
     {
-        var options = new DbContextOptionsBuilder<LocationDbContext>()
-            .UseInMemoryDatabase(Guid.CreateVersion7().ToString())
-            .Options;
+        var options = new DbContextOptionsBuilder<LocationDbContext>().UseInMemoryDatabase(Guid.CreateVersion7().ToString()).Options;
         return new TestLocationDbContext(options, new CustomDbContextOptions<LocationDbContext>
         {
             IsPooled = false,
@@ -127,24 +124,22 @@ public class SnapshotGroupingShould
         A.CallTo(() => repositoryFactory.DailyResourceAvailabilitySnapshotRepository).Returns(snapshotRepository);
         A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
 
-        A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
-        A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(CustomerId);
-        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, A<CancellationToken>._))
+        A.CallTo(() => locationRepository.GetByIdAsync(LocationId, cancellationToken)).Returns(location);
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(CustomerId);
+        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, cancellationToken))
             .Returns(true);
 
-        A.CallTo(() => deskCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, A<CancellationToken>._))
+        A.CallTo(() => deskCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, cancellationToken))
             .Returns([]);
 
-        A.CallTo(() => roomCountRepository.GetByLocationIdsAndDateRangeAsync(
-                A<IReadOnlyList<string>>._, from, until, A<CancellationToken>._))
-            .Returns(Array.Empty<RoomCountRecordingEntity>());
+        A.CallTo(() => roomCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, cancellationToken)).Returns([]);
 
         A.CallTo(() => snapshotRepository.GetByLocationIdsAndDateRangeAsync(
                 A<IReadOnlyList<string>>._,
                 from,
                 until,
                 A<string?>._,
-                A<CancellationToken>._))
+                cancellationToken))
             .Returns(snapshots);
 
         // Act
@@ -205,17 +200,12 @@ public class SnapshotGroupingShould
         A.CallTo(() => repositoryFactory.DailyResourceAvailabilitySnapshotRepository).Returns(snapshotRepository);
         A.CallTo(() => repositoryFactory.DbContext).Returns(dbContext);
 
-        A.CallTo(() => locationRepository.GetByIdAsync(LocationId, A<CancellationToken>._)).Returns(location);
-        A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(CustomerId);
-        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, A<CancellationToken>._)).Returns(true);
-        A.CallTo(() => deskCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, A<CancellationToken>._))
-            .Returns([]);
-
-        A.CallTo(() => roomCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, A<CancellationToken>._))
-            .Returns(Array.Empty<RoomCountRecordingEntity>());
-
-        A.CallTo(() => snapshotRepository.GetByLocationIdAndDateRangeAsync(LocationId, from, until, A<string?>._, A<CancellationToken>._))
-            .Returns([]);
+        A.CallTo(() => locationRepository.GetByIdAsync(LocationId, cancellationToken)).Returns(location);
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(CustomerId);
+        A.CallTo(() => organizationAuthorizationService.CanViewAnalyticsAsync(OrganizationId, CustomerId, cancellationToken)).Returns(true);
+        A.CallTo(() => deskCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, cancellationToken)).Returns([]);
+        A.CallTo(() => roomCountRepository.GetByLocationIdsAndDateRangeAsync(A<IReadOnlyList<string>>._, from, until, cancellationToken)).Returns([]);
+        A.CallTo(() => snapshotRepository.GetByLocationIdAndDateRangeAsync(LocationId, from, until, A<string?>._, cancellationToken)).Returns([]);
 
         // Act
         var result = await sut.GetAnalyticsAsync(LocationId, from, until, cancellationToken);

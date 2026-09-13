@@ -25,7 +25,7 @@ public class NatsPublisherShould
                 "events.test",
                 A<ReadOnlyMemory<byte>>._,
                 A<IReadOnlyDictionary<string, string>>._,
-                A<CancellationToken>._))
+                cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
 }

@@ -20,20 +20,20 @@ public class SetOrganizationPaymentMethodAsyncShould
         IOrganizationRepository organizationRepository,
         StripeIntegrations sut)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var organization = new OrganizationEntity
         {
             Id = "org-1",
             CustomDomain = "acme",
         };
-        const string redirectTo = "https://app.example.test/organizations/acme/settings?tab=profile&section=plan";
+        const string RedirectTo = "https://app.example.test/organizations/acme/settings?tab=profile&section=plan";
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(organization.Id, null, environment.CancellationTokenSource.Token))
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(organization.Id, null, activityEnvironment.CancellationTokenSource.Token))
             .Returns(organization);
 
-        var result = await environment.RunAsync(() => sut.SetOrganizationPaymentMethodAsync(
-            new SetOrganizationPaymentMethodInput(organization.Id, "seti-1", "failed", redirectTo)));
+        var result = await activityEnvironment.RunAsync(() => sut.SetOrganizationPaymentMethodAsync(
+            new SetOrganizationPaymentMethodInput(organization.Id, "seti-1", "failed", RedirectTo)));
 
         result.ShouldBe("https://app.example.test/organizations/acme/settings?tab=profile&section=plan&add-payment-method-status=failed");
         A.CallTo(() => repositoryFactory.OrganizationStripePaymentMethodRepository).MustNotHaveHappened();
@@ -56,13 +56,13 @@ public class SetOrganizationPaymentMethodAsyncShould
         IOrganizationStripePaymentMethodRepository organizationStripePaymentMethodRepository,
         StripeIntegrations sut)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var organization = new OrganizationEntity
         {
             Id = "org-1",
             CustomDomain = "acme",
         };
-        const string redirectTo = "https://app.example.test/organizations/acme/settings?tab=profile&section=plan";
+        const string RedirectTo = "https://app.example.test/organizations/acme/settings?tab=profile&section=plan";
         var setupIntent = new SetupIntent
         {
             PaymentMethodId = "pm-1",
@@ -75,17 +75,17 @@ public class SetOrganizationPaymentMethodAsyncShould
         var mappedPaymentMethod = new OrganizationStripePaymentMethod();
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(organization.Id, null, environment.CancellationTokenSource.Token))
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(organization.Id, null, activityEnvironment.CancellationTokenSource.Token))
             .Returns(organization);
         A.CallTo(() => setupIntentRetrievableService.GetAsync(setupIntent.Id, A<SetupIntentGetOptions>._, A<RequestOptions>._,
-            environment.CancellationTokenSource.Token)).Returns(setupIntent);
+            activityEnvironment.CancellationTokenSource.Token)).Returns(setupIntent);
         A.CallTo(() => paymentMethodRetrievableService.GetAsync(setupIntent.PaymentMethodId, A<PaymentMethodGetOptions>._, A<RequestOptions>._,
-            environment.CancellationTokenSource.Token)).Returns(paymentMethod);
+            activityEnvironment.CancellationTokenSource.Token)).Returns(paymentMethod);
         A.CallTo(() => entityMapper.MapTo(paymentMethod, setupIntent.Id, organization)).Returns(mappedPaymentMethod);
         A.CallTo(() => repositoryFactory.OrganizationStripePaymentMethodRepository).Returns(organizationStripePaymentMethodRepository);
 
-        var result = await environment.RunAsync(() => sut.SetOrganizationPaymentMethodAsync(
-            new SetOrganizationPaymentMethodInput(organization.Id, setupIntent.Id, "succeeded", redirectTo)));
+        var result = await activityEnvironment.RunAsync(() => sut.SetOrganizationPaymentMethodAsync(
+            new SetOrganizationPaymentMethodInput(organization.Id, setupIntent.Id, "succeeded", RedirectTo)));
 
         result.ShouldBe("https://app.example.test/organizations/acme/settings?tab=profile&section=plan&add-payment-method-status=added");
         A.CallTo(() => organizationStripePaymentMethodRepository.Add(mappedPaymentMethod)).MustHaveHappenedOnceExactly();

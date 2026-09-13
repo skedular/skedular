@@ -36,6 +36,7 @@ public sealed class EntitlementCancellationService(
     IDbTransactionBuilder transactionBuilder,
     IMarketplaceRefundService marketplaceRefundService,
     MarketplaceRefundPolicyService marketplaceRefundPolicyService,
+    IEntitlementPurchasePaymentCancellationService paymentCancellationService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
     ILogger<EntitlementCancellationService> logger) : IEntitlementCancellationService
 {
@@ -200,6 +201,11 @@ public sealed class EntitlementCancellationService(
             cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+        if (purchase is not null)
+        {
+            await paymentCancellationService.CancelAsync(purchase, cancellationToken);
+        }
+
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.EntitlementPurchaseTopicName,
             entitlement.PurchaseReference, cancellationToken);
         logger.LogInformation(

@@ -249,9 +249,9 @@ public class CreateBookingCancellationRefundAsyncShould
     }
 
     [Theory]
-    [InlineAutoFakeItEasyData(new Type[] { }, MarketplaceRefundStatusConstants.Rejected)]
-    [InlineAutoFakeItEasyData(new Type[] { }, MarketplaceRefundStatusConstants.Cancelled)]
-    [InlineAutoFakeItEasyData(new Type[] { }, MarketplaceRefundStatusConstants.Completed)]
+    [InlineAutoFakeItEasyData([], MarketplaceRefundStatusConstants.Rejected)]
+    [InlineAutoFakeItEasyData([], MarketplaceRefundStatusConstants.Cancelled)]
+    [InlineAutoFakeItEasyData([], MarketplaceRefundStatusConstants.Completed)]
     public async Task Return_Terminal_Refund_Without_Resetting_It_For_All_Terminal_Statuses(
         string terminalStatus,
         [Frozen]

@@ -10,11 +10,11 @@ public class EvaluateShould
     private static readonly DateTimeOffset s_trialEnd = s_trialStart.AddDays(14);
 
     [Theory]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.Read)]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.CreateOrModify)]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.CreateBookingInstance)]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.ProtectExistingCommitment)]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.AccountOrUpgrade)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.Read)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.CreateOrModify)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.CreateBookingInstance)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.ProtectExistingCommitment)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.AccountOrUpgrade)]
     public void Allow_Every_Action_During_Active_Trial(SpacesAccessAction action, SpacesAccessEvaluator sut)
     {
         var result = sut.Evaluate(s_trialStart, TrialOffering(), action);
@@ -46,8 +46,8 @@ public class EvaluateShould
     }
 
     [Theory]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.CreateOrModify)]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.CreateBookingInstance)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.CreateOrModify)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.CreateBookingInstance)]
     public void Deny_New_Work_At_Exact_Expiry(SpacesAccessAction action, SpacesAccessEvaluator sut)
     {
         var result = sut.Evaluate(s_trialEnd, TrialOffering(), action);
@@ -60,9 +60,9 @@ public class EvaluateShould
     }
 
     [Theory]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.Read, SpacesAccessReasonCode.AllowedReadOrRecovery)]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.AccountOrUpgrade, SpacesAccessReasonCode.AllowedReadOrRecovery)]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.ProtectExistingCommitment, SpacesAccessReasonCode.AllowedProtectiveAction)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.Read, SpacesAccessReasonCode.AllowedReadOrRecovery)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.AccountOrUpgrade, SpacesAccessReasonCode.AllowedReadOrRecovery)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.ProtectExistingCommitment, SpacesAccessReasonCode.AllowedProtectiveAction)]
     public void Allow_Recovery_And_Protective_Actions_After_Expiry(
         SpacesAccessAction action,
         SpacesAccessReasonCode expectedReason,
@@ -107,9 +107,9 @@ public class EvaluateShould
     }
 
     [Theory]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.Read)]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.ProtectExistingCommitment)]
-    [InlineAutoFakeItEasyData(new Type[] { }, SpacesAccessAction.AccountOrUpgrade)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.Read)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.ProtectExistingCommitment)]
+    [InlineAutoFakeItEasyData([], SpacesAccessAction.AccountOrUpgrade)]
     public void Preserve_Safe_Actions_For_Legacy_Free_Projection(
         SpacesAccessAction action,
         SpacesAccessEvaluator sut)

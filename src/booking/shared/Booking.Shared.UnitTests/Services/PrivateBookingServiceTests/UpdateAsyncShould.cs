@@ -74,7 +74,6 @@ public class UpdateAsyncShould
                 Id = "org-1",
             },
         };
-        var teams = new List<Team>();
 
         A.CallTo(() => repositoryFactory.CustomerRepository.GetByIdsAsync(
                 A<IReadOnlyList<string>>._, true, A<CancellationToken>._))
@@ -97,8 +96,7 @@ public class UpdateAsyncShould
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, A<CancellationToken>._))
             .Returns(Task.FromResult(dbContextTransaction));
 
-        var result = await sut.UpdateAsync(booking, existingBooking, null, organizations, teams,
-            null, false, cancellationToken);
+        var result = await sut.UpdateAsync(booking, existingBooking, null, organizations, [], null, false, cancellationToken);
 
         result.ShouldNotBeNull();
         result.Id.ShouldBe("booking-1");

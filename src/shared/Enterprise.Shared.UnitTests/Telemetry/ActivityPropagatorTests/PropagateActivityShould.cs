@@ -51,8 +51,8 @@ public class PropagateActivityShould
         accessor.PropagateActivity(destination);
 
         A.CallTo(() =>
-                textMapPropagator.Inject(A<PropagationContext>.Ignored, A<string>.Ignored,
-                    A<Action<string, string, string>>.Ignored))
+                textMapPropagator.Inject(A<PropagationContext>._, A<string>._,
+                    A<Action<string, string, string>>._))
             .MustNotHaveHappened();
     }
 }

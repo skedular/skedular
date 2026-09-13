@@ -5,11 +5,9 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Messaging;
 using Stripe;
 using MarketplaceRefundStatusConstants = Booking.Shared.Models.MarketplaceRefundStatusConstants;
 using BookingInternalEvent = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event;
-using BookingInternalKey = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key;
 using BookingInternalMetadata = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Metadata;
 using BookingInternalType = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Type;
 
@@ -29,9 +27,7 @@ public class BookingInternalSubscriberStripePayoutShould
         IEntitlementPurchaseRepository purchaseRepository,
         [Frozen]
         IEntitlementPurchaseService entitlementPurchaseService,
-        [Frozen]
-        EventContext eventContext,
-        BookingInternalSubscriber sut,
+        BookingStripeWebhookProcessor sut,
         CancellationToken cancellationToken)
     {
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
@@ -53,7 +49,7 @@ public class BookingInternalSubscriberStripePayoutShould
             StripeConnectAccountWebhookEventPayload = payload,
         };
 
-        await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
+        await sut.ProcessAsync(payload, cancellationToken);
 
         A.CallTo(() => entitlementPurchaseService.UpdatePaymentStatusAsync(
                 "purchase_1",
@@ -78,9 +74,7 @@ public class BookingInternalSubscriberStripePayoutShould
         IEntitlementPurchaseRepository purchaseRepository,
         [Frozen]
         IEntitlementPurchaseService entitlementPurchaseService,
-        [Frozen]
-        EventContext eventContext,
-        BookingInternalSubscriber sut,
+        BookingStripeWebhookProcessor sut,
         CancellationToken cancellationToken)
     {
         A.CallTo(() => repositoryFactory.StripeCheckoutSessionRepository).Returns(checkoutRepository);
@@ -103,7 +97,7 @@ public class BookingInternalSubscriberStripePayoutShould
             StripeConnectAccountWebhookEventPayload = payload,
         };
 
-        await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
+        await sut.ProcessAsync(payload, cancellationToken);
 
         A.CallTo(() => entitlementPurchaseService.UpdatePaymentStatusAsync(
                 A<string>._,
@@ -120,9 +114,7 @@ public class BookingInternalSubscriberStripePayoutShould
         IRepositoryFactory repositoryFactory,
         [Frozen]
         IStripeCheckoutSessionRepository checkoutRepository,
-        [Frozen]
-        EventContext eventContext,
-        BookingInternalSubscriber sut,
+        BookingStripeWebhookProcessor sut,
         CancellationToken cancellationToken)
     {
         var checkout = new StripeCheckoutSession
@@ -142,7 +134,7 @@ public class BookingInternalSubscriberStripePayoutShould
             StripeConnectAccountWebhookEventPayload = payload,
         };
 
-        await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
+        await sut.ProcessAsync(payload, cancellationToken);
 
         checkout.ChargeId.ShouldBe("ch_1");
         checkout.TransferId.ShouldBe("tr_1");
@@ -153,9 +145,7 @@ public class BookingInternalSubscriberStripePayoutShould
     public async Task Consume_Serialized_Paid_Payout_Webhook(
         [Frozen]
         IStripePayoutReconciliationService payoutReconciliationService,
-        [Frozen]
-        EventContext eventContext,
-        BookingInternalSubscriber sut,
+        BookingStripeWebhookProcessor sut,
         CancellationToken cancellationToken)
     {
         var payload =
@@ -169,7 +159,7 @@ public class BookingInternalSubscriberStripePayoutShould
             StripeConnectAccountWebhookEventPayload = payload,
         };
 
-        await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
+        await sut.ProcessAsync(payload, cancellationToken);
 
         A.CallTo(() => payoutReconciliationService.HandlePaidAsync(
                 A<Payout>.That.Matches(payout => payout.Id == "po_1" && payout.Status == "paid"),
@@ -182,9 +172,7 @@ public class BookingInternalSubscriberStripePayoutShould
     public async Task Consume_Serialized_Failed_Payout_Webhook(
         [Frozen]
         IStripePayoutReconciliationService payoutReconciliationService,
-        [Frozen]
-        EventContext eventContext,
-        BookingInternalSubscriber sut,
+        BookingStripeWebhookProcessor sut,
         CancellationToken cancellationToken)
     {
         var payload =
@@ -198,7 +186,7 @@ public class BookingInternalSubscriberStripePayoutShould
             StripeConnectAccountWebhookEventPayload = payload,
         };
 
-        await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
+        await sut.ProcessAsync(payload, cancellationToken);
 
         A.CallTo(() => payoutReconciliationService.HandleStateChangedAsync(
                 A<Payout>.That.Matches(payout => payout.Id == "po_1" && payout.Status == "failed" &&
@@ -212,9 +200,7 @@ public class BookingInternalSubscriberStripePayoutShould
     public async Task Consume_Serialized_Canceled_Payout_Webhook(
         [Frozen]
         IStripePayoutReconciliationService payoutReconciliationService,
-        [Frozen]
-        EventContext eventContext,
-        BookingInternalSubscriber sut,
+        BookingStripeWebhookProcessor sut,
         CancellationToken cancellationToken)
     {
         var payload =
@@ -228,7 +214,7 @@ public class BookingInternalSubscriberStripePayoutShould
             StripeConnectAccountWebhookEventPayload = payload,
         };
 
-        await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
+        await sut.ProcessAsync(payload, cancellationToken);
 
         A.CallTo(() => payoutReconciliationService.HandleStateChangedAsync(
                 A<Payout>.That.Matches(payout => payout.Id == "po_1" && payout.Status == "canceled"),
@@ -241,9 +227,7 @@ public class BookingInternalSubscriberStripePayoutShould
     public async Task Consume_Serialized_Refund_Webhook_With_Provider_Correlation(
         [Frozen]
         IStripeHostRefundService stripeHostRefundService,
-        [Frozen]
-        EventContext eventContext,
-        BookingInternalSubscriber sut,
+        BookingStripeWebhookProcessor sut,
         CancellationToken cancellationToken)
     {
         var payload =
@@ -257,7 +241,7 @@ public class BookingInternalSubscriberStripePayoutShould
             StripeConnectAccountWebhookEventPayload = payload,
         };
 
-        await sut.HandleAsync(eventContext, new BookingInternalKey(), @event, cancellationToken);
+        await sut.ProcessAsync(payload, cancellationToken);
 
         A.CallTo(() => stripeHostRefundService.ReconcileAsync(
                 A<Refund>.That.Matches(refund => refund.Id == "re_1"),
@@ -276,7 +260,7 @@ public class BookingInternalSubscriberStripePayoutShould
         IStripeCheckoutSessionRepository checkoutRepository,
         [Frozen]
         IUnitOfWork unitOfWork,
-        BookingInternalSubscriber sut,
+        BookingStripeWebhookProcessor sut,
         CancellationToken cancellationToken)
     {
         var checkout = new StripeCheckoutSession
@@ -287,12 +271,9 @@ public class BookingInternalSubscriberStripePayoutShould
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => checkoutRepository.GetByPaymentIntentIdAsync("pi_1", cancellationToken)).Returns(checkout);
 
-        await sut.HandleChargeSucceededAsync(new Charge
-        {
-            Id = "ch_1",
-            PaymentIntentId = "pi_1",
-            TransferId = "tr_1",
-        }, cancellationToken);
+        var payload =
+            "{\"id\":\"evt_charge\",\"type\":\"charge.succeeded\",\"data\":{\"object\":{\"id\":\"ch_1\",\"object\":\"charge\",\"payment_intent\":\"pi_1\",\"transfer\":\"tr_1\"}}}";
+        await sut.ProcessAsync(payload, cancellationToken);
 
         checkout.ChargeId.ShouldBe("ch_1");
         checkout.TransferId.ShouldBe("tr_1");

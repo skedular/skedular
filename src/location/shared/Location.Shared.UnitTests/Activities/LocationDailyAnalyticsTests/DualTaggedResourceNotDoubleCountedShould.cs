@@ -73,14 +73,14 @@ public class DualTaggedResourceNotDoubleCountedShould
         LocationDailyAnalytics sut)
     {
         // Arrange – one resource tagged as both desk AND room
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var dualTaggedResource = MakeResource("res-dual", "Dual Desk", true, true);
         var location = MakeLocation("loc-1", [dualTaggedResource]);
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DailyDeskCountRecordingRepository).Returns(deskCountRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", environment.CancellationTokenSource.Token)).Returns(location);
+        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", activityEnvironment.CancellationTokenSource.Token)).Returns(location);
 
         var capturedRecordings = new List<DailyDeskCountRecording>();
         A.CallTo(() => deskCountRepository.Add(A<DailyDeskCountRecording>._))
@@ -88,7 +88,7 @@ public class DualTaggedResourceNotDoubleCountedShould
             .Returns(deskCountRecording);
 
         // Act
-        var result = await environment.RunAsync(() => sut.RecordLocationDesksCountAsync("loc-1"));
+        var result = await activityEnvironment.RunAsync(() => sut.RecordLocationDesksCountAsync("loc-1"));
 
         // Assert – resource is counted in desk total
         result.ShouldBeTrue();
@@ -114,18 +114,18 @@ public class DualTaggedResourceNotDoubleCountedShould
         LocationDailyAnalytics sut)
     {
         // Arrange
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var dualTaggedResource = MakeResource("res-warn", "Warn Desk", true, true);
         var location = MakeLocation("loc-warn", [dualTaggedResource]);
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DailyDeskCountRecordingRepository).Returns(deskCountRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => locationRepository.GetByIdAsync("loc-warn", environment.CancellationTokenSource.Token)).Returns(location);
+        A.CallTo(() => locationRepository.GetByIdAsync("loc-warn", activityEnvironment.CancellationTokenSource.Token)).Returns(location);
         A.CallTo(() => deskCountRepository.Add(A<DailyDeskCountRecording>._)).Returns(deskCountRecording);
 
         // Act
-        await environment.RunAsync(() => sut.RecordLocationDesksCountAsync("loc-warn"));
+        await activityEnvironment.RunAsync(() => sut.RecordLocationDesksCountAsync("loc-warn"));
 
         // Assert – warning log contains the resource ID
         LogAssertions.ACallToLog(logger, LogLevel.Warning).MustHaveHappenedOnceExactly();
@@ -149,18 +149,18 @@ public class DualTaggedResourceNotDoubleCountedShould
         LocationDailyAnalytics sut)
     {
         // Arrange – resource has only desk tag, no room tag
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var deskOnly = MakeResource("res-desk", "Pure Desk", true, false);
         var location = MakeLocation("loc-pure", [deskOnly]);
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DailyDeskCountRecordingRepository).Returns(deskCountRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => locationRepository.GetByIdAsync("loc-pure", environment.CancellationTokenSource.Token)).Returns(location);
+        A.CallTo(() => locationRepository.GetByIdAsync("loc-pure", activityEnvironment.CancellationTokenSource.Token)).Returns(location);
         A.CallTo(() => deskCountRepository.Add(A<DailyDeskCountRecording>._)).Returns(deskCountRecording);
 
         // Act
-        await environment.RunAsync(() => sut.RecordLocationDesksCountAsync("loc-pure"));
+        await activityEnvironment.RunAsync(() => sut.RecordLocationDesksCountAsync("loc-pure"));
 
         // Assert – no warning log for a resource that is only a desk
         LogAssertions.ACallToLog(logger, LogLevel.Warning).MustNotHaveHappened();

@@ -25,6 +25,8 @@ public interface IWorkflowIdService
     string ProcessMarketplaceRefund(string refundId);
     string ResolvePartialMarketplaceBooking(string failureId);
     string MarketplaceBookingCleanup(string failureId);
+    string ProvisionMarketplacePaidInvoice(string stripeAccountId, string invoiceId);
+    string SynchronizeMarketplaceStripeCancellation(string sourceType, string sourceId, bool cancelAtPeriodEnd);
 }
 
 public class WorkflowIdService(ITemporalHelperService temporalHelperService) : IWorkflowIdService
@@ -90,4 +92,10 @@ public class WorkflowIdService(ITemporalHelperService temporalHelperService) : I
 
     public string MarketplaceBookingCleanup(string failureId) =>
         temporalHelperService.ToId($"marketplace-booking-cleanup:{failureId}");
+
+    public string ProvisionMarketplacePaidInvoice(string stripeAccountId, string invoiceId) =>
+        temporalHelperService.ToId($"marketplace-paid-invoice:{stripeAccountId}:{invoiceId}");
+
+    public string SynchronizeMarketplaceStripeCancellation(string sourceType, string sourceId, bool cancelAtPeriodEnd) =>
+        temporalHelperService.ToId($"marketplace-stripe-cancellation:{sourceType}:{sourceId}:{cancelAtPeriodEnd}");
 }

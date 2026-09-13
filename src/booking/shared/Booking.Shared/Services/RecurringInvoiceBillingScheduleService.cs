@@ -4,13 +4,22 @@ using XeroRepeatingInvoiceScheduleSourceConstants = Booking.Shared.Models.XeroRe
 
 namespace Booking.Shared.Services;
 
-public record RecurringInvoiceBillingDefinition(string Source, MembershipTerm MembershipTerm, decimal InvoiceAmount);
+public record RecurringInvoiceBillingDefinition(
+    string Source,
+    MembershipTerm MembershipTerm,
+    decimal InvoiceAmount,
+    int InstallmentCount = 1);
 
 public interface IRecurringInvoiceBillingScheduleService
 {
     RecurringInvoiceBillingDefinition GetSchedule(
         RecurringBooking recurringBooking,
         MarketplaceBooking marketplaceBooking,
+        OrganizationBillingCycle organizationBillingCycle);
+
+    RecurringInvoiceBillingDefinition GetSchedule(
+        ProductPricing pricing,
+        decimal totalAmount,
         OrganizationBillingCycle organizationBillingCycle);
 }
 
@@ -19,9 +28,20 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
     public RecurringInvoiceBillingDefinition GetSchedule(
         RecurringBooking recurringBooking,
         MarketplaceBooking marketplaceBooking,
+        OrganizationBillingCycle organizationBillingCycle) =>
+        HasPersistedRecurringChargeAmount(marketplaceBooking)
+            ? GetPersistedSchedule(marketplaceBooking, organizationBillingCycle)
+            : GetSchedule(
+                marketplaceBooking.ProductPricing,
+                CalculateTotalRecurringChargeAmount(marketplaceBooking),
+                organizationBillingCycle);
+
+    public RecurringInvoiceBillingDefinition GetSchedule(
+        ProductPricing pricing,
+        decimal totalAmount,
         OrganizationBillingCycle organizationBillingCycle)
     {
-        var membershipTerm = marketplaceBooking.ProductPricing.MembershipTerm;
+        var membershipTerm = pricing.MembershipTerm;
         var shouldSplitByBillingCycle = ShouldSplitByBillingCycle(membershipTerm, organizationBillingCycle);
 
         if (!shouldSplitByBillingCycle)
@@ -29,13 +49,16 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
             return new RecurringInvoiceBillingDefinition(
                 XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
                 membershipTerm,
-                CalculateTotalRecurringChargeAmount(marketplaceBooking));
+                decimal.Round(totalAmount, 4, MidpointRounding.AwayFromZero));
         }
+
+        var installmentCount = CalculateInstallmentCount(membershipTerm, organizationBillingCycle);
 
         return new RecurringInvoiceBillingDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             MapBillingCycleToCadence(organizationBillingCycle),
-            CalculateInstallmentAmount(recurringBooking, marketplaceBooking, membershipTerm, organizationBillingCycle));
+            decimal.Round(totalAmount / installmentCount, 4, MidpointRounding.AwayFromZero),
+            installmentCount);
     }
 
     private static MembershipTerm MapBillingCycleToCadence(OrganizationBillingCycle organizationBillingCycle) =>
@@ -47,30 +70,39 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
             _ => throw new ArgumentOutOfRangeException(nameof(organizationBillingCycle)),
         };
 
-    private static decimal CalculateInstallmentAmount(
-        RecurringBooking recurringBooking,
-        MarketplaceBooking marketplaceBooking,
-        MembershipTerm membershipTerm,
-        OrganizationBillingCycle organizationBillingCycle)
-    {
-        if (HasPersistedRecurringChargeAmount(marketplaceBooking))
-        {
-            return CalculateTotalRecurringChargeAmount(marketplaceBooking);
-        }
-
-        var totalAmount = CalculateTotalRecurringChargeAmount(marketplaceBooking);
-        var cycleEndExclusive = ResolveCycleEndExclusive(recurringBooking, membershipTerm);
-        var installmentCount = SplitIntoBillingCyclePeriodsFromStart(recurringBooking.StartDate, cycleEndExclusive, organizationBillingCycle).Count;
-
-        return installmentCount <= 1
-            ? totalAmount
-            : decimal.Round(totalAmount / installmentCount, 4, MidpointRounding.AwayFromZero);
-    }
+    private static int CalculateInstallmentCount(MembershipTerm membershipTerm, OrganizationBillingCycle organizationBillingCycle) =>
+        SplitIntoBillingCyclePeriodsFromStart(
+                DateTimeOffset.UnixEpoch,
+                ResolveCycleEndExclusive(DateTimeOffset.UnixEpoch, membershipTerm),
+                organizationBillingCycle)
+            .Count;
 
     private static bool HasPersistedRecurringChargeAmount(MarketplaceBooking marketplaceBooking) =>
         marketplaceBooking.ProductPricing.IsTaxInclusive
             ? marketplaceBooking.TotalAmount.HasValue || marketplaceBooking.TotalAmountExcludeTax.HasValue
             : marketplaceBooking.TotalAmountExcludeTax.HasValue || marketplaceBooking.TotalAmount.HasValue;
+
+    private static RecurringInvoiceBillingDefinition GetPersistedSchedule(
+        MarketplaceBooking marketplaceBooking,
+        OrganizationBillingCycle organizationBillingCycle)
+    {
+        var membershipTerm = marketplaceBooking.ProductPricing.MembershipTerm;
+        var totalAmount = CalculateTotalRecurringChargeAmount(marketplaceBooking);
+        if (!ShouldSplitByBillingCycle(membershipTerm, organizationBillingCycle))
+        {
+            return new RecurringInvoiceBillingDefinition(
+                XeroRepeatingInvoiceScheduleSourceConstants.MembershipTerm,
+                membershipTerm,
+                totalAmount);
+        }
+
+        var installmentCount = CalculateInstallmentCount(membershipTerm, organizationBillingCycle);
+        return new RecurringInvoiceBillingDefinition(
+            XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
+            MapBillingCycleToCadence(organizationBillingCycle),
+            totalAmount,
+            installmentCount);
+    }
 
     private static decimal CalculateTotalRecurringChargeAmount(MarketplaceBooking marketplaceBooking)
     {
@@ -86,20 +118,19 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
         return decimal.Round(totalAmount, 4, MidpointRounding.AwayFromZero);
     }
 
-    private static DateTimeOffset ResolveCycleEndExclusive(RecurringBooking recurringBooking, MembershipTerm membershipTerm) =>
-        recurringBooking.EndDate?.AddDays(1) ?? membershipTerm switch
-        {
-            MembershipTerm.Weekly => recurringBooking.StartDate.AddDays(7),
-            MembershipTerm.Fortnightly => recurringBooking.StartDate.AddDays(14),
-            MembershipTerm.Monthly => recurringBooking.StartDate.AddMonths(1),
-            MembershipTerm.TwoMonths => recurringBooking.StartDate.AddMonths(2),
-            MembershipTerm.Quarterly => recurringBooking.StartDate.AddMonths(3),
-            MembershipTerm.FourMonths => recurringBooking.StartDate.AddMonths(4),
-            MembershipTerm.FiveMonths => recurringBooking.StartDate.AddMonths(5),
-            MembershipTerm.SixMonths => recurringBooking.StartDate.AddMonths(6),
-            MembershipTerm.Yearly => recurringBooking.StartDate.AddYears(1),
-            _ => recurringBooking.StartDate.AddDays(1),
-        };
+    private static DateTimeOffset ResolveCycleEndExclusive(DateTimeOffset start, MembershipTerm membershipTerm) => membershipTerm switch
+    {
+        MembershipTerm.Weekly => start.AddDays(7),
+        MembershipTerm.Fortnightly => start.AddDays(14),
+        MembershipTerm.Monthly => start.AddMonths(1),
+        MembershipTerm.TwoMonths => start.AddMonths(2),
+        MembershipTerm.Quarterly => start.AddMonths(3),
+        MembershipTerm.FourMonths => start.AddMonths(4),
+        MembershipTerm.FiveMonths => start.AddMonths(5),
+        MembershipTerm.SixMonths => start.AddMonths(6),
+        MembershipTerm.Yearly => start.AddYears(1),
+        _ => start.AddDays(1),
+    };
 
     private static bool ShouldSplitByBillingCycle(MembershipTerm membershipTerm, OrganizationBillingCycle billingCycle) =>
         billingCycle switch
