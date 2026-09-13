@@ -64,10 +64,12 @@ public class AdjustRequiredResourcesForPrivateRecurringBookingAsyncShould
             null,
             false);
 
-        A.CallTo(() => repositoryFactory.RecurringBookingRepository.GetByIdAsync(recurringBookingId, A<CancellationToken>._))
+        var activityEnvironment = new ActivityEnvironment();
+        A.CallTo(() => repositoryFactory.RecurringBookingRepository.GetByIdAsync(recurringBookingId,
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(recurringBooking);
         A.CallTo(() => repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
-                recurringBookingId, A<DateTimeOffset>._, null, A<CancellationToken>._))
+                recurringBookingId, A<DateTimeOffset>._, null, activityEnvironment.CancellationTokenSource.Token))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Booking>>([]));
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 recurringBooking, A<DateTimeOffset>._, A<DateTimeOffset>._, A<IReadOnlyList<Database.Entities.Booking>>._))
@@ -79,11 +81,10 @@ public class AdjustRequiredResourcesForPrivateRecurringBookingAsyncShould
                 A<IReadOnlyList<Organization>>._,
                 A<IReadOnlyList<Team>>._,
                 recurringBooking,
-                A<CancellationToken>._))
+                activityEnvironment.CancellationTokenSource.Token))
             .ThrowsAsync(new SpacesAccessDenied(accessDecision));
 
-        var environment = new ActivityEnvironment();
-        var result = await environment.RunAsync(() => sut.AdjustRequiredResourcesForPrivateRecurringBookingAsync(
+        var result = await activityEnvironment.RunAsync(() => sut.AdjustRequiredResourcesForPrivateRecurringBookingAsync(
             new AdjustRequiredResourcesForPrivateRecurringBookingInput(recurringBookingId)));
 
         result.ShouldBe(new AdjustRequiredResourcesForPrivateRecurringBookingAsyncResponse(false, false));
@@ -151,11 +152,12 @@ public class AdjustRequiredResourcesForPrivateRecurringBookingAsyncShould
             ],
         };
 
+        var activityEnvironment = new ActivityEnvironment();
         A.CallTo(() => repositoryFactory.RecurringBookingRepository.GetByIdAsync(
-                recurringBooking.Id, A<CancellationToken>._))
+                recurringBooking.Id, activityEnvironment.CancellationTokenSource.Token))
             .Returns(recurringBooking);
         A.CallTo(() => repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
-                recurringBooking.Id, A<DateTimeOffset>._, null, A<CancellationToken>._))
+                recurringBooking.Id, A<DateTimeOffset>._, null, activityEnvironment.CancellationTokenSource.Token))
             .Returns(Task.FromResult<IReadOnlyList<Database.Entities.Booking>>([]));
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 recurringBooking,
@@ -170,11 +172,10 @@ public class AdjustRequiredResourcesForPrivateRecurringBookingAsyncShould
                 A<IReadOnlyList<Organization>>._,
                 A<IReadOnlyList<Team>>._,
                 recurringBooking,
-                A<CancellationToken>._))
+                activityEnvironment.CancellationTokenSource.Token))
             .ThrowsAsync(new SpacesBookingQuotaExceeded(SpacesQuotaReasonCode.FreeTierLimitExceeded, 100, 100, 1, 0, 0, []));
 
-        var environment = new ActivityEnvironment();
-        var result = await environment.RunAsync(() => sut.AdjustRequiredResourcesForPrivateRecurringBookingAsync(
+        var result = await activityEnvironment.RunAsync(() => sut.AdjustRequiredResourcesForPrivateRecurringBookingAsync(
             new AdjustRequiredResourcesForPrivateRecurringBookingInput(recurringBooking.Id)));
 
         result.Deleted.ShouldBeFalse();

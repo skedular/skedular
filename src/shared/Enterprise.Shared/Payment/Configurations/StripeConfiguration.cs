@@ -13,4 +13,10 @@ public class StripeConfiguration
     public bool LogStripePlatformAccountWebhookMessages { get; set; }
     public bool LogStripeConnectAccountWebhookMessages { get; set; }
     public string OAuthClientId { get; set; } = string.Empty;
+
+    /// <summary>
+    ///     Enables Stripe Billing subscriptions for newly-created AutoRenew marketplace purchases.
+    ///     Existing purchases without a subscription link continue through explicit checkout recovery.
+    /// </summary>
+    public bool EnableMarketplaceBillingAutoRenewal { get; set; } = true;
 }

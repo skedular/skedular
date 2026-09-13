@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
+using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Booking.Shared.Services.Entitlements;
 using HotChocolate;
@@ -11,6 +12,73 @@ namespace Booking.Api.GraphQL.EntitlementPurchase;
 [MutationType]
 public sealed class RootMutation
 {
+    [UseResolverScope]
+    public async Task<EntitlementPurchasePayload> CreateEntitlementAutomaticPaymentRecoveryAsync(
+        CreateAutomaticPaymentRecoveryInput input,
+        [Service]
+        ICachedCustomerService cachedCustomerService,
+        [Service]
+        IEntitlementPurchaseReadService entitlementPurchaseReadService,
+        [Service]
+        IMarketplaceAutomaticPaymentStatusService automaticPaymentStatusService,
+        [Service]
+        IMarketplaceStripeBillingPortalService billingPortalService,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            var purchase = await entitlementPurchaseReadService.GetAuthorizedAsync(input.PurchaseId, customerId, cancellationToken);
+            if (purchase is null)
+            {
+                return new EntitlementPurchasePayload
+                {
+                    ClientMutationId = input.ClientMutationId,
+                    Error = "The entitlement purchase could not be found.",
+                };
+            }
+
+            if (!purchase.AutoRenew || !string.Equals(purchase.PaymentMethod, "CARD", StringComparison.OrdinalIgnoreCase))
+            {
+                return new EntitlementPurchasePayload
+                {
+                    ClientMutationId = input.ClientMutationId,
+                    Error = "Automatic payment recovery is only available for card-backed auto-renewing purchases.",
+                };
+            }
+
+            var automaticPaymentStatus = await automaticPaymentStatusService.GetForEntitlementAsync(
+                purchase.Id,
+                cancellationToken);
+            if (automaticPaymentStatus is null || automaticPaymentStatus.Status is not
+                    ("past_due" or "action_required" or "finalization_failed" or "incomplete"))
+            {
+                return new EntitlementPurchasePayload
+                {
+                    ClientMutationId = input.ClientMutationId,
+                    Error = "Automatic payment recovery is not available for this purchase.",
+                };
+            }
+
+            return new EntitlementPurchasePayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                AutomaticPaymentRecoveryUrl = await billingPortalService.CreateForEntitlementAsync(
+                    input.PurchaseId,
+                    input.ReturnUrl,
+                    cancellationToken),
+            };
+        }
+        catch (InvalidOperationException exception)
+        {
+            return new EntitlementPurchasePayload
+            {
+                ClientMutationId = input.ClientMutationId,
+                Error = exception.Message,
+            };
+        }
+    }
+
     [UseResolverScope]
     public async Task<EntitlementPurchasePayload> CreateEntitlementPurchaseAsync(
         CreateEntitlementPurchaseInput input,

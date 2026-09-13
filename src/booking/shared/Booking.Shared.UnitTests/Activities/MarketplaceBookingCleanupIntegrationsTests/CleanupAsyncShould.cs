@@ -20,14 +20,15 @@ public class CleanupAsyncShould
         MarketplaceBookingCleanupIntegrations sut,
         MarketplaceBookingCleanupInput input)
     {
+        var activityEnvironment = new ActivityEnvironment();
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);
-        A.CallTo(() => failureRepository.GetByIdAsync(input.FailureId, A<CancellationToken>._))
-            .Returns((MarketplaceBookingFailure?)null);
-        var environment = new ActivityEnvironment();
+        A.CallTo(() => failureRepository.GetByIdAsync(input.FailureId, activityEnvironment.CancellationTokenSource.Token))
+            .Returns<MarketplaceBookingFailure?>(null);
 
-        await environment.RunAsync(() => sut.CleanupAsync(input));
+        await activityEnvironment.RunAsync(() => sut.CleanupAsync(input));
 
-        A.CallTo(() => failureRepository.GetByIdAsync(input.FailureId, A<CancellationToken>._)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => failureRepository.GetByIdAsync(input.FailureId, activityEnvironment.CancellationTokenSource.Token))
+            .MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -40,16 +41,17 @@ public class CleanupAsyncShould
         MarketplaceBookingCleanupIntegrations sut,
         MarketplaceBookingCleanupInput input)
     {
+        var activityEnvironment = new ActivityEnvironment();
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);
-        A.CallTo(() => failureRepository.GetByIdAsync(input.FailureId, A<CancellationToken>._)).Returns(new MarketplaceBookingFailure
-        {
-            Id = input.FailureId,
-            ResourceReleaseStatus = MarketplaceBookingFailureResourceReleaseStatusConstants.Released,
-        });
-        var environment = new ActivityEnvironment();
+        A.CallTo(() => failureRepository.GetByIdAsync(input.FailureId, activityEnvironment.CancellationTokenSource.Token)).Returns(
+            new MarketplaceBookingFailure
+            {
+                Id = input.FailureId,
+                ResourceReleaseStatus = MarketplaceBookingFailureResourceReleaseStatusConstants.Released,
+            });
 
-        await environment.RunAsync(() => sut.CleanupAsync(input));
+        await activityEnvironment.RunAsync(() => sut.CleanupAsync(input));
 
-        A.CallTo(() => failureRepository.GetByBookingIdAsync(A<string>._, A<CancellationToken>._)).MustNotHaveHappened();
+        A.CallTo(() => failureRepository.GetByBookingIdAsync(A<string>._, activityEnvironment.CancellationTokenSource.Token)).MustNotHaveHappened();
     }
 }

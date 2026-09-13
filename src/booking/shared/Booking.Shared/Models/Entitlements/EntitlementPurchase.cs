@@ -5,6 +5,7 @@ namespace Booking.Shared.Models.Entitlements;
 
 public class EntitlementPurchase : ModelBase
 {
+    public bool AutoRenew { get; set; }
     public EntitlementPurchaseLifecycleState LifecycleState { get; set; }
     public string PaymentStatus { get; set; } = string.Empty;
     public DateTimeOffset? PaymentConfirmedAt { get; set; }

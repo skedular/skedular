@@ -20,7 +20,7 @@ public class StartActivityShould
     {
         sut.GetActivityPropagationContext(location);
 
-        A.CallTo(() => propagator.Extract(A<PropagationContext>.Ignored, location, functionProvider.Extract)).MustHaveHappened();
+        A.CallTo(() => propagator.Extract(A<PropagationContext>._, location, functionProvider.Extract)).MustHaveHappened();
     }
 
     [Theory]
@@ -36,7 +36,7 @@ public class StartActivityShould
         // make the context unique
         var expected = new PropagationContext(ActivityContext.Parse("00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01", ""), new Baggage());
 
-        A.CallTo(() => propagator.Extract(A<PropagationContext>.Ignored, location, functionProvider.Extract)).Returns(expected);
+        A.CallTo(() => propagator.Extract(A<PropagationContext>._, location, functionProvider.Extract)).Returns(expected);
 
         var returned = sut.GetActivityPropagationContext(location);
 

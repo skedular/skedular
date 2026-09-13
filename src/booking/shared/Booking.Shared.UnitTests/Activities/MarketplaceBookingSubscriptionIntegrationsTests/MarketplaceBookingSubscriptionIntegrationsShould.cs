@@ -29,7 +29,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
         string organizationId)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var subscription = CreateSubscription(MarketplaceBookingSubscriptionStatus.Active, new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero));
         subscription.InvolvedOrganizations =
         [
@@ -56,15 +56,15 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             false);
 
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
         A.CallTo(() => spacesBookingQuotaService.EvaluateAccessAsync(
                 organizationId,
                 SpacesAccessAction.CreateOrModify,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(denied);
 
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -81,12 +81,12 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         MarketplaceBookingSubscriptionIntegrations sut,
         IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(Task.FromResult<MarketplaceBookingSubscription?>(null));
 
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -102,14 +102,14 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         MarketplaceBookingSubscriptionIntegrations sut,
         IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var subscription = CreateSubscription(MarketplaceBookingSubscriptionStatus.Paused, new DateTimeOffset(2026, 3, 17, 0, 0, 0, TimeSpan.Zero));
 
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
 
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -131,7 +131,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         ICustomerRepository customerRepository,
         IBookingRepository bookingRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var customer = new Customer
         {
             Id = "customer-1",
@@ -144,6 +144,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = 1,
+                PaymentStatus = PaymentStatusConstants.Confirmed,
                 ProductPricing =
                     ProductPricing.Empty("pricing-1") with
                     {
@@ -173,11 +174,11 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
-        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, activityEnvironment.CancellationTokenSource.Token)).Returns(customer);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync("rb-1", A<DateTimeOffset>._, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([]);
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 recurringBooking,
@@ -186,7 +187,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -211,7 +212,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         ICustomerRepository customerRepository,
         IBookingRepository bookingRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var customer = new Customer
         {
             Id = "customer-1",
@@ -260,15 +261,17 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 19, 8, 0, 0, TimeSpan.Zero));
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
+        A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
+        A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
-        A.CallTo(() => recurringBookingRepository.GetByIdAsync("rb-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => recurringBookingRepository.GetByIdAsync("rb-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(recurringBooking);
-        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, activityEnvironment.CancellationTokenSource.Token)).Returns(customer);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync("rb-1", A<DateTimeOffset>._, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([]);
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 recurringBooking,
@@ -277,7 +280,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
-        _ = await environment.RunAsync(() =>
+        _ = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -286,7 +289,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     item.RecurringBookingId == recurringBooking.Id &&
                     item.ExpiryDate == recurringBooking.MarketplaceBooking.PaymentExpiry &&
                     item.InvoiceEmailList.Count == 0),
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -308,7 +311,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         ICustomerRepository customerRepository,
         IBookingRepository bookingRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var customer = new Customer
         {
             Id = "customer-1",
@@ -367,13 +370,13 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
-        A.CallTo(() => recurringBookingRepository.GetByIdAsync("rb-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => recurringBookingRepository.GetByIdAsync("rb-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(recurringBooking);
-        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, activityEnvironment.CancellationTokenSource.Token)).Returns(customer);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync("rb-1", A<DateTimeOffset>._, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([]);
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 recurringBookingFromSubscription,
@@ -382,7 +385,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
-        _ = await environment.RunAsync(() =>
+        _ = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -391,7 +394,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     item.RecurringBookingId == recurringBooking.Id &&
                     item.ExpiryDate == recurringBooking.MarketplaceBooking!.PaymentExpiry &&
                     item.InvoiceEmailList.Count == 0),
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -412,7 +415,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         ICustomerRepository customerRepository,
         IBookingRepository bookingRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var customer = new Customer
         {
             Id = "customer-1",
@@ -463,13 +466,16 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
-        A.CallTo(() => recurringBookingRepository.GetByIdAsync("rb-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => recurringBookingRepository.GetByIdAsync("rb-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(recurringBooking);
-        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
-        A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync("rb-1", A<DateTimeOffset>._, null,
-                environment.CancellationTokenSource.Token))
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, activityEnvironment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync(
+                "rb-1",
+                A<DateTimeOffset>._,
+                null,
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([]);
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 recurringBooking,
@@ -478,7 +484,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
-        _ = await environment.RunAsync(() =>
+        _ = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -487,7 +493,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     item.RecurringBookingId == recurringBooking.Id &&
                     item.ExpiryDate == recurringBooking.MarketplaceBooking.PaymentExpiry &&
                     item.InvoiceEmailList.Count == 0),
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -505,7 +511,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         ICustomerRepository customerRepository,
         IBookingRepository bookingRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var customer = new Customer
         {
             Id = "customer-1",
@@ -518,6 +524,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = 1,
+                PaymentStatus = PaymentStatusConstants.Confirmed,
                 ProductPricing =
                     ProductPricing.Empty("pricing-1") with
                     {
@@ -543,11 +550,11 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
-        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, activityEnvironment.CancellationTokenSource.Token)).Returns(customer);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync("rb-1", A<DateTimeOffset>._, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([]);
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 recurringBooking,
@@ -557,7 +564,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             .Returns(new RecurringBookingReconciliationPlan([], [new DateOnly(2026, 3, 20)], [], false));
 
         await Should.ThrowAsync<MarketplaceEventProductRecurringBookingNotSupported>(async () =>
-            await environment.RunAsync(() =>
+            await activityEnvironment.RunAsync(() =>
                 sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                     new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0)))));
     }
@@ -576,7 +583,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         ICustomerRepository customerRepository,
         IBookingRepository bookingRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var customer = new Customer
         {
             Id = "customer-1",
@@ -619,11 +626,11 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
-        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, activityEnvironment.CancellationTokenSource.Token)).Returns(customer);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync("rb-1", A<DateTimeOffset>._, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([]);
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 recurringBooking,
@@ -632,7 +639,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -651,10 +658,11 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         TimeProvider timeProvider,
         MarketplaceBookingSubscriptionIntegrations sut,
         IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        IRecurringBookingRepository recurringBookingRepository,
         ICustomerRepository customerRepository,
         IBookingRepository bookingRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var customer = new Customer
         {
             Id = "customer-1",
@@ -667,6 +675,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = 1,
+                PaymentStatus = PaymentStatusConstants.Confirmed,
                 ProductPricing =
                     ProductPricing.Empty("pricing-1") with
                     {
@@ -699,12 +708,16 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(subscription)).Returns(subscription);
-        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => recurringBookingRepository.GetByMarketplaceBookingSubscriptionIdAsync(
+                subscription.Id,
+                activityEnvironment.CancellationTokenSource.Token))
+            .Returns([recurringBooking]);
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, activityEnvironment.CancellationTokenSource.Token)).Returns(customer);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync("rb-1", A<DateTimeOffset>._, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([]);
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 recurringBooking,
@@ -713,7 +726,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<IReadOnlyList<Database.Entities.Booking>>._))
             .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
 
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -733,7 +746,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         IBookingRepository bookingRepository,
         IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var recurringBooking = new RecurringBooking
         {
             Id = "rb-1",
@@ -758,28 +771,28 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
 
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync("rb-1", A<DateTimeOffset>._, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([booking1, booking2]);
         A.CallTo(() => marketplaceBookingService.DeleteWithoutAccountingAsync(A<Database.Entities.Booking>._, null, false, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .ReturnsLazily((Database.Entities.Booking booking, Customer? _, bool _, string? _, CancellationToken _) =>
                 Task.FromResult(new Shared.Models.Booking
                 {
                     Id = booking.Id,
                 }));
 
-        await environment.RunAsync(() =>
+        await activityEnvironment.RunAsync(() =>
             sut.ReleaseMarketplaceBookingSubscriptionResourcesAsync(
                 new ReleaseMarketplaceBookingSubscriptionResourcesInput("sub-1")));
 
         A.CallTo(() => marketplaceBookingService.DeleteWithoutAccountingAsync(booking1, subscription.DeletedByCustomer, false, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingService.DeleteWithoutAccountingAsync(booking2, subscription.DeletedByCustomer, false, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -809,7 +822,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         IBookingRepository bookingRepository,
         IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var customer = new Customer
         {
             Id = "customer-1",
@@ -849,6 +862,8 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         };
         var subscription = CreateSubscription(MarketplaceBookingSubscriptionStatus.Active, new DateTimeOffset(2026, 3, 18, 0, 0, 0, TimeSpan.Zero));
         subscription.AutoRenew = true;
+        subscription.StripeAccountId = "acct-1";
+        subscription.StripeSubscriptionId = "stripe-sub-1";
         subscription.ProductVersion = renewedProductVersion;
         subscription.InvolvedCustomers = [customer];
         subscription.RecurringBookings = [previousRecurringBooking];
@@ -892,20 +907,21 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).Returns(1);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).Returns(1);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
-        A.CallTo(() => productVersionRepository.GetByIdAsync("pv-1", environment.CancellationTokenSource.Token)).Returns(renewedProductVersion);
+        A.CallTo(() => productVersionRepository.GetByIdAsync("pv-1", activityEnvironment.CancellationTokenSource.Token))
+            .Returns(renewedProductVersion);
         A.CallTo(() => productVersionHelperService.FindMatchingPricing(renewedProductVersion.PricingOptions!.ToList(),
                 subscription.MarketplaceBooking.ProductPricing))
             .Returns(subscription.MarketplaceBooking.ProductPricing);
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(subscription)).Returns(subscription);
-        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, activityEnvironment.CancellationTokenSource.Token)).Returns(customer);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync("rb-prev", A<DateTimeOffset>._, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([previousBooking]);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync("rb-current", A<DateTimeOffset>._, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([]);
         A.CallTo(() => marketplaceBookingRepository.Add(A<MarketplaceBooking>._))
             .ReturnsLazily((MarketplaceBooking booking) => booking);
@@ -946,13 +962,13 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<bool>._,
                 A<bool>._,
                 A<bool>._,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(new Shared.Models.Booking
             {
                 Id = "booking-new",
             });
 
-        await environment.RunAsync(() =>
+        await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
     }
@@ -971,9 +987,10 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         MarketplaceBookingSubscriptionIntegrations sut,
         IUnitOfWork unitOfWork,
         IProductVersionRepository productVersionRepository,
-        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository)
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        IRecurringBookingRepository recurringBookingRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var originalPricing = ProductPricing.Empty("pricing-original") with
         {
             MembershipTerm = MembershipTerm.Weekly,
@@ -998,18 +1015,34 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             MarketplaceBookingSubscriptionStatus.Active,
             new DateTimeOffset(2026, 3, 17, 0, 0, 0, TimeSpan.Zero));
         subscription.AutoRenew = true;
+        subscription.StripeAccountId = "acct-1";
+        subscription.StripeSubscriptionId = "stripe-sub-1";
         subscription.ProductVersion = renewedProductVersion;
         subscription.MarketplaceBooking.ProductVersion = renewedProductVersion;
         subscription.MarketplaceBooking.ProductPricing = originalPricing;
         subscription.WeeklySelectedDays = [DayOfWeekConstants.Tuesday, DayOfWeekConstants.Wednesday];
+        var priorRecurringBooking = new RecurringBooking
+        {
+            Id = "rb-prior",
+            EndDate = new DateTimeOffset(2026, 3, 16, 0, 0, 0, TimeSpan.Zero),
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                PaymentStatus = PaymentStatusConstants.Confirmed,
+            },
+        };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero));
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
-        A.CallTo(() => productVersionRepository.GetByIdAsync("pv-1", environment.CancellationTokenSource.Token))
+        A.CallTo(() => recurringBookingRepository.GetByMarketplaceBookingSubscriptionIdAsync(
+                subscription.Id,
+                activityEnvironment.CancellationTokenSource.Token))
+            .Returns([priorRecurringBooking]);
+        A.CallTo(() => productVersionRepository.GetByIdAsync("pv-1", activityEnvironment.CancellationTokenSource.Token))
             .Returns(renewedProductVersion);
         A.CallTo(() => productVersionHelperService.FindMatchingPricing(
                 renewedProductVersion.PricingOptions!.ToList(),
@@ -1021,9 +1054,9 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<IEnumerable<DayOfWeek>>._))
             .Throws(new MarketplaceBookingWeeklyDaySelectionInvalid());
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(subscription)).Returns(subscription);
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).Returns(1);
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).Returns(1);
 
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1", new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -1036,7 +1069,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<IEnumerable<DayOfWeek>>.That.Matches(days => days.SequenceEqual(new[] { DayOfWeek.Tuesday, DayOfWeek.Wednesday }))))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Update(subscription)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -1059,7 +1092,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         IMarketplaceBookingService marketplaceBookingService,
         IUnitOfWork unitOfWork)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var start = new DateTimeOffset(2026, 3, 16, 0, 0, 0, TimeSpan.Zero);
         var customer = new Customer
         {
@@ -1100,15 +1133,16 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync(subscription.Id, environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync(subscription.Id, activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdUntrackedAsync(subscription.Id, environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdUntrackedAsync(subscription.Id,
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns((MarketplaceBookingSubscription?)null);
-        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, activityEnvironment.CancellationTokenSource.Token)).Returns(customer);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(recurringBooking.Id, A<DateTimeOffset>._, null,
-            environment.CancellationTokenSource.Token)).Returns([]);
+            activityEnvironment.CancellationTokenSource.Token)).Returns([]);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync(recurringBooking.Id, A<DateTimeOffset>._, null,
-            environment.CancellationTokenSource.Token)).Returns([]);
+            activityEnvironment.CancellationTokenSource.Token)).Returns([]);
         A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
                 A<RecurringBooking>._,
                 A<DateTimeOffset>._,
@@ -1119,12 +1153,12 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             .Returns(true);
         A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(
                 A<MarketplaceBookingFailureFinalization>._,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(new MarketplaceBookingFailure
             {
                 Id = "failure-initial",
             });
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
                 new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput(subscription.Id, new TimeOnly(8, 0), new TimeOnly(9, 0))));
 
@@ -1141,7 +1175,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     item.Scope == MarketplaceBookingFailureScopeConstants.InitialSeries &&
                     item.RecurringBookingId == recurringBooking.Id &&
                     item.MarketplaceBookingSubscriptionId == subscription.Id),
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustNotHaveHappened();
         A.CallTo(() => marketplaceBookingService.AddAsync(
                 A<Shared.Models.Booking>._,
@@ -1152,7 +1186,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<bool>._,
                 A<bool>._,
                 A<bool>._,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustNotHaveHappened();
     }
 

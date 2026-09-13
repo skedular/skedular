@@ -8,6 +8,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Stripe;
 using Stripe.Checkout;
+using MarketplaceStripeConfiguration = Enterprise.Shared.Payment.Configurations.StripeConfiguration;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using PaymentMethod = Api.Shared.Services.Models.PaymentMethod;
 
@@ -32,6 +33,7 @@ public sealed class EntitlementPurchaseCheckoutService(
     OrganizationBillingService.OrganizationBillingServiceClient organizationBillingServiceClient,
     IStripeProductPricingService stripeProductPricingService,
     IStripeCustomerService stripeCustomerService,
+    MarketplaceStripeConfiguration stripeConfiguration,
     ICreatable<Session, SessionCreateOptions> sessionCreateService) : IEntitlementPurchaseCheckoutService
 {
     public async Task<EntitlementPurchaseCheckoutAction> CreateCardCheckoutAsync(string purchaseId, CancellationToken cancellationToken)
@@ -65,10 +67,25 @@ public sealed class EntitlementPurchaseCheckoutService(
             cancellationToken: cancellationToken);
         var stripeAccountId = accounts.Edges.Select(item => item.Node).First(item => item.IsDefault).StripeAccountId;
 
-        await stripeProductPricingService.UpsertProductPricingAsync(productVersion, stripeAccountId, cancellationToken);
-        var stripeProduct = productVersion.StripeProducts.FirstOrDefault(item => item.ProductPricingId == purchase.ProductPricing.Id)
+        await stripeProductPricingService.EnsureProductPricingAsync(
+            productVersion, purchase.ProductPricing, stripeAccountId, cancellationToken);
+        var stripeProduct = productVersion.StripeProducts.FirstOrDefault(item => item.StripeAccountId == stripeAccountId)
                             ?? throw new InvalidOperationException($"Stripe product is not configured for pricing {purchase.ProductPricing.Id}.");
-        ArgumentNullException.ThrowIfNull(stripeProduct.StripePrice);
+        var oneTimeStripePriceId = stripeProductPricingService.GetOneTimePriceId(
+            productVersion, purchase.ProductPricing, stripeAccountId);
+        var usesStripeSubscription = stripeConfiguration.EnableMarketplaceBillingAutoRenewal && purchase.AutoRenew;
+        var recurringStripePriceId = usesStripeSubscription
+            ? stripeProductPricingService.GetRecurringPriceId(productVersion, purchase.ProductPricing, stripeAccountId)
+            : null;
+        if (usesStripeSubscription && string.IsNullOrWhiteSpace(recurringStripePriceId))
+        {
+            throw new InvalidOperationException("The auto-renewing entitlement price has no recurring Stripe Price.");
+        }
+
+        if (!usesStripeSubscription)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(oneTimeStripePriceId);
+        }
 
         var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(purchase.CustomerId, true, cancellationToken)
                        ?? throw new CustomerNotFound();
@@ -82,21 +99,35 @@ public sealed class EntitlementPurchaseCheckoutService(
                 [
                     new SessionLineItemOptions
                     {
-                        Price = stripeProduct.StripePrice.StripePriceId,
+                        Price = usesStripeSubscription ? recurringStripePriceId : oneTimeStripePriceId,
                         Quantity = 1,
                     },
                 ],
-                Mode = "payment",
+                Mode = usesStripeSubscription ? "subscription" : "payment",
                 UiMode = "hosted_page",
                 PaymentMethodTypes = ["card"],
                 ClientReferenceId = purchase.Id,
                 Metadata = new Dictionary<string, string>
                 {
                     ["purchase_id"] = purchase.Id,
+                    ["marketplace_purchase_type"] = "entitlement",
+                    ["marketplace_purchase_id"] = purchase.Id,
                     ["pricing_id"] = purchase.ProductPricing.Id,
                     ["amount"] = purchase.Amount.ToString(CultureInfo.InvariantCulture),
                     ["currency"] = purchase.Currency,
+                    ["marketplace_stripe_price_id"] = usesStripeSubscription ? recurringStripePriceId! : oneTimeStripePriceId!,
                 },
+                SubscriptionData = usesStripeSubscription
+                    ? new SessionSubscriptionDataOptions
+                    {
+                        Metadata = new Dictionary<string, string>
+                        {
+                            ["marketplace_purchase_type"] = "entitlement",
+                            ["marketplace_purchase_id"] = purchase.Id,
+                            ["marketplace_stripe_price_id"] = recurringStripePriceId!,
+                        },
+                    }
+                    : null,
                 SuccessUrl = returnUrl,
                 CancelUrl = returnUrl,
                 AutomaticTax = new SessionAutomaticTaxOptions

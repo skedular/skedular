@@ -50,7 +50,7 @@ public class ReleaseBookingResourcesAsyncShould
         BookingIntegrations sut,
         string bookingId)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var booking = new BookingEntity
         {
             Id = bookingId,
@@ -65,56 +65,57 @@ public class ReleaseBookingResourcesAsyncShould
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingRepository).Returns(marketplaceBookingRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => bookingRepository.GetByIdAsync(bookingId, environment.CancellationTokenSource.Token)).Returns(booking);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, environment.CancellationTokenSource.Token)).Returns(transaction);
+        A.CallTo(() => bookingRepository.GetByIdAsync(bookingId, activityEnvironment.CancellationTokenSource.Token)).Returns(booking);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, activityEnvironment.CancellationTokenSource.Token)).Returns(transaction);
         var failure = new MarketplaceBookingFailure
         {
             Id = "failure-1",
         };
         A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(A<MarketplaceBookingFailureFinalization>._,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(failure);
         A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(
-                booking, null, environment.CancellationTokenSource.Token, true))
+                booking, null, activityEnvironment.CancellationTokenSource.Token, true))
             .Returns(new MarketplaceRefund
             {
                 Id = "refund-1",
                 Status = "Requested",
             });
 
-        await environment.RunAsync(() =>
+        await activityEnvironment.RunAsync(() =>
             sut.ReleaseBookingResourcesAsync(new ReleaseBookingResourcesInput(
                 bookingId,
                 MarketplaceBookingFailureCategoryConstants.PaymentFailed)));
 
         booking.MarketplaceBooking.PaymentStatus.ShouldBe(PaymentStatusConstants.RecordNeverCreated);
-        A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(booking, environment.CancellationTokenSource.Token))
+        A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(booking, activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking)).MustHaveHappenedOnceExactly();
         A.CallTo(() => bookingOutboxPublisher.PublishBookings(A<IReadOnlyList<Shared.Models.Booking>>._, unitOfWork)).MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingRepository.Update(booking.MarketplaceBooking)).MustHaveHappened();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappened(2, Times.Exactly);
-        A.CallTo(() => transaction.CommitAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => cachedBookingService.UpdateByIdAsync(bookingId, environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappened(2, Times.Exactly);
+        A.CallTo(() => transaction.CommitAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => cachedBookingService.UpdateByIdAsync(bookingId, activityEnvironment.CancellationTokenSource.Token))
+            .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(
                 A<MarketplaceBookingFailureFinalization>.That.Matches(item =>
                     item.Category == MarketplaceBookingFailureCategoryConstants.PaymentFailed &&
                     item.Scope == MarketplaceBookingFailureScopeConstants.OneTimeBooking &&
                     item.BookingId == bookingId),
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(
-                booking, null, environment.CancellationTokenSource.Token, true))
+                booking, null, activityEnvironment.CancellationTokenSource.Token, true))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingFailureService.MarkResourcesReleasedAsync(
                 failure.Id,
                 MarketplaceBookingFailureAccountingCleanupStatusConstants.Pending,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingFailureService.MarkResourcesReleasedAsync(
                 failure.Id,
                 MarketplaceBookingFailureAccountingCleanupStatusConstants.NotRequired,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -140,7 +141,7 @@ public class ReleaseBookingResourcesAsyncShould
         BookingIntegrations sut,
         string bookingId)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var booking = new BookingEntity
         {
             Id = bookingId,
@@ -157,26 +158,26 @@ public class ReleaseBookingResourcesAsyncShould
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingRepository).Returns(marketplaceBookingRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => bookingRepository.GetByIdAsync(bookingId, environment.CancellationTokenSource.Token)).Returns(booking);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, environment.CancellationTokenSource.Token)).Returns(transaction);
+        A.CallTo(() => bookingRepository.GetByIdAsync(bookingId, activityEnvironment.CancellationTokenSource.Token)).Returns(booking);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, activityEnvironment.CancellationTokenSource.Token)).Returns(transaction);
         A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(A<MarketplaceBookingFailureFinalization>._,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(failure);
-        A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(booking, environment.CancellationTokenSource.Token))
+        A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(booking, activityEnvironment.CancellationTokenSource.Token))
             .ThrowsAsync(new InvalidOperationException("Xero is unavailable."));
 
-        await environment.RunAsync(() => sut.ReleaseBookingResourcesAsync(new ReleaseBookingResourcesInput(bookingId)));
+        await activityEnvironment.RunAsync(() => sut.ReleaseBookingResourcesAsync(new ReleaseBookingResourcesInput(bookingId)));
 
-        A.CallTo(() => transaction.CommitAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => transaction.CommitAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingFailureService.MarkResourcesReleasedAsync(
                 failure.Id,
                 MarketplaceBookingFailureAccountingCleanupStatusConstants.Pending,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingFailureService.MarkResourcesReleasedAsync(
                 failure.Id,
                 MarketplaceBookingFailureAccountingCleanupStatusConstants.TransitionRequired,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 }

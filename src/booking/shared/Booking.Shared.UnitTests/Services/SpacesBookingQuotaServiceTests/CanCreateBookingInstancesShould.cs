@@ -59,10 +59,10 @@ public class CanCreateBookingInstancesShould
         CancellationToken cancellationToken)
     {
         var org = CreateOrganization(1);
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(Task.FromResult<Organization?>(org));
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .Returns(Task.FromResult(50));
         A.CallTo(() => counter.CountCurrentPeriodInstances(
                 A<IReadOnlyList<DateTimeOffset>>._,
@@ -74,7 +74,7 @@ public class CanCreateBookingInstancesShould
         result.CanCreate.ShouldBeTrue();
         result.QuotaLimit.ShouldBe(100);
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                A<string>._, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                A<string>._, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -90,10 +90,10 @@ public class CanCreateBookingInstancesShould
         CancellationToken cancellationToken)
     {
         var org = CreateOrganization(1);
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(Task.FromResult<Organization?>(org));
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .Returns(Task.FromResult(100));
         A.CallTo(() => counter.CountCurrentPeriodInstances(
                 A<IReadOnlyList<DateTimeOffset>>._,
@@ -105,7 +105,7 @@ public class CanCreateBookingInstancesShould
         result.CanCreate.ShouldBeFalse();
         result.ReasonCode.ShouldBe(SpacesQuotaReasonCode.FreeTierLimitExceeded);
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                A<string>._, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                A<string>._, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -121,10 +121,10 @@ public class CanCreateBookingInstancesShould
         CancellationToken cancellationToken)
     {
         var org = CreateOrganization(5);
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(Task.FromResult<Organization?>(org));
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .Returns(Task.FromResult(400));
         A.CallTo(() => counter.CountCurrentPeriodInstances(
                 A<IReadOnlyList<DateTimeOffset>>._,
@@ -149,10 +149,10 @@ public class CanCreateBookingInstancesShould
         CancellationToken cancellationToken)
     {
         var org = CreateOrganization(4, 100, 100);
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(Task.FromResult<Organization?>(org));
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .Returns(Task.FromResult(10_000));
         A.CallTo(() => counter.CountCurrentPeriodInstances(
                 A<IReadOnlyList<DateTimeOffset>>._,
@@ -179,10 +179,10 @@ public class CanCreateBookingInstancesShould
         CancellationToken cancellationToken)
     {
         var org = CreateOrganization(5);
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(Task.FromResult<Organization?>(org));
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .Returns(Task.FromResult(500));
         A.CallTo(() => counter.CountCurrentPeriodInstances(
                 A<IReadOnlyList<DateTimeOffset>>._,
@@ -204,7 +204,7 @@ public class CanCreateBookingInstancesShould
         string organizationId,
         CancellationToken cancellationToken)
     {
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(Task.FromResult<Organization?>(null));
 
         var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
@@ -225,10 +225,10 @@ public class CanCreateBookingInstancesShould
         CancellationToken cancellationToken)
     {
         var org = CreateOrganization(1);
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(Task.FromResult<Organization?>(org));
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .Returns(Task.FromResult(95));
 
         var result = await sut.GetQuotaStatusAsync(organizationId, cancellationToken);
@@ -258,10 +258,10 @@ public class CanCreateBookingInstancesShould
         CancellationToken cancellationToken)
     {
         var org = CreateOrganization(1, 25);
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(Task.FromResult<Organization?>(org));
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .Returns(Task.FromResult(25));
         A.CallTo(() => counter.CountCurrentPeriodInstances(
                 A<IReadOnlyList<DateTimeOffset>>._,
@@ -286,10 +286,10 @@ public class CanCreateBookingInstancesShould
         CancellationToken cancellationToken)
     {
         var org = CreateOrganization(999);
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(Task.FromResult<Organization?>(org));
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .Returns(Task.FromResult(0));
 
         var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
@@ -309,10 +309,10 @@ public class CanCreateBookingInstancesShould
     {
         var start = new DateTimeOffset(2026, 6, 1, 0, 0, 0, TimeSpan.Zero);
         var org = CreateOrganization(5, periodStart: start, periodEnd: start);
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(Task.FromResult<Organization?>(org));
         A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
-                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, A<CancellationToken>._))
+                organizationId, A<DateTimeOffset>._, A<DateTimeOffset>._, cancellationToken))
             .Returns(Task.FromResult(0));
 
         var result = await sut.CanCreateBookingInstanceAsync(organizationId, TimeProvider.System.GetUtcNow(), cancellationToken);
@@ -334,8 +334,7 @@ public class CanCreateBookingInstancesShould
         var organization = CreateOrganization(1);
         organization.Offering!.SpacesTrialStartedAt = now.AddDays(-14);
         organization.Offering.SpacesTrialEndsAt = now;
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(
-                organizationId, A<CancellationToken>._))
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationWithOfferingAsync(organizationId, cancellationToken))
             .Returns(organization);
 
         var result = await sut.CanCreateBookingInstanceAsync(organizationId, now, cancellationToken);

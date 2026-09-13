@@ -49,6 +49,7 @@ public class MarketplaceBookingSubscriptionService(
     TimeProvider timeProvider,
     MarketplaceRefundPolicyService marketplaceRefundPolicyService,
     IMarketplaceRefundService marketplaceRefundService,
+    IMarketplaceStripeSubscriptionCancellationService marketplaceStripeSubscriptionCancellationService,
     ISpacesBookingQuotaService spacesBookingQuotaService,
     IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
     IMarketplaceBookingWeeklyDaySelectionService marketplaceBookingWeeklyDaySelectionService,
@@ -376,6 +377,11 @@ public class MarketplaceBookingSubscriptionService(
                 await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
 
+                await marketplaceStripeSubscriptionCancellationService.SynchronizeAsync(
+                    existingSubscription.Id,
+                    false,
+                    cancellationToken);
+
                 if (refund is not null)
                 {
                     await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.MarketplaceBookingSubscriptionTopicName,
@@ -390,6 +396,11 @@ public class MarketplaceBookingSubscriptionService(
                 existingSubscription, null, cancellationToken);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
+
+            await marketplaceStripeSubscriptionCancellationService.SynchronizeAsync(
+                existingSubscription.Id,
+                true,
+                cancellationToken);
 
             return entityMapper.MapTo(existingSubscription);
         }

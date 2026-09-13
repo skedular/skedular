@@ -44,9 +44,9 @@ public sealed class EntitlementPurchaseServiceShould
         A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
         A.CallTo(() => repositoryFactory.MarketplacePurchaseHistoryRepository).Returns(historyRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.Ignored))
+        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>._))
             .ReturnsLazily((EntitlementPurchaseEntity purchase) => purchase);
-        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>.Ignored)).Returns(model);
+        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>._)).Returns(model);
 
         var result = await sut.CreatePendingAsync("customer", "organization", "product-version", pricing, "NZD",
             PaymentMethod.Card, TimeProvider.System.GetUtcNow().AddMinutes(30), null, [], cancellationToken);
@@ -54,14 +54,14 @@ public sealed class EntitlementPurchaseServiceShould
         result.PaymentStatus.ShouldBe(PaymentStatusConstants.Pending);
         A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.That.Matches(item => item.EntitlementId == null)))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => historyRepository.RefreshForEntitlementPurchaseAsync(A<string>.Ignored, cancellationToken)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => invoiceService.GenerateAsync(A<string>.Ignored, cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => historyRepository.RefreshForEntitlementPurchaseAsync(A<string>._, cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => invoiceService.GenerateAsync(A<string>._, cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => repositoryFactory.BookingRepository).MustNotHaveHappened();
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task KeepAutoRenewOnlyForSupportedPricing(
+    public async Task RejectAutoRenewForUnsupportedPricing(
         [Frozen]
         IRepositoryFactory repositoryFactory,
         [Frozen]
@@ -86,12 +86,13 @@ public sealed class EntitlementPurchaseServiceShould
         A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
         A.CallTo(() => repositoryFactory.MarketplacePurchaseHistoryRepository).Returns(historyRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.Ignored))
+        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>._))
             .ReturnsLazily((EntitlementPurchaseEntity purchase) => purchase);
-        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>.Ignored)).Returns(new EntitlementPurchase());
+        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>._)).Returns(new EntitlementPurchase());
 
-        await sut.CreatePendingAsync("customer", "organization", "product-version", pricing, "NZD", PaymentMethod.Card,
-            TimeProvider.System.GetUtcNow().AddMinutes(30), TimeProvider.System.GetUtcNow(), null, [], true, cancellationToken);
+        await Should.ThrowAsync<InvalidOperationException>(() => sut.CreatePendingAsync(
+            "customer", "organization", "product-version", pricing, "NZD", PaymentMethod.Card,
+            TimeProvider.System.GetUtcNow().AddMinutes(30), TimeProvider.System.GetUtcNow(), null, [], true, cancellationToken));
     }
 
     [Theory]
@@ -166,9 +167,9 @@ public sealed class EntitlementPurchaseServiceShould
         A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
         A.CallTo(() => repositoryFactory.MarketplacePurchaseHistoryRepository).Returns(historyRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.Ignored))
+        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>._))
             .ReturnsLazily((EntitlementPurchaseEntity purchase) => purchase);
-        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>.Ignored)).Returns(new EntitlementPurchase());
+        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>._)).Returns(new EntitlementPurchase());
 
         await sut.CreatePendingAsync("customer", "organization", "product-version", pricing, "NZD", PaymentMethod.Card,
             TimeProvider.System.GetUtcNow().AddMinutes(30), TimeProvider.System.GetUtcNow(), null, [], true, cancellationToken);
@@ -242,7 +243,7 @@ public sealed class EntitlementPurchaseServiceShould
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => purchaseRepository.GetByIdAsync("purchase", cancellationToken)).Returns(purchase);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(TimeProvider.System.GetUtcNow());
-        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>.Ignored)).Returns(new EntitlementPurchase());
+        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>._)).Returns(new EntitlementPurchase());
 
         var result = await sut.UpdatePaymentStatusAsync("purchase", PaymentStatus.Confirmed, TimeProvider.System.GetUtcNow(), cancellationToken);
 
@@ -292,7 +293,7 @@ public sealed class EntitlementPurchaseServiceShould
         };
         A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
         A.CallTo(() => purchaseRepository.GetByIdAsync("purchase", cancellationToken)).Returns(purchase);
-        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>.Ignored)).Returns(new EntitlementPurchase());
+        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>._)).Returns(new EntitlementPurchase());
 
         var result = await sut.UpdatePaymentStatusAsync("purchase", PaymentStatus.Confirmed, TimeProvider.System.GetUtcNow(), cancellationToken);
 
@@ -327,7 +328,7 @@ public sealed class EntitlementPurchaseServiceShould
         A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
         A.CallTo(() => repositoryFactory.MarketplacePurchaseHistoryRepository).Returns(historyRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => purchaseRepository.GetExpiredPendingAsync(A<DateTimeOffset>.Ignored, cancellationToken)).Returns([purchase]);
+        A.CallTo(() => purchaseRepository.GetExpiredPendingAsync(A<DateTimeOffset>._, cancellationToken)).Returns([purchase]);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(TimeProvider.System.GetUtcNow());
 
         var count = await sut.ExpirePendingAsync(cancellationToken);
@@ -362,7 +363,7 @@ public sealed class EntitlementPurchaseServiceShould
         };
         A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => purchaseRepository.GetExpiredPendingAsync(A<DateTimeOffset>.Ignored, cancellationToken)).Returns([purchase]);
+        A.CallTo(() => purchaseRepository.GetExpiredPendingAsync(A<DateTimeOffset>._, cancellationToken)).Returns([purchase]);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(TimeProvider.System.GetUtcNow());
         A.CallTo(() => paymentCancellationService.CancelAsync(purchase, cancellationToken)).ThrowsAsync(new InvalidOperationException());
 
@@ -393,13 +394,13 @@ public sealed class EntitlementPurchaseServiceShould
         };
         A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
         A.CallTo(() => purchaseRepository.GetByIdAsync("purchase", cancellationToken)).Returns(purchase);
-        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>.Ignored)).Returns(new EntitlementPurchase());
+        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>._)).Returns(new EntitlementPurchase());
 
         var result = await sut.UpdatePaymentStatusAsync("purchase", PaymentStatus.Confirmed, TimeProvider.System.GetUtcNow(), cancellationToken);
 
         result.ShouldNotBeNull();
         purchase.PaymentStatus.ShouldBe(PaymentStatusConstants.Expired);
-        A.CallTo(() => repositoryFactory.UnitOfWork.SaveChangesAsync(A<CancellationToken>.Ignored)).MustNotHaveHappened();
+        A.CallTo(() => repositoryFactory.UnitOfWork.SaveChangesAsync(A<CancellationToken>._)).MustNotHaveHappened();
     }
 
     [Theory]
@@ -431,16 +432,16 @@ public sealed class EntitlementPurchaseServiceShould
         A.CallTo(() => repositoryFactory.EntitlementPurchaseRepository).Returns(purchaseRepository);
         A.CallTo(() => repositoryFactory.MarketplacePurchaseHistoryRepository).Returns(historyRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.Ignored))
+        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>._))
             .ReturnsLazily((EntitlementPurchaseEntity purchase) => purchase);
-        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>.Ignored)).Returns(new EntitlementPurchase());
-        A.CallTo(() => invoiceService.GenerateAsync(A<string>.Ignored, cancellationToken)).ThrowsAsync(invoiceException);
+        A.CallTo(() => mapper.Map(A<EntitlementPurchaseEntity>._)).Returns(new EntitlementPurchase());
+        A.CallTo(() => invoiceService.GenerateAsync(A<string>._, cancellationToken)).ThrowsAsync(invoiceException);
 
         var thrown = await Should.ThrowAsync<InvalidOperationException>(() => sut.CreatePendingAsync("customer", "organization",
             "product-version", pricing, "NZD", PaymentMethod.Card, TimeProvider.System.GetUtcNow().AddMinutes(30), null, [], cancellationToken));
 
         thrown.ShouldBe(invoiceException);
-        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>.Ignored)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => purchaseRepository.Add(A<EntitlementPurchaseEntity>._)).MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
     }
 }

@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json;
 using Api.Shared.Services.OpenApi.Skedular.Booking.StripeWebhook.V1;
 using Booking.Shared.Publishers;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,7 @@ public class BookingStripeWebhookController(
 
             logger.LogInformation(
                 "Accepted Stripe platform webhook {EventType} with object {ObjectId}", stripeEvent.Type,
-                GetEventObjectId(stripeEvent));
+                GetEventObjectId(stripeEvent, json));
 
             await PublishBookingEventAsync(stripeEvent, json, cancellationToken);
 
@@ -104,7 +105,7 @@ public class BookingStripeWebhookController(
 
             logger.LogInformation(
                 "Accepted Stripe Connect webhook {EventType} with object {ObjectId}", stripeEvent.Type,
-                GetEventObjectId(stripeEvent));
+                GetEventObjectId(stripeEvent, json));
 
             await PublishBookingEventAsync(stripeEvent, json, cancellationToken);
 
@@ -124,10 +125,7 @@ public class BookingStripeWebhookController(
         }
     }
 
-    internal async Task PublishBookingEventAsync(
-        Event stripeEvent,
-        string json,
-        CancellationToken cancellationToken)
+    public async Task PublishBookingEventAsync(Event stripeEvent, string json, CancellationToken cancellationToken)
     {
         var eventObjectId = stripeEvent.Type switch
         {
@@ -140,6 +138,10 @@ public class BookingStripeWebhookController(
                 when stripeEvent.Data.Object is Charge charge => charge.Id,
             "payment_intent.succeeded" or "payment_intent.payment_failed" or "payment_intent.canceled"
                 when stripeEvent.Data.Object is PaymentIntent paymentIntent => paymentIntent.Id,
+            "invoice.paid" or "invoice.payment_succeeded"
+                when stripeEvent.Data.Object is Invoice invoice => invoice.Id,
+            "invoice_payment.paid"
+                when stripeEvent.Data.Object is InvoicePayment invoicePayment => invoicePayment.Id,
             "payout.paid" or "payout.reconciliation_completed" or "payout.failed" or "payout.canceled" or "payout.updated"
                 when stripeEvent.Data.Object is Payout payout => payout.Id,
             _ => null,
@@ -154,12 +156,43 @@ public class BookingStripeWebhookController(
         }
     }
 
-    private static string? GetEventObjectId(Event stripeEvent) => stripeEvent.Data.Object switch
+    public string? GetEventObjectId(Event stripeEvent, string json)
     {
-        Refund refund => refund.Id,
-        Charge charge => charge.Id,
-        Payout payout => payout.Id,
-        Session session => session.Id,
-        _ => null,
-    };
+        var objectId = stripeEvent.Data.Object switch
+        {
+            Refund refund => refund.Id,
+            Charge charge => charge.Id,
+            Payout payout => payout.Id,
+            Session session => session.Id,
+            Invoice invoice => invoice.Id,
+            InvoicePayment invoicePayment => invoicePayment.Id,
+            _ => null,
+        };
+
+        if (!string.IsNullOrWhiteSpace(objectId))
+        {
+            return objectId;
+        }
+
+        // Some newer Stripe event types, including invoice.upcoming, may not be
+        // materialized by the installed SDK even though the signed payload is valid.
+        // Keep the diagnostic log useful without changing event processing behavior.
+        try
+        {
+            using var document = JsonDocument.Parse(json);
+            return document.RootElement
+                .GetProperty("data")
+                .GetProperty("object")
+                .GetProperty("id")
+                .GetString();
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+        catch (KeyNotFoundException)
+        {
+            return null;
+        }
+    }
 }

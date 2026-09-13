@@ -190,6 +190,9 @@ type Mutation {
     @cost(weight: "10")
   cancelEntitlement(input: CancelEntitlementInput!): CancelEntitlementPayload!
     @cost(weight: "10")
+  createEntitlementAutomaticPaymentRecovery(
+    input: CreateEntitlementAutomaticPaymentRecoveryInput!
+  ): EntitlementPurchasePayload! @cost(weight: "10")
   createEntitlementPurchase(input: CreateEntitlementPurchaseInput!): EntitlementPurchasePayload!
     @cost(weight: "10")
   confirmEntitlementPurchase(input: ConfirmEntitlementPurchaseInput!): EntitlementPurchasePayload!
@@ -199,6 +202,9 @@ type Mutation {
   makeEntitlementPurchasePaymentNotRequired(
     input: MakeEntitlementPurchasePaymentNotRequiredInput!
   ): EntitlementPurchasePayload! @cost(weight: "10")
+  createMarketplaceBookingSubscriptionAutomaticPaymentRecovery(
+    input: CreateMarketplaceBookingSubscriptionAutomaticPaymentRecoveryInput!
+  ): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
   addMarketplaceBookingSubscription(
     input: AddMarketplaceBookingSubscriptionInput!
   ): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
@@ -483,6 +489,8 @@ type EntitlementDetails {
 
 type EntitlementPurchaseDetails {
   productVersion: ProductVersionDetails!
+  automaticPaymentStatus: MarketplaceAutomaticPaymentStatusDetails
+    @cost(weight: "10")
   history(after: String, first: Int, before: String, last: Int): ConnectionOfMarketplacePurchaseHistoryEventEdge!
     @cost(weight: "10")
   customerName: String @cost(weight: "10")
@@ -490,6 +498,7 @@ type EntitlementPurchaseDetails {
   linkedBookings(after: String, first: Int, before: String, last: Int): ConnectionOfBookingEdge!
     @cost(weight: "10")
   id: String!
+  autoRenew: Boolean!
   paymentStatus: String!
   lifecycleState: String!
   paymentMethod: String!
@@ -515,6 +524,7 @@ type EntitlementPurchasePayload {
   clientMutationId: String
   purchase: EntitlementPurchaseDetails
   error: String
+  automaticPaymentRecoveryUrl: String
 }
 
 type EntitlementRefundDetails {
@@ -539,6 +549,13 @@ type ListingMetadata @shareable {
   title: String
   subTitle: String
   includedFeatures: [String!]
+}
+
+type MarketplaceAutomaticPaymentStatusDetails {
+  configured: Boolean!
+  status: String!
+  currentPeriodEndsAt: DateTime
+  cancelAtPeriodEnd: Boolean!
 }
 
 type MarketplaceBookingDetails {
@@ -671,6 +688,8 @@ type MarketplaceBookingSubscriptionDetails @key(fields: "id") {
   failure: MarketplaceBookingFailureDetails @cost(weight: "10")
   cancellationAvailability: MarketplaceSubscriptionCancellationAvailabilityDetails!
     @cost(weight: "10")
+  automaticPaymentStatus: MarketplaceAutomaticPaymentStatusDetails
+    @cost(weight: "10")
   history(after: String, first: Int, before: String, last: Int): ConnectionOfMarketplacePurchaseHistoryEventEdge!
     @cost(weight: "10")
   bookingInstances(
@@ -708,6 +727,8 @@ type MarketplaceBookingSubscriptionPayload {
   marketplaceBookingSubscription: MarketplaceBookingSubscriptionDetails
   accessError: SpacesAccessErrorDetails
   cancellationError: CancellationErrorDetails
+  automaticPaymentRecoveryUrl: String
+  error: String
 }
 
 type MarketplaceBookingSubscriptionStatusDetails {
@@ -1349,6 +1370,12 @@ input ConsumeEntitlementCreditInput {
   bookingAt: DateTime!
 }
 
+input CreateEntitlementAutomaticPaymentRecoveryInput {
+  clientMutationId: String!
+  purchaseId: String!
+  returnUrl: String!
+}
+
 input CreateEntitlementPurchaseInput {
   clientMutationId: String
   organizationId: String!
@@ -1359,6 +1386,12 @@ input CreateEntitlementPurchaseInput {
   serviceStartAt: DateTime!
   checkoutReturnUrl: String
   invoiceEmailList: [String!]!
+}
+
+input CreateMarketplaceBookingSubscriptionAutomaticPaymentRecoveryInput {
+  clientMutationId: String!
+  subscriptionId: String!
+  returnUrl: String!
 }
 
 input CreatePartialMarketplaceRefundInput {

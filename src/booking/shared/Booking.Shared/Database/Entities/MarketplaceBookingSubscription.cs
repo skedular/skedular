@@ -17,6 +17,13 @@ public class MarketplaceBookingSubscription : EntityBaseWithDeleted
     public bool CancelAtPeriodEnd { get; set; }
     public bool CancellationPolicyOverridden { get; set; }
     public string? CancellationOverrideReason { get; set; }
+    public string? StripeAccountId { get; set; }
+    public string? StripeCustomerId { get; set; }
+    public string? StripeSubscriptionId { get; set; }
+    public string? StripePriceId { get; set; }
+    public string? StripeSubscriptionStatus { get; set; }
+    public DateTimeOffset? StripeCurrentPeriodEndsAt { get; set; }
+    public bool StripeCancelAtPeriodEnd { get; set; }
     public ICollection<string> WeeklySelectedDays { get; set; } = [];
 
     public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
@@ -42,6 +49,11 @@ public class MarketplaceBookingSubscriptionConfiguration : IEntityTypeConfigurat
         builder.Property(item => item.Status).HasMaxLength(Constants.MaxMarketplaceBookingSubscriptionStatusLength);
         builder.Property(item => item.AutoRenew);
         builder.Property(item => item.CancelAtPeriodEnd);
+        builder.Property(item => item.StripeAccountId).HasMaxLength(Constants.MaxStripeConnectAccountIdLength);
+        builder.Property(item => item.StripeCustomerId).HasMaxLength(Constants.StripeCustomerIdLength);
+        builder.Property(item => item.StripeSubscriptionId).HasMaxLength(256);
+        builder.Property(item => item.StripePriceId).HasMaxLength(Constants.MaxStripePriceIdLength);
+        builder.Property(item => item.StripeSubscriptionStatus).HasMaxLength(64);
         builder.Property(item => item.WeeklySelectedDays).HasColumnType("jsonb");
         builder.Property(item => item.CancellationOverrideReason).HasMaxLength(Constants.MaxDescriptionLength);
 
@@ -58,5 +70,10 @@ public class MarketplaceBookingSubscriptionConfiguration : IEntityTypeConfigurat
         builder.HasIndex(item => item.CancelledAt);
         builder.HasIndex(item => item.NextRenewalAt);
         builder.HasIndex(item => item.Status);
+        builder.HasIndex(item => new
+        {
+            item.StripeAccountId,
+            item.StripeSubscriptionId,
+        }).IsUnique();
     }
 }

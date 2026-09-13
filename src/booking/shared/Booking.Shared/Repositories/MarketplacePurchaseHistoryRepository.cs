@@ -398,7 +398,7 @@ public class MarketplacePurchaseHistoryRepository(BookingDbContext dbContext, Ti
                 .Where(item => item.TransactionType is "RELEASED" or "ADJUSTED").Sum(item => item.Quantity) - entitlement.LedgerEntries
                 .Where(item => item.TransactionType is "CONSUMED" or "FORFEITED" or "EXPIRED").Sum(item => item.Quantity);
         row.SubscriptionStatus = null;
-        row.AutoRenew = false;
+        row.AutoRenew = purchase.AutoRenew;
         row.CancelAtPeriodEnd = false;
         row.IsDeleted = false;
         row.MarketplaceBookingId = null;

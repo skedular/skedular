@@ -6,6 +6,8 @@ using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Microsoft.Extensions.Logging;
 using Stripe;
+using Stripe.Checkout;
+using StripeInvoice = Stripe.Invoice;
 using StripeCheckoutSessionEntity = Booking.Shared.Database.Entities.StripeCheckoutSession;
 using MarketplaceRefundEntityTypeConstants = Booking.Shared.Models.MarketplaceRefundEntityTypeConstants;
 using MarketplaceRefundStatusConstants = Booking.Shared.Models.MarketplaceRefundStatusConstants;
@@ -33,6 +35,9 @@ public class StripeHostRefundService(
     IStripeHostRefundClient stripeClient,
     IMarketplaceRefundTransitionService refundTransitionService,
     TimeProvider timeProvider,
+    IRetrievable<Session, SessionGetOptions> checkoutSessionRetriever,
+    SubscriptionService subscriptionService,
+    IRetrievable<StripeInvoice, InvoiceGetOptions> invoiceRetriever,
     ILogger<StripeHostRefundService> logger) : IStripeHostRefundService
 {
     /// <summary>
@@ -54,20 +59,42 @@ public class StripeHostRefundService(
             "Starting Stripe refund processing for refund {RefundId}, amount {RefundAmount}, currency {Currency}, retry count {RetryCount}",
             refund.Id, refund.RefundAmount, refund.Currency, refund.RetryCount);
         var context = GetPersistedStripeContext(refund);
+        logger.LogInformation(
+            "Resolved Stripe refund context for refund {RefundId}: paymentIntentIdPresent={PaymentIntentIdPresent}, stripeAccountIdPresent={StripeAccountIdPresent}, chargeType={ChargeType}, refundPath={RefundPath}",
+            refund.Id,
+            !string.IsNullOrWhiteSpace(refund.StripePaymentIntentId),
+            !string.IsNullOrWhiteSpace(refund.StripeAccountId),
+            refund.StripeChargeType,
+            refund.StripeRefundPath);
         if (context is null)
         {
             var checkout = await ResolveStripeCheckoutSessionAsync(refund, cancellationToken) ??
                            throw new InvalidOperationException("The Stripe Checkout session for this Host refund could not be found.");
             if (string.IsNullOrWhiteSpace(checkout.PaymentIntentId))
             {
-                refund.Status = MarketplaceRefundStatusConstants.ReconciliationRequired;
-                refund.LastError = "The original Stripe charge context is incomplete and requires reconciliation.";
-                return repositoryFactory.MarketplaceRefundRepository.Update(refund);
+                var recoveredPaymentIntentId = await RecoverPaymentIntentIdAsync(checkout, cancellationToken);
+                if (!string.IsNullOrWhiteSpace(recoveredPaymentIntentId))
+                {
+                    checkout.PaymentIntentId = recoveredPaymentIntentId;
+                    repositoryFactory.StripeCheckoutSessionRepository.Update(checkout);
+                    logger.LogInformation(
+                        "Recovered Stripe PaymentIntent for refund {RefundId} from the Checkout Session subscription invoice: paymentIntentId={PaymentIntentId}",
+                        refund.Id, recoveredPaymentIntentId);
+                }
+                else
+                {
+                    logger.LogWarning("Stripe refund {RefundId} cannot start because the Checkout Session has no PaymentIntentId", refund.Id);
+                    refund.Status = MarketplaceRefundStatusConstants.ReconciliationRequired;
+                    refund.LastError = "The original Stripe charge context is incomplete and requires reconciliation.";
+                    return repositoryFactory.MarketplaceRefundRepository.Update(refund);
+                }
             }
 
             PersistStripeContext(refund, checkout);
             if (!IsSupportedChargeType(refund.StripeChargeType))
             {
+                logger.LogWarning("Stripe refund {RefundId} cannot start because charge type {ChargeType} is unsupported", refund.Id,
+                    refund.StripeChargeType);
                 refund.Status = MarketplaceRefundStatusConstants.ReconciliationRequired;
                 refund.LastError = "The original Stripe charge type is unknown and requires reconciliation.";
                 return repositoryFactory.MarketplaceRefundRepository.Update(refund);
@@ -80,6 +107,7 @@ public class StripeHostRefundService(
 
         if (context is null || string.IsNullOrWhiteSpace(refund.StripePaymentIntentId))
         {
+            logger.LogWarning("Stripe refund {RefundId} cannot start because Stripe payment context is incomplete", refund.Id);
             refund.Status = MarketplaceRefundStatusConstants.ReconciliationRequired;
             refund.LastError = "The original Stripe charge context is incomplete and requires reconciliation.";
             return repositoryFactory.MarketplaceRefundRepository.Update(refund);
@@ -87,6 +115,8 @@ public class StripeHostRefundService(
 
         if (!IsSupportedChargeType(refund.StripeChargeType))
         {
+            logger.LogWarning("Stripe refund {RefundId} cannot start because charge type {ChargeType} is unsupported", refund.Id,
+                refund.StripeChargeType);
             refund.Status = MarketplaceRefundStatusConstants.ReconciliationRequired;
             refund.LastError = "The original Stripe charge type is unknown and requires reconciliation.";
             return repositoryFactory.MarketplaceRefundRepository.Update(refund);
@@ -108,6 +138,15 @@ public class StripeHostRefundService(
                 try
                 {
                     providerSubmissionStarted = true;
+                    logger.LogInformation(
+                        "Calling Stripe refund API for refund {RefundId}: paymentIntentId={PaymentIntentId}, stripeAccountId={StripeAccountId}, reverseTransfer={ReverseTransfer}, refundApplicationFee={RefundApplicationFee}, amount={Amount}, currency={Currency}",
+                        refund.Id,
+                        refund.StripePaymentIntentId,
+                        refund.StripeAccountId,
+                        reverseTransfer,
+                        refundApplicationFee,
+                        refund.RefundAmount,
+                        refund.Currency);
                     stripeRefund = await stripeClient.CreateRefundAsync(
                         new RefundCreateOptions
                         {
@@ -123,6 +162,9 @@ public class StripeHostRefundService(
                         GetStripeRefundIdempotencyKey(refund, reverseTransfer, refundApplicationFee, isInitialProviderRequest),
                         cancellationToken,
                         refund.StripeAccountId);
+                    logger.LogInformation(
+                        "Stripe refund API succeeded for refund {RefundId}: providerRefundId={ProviderRefundId}, providerStatus={ProviderStatus}",
+                        refund.Id, stripeRefund.Id, stripeRefund.Status);
                     refund.StripeRefundPath = reverseTransfer
                         ? MarketplaceStripeRefundPathConstants.TransferReversal
                         : MarketplaceStripeRefundPathConstants.PlatformFunded;
@@ -233,8 +275,8 @@ public class StripeHostRefundService(
             ? MarketplaceRefundStatusConstants.ReconciliationRequired
             : mappedStatus;
         logger.LogInformation(
-            "Received Stripe refund reconciliation for provider refund {ExternalPaymentRefundId}, mapped status {Status}, failure reason {FailureReason}",
-            stripeRefund.Id, nextStatus, stripeRefund.FailureReason);
+            "Received Stripe refund webhook reconciliation: providerRefundId={ExternalPaymentRefundId}, eventCorrelationId={CorrelationId}, localRefundId={RefundId}, mappedStatus={Status}, failureReason={FailureReason}, stripeAccountId={StripeAccountId}",
+            stripeRefund.Id, correlationId, refund.Id, nextStatus, stripeRefund.FailureReason, stripeAccountId);
         if (refund.PaymentRefundStatus == nextStatus)
         {
             if (pathIsUnknown)
@@ -379,19 +421,33 @@ public class StripeHostRefundService(
             !string.IsNullOrWhiteSpace(item.SourcePaymentReference));
         if (stripeSource is not null)
         {
+            logger.LogInformation(
+                "Resolving Stripe refund source allocation for refund {RefundId}: sourceReference={SourceReference}",
+                refund.Id, stripeSource.SourcePaymentReference);
             var checkout = await repositoryFactory.StripeCheckoutSessionRepository.GetByStripeCheckoutSessionIdAsync(
                 stripeSource.SourcePaymentReference,
                 cancellationToken);
             if (checkout is not null)
             {
+                logger.LogInformation(
+                    "Resolved Stripe refund Checkout Session from source allocation for refund {RefundId}: checkoutSessionId={CheckoutSessionId}, paymentIntentId={PaymentIntentId}, chargeType={ChargeType}, stripeAccountId={StripeAccountId}",
+                    refund.Id, checkout.Id, checkout.PaymentIntentId, checkout.ChargeType, checkout.StripeAccountId);
                 return checkout;
             }
+
+            logger.LogWarning(
+                "Stripe source allocation for refund {RefundId} referenced Checkout Session {CheckoutSessionId}, but no local Checkout Session was found",
+                refund.Id, stripeSource.SourcePaymentReference);
         }
 
         if (refund.LocalEntityType == MarketplaceRefundEntityTypeConstants.MarketplaceBooking)
         {
-            return (await repositoryFactory.MarketplaceBookingRepository.GetByIdAsync(refund.LocalEntityId, cancellationToken))
+            var checkout = (await repositoryFactory.MarketplaceBookingRepository.GetByIdAsync(refund.LocalEntityId, cancellationToken))
                 ?.StripeCheckoutSession;
+            logger.LogInformation(
+                "Resolved Stripe refund Checkout Session from booking for refund {RefundId}: found={Found}, paymentIntentId={PaymentIntentId}, chargeType={ChargeType}",
+                refund.Id, checkout is not null, checkout?.PaymentIntentId, checkout?.ChargeType);
+            return checkout;
         }
 
         if (refund.LocalEntityType != MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription)
@@ -402,7 +458,7 @@ public class StripeHostRefundService(
         var subscription = await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdAsync(
             refund.LocalEntityId,
             cancellationToken);
-        return subscription?.RecurringBookings
+        var checkoutSession = subscription?.RecurringBookings
             .Where(item =>
                 item.MarketplaceBooking is { PaymentStatus: PaymentStatusConstants.Confirmed } &&
                 item.StartDate <= refund.RequestedAt &&
@@ -410,6 +466,62 @@ public class StripeHostRefundService(
             .OrderByDescending(item => item.StartDate)
             .Select(item => item.MarketplaceBooking!.StripeCheckoutSession)
             .FirstOrDefault();
+        logger.LogInformation(
+            "Resolved Stripe refund Checkout Session from subscription cycle for refund {RefundId}: subscriptionFound={SubscriptionFound}, recurringBookingCount={RecurringBookingCount}, checkoutFound={CheckoutFound}, paymentIntentId={PaymentIntentId}, chargeType={ChargeType}",
+            refund.Id, subscription is not null, subscription?.RecurringBookings.Count ?? 0, checkoutSession is not null,
+            checkoutSession?.PaymentIntentId, checkoutSession?.ChargeType);
+        return checkoutSession;
+    }
+
+    private async Task<string?> RecoverPaymentIntentIdAsync(
+        StripeCheckoutSessionEntity checkout,
+        CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(checkout.StripeCheckoutSessionId) ||
+            string.IsNullOrWhiteSpace(checkout.StripeAccountId))
+        {
+            return null;
+        }
+
+        var stripeSession = await checkoutSessionRetriever.GetAsync(
+            checkout.StripeCheckoutSessionId,
+            new SessionGetOptions(),
+            new RequestOptions
+            {
+                StripeAccount = checkout.StripeAccountId,
+            },
+            cancellationToken);
+        if (string.IsNullOrWhiteSpace(stripeSession.SubscriptionId))
+        {
+            return null;
+        }
+
+        var stripeSubscription = await subscriptionService.GetAsync(
+            stripeSession.SubscriptionId,
+            null,
+            new RequestOptions
+            {
+                StripeAccount = checkout.StripeAccountId,
+            },
+            cancellationToken);
+        var invoiceId = stripeSubscription.LatestInvoiceId;
+        if (string.IsNullOrWhiteSpace(invoiceId))
+        {
+            return null;
+        }
+
+        var invoice = await invoiceRetriever.GetAsync(
+            invoiceId,
+            new InvoiceGetOptions
+            {
+                Expand = ["payments.data.payment"],
+            },
+            new RequestOptions
+            {
+                StripeAccount = checkout.StripeAccountId,
+            },
+            cancellationToken);
+        return invoice.Payments?.Data.FirstOrDefault()?.Payment?.PaymentIntentId;
     }
 
     private static long ToMinorUnits(decimal amount, string? currency)

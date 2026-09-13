@@ -71,6 +71,10 @@ public interface ITemporalService
 
     Task StartWorkflowExpireEntitlementsAsync(CancellationToken cancellationToken);
 
+    Task StartWorkflowProvisionMarketplacePaidInvoiceAsync(
+        ProvisionMarketplacePaidInvoiceInput args,
+        CancellationToken cancellationToken);
+
 
     /// <summary>
     ///     Updates the organization in-arrears billing workflow configuration.
@@ -148,6 +152,24 @@ public class TemporalService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
+            });
+
+    public async Task StartWorkflowProvisionMarketplacePaidInvoiceAsync(
+        ProvisionMarketplacePaidInvoiceInput args,
+        CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync(
+            (ProvisionMarketplacePaidInvoice workflow) => workflow.ExecuteAsync(args),
+            new WorkflowOptions
+            {
+                Id = workflowIdService.ProvisionMarketplacePaidInvoice(args.StripeAccountId, args.InvoiceId),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.UseExisting,
                 Rpc = new RpcOptions
                 {
                     CancellationToken = cancellationToken,

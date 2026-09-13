@@ -1,55 +1,44 @@
-# Research: Automatic Marketplace Renewal Charging
+# Research: Stripe-Billed Marketplace Auto-Renewal
 
-## Decision: Keep payment authorization purchase-specific
+## Decision: Stripe Billing, not local off-session PaymentIntents
 
-**Decision**: Capture consent and a Stripe-side reusable credential during the initial or fallback checkout for that marketplace purchase. Persist its non-sensitive Stripe references and consent/audit state against that purchase. Never read, select, replace, or fall back to the existing customer-profile payment method.
+Use a Stripe Subscription. Stripe Billing creates the invoice and its PaymentIntent every term, attempts collection, handles SCA/3DS and configured recovery/retries. Skedular consumes webhooks and grants only on `invoice.paid`. This removes the need for local payment-attempt/cycle/retry models.
 
-**Rationale**: It honors the clarified product boundary while leaving card handling to Stripe. A Stripe Customer/PaymentMethod association can exist as a technical Stripe requirement for off-session collection, but it must not be represented as, or sourced from, Skedular’s customer-profile payment-method feature.
+## Decision: recipient connected account, direct charge
 
-**Alternatives considered**:
+Create the Customer, recurring Price, Checkout Session, and Subscription authenticated as the connected account that receives marketplace money. Stripe documents this as the direct-charge Connect subscription model and identifies `invoice.paid` as the provisioning event. The platform must confirm liability/account-type compatibility before enablement. Percentage platform fees can use `application_fee_percent`; a dynamic fee needs an explicit invoice-level policy.
 
-- Reuse customer-profile cards: rejected; violates purchase-specific consent.
-- Create a local card vault: rejected; Stripe owns card data and authorization.
+## Decision: marketplace-only Stripe payment relationship
 
-## Decision: Use one off-session PaymentIntent per renewal cycle
+The customer authorizes Stripe during the initial subscription Checkout. Its Stripe Customer/default payment method is a technical Billing relationship in the connected account. The Customer-domain `StripePaymentMethod` is not read or reused.
 
-**Decision**: A renewal cycle owns one idempotent PaymentIntent identity. Its success/failure/cancellation/action-required outcome is reconciled through local authoritative state and append-only events before reservation access or credit allocation occurs.
+## Decision: catalog pricing
 
-**Rationale**: PaymentIntents model the actual charge and asynchronous outcomes without transferring Skedular’s renewal, entitlement, refund, or history ownership to Stripe.
+Use connected-account recurring Product/Price catalog records. Stripe Prices are immutable. Reuse one Stripe Product per auto-renewable offer version and connected account, and lazily create one `StripePrice` row for each actual recurring Price when that exact local pricing snapshot is first purchased or adopted at renewal. Map `MembershipTerm` to recurring `interval` and `interval_count`; keep one-time and recurring Prices in the same local catalog table. Do not create per-invoice prices or invoice line-item workarounds where a supported recurring Price exists.
 
-**Alternatives considered**:
+Implemented mapping: Daily → `day` × 1; Weekly → `week` × 1; Fortnightly → `week` × 2; Monthly, TwoMonths, Quarterly, FourMonths, FiveMonths, and SixMonths → `month` × 1–6; Yearly → `year` × 1. `NotSet` is rejected and cannot create an AutoRenew Stripe Price.
 
-- Repeated hosted Checkout: retained as fallback, rejected as the primary renewal path.
-- Stripe Billing subscriptions: not selected by default; custom membership terms, current pricing, resource materialization, entitlement validity, cancellation/refund, and Connect behavior would need proof before delegating lifecycle ownership.
+## Decision: provisioning and failure
 
-## Decision: Use Stripe catalog records only for exact matches
+`invoice.paid` is the sole grant gate. `invoice.payment_action_required`, `invoice.payment_failed`, finalization failures, and account disconnection create history/notifications/recovery actions but never grant. Webhook event/account/invoice-period identities provide idempotency.
 
-**Decision**: Reuse the existing Stripe Product/Price mapping for a pricing option only when it exactly represents the renewed commercial amount, currency, tax behavior, and charge context. Use a calculated PaymentIntent amount for dynamic/arrears/tax/Connect cases. Do not create a Product or Price per renewal.
+## Decision: recovery surface
 
-**Rationale**: The existing repository already uses persisted Price IDs for standard reservation and entitlement Checkout and inline `price_data` for arrears/host paths. Stripe describes Products/Prices as catalog resources and supports inline transaction-specific pricing; an inline or dynamic price is not a reusable catalog record.
+Use Stripe Customer Portal for customer recovery. The portal session is created against the purchase-specific connected-account Stripe Customer recorded on the reservation or entitlement aggregate; the Customer-domain `StripePaymentMethod` remains excluded. The portal is a recovery action for payment method/invoice state and does not create a local retry PaymentIntent. Stripe Dashboard portal configuration must prevent customer subscription changes or cancellation unless product policy later approves those actions.
 
-**Alternatives considered**:
+Legacy AutoRenew purchases without purchase-specific subscription correlation do not silently fall back to a Customer-profile payment method. They require an explicit migration checkout that creates the connected-account Billing relationship.
 
-- New catalog objects per renewal: rejected; catalog noise with no idempotency benefit.
-- Force all dynamic values through a static Price: rejected; incorrect for calculated tax/arrears/current-price/Connect cases.
+Option B is selected: when the current marketplace price or term changes, the next renewal updates the connected-account Stripe Subscription item with the current recurring Price and applies the renewed marketplace pricing without customer confirmation. If Stripe cannot apply the update, the renewal does not advance locally.
 
-## Decision: Preserve Connect charge type and validate ownership
+## Open research gates
 
-**Decision**: Keep direct and destination charge behavior as currently selected. Before automatic charging, validate account context, credential scope, customer ownership, tax semantics, and refund/webhook lookup for the selected path. Any ambiguity results in no charge/no grant plus fallback/manual recovery.
+1. Check installed Stripe.NET API fields for subscription Checkout, recurring price mapping, and invoice event objects.
+2. Inventory `MembershipTerm` values and validate exact Stripe interval/count support.
+3. Confirm recipient Connect account types and marketplace fee policy.
+4. Changed-price policy resolved as option B; recovery surface is Customer Portal.
 
-**Rationale**: Stripe scopes direct charges to the connected account and destination charges to the platform. Credential reuse cannot be assumed across account contexts.
+## Confirmed commercial policy
 
-## Decision: Keep local lifecycle history authoritative
-
-**Decision**: Persist cycles, attempts, authorization status, fallback recovery, and append-only lifecycle events locally. Stripe IDs/events reconcile state but cannot manufacture paid access, credits, history, cancellation, or refund outcomes.
-
-**Rationale**: This satisfies the repository’s authoritative-history and domain-ownership rules, while allowing retries, delayed webhooks, and manual recovery to remain auditable.
-
-## Sources
-
-- [Stripe Products and Prices](https://docs.stripe.com/products-prices/how-products-and-prices-work)
-- [Stripe Checkout future payments](https://docs.stripe.com/payments/checkout/save-and-reuse)
-- [Stripe save details during payment](https://docs.stripe.com/payments/save-during-payment)
-- [Stripe Setup Intents](https://docs.stripe.com/payments/setup-intents)
-- [Stripe destination charges](https://docs.stripe.com/connect/destination-charges)
-- [Stripe Connect charge types](https://docs.stripe.com/connect/charges)
+- Skedular Spaces marketplace subscriptions use direct connected-account charges with no platform commission.
+- Skedular Host marketplace subscriptions retain the existing configured commission, currently 5%, using Stripe Billing `application_fee_percent` on the subscription created by Checkout.
+- The Host commission is taken from the persisted marketplace booking commission rate; Customer-profile payment methods are not involved.

@@ -1,42 +1,12 @@
-# Quickstart Validation: Automatic Marketplace Renewal Charging
+# Quickstart: Validate Stripe-Billed Marketplace Auto-Renewal
 
-## Prerequisites
+For an auto-renewable purchase, verify that its recipient connected account has one reusable Stripe Product for the offer version and a recurring Stripe Price mapped to the exact purchased pricing snapshot. Intermediate pricing edits that are never purchased must not create a Stripe Price.
 
-- Branch `049-marketplace-auto-charge` and normal local dependencies.
-- Stripe test fixtures for success, insufficient funds, authentication required, canceled, and delayed outcomes.
-- AutoRenew reservation subscription and credit-entitlement purchases.
-- Purchase-specific authorization captured through that purchase’s checkout—not a customer-profile card.
-
-## Unit validation
-
-Verify:
-
-1. Missing/revoked/detached/expired authorization and profile-card-only state are ineligible.
-2. Renewal freezes current pricing, tax, billing mode, term, and entitlement values.
-3. Amount/tax changes create fallback rather than off-session charge.
-4. Automatic retry stops after three attempts/three days and skips non-retryable failures.
-5. Workflow/webhook replay yields one provider attempt and one materialization.
-6. Reservation cycles and credits are created only after confirmed payment.
-7. Refund policy returns only unused credits and stays separate from cancellation.
-
-## Integration validation
-
-1. Apply the forward-only migration to a disposable database and verify foreign keys, uniqueness, and event indexes.
-2. Exercise direct and destination charge contexts; invalid ownership yields no charge/no grant.
-3. Deliver success, failed, canceled, processing, authentication-required, duplicate, and out-of-order webhooks.
-4. Replay after workflow timeout before webhook delivery and verify no duplicate charge.
-5. Expire fallback after three days and verify prior active term is not implicitly canceled.
-
-## GraphQL and UI validation
-
-1. Query ready, missing authorization, pending, action-required, failed, fallback-required, paid, canceled, and expired states.
-2. Verify customer-profile card status never determines renewal readiness.
-3. Verify authorization/fallback/retry/recovery mutations update Relay without reload.
-4. Verify customer/admin history contains persisted lifecycle events only.
-5. Verify permissions, accessible actions, loading/error states, and American English copy.
-
-## Operational validation
-
-- Locate payment-pending and webhook-conflict records by correlation IDs.
-- Replay/manual-recover safely and verify idempotency.
-- Confirm logs include purchase, renewal, attempt, workflow, PaymentIntent, and event IDs but no sensitive payment data.
+1. Create an eligible AutoRenew reservation or entitlement offer with a connected-account recurring Stripe Price for its membership term.
+2. Complete initial hosted Checkout in subscription mode for the recipient connected account. Confirm purchase-specific Stripe correlation fields and a history event exist; confirm no Customer-profile payment method was consulted.
+3. Deliver a connected-account `invoice.paid` webhook for the initial/renewal period. Confirm exactly one local reservation term or entitlement/credit allocation is created.
+4. Replay that webhook and race it with the applicable reconciliation workflow. Confirm no duplicate grant.
+5. Deliver `invoice.payment_action_required`, `invoice.payment_failed`, and disconnected-account events. Confirm no grant, persisted history, notification/recovery action, and no local retry PaymentIntent.
+6. Complete Stripe recovery and deliver the later `invoice.paid`; confirm one grant.
+7. Disable AutoRenew, test immediate cancellation and period-end cancellation, and confirm Stripe/local future-grant behavior matches the selected policy.
+8. Test legacy AutoRenew without purchase-specific Stripe Subscription correlation. Confirm explicit migration checkout is required and the Customer-profile card is not used.

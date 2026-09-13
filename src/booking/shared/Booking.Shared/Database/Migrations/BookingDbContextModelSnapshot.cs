@@ -723,6 +723,9 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("DECIMAL(18,4)");
 
+                    b.Property<bool>("AutoRenew")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("CheckoutReturnUrl")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
@@ -806,6 +809,9 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
+                    b.Property<bool>("StripeCancelAtPeriodEnd")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("StripeCheckoutSessionId")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -814,9 +820,28 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
+                    b.Property<DateTimeOffset?>("StripeCurrentPeriodEndsAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("StripeCustomerId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
                     b.Property<string>("StripePaymentIntentId")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
+
+                    b.Property<string>("StripePriceId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripeSubscriptionId")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("StripeSubscriptionStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.HasKey("Id");
 
@@ -836,6 +861,9 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("PaymentStatus");
 
                     b.HasIndex("ProductVersionId");
+
+                    b.HasIndex("StripeAccountId", "StripeSubscriptionId")
+                        .IsUnique();
 
                     b.ToTable("EntitlementPurchase");
                 });
@@ -1642,6 +1670,32 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
 
+                    b.Property<string>("StripeAccountId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("StripeCancelAtPeriodEnd")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("StripeCurrentPeriodEndsAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("StripeCustomerId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("StripePriceId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripeSubscriptionId")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("StripeSubscriptionStatus")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.PrimitiveCollection<string>("WeeklySelectedDays")
                         .IsRequired()
                         .HasColumnType("jsonb");
@@ -1669,6 +1723,9 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("StartedAt");
 
                     b.HasIndex("Status");
+
+                    b.HasIndex("StripeAccountId", "StripeSubscriptionId")
+                        .IsUnique();
 
                     b.ToTable("MarketplaceBookingSubscription");
                 });
@@ -3392,8 +3449,16 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("BillingMode")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -3404,8 +3469,26 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
+                    b.Property<bool>("IsRecurring")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool?>("IsTaxInclusive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("MembershipTerm")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ProductPricingId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("StripeAccountId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("StripePriceId")
                         .IsRequired()
@@ -3415,6 +3498,9 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("StripeProductId")
                         .HasColumnType("character varying(100)");
 
+                    b.Property<decimal?>("UnitAmount")
+                        .HasColumnType("DECIMAL(18,4)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
@@ -3423,7 +3509,12 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("StripeProductId")
+                    b.HasIndex("StripeProductId");
+
+                    b.HasIndex("StripeAccountId", "StripePriceId")
+                        .IsUnique();
+
+                    b.HasIndex("StripeAccountId", "ProductPricingId", "UnitAmount", "Currency", "MembershipTerm", "BillingMode", "IsTaxInclusive", "IsRecurring")
                         .IsUnique();
 
                     b.ToTable("StripePrice");
@@ -4764,8 +4855,8 @@ namespace Booking.Shared.Database.Migrations
             modelBuilder.Entity("Booking.Shared.Database.Entities.StripePrice", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.StripeProduct", "StripeProduct")
-                        .WithOne("StripePrice")
-                        .HasForeignKey("Booking.Shared.Database.Entities.StripePrice", "StripeProductId");
+                        .WithMany("StripePrices")
+                        .HasForeignKey("StripeProductId");
 
                     b.Navigation("StripeProduct");
                 });
@@ -5282,7 +5373,7 @@ namespace Booking.Shared.Database.Migrations
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.StripeProduct", b =>
                 {
-                    b.Navigation("StripePrice");
+                    b.Navigation("StripePrices");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Team", b =>

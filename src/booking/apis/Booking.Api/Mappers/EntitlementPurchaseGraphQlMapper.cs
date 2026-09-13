@@ -13,6 +13,7 @@ public sealed class EntitlementPurchaseGraphQlMapper : IEntitlementPurchaseGraph
     public EntitlementPurchaseDetails Map(EntitlementPurchase source) => new()
     {
         Id = source.Id,
+        AutoRenew = source.AutoRenew,
         PaymentStatus = source.PaymentStatus,
         LifecycleState = source.LifecycleState.ToString(),
         PaymentMethod = source.PaymentMethod,
