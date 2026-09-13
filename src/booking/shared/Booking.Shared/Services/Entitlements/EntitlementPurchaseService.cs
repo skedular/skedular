@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Shared.Mappers;
+using Booking.Shared.Models;
 using Booking.Shared.Models.Entitlements;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.GraphQL;
@@ -57,6 +58,13 @@ public interface IEntitlementPurchaseService
         DateTimeOffset activatesAt,
         CancellationToken cancellationToken);
 
+    Task ConfirmStripeSubscriptionInvoiceAsync(
+        string purchaseId,
+        string stripeAccountId,
+        string stripeInvoiceId,
+        DateTimeOffset serviceStartAt,
+        CancellationToken cancellationToken);
+
     Task UpdateStripePaymentContextAsync(
         string purchaseId,
         string? stripeCheckoutSessionId,
@@ -86,6 +94,9 @@ public sealed class EntitlementPurchaseService(
     TimeProvider timeProvider,
     IEntitlementPurchasePaymentCancellationService paymentCancellationService,
     IEntitlementInvoiceService entitlementInvoiceService,
+    IProductVersionHelperService productVersionHelperService,
+    IStripeProductPricingService stripeProductPricingService,
+    IMarketplaceStripeSubscriptionPriceService marketplaceStripeSubscriptionPriceService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
     ILogger<EntitlementPurchaseService> logger) : IEntitlementPurchaseService
 {
@@ -192,10 +203,17 @@ public sealed class EntitlementPurchaseService(
             throw new InvalidOperationException("The selected payment method is not accepted for this entitlement purchase.");
         }
 
+        if (autoRenew && (!pricing.SupportsSubscriptionAutoRenewal || paymentMethod != PaymentMethod.Card))
+        {
+            throw new InvalidOperationException(
+                "Auto-renewing entitlement purchases require card payment and a pricing option that supports AutoRenew.");
+        }
+
         var purchase = new Database.Entities.EntitlementPurchase
         {
             Id = randomHelper.Generate(),
             CreatedAt = timeProvider.GetUtcNow(),
+            AutoRenew = autoRenew,
             PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
             PaymentMethod = paymentMethod.ToPaymentMethod(),
             PaymentExpiry = paymentExpiry,
@@ -308,7 +326,7 @@ public sealed class EntitlementPurchaseService(
 
         if (paymentStatus == PaymentStatus.Confirmed)
         {
-            if (purchase.PaymentMethod == PaymentMethod.Card.ToPaymentMethod() &&
+            if (!purchase.AutoRenew && purchase.PaymentMethod == PaymentMethod.Card.ToPaymentMethod() &&
                 (string.IsNullOrWhiteSpace(purchase.StripeCheckoutSessionId) ||
                  string.IsNullOrWhiteSpace(purchase.StripePaymentIntentId)))
             {
@@ -377,6 +395,113 @@ public sealed class EntitlementPurchaseService(
         purchase.StripePaymentIntentId ??= stripePaymentIntentId;
         await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForEntitlementPurchaseAsync(purchase.Id, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task ConfirmStripeSubscriptionInvoiceAsync(
+        string purchaseId,
+        string stripeAccountId,
+        string stripeInvoiceId,
+        DateTimeOffset serviceStartAt,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(stripeAccountId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(stripeInvoiceId);
+
+        var purchase = await repositoryFactory.EntitlementPurchaseRepository.GetByIdAsync(purchaseId, cancellationToken) ??
+                       throw new InvalidOperationException("The entitlement purchase could not be found.");
+        if (!purchase.AutoRenew || purchase.PaymentMethod != PaymentMethod.Card.ToPaymentMethod())
+        {
+            logger.LogWarning(
+                "Ignored Stripe subscription invoice for a purchase without Stripe Billing authorization. PurchaseId={PurchaseId}, InvoiceId={InvoiceId}",
+                purchaseId,
+                stripeInvoiceId);
+            return;
+        }
+
+        if (purchase.EntitlementId is null)
+        {
+            // Checkout completion captures authorization only. The first paid invoice is
+            // the sole confirmation gate for the initial credit entitlement.
+            await ConfirmAsync(purchase.Id, serviceStartAt, cancellationToken);
+            await entitlementInvoiceService.GenerateAsync(purchase.Id, cancellationToken);
+            return;
+        }
+
+        var invoicePurchaseReference = $"stripe-subscription-invoice:{stripeAccountId}:{stripeInvoiceId}";
+        var entitlement = await entitlementService.GrantAsync(
+            invoicePurchaseReference,
+            purchase.CustomerId,
+            purchase.OrganizationId,
+            purchase.ProductPricing,
+            serviceStartAt,
+            purchase.Currency,
+            cancellationToken);
+        await repositoryFactory.MarketplacePurchaseHistoryRepository.AppendEventAsync(
+            new MarketplacePurchaseHistoryEventModel(
+                $"stripe-invoice-paid:{stripeAccountId}:{stripeInvoiceId}",
+                purchase.Id,
+                MarketplacePurchaseHistoryEligibleSourceType.Entitlement,
+                MarketplacePurchaseHistoryEventType.EntitlementCreated,
+                serviceStartAt,
+                timeProvider.GetUtcNow(),
+                null,
+                PaymentStatus.Confirmed,
+                null,
+                null,
+                null,
+                entitlement.GrantedQuantity,
+                entitlement.GrantedQuantity,
+                purchase.Amount,
+                null,
+                null,
+                null,
+                null,
+                "Stripe subscription invoice paid",
+                null,
+                entitlement.Status,
+                true,
+                null,
+                null,
+                $"stripe-account:{stripeAccountId};stripe-invoice:{stripeInvoiceId}"),
+            $"stripe-invoice-paid:{stripeAccountId}:{stripeInvoiceId}",
+            cancellationToken);
+
+        // The paid invoice is authoritative for this grant. Only after the grant is
+        // recorded may the next Stripe Billing cycle be moved to the current price.
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(purchase.ProductVersionId, cancellationToken);
+        var currentPricing = productVersion is null
+            ? null
+            : productVersionHelperService.FindMatchingPricing([.. productVersion.PricingOptions ?? []], purchase.ProductPricing);
+        if (currentPricing is not null && productVersion is not null && !string.IsNullOrWhiteSpace(purchase.StripeAccountId))
+        {
+            await stripeProductPricingService.EnsureProductPricingAsync(
+                productVersion, currentPricing, purchase.StripeAccountId, cancellationToken);
+        }
+
+        var currentStripePrice = currentPricing is null || productVersion is null || string.IsNullOrWhiteSpace(purchase.StripeAccountId)
+            ? null
+            : stripeProductPricingService.GetRecurringPriceId(productVersion, currentPricing, purchase.StripeAccountId);
+        if (currentPricing is not null && !string.IsNullOrWhiteSpace(currentStripePrice) &&
+            !string.Equals(currentPricing.Id, purchase.ProductPricing.Id, StringComparison.Ordinal))
+        {
+            if (await marketplaceStripeSubscriptionPriceService.UpdatePriceForEntitlementAsync(
+                    purchase.Id,
+                    currentStripePrice,
+                    1,
+                    cancellationToken))
+            {
+                purchase.ProductPricing = currentPricing;
+                purchase.Amount = currentPricing.Price;
+                repositoryFactory.EntitlementPurchaseRepository.Update(purchase);
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            }
+        }
+
+        logger.LogInformation(
+            "Granted entitlement from paid Stripe subscription invoice. PurchaseId={PurchaseId}, InvoiceId={InvoiceId}, EntitlementId={EntitlementId}",
+            purchase.Id,
+            stripeInvoiceId,
+            entitlement.Id);
     }
 
     public async Task<EntitlementModel?> CompleteAsync(

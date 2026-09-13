@@ -17,15 +17,11 @@ public class BookingStripeWebhookControllerShould
     [AutoFakeItEasyData]
     public async Task Publish_Payout_State_Events(
         [Frozen]
-        StripeConfiguration stripeConfiguration,
-        [Frozen]
         IBookingInternalPublisher publisher,
-        [Frozen]
-        ILogger<BookingStripeWebhookController> logger,
-        TimeProvider timeProvider,
+        [NoAutoProperties]
+        BookingStripeWebhookController sut,
         CancellationToken cancellationToken)
     {
-        var sut = new BookingStripeWebhookController(stripeConfiguration, publisher, timeProvider, logger);
         var eventTypes = new[] { "payout.paid", "payout.reconciliation_completed", "payout.failed", "payout.canceled", "payout.updated" };
         foreach (var eventType in eventTypes)
         {
@@ -44,8 +40,7 @@ public class BookingStripeWebhookControllerShould
             await sut.PublishBookingEventAsync(stripeEvent, "{}", cancellationToken);
         }
 
-        A.CallTo(() => publisher.PublishStripeConnectAccountWebhookEventReceivedAsync(
-                "po_1", "{}", cancellationToken))
+        A.CallTo(() => publisher.PublishStripeConnectAccountWebhookEventReceivedAsync("po_1", "{}", cancellationToken))
             .MustHaveHappened(5, Times.Exactly);
     }
 
@@ -56,14 +51,12 @@ public class BookingStripeWebhookControllerShould
         StripeConfiguration stripeConfiguration,
         [Frozen]
         IBookingInternalPublisher publisher,
-        [Frozen]
-        ILogger<BookingStripeWebhookController> logger,
-        TimeProvider timeProvider,
+        [NoAutoProperties]
+        BookingStripeWebhookController sut,
+        string secret,
         CancellationToken cancellationToken)
     {
-        const string secret = "whsec_test";
         stripeConfiguration.BookingPlatformAccountWebhookKey = secret;
-        var sut = new BookingStripeWebhookController(stripeConfiguration, publisher, timeProvider, logger);
         var webhooks = new[]
         {
             (EventType: "charge.succeeded", ObjectId: "ch_1", ObjectType: "charge"),
@@ -96,8 +89,7 @@ public class BookingStripeWebhookControllerShould
             var result = await sut.ProcessStripePlatformAccountEvent(signature, cancellationToken);
 
             result.ShouldBeOfType<OkResult>();
-            A.CallTo(() => publisher.PublishStripeConnectAccountWebhookEventReceivedAsync(
-                    webhook.ObjectId, json, A<CancellationToken>._))
+            A.CallTo(() => publisher.PublishStripeConnectAccountWebhookEventReceivedAsync(webhook.ObjectId, json, cancellationToken))
                 .MustHaveHappenedOnceExactly();
         }
     }
@@ -127,7 +119,7 @@ public class BookingStripeWebhookControllerShould
                 {
                     Request =
                     {
-                        Body = new MemoryStream(Encoding.UTF8.GetBytes("{}")),
+                        Body = new MemoryStream([.. "{}"u8]),
                     },
                 },
             },
@@ -141,5 +133,24 @@ public class BookingStripeWebhookControllerShould
             .MustHaveHappened();
         A.CallTo(() => publisher.PublishStripeConnectAccountWebhookEventReceivedAsync(A<string>._, A<string>._, A<CancellationToken>._))
             .MustNotHaveHappened();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Log_Raw_Object_Id_When_Stripe_Does_Not_Materialize_Invoice_Upcoming_Object(
+        [NoAutoProperties]
+        BookingStripeWebhookController sut,
+        string invoiceId)
+    {
+        var stripeEvent = new Event
+        {
+            Type = "invoice.upcoming",
+            Data = new EventData(),
+        };
+        var Json = $"{{\"data\":{{\"object\":{{\"id\":\"{invoiceId}\"}}}}}}";
+
+        var objectId = sut.GetEventObjectId(stripeEvent, Json);
+
+        objectId.ShouldBe(invoiceId);
     }
 }

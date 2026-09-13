@@ -121,8 +121,8 @@ public class RecordDeskAvailabilitySnapshotShould(
             new BookingService.BookingServiceClient(callInvoker),
             logger);
 
-        var environment = new ActivityEnvironment();
-        var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync(locationId));
+        var activityEnvironment = new ActivityEnvironment();
+        var result = await activityEnvironment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync(locationId));
 
         result.ShouldBeTrue();
 
@@ -159,14 +159,14 @@ public class RecordDeskAvailabilitySnapshotShould(
             new BookingService.BookingServiceClient(callInvoker),
             logger);
 
-        var environment = new ActivityEnvironment();
+        var activityEnvironment1 = new ActivityEnvironment();
 
         // First invocation
-        await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync(locationId));
+        await activityEnvironment1.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync(locationId));
 
         // Second invocation — idempotent replace
-        var environment2 = new ActivityEnvironment();
-        var result2 = await environment2.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync(locationId));
+        var activityEnvironment2 = new ActivityEnvironment();
+        var result2 = await activityEnvironment2.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync(locationId));
 
         result2.ShouldBeTrue();
 

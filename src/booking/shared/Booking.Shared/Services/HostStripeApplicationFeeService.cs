@@ -8,6 +8,8 @@ public interface IHostStripeApplicationFeeService
 {
     long? GetAmountInMinorUnits(string organizationType, decimal? commissionAmount);
 
+    SessionSubscriptionDataOptions? CreateSubscriptionData(string organizationType, decimal? commissionRatePercentage);
+
     SessionPaymentIntentDataOptions? CreateDestinationCharge(
         string organizationType,
         string stripeConnectAccountId,
@@ -16,6 +18,19 @@ public interface IHostStripeApplicationFeeService
 
 public class HostStripeApplicationFeeService : IHostStripeApplicationFeeService
 {
+    public SessionSubscriptionDataOptions? CreateSubscriptionData(string organizationType, decimal? commissionRatePercentage)
+    {
+        if (organizationType != OrganizationTypeConstants.Host || commissionRatePercentage is null or <= 0m)
+        {
+            return null;
+        }
+
+        return new SessionSubscriptionDataOptions
+        {
+            ApplicationFeePercent = Math.Clamp(commissionRatePercentage.Value, 0m, 100m).RoundedDecimal(),
+        };
+    }
+
     public long? GetAmountInMinorUnits(string organizationType, decimal? commissionAmount)
     {
         if (organizationType != OrganizationTypeConstants.Host || commissionAmount is null or <= 0m)

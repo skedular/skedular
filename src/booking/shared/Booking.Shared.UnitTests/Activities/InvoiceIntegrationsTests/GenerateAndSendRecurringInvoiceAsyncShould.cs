@@ -38,8 +38,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         string relatedBookingId,
         string subscriptionId)
     {
-        var environment = new ActivityEnvironment();
-
+        var activityEnvironment = new ActivityEnvironment();
         var recurringBooking = new RecurringBooking
         {
             Id = recurringBookingId,
@@ -80,25 +79,25 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, environment.CancellationTokenSource.Token))
+        A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, activityEnvironment.CancellationTokenSource.Token))
             .Returns(recurringBooking);
-        A.CallTo(() => productVersionRepository.GetByIdAsync(productVersionId, environment.CancellationTokenSource.Token))
+        A.CallTo(() => productVersionRepository.GetByIdAsync(productVersionId, activityEnvironment.CancellationTokenSource.Token))
             .Returns(productVersion);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync(
                 recurringBookingId,
                 recurringBooking.StartDate,
                 null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(relatedBookings);
         A.CallTo(() => xeroInvoiceService.HandleRecurringBookingInvoiceAsync(
                 organizationId,
                 recurringBooking,
                 recurringBooking.MarketplaceBooking,
                 productVersion,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(RecurringInvoiceHandlingDisposition.StopAndPublish);
 
-        await environment.RunAsync(() =>
+        await activityEnvironment.RunAsync(() =>
             sut.GenerateAndSendRecurringInvoiceAsync(new GenerateAndSendRecurringInvoiceInput(recurringBookingId, [])));
 
         A.CallTo(() => skedularInvoiceService.GenerateAndSendRecurringInvoiceAsync(
@@ -110,12 +109,12 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         A.CallTo(() => graphQlTopicEventSender.RaiseGraphqlChangeAsync(
                 Constants.MarketplaceBookingSubscriptionTopicName,
                 subscriptionId,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => graphQlTopicEventSender.RaiseGraphqlChangeAsync(
                 Constants.BookingTopicName,
                 relatedBookingId,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -144,8 +143,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         string relatedBookingId,
         string subscriptionId)
     {
-        var environment = new ActivityEnvironment();
-
+        var activityEnvironment = new ActivityEnvironment();
         var recurringBooking = new RecurringBooking
         {
             Id = recurringBookingId,
@@ -186,42 +184,42 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
-        A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, environment.CancellationTokenSource.Token))
+        A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, activityEnvironment.CancellationTokenSource.Token))
             .Returns(recurringBooking);
-        A.CallTo(() => productVersionRepository.GetByIdAsync(productVersionId, environment.CancellationTokenSource.Token))
+        A.CallTo(() => productVersionRepository.GetByIdAsync(productVersionId, activityEnvironment.CancellationTokenSource.Token))
             .Returns(productVersion);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync(
                 recurringBookingId,
                 recurringBooking.StartDate,
                 null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(relatedBookings);
         A.CallTo(() => xeroInvoiceService.HandleRecurringBookingInvoiceAsync(
                 organizationId,
                 recurringBooking,
                 recurringBooking.MarketplaceBooking,
                 productVersion,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(RecurringInvoiceHandlingDisposition.ContinueToSkedular);
 
-        await environment.RunAsync(() =>
+        await activityEnvironment.RunAsync(() =>
             sut.GenerateAndSendRecurringInvoiceAsync(new GenerateAndSendRecurringInvoiceInput(recurringBookingId, [])));
 
         A.CallTo(() => skedularInvoiceService.GenerateAndSendRecurringInvoiceAsync(
                 A<GenerateAndSendRecurringInvoiceInput>.That.Matches(input => input.RecurringBookingId == recurringBookingId),
                 recurringBooking,
                 organizationId,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => graphQlTopicEventSender.RaiseGraphqlChangeAsync(
                 Constants.MarketplaceBookingSubscriptionTopicName,
                 subscriptionId,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => graphQlTopicEventSender.RaiseGraphqlChangeAsync(
                 Constants.BookingTopicName,
                 relatedBookingId,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 }

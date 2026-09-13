@@ -10,6 +10,7 @@ public interface IStripeCheckoutSessionRepository : IRepository<StripeCheckoutSe
 {
     Task<StripeCheckoutSession?> GetByStripeCheckoutSessionIdAsync(string stripeCheckoutSessionId, CancellationToken cancellationToken);
     Task<StripeCheckoutSession?> GetByPaymentIntentIdAsync(string paymentIntentId, CancellationToken cancellationToken);
+    Task<StripeCheckoutSession?> GetByMarketplaceBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken);
     Task<StripeCheckoutSession?> GetByTransferIdAsync(string transferId, CancellationToken cancellationToken);
     Task<StripeCheckoutSession?> GetByPayoutIdAsync(string payoutId, CancellationToken cancellationToken);
 
@@ -52,6 +53,11 @@ public class StripeCheckoutSessionRepository(BookingDbContext dbContext, TimePro
             .ThenInclude(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBookingSubscription)
             .FirstOrDefaultAsync(query => query.PaymentIntentId == paymentIntentId, cancellationToken);
+
+    public async Task<StripeCheckoutSession?> GetByMarketplaceBookingIdAsync(
+        string marketplaceBookingId, CancellationToken cancellationToken) =>
+        await DbContext.StripeCheckoutSession
+            .FirstOrDefaultAsync(query => query.MarketplaceBookingId == marketplaceBookingId, cancellationToken);
 
     public StripeCheckoutSession Update(StripeCheckoutSession stripeCheckoutSession)
     {

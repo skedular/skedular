@@ -40,7 +40,7 @@ public class ReleaseMarketplaceBookingSubscriptionResourcesAsyncShould
         string recurringBookingId,
         string bookingId)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var deletedByCustomer = new Customer
         {
             Id = "customer-1",
@@ -74,13 +74,13 @@ public class ReleaseMarketplaceBookingSubscriptionResourcesAsyncShould
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync(subscriptionId, environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync(subscriptionId, activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(
                 recurringBookingId,
                 A<DateTimeOffset>._,
                 null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(new List<BookingEntity>
             {
                 existingBooking,
@@ -88,20 +88,21 @@ public class ReleaseMarketplaceBookingSubscriptionResourcesAsyncShould
         A.CallTo(() => recurringBookingRepository.Update(recurringBooking)).Returns(recurringBooking);
         A.CallTo(() => recurringBookingRepository.Remove(recurringBooking)).Returns(recurringBooking);
 
-        await environment.RunAsync(() =>
+        await activityEnvironment.RunAsync(() =>
             sut.ReleaseMarketplaceBookingSubscriptionResourcesAsync(new ReleaseMarketplaceBookingSubscriptionResourcesInput(subscriptionId)));
 
         A.CallTo(() => temporalService.SignalPayRecurringBookingViaBankTransferWorkflowDeleteRecurringBookingAsync(
                 recurringBookingId,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, environment.CancellationTokenSource.Token))
+        A.CallTo(() => accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking,
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingService.DeleteWithoutAccountingAsync(existingBooking, deletedByCustomer, false, null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => recurringBookingRepository.Remove(recurringBooking)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -127,7 +128,7 @@ public class ReleaseMarketplaceBookingSubscriptionResourcesAsyncShould
         string subscriptionId,
         string recurringBookingId)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var deletedByCustomer = new Customer
         {
             Id = "customer-1",
@@ -155,32 +156,33 @@ public class ReleaseMarketplaceBookingSubscriptionResourcesAsyncShould
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync(subscriptionId, environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync(subscriptionId, activityEnvironment.CancellationTokenSource.Token))
             .Returns(subscription);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(
                 recurringBookingId,
                 A<DateTimeOffset>._,
                 null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(new List<BookingEntity>());
         A.CallTo(() => recurringBookingRepository.Update(recurringBooking)).Returns(recurringBooking);
         A.CallTo(() => recurringBookingRepository.Remove(recurringBooking)).Returns(recurringBooking);
 
-        await environment.RunAsync(() =>
+        await activityEnvironment.RunAsync(() =>
             sut.ReleaseMarketplaceBookingSubscriptionResourcesAsync(new ReleaseMarketplaceBookingSubscriptionResourcesInput(subscriptionId)));
 
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(
                 recurringBookingId,
                 from,
                 null,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => temporalService.SignalPayRecurringBookingViaBankTransferWorkflowDeleteRecurringBookingAsync(
                 recurringBookingId,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, environment.CancellationTokenSource.Token))
+        A.CallTo(() => accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking,
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
     }
 }

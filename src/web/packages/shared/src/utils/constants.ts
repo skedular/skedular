@@ -1,5 +1,3 @@
-import type { NextRequest } from 'next/server';
-
 export const isServer = typeof window === 'undefined';
 
 export const keyboardSearchDebounceTimeout = 500;
@@ -55,7 +53,12 @@ const isLocalHost = (host: string) => {
   return normalizedHost === 'localhost' || normalizedHost.startsWith('localhost:') || normalizedHost.startsWith('127.0.0.1');
 };
 
-export const getPublicOrigin = (request: NextRequest) => {
+type PublicOriginRequest = {
+  headers: Pick<Headers, 'get'>;
+  nextUrl: Pick<URL, 'host' | 'origin' | 'protocol'>;
+};
+
+export const getPublicOrigin = (request: PublicOriginRequest) => {
   const forwardedHostCandidates = [
     ...splitHeaderValues(request.headers.get('x-forwarded-host')),
     ...splitHeaderValues(request.headers.get('x-original-host')),

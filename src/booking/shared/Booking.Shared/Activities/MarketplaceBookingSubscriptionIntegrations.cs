@@ -52,6 +52,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
     IMarketplaceBookingAvailableDaysService marketplaceBookingAvailableDaysService,
     IMarketplaceBookingWeeklyDaySelectionService marketplaceBookingWeeklyDaySelectionService,
     IMarketplaceBookingFailureService marketplaceBookingFailureService,
+    IStripeProductPricingService stripeProductPricingService,
+    IMarketplaceStripeSubscriptionPriceService marketplaceStripeSubscriptionPriceService,
     IDbTransactionBuilder transactionBuilder,
     ICachedBookingService cachedBookingService,
     ILogger<MarketplaceBookingSubscriptionIntegrations> logger)
@@ -698,7 +700,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await EnsureInitialArrearsInvoiceStartedAsync(subscription, recurringBooking, cycleStart, cancellationToken);
 
-        if (ShouldStartRecurringBookingCardPaymentWorkflow(recurringMarketplaceBooking))
+        var hasStripeBillingLink = await HasStripeBillingLinkAsync(subscription.Id, cancellationToken);
+        if (ShouldStartRecurringBookingCardPaymentWorkflow(recurringMarketplaceBooking) && !hasStripeBillingLink)
         {
             await temporalService.StartWorkflowPayRecurringBookingViaCardAsync(
                 new PayRecurringBookingViaCardInput(
@@ -731,6 +734,14 @@ public class MarketplaceBookingSubscriptionIntegrations(
         CancellationToken cancellationToken)
     {
         recurringBooking = await EnsureRecurringBookingMarketplaceBookingLoadedAsync(recurringBooking, cancellationToken);
+        if (recurringBooking.MarketplaceBookingSubscription is { Id: var subscriptionId } &&
+            await HasStripeBillingLinkAsync(subscriptionId, cancellationToken))
+        {
+            // Stripe Billing owns subsequent collection. The paid-invoice webhook is the
+            // only path that confirms this term; do not create another Checkout Session.
+            return;
+        }
+
         var marketplaceBooking = recurringBooking.MarketplaceBooking;
 
         if (marketplaceBooking is null ||
@@ -856,6 +867,12 @@ public class MarketplaceBookingSubscriptionIntegrations(
             return subscription;
         }
 
+        // Stripe creates the next invoice at its own period boundary. Prepare the
+        // selected Price while the current period is still active; doing this only
+        // after NextRenewalAt has passed can charge the old Price before Temporal
+        // gets a chance to run.
+        hasChanges |= await TryPrepareNextStripeBillingPriceAsync(subscription, cancellationToken);
+
         while (subscription.NextRenewalAt.HasValue && subscription.NextRenewalAt.Value <= now)
         {
             if (!subscription.AutoRenew || !subscription.MarketplaceBooking.ProductPricing.SupportsSubscriptionAutoRenewal)
@@ -873,6 +890,15 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 break;
             }
 
+            if (!await IsPreviousCyclePaidAsync(subscription, cancellationToken))
+            {
+                logger.LogInformation(
+                    "Marketplace subscription renewal is waiting for the previous cycle payment. SubscriptionId={SubscriptionId}, RenewalAt={RenewalAt}",
+                    subscription.Id,
+                    subscription.NextRenewalAt);
+                break;
+            }
+
             var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(subscription.ProductVersion.Id, cancellationToken);
             if (productVersion?.PricingOptions is null)
             {
@@ -882,6 +908,13 @@ public class MarketplaceBookingSubscriptionIntegrations(
                     hasChanges = true;
                 }
 
+                break;
+            }
+
+            if (string.IsNullOrWhiteSpace(subscription.StripeAccountId))
+            {
+                subscription.Status = MarketplaceBookingSubscriptionStatus.RenewalFailed.ToMarketplaceBookingSubscriptionStatus();
+                hasChanges = true;
                 break;
             }
 
@@ -898,6 +931,9 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
                 break;
             }
+
+            await stripeProductPricingService.EnsureProductPricingAsync(
+                productVersion, renewedProductPricing, subscription.StripeAccountId, cancellationToken);
 
             try
             {
@@ -943,6 +979,26 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 subscription.MarketplaceBooking.ProductPricing.Id,
                 renewedProductPricing.Id,
                 renewedProductPricing.AvailableDays);
+            var renewedStripePrice = stripeProductPricingService.GetRecurringPriceId(
+                productVersion,
+                renewedProductPricing,
+                subscription.StripeAccountId!);
+            if (string.IsNullOrWhiteSpace(renewedStripePrice) ||
+                !await marketplaceStripeSubscriptionPriceService.UpdatePriceAsync(
+                    subscription.Id,
+                    renewedStripePrice,
+                    subscription.MarketplaceBooking.Quantity,
+                    cancellationToken))
+            {
+                logger.LogWarning(
+                    "Marketplace subscription renewal stopped because Stripe could not adopt the current recurring price. SubscriptionId={SubscriptionId}, PricingId={PricingId}",
+                    subscription.Id,
+                    renewedProductPricing.Id);
+                subscription.Status = MarketplaceBookingSubscriptionStatus.RenewalFailed.ToMarketplaceBookingSubscriptionStatus();
+                hasChanges = true;
+                break;
+            }
+
             subscription.MarketplaceBooking.ProductPricing = renewedProductPricing;
             subscription.ProductVersion = productVersion;
             subscription.Status = MarketplaceBookingSubscriptionStatus.Active.ToMarketplaceBookingSubscriptionStatus();
@@ -1009,6 +1065,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
         marketplaceBooking.IsPaymentRequired &&
         !ShouldSkipResourceMaterializationForTerminalPaymentStatus(marketplaceBooking) &&
         marketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.Card;
+
+    private async Task<bool> HasStripeBillingLinkAsync(string marketplaceBookingSubscriptionId, CancellationToken cancellationToken) =>
+        await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdAsync(
+            marketplaceBookingSubscriptionId, cancellationToken) is { StripeSubscriptionId: not null };
 
     private static bool ShouldStartRecurringBookingBankTransferPaymentWorkflow(MarketplaceBooking marketplaceBooking) =>
         marketplaceBooking.IsPaymentRequired &&
@@ -1132,4 +1192,66 @@ public class MarketplaceBookingSubscriptionIntegrations(
             MembershipTerm.Yearly => start.AddYears(1),
             _ => start.AddDays(1),
         };
+
+    private async Task<bool> IsPreviousCyclePaidAsync(
+        MarketplaceBookingSubscription subscription,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(subscription.NextRenewalAt);
+        var previousCycle = (await repositoryFactory.RecurringBookingRepository.GetByMarketplaceBookingSubscriptionIdAsync(
+                subscription.Id, cancellationToken))
+            .Where(item => item.EndDate.HasValue && item.EndDate.Value <= subscription.NextRenewalAt.Value)
+            .OrderByDescending(item => item.EndDate)
+            .FirstOrDefault();
+
+        return previousCycle?.MarketplaceBooking?.PaymentStatus.ToPaymentStatus() is
+            PaymentStatus.Confirmed or PaymentStatus.NoPaymentRequired;
+    }
+
+    private async Task<bool> TryPrepareNextStripeBillingPriceAsync(
+        MarketplaceBookingSubscription subscription,
+        CancellationToken cancellationToken)
+    {
+        if (!subscription.AutoRenew || string.IsNullOrWhiteSpace(subscription.StripeAccountId) ||
+            string.IsNullOrWhiteSpace(subscription.StripeSubscriptionId) ||
+            string.Equals(subscription.StripeSubscriptionStatus, "disconnected", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(
+            subscription.ProductVersion.Id, cancellationToken);
+        var currentPricing = productVersion?.PricingOptions is null
+            ? null
+            : productVersionHelperService.FindMatchingPricing(
+                [.. productVersion.PricingOptions], subscription.MarketplaceBooking.ProductPricing);
+        if (productVersion is null || currentPricing is null || !currentPricing.SupportsSubscriptionAutoRenewal)
+        {
+            return false;
+        }
+
+        await stripeProductPricingService.EnsureProductPricingAsync(
+            productVersion, currentPricing, subscription.StripeAccountId, cancellationToken);
+        var stripePriceId = stripeProductPricingService.GetRecurringPriceId(
+            productVersion, currentPricing, subscription.StripeAccountId);
+        if (string.IsNullOrWhiteSpace(stripePriceId) ||
+            !await marketplaceStripeSubscriptionPriceService.UpdatePriceAsync(
+                subscription.Id, stripePriceId, subscription.MarketplaceBooking.Quantity, cancellationToken))
+        {
+            logger.LogWarning(
+                "Could not prepare the next Stripe Billing price. SubscriptionId={SubscriptionId}, PricingId={PricingId}",
+                subscription.Id,
+                currentPricing.Id);
+            return false;
+        }
+
+        if (subscription.MarketplaceBooking.ProductPricing == currentPricing)
+        {
+            return false;
+        }
+
+        subscription.MarketplaceBooking.ProductPricing = currentPricing;
+        subscription.ProductVersion = productVersion;
+        return true;
+    }
 }

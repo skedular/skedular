@@ -135,7 +135,7 @@ public class OrganizationArrearsBillingIntegrationsShould
         OrganizationArrearsBillingIntegrations sut,
         IBookingRepository bookingRepository)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var billingPeriod = new BillingPeriod(
             new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero),
             new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero));
@@ -145,10 +145,10 @@ public class OrganizationArrearsBillingIntegrationsShould
                 "org-1",
                 billingPeriod.StartInclusive,
                 billingPeriod.EndExclusive,
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns([]);
 
-        await environment.RunAsync(() =>
+        await activityEnvironment.RunAsync(() =>
             sut.GenerateOrganizationArrearsInvoicesAsync(
                 new GenerateOrganizationArrearsInvoicesInput("org-1", billingPeriod, OrganizationBillingCycle.Monthly)));
     }

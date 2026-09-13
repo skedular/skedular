@@ -2,6 +2,8 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.GraphQL;
+using Microsoft.EntityFrameworkCore;
+using Polly;
 using Constants = Booking.Shared.GraphQL.Constants;
 
 namespace Booking.Shared.Services;
@@ -36,26 +38,46 @@ public sealed class MarketplaceRefundTransitionService(
         string? correlationId,
         CancellationToken cancellationToken)
     {
-        var previousStatus = refund.Status;
-        MarketplaceRefundStateMachine.EnsureAllowed(previousStatus, nextStatus);
+        var currentRefund = refund;
+        await Policy
+            .Handle<DbUpdateConcurrencyException>()
+            .WaitAndRetryAsync(2, _ => TimeSpan.FromMilliseconds(100))
+            .ExecuteAsync(async () =>
+            {
+                if (!ReferenceEquals(currentRefund, refund))
+                {
+                    repositoryFactory.ResetChangeTracker();
+                    currentRefund = await repositoryFactory.MarketplaceRefundRepository.GetByIdAsync(refund.Id, cancellationToken)
+                                    ?? throw new InvalidOperationException($"Marketplace refund {refund.Id} no longer exists.");
+                }
 
-        var processedAt = timeProvider.GetUtcNow();
-        refund.Status = nextStatus;
-        refund.LastProcessedAt = processedAt;
-        refund.LastError = error;
-        repositoryFactory.MarketplaceRefundRepository.Update(refund);
-        refundEventService.Add(
-            refund,
-            MapStatusToEventType(nextStatus),
-            actorCustomerId,
-            processedAt,
-            previousStatus,
-            correlationId);
-        await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForRefundAsync(refund, cancellationToken);
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await notificationService.NotifyStatusChangedAsync(refund, cancellationToken);
-        await RaiseOwnerGraphQlChangeAsync(refund, cancellationToken);
-        return refund;
+                var previousStatus = currentRefund.Status;
+                if (previousStatus == nextStatus)
+                {
+                    return;
+                }
+
+                MarketplaceRefundStateMachine.EnsureAllowed(previousStatus, nextStatus);
+
+                var processedAt = timeProvider.GetUtcNow();
+                currentRefund.Status = nextStatus;
+                currentRefund.LastProcessedAt = processedAt;
+                currentRefund.LastError = error;
+                repositoryFactory.MarketplaceRefundRepository.Update(currentRefund);
+                refundEventService.Add(
+                    currentRefund,
+                    MapStatusToEventType(nextStatus),
+                    actorCustomerId,
+                    processedAt,
+                    previousStatus,
+                    correlationId);
+                await repositoryFactory.MarketplacePurchaseHistoryRepository.RefreshForRefundAsync(currentRefund, cancellationToken);
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            });
+
+        await notificationService.NotifyStatusChangedAsync(currentRefund, cancellationToken);
+        await RaiseOwnerGraphQlChangeAsync(currentRefund, cancellationToken);
+        return currentRefund;
     }
 
     private Task RaiseOwnerGraphQlChangeAsync(MarketplaceRefund refund, CancellationToken cancellationToken) =>

@@ -9,8 +9,8 @@ namespace Booking.Shared.UnitTests.Services.HostCommissionServiceTests;
 public class CalculateShould
 {
     [Theory]
-    [InlineAutoFakeItEasyData(new Type[] { }, 100, 5, 5, 95)]
-    [InlineAutoFakeItEasyData(new Type[] { }, 275.50, 5, 13.78, 261.72)]
+    [InlineAutoFakeItEasyData([], 100, 5, 5, 95)]
+    [InlineAutoFakeItEasyData([], 275.50, 5, 13.78, 261.72)]
     public void CalculateConfiguredCommissionForHost(
         decimal bookingTotal,
         decimal commissionRate,
