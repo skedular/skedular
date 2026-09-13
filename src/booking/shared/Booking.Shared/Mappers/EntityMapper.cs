@@ -178,6 +178,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper, IEntitleme
     public EntitlementPurchase MapTo(Database.Entities.EntitlementPurchase src) => new()
     {
         Id = src.Id,
+        AutoRenew = src.AutoRenew,
         CreatedAt = src.CreatedAt,
         ModifiedAt = src.ModifiedAt,
         PaymentStatus = src.PaymentStatus,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7c16fd228b376846c39ceb53b349adb5>>
+ * @generated SignedSource<<601fee8a3a7b6e414c2949d65c31b04e>>
  * @lightSyntaxTransform
  */
 
@@ -9,12 +9,19 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type EntitlementStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PENDING" | "%future added value";
+export type MarketplaceAutomaticPaymentStatusType = "ACTION_REQUIRED" | "ACTIVE" | "CANCELED" | "DISCONNECTED" | "FAILED" | "FINALIZATION_FAILED" | "INCOMPLETE" | "PAST_DUE" | "PAUSED" | "PENDING" | "UNKNOWN" | "%future added value";
 export type entitlementPurchaseDetails_subscription_EntitlementPurchase$variables = {
   purchaseId: string;
 };
 export type entitlementPurchaseDetails_subscription_EntitlementPurchase$data = {
   readonly entitlementPurchase: {
     readonly amount: any;
+    readonly automaticPaymentStatus: {
+      readonly cancelAtPeriodEnd: boolean;
+      readonly configured: boolean;
+      readonly currentPeriodEndsAt: any | null | undefined;
+      readonly status: MarketplaceAutomaticPaymentStatusType;
+    } | null | undefined;
     readonly creditQuantity: number;
     readonly currency: string;
     readonly entitlement: {
@@ -55,7 +62,14 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v3 = [
   {
     "alias": null,
     "args": [
@@ -76,6 +90,39 @@ v2 = [
         "args": null,
         "kind": "ScalarField",
         "name": "paymentStatus",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "MarketplaceAutomaticPaymentStatusDetails",
+        "kind": "LinkedField",
+        "name": "automaticPaymentStatus",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "configured",
+            "storageKey": null
+          },
+          (v2/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "currentPeriodEndsAt",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "cancelAtPeriodEnd",
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       },
       {
@@ -178,13 +225,7 @@ v2 = [
             "name": "availableQuantity",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "status",
-            "storageKey": null
-          }
+          (v2/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -198,7 +239,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "entitlementPurchaseDetails_subscription_EntitlementPurchase",
-    "selections": (v2/*:: as any*/),
+    "selections": (v3/*:: as any*/),
     "type": "Subscription",
     "abstractKey": null
   },
@@ -207,19 +248,19 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "entitlementPurchaseDetails_subscription_EntitlementPurchase",
-    "selections": (v2/*:: as any*/)
+    "selections": (v3/*:: as any*/)
   },
   "params": {
-    "cacheID": "e613672fd58886652b511fda6b8b5a40",
+    "cacheID": "e80ceb01bb92dd7643dc9706e73cc17c",
     "id": null,
     "metadata": {},
     "name": "entitlementPurchaseDetails_subscription_EntitlementPurchase",
     "operationKind": "subscription",
-    "text": "subscription entitlementPurchaseDetails_subscription_EntitlementPurchase(\n  $purchaseId: String!\n) {\n  entitlementPurchase(purchaseId: $purchaseId) {\n    id\n    paymentStatus\n    lifecycleState\n    paymentMethod\n    paymentExpiry\n    serviceStartAt\n    amount\n    currency\n    pricingId\n    creditQuantity\n    validityDays\n    invoiceNumber\n    invoiceUrl\n    paymentAction\n    entitlement {\n      id\n      availableQuantity\n      status\n    }\n  }\n}\n"
+    "text": "subscription entitlementPurchaseDetails_subscription_EntitlementPurchase(\n  $purchaseId: String!\n) {\n  entitlementPurchase(purchaseId: $purchaseId) {\n    id\n    paymentStatus\n    automaticPaymentStatus {\n      configured\n      status\n      currentPeriodEndsAt\n      cancelAtPeriodEnd\n    }\n    lifecycleState\n    paymentMethod\n    paymentExpiry\n    serviceStartAt\n    amount\n    currency\n    pricingId\n    creditQuantity\n    validityDays\n    invoiceNumber\n    invoiceUrl\n    paymentAction\n    entitlement {\n      id\n      availableQuantity\n      status\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "38b95c24d9e209d62671d4b81e876aa6";
+(node as any).hash = "f5e413792d6eafe693cb7c39d9ebf01d";
 
 export default node;

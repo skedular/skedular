@@ -17,38 +17,6 @@ namespace Organization.Api.UnitTests.Services.Pricing.OrganizationSpacesSubscrip
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class UpdateAsyncShould
 {
-    [Fact]
-    public void Reject_Invalid_PlanCode()
-    {
-        var exception = Record.Exception(() =>
-        {
-            var planCode = PricingCatalogSubscriptionPlanCodeAlias.NotSet;
-            if (planCode is not (PricingCatalogSubscriptionPlanCodeAlias.Free or
-                PricingCatalogSubscriptionPlanCodeAlias.Growth or
-                PricingCatalogSubscriptionPlanCodeAlias.Business or
-                PricingCatalogSubscriptionPlanCodeAlias.ContactUs))
-            {
-                throw new ArgumentOutOfRangeException(nameof(planCode));
-            }
-        });
-        exception.ShouldBeOfType<ArgumentOutOfRangeException>();
-    }
-
-    [Fact]
-    public void Reject_Custom_Capacity_For_Non_ContactUs_Plan()
-    {
-        var exception = Record.Exception(() =>
-        {
-            int? capacity = 2000;
-            var planCode = PricingCatalogSubscriptionPlanCodeAlias.Free;
-            if (capacity.HasValue && planCode != PricingCatalogSubscriptionPlanCodeAlias.ContactUs)
-            {
-                throw new ArgumentException("Custom Spaces capacity is only supported for Contact Us subscriptions.");
-            }
-        });
-        exception.ShouldBeOfType<ArgumentException>();
-    }
-
     [Theory]
     [AutoFakeItEasyData]
     public async Task Initialize_Trial_Once_On_First_Spaces_Enablement(
@@ -77,11 +45,11 @@ public class UpdateAsyncShould
         };
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                organizationId, null, A<CancellationToken>._))
+                organizationId, null, cancellationToken))
             .Returns(organization);
-        A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(customerId);
-        A.CallTo(() => authorizationService.CanModifyAsync(organization, customerId, A<CancellationToken>._)).Returns(true);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, A<CancellationToken>._))
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customerId);
+        A.CallTo(() => authorizationService.CanModifyAsync(organization, customerId, cancellationToken)).Returns(true);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken))
             .Returns(transaction);
 
         await sut.UpdateAsync(
@@ -129,11 +97,11 @@ public class UpdateAsyncShould
         existingOffering.Organization = organization;
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                organizationId, null, A<CancellationToken>._))
+                organizationId, null, cancellationToken))
             .Returns(organization);
-        A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(customerId);
-        A.CallTo(() => authorizationService.CanModifyAsync(organization, customerId, A<CancellationToken>._)).Returns(true);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, A<CancellationToken>._))
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customerId);
+        A.CallTo(() => authorizationService.CanModifyAsync(organization, customerId, cancellationToken)).Returns(true);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken))
             .Returns(transaction);
 
         await sut.UpdateAsync(
@@ -185,11 +153,11 @@ public class UpdateAsyncShould
         existingOffering.Organization = organization;
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                organizationId, null, A<CancellationToken>._))
+                organizationId, null, cancellationToken))
             .Returns(organization);
-        A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(customerId);
-        A.CallTo(() => authorizationService.CanModifyAsync(organization, customerId, A<CancellationToken>._)).Returns(true);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, A<CancellationToken>._))
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customerId);
+        A.CallTo(() => authorizationService.CanModifyAsync(organization, customerId, cancellationToken)).Returns(true);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken))
             .Returns(transaction);
 
         await sut.UpdateAsync(
@@ -227,10 +195,10 @@ public class UpdateAsyncShould
         };
         existingOffering.Organization = organization;
         A.CallTo(() => repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                organizationId, null, A<CancellationToken>._))
+                organizationId, null, cancellationToken))
             .Returns(organization);
-        A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(customerId);
-        A.CallTo(() => authorizationService.CanModifyAsync(organization, customerId, A<CancellationToken>._)).Returns(true);
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customerId);
+        A.CallTo(() => authorizationService.CanModifyAsync(organization, customerId, cancellationToken)).Returns(true);
 
         await Should.ThrowAsync<PaymentMethodRequired>(() => sut.UpdateAsync(
             organizationId,
@@ -276,11 +244,11 @@ public class UpdateAsyncShould
         existingOffering.Organization = organization;
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                organizationId, null, A<CancellationToken>._))
+                organizationId, null, cancellationToken))
             .Returns(organization);
-        A.CallTo(() => cachedCustomerService.GetIdAsync(A<CancellationToken>._)).Returns(customerId);
-        A.CallTo(() => authorizationService.CanModifyAsync(organization, customerId, A<CancellationToken>._)).Returns(true);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, A<CancellationToken>._))
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customerId);
+        A.CallTo(() => authorizationService.CanModifyAsync(organization, customerId, cancellationToken)).Returns(true);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken))
             .Returns(transaction);
 
         var result = await sut.UpdateAsync(

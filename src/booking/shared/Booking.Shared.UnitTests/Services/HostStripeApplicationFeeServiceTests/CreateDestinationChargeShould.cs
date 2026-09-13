@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Services;
+using Enterprise.Shared;
 
 namespace Booking.Shared.UnitTests.Services.HostStripeApplicationFeeServiceTests;
 
@@ -37,4 +38,25 @@ public class CreateDestinationChargeShould
                 stripeConnectAccountId,
                 commissionAmount)
             .ShouldBeNull();
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void ApplyTheConfiguredHostPercentageToSubscriptions(
+        HostStripeApplicationFeeService sut,
+        decimal commissionRatePercentage)
+    {
+        commissionRatePercentage = Math.Clamp(Math.Abs(commissionRatePercentage), 0.01m, 100m);
+
+        var result = sut.CreateSubscriptionData(OrganizationTypeConstants.Host, commissionRatePercentage);
+
+        result.ShouldNotBeNull();
+        result.ApplicationFeePercent.ShouldBe(commissionRatePercentage.RoundedDecimal());
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void DoNotApplyAPlatformFeeToSpacesSubscriptions(
+        HostStripeApplicationFeeService sut,
+        decimal commissionRatePercentage) =>
+        sut.CreateSubscriptionData(OrganizationTypeConstants.Marketplace, commissionRatePercentage).ShouldBeNull();
 }

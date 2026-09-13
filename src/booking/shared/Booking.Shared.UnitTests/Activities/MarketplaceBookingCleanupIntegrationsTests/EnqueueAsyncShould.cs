@@ -52,19 +52,18 @@ public class EnqueueAsyncShould
         {
             Id = failureId,
         };
+        var activityEnvironment = new ActivityEnvironment();
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => failureRepository.GetByBookingIdAsync(bookingId, A<CancellationToken>._))
-            .Returns((MarketplaceBookingFailure?)null);
-        A.CallTo(() => bookingRepository.GetByIdAsync(bookingId, A<CancellationToken>._)).Returns(booking);
+        A.CallTo(() => failureRepository.GetByBookingIdAsync(bookingId, activityEnvironment.CancellationTokenSource.Token))
+            .Returns<MarketplaceBookingFailure?>(null);
+        A.CallTo(() => bookingRepository.GetByIdAsync(bookingId, activityEnvironment.CancellationTokenSource.Token)).Returns(booking);
         A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(
                 A<MarketplaceBookingFailureFinalization>._,
-                A<CancellationToken>._))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(failure);
-        var environment = new ActivityEnvironment();
-
-        await environment.RunAsync(() => sut.EnqueueAsync(input));
+        await activityEnvironment.RunAsync(() => sut.EnqueueAsync(input));
 
         A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(
                 A<MarketplaceBookingFailureFinalization>.That.Matches(item =>
@@ -74,12 +73,12 @@ public class EnqueueAsyncShould
                     item.Scope == MarketplaceBookingFailureScopeConstants.OneTimeBooking &&
                     item.RequestedFrom == from &&
                     item.RequestedUntil == until),
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => temporalOutboxService.StartWorkflowMarketplaceBookingCleanup(
                 new MarketplaceBookingCleanupInput(failureId), unitOfWork))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
     }
 
     [Theory]
@@ -122,19 +121,21 @@ public class EnqueueAsyncShould
         {
             Id = failureId,
         };
+
+        var activityEnvironment = new ActivityEnvironment();
+
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => failureRepository.GetByRecurringBookingIdAsync(recurringBookingId, A<CancellationToken>._))
-            .Returns((MarketplaceBookingFailure?)null);
-        A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, A<CancellationToken>._)).Returns(recurringBooking);
+        A.CallTo(() => failureRepository.GetByRecurringBookingIdAsync(recurringBookingId, activityEnvironment.CancellationTokenSource.Token))
+            .Returns<MarketplaceBookingFailure?>(null);
+        A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, activityEnvironment.CancellationTokenSource.Token))
+            .Returns(recurringBooking);
         A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(
                 A<MarketplaceBookingFailureFinalization>._,
-                A<CancellationToken>._))
+                activityEnvironment.CancellationTokenSource.Token))
             .Returns(failure);
-        var environment = new ActivityEnvironment();
-
-        await environment.RunAsync(() => sut.EnqueueAsync(input));
+        await activityEnvironment.RunAsync(() => sut.EnqueueAsync(input));
 
         A.CallTo(() => marketplaceBookingFailureService.FinalizeAsync(
                 A<MarketplaceBookingFailureFinalization>.That.Matches(item =>
@@ -145,11 +146,11 @@ public class EnqueueAsyncShould
                     item.Scope == MarketplaceBookingFailureScopeConstants.RecurringCycle &&
                     item.RequestedFrom == from &&
                     item.RequestedUntil == until),
-                environment.CancellationTokenSource.Token))
+                activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => temporalOutboxService.StartWorkflowMarketplaceBookingCleanup(
                 new MarketplaceBookingCleanupInput(failureId), unitOfWork))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
     }
 }

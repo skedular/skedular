@@ -38,7 +38,7 @@ public class RenewAutoRenewableOrganizationOfferingAsyncShould
         string renewedOfferingId,
         DateTimeOffset billingBoundary)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var renewalBoundary = billingBoundary.GetOfferingPeriodStart();
         var organization = new Database.Entities.Organization
         {
@@ -61,10 +61,10 @@ public class RenewAutoRenewableOrganizationOfferingAsyncShould
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationOfferingRepository).Returns(offeringRepository);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync(
-                organizationId, null, environment.CancellationTokenSource.Token))
+                organizationId, null, activityEnvironment.CancellationTokenSource.Token))
             .Returns(organization);
         A.CallTo(() => offeringRepository.GetByIdAsync(
-                bridgeOfferingId, environment.CancellationTokenSource.Token))
+                bridgeOfferingId, activityEnvironment.CancellationTokenSource.Token))
             .Returns(bridgeOffering);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(renewalBoundary);
         A.CallTo(() => randomHelper.Generate()).Returns(renewedOfferingId);
@@ -85,10 +85,10 @@ public class RenewAutoRenewableOrganizationOfferingAsyncShould
             ],
         });
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(
-                repositoryFactory.UnitOfWork, environment.CancellationTokenSource.Token))
+                repositoryFactory.UnitOfWork, activityEnvironment.CancellationTokenSource.Token))
             .Returns(transaction);
 
-        var result = await environment.RunAsync(() => sut.RenewAutoRenewableOrganizationOfferingAsync(
+        var result = await activityEnvironment.RunAsync(() => sut.RenewAutoRenewableOrganizationOfferingAsync(
             new RenewAutoRenewableOrganizationOfferingAsyncInput(organizationId, bridgeOfferingId)));
 
         result.ShouldBe(renewedOfferingId);
@@ -96,6 +96,6 @@ public class RenewAutoRenewableOrganizationOfferingAsyncShould
         addedOffering.Start.ShouldBe(renewalBoundary);
         addedOffering.End.ShouldBe(renewalBoundary.AddMonths(1));
         A.CallTo(() => offeringRepository.Remove(bridgeOffering)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => transaction.CommitAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => transaction.CommitAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
     }
 }

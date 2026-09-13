@@ -28,7 +28,7 @@ public class XeroIntegrationsShould
         ICachedOrganizationService cachedOrganizationService,
         XeroIntegrations sut)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var organization = new Database.Entities.Organization
         {
             Id = "org-1",
@@ -43,10 +43,10 @@ public class XeroIntegrationsShould
         };
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, environment.CancellationTokenSource.Token))
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, activityEnvironment.CancellationTokenSource.Token))
             .Returns(organization);
 
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.RefreshOrganizationXeroConnectionAsync(new RefreshOrganizationXeroConnectionInput("org-1")));
 
         result.ShouldBe(new RefreshOrganizationXeroConnectionResult(false, null));
@@ -77,7 +77,7 @@ public class XeroIntegrationsShould
         ICachedOrganizationService cachedOrganizationService,
         XeroIntegrations sut)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 3, 31, 10, 0, 0, TimeSpan.Zero);
         var connection = new OrganizationXeroConnection
         {
@@ -103,12 +103,12 @@ public class XeroIntegrationsShould
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationXeroConnectionRepository).Returns(organizationXeroConnectionRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, environment.CancellationTokenSource.Token))
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, activityEnvironment.CancellationTokenSource.Token))
             .Returns(organization);
         A.CallTo(() => entityMapper.MapTo(organization)).Returns(mappedOrganization);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
 
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.RefreshOrganizationXeroConnectionAsync(new RefreshOrganizationXeroConnectionInput("org-1")));
 
         result.ShouldBe(new RefreshOrganizationXeroConnectionResult(false, null));
@@ -119,8 +119,8 @@ public class XeroIntegrationsShould
                 A<IEnumerable<Models.Organization>>.That.Matches(items => items.SequenceEqual(new[] { mappedOrganization })),
                 unitOfWork))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => cachedOrganizationService.RemoveByIdOrCustomDomainAsync("org-1", null, environment.CancellationTokenSource.Token))
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => cachedOrganizationService.RemoveByIdOrCustomDomainAsync("org-1", null, activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 
@@ -147,7 +147,7 @@ public class XeroIntegrationsShould
         ICachedOrganizationService cachedOrganizationService,
         XeroIntegrations sut)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 3, 31, 10, 0, 0, TimeSpan.Zero);
         var nextRefreshAt = now.AddDays(40);
         var nextMaintenanceAt = now.AddDays(35);
@@ -183,14 +183,14 @@ public class XeroIntegrationsShould
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationXeroConnectionRepository).Returns(organizationXeroConnectionRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, environment.CancellationTokenSource.Token))
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, activityEnvironment.CancellationTokenSource.Token))
             .Returns(organization);
         A.CallTo(() => entityMapper.MapTo(organization)).Returns(mappedOrganization);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
-        A.CallTo(() => xeroTokenRefreshService.RefreshAsync(connection, environment.CancellationTokenSource.Token)).Returns(refreshResult);
+        A.CallTo(() => xeroTokenRefreshService.RefreshAsync(connection, activityEnvironment.CancellationTokenSource.Token)).Returns(refreshResult);
         A.CallTo(() => xeroTokenRefreshService.GetNextMaintenanceAt(nextRefreshAt)).Returns(nextMaintenanceAt);
 
-        var result = await environment.RunAsync(() =>
+        var result = await activityEnvironment.RunAsync(() =>
             sut.RefreshOrganizationXeroConnectionAsync(new RefreshOrganizationXeroConnectionInput("org-1")));
 
         result.ShouldBe(new RefreshOrganizationXeroConnectionResult(true, nextMaintenanceAt));
@@ -205,8 +205,8 @@ public class XeroIntegrationsShould
                 A<IEnumerable<Models.Organization>>.That.Matches(items => items.SequenceEqual(new[] { mappedOrganization })),
                 unitOfWork))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => cachedOrganizationService.RemoveByIdOrCustomDomainAsync("org-1", null, environment.CancellationTokenSource.Token))
+        A.CallTo(() => unitOfWork.SaveChangesAsync(activityEnvironment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => cachedOrganizationService.RemoveByIdOrCustomDomainAsync("org-1", null, activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 }

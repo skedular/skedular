@@ -64,6 +64,7 @@ public class XeroWebhookService(
         logger.LogInformation("Processing Xero webhook payload. PayloadLength={PayloadLength}", payloadJson.Length);
         var syncTargets = await GetSyncTargetsAsync(payloadJson, cancellationToken);
         logger.LogInformation("Resolved Xero webhook sync targets. SyncTargetCount={SyncTargetCount}", syncTargets.Count);
+
         if (syncTargets.Count == 0)
         {
             logger.LogWarning("Xero webhook produced no sync targets.");

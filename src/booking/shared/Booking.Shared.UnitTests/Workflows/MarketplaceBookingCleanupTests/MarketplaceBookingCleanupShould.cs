@@ -25,8 +25,7 @@ public class MarketplaceBookingCleanupShould
         CancellationToken cancellationToken)
     {
         A.CallTo(() => repositoryFactory.MarketplaceBookingFailureRepository).Returns(failureRepository);
-        A.CallTo(() => failureRepository.GetByIdAsync(input.FailureId, A<CancellationToken>._))
-            .Returns((MarketplaceBookingFailure?)null);
+        A.CallTo(() => failureRepository.GetByIdAsync(input.FailureId, A<CancellationToken>._)).Returns<MarketplaceBookingFailure?>(null);
 
         await using var environment = await WorkflowEnvironment.StartTimeSkippingAsync();
         using var worker = new TemporalWorker(

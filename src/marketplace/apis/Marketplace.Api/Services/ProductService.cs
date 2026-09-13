@@ -694,11 +694,6 @@ public class ProductService(
             throw new ProductPricingEventAutoRenewalNotSupported();
         }
 
-        if (pricing.FulfillmentType == ProductPricingFulfillmentType.Entitlement && pricing.SupportsSubscriptionAutoRenewal)
-        {
-            throw new ProductPricingEntitlementAutoRenewalNotSupported();
-        }
-
         if (pricing.AcceptedPaymentMethods.Count <= 0)
         {
             throw new ProductPricingAcceptedPaymentMethodsRequired();
@@ -708,6 +703,7 @@ public class ProductService(
         {
             throw new ProductPricingBillingModeRequired();
         }
+
 
         ValidateCancellationPolicy(pricing);
 
@@ -743,6 +739,7 @@ public class ProductService(
             }
         }
     }
+
 
     private static bool IsSubscriptionCadence(MembershipTerm cadence) =>
         cadence is MembershipTerm.Daily or

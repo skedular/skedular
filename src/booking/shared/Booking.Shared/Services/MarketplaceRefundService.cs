@@ -461,11 +461,13 @@ public class MarketplaceRefundService(
                         MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer, StringComparison.OrdinalIgnoreCase)
                         ? MarketplaceExternalRefundReconciliationProviderConstants.BankTransfer
                         : MarketplaceExternalRefundReconciliationProviderConstants.Stripe,
-                    StripePaymentIntentId = marketplaceBooking.StripeCheckoutSession?.PaymentIntentId,
+                    StripePaymentIntentId = marketplaceBooking.StripePaymentIntentId ?? marketplaceBooking.StripeCheckoutSession?.PaymentIntentId,
                     StripeChargeId = marketplaceBooking.StripeCheckoutSession?.ChargeId,
                     StripeTransferId = marketplaceBooking.StripeCheckoutSession?.TransferId,
-                    StripeAccountId = marketplaceBooking.StripeCheckoutSession?.StripeAccountId,
-                    StripeChargeType = marketplaceBooking.StripeCheckoutSession?.ChargeType,
+                    StripeAccountId = marketplaceBooking.MarketplaceBookingSubscription?.StripeAccountId ??
+                                      marketplaceBooking.StripeCheckoutSession?.StripeAccountId,
+                    StripeChargeType = marketplaceBooking.StripeCheckoutSession?.ChargeType ??
+                                       (marketplaceBooking.MarketplaceBookingSubscription?.StripeAccountId is not null ? "Direct" : null),
                 });
             await AddPaymentAllocationIfAvailableAsync(refund, marketplaceBooking, cancellationToken);
             marketplaceRefundEventService.Add(

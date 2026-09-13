@@ -114,12 +114,12 @@ public class RecordDeskAvailabilitySnapshotShould
         ILocationRepository locationRepository,
         LocationDailyAnalytics sut)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
-        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", environment.CancellationTokenSource.Token))
-            .Returns((Database.Entities.Location?)null);
+        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", activityEnvironment.CancellationTokenSource.Token))
+            .Returns<Database.Entities.Location?>(null);
 
-        var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
+        var result = await activityEnvironment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
         result.ShouldBeFalse();
     }
@@ -133,7 +133,7 @@ public class RecordDeskAvailabilitySnapshotShould
         ILocationRepository locationRepository,
         LocationDailyAnalytics sut)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var deletedLocation = new Database.Entities.Location
         {
             Id = "loc-del",
@@ -141,9 +141,9 @@ public class RecordDeskAvailabilitySnapshotShould
             DeletedAt = TimeProvider.System.GetUtcNow(),
         };
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
-        A.CallTo(() => locationRepository.GetByIdAsync("loc-del", environment.CancellationTokenSource.Token)).Returns(deletedLocation);
+        A.CallTo(() => locationRepository.GetByIdAsync("loc-del", activityEnvironment.CancellationTokenSource.Token)).Returns(deletedLocation);
 
-        var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-del"));
+        var result = await activityEnvironment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-del"));
 
         result.ShouldBeFalse();
     }
@@ -174,7 +174,7 @@ public class RecordDeskAvailabilitySnapshotShould
     {
         var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
             new BookingService.BookingServiceClient(callInvoker), logger);
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
         var snapshotDate = now.StartOfDay();
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
@@ -185,7 +185,7 @@ public class RecordDeskAvailabilitySnapshotShould
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DailyResourceAvailabilitySnapshotRepository).Returns(snapshotRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", environment.CancellationTokenSource.Token)).Returns(location);
+        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", activityEnvironment.CancellationTokenSource.Token)).Returns(location);
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetPaginatedBookingsInput, BookingConnection>>._,
                 A<string?>._,
@@ -198,7 +198,7 @@ public class RecordDeskAvailabilitySnapshotShould
             .Invokes(call => capturedSnapshots.Add(call.GetArgument<DailyResourceAvailabilitySnapshot>(0)!))
             .Returns(snapshotResult);
 
-        var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
+        var result = await activityEnvironment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
         result.ShouldBeTrue();
         capturedSnapshots.ShouldHaveSingleItem();
@@ -239,7 +239,7 @@ public class RecordDeskAvailabilitySnapshotShould
             bookingConfiguration,
             new BookingService.BookingServiceClient(callInvoker),
             logger);
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
 
@@ -249,7 +249,7 @@ public class RecordDeskAvailabilitySnapshotShould
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DailyResourceAvailabilitySnapshotRepository).Returns(snapshotRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", environment.CancellationTokenSource.Token)).Returns(location);
+        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", activityEnvironment.CancellationTokenSource.Token)).Returns(location);
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetPaginatedBookingsInput, BookingConnection>>._,
                 A<string?>._,
@@ -262,7 +262,7 @@ public class RecordDeskAvailabilitySnapshotShould
             .Invokes(call => capturedSnapshots.Add(call.GetArgument<DailyResourceAvailabilitySnapshot>(0)!))
             .Returns(snapshotResult);
 
-        var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
+        var result = await activityEnvironment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
         result.ShouldBeTrue();
         capturedSnapshots.ShouldHaveSingleItem();
@@ -295,7 +295,7 @@ public class RecordDeskAvailabilitySnapshotShould
     {
         var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
             new BookingService.BookingServiceClient(callInvoker), logger);
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
 
@@ -305,7 +305,7 @@ public class RecordDeskAvailabilitySnapshotShould
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DailyResourceAvailabilitySnapshotRepository).Returns(snapshotRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", environment.CancellationTokenSource.Token)).Returns(location);
+        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", activityEnvironment.CancellationTokenSource.Token)).Returns(location);
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetPaginatedBookingsInput, BookingConnection>>._,
                 A<string?>._,
@@ -318,7 +318,7 @@ public class RecordDeskAvailabilitySnapshotShould
             .Invokes(call => capturedSnapshots.Add(call.GetArgument<DailyResourceAvailabilitySnapshot>(0)!))
             .Returns(snapshotResult);
 
-        var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
+        var result = await activityEnvironment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
         result.ShouldBeTrue();
         capturedSnapshots.ShouldHaveSingleItem();
@@ -351,7 +351,7 @@ public class RecordDeskAvailabilitySnapshotShould
     {
         var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
             new BookingService.BookingServiceClient(callInvoker), logger);
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
 
@@ -362,7 +362,7 @@ public class RecordDeskAvailabilitySnapshotShould
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DailyResourceAvailabilitySnapshotRepository).Returns(snapshotRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", environment.CancellationTokenSource.Token)).Returns(location);
+        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", activityEnvironment.CancellationTokenSource.Token)).Returns(location);
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetPaginatedBookingsInput, BookingConnection>>._,
                 A<string?>._,
@@ -375,7 +375,7 @@ public class RecordDeskAvailabilitySnapshotShould
             .Invokes(call => capturedSnapshots.Add(call.GetArgument<DailyResourceAvailabilitySnapshot>(0)!))
             .Returns(snapshotResult);
 
-        var result = await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
+        var result = await activityEnvironment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
         result.ShouldBeTrue();
         capturedSnapshots.ShouldHaveSingleItem();
@@ -410,7 +410,7 @@ public class RecordDeskAvailabilitySnapshotShould
     {
         var sut = new LocationDailyAnalytics(repositoryFactory, randomHelper, timeProvider, bookingConfiguration,
             new BookingService.BookingServiceClient(callInvoker), logger);
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var now = new DateTimeOffset(2026, 1, 15, 10, 0, 0, TimeSpan.Zero);
         var snapshotDate = now.StartOfDay();
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
@@ -421,7 +421,7 @@ public class RecordDeskAvailabilitySnapshotShould
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.DailyResourceAvailabilitySnapshotRepository).Returns(snapshotRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", environment.CancellationTokenSource.Token)).Returns(location);
+        A.CallTo(() => locationRepository.GetByIdAsync("loc-1", activityEnvironment.CancellationTokenSource.Token)).Returns(location);
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetPaginatedBookingsInput, BookingConnection>>._,
                 A<string?>._,
@@ -431,9 +431,9 @@ public class RecordDeskAvailabilitySnapshotShould
         A.CallTo(() => snapshotRepository.Add(A<DailyResourceAvailabilitySnapshot>._))
             .Returns(snapshotResult);
 
-        await environment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
+        await activityEnvironment.RunAsync(() => sut.RecordResourceAvailabilitySnapshotAsync("loc-1"));
 
-        A.CallTo(() => snapshotRepository.DeleteByLocationAndDateAsync("loc-1", snapshotDate, environment.CancellationTokenSource.Token))
+        A.CallTo(() => snapshotRepository.DeleteByLocationAndDateAsync("loc-1", snapshotDate, activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 }

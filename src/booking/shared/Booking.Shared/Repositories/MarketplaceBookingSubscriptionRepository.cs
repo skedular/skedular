@@ -27,6 +27,16 @@ public interface IMarketplaceBookingSubscriptionRepository : IRepository<Marketp
     Task<MarketplaceBookingSubscription?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<MarketplaceBookingSubscription?> GetByIdForUpdateAsync(string id, CancellationToken cancellationToken);
     Task<MarketplaceBookingSubscription?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
+
+    Task<MarketplaceBookingSubscription?> GetByStripeSubscriptionAsync(
+        string stripeAccountId,
+        string stripeSubscriptionId,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByStripeAccountAsync(
+        string stripeAccountId,
+        CancellationToken cancellationToken);
+
     MarketplaceBookingSubscription Add(MarketplaceBookingSubscription recurringBooking);
     MarketplaceBookingSubscription Update(MarketplaceBookingSubscription recurringBooking);
     MarketplaceBookingSubscription Remove(MarketplaceBookingSubscription recurringBooking);
@@ -250,6 +260,21 @@ public static class MarketplaceBookingSubscriptionExtensions
 public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, MarketplaceBookingSubscription>(dbContext, timeProvider), IMarketplaceBookingSubscriptionRepository
 {
+    public Task<MarketplaceBookingSubscription?> GetByStripeSubscriptionAsync(
+        string stripeAccountId,
+        string stripeSubscriptionId,
+        CancellationToken cancellationToken) =>
+        DbContext.MarketplaceBookingSubscription.FirstOrDefaultAsync(
+            item => item.StripeAccountId == stripeAccountId && item.StripeSubscriptionId == stripeSubscriptionId,
+            cancellationToken);
+
+    public async Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByStripeAccountAsync(
+        string stripeAccountId,
+        CancellationToken cancellationToken) =>
+        await DbContext.MarketplaceBookingSubscription
+            .Where(item => item.StripeAccountId == stripeAccountId)
+            .ToListAsync(cancellationToken);
+
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<RecurringBookingEntity>>, int)> GetPaginatedBookingInstancesUntrackedAsync(
         string subscriptionId,
         PaginationInputParam paginationInputParam,

@@ -24,6 +24,7 @@ import useKnownParams from '@/hooks/use-known-params';
 import type { marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscriptionDetails_relatedBookingsQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_relatedBookingsQuery.graphql';
 import type { marketplaceProductSubscriptionDetails_rootQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_rootQuery.graphql';
+import type { marketplaceProductSubscriptionDetails_createAutomaticPaymentRecoveryMutation } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_createAutomaticPaymentRecoveryMutation.graphql';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -149,6 +150,12 @@ const RootQuery = graphql`
       nextRenewalAt
       autoRenew
       cancelAtPeriodEnd
+      automaticPaymentStatus {
+        configured
+        status
+        currentPeriodEndsAt
+        cancelAtPeriodEnd
+      }
       weeklySelectedDays
       marketplaceBooking {
         id
@@ -300,6 +307,16 @@ const RootQuery = graphql`
   }
 `;
 
+const CreateAutomaticPaymentRecoveryMutation = graphql`
+  mutation marketplaceProductSubscriptionDetails_createAutomaticPaymentRecoveryMutation($input: CreateMarketplaceBookingSubscriptionAutomaticPaymentRecoveryInput!) {
+    createMarketplaceBookingSubscriptionAutomaticPaymentRecovery(input: $input) {
+      automaticPaymentRecoveryUrl
+      error
+      clientMutationId
+    }
+  }
+`;
+
 const RelatedBookingsQuery = graphql`
   query marketplaceProductSubscriptionDetails_relatedBookingsQuery(
     $organizationCustomDomain: String!
@@ -352,6 +369,12 @@ const SubscriptionUpdates = graphql`
       nextRenewalAt
       autoRenew
       cancelAtPeriodEnd
+      automaticPaymentStatus {
+        configured
+        status
+        currentPeriodEndsAt
+        cancelAtPeriodEnd
+      }
       weeklySelectedDays
       marketplaceBooking {
         id
@@ -515,6 +538,8 @@ const MarketplaceProductSubscriptionDetails = ({
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const [relatedBookingsFirst, setRelatedBookingsFirst] = useState(8);
   const subscription = rootData.marketplaceBookingSubscription;
+  const [commitAutomaticPaymentRecovery, isAutomaticPaymentRecoveryInFlight] =
+    useMutation<marketplaceProductSubscriptionDetails_createAutomaticPaymentRecoveryMutation>(CreateAutomaticPaymentRecoveryMutation);
   const today = useMemo(() => convertCalendarDayToStartOfDay(dayjs()).toISOString(), []);
 
   useSubscription({
@@ -555,6 +580,25 @@ const MarketplaceProductSubscriptionDetails = ({
     : null;
   const productVersion = displayMarketplaceBooking?.productVersion ?? null;
   const productTitle = productVersion?.listingMetadata.title ?? 'subscription';
+  const automaticPaymentNeedsRecovery = ['PAST_DUE', 'ACTION_REQUIRED', 'FINALIZATION_FAILED', 'INCOMPLETE'].includes(subscription?.automaticPaymentStatus?.status ?? '');
+  const recoverAutomaticPayment = () => {
+    if (!subscription) return;
+    commitAutomaticPaymentRecovery({
+      variables: {
+        input: {
+          clientMutationId: subscription.id,
+          subscriptionId: subscription.id,
+          returnUrl: typeof window === 'undefined' ? '/' : window.location.href,
+        },
+      },
+      onCompleted: (response) => {
+        const result = response.createMarketplaceBookingSubscriptionAutomaticPaymentRecovery;
+        if (result.error) toast(<NotificationContent content={result.error} />, errorNotificationOptions);
+        else if (result.automaticPaymentRecoveryUrl) window.location.assign(result.automaticPaymentRecoveryUrl);
+        else toast(<NotificationContent content="Automatic payment recovery is not available for this subscription." />, errorNotificationOptions);
+      },
+    });
+  };
   const hasConfirmedCurrentCyclePayment = displayMarketplaceBooking?.paymentStatus.type === 'CONFIRMED';
   const cancellationModes = rootData.marketplaceBookingSubscriptionCancellationModes;
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
@@ -724,6 +768,12 @@ const MarketplaceProductSubscriptionDetails = ({
                   />
                   <DetailsRow label="Booked for" value={subscription.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
                   <DetailsRow label="Renewal" value={lifecycleDisplay?.renewalLabel ?? (subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period')} />
+                  {subscription.automaticPaymentStatus?.configured ? <DetailsRow label="Automatic payment" value={subscription.automaticPaymentStatus.status} /> : null}
+                  {automaticPaymentNeedsRecovery ? (
+                    <Button variant="outlined" onClick={recoverAutomaticPayment} disabled={isAutomaticPaymentRecoveryInFlight} sx={{ textTransform: 'none' }}>
+                      Resolve automatic payment
+                    </Button>
+                  ) : null}
                   {subscription.cancellationPolicyOverridden ? (
                     <DetailsRow label="Cancellation reason" value={subscription.cancellationOverrideReason ?? 'Policy overridden'} />
                   ) : null}
@@ -832,6 +882,7 @@ const MarketplaceProductSubscriptionDetails = ({
                   <DetailsRow label="Quantity" value={`${displayMarketplaceBooking.quantity}`} />
                   <DetailsRow label="Booked for" value={subscription.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
                   <DetailsRow label="Renewal" value={lifecycleDisplay?.renewalLabel ?? (subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period')} />
+                  {subscription.automaticPaymentStatus?.configured ? <DetailsRow label="Automatic payment" value={subscription.automaticPaymentStatus.status} /> : null}
                   {subscription.cancellationPolicyOverridden ? (
                     <DetailsRow label="Cancellation reason" value={subscription.cancellationOverrideReason ?? 'Policy overridden'} />
                   ) : null}

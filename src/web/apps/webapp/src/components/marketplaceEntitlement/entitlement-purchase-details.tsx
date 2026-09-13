@@ -11,6 +11,7 @@ import { OrganizationStoreFrontRootShell } from '@/components/rootShell';
 import useKnownParams from '@/hooks/use-known-params';
 import type { entitlementPurchaseDetails_rootQuery } from '@/queries/__generated__/entitlementPurchaseDetails_rootQuery.graphql';
 import type { entitlementPurchaseDetails_cancelEntitlementMutation } from '@/queries/__generated__/entitlementPurchaseDetails_cancelEntitlementMutation.graphql';
+import type { entitlementPurchaseDetails_createAutomaticPaymentRecoveryMutation } from '@/queries/__generated__/entitlementPurchaseDetails_createAutomaticPaymentRecoveryMutation.graphql';
 import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
 import CardContent from '@mui/material/CardContent';
@@ -84,6 +85,12 @@ const RootQuery = graphql`
         }
       }
       paymentStatus
+      automaticPaymentStatus {
+        configured
+        status
+        currentPeriodEndsAt
+        cancelAtPeriodEnd
+      }
       lifecycleState
       paymentMethod
       paymentExpiry
@@ -154,6 +161,12 @@ const EntitlementPurchaseUpdates = graphql`
     entitlementPurchase(purchaseId: $purchaseId) {
       id
       paymentStatus
+      automaticPaymentStatus {
+        configured
+        status
+        currentPeriodEndsAt
+        cancelAtPeriodEnd
+      }
       lifecycleState
       paymentMethod
       paymentExpiry
@@ -187,6 +200,16 @@ const CancelEntitlementMutation = graphql`
   }
 `;
 
+const CreateAutomaticPaymentRecoveryMutation = graphql`
+  mutation entitlementPurchaseDetails_createAutomaticPaymentRecoveryMutation($input: CreateEntitlementAutomaticPaymentRecoveryInput!) {
+    createEntitlementAutomaticPaymentRecovery(input: $input) {
+      automaticPaymentRecoveryUrl
+      error
+      clientMutationId
+    }
+  }
+`;
+
 const EntitlementPurchaseDetails = () => {
   const { purchaseId } = useParams<{ purchaseId: string }>();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
@@ -199,6 +222,8 @@ const EntitlementPurchaseDetails = () => {
     subscription: EntitlementPurchaseUpdates,
   });
   const [commitCancellation, isCancellationInFlight] = useMutation<entitlementPurchaseDetails_cancelEntitlementMutation>(CancelEntitlementMutation);
+  const [commitAutomaticPaymentRecovery, isAutomaticPaymentRecoveryInFlight] =
+    useMutation<entitlementPurchaseDetails_createAutomaticPaymentRecoveryMutation>(CreateAutomaticPaymentRecoveryMutation);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   if (!purchase) return <Loading />;
@@ -226,6 +251,24 @@ const EntitlementPurchaseDetails = () => {
       },
     });
   };
+  const recoverAutomaticPayment = () => {
+    commitAutomaticPaymentRecovery({
+      variables: {
+        input: {
+          clientMutationId: purchase.id,
+          purchaseId: purchase.id,
+          returnUrl: typeof window === 'undefined' ? '/' : window.location.href,
+        },
+      },
+      onCompleted: (response) => {
+        const result = response.createEntitlementAutomaticPaymentRecovery;
+        if (result.error) toast(<NotificationContent content={result.error} />, errorNotificationOptions);
+        else if (result.automaticPaymentRecoveryUrl) window.location.assign(result.automaticPaymentRecoveryUrl);
+        else toast(<NotificationContent content="Automatic payment recovery is not available for this purchase." />, errorNotificationOptions);
+      },
+    });
+  };
+  const automaticPaymentNeedsRecovery = ['PAST_DUE', 'ACTION_REQUIRED', 'FINALIZATION_FAILED', 'INCOMPLETE'].includes(purchase.automaticPaymentStatus?.status ?? '');
   return (
     <OrganizationStoreFrontRootShell>
       <Box
@@ -258,8 +301,15 @@ const EntitlementPurchaseDetails = () => {
                       label={purchase.paymentStatus === 'CONFIRMED' ? 'Payment confirmed' : purchase.paymentStatus}
                       color={purchase.paymentStatus === 'CONFIRMED' ? 'success' : 'default'}
                     />
+                    {purchase.automaticPaymentStatus?.configured ? <Chip label={`Automatic payment: ${purchase.automaticPaymentStatus.status}`} variant="outlined" /> : null}
                     <Chip label={purchase.paymentMethod} variant="outlined" />
                   </StackRow>
+
+                  {automaticPaymentNeedsRecovery ? (
+                    <Button variant="outlined" onClick={recoverAutomaticPayment} disabled={isAutomaticPaymentRecoveryInFlight} sx={{ mt: 2, textTransform: 'none' }}>
+                      Resolve automatic payment
+                    </Button>
+                  ) : null}
 
                   {purchase.entitlement?.status === 'ACTIVE' && purchase.entitlement.availableQuantity > 0 && purchase.paymentStatus === 'CONFIRMED' ? (
                     <Button

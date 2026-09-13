@@ -29,7 +29,7 @@ public class DispatchShould
         IDbContextTransaction transaction,
         MarketplaceBookingModificationNotificationIntegrations sut)
     {
-        var environment = new ActivityEnvironment();
+        var activityEnvironment = new ActivityEnvironment();
         var modification = new MarketplaceBookingModification
         {
             Id = "modification-1",
@@ -45,10 +45,10 @@ public class DispatchShould
 
         A.CallTo(() => repositoryFactory.MarketplaceBookingModificationRepository).Returns(modificationRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => modificationRepository.GetByIdAsync(modification.Id, environment.CancellationTokenSource.Token)).Returns(modification);
-        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, environment.CancellationTokenSource.Token)).Returns(transaction);
+        A.CallTo(() => modificationRepository.GetByIdAsync(modification.Id, activityEnvironment.CancellationTokenSource.Token)).Returns(modification);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, activityEnvironment.CancellationTokenSource.Token)).Returns(transaction);
 
-        await environment.RunAsync(() =>
+        await activityEnvironment.RunAsync(() =>
             sut.DispatchMarketplaceBookingModificationAsync(new DispatchMarketplaceBookingModificationNotificationInput(modification.Id)));
 
         delivery.Status.ShouldBe(MarketplaceBookingModificationNotificationDeliveryStatusConstants.RecoveryRequired);
@@ -58,6 +58,6 @@ public class DispatchShould
             A<string>._, A<string>._, A<string>._, A<string>._,
             A<IReadOnlyList<string>>._, A<IReadOnlyList<string>>._,
             A<IReadOnlyList<string>>._, A<IReadOnlyList<EmailAttachment>>._,
-            environment.CancellationTokenSource.Token)).MustNotHaveHappened();
+            activityEnvironment.CancellationTokenSource.Token)).MustNotHaveHappened();
     }
 }

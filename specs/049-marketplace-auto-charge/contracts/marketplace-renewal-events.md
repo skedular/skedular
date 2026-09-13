@@ -1,13 +1,15 @@
 # Marketplace Renewal Event Contract
 
-## Guarantees
+Persist an append-only local event for each accepted Stripe/local fact. Required correlation: local purchase, connected account, Stripe event ID where provider-originated, subscription ID, invoice ID/period, and local grant ID where applicable.
 
-- Events are append-only and are the history UI’s source of truth.
-- Every transition contains a source identity, event ID, occurrence time, and idempotency key.
-- Webhook-linked events retain safe provider event and PaymentIntent identifiers.
-- Workflow retry, webhook replay, fallback completion, and manual recovery cannot create duplicate payment-success or materialization events.
-- Out-of-order events are retained for audit but only advance current state through valid transitions.
+| Event family | Grant allowed? |
+|---|---:|
+| Subscription created/updated/cancelled | No |
+| Invoice paid | Yes, exactly once |
+| Invoice action required/failed/finalization failed | No |
+| Connected account disconnected | No |
+| Reservation term granted | Already gated by paid invoice |
+| Entitlement/credit allocation granted | Already gated by paid invoice |
+| Cancellation/refund/recovery | Never itself grants |
 
-## Consumer rule
-
-Customer/admin history must render persisted events and must not infer historical events from mutable aggregate payment status, timestamps, entitlement state, or reservation state.
+History UI reads these persisted records rather than aggregate subscription/payment fields.

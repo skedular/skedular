@@ -1,29 +1,28 @@
-# Stripe Contract: Marketplace Renewal Payment
+# Stripe Contract: Connected-Account Marketplace Subscription
 
-## Initial or fallback authorization
+## Creation
 
-1. Resolve the purchase, Connect account context, and commercial values.
-2. Create checkout/authorization flow with explicit future off-session consent for that purchase only.
-3. Use Stripe’s supported future-payment setup during payment or setup-only authorization.
-4. On provider-confirmed completion, persist only Stripe references, account context, consent evidence, and non-sensitive usability state in `PurchaseRenewalAuthorization`.
+- Request account context: `Stripe-Account: {recipientConnectedAccountId}`.
+- Product/Price: reuse one connected-account Product per auto-renewable offer version; lazily create an immutable recurring Price only for an actually-used pricing snapshot and its contract term.
+- Initial Checkout: hosted Stripe Checkout with `mode=subscription`, one recurring price, technical local-purchase metadata, and Stripe’s recurring-payment authorization.
+- Completion: `checkout.session.completed` supplies the connected-account subscription/customer references used to create/update the local link.
 
-The flow neither reads nor updates Skedular’s existing customer-profile payment method for renewal eligibility.
+## Ongoing billing
 
-## Off-session renewal
+Stripe creates invoices and PaymentIntents and applies its Billing retry/SCA policy. Skedular does not create a separate renewal PaymentIntent.
 
-1. Load authoritative renewal cycle and authorization.
-2. Recalculate price, currency, tax, billing mode, membership term, reservation rules, or entitlement quantity/validity.
-3. If amount/tax changed from the original purchase, generate three-day fallback checkout; do not auto-charge.
-4. Otherwise create/reuse the cycle’s idempotent off-session PaymentIntent using the purchase-specific Stripe credential.
-5. Preserve direct/destination charge semantics and verify account/credential ownership.
-6. Reconcile confirmed provider outcome before materialization.
+| Event | Local behavior |
+|---|---|
+| `invoice.paid` | Deduplicate, record, and grant exactly one reservation term or entitlement. If it precedes Checkout/subscription correlation or local-cycle materialization, resolve correlation from the connected-account Subscription metadata and retry rather than acknowledge an ungranted paid invoice. |
+| `invoice.payment_action_required` | Record/notify/recover; no grant. |
+| `invoice.payment_failed` | Record/notify/recover; no grant. |
+| `invoice.finalization_failed` | Record/block grant and notify appropriate party. |
+| `customer.subscription.updated` | Mirror operational status/period/cancellation intent. |
+| `customer.subscription.deleted` | End future local grants. |
+| `account.application.deauthorized` | Mark link disconnected; no grant. |
 
-## Webhook rules
+Every event is correlated by connected account plus Stripe event/object IDs. The selected Stripe Price is prepared while the prior period is active, before Stripe creates the next invoice. Only a paid invoice controls provisioning.
 
-Process succeeded, failed, canceled, processing/asynchronous, and authentication-required PaymentIntent outcomes using account context plus provider and local attempt IDs. Duplicate/out-of-order delivery must converge through valid local transitions and event idempotency.
+## Cancellation and fees
 
-## Safety rules
-
-- Never persist card data, client secrets, or full provider payloads in logs.
-- No retry after confirmed success/cancellation, expired/detached authorization, or authentication-required outcome.
-- Account/credential/tax ambiguity produces no charge/no grant and fallback/manual recovery.
+AutoRenew changes synchronize to Stripe Subscription cancellation (`cancel_at_period_end` or immediate cancellation as product policy dictates). Direct-charge platform fees require the approved Stripe subscription/invoice fee configuration; this design does not convert to destination charges by default.

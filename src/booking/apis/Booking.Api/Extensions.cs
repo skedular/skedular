@@ -59,6 +59,7 @@ public static class Extensions
                 .AddScoped<IMarketplacePurchaseHistoryService, MarketplacePurchaseHistoryService>()
                 .AddScoped<IResourceService, ResourceService>()
                 .AddScoped<IGraphQlTopicEventSender, GraphQlTopicEventSender>()
+                .AddSingleton<IBookingStripeWebhookService, BookingStripeWebhookService>()
                 .AddScoped<IWorkaroundService, WorkaroundService>();
 
         public IServiceCollection AddJobs() =>

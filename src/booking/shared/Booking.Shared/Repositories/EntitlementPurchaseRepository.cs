@@ -32,6 +32,16 @@ public interface IEntitlementPurchaseRepository : IRepository<EntitlementPurchas
         CancellationToken cancellationToken);
 
     Task<EntitlementPurchase?> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    Task<EntitlementPurchase?> GetByStripeSubscriptionAsync(
+        string stripeAccountId,
+        string stripeSubscriptionId,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<EntitlementPurchase>> GetByStripeAccountAsync(
+        string stripeAccountId,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<EntitlementPurchase>> GetForCustomerAsync(string customerId, CancellationToken cancellationToken);
     Task<IReadOnlyList<EntitlementPurchase>> GetForOrganizationAsync(string organizationId, CancellationToken cancellationToken);
     Task<IReadOnlyList<EntitlementPurchase>> GetExpiredPendingAsync(DateTimeOffset now, CancellationToken cancellationToken);
@@ -43,6 +53,21 @@ public sealed class EntitlementPurchaseRepository(BookingDbContext dbContext, Ti
     public EntitlementPurchase Add(EntitlementPurchase purchase) => DbContext.EntitlementPurchase.Add(purchase).Entity;
 
     public EntitlementPurchase Update(EntitlementPurchase purchase) => DbContext.EntitlementPurchase.Update(purchase).Entity;
+
+    public Task<EntitlementPurchase?> GetByStripeSubscriptionAsync(
+        string stripeAccountId,
+        string stripeSubscriptionId,
+        CancellationToken cancellationToken) =>
+        DbContext.EntitlementPurchase.FirstOrDefaultAsync(
+            item => item.StripeAccountId == stripeAccountId && item.StripeSubscriptionId == stripeSubscriptionId,
+            cancellationToken);
+
+    public async Task<IReadOnlyList<EntitlementPurchase>> GetByStripeAccountAsync(
+        string stripeAccountId,
+        CancellationToken cancellationToken) =>
+        await DbContext.EntitlementPurchase
+            .Where(item => item.StripeAccountId == stripeAccountId)
+            .ToListAsync(cancellationToken);
 
     public async Task<bool> UpdateCheckoutReturnUrlAsync(
         string purchaseId,

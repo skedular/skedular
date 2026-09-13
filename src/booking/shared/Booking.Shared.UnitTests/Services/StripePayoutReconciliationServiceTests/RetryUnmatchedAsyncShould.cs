@@ -130,8 +130,8 @@ public class RetryUnmatchedAsyncShould
     }
 
     [Theory]
-    [InlineAutoFakeItEasyData(new Type[] { }, "failed")]
-    [InlineAutoFakeItEasyData(new Type[] { }, "canceled")]
+    [InlineAutoFakeItEasyData([], "failed")]
+    [InlineAutoFakeItEasyData([], "canceled")]
     public async Task Process_NonPaid_Retrieved_Payouts_Through_State_Handling(
         string payoutStatus,
         [Frozen]

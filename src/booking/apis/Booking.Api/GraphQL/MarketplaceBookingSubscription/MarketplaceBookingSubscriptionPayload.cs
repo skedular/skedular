@@ -17,4 +17,9 @@ public class MarketplaceBookingSubscriptionPayload
 
     [GraphQLName("cancellationError")]
     public CancellationErrorDetails? CancellationError { get; set; }
+
+    [GraphQLName("automaticPaymentRecoveryUrl")]
+    public string? AutomaticPaymentRecoveryUrl { get; set; }
+
+    public string? Error { get; set; }
 }
