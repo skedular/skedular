@@ -18,8 +18,8 @@
 
     <ItemGroup>
         <!-- Test Framework (xUnit) -->
-        <PackageReference Include="xunit.v3" Version="4.0.1"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="4.0.0">
+        <PackageReference Include="xunit.v3" Version="4.0.2"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
@@ -39,12 +39,12 @@
         <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.1.0"/>
 
         <!-- Entity Framework Core (In-Memory Testing) -->
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.12"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.12"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.14"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14"/>
         <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3"/>
 
         <!-- Analyzers -->
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.7.23">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.12.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

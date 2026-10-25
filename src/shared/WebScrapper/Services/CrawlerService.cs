@@ -1,7 +1,6 @@
 using System.Globalization;
 using CommandLine;
 using CsvHelper;
-using CsvHelper.Configuration;
 using Flurl;
 using WebScrapper.Models;
 using WebScrapper.Sharedspaces;
@@ -35,18 +34,18 @@ public class CrawlerService(SharedSpacesConfiguration sharedSpacesConfiguration,
     {
         await using var writer =
             new StreamWriter(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "locations-output.csv"));
-        await using var csv = new CsvWriter(
+        await using var csv = CsvWriter.Create(
             writer,
-            new CsvConfiguration(CultureInfo.InvariantCulture)
+            new CsvWriterOptions
             {
-                Delimiter = "|",
-                ShouldQuote = _ => true,
+                Separator = '|',
+                Quoting = CsvQuoting.Always,
+                FormatProvider = CultureInfo.InvariantCulture,
                 NewLine = Environment.NewLine,
             });
-        csv.Context.RegisterClassMap<LocationMap>();
 
         csv.WriteHeader<Location>();
-        await csv.NextRecordAsync();
+        await csv.EndRecordAsync(cancellationToken);
         await writer.FlushAsync(cancellationToken);
 
         foreach (var url in _urls)
@@ -56,8 +55,8 @@ public class CrawlerService(SharedSpacesConfiguration sharedSpacesConfiguration,
                 url.Value,
                 async location =>
                 {
-                    csv.WriteRecord(location);
-                    await csv.NextRecordAsync();
+                    await csv.WriteRecordAsync(location, cancellationToken);
+                    await csv.EndRecordAsync(cancellationToken);
                     await writer.FlushAsync(cancellationToken);
                 }, cancellationToken);
             await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);

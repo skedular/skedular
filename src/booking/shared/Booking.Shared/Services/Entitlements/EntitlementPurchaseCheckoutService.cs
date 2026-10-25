@@ -142,7 +142,7 @@ public sealed class EntitlementPurchaseCheckoutService(
                 ],
                 Mode = usesStripeSubscription ? "subscription" : "payment",
                 UiMode = "hosted_page",
-                PaymentMethodTypes = ["card"],
+                AllowedPaymentMethodTypes = ["card"],
                 ClientReferenceId = purchase.Id,
                 Metadata = new Dictionary<string, string>
                 {

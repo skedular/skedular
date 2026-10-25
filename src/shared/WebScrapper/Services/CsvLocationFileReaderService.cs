@@ -1,6 +1,4 @@
-using System.Globalization;
 using CsvHelper;
-using CsvHelper.Configuration;
 using WebScrapper.Models;
 
 namespace WebScrapper.Services;
@@ -15,15 +13,12 @@ public class CsvLocationFileReaderService : ICsvLocationFileReaderService
     public IReadOnlyList<Location> ReadLocations()
     {
         using var reader = new StreamReader("/Users/morteza/Downloads/locations-output.csv");
-        using var csv = new CsvReader(
+        using var csv = CsvReader.Create(
             reader,
-            new CsvConfiguration(CultureInfo.InvariantCulture)
+            new CsvReaderOptions
             {
-                Delimiter = "|",
-                ShouldQuote = _ => true,
-                NewLine = Environment.NewLine,
+                Separator = '|',
             });
-        csv.Context.RegisterClassMap<LocationMap>();
 
         return [.. csv.GetRecords<Location>()];
     }

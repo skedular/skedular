@@ -12,7 +12,7 @@ public static class SlackClientExtensions
         public async Task<ViewResponse> ViewsOpenAsync(string triggerId,
             ViewDefinition viewDefinition,
             CancellationToken cancellationToken) =>
-            await slackApiClient.Views.Open(triggerId, viewDefinition, cancellationToken);
+            await slackApiClient.Views.Open(viewDefinition, triggerId, cancellationToken: cancellationToken);
 
         public async Task ViewsPublishAsync(string userId,
             HomeViewDefinition viewDefinition,

@@ -1,8 +1,9 @@
-using CsvHelper.Configuration;
+using CsvHelper;
 
 namespace WebScrapper.Models;
 
-public class Location
+[CsvRecord]
+public partial class Location
 {
     public Location()
     {
@@ -36,35 +37,39 @@ public class Location
         Websites = websites;
     }
 
+    [CsvColumn("Type", Index = 0)]
     public string Type { get; set; } = string.Empty;
-    public string Url { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
-    public string Subtitle { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public string ContactPerson { get; set; } = string.Empty;
-    public string ContactPhone { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public string Area { get; set; } = string.Empty;
-    public string People { get; set; } = string.Empty;
-    public string Emails { get; set; } = string.Empty;
-    public string Websites { get; set; } = string.Empty;
-}
 
-public class LocationMap : ClassMap<Location>
-{
-    public LocationMap()
-    {
-        Map(m => m.Type).Index(0).Name("Type");
-        Map(m => m.Url).Index(1).Name("Url");
-        Map(m => m.Title).Index(2).Name("Title");
-        Map(m => m.Subtitle).Index(3).Name("Subtitle");
-        Map(m => m.Description).Index(4).Name("Description");
-        Map(m => m.ContactPerson).Index(5).Name("ContactPerson");
-        Map(m => m.ContactPhone).Index(6).Name("ContactPhone");
-        Map(m => m.Address).Index(7).Name("Address");
-        Map(m => m.Area).Index(8).Name("Area");
-        Map(m => m.People).Index(9).Name("People");
-        Map(m => m.Emails).Index(10).Name("Emails");
-        Map(m => m.Websites).Index(11).Name("Websites");
-    }
+    [CsvColumn("Url", Index = 1)]
+    public string Url { get; set; } = string.Empty;
+
+    [CsvColumn("Title", Index = 2)]
+    public string Title { get; set; } = string.Empty;
+
+    [CsvColumn("Subtitle", Index = 3)]
+    public string Subtitle { get; set; } = string.Empty;
+
+    [CsvColumn("Description", Index = 4)]
+    public string Description { get; set; } = string.Empty;
+
+    [CsvColumn("ContactPerson", Index = 5)]
+    public string ContactPerson { get; set; } = string.Empty;
+
+    [CsvColumn("ContactPhone", Index = 6)]
+    public string ContactPhone { get; set; } = string.Empty;
+
+    [CsvColumn("Address", Index = 7)]
+    public string Address { get; set; } = string.Empty;
+
+    [CsvColumn("Area", Index = 8)]
+    public string Area { get; set; } = string.Empty;
+
+    [CsvColumn("People", Index = 9)]
+    public string People { get; set; } = string.Empty;
+
+    [CsvColumn("Emails", Index = 10)]
+    public string Emails { get; set; } = string.Empty;
+
+    [CsvColumn("Websites", Index = 11)]
+    public string Websites { get; set; } = string.Empty;
 }

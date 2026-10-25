@@ -81,7 +81,7 @@ public class PaymentService(
             new SetupIntentCreateOptions
             {
                 Customer = organization.OrganizationStripeCustomer.StripeCustomerId,
-                PaymentMethodTypes = ["card"],
+                AllowedPaymentMethodTypes = ["card"],
             },
             new RequestOptions(),
             cancellationToken);

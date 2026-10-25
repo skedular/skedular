@@ -298,7 +298,7 @@ public class StripeIntegrations(
             LineItems = lineItems,
             Mode = usesStripeSubscription ? "subscription" : "payment",
             UiMode = "hosted_page",
-            PaymentMethodTypes = ["card"],
+            AllowedPaymentMethodTypes = ["card"],
             ClientReferenceId = booking.Id,
             Metadata = usesStripeSubscription
                 ? new Dictionary<string, string>
@@ -431,7 +431,7 @@ public class StripeIntegrations(
                 ],
                 Mode = "payment",
                 UiMode = "hosted_page",
-                PaymentMethodTypes = ["card"],
+                AllowedPaymentMethodTypes = ["card"],
                 ClientReferenceId = purchase.Id,
                 Metadata = new Dictionary<string, string>
                 {
@@ -571,7 +571,7 @@ public class StripeIntegrations(
             LineItems = lineItems,
             Mode = usesStripeSubscription ? "subscription" : "payment",
             UiMode = "hosted_page",
-            PaymentMethodTypes = ["card"],
+            AllowedPaymentMethodTypes = ["card"],
             ClientReferenceId = recurringBooking.Id,
             Metadata = usesStripeSubscription
                 ? new Dictionary<string, string>

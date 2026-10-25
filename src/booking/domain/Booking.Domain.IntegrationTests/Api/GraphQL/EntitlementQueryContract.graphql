@@ -19,7 +19,6 @@ query EntitlementQueryContract {
             name
             args {
                 name
-                type { name kind inputFields { name } ofType { name kind } }
             }
         }
     }

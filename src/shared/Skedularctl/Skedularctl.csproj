@@ -21,7 +21,7 @@
         <PackageReference Include="CommandLineParser" Version="2.9.1"/>
 
         <!-- Templating -->
-        <PackageReference Include="DotLiquid" Version="2.3.197"/>
+        <PackageReference Include="DotLiquid" Version="2.3.260"/>
 
         <!-- Code Analysis (Roslyn) -->
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0"/>

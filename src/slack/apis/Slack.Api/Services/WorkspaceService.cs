@@ -32,6 +32,7 @@ public class WorkspaceService(
             null,
             slackConfigurationService.RedirectUrl!.ToString(),
             null,
+            null,
             cancellationToken);
         ArgumentNullException.ThrowIfNull(response.Team);
 

@@ -15,19 +15,19 @@
 
     <ItemGroup>
         <!-- Test Framework -->
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0"/>
 
         <!-- GraphQL Testing (StrawberryShake) -->
-        <PackageReference Include="StrawberryShake.Server" Version="16.6.6"/>
+        <PackageReference Include="StrawberryShake.Server" Version="16.7.3"/>
 
         <!-- Code Coverage -->
-        <PackageReference Include="coverlet.collector" Version="10.0.1">
+        <PackageReference Include="coverlet.collector" Version="10.1.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
         <!-- Analyzers -->
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.7.23">
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="18.12.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

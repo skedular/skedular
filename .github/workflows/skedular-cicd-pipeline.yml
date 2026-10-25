@@ -614,11 +614,16 @@ jobs:
                   TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.STAGING_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.STAGING_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.STAGING_WEBAPP_SPACES_WORKOS_API_KEY || matrix.name == 'webapp-host' && secrets.STAGING_WEBAPP_HOST_WORKOS_API_KEY || '' }}
               with:
                   workingDirectory: ${{ matrix.workingDirectory }}
+            - name: Set up Node.js for public static web
+              if: ${{ matrix.name == 'public-web' }}
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24.22.1
             - name: Enable pnpm for public static web
               if: ${{ matrix.name == 'public-web' }}
               run: |
                   corepack enable
-                  corepack prepare pnpm@12.4.1 --activate
+                  corepack prepare pnpm@12.16.1 --activate
             - name: Install public static web dependencies
               if: ${{ matrix.name == 'public-web' }}
               run: pnpm --dir src/web install --frozen-lockfile
@@ -697,11 +702,16 @@ jobs:
                   TF_VAR_workos_api_key: ${{ matrix.name == 'webapp' && secrets.PRODUCTION_WEBAPP_WORKOS_API_KEY || matrix.name == 'webapp-teams' && secrets.PRODUCTION_WEBAPP_TEAMS_WORKOS_API_KEY || matrix.name == 'webapp-spaces' && secrets.PRODUCTION_WEBAPP_SPACES_WORKOS_API_KEY || matrix.name == 'webapp-host' && secrets.PRODUCTION_WEBAPP_HOST_WORKOS_API_KEY || '' }}
               with:
                   workingDirectory: ${{ matrix.workingDirectory }}
+            - name: Set up Node.js for public static web
+              if: ${{ matrix.name == 'public-web' }}
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24.22.1
             - name: Enable pnpm for public static web
               if: ${{ matrix.name == 'public-web' }}
               run: |
                   corepack enable
-                  corepack prepare pnpm@12.4.1 --activate
+                  corepack prepare pnpm@12.16.1 --activate
             - name: Install public static web dependencies
               if: ${{ matrix.name == 'public-web' }}
               run: pnpm --dir src/web install --frozen-lockfile

@@ -35,7 +35,7 @@ public class MarketplaceBookingModificationPersistenceShould(
         CancellationToken cancellationToken)
     {
         // Arrange
-        var from = TimeProvider.System.GetUtcNow().AddDays(1);
+        var from = GetFutureBookingStart();
         var until = from.AddHours(1);
         var newFrom = from.AddDays(1);
         var newUntil = until.AddDays(1);
@@ -117,7 +117,7 @@ public class MarketplaceBookingModificationPersistenceShould(
         CancellationToken cancellationToken)
     {
         // Arrange
-        var from = TimeProvider.System.GetUtcNow().AddDays(1);
+        var from = GetFutureBookingStart();
         var until = from.AddHours(1);
 
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, true, cancellationToken);
@@ -203,7 +203,7 @@ public class MarketplaceBookingModificationPersistenceShould(
         CancellationToken cancellationToken)
     {
         // Arrange
-        var from = TimeProvider.System.GetUtcNow().AddDays(1);
+        var from = GetFutureBookingStart();
         var until = from.AddHours(1);
         var originalPrice = 100m;
 
@@ -281,7 +281,7 @@ public class MarketplaceBookingModificationPersistenceShould(
         string entitlementId,
         CancellationToken cancellationToken)
     {
-        var from = TimeProvider.System.GetUtcNow().AddDays(1);
+        var from = GetFutureBookingStart();
         var until = from.AddHours(1);
         var customer = await repositoryFactory.CustomerRepository.UpsertNakedAsync(customerId, true, cancellationToken);
         customer.Identities.Add(new IdentityEntity
@@ -393,5 +393,11 @@ public class MarketplaceBookingModificationPersistenceShould(
     {
         httpContextAccessor.HttpContext = new DefaultHttpContext();
         context.SetVerifiableToken(customerId);
+    }
+
+    private static DateTimeOffset GetFutureBookingStart()
+    {
+        var utcDate = TimeProvider.System.GetUtcNow().UtcDateTime.Date;
+        return new DateTimeOffset(utcDate.AddDays(1).AddHours(10), TimeSpan.Zero);
     }
 }

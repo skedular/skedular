@@ -1,11 +1,11 @@
 import withBundleAnalyzer from "@next/bundle-analyzer";
-import type { NextConfig } from "next";
+import type { RemotePattern } from "next/dist/shared/lib/image-config";
 import relayConfig from "./relay.config";
 
 const isVercel = process.env.VERCEL === "1";
 const withAnalyzer = withBundleAnalyzer({ enabled: process.env.ANALYZE === "true" });
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   allowedDevOrigins: ["mapp.skedular.app"],
   transpilePackages: ["@skedular/ui", "@skedular/shared"],
   compiler: {
@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'cloudflarecdn.skedular.app', pathname: '/**' },
       { protocol: 'https', hostname: 'awscdnstaging.skedular.app', pathname: '/**' },
       { protocol: 'https', hostname: 'awscdn.skedular.app', pathname: '/**' },
-    ],
+    ] satisfies RemotePattern[],
   },
 };
 

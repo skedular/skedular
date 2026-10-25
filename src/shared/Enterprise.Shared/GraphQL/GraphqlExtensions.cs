@@ -44,6 +44,7 @@ public static class GraphqlExtensions
 
             builder = builder
                 .AddCostAnalyzer()
+                .ModifyCostOptions(options => options.SkipAnalyzer = true)
                 .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)
                 .AddCustomGraphqlInstrumentation()
                 .AddSourceSchemaDefaults();

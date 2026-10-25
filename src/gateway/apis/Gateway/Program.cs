@@ -55,6 +55,7 @@ public class Program
 
         _ = services
             .AddGraphQLGatewayServer(disableDefaultSecurity: true)
+            .ModifyCostOptions(options => options.SkipAnalyzer = true)
             .AddFileSystemConfiguration(Path.Combine(AppContext.BaseDirectory, "gateway.far"))
             .AddWarmupTask<ConfiguredGraphqlWarmupTask>(
                 serviceProvider =>
