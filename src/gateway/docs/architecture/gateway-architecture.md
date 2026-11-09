@@ -13,17 +13,12 @@ It is intentionally C4-style rather than implementation-complete. The goal is to
 
 ## Local listeners and TLS
 
-The gateway listens on HTTP port 9000 and HTTPS port 9001. The HTTPS listener uses an
-`https://` URL; naming an HTTP listener `https` does not enable TLS.
-
-For local development, configure an ASP.NET Core development certificate with
-`dotnet dev-certs https --trust`. Hosts that do not have a development certificate
-must configure a certificate, for example with
-`Kestrel__Endpoints__https__Certificate__Path` and
+The gateway listens on HTTP ports 9000 and 9001. The `https` endpoint key is a
+configuration name only; its `http://` URL means Kestrel does not enable TLS on that
+listener. If TLS is terminated by Kestrel, configure an `https://` URL and provide a
+certificate through `Kestrel__Endpoints__https__Certificate__Path` and
 `Kestrel__Endpoints__https__Certificate__Password`. Keep certificate passwords out of
-source control. When TLS terminates upstream and the gateway must use HTTP only,
-explicitly override `Kestrel__Endpoints__https__Url` to an HTTP URL rather than
-assuming the HTTPS listener is unencrypted.
+source control.
 
 ## Scope
 
