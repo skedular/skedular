@@ -35,3 +35,10 @@ Provider services are registered only when their matching config sections are pr
 - Provider registration conditions belong in root `Enterprise.Shared/Extensions.cs`.
 - If a provider needs extra configuration guards, add them in `AddIdentityTokenProviders()` and keep the guard aligned
   with the provider's actual runtime requirements.
+- Never populate request identity from a parsed JWT until signature, issuer, lifetime, and applicable audience
+  validation
+  succeeds. `JsonWebTokenHandler.ValidateTokenAsync` returns a result; an awaited call alone does not mean validation
+  passed.
+- WorkOS AuthKit session JWTs do not contain `aud`. Validate them against the client-specific JWKS and configured issuer
+  allowlist, including custom auth domains. Cognito and Azure tokens still require their configured audience.
+- Log validation failures without credentials or token payloads, and propagate request cancellation.

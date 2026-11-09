@@ -96,6 +96,11 @@ public class SamlAssertionConsumerService(
 
         var response = new SamlResponse();
 
+        var assertionNode = samlResponse.SelectSingleNode("//saml:Assertion", namespaceManager);
+        ArgumentNullException.ThrowIfNull(assertionNode);
+        ArgumentException.ThrowIfNullOrWhiteSpace(assertionNode.Attributes?["ID"]?.Value);
+        response.AssertionId = assertionNode.Attributes["ID"]!.Value;
+
         var nameIdNode = samlResponse.SelectSingleNode("//saml:Subject/saml:NameID", namespaceManager);
         response.NameId = nameIdNode?.InnerText;
 

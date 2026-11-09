@@ -25,7 +25,7 @@ public class PropagatorEntityFunctions(ILogger<PropagatorEntityFunctions> logger
 
         try
         {
-            context = string.IsNullOrEmpty(destination.TraceContext)
+            context = string.IsNullOrWhiteSpace(destination.TraceContext)
                 ? new JsonObject()
                 : JsonNode.Parse(destination.TraceContext)?.AsObject() ?? new JsonObject();
         }
@@ -44,7 +44,7 @@ public class PropagatorEntityFunctions(ILogger<PropagatorEntityFunctions> logger
 
     public IEnumerable<string> Extract(IPropagatorEntity location, string contextFieldName)
     {
-        if (string.IsNullOrEmpty(location.TraceContext))
+        if (string.IsNullOrWhiteSpace(location.TraceContext))
         {
             return [];
         }

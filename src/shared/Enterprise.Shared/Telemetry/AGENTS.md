@@ -78,4 +78,5 @@ Use `MetricTaggingExtensions.ToTagList(ITaggable)` to convert tag objects to `Ta
 - Do not create `ActivitySource` instances directly in domain code — use `IActivityAccessor` to retrieve or start
   activities so the source name stays consistent.
 - Health check routes are filtered from traces automatically; do not add custom filters for them.
+- Empty or whitespace-only entity trace context is treated as absent, not malformed JSON.
 - The custom meter name must match `OpenTelemetryConfiguration.MeterProviderName` in config; do not hardcode a string.

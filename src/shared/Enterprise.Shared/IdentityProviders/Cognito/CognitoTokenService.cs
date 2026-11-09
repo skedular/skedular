@@ -45,13 +45,14 @@ public class CognitoTokenService(
 
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
-            if (issuer is not null && _cognitoConfiguration.Issuer != issuer)
+            if (issuer is null || _cognitoConfiguration.Issuer != issuer)
             {
+                logger.LogDebug("Cognito token issuer does not match the configured issuer");
                 return;
             }
 
-            await new JsonWebTokenHandler().ValidateTokenAsync(
-                jwtToken,
+            var validationResult = await new JsonWebTokenHandler().ValidateTokenAsync(
+                token,
                 new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -62,6 +63,13 @@ public class CognitoTokenService(
                     IssuerSigningKeys = jws.Keys,
                     ValidateLifetime = true,
                 });
+
+            if (!validationResult.IsValid)
+            {
+                logger.LogWarning("Cognito token validation failed. FailureType={FailureType}",
+                    validationResult.Exception?.GetType().Name);
+                return;
+            }
 
             var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
             ArgumentException.ThrowIfNullOrWhiteSpace(value);
@@ -112,9 +120,13 @@ public class CognitoTokenService(
 
             logger.LogInformation("Cognito token verified successfully");
         }
-        catch
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            // ignored
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning("Cognito token verification failed. FailureType={FailureType}", exception.GetType().Name);
         }
     }
 }

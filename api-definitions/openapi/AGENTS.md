@@ -37,3 +37,6 @@ Use `make generate` from the repo root to run all three generation steps in the 
 - Do not add route logic to a controller without a matching YAML declaration.
 - Do not patch generated files under `shared/Api.Shared.Services/OpenApi/` or `shared/Api.Shared.Clients/OpenApi/` by
   hand.
+- The generator builds client and service images concurrently and must check both exit statuses before extracting
+  outputs. Never copy outputs from a stale image after a failed build.
+- Run `sh api-definitions/openapi/tests/generate.sh` for Docker-free regression checks of generation build failures.

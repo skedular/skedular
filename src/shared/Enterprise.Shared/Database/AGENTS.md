@@ -37,6 +37,9 @@ All variants accept an optional `healthCheckName` to register a PostgreSQL readi
 **Prerequisites:** `AddCoreServices<TProgram>()` (registers `ApplicationConfiguration` for query splitting behaviour)
 and a registered `NpgsqlDataSource`.
 
+Data sources are cached by connection string and PostGIS mode. Contexts using the same connection string with different
+spatial mapping requirements do not share a data source.
+
 ## Registration — SQL Server
 
 Same API surface, parallel methods:

@@ -5,6 +5,7 @@ public class SamlResponse
 {
     public string Destination { get; set; } = string.Empty; // AssertionConsumerServiceUrl
     public string InResponseTo { get; set; } = string.Empty; // OrganizationId
+    public string AssertionId { get; set; } = string.Empty;
     public string? NameId { get; set; }
     public Dictionary<string, string> Roles { get; set; } = [];
 

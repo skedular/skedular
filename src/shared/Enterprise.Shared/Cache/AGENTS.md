@@ -23,6 +23,9 @@ connection string format is accepted (e.g. `localhost:6379` or a full options st
 | `IConnectionMultiplexer` | `ConnectionMultiplexer`                   | Singleton |
 | `IDistributedCache`      | `RedisCache` (StackExchange.Redis-backed) | Singleton |
 
+The distributed cache reuses the registered `IConnectionMultiplexer` instead of opening a second Redis connection.
+Resolving cache options does not connect to Redis; the shared multiplexer is resolved when the cache first needs it.
+
 ## HybridCache
 
 `AddHybridCaching()` (in root `Extensions.cs`) layers `HybridCache` on top of this Redis registration. Call `AddRedis`

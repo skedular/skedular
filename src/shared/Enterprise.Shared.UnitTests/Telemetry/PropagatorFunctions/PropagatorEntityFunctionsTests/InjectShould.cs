@@ -1,5 +1,7 @@
-﻿using Enterprise.Shared.Telemetry;
+﻿using System.Text.Json.Nodes;
+using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Telemetry.PropagatorFunctions;
+using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagatorFunctions.PropagatorEntityFunctionsTests;
 
@@ -44,5 +46,26 @@ public class InjectShould
         entity.TraceContext = "{\"my field\":\"my value\"";
         functions.Inject(entity, "my field", "new value");
         entity.TraceContext.ShouldBe("{\"my field\":\"new value\"}");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Treat_whitespace_context_as_empty_without_logging_a_warning(
+        [Frozen]
+        ILogger<PropagatorEntityFunctions> logger,
+        PropagatorEntityFunctions functions,
+        IPropagatorEntity entity,
+        string fieldName,
+        string fieldValue)
+    {
+        entity.TraceContext = " \t\r\n";
+
+        functions.Inject(entity, fieldName, fieldValue);
+
+        entity.TraceContext.ShouldBe(new JsonObject
+        {
+            [fieldName] = fieldValue,
+        }.ToJsonString());
+        Fake.GetCalls(logger).Where(call => call.Method.Name == nameof(ILogger.Log)).ShouldBeEmpty();
     }
 }

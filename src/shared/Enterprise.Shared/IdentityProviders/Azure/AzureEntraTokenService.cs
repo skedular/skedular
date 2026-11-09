@@ -30,12 +30,13 @@ public class AzureEntraTokenService(
 
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
             var tenantId = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "tid")?.Value;
-            if (tenantId is null)
+            if (!Guid.TryParse(tenantId, out var tenant))
             {
+                logger.LogDebug("Azure Entra token has no valid tenant id claim");
                 return;
             }
 
-            var authority = $"https://login.microsoftonline.com/{tenantId}";
+            var authority = $"https://login.microsoftonline.com/{tenant:D}";
             var openIdConnectConfiguration = await memoryCache.GetOrCreateAsync<OpenIdConnectConfiguration>(
                 $"openid-configuration-msteams-{tenantId}",
                 async cacheEntry =>
@@ -57,12 +58,12 @@ public class AzureEntraTokenService(
 
             ArgumentNullException.ThrowIfNull(openIdConnectConfiguration);
 
-            await new JsonWebTokenHandler().ValidateTokenAsync(
-                jwtToken,
+            var validationResult = await new JsonWebTokenHandler().ValidateTokenAsync(
+                token,
                 new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = authority,
+                    ValidIssuer = openIdConnectConfiguration.Issuer,
                     ValidateAudience = true,
                     ValidAudience = azureEntraConfiguration.ClientId,
                     ValidateIssuerSigningKey = true,
@@ -70,16 +71,16 @@ public class AzureEntraTokenService(
                     ValidateLifetime = true,
                 });
 
-            if (!Guid.TryParse(tenantId, out var tenant))
+            if (!validationResult.IsValid)
             {
-                logger.LogWarning("Azure Entra tenant id claim is not a GUID");
+                logger.LogWarning("Azure Entra token validation failed. FailureType={FailureType}",
+                    validationResult.Exception?.GetType().Name);
                 return;
             }
 
-            context.SetAzureTenantId(tenant);
-
             var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "oid")?.Value;
             ArgumentException.ThrowIfNullOrWhiteSpace(value);
+            context.SetAzureTenantId(tenant);
             context.SetVerifiableToken(value);
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "name")?.Value;
@@ -112,9 +113,13 @@ public class AzureEntraTokenService(
 
             logger.LogInformation("Azure Entra token verified successfully");
         }
-        catch
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            // ignored
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning("Azure Entra token verification failed. FailureType={FailureType}", exception.GetType().Name);
         }
     }
 }

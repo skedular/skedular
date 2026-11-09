@@ -96,6 +96,7 @@ public static class Extensions
                     var durableName = index == 0 ? durableConsumerName : $"{durableConsumerName}-{subject.Replace('.', '-')}";
 
                     return new NatsConsumeService<TKey, TEvent>(
+                        provider.GetRequiredService<NatsConfiguration>(),
                         provider.GetRequiredService<INatsConnection>(),
                         provider.GetRequiredService<INatsJetStreamProvisioner>(),
                         NatsSubjectAttributeHelper.GetStreamName<TEvent>(),

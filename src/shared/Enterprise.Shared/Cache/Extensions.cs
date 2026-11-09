@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
@@ -25,7 +26,11 @@ public static class Extensions
 
             services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(connectionString));
 
-            return services.AddStackExchangeRedisCache(options => options.Configuration = connectionString);
+            services.AddStackExchangeRedisCache(_ => { });
+            services.AddOptions<RedisCacheOptions>().Configure<IServiceProvider>((options, provider) =>
+                options.ConnectionMultiplexerFactory = () => Task.FromResult(provider.GetRequiredService<IConnectionMultiplexer>()));
+
+            return services;
         }
     }
 }

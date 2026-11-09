@@ -48,20 +48,29 @@ public class WorkOSTokenService(
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
             if (issuer is null || (_configuration.Issuer != issuer && _configuration.OtherIssuers.All(item => item.ToString() != issuer)))
             {
+                logger.LogDebug("WorkOS token issuer does not match a configured issuer");
                 return;
             }
 
-            await new JsonWebTokenHandler().ValidateTokenAsync(
-                jwtToken,
+            var validationResult = await new JsonWebTokenHandler().ValidateTokenAsync(
+                token,
                 new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = _configuration.Issuer,
-                    ValidateAudience = true,
+                    ValidIssuers = new[] { _configuration.Issuer }.Concat(_configuration.OtherIssuers.Select(item => item.ToString())),
+                    // AuthKit session tokens have no audience; the configured JWKS is client-specific.
+                    ValidateAudience = false,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKeys = jws.Keys,
                     ValidateLifetime = true,
                 });
+
+            if (!validationResult.IsValid)
+            {
+                logger.LogWarning("WorkOS token validation failed. FailureType={FailureType}",
+                    validationResult.Exception?.GetType().Name);
+                return;
+            }
 
             var sub = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
             ArgumentException.ThrowIfNullOrWhiteSpace(sub);
@@ -114,9 +123,13 @@ public class WorkOSTokenService(
 
             logger.LogInformation("WorkOS token verified successfully");
         }
-        catch
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            // ignored
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning("WorkOS token verification failed. FailureType={FailureType}", exception.GetType().Name);
         }
     }
 }

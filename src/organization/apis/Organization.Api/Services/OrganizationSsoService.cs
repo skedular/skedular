@@ -47,6 +47,7 @@ public class OrganizationSsoService(
     IRepositoryFactory repositoryFactory,
     ISamlLoginRequestFactory samlLoginRequestFactory,
     ISamlAssertionConsumerService samlAssertionConsumerService,
+    ISamlAssertionReplayCache samlAssertionReplayCache,
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
@@ -242,6 +243,11 @@ public class OrganizationSsoService(
         if (!isSignatureValid)
         {
             throw new UnauthorizedAccessException();
+        }
+
+        if (!samlAssertionReplayCache.TryRegister(samlResponse.Issuer, samlResponse.AssertionId, timeProvider.GetUtcNow()))
+        {
+            throw new UnauthorizedAccessException("The SAML assertion has already been used.");
         }
 
         samlAssertionConsumerService.StoreSamlResponseInCookie(httpResponse, ssoSettings.Organization.Id, samlResponse);

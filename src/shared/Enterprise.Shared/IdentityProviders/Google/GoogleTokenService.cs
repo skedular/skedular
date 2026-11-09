@@ -27,6 +27,7 @@ public class GoogleTokenService(
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
             if (issuer is not null && _googleConfiguration.Issuer != issuer)
             {
+                logger.LogDebug("Google token issuer does not match the configured issuer");
                 return;
             }
 
@@ -54,9 +55,13 @@ public class GoogleTokenService(
 
             logger.LogInformation("Google token verified successfully");
         }
-        catch
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            // ignored
+            throw;
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning("Google token verification failed. FailureType={FailureType}", exception.GetType().Name);
         }
     }
 }

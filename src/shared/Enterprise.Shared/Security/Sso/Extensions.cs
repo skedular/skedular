@@ -9,6 +9,7 @@ public static class Extensions
     {
         public IServiceCollection AddSso() =>
             services
+                .AddSingleton<ISamlAssertionReplayCache, SamlAssertionReplayCache>()
                 .AddSingleton<ISamlAssertionConsumerService, SamlAssertionConsumerService>()
                 .AddSingleton<ISamlLoginRequestFactory, SamlLoginRequestFactory>();
     }

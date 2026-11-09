@@ -12,6 +12,7 @@ using NatsLogEvents = Enterprise.Shared.Messaging.Nats.Logging.NatsLogEvents;
 namespace Enterprise.Shared.Messaging.Nats.Consume;
 
 public class NatsConsumeService<TKey, TEvent>(
+    NatsConfiguration natsConfiguration,
     INatsConnection connection,
     INatsJetStreamProvisioner provisioner,
     string streamName,
@@ -33,8 +34,9 @@ public class NatsConsumeService<TKey, TEvent>(
 
         try
         {
+            var retryDelay = retrySubjects.FirstOrDefault(item => item.Subject == subject)?.Delay ?? TimeSpan.Zero;
             await provisioner.EnsureConsumerAsync(
-                new NatsConsumerDefinition(streamName, durableName, subject, TimeSpan.FromSeconds(30), -1),
+                new NatsConsumerDefinition(streamName, durableName, subject, retryDelay + TimeSpan.FromSeconds(30), -1),
                 cancellationToken);
 
             consumer = await new NatsJSContext(connection).GetConsumerAsync(streamName, durableName, cancellationToken);
@@ -48,70 +50,7 @@ public class NatsConsumeService<TKey, TEvent>(
                                },
                                cancellationToken: cancellationToken))
             {
-                try
-                {
-                    message.EnsureSuccess();
-                }
-                catch (Exception exception)
-                {
-                    logger.LogError(exception, "NATS message delivery failed; message remains unacknowledged. Subject={Subject}", message.Subject);
-                    continue;
-                }
-
-                NatsLogEvents.MessageDelivered(logger, message.Subject);
-
-                var headers = ToHeaders(message.Headers);
-                var natsMessage = new NatsMessage
-                {
-                    Subject = message.Subject,
-                    Payload = message.Data ?? [],
-                    Headers = headers,
-                    AcknowledgeAsync = token => message.AckAsync(cancellationToken: token),
-                };
-
-                try
-                {
-                    await WaitForRetryDelayAsync(natsMessage, cancellationToken);
-                    await handler.HandleMessageAsync(natsMessage, cancellationToken);
-                    await message.AckAsync(cancellationToken: cancellationToken);
-
-                    NatsLogEvents.MessageAcknowledged(logger, message.Subject);
-                }
-                catch (Exception exception) when (reliable)
-                {
-                    var nextSubject = GetNextSubject(message.Subject);
-                    if (forwarder is null || nextSubject is null)
-                    {
-                        throw;
-                    }
-
-                    var forwardingHeaders = new Dictionary<string, string>(headers, StringComparer.OrdinalIgnoreCase)
-                    {
-                        [NatsMessage.RetryTimestampHeader] = timeProvider.GetUtcNow().ToString("O", CultureInfo.InvariantCulture),
-                    };
-
-                    try
-                    {
-                        await forwarder.PublishForwardedAsync(nextSubject, natsMessage.Payload, forwardingHeaders, cancellationToken);
-                        await message.AckAsync(cancellationToken: cancellationToken);
-
-                        logger.LogWarning(
-                            exception, "NATS message forwarded. Subject={Subject} NextSubject={NextSubject}", message.Subject,
-                            nextSubject);
-                    }
-                    catch (Exception forwardingException)
-                    {
-                        logger.LogError(
-                            forwardingException,
-                            "NATS message forwarding failed; message remains unacknowledged. Subject={Subject} NextSubject={NextSubject}",
-                            message.Subject,
-                            nextSubject);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    logger.LogError(exception, "NATS message processing failed; message remains unacknowledged. Subject={Subject}", message.Subject);
-                }
+                await ProcessMessageAsync(message, cancellationToken);
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -134,6 +73,81 @@ public class NatsConsumeService<TKey, TEvent>(
         }
     }
 
+    protected async Task ProcessMessageAsync(INatsJSMsg<byte[]> message, CancellationToken cancellationToken)
+    {
+        try
+        {
+            message.EnsureSuccess();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "NATS message delivery failed; message remains unacknowledged. Subject={Subject}", message.Subject);
+            return;
+        }
+
+        NatsLogEvents.MessageDelivered(logger, message.Subject);
+
+        var headers = ToHeaders(message.Headers);
+        var natsMessage = new NatsMessage
+        {
+            Subject = message.Subject,
+            Payload = message.Data ?? [],
+            Headers = headers,
+            AcknowledgeAsync = token => message.AckAsync(cancellationToken: token),
+        };
+
+        try
+        {
+            await WaitForRetryDelayAsync(natsMessage, cancellationToken);
+            await handler.HandleMessageAsync(natsMessage, cancellationToken);
+            await message.AckAsync(cancellationToken: cancellationToken);
+
+            NatsLogEvents.MessageAcknowledged(logger, message.Subject);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception exception) when (reliable && message.Subject != deadLetterSubject)
+        {
+            var nextSubject = GetNextSubject(message.Subject);
+            if (forwarder is null || nextSubject is null)
+            {
+                throw;
+            }
+
+            var forwardingHeaders = new Dictionary<string, string>(headers, StringComparer.OrdinalIgnoreCase)
+            {
+                [NatsMessage.RetryTimestampHeader] = timeProvider.GetUtcNow().ToString("O", CultureInfo.InvariantCulture),
+            };
+
+            try
+            {
+                await forwarder.PublishForwardedAsync(nextSubject, natsMessage.Payload, forwardingHeaders, cancellationToken);
+                await message.AckAsync(cancellationToken: cancellationToken);
+
+                logger.LogWarning(exception, "NATS message forwarded. Subject={Subject} NextSubject={NextSubject}",
+                    message.Subject, nextSubject);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception forwardingException)
+            {
+                await message.NakAsync(natsConfiguration.RedeliveryDelay, cancellationToken);
+                logger.LogError(forwardingException,
+                    "NATS message forwarding failed; message remains unacknowledged. Subject={Subject} NextSubject={NextSubject}",
+                    message.Subject, nextSubject);
+            }
+        }
+        catch (Exception exception)
+        {
+            await message.NakAsync(natsConfiguration.RedeliveryDelay, cancellationToken);
+            logger.LogError(exception, "NATS message processing failed; message remains unacknowledged. Subject={Subject}", message.Subject);
+        }
+    }
+
     private async ValueTask WaitForRetryDelayAsync(NatsMessage message, CancellationToken cancellationToken)
     {
         var setting = retrySubjects.FirstOrDefault(item => item.Subject == message.Subject);
@@ -153,9 +167,14 @@ public class NatsConsumeService<TKey, TEvent>(
 
     private string? GetNextSubject(string subjectName)
     {
-        if (subjectName == subject)
+        if (subjectName == deadLetterSubject)
         {
-            return retrySubjects.FirstOrDefault()?.Subject;
+            return null;
+        }
+
+        if (subjectName == subject && retrySubjects.All(item => item.Subject != subjectName))
+        {
+            return retrySubjects.FirstOrDefault()?.Subject ?? deadLetterSubject;
         }
 
         var index = -1;

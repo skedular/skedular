@@ -5,7 +5,7 @@ namespace Enterprise.Shared.Database.PostgreSql;
 
 public static class PostgreSqlConfigurationExtensions
 {
-    private static readonly ConcurrentDictionary<string, NpgsqlDataSource> s_dataSources = new();
+    private static readonly ConcurrentDictionary<(string ConnectionString, bool IsPostgisEnabled), NpgsqlDataSource> s_dataSources = new();
 
     extension(string connectionString)
     {
@@ -13,7 +13,8 @@ public static class PostgreSqlConfigurationExtensions
         {
             try
             {
-                if (s_dataSources.TryGetValue(connectionString, out var dataSource))
+                var cacheKey = (connectionString, isPostgisEnabled);
+                if (s_dataSources.TryGetValue(cacheKey, out var dataSource))
                 {
                     return dataSource;
                 }
@@ -24,8 +25,8 @@ public static class PostgreSqlConfigurationExtensions
                     dataSourceBuilder = dataSourceBuilder.UseNetTopologySuite();
                 }
 
-                s_dataSources[connectionString] = dataSourceBuilder.EnableDynamicJson().Build();
-                return s_dataSources[connectionString];
+                s_dataSources[cacheKey] = dataSourceBuilder.EnableDynamicJson().Build();
+                return s_dataSources[cacheKey];
             }
             catch (Exception ex)
             {
