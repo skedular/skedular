@@ -19,7 +19,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Text.Json" Version="10.0.14"/>
+        <PackageReference Include="System.Text.Json" Version="10.0.15"/>
         <PackageReference Include="Grpc.Net.ClientFactory" Version="2.85.0"/>
 
         <!-- Build Tools / Event Protobuf Serialization -->

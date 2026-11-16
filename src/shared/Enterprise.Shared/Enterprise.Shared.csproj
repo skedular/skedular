@@ -33,7 +33,7 @@
 
         <!-- Database / SQL Server -->
         <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.15"/>
 
         <!-- AWS -->
         <PackageReference Include="AWSSDK.S3" Version="4.0.104.11"/>
@@ -45,33 +45,33 @@
         <PackageReference Include="Grpc.Net.Client" Version="2.85.0"/>
 
         <!-- GraphQL (HotChocolate) -->
-        <PackageReference Include="HotChocolate" Version="16.7.3"/>
-        <PackageReference Include="HotChocolate.AspNetCore" Version="16.7.3"/>
-        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="16.7.3"/>
-        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="16.7.3"/>
-        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="16.7.3"/>
-        <PackageReference Include="HotChocolate.Diagnostics" Version="16.7.3"/>
-        <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="16.7.3"/>
+        <PackageReference Include="HotChocolate" Version="16.7.5"/>
+        <PackageReference Include="HotChocolate.AspNetCore" Version="16.7.5"/>
+        <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="16.7.5"/>
+        <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="16.7.5"/>
+        <PackageReference Include="HotChocolate.Data.EntityFramework" Version="16.7.5"/>
+        <PackageReference Include="HotChocolate.Diagnostics" Version="16.7.5"/>
+        <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="16.7.5"/>
 
         <!-- ASP.NET Core -->
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.14"/>
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="10.0.14"/>
-        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="10.0.14"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.14"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.15"/>
+        <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="10.0.15"/>
+        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="10.0.15"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.15"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.15"/>
 
         <!-- Entity Framework Core -->
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.14"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.14"/>
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.14"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.15"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.15"/>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.15"/>
 
         <!-- Caching / Redis -->
         <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.11.0"/>
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.14"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.15"/>
         <PackageReference Include="StackExchange.Redis" Version="3.4.31"/>
 
         <!-- Dependency Injection -->
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.15"/>
         <PackageReference Include="Scrutor" Version="7.0.0"/>
 
         <!-- HTTP / Resilience -->
@@ -117,8 +117,8 @@
 
         <!-- Authentication / Security -->
         <PackageReference Include="Google.Apis.Auth" Version="1.78.0"/>
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.14"/>
-        <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.14"/>
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.15"/>
+        <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.15"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0"/>
         <PackageReference Include="WorkOS.net" Version="6.7.0"/>
 
@@ -165,7 +165,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.14">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.15">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
