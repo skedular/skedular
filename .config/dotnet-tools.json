@@ -4,32 +4,44 @@
   "tools": {
     "jetbrains.resharper.globaltools": {
       "version": "2026.3.0",
-      "commands": ["jb"],
+      "commands": [
+        "jb"
+      ],
       "rollForward": false
     },
     "dotnet-ef": {
       "version": "10.0.15",
-      "commands": ["dotnet-ef"],
+      "commands": [
+        "dotnet-ef"
+      ],
       "rollForward": false
     },
     "dotnet-outdated-tool": {
       "version": "4.9.0",
-      "commands": ["dotnet-outdated"],
+      "commands": [
+        "dotnet-outdated"
+      ],
       "rollForward": false
     },
     "chillicream.nitro.commandline": {
-      "version": "16.7.5",
-      "commands": ["nitro"],
+      "version": "16.7.6",
+      "commands": [
+        "nitro"
+      ],
       "rollForward": false
     },
     "strawberryshake.tools": {
-      "version": "16.7.5",
-      "commands": ["dotnet-graphql"],
+      "version": "16.7.6",
+      "commands": [
+        "dotnet-graphql"
+      ],
       "rollForward": false
     },
     "dotnet-stryker": {
       "version": "5.0.0",
-      "commands": ["dotnet-stryker"],
+      "commands": [
+        "dotnet-stryker"
+      ],
       "rollForward": false
     }
   }
