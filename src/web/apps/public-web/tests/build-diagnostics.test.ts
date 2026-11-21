@@ -5,11 +5,15 @@ import { publicUrlEnvironment, publicUrlFixtures } from "./public-url-fixtures";
 function runBuild(environment: NodeJS.ProcessEnv) {
   return new Promise<{ code: number | null; stdout: string; stderr: string }>(
     (resolve) => {
-      const child = spawn("pnpm", ["build"], {
-        cwd: process.cwd(),
-        env: environment,
-        shell: false,
-      });
+      const child = spawn(
+        "sh",
+        ["-c", "pnpm exec astro build && node ./scripts/report-build.mjs"],
+        {
+          cwd: process.cwd(),
+          env: environment,
+          shell: false,
+        },
+      );
       let stdout = "";
       let stderr = "";
 

@@ -43,7 +43,7 @@ import { getRobotsForPath, sitemapPages } from "../src/data/seo";
 import { publicUrlEnvironment, publicUrlFixtures } from "./public-url-fixtures";
 
 beforeAll(() => {
-  const result = spawnSync("pnpm", ["build"], {
+  const result = spawnSync("pnpm", ["exec", "astro", "build"], {
     cwd: process.cwd(),
     env: { ...process.env, ...publicUrlEnvironment },
     encoding: "utf8",

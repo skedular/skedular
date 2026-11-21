@@ -7,7 +7,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { publicUrlEnvironment } from "./public-url-fixtures";
 
 beforeAll(() => {
-  const result = spawnSync("pnpm", ["build"], {
+  const result = spawnSync("pnpm", ["exec", "astro", "build"], {
     cwd: process.cwd(),
     env: { ...process.env, ...publicUrlEnvironment },
     encoding: "utf8",
