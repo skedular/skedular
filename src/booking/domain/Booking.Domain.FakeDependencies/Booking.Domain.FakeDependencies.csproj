@@ -11,6 +11,7 @@
         <RepositoryType>git</RepositoryType>
         <OutputType>Exe</OutputType>
         <TargetFramework>net11.0</TargetFramework>
+        <AnalysisLevel>latest</AnalysisLevel>
         <Features>runtime-async=on</Features>
         <LangVersion>15</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
