@@ -2,6 +2,7 @@
 using Enterprise.Shared.UnitTesting.Database.TestSupport;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Enterprise.Shared.UnitTests.Database.DatabaseMigrationServiceTests;
 
@@ -20,7 +21,11 @@ public class MigrateAsyncShould
         try
         {
             await using var context =
-                new DatabaseTestContext(new DbContextOptionsBuilder<DatabaseTestContext>().UseSqlite($"Data Source={path}").Options);
+                new DatabaseTestContext(
+                    new DbContextOptionsBuilder<DatabaseTestContext>()
+                        .UseSqlite($"Data Source={path}")
+                        .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.MigrationsNotFound))
+                        .Options);
 
             await sut.MigrateAsync(context, cancellationToken);
 

@@ -134,14 +134,14 @@ public static class Extensions
     extension(decimal price)
     {
         public string ToRoundedPrice() => price.ToString("0.00", CultureInfo.InvariantCulture);
-        public decimal RoundedDecimal() => Math.Round(price, 2);
+        public decimal RoundedDecimal() => Math.Round(price, 2, MidpointRounding.AwayFromZero);
         public string ToRoundedDecimal() => price.ToString("0.00", CultureInfo.InvariantCulture);
     }
 
     extension(string price)
     {
-        public decimal FromRoundedPrice() => decimal.Parse(price);
-        public decimal FromRoundedDecimal() => decimal.Parse(price);
+        public decimal FromRoundedPrice() => decimal.Parse(price, CultureInfo.InvariantCulture);
+        public decimal FromRoundedDecimal() => decimal.Parse(price, CultureInfo.InvariantCulture);
     }
 
     extension(string? str)

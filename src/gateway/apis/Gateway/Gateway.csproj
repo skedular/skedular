@@ -22,7 +22,7 @@
 
     <ItemGroup>
         <!-- GraphQL Federation -->
-        <PackageReference Include="HotChocolate.Fusion.AspNetCore" Version="16.7.6"/>
+        <PackageReference Include="HotChocolate.Fusion.AspNetCore" Version="16.7.7"/>
 
         <!-- Reverse Proxy -->
         <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0"/>
