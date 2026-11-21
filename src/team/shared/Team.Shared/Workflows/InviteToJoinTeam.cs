@@ -1,4 +1,4 @@
-using Team.Shared.Activities;
+﻿using Team.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Payment;
 
 namespace Booking.Api.UnitTests.GraphQL.Payment.RootQueryTests;

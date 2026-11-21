@@ -1,4 +1,4 @@
-using Enterprise.Shared.GraphQL.Types;
+﻿using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types.Composite;
 using Location.Api.GraphQL.Location;

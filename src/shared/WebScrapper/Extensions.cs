@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
+﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
 using Api.Shared.Grpc.Skedular.Location.Core.V1;
 using Microsoft.Extensions.Configuration;

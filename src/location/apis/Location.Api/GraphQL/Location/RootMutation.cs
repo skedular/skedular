@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using HotChocolate.Types;
 using Location.Api.Mappers;
 using Location.Api.Models;

@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Enterprise.Shared.Messaging;
 using Location.Processors.Mappers;
 using Location.Shared.Publishers;

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Accounting.Configurations;
+﻿using Enterprise.Shared.Accounting.Configurations;
 using Enterprise.Shared.Encryption;
 using Microsoft.Extensions.Logging;
 

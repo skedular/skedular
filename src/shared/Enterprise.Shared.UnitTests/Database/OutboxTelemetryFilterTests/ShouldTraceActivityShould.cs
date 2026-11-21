@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Kafka;
 using KafkaTelemetryKeys = Enterprise.Shared.Outbox.Kafka.TelemetryKeys;

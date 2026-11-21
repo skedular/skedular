@@ -1,4 +1,4 @@
-using Enterprise.Shared.Messaging;
+﻿using Enterprise.Shared.Messaging;
 
 namespace Enterprise.Shared.UnitTests.Messaging.Kafka.EventSubscriberResultTests;
 

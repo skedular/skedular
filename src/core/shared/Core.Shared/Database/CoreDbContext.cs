@@ -1,4 +1,4 @@
-using Core.Shared.Database.Entities;
+﻿using Core.Shared.Database.Entities;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Outbox.Kafka;

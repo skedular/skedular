@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Location.Graphql.V1;
+﻿using Api.Shared.Grpc.Skedular.Location.Graphql.V1;
 using Api.Shared.Services.Configurations.Grpc;
 using Enterprise.Shared.Grpc;
 using Grpc.Core;

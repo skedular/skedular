@@ -1,4 +1,4 @@
-using Organization.Shared.Activities;
+﻿using Organization.Shared.Activities;
 using Organization.Shared.UnitTests.Fixtures;
 using Organization.Shared.Workflows;
 using Temporalio.Client;

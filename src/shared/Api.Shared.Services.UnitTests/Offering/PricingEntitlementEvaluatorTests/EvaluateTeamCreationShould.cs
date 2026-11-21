@@ -1,4 +1,4 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using SharedOffering = Api.Shared.Services.Models.Offering;
 
 namespace Api.Shared.Services.UnitTests.Offering.PricingEntitlementEvaluatorTests;

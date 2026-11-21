@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Marketplace.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Marketplace.Core.V1;
 using Api.Shared.Services.Configurations.Grpc;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Version;

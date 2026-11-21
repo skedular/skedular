@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
+﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Grpc;

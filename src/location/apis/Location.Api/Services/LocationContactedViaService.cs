@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Location.Api.Services.Authorization;
 using Location.Shared.Mappers;

@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Payment.Configurations;
+﻿namespace Enterprise.Shared.Payment.Configurations;
 
 public class StripeConfiguration
 {

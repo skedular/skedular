@@ -1,4 +1,4 @@
-namespace Customer.Api.Services;
+﻿namespace Customer.Api.Services;
 
 public interface ICustomerSettingsService
 {

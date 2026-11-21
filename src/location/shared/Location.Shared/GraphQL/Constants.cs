@@ -1,4 +1,4 @@
-namespace Location.Shared.GraphQL;
+﻿namespace Location.Shared.GraphQL;
 
 public static class Constants
 {

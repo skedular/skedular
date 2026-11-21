@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Temporal;

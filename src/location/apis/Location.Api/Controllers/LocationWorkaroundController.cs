@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.Skedular.Location.Workaround.V1;
+﻿using Api.Shared.Services.OpenApi.Skedular.Location.Workaround.V1;
 using Location.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 

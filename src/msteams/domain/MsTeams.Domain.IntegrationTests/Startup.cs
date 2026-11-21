@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Workaround.V1;
 using Api.Shared.Grpc.Skedular.MsTeams.Core.V1;

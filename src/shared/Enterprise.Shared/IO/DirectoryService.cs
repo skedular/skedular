@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Path = System.IO.Path;
 
 namespace Enterprise.Shared.IO;

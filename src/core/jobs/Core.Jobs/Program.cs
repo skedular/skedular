@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Core.Shared;
 using Core.Shared.Database;
 using Enterprise.Shared;

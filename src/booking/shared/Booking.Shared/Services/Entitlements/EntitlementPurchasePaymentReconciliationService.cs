@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.GraphQL;
 using Microsoft.Extensions.Logging;

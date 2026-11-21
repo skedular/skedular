@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Slack.Api.Components;
@@ -14,10 +14,10 @@ using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using Icons = Slack.Shared.Constants.Icons;
-using Option = SlackNet.Blocks.Option;
 using Button = SlackNet.Blocks.Button;
+using Icons = Slack.Shared.Constants.Icons;
 using LocationEdge = Slack.Shared.Models.LocationEdge;
+using Option = SlackNet.Blocks.Option;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 

@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Api.Shared.Services.OpenApi.Skedular.Booking.XeroWebhook.V1;
 using Booking.Shared.Publishers;
 using Booking.Shared.Services;

@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services;
@@ -21,13 +21,12 @@ using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Logging;
 using Xero.NetStandard.OAuth2.Api;
 using Xero.NetStandard.OAuth2.Model.Accounting;
-using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;
-using AccountingInvoiceExportConfigurationStateConstants = Booking.Shared.Models.AccountingInvoiceExportConfigurationStateConstants;
-using AccountingInvoiceExportModeConstants = Booking.Shared.Models.AccountingInvoiceExportModeConstants;
-using Constants = Booking.Shared.GraphQL.Constants;
-using AccountingInvoiceExportLink = Booking.Shared.Database.Entities.AccountingInvoiceExportLink;
 using AccountingContactLink = Booking.Shared.Database.Entities.AccountingContactLink;
+using AccountingInvoiceExportConfigurationStateConstants = Booking.Shared.Models.AccountingInvoiceExportConfigurationStateConstants;
+using AccountingInvoiceExportLink = Booking.Shared.Database.Entities.AccountingInvoiceExportLink;
+using AccountingInvoiceExportModeConstants = Booking.Shared.Models.AccountingInvoiceExportModeConstants;
 using AccountingPaymentEvent = Booking.Shared.Database.Entities.AccountingPaymentEvent;
+using Constants = Booking.Shared.GraphQL.Constants;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using Organization = Api.Shared.Grpc.Skedular.Organization.Core.V1.Organization;
@@ -35,6 +34,7 @@ using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.Organiz
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 using XeroInvoice = Xero.NetStandard.OAuth2.Model.Accounting.Invoice;
+using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;
 
 namespace Booking.Shared.Services;
 
@@ -873,9 +873,9 @@ public class XeroInvoiceService(
 
         var contactsResponse = contact.ContactID is null
             ? await accountingApi.CreateContactsAsync(accessToken, xeroConnection.TenantId, new Contacts
-                {
-                    _Contacts = [contact],
-                }, null, null,
+            {
+                _Contacts = [contact],
+            }, null, null,
                 cancellationToken)
             : await accountingApi.UpdateOrCreateContactsAsync(
                 accessToken,

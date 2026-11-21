@@ -11,7 +11,7 @@ feature. It is a developer-facing runbook, not a user-facing product guide.
 
 - On branch `017-move-sources-to-src`
 - Git working tree is clean: `git status` shows nothing uncommitted
-- `dotnet` CLI available and `.NET 10 SDK` installed
+- `dotnet` CLI available and `.NET 11 SDK` installed
 - Docker available (for smoke-testing compose validation)
 
 ---

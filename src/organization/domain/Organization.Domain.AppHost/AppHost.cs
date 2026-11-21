@@ -1,7 +1,6 @@
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
-using Projects;
 using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
@@ -42,7 +41,7 @@ var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 var useFakeDependencies = DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled();
 
 var sharedInfrastructure = builder
-    .AddProject<Infrastructure_Shared>("infrastructureshared")
+    .AddDotnetProject("infrastructureshared", "../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -51,14 +50,14 @@ var sharedInfrastructure = builder
 
 var organizationFakeDependencies = useFakeDependencies
     ? builder
-        .AddProject<Organization_Domain_FakeDependencies>("organizationfakedependencies")
+        .AddDotnetProject("organizationfakedependencies", "../Organization.Domain.FakeDependencies/Organization.Domain.FakeDependencies.csproj")
         .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
         .WithHttpHealthCheck(Constants.ReadinessPath)
     : null;
 
 var organizationDatabase = postgres.AddDatabase("organizationdb");
 var organizationInfrastructure = builder
-    .AddProject<Organization_Infrastructure>("organizationinfrastructure")
+    .AddDotnetProject("organizationinfrastructure", "../../shared/Organization.Infrastructure/Organization.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -73,7 +72,7 @@ var organizationInfrastructure = builder
     .WaitFor(organizationDatabase);
 
 var organizationApi = builder
-    .AddProject<Organization_Api>("organizationapi")
+    .AddDotnetProject("organizationapi", "../../apis/Organization.Api/Organization.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -88,7 +87,7 @@ var organizationApi = builder
     .WaitForCompletion(organizationInfrastructure);
 
 var organizationProcessors = builder
-    .AddProject<Organization_Processors>("organizationprocessors")
+    .AddDotnetProject("organizationprocessors", "../../processors/Organization.Processors/Organization.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -103,7 +102,7 @@ var organizationProcessors = builder
     .WaitForCompletion(organizationInfrastructure);
 
 var organizationJobs = builder
-    .AddProject<Organization_Jobs>("organizationjobs")
+    .AddDotnetProject("organizationjobs", "../../jobs/Organization.Jobs/Organization.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)

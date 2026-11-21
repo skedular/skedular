@@ -1,6 +1,6 @@
-﻿using Api.Shared.Services.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Api.Shared.Services.Models;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Team.Shared.Models;
 

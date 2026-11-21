@@ -1,4 +1,4 @@
-using Enterprise.Shared.Outbox;
+﻿using Enterprise.Shared.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

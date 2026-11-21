@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Security.Configurations;

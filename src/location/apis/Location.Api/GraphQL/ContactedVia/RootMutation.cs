@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using HotChocolate.Types;
 using Location.Api.GraphQL.Location;
 using Location.Api.Mappers;

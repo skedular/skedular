@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database.SqlServer.Interceptors;
+﻿using Enterprise.Shared.Database.SqlServer.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

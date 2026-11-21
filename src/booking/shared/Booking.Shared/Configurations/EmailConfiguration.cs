@@ -1,4 +1,4 @@
-namespace Booking.Shared.Configurations;
+﻿namespace Booking.Shared.Configurations;
 
 public class EmailConfiguration
 {

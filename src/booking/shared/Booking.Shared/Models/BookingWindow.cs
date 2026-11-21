@@ -1,4 +1,4 @@
-namespace Booking.Shared.Models;
+﻿namespace Booking.Shared.Models;
 
 /// <summary>
 ///     One booking time window within a resource's day view.

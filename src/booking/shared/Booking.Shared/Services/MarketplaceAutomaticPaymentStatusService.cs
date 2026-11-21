@@ -1,4 +1,4 @@
-using Booking.Shared.Database.Entities;
+﻿using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;

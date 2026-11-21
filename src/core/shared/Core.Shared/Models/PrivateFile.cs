@@ -1,4 +1,4 @@
-using Enterprise.Shared.Models;
+﻿using Enterprise.Shared.Models;
 
 namespace Core.Shared.Models;
 

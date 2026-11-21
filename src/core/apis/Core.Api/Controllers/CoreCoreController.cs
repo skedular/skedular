@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.Skedular.Core.Core.V1;
+﻿using Api.Shared.Services.OpenApi.Skedular.Core.Core.V1;
 using Core.Api.Mappers;
 using Core.Api.Services;
 using Enterprise.Shared.FileStorage;

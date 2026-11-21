@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Messaging.Nats.Serialization;
+﻿namespace Enterprise.Shared.Messaging.Nats.Serialization;
 
 public interface INatsSerializer<T>
 {

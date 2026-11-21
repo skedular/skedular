@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.MarketplacePurchaseHistory;
 using Booking.Api.GraphQL.RecurringBooking;

@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services;
 using Customer.Processors.Subscribers;
 using Customer.Shared;
@@ -8,8 +8,8 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Messaging.Kafka;
 using Enterprise.Shared.Temporal;
-using CustomerReadinessKey = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Key;
 using CustomerReadinessEvent = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Event;
+using CustomerReadinessKey = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Key;
 
 namespace Customer.Processors;
 

@@ -1,14 +1,14 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Messaging;
 using MsTeams.Processors.Mappers;
 using MsTeams.Processors.Subscribers;
 using MsTeams.Shared.Publishers;
 using MsTeams.Shared.Repositories;
+using CustomerEntity = MsTeams.Shared.Database.Entities.Customer;
+using CustomerModel = MsTeams.Shared.Models.Customer;
 using ValueMetadata = Api.Shared.Clients.Events.Skedular.Customer.V1.Metadata;
 using ValueType = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
-using CustomerModel = MsTeams.Shared.Models.Customer;
-using CustomerEntity = MsTeams.Shared.Database.Entities.Customer;
 
 namespace MsTeams.Processors.UnitTests.Subscribers;
 

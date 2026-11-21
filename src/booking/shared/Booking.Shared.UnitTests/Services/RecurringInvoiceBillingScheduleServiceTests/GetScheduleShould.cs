@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Services;
 using XeroRepeatingInvoiceScheduleSourceConstants = Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants;

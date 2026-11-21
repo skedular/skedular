@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Aspire.Hosting;
 using Aspire.Hosting.Testing;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.FileStorage;
+﻿namespace Enterprise.Shared.FileStorage;
 
 public class CloudflareConfiguration
 {

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database.Interceptors;
+﻿using Enterprise.Shared.Database.Interceptors;
 using Enterprise.Shared.Database.PostgreSql.Interceptors;
 using Npgsql;
 

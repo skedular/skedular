@@ -1,11 +1,11 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models.Entitlements;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Entitlements;
-using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using EntitlementPurchase = Booking.Shared.Database.Entities.EntitlementPurchase;
+using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 
 namespace Booking.Domain.IntegrationTests.Services;
 

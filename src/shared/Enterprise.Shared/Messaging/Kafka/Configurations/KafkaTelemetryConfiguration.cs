@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Messaging.Kafka.Configurations;
+﻿namespace Enterprise.Shared.Messaging.Kafka.Configurations;
 
 public class KafkaTelemetryConfiguration
 {

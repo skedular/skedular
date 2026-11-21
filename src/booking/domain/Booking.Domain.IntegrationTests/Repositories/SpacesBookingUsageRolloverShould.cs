@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Repositories;
 using OfferingModel = Api.Shared.Services.Models.Offering;
 

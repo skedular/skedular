@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.GraphQL;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;

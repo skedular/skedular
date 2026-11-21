@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Enterprise.Shared.Messaging.Nats.Consume;
 using Microsoft.Extensions.Logging;
 using NATS.Client.Core;

@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Shared.Mappers;
 using Booking.Shared.Models;
@@ -8,8 +8,8 @@ using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using GraphQlConstants = Booking.Shared.GraphQL.Constants;
 using EntitlementPurchase = Booking.Shared.Models.Entitlements.EntitlementPurchase;
+using GraphQlConstants = Booking.Shared.GraphQL.Constants;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 
 namespace Booking.Shared.Services.Entitlements;

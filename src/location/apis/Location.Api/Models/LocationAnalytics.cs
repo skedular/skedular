@@ -1,4 +1,4 @@
-using Location.Shared.Models;
+﻿using Location.Shared.Models;
 
 namespace Location.Api.Models;
 

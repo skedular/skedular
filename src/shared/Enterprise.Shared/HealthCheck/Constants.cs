@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.HealthCheck;
+﻿namespace Enterprise.Shared.HealthCheck;
 
 public class Constants
 {

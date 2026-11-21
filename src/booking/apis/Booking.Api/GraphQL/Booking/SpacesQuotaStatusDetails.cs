@@ -1,4 +1,4 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using HotChocolate;
 
 namespace Booking.Api.GraphQL.Booking;

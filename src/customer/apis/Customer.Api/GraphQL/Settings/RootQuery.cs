@@ -1,4 +1,4 @@
-using Customer.Api.GraphQL.Customer;
+﻿using Customer.Api.GraphQL.Customer;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Shared.Models;

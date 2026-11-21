@@ -1,4 +1,4 @@
-namespace Booking.Shared.Workflows;
+﻿namespace Booking.Shared.Workflows;
 
 public class Constants
 {

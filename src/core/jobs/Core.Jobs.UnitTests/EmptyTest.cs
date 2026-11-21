@@ -1,4 +1,4 @@
-namespace Core.Jobs.UnitTests;
+﻿namespace Core.Jobs.UnitTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class EmptyTest

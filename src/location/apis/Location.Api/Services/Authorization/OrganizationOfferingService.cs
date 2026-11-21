@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Offering;
 using Location.Shared.Logging;
 using Location.Shared.Services.Cache;

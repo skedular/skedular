@@ -1,4 +1,4 @@
-using Enterprise.Shared.Accounting.Configurations;
+﻿using Enterprise.Shared.Accounting.Configurations;
 using Microsoft.Extensions.Logging;
 using Xero.NetStandard.OAuth2.Api;
 using Xero.NetStandard.OAuth2.Client;

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Domain.IntegrationTests.Skedular.GraphQL.V1;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;

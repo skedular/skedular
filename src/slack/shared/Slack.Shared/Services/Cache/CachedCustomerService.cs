@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Microsoft.Extensions.Caching.Hybrid;

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using SlackNet;
 using Customer = Slack.Shared.Models.Customer;

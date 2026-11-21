@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Organization.Shared.Repositories;
 using Temporalio.Activities;
 

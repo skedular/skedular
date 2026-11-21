@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1;

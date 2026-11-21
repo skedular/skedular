@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services;
 using Core.Processors.Subscribers;
 using Core.Shared;

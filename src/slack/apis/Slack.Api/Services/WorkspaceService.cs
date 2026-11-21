@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Flurl;
 using Slack.Api.Mappers;
 using Slack.Shared.Configurations;

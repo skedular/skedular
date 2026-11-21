@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Booking.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Booking.V1;
 using Enterprise.Shared.Messaging;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Sanitization;
@@ -77,10 +77,10 @@ public class BookingSubscriber(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         foreach (var changedFact in changedFacts.DistinctBy(item => new
-                 {
-                     item.CustomerId,
-                     item.LocationId,
-                 }))
+        {
+            item.CustomerId,
+            item.LocationId,
+        }))
         {
             await cachedLocationBookingAccessService.RemoveByCustomerAndLocationAsync(
                 changedFact.CustomerId,
@@ -108,15 +108,15 @@ public class BookingSubscriber(
         var organizationIds = booking.InvolvedOrganizationIds.RemoveInvalidIds().Distinct().DefaultIfEmpty(string.Empty);
 
         return from customerId in customerIds
-            from locationId in locationIds
-            from organizationId in organizationIds
-            select new LocationBookingAccess
-            {
-                CustomerId = customerId,
-                LocationId = locationId,
-                OrganizationId = organizationId,
-                ActiveBookingCount = 0,
-                EventRaisedAt = eventRaisedAt,
-            };
+               from locationId in locationIds
+               from organizationId in organizationIds
+               select new LocationBookingAccess
+               {
+                   CustomerId = customerId,
+                   LocationId = locationId,
+                   OrganizationId = organizationId,
+                   ActiveBookingCount = 0,
+                   EventRaisedAt = eventRaisedAt,
+               };
     }
 }

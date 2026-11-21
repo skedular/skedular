@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using HotChocolate.Types;
 using Organization.Api.Services.Pricing;
 using OrganizationOfferingPlanDto = Organization.Shared.Models.PricingCatalog.OrganizationOfferingPlan;

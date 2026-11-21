@@ -1,4 +1,4 @@
-using AutoFixture;
+﻿using AutoFixture;
 using Organization.Shared.Workflows;
 
 namespace Organization.Shared.UnitTests.Fixtures;

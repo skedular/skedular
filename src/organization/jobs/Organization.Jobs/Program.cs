@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Accounting;

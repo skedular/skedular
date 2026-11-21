@@ -1,4 +1,4 @@
-using Path = System.IO.Path;
+﻿using Path = System.IO.Path;
 
 namespace Enterprise.Shared.Configurations;
 

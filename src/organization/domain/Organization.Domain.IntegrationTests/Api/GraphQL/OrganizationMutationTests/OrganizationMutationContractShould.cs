@@ -1,4 +1,4 @@
-using Organization.Domain.IntegrationTests.Skedular.GraphQL.V1;
+﻿using Organization.Domain.IntegrationTests.Skedular.GraphQL.V1;
 
 namespace Organization.Domain.IntegrationTests.Api.GraphQL.OrganizationMutationTests;
 

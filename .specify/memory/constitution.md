@@ -171,7 +171,8 @@ that the appropriate generator was run and its outputs are committed.
 
 Application and domain service interfaces MUST return shared domain models owned by the service/domain layer. They MUST
 NOT return GraphQL detail types, GraphQL inputs, GraphQL payloads, HotChocolate connection/edge types, or any other API
-adapter type. If a service needs to expose new data, first create or extend a model in the owning shared model namespace,
+adapter type. If a service needs to expose new data, first create or extend a model in the owning shared model
+namespace,
 then map that model to GraphQL, REST, gRPC, or another API representation at the API boundary. This keeps service
 contracts reusable when a second API layer is added and prevents API-specific dependencies from leaking inward.
 
@@ -221,12 +222,19 @@ duplicates shared infrastructure logic requires explicit justification before me
 
 #### Unit-test construction and required collaborators
 
-- Unit tests MUST prefer `[Theory]` with `AutoFakeItEasyData` (or the repository's equivalent auto-data attribute) when generated inputs are suitable.
-- Constructor dependencies and the SUT MUST be injected through test-method parameters: dependencies first, `sut` next, then scenario inputs and expected values.
-- Do not create `A.Fake<T>()` inside a test when auto-data can inject the dependency. Use `A.CallTo` only to configure scenario-specific behavior.
-- Test doubles MUST be supplied through test-method parameters; do not construct or pass nullable service instances, null loggers, or null transaction builders to the SUT.
-- Required collaborators MUST be non-nullable and supplied by dependency injection, including loggers, transaction builders, repository factories, mappers, clocks, and domain services.
-- Production code MUST NOT add nullable collaborators, null-conditional calls such as `logger?.Log...`, null-forgiving workarounds, or fallback branches solely to make tests easier to construct. A logger and transaction builder are always provided.
+- Unit tests MUST prefer `[Theory]` with `AutoFakeItEasyData` (or the repository's equivalent auto-data attribute) when
+  generated inputs are suitable.
+- Constructor dependencies and the SUT MUST be injected through test-method parameters: dependencies first, `sut` next,
+  then scenario inputs and expected values.
+- Do not create `A.Fake<T>()` inside a test when auto-data can inject the dependency. Use `A.CallTo` only to configure
+  scenario-specific behavior.
+- Test doubles MUST be supplied through test-method parameters; do not construct or pass nullable service instances,
+  null loggers, or null transaction builders to the SUT.
+- Required collaborators MUST be non-nullable and supplied by dependency injection, including loggers, transaction
+  builders, repository factories, mappers, clocks, and domain services.
+- Production code MUST NOT add nullable collaborators, null-conditional calls such as `logger?.Log...`, null-forgiving
+  workarounds, or fallback branches solely to make tests easier to construct. A logger and transaction builder are
+  always provided.
 - Optional collaborators are allowed only when optionality is part of the domain contract and both states are tested.
 
 Every backend behavior change MUST be tested with unit tests when its behavior can be exercised
@@ -374,7 +382,7 @@ MUST reject changes that add feature behavior without corresponding structured l
 The following stack choices meaningfully constrain architecture and implementation decisions.
 These are not aspirational — they describe the current, enforced state:
 
-- **Backend**: C# on .NET 10; domain services follow the microservice layout under each domain directory.
+- **Backend**: C# on .NET 11; domain services follow the microservice layout under each domain directory.
 - **API surfaces**: Federated GraphQL (primary client-facing), REST/OpenAPI (secondary), gRPC (internal only).
 - **Events**: Kafka with protobuf-defined events; event classes generated into `shared/Api.Shared.Clients/obj`.
 - **Workflows**: Temporal for long-running, stateful processes; workflow IDs owned by domain ID services.

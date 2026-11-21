@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Organization.Shared.Models;
 using Organization.Shared.Services.Cache;

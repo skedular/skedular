@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Customer.Shared.Configurations;
 using Customer.Shared.Models;
 using Customer.Shared.Repositories;

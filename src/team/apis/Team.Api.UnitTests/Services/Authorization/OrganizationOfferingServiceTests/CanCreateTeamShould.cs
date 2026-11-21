@@ -1,11 +1,11 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Microsoft.Extensions.Logging;
 using Team.Api.Services.Authorization;
 using Team.Shared.Services.Cache;
-using Organization = Team.Shared.Database.Entities.Organization;
 using Offering = Api.Shared.Services.Models.Offering;
+using Organization = Team.Shared.Database.Entities.Organization;
 
 namespace Team.Api.UnitTests.Services.Authorization.OrganizationOfferingServiceTests;
 

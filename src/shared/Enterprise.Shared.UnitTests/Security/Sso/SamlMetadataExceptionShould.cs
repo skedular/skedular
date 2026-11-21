@@ -1,4 +1,4 @@
-using Enterprise.Shared.Security.Sso;
+﻿using Enterprise.Shared.Security.Sso;
 
 namespace Enterprise.Shared.UnitTests.Security.Sso;
 

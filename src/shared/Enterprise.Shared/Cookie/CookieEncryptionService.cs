@@ -1,4 +1,4 @@
-using Enterprise.Shared.Cookie.Configurations;
+﻿using Enterprise.Shared.Cookie.Configurations;
 using Enterprise.Shared.Encryption;
 using Microsoft.Extensions.Logging;
 

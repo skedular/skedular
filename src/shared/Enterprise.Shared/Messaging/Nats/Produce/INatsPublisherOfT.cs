@@ -1,4 +1,4 @@
-using Google.Protobuf;
+﻿using Google.Protobuf;
 
 namespace Enterprise.Shared.Messaging.Nats.Produce;
 

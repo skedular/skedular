@@ -1,4 +1,4 @@
-using Booking.Shared.Services;
+﻿using Booking.Shared.Services;
 using Enterprise.Shared.Temporal;
 
 namespace Booking.Shared.UnitTests.Services.WorkflowIdServiceTests;

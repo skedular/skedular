@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Team.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Team.Core.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Configurations.Grpc;
 using Enterprise.Shared;

@@ -1,17 +1,17 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Location.Shared.Database.Entities;
 using static Location.Shared.Models.LocationRestrictedInformationCategoryExtensions;
 using DailyDeskCountRecording = Location.Shared.Models.DailyDeskCountRecording;
 using DailyRoomCountRecording = Location.Shared.Models.DailyRoomCountRecording;
-using Organization = Location.Shared.Database.Entities.Organization;
-using Resource = Location.Shared.Database.Entities.Resource;
-using LocationPhysicalAddress = Location.Shared.Database.Entities.LocationPhysicalAddress;
 using FloorPlan = Location.Shared.Models.FloorPlan;
+using LocationPhysicalAddress = Location.Shared.Database.Entities.LocationPhysicalAddress;
 using LocationRestrictedInformation = Location.Shared.Models.LocationRestrictedInformation;
+using Organization = Location.Shared.Database.Entities.Organization;
 using PrecomputedLocationProduct = Location.Shared.Models.PrecomputedLocationProduct;
 using Product = Location.Shared.Models.Product;
+using Resource = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Shared.Mappers;
 

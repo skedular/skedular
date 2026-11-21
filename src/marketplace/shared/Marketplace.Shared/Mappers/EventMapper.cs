@@ -1,20 +1,20 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Marketplace.V1.CdnFile;
 using CdnImageFile = Api.Shared.Clients.Events.Skedular.Marketplace.V1.CdnImageFile;
-using Product = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Product;
-using ProductVersion = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductVersion;
-using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricing;
-using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingBillingMode;
 using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Currency;
 using ListingMetadata = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ListingMetadata;
 using MembershipTerm = Api.Shared.Services.Models.MembershipTerm;
 using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.PaymentMethod;
-using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductType;
+using Product = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Product;
+using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricing;
+using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingBillingMode;
 using ProductPricingCancellationPolicyType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationPolicyType;
 using ProductPricingCancellationRefundRule = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductPricingCancellationRefundRule;
 using ProductPricingFulfillmentType = Api.Shared.Services.Models.ProductPricingFulfillmentType;
+using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductType;
+using ProductVersion = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductVersion;
 
 namespace Marketplace.Shared.Mappers;
 

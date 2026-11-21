@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;
 using Customer.Domain.IntegrationTests.Fixtures;
 using Customer.Shared.Repositories;
 

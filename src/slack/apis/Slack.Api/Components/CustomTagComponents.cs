@@ -1,4 +1,4 @@
-using Enterprise.Shared;
+﻿using Enterprise.Shared;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Models;

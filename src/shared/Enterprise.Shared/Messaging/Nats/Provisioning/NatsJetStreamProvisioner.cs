@@ -1,4 +1,4 @@
-using Enterprise.Shared.Messaging.Nats.Configuration;
+﻿using Enterprise.Shared.Messaging.Nats.Configuration;
 using Microsoft.Extensions.Logging;
 using NATS.Client.Core;
 using NATS.Client.JetStream;

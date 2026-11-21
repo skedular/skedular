@@ -1,4 +1,4 @@
-namespace Location.Jobs;
+﻿namespace Location.Jobs;
 
 public static class Extensions
 {

@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Messaging;
 using Microsoft.Extensions.Logging;

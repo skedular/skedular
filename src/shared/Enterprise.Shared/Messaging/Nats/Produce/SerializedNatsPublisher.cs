@@ -1,4 +1,4 @@
-using Enterprise.Shared.Messaging.Nats.Serialization;
+﻿using Enterprise.Shared.Messaging.Nats.Serialization;
 using Google.Protobuf;
 
 namespace Enterprise.Shared.Messaging.Nats.Produce;

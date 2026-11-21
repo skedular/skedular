@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Api.Shared.Services;
 using Customer.Shared;
 using Customer.Shared.Activities;

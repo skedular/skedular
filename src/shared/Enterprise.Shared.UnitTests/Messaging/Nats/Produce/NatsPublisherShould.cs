@@ -1,4 +1,4 @@
-using Enterprise.Shared.Messaging.Nats.Produce;
+﻿using Enterprise.Shared.Messaging.Nats.Produce;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Enterprise.Shared.UnitTests.Messaging.Nats.Produce;

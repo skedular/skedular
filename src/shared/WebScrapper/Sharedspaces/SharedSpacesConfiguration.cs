@@ -1,4 +1,4 @@
-namespace WebScrapper.Sharedspaces;
+﻿namespace WebScrapper.Sharedspaces;
 
 public class SharedSpacesConfiguration
 {

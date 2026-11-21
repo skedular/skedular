@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Location.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Location.Core.V1;
 using Api.Shared.Grpc.Skedular.Location.Resources.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;

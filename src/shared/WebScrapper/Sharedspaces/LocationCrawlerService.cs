@@ -1,4 +1,4 @@
-using Microsoft.Playwright;
+﻿using Microsoft.Playwright;
 using WebScrapper.Services;
 using Location = WebScrapper.Models.Location;
 

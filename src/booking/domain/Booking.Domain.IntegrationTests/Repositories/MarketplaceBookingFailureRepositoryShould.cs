@@ -1,11 +1,11 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
+using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using Resource = Booking.Shared.Database.Entities.Resource;
 using ResourceBookingSlot = Booking.Shared.Database.Entities.ResourceBookingSlot;
-using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 
 namespace Booking.Domain.IntegrationTests.Repositories;
 

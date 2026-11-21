@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database.PostgreSql;
+﻿using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.UnitTesting.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;

@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Enterprise.Shared.Hosting;
 using Enterprise.Shared.Messaging.Nats.Configuration;
 using Enterprise.Shared.Messaging.Nats.Produce;

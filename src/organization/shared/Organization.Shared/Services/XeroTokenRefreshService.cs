@@ -1,4 +1,4 @@
-using Enterprise.Shared.Accounting;
+﻿using Enterprise.Shared.Accounting;
 using Organization.Shared.Database.Entities;
 
 namespace Organization.Shared.Services;

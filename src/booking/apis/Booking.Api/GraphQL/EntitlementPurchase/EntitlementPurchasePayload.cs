@@ -1,4 +1,4 @@
-namespace Booking.Api.GraphQL.EntitlementPurchase;
+﻿namespace Booking.Api.GraphQL.EntitlementPurchase;
 
 public sealed class EntitlementPurchasePayload
 {

@@ -1,4 +1,4 @@
-using Booking.Shared.Configurations;
+﻿using Booking.Shared.Configurations;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
@@ -117,14 +117,14 @@ public class MarketplaceBookingFailureNotificationIntegrations(
         MarketplaceBookingFailureDelivery delivery,
         bool succeeded,
         string? error) => repositoryFactory.MarketplaceBookingFailureEventRepository.Add(new MarketplaceBookingFailureEvent
-    {
-        Id = randomHelper.Generate(),
-        MarketplaceBookingFailureId = failure.Id,
-        EventType = succeeded
+        {
+            Id = randomHelper.Generate(),
+            MarketplaceBookingFailureId = failure.Id,
+            EventType = succeeded
             ? MarketplaceBookingFailureEventTypeConstants.DeliverySucceeded
             : MarketplaceBookingFailureEventTypeConstants.DeliveryFailed,
-        OccurredAt = delivery.LastAttemptAt ?? timeProvider.GetUtcNow(),
-        Reason = $"{delivery.Audience}:{delivery.Channel}",
-        LastError = error,
-    });
+            OccurredAt = delivery.LastAttemptAt ?? timeProvider.GetUtcNow(),
+            Reason = $"{delivery.Audience}:{delivery.Channel}",
+            LastError = error,
+        });
 }

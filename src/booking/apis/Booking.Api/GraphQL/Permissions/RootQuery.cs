@@ -1,4 +1,4 @@
-using Booking.Api.Services.Authorization;
+﻿using Booking.Api.Services.Authorization;
 using HotChocolate;
 using HotChocolate.Types;
 

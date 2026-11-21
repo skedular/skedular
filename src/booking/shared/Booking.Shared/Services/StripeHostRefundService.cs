@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Net;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
@@ -7,11 +7,11 @@ using Booking.Shared.Repositories;
 using Microsoft.Extensions.Logging;
 using Stripe;
 using Stripe.Checkout;
-using StripeInvoice = Stripe.Invoice;
-using StripeCheckoutSessionEntity = Booking.Shared.Database.Entities.StripeCheckoutSession;
+using MarketplaceExternalRefundReconciliationStatusConstants = Booking.Shared.Models.MarketplaceExternalRefundReconciliationStatusConstants;
 using MarketplaceRefundEntityTypeConstants = Booking.Shared.Models.MarketplaceRefundEntityTypeConstants;
 using MarketplaceRefundStatusConstants = Booking.Shared.Models.MarketplaceRefundStatusConstants;
-using MarketplaceExternalRefundReconciliationStatusConstants = Booking.Shared.Models.MarketplaceExternalRefundReconciliationStatusConstants;
+using StripeCheckoutSessionEntity = Booking.Shared.Database.Entities.StripeCheckoutSession;
+using StripeInvoice = Stripe.Invoice;
 
 namespace Booking.Shared.Services;
 

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using Organization.Api.Models;
 using Organization.Api.Services;
 

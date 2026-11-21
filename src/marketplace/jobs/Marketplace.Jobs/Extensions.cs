@@ -1,4 +1,4 @@
-namespace Marketplace.Jobs;
+﻿namespace Marketplace.Jobs;
 
 public static class Extensions
 {

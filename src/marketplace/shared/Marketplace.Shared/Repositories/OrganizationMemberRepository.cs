@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Marketplace.Shared.Database;
 using Marketplace.Shared.Database.Entities;

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Temporal;
+﻿using Enterprise.Shared.Temporal;
 using Location.Shared.Workflows;
 
 namespace Location.Shared.Services;

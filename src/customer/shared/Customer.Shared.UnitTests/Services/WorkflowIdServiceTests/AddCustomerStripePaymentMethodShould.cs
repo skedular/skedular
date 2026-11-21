@@ -1,4 +1,4 @@
-using Customer.Shared.Services;
+﻿using Customer.Shared.Services;
 using Enterprise.Shared.Temporal;
 
 namespace Customer.Shared.UnitTests.Services.WorkflowIdServiceTests;

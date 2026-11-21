@@ -1,4 +1,4 @@
-namespace Booking.Shared.GraphQL;
+﻿namespace Booking.Shared.GraphQL;
 
 public static class Constants
 {

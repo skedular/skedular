@@ -1,4 +1,4 @@
-using Enterprise.Shared.Azure.Graph;
+﻿using Enterprise.Shared.Azure.Graph;
 using Organization.Shared.Mappers;
 using Organization.Shared.Models;
 

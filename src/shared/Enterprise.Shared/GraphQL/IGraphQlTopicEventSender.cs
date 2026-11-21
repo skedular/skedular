@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.GraphQL;
+﻿namespace Enterprise.Shared.GraphQL;
 
 public interface IGraphQlTopicEventSender
 {

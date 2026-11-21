@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Location.Api.Mappers;
 using Location.Shared.Models;
 

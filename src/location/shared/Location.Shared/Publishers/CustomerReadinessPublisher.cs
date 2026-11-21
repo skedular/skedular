@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1;
+﻿using Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Messaging.Kafka.Produce;
 using CRType = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Type;

@@ -1,4 +1,4 @@
-using Booking.Shared.Database.Entities;
+﻿using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Random;
 

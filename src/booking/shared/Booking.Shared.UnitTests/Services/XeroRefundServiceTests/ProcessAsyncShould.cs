@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
@@ -15,10 +15,10 @@ using Xero.NetStandard.OAuth2.Model.Accounting;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using Organization = Booking.Shared.Database.Entities.Organization;
-using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using Product = Booking.Shared.Database.Entities.Product;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
+using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 using XeroInvoice = Xero.NetStandard.OAuth2.Model.Accounting.Invoice;
 
 namespace Booking.Shared.UnitTests.Services.XeroRefundServiceTests;

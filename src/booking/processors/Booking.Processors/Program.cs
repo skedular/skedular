@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
 using Api.Shared.Services;
 using Booking.Processors.Subscribers;
 using Booking.Shared;

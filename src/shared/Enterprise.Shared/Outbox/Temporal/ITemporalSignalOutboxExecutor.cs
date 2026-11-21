@@ -1,4 +1,4 @@
-using Temporalio.Client;
+﻿using Temporalio.Client;
 
 namespace Enterprise.Shared.Outbox.Temporal;
 

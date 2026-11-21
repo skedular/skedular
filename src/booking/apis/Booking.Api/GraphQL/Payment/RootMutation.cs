@@ -1,4 +1,4 @@
-using Booking.Api.GraphQL.Booking;
+﻿using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.RecurringBooking;
 using Booking.Api.Mappers;
 using Booking.Api.Services;

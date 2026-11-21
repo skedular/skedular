@@ -1,4 +1,4 @@
-using Amazon.SimpleEmail;
+﻿using Amazon.SimpleEmail;
 using Amazon.SimpleEmail.Model;
 using Microsoft.Extensions.Logging;
 using MimeKit;

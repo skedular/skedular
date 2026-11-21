@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Marketplace.Api.Services;
 
 namespace Marketplace.Api.UnitTests.Services.ProductServiceTests;

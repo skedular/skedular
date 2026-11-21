@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Location.Analytics.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Location.Analytics.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Location.Workaround.V1;

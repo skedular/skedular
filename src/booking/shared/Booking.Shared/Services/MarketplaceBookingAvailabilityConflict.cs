@@ -1,4 +1,4 @@
-namespace Booking.Shared.Services;
+﻿namespace Booking.Shared.Services;
 
 public class MarketplaceBookingAvailabilityConflict(
     IReadOnlyCollection<string> unavailableResourceIds,

@@ -1,4 +1,4 @@
-using Core.Shared.Repositories;
+﻿using Core.Shared.Repositories;
 using Enterprise.Shared.Database;
 
 namespace Core.Infrastructure.Services;

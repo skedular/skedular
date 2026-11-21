@@ -1,4 +1,4 @@
-namespace Team.Shared.Models;
+﻿namespace Team.Shared.Models;
 
 public class Permissions
 {

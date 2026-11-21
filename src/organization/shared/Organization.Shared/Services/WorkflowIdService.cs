@@ -1,4 +1,4 @@
-using Enterprise.Shared.Temporal;
+﻿using Enterprise.Shared.Temporal;
 using Organization.Shared.Workflows;
 
 namespace Organization.Shared.Services;

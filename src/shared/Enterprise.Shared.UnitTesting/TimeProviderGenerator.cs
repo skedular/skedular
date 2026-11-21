@@ -1,4 +1,4 @@
-using AutoFixture.Kernel;
+﻿using AutoFixture.Kernel;
 using FakeItEasy;
 
 namespace Enterprise.Shared.UnitTesting;

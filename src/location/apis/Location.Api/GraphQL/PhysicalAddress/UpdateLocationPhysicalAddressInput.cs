@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using Location.Api.Models;
 
 namespace Location.Api.GraphQL.PhysicalAddress;

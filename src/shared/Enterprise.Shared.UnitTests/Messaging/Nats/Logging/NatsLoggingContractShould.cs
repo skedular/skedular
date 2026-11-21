@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Enterprise.Shared.Messaging.Nats.Logging;
 using Microsoft.Extensions.Logging;
 

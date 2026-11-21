@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.IdentityProviders.Configurations;
+﻿namespace Enterprise.Shared.IdentityProviders.Configurations;
 
 public class IdentityProvidersConfiguration
 {
@@ -7,7 +7,7 @@ public class IdentityProvidersConfiguration
     public Cognito? Cognito { get; set; }
     public Google? Google { get; set; }
 
-// ReSharper disable once InconsistentNaming
+    // ReSharper disable once InconsistentNaming
     public WorkOS? WorkOS { get; set; }
 }
 

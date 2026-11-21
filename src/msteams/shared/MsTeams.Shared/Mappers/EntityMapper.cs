@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Microsoft.Graph.Models;
 using MsTeams.Shared.Models;
 using AzureTenant = MsTeams.Shared.Database.Entities.AzureTenant;

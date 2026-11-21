@@ -1,4 +1,4 @@
-using System.Data;
+﻿using System.Data;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
@@ -15,12 +15,12 @@ using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Temporalio.Activities;
+using BookingModel = Booking.Shared.Models.Booking;
 using Constants = Booking.Shared.GraphQL.Constants;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
-using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
-using BookingModel = Booking.Shared.Models.Booking;
-using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 using MarketplaceBookingFailureAccountingCleanupStatus = Booking.Shared.Models.MarketplaceBookingFailureAccountingCleanupStatus;
+using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
+using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.Activities;
 

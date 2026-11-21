@@ -1,7 +1,6 @@
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
-using Projects;
 using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
@@ -42,7 +41,7 @@ var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 var useFakeDependencies = DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled();
 
 var sharedInfrastructure = builder
-    .AddProject<Infrastructure_Shared>("infrastructureshared")
+    .AddDotnetProject("infrastructureshared", "../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Kafka__SchemaRegistry__Url", schemaRegistryUrl)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -51,14 +50,14 @@ var sharedInfrastructure = builder
 
 var locationFakeDependencies = useFakeDependencies
     ? builder
-        .AddProject<Location_Domain_FakeDependencies>("locationfakedependencies")
+        .AddDotnetProject("locationfakedependencies", "../Location.Domain.FakeDependencies/Location.Domain.FakeDependencies.csproj")
         .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
         .WithHttpHealthCheck(Constants.ReadinessPath)
     : null;
 
 var locationDatabase = postgres.AddDatabase("locationdb");
 var locationInfrastructure = builder
-    .AddProject<Location_Infrastructure>("locationinfrastructure")
+    .AddDotnetProject("locationinfrastructure", "../../shared/Location.Infrastructure/Location.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -73,7 +72,7 @@ var locationInfrastructure = builder
     .WaitFor(locationDatabase);
 
 var locationApi = builder
-    .AddProject<Location_Api>("locationapi")
+    .AddDotnetProject("locationapi", "../../apis/Location.Api/Location.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -88,7 +87,7 @@ var locationApi = builder
     .WaitForCompletion(locationInfrastructure);
 
 var locationProcessors = builder
-    .AddProject<Location_Processors>("locationprocessors")
+    .AddDotnetProject("locationprocessors", "../../processors/Location.Processors/Location.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -103,7 +102,7 @@ var locationProcessors = builder
     .WaitForCompletion(locationInfrastructure);
 
 var locationJobs = builder
-    .AddProject<Location_Jobs>("locationjobs")
+    .AddDotnetProject("locationjobs", "../../jobs/Location.Jobs/Location.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)

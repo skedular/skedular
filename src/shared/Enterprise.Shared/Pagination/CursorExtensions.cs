@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Pagination;
+﻿namespace Enterprise.Shared.Pagination;
 
 public static class CursorExtensions
 {

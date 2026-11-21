@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.Entitlement;
@@ -18,10 +18,11 @@ using BookingCategory = Api.Shared.Services.Models.BookingCategory;
 using BookingEdge = Booking.Api.GraphQL.Booking.BookingEdge;
 using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using Customer = Booking.Shared.Models.Customer;
+using EntitlementEntity = Booking.Shared.Database.Entities.Entitlement;
 using Location = Booking.Shared.Database.Entities.Location;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
-using MarketplaceBookingSubscription = Booking.Shared.Models.MarketplaceBookingSubscription;
 using MarketplaceBookingFailureEntity = Booking.Shared.Database.Entities.MarketplaceBookingFailure;
+using MarketplaceBookingSubscription = Booking.Shared.Models.MarketplaceBookingSubscription;
 using Organization = Booking.Shared.Models.Organization;
 using OrganizationArrearsInvoice = Booking.Shared.Models.OrganizationArrearsInvoice;
 using OrganizationTag = Booking.Shared.Models.OrganizationTag;
@@ -30,7 +31,6 @@ using RecurringBooking = Booking.Shared.Models.RecurringBooking;
 using Resource = Booking.Shared.Models.Resource;
 using StripeCheckoutSession = Booking.Shared.Models.StripeCheckoutSession;
 using Team = Booking.Shared.Models.Team;
-using EntitlementEntity = Booking.Shared.Database.Entities.Entitlement;
 
 namespace Booking.Api.Mappers;
 
@@ -1128,17 +1128,17 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 
     private static MarketplaceBookingFailureResourceReleaseStatusDetails ToResourceReleaseStatusDetails(
         MarketplaceBookingFailureResourceReleaseStatus status) => new()
-    {
-        Type = status,
-        Name = status.ToDisplayName(),
-    };
+        {
+            Type = status,
+            Name = status.ToDisplayName(),
+        };
 
     private static MarketplaceBookingFailureAccountingCleanupStatusDetails ToAccountingCleanupStatusDetails(
         MarketplaceBookingFailureAccountingCleanupStatus status) => new()
-    {
-        Type = status,
-        Name = status.ToDisplayName(),
-    };
+        {
+            Type = status,
+            Name = status.ToDisplayName(),
+        };
 
     private static ProductPricing? GetPricing(EntitlementEntity source) =>
         source.EntitlementPurchase?.ProductPricing ??

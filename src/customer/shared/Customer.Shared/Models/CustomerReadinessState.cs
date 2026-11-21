@@ -1,4 +1,4 @@
-namespace Customer.Shared.Models;
+﻿namespace Customer.Shared.Models;
 
 public class CustomerReadinessState
 {

@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Booking.Shared.Publishers;
 using Stripe;
 using Stripe.Checkout;

@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Messaging.Kafka;
 using Marketplace.Shared.Repositories;

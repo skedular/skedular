@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
 using Marketplace.Api.GraphQL.Product;

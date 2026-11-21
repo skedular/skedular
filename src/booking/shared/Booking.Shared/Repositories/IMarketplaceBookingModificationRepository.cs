@@ -1,4 +1,4 @@
-using Booking.Shared.Database.Entities;
+﻿using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Database;
 
 namespace Booking.Shared.Repositories;

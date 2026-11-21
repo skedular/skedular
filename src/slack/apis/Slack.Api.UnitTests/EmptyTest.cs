@@ -1,4 +1,4 @@
-namespace Slack.Api.UnitTests;
+﻿namespace Slack.Api.UnitTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class EmptyTest

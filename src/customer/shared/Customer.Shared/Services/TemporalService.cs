@@ -1,4 +1,4 @@
-using Customer.Shared.Workflows;
+﻿using Customer.Shared.Workflows;
 using Enterprise.Shared.Temporal.Configurations;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;

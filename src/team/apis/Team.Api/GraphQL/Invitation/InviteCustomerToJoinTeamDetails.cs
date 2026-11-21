@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;

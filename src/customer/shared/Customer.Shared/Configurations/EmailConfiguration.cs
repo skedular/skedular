@@ -1,4 +1,4 @@
-namespace Customer.Shared.Configurations;
+﻿namespace Customer.Shared.Configurations;
 
 public class EmailConfiguration
 {

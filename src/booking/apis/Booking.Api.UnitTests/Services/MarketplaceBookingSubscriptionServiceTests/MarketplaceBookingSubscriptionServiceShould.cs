@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Mappers;
@@ -7,8 +7,8 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
-using ICancellationDecisionService = Booking.Shared.Services.ICancellationDecisionService;
 using Customer = Booking.Shared.Database.Entities.Customer;
+using ICancellationDecisionService = Booking.Shared.Services.ICancellationDecisionService;
 using IMarketplaceBookingSubscriptionService = Booking.Shared.Services.IMarketplaceBookingSubscriptionService;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using Organization = Booking.Shared.Database.Entities.Organization;

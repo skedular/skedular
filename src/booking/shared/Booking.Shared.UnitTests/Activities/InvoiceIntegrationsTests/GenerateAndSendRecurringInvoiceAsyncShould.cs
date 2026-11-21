@@ -1,12 +1,12 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.GraphQL;
 using Temporalio.Testing;
-using Constants = Booking.Shared.GraphQL.Constants;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
+using Constants = Booking.Shared.GraphQL.Constants;
 
 namespace Booking.Shared.UnitTests.Activities.InvoiceIntegrationsTests;
 

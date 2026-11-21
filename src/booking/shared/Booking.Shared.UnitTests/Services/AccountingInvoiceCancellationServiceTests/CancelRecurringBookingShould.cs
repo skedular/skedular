@@ -1,5 +1,6 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+using Api.Shared.Services;
 using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
@@ -7,14 +8,13 @@ using Booking.Shared.Services;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.UnitTesting;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
-using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
-using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using Xero.NetStandard.OAuth2.Api;
-using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
-using Enterprise.Shared.UnitTesting;
+using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
+using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
+using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.UnitTests.Services.AccountingInvoiceCancellationServiceTests;
 

@@ -1,4 +1,4 @@
-using Flurl;
+﻿using Flurl;
 using Microsoft.Playwright;
 using Location = WebScrapper.Models.Location;
 

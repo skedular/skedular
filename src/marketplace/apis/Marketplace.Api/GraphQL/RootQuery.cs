@@ -1,9 +1,9 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared.Version;
 using HotChocolate.Types;
 using Marketplace.Api.GraphQL.Product;
-using Version = Enterprise.Shared.GraphQL.Types.Version;
 using Constants = Api.Shared.Services.Constants;
+using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Marketplace.Api.GraphQL;
 

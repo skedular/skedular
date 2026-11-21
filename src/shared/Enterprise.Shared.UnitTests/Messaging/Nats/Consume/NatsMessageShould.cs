@@ -1,4 +1,4 @@
-using Enterprise.Shared.Messaging.Nats.Consume;
+﻿using Enterprise.Shared.Messaging.Nats.Consume;
 
 namespace Enterprise.Shared.UnitTests.Messaging.Nats.Consume;
 

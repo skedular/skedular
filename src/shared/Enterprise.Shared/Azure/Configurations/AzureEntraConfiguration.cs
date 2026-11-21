@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Azure.Configurations;
+﻿namespace Enterprise.Shared.Azure.Configurations;
 
 public class AzureEntraConfiguration
 {

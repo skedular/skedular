@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Booking.Shared.Models;
@@ -82,19 +82,25 @@ public class SubscriptionKeyService : ISubscriptionKeyService
         // so that subscribers watching a single location AND subscribers watching all locations
         // both receive the notification.
         foreach (var locIds in new[] { new[] { locationId }, Array.Empty<string>() })
-        foreach (var floor in Variants(floorId))
-        foreach (var zone in Variants(zoneId))
-        foreach (var type in Variants(resourceType))
         {
-            yield return Compute(new ResourceAvailabilityDayFilter
+            foreach (var floor in Variants(floorId))
             {
-                OrganizationCustomDomain = organizationCustomDomain,
-                LocationIds = locIds,
-                FloorId = floor,
-                ZoneId = zone,
-                ResourceType = type,
-                Date = date,
-            });
+                foreach (var zone in Variants(zoneId))
+                {
+                    foreach (var type in Variants(resourceType))
+                    {
+                        yield return Compute(new ResourceAvailabilityDayFilter
+                        {
+                            OrganizationCustomDomain = organizationCustomDomain,
+                            LocationIds = locIds,
+                            FloorId = floor,
+                            ZoneId = zone,
+                            ResourceType = type,
+                            Date = date,
+                        });
+                    }
+                }
+            }
         }
     }
 

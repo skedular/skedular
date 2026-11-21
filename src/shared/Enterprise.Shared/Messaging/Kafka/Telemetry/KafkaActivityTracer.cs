@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Confluent.Kafka;
 using Enterprise.Shared.Telemetry;
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-using HotChocolate.Types.Pagination;
+﻿using HotChocolate.Types.Pagination;
 
 namespace Slack.Shared.Models;
 

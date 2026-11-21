@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
+﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
@@ -14,8 +14,8 @@ using Microsoft.Extensions.Logging;
 using Temporalio.Activities;
 using DailyDeskCountRecording = Location.Shared.Database.Entities.DailyDeskCountRecording;
 using DailyRoomCountRecording = Location.Shared.Database.Entities.DailyRoomCountRecording;
-using ResourceAvailabilityClassification = Location.Shared.Models.ResourceAvailabilityClassification;
 using Resource = Location.Shared.Database.Entities.Resource;
+using ResourceAvailabilityClassification = Location.Shared.Models.ResourceAvailabilityClassification;
 
 namespace Location.Shared.Activities;
 

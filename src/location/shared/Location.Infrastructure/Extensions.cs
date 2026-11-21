@@ -1,4 +1,4 @@
-using Location.Infrastructure.Jobs;
+﻿using Location.Infrastructure.Jobs;
 using Location.Infrastructure.Services;
 
 namespace Location.Infrastructure;

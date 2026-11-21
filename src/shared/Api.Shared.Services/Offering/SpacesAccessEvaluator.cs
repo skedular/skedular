@@ -1,4 +1,4 @@
-using SharedOffering = Api.Shared.Services.Models.Offering;
+﻿using SharedOffering = Api.Shared.Services.Models.Offering;
 
 namespace Api.Shared.Services.Offering;
 

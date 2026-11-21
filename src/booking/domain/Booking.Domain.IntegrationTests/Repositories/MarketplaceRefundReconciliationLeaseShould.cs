@@ -1,4 +1,4 @@
-using Booking.Shared.Database.Entities;
+﻿using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -126,15 +126,15 @@ public class MarketplaceRefundReconciliationLeaseShould(IRepositoryFactory repos
 
     private static MarketplaceRefundPaymentAllocation CreateSourceAllocation(
         string id, string refundId, string provider, decimal amount) => new()
-    {
-        Id = id,
-        MarketplaceRefundId = refundId,
-        SourcePaymentProvider = provider,
-        SourcePaymentReference = $"payment-{id}",
-        SourceCapturedAmount = amount,
-        Currency = "NZD",
-        IsSourcePayment = true,
-    };
+        {
+            Id = id,
+            MarketplaceRefundId = refundId,
+            SourcePaymentProvider = provider,
+            SourcePaymentReference = $"payment-{id}",
+            SourceCapturedAmount = amount,
+            Currency = "NZD",
+            IsSourcePayment = true,
+        };
 
     private static async Task<bool> TryReserveAsync(
         IRepositoryFactory repositoryFactory, string refundId, string allocationId, decimal amount,

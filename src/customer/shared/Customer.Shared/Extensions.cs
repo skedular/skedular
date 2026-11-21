@@ -1,4 +1,4 @@
-using Customer.Shared.Configurations;
+﻿using Customer.Shared.Configurations;
 using Customer.Shared.Mappers;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;

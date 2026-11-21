@@ -1,4 +1,4 @@
-using Skedular.SystemTests.Skedular.GraphQL.V1;
+﻿using Skedular.SystemTests.Skedular.GraphQL.V1;
 
 namespace Skedular.SystemTests.Gateway.GraphQl;
 

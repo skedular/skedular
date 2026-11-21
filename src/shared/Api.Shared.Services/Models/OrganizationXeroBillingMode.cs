@@ -1,4 +1,4 @@
-namespace Api.Shared.Services.Models;
+﻿namespace Api.Shared.Services.Models;
 
 /// <summary>
 ///     Controls whether Skedular should route invoice creation and delivery through Xero for an organization.

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database.PostgreSql;
+﻿using Enterprise.Shared.Database.PostgreSql;
 using Npgsql;
 
 namespace Enterprise.Shared.UnitTests.Database.PostgreSql.PostgreSqlConfigurationExtensionsTests;

@@ -1,4 +1,4 @@
-using Enterprise.Shared;
+﻿using Enterprise.Shared;
 
 namespace Customer.Domain.FakeDependencies;
 

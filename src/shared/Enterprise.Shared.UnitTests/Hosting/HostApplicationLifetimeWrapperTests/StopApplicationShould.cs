@@ -1,4 +1,4 @@
-using Enterprise.Shared.Hosting;
+﻿using Enterprise.Shared.Hosting;
 using Microsoft.Extensions.Hosting;
 
 namespace Enterprise.Shared.UnitTests.Hosting.HostApplicationLifetimeWrapperTests;

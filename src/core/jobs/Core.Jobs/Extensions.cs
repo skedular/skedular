@@ -1,4 +1,4 @@
-namespace Core.Jobs;
+﻿namespace Core.Jobs;
 
 public static class Extensions
 {

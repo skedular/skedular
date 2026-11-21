@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Security.Sso.Models;
+﻿namespace Enterprise.Shared.Security.Sso.Models;
 
 public class Constants
 {

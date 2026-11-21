@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Booking.Shared.Services;
 using Xero.NetStandard.OAuth2.Model.Accounting;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;

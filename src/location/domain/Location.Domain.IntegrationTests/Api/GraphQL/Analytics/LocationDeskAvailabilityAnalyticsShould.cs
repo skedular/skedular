@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared.Time;
 using Location.Domain.IntegrationTests.Skedular.GraphQL.V1;
 using Location.Shared.Database.Entities;

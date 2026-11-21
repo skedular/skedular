@@ -1,4 +1,4 @@
-using Marketplace.Domain.IntegrationTests.Skedular.GraphQL.V1;
+﻿using Marketplace.Domain.IntegrationTests.Skedular.GraphQL.V1;
 
 namespace Marketplace.Domain.IntegrationTests.Api.GraphQL;
 

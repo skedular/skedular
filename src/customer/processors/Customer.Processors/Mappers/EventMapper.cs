@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using CustomerBillingDetails = Customer.Shared.Models.CustomerBillingDetails;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Event;
@@ -7,12 +7,12 @@ using Location = Customer.Shared.Models.Location;
 using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.LocationType;
 using Organization = Customer.Shared.Models.Organization;
 using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationSsoSetting = Customer.Shared.Models.OrganizationSsoSetting;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
 using Resource = Customer.Shared.Database.Entities.Resource;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 
 namespace Customer.Processors.Mappers;
 

@@ -1,4 +1,4 @@
-using AutoFixture;
+﻿using AutoFixture;
 using Enterprise.Shared.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

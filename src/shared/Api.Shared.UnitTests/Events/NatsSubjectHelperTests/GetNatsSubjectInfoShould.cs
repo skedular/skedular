@@ -1,4 +1,4 @@
-using Api.Shared.Events.Nats;
+﻿using Api.Shared.Events.Nats;
 
 namespace Api.Shared.UnitTests.Events.NatsSubjectHelperTests;
 

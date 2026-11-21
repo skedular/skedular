@@ -1,14 +1,14 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Messaging;
 using Slack.Processors.Mappers;
 using Slack.Processors.Subscribers;
 using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
+using CustomerEntity = Slack.Shared.Database.Entities.Customer;
+using CustomerModel = Slack.Shared.Models.Customer;
 using ValueMetadata = Api.Shared.Clients.Events.Skedular.Customer.V1.Metadata;
 using ValueType = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
-using CustomerModel = Slack.Shared.Models.Customer;
-using CustomerEntity = Slack.Shared.Database.Entities.Customer;
 
 namespace Slack.Processors.UnitTests.Subscribers;
 

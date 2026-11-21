@@ -1,4 +1,4 @@
-using Enterprise.Shared.Pagination;
+﻿using Enterprise.Shared.Pagination;
 
 namespace Customer.Shared.Models;
 

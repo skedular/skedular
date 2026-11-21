@@ -1,4 +1,4 @@
-using Customer.Api.Services;
+﻿using Customer.Api.Services;
 using Enterprise.Shared.Version;
 using HotChocolate;
 using HotChocolate.Types;

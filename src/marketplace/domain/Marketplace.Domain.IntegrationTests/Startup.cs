@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Workaround.V1;
 using Api.Shared.Grpc.Skedular.Marketplace.Core.V1;

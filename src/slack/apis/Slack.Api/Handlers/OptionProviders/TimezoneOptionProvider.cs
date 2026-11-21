@@ -1,4 +1,4 @@
-using Slack.Shared.Constants;
+﻿using Slack.Shared.Constants;
 using SlackNet.Interaction;
 using Option = SlackNet.Blocks.Option;
 

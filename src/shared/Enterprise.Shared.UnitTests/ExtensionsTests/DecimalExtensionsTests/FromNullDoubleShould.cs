@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.UnitTests.ExtensionsTests.DecimalExtensionsTests;
+﻿namespace Enterprise.Shared.UnitTests.ExtensionsTests.DecimalExtensionsTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class FromNullDoubleShould

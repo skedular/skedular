@@ -1,18 +1,18 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Slack.Shared.Database.Entities;
-using Location = Slack.Shared.Models.Location;
-using Team = Slack.Shared.Models.Team;
-using Organization = Slack.Shared.Models.Organization;
 using Customer = Slack.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Identity = Slack.Shared.Models.Identity;
+using Location = Slack.Shared.Models.Location;
 using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.LocationType;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
+using Organization = Slack.Shared.Models.Organization;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
 using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
+using Team = Slack.Shared.Models.Team;
 
 namespace Slack.Processors.Mappers;
 

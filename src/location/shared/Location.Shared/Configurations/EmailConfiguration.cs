@@ -1,4 +1,4 @@
-namespace Location.Shared.Configurations;
+﻿namespace Location.Shared.Configurations;
 
 public class EmailConfiguration
 {

@@ -1,4 +1,4 @@
-namespace Team.Shared.Configurations;
+﻿namespace Team.Shared.Configurations;
 
 public class EmailConfiguration
 {

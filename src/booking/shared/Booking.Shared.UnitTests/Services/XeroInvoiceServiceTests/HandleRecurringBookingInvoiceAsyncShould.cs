@@ -1,5 +1,6 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
@@ -12,16 +13,15 @@ using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.UnitTesting;
 using Grpc.Core;
+using Microsoft.Extensions.Logging;
 using Xero.NetStandard.OAuth2.Model.Accounting;
 using AccountingInvoiceExportConfigurationStateConstants = Booking.Shared.Models.AccountingInvoiceExportConfigurationStateConstants;
 using AccountingInvoiceExportModeConstants = Booking.Shared.Models.AccountingInvoiceExportModeConstants;
 using OrganizationBillingCycleModel = Api.Shared.Services.Models.OrganizationBillingCycle;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
-using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
-using Enterprise.Shared.UnitTesting;
-using Microsoft.Extensions.Logging;
 
 namespace Booking.Shared.UnitTests.Services.XeroInvoiceServiceTests;
 

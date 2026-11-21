@@ -1,17 +1,17 @@
-using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+﻿using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Grpc.Skedular.Organization.Tags.V1;
 using Api.Shared.Grpc.Skedular.Organization.Zones.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Grpc;
 using Organization.Shared.Repositories;
-using GrpcOrganizationConfiguration = Api.Shared.Services.Configurations.Grpc.OrganizationConfiguration;
 using BillingDetailsEntity = Organization.Shared.Database.Entities.OrganizationBillingDetails;
 using Constants = Api.Shared.Services.Constants;
+using GrpcOrganizationConfiguration = Api.Shared.Services.Configurations.Grpc.OrganizationConfiguration;
 using IdentityEntity = Organization.Shared.Database.Entities.Identity;
+using OrganizationEntity = Organization.Shared.Database.Entities.Organization;
 using OrganizationMemberEntity = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOfferingEntity = Organization.Shared.Database.Entities.OrganizationOffering;
-using OrganizationEntity = Organization.Shared.Database.Entities.Organization;
 using TagEntity = Organization.Shared.Database.Entities.Tag;
 
 namespace Organization.Domain.IntegrationTests.Api.Grpc.OrganizationPatchGrpcServiceTests;

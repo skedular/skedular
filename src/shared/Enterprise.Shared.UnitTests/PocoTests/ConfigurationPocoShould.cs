@@ -1,4 +1,4 @@
-using Enterprise.Shared.Accounting;
+﻿using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Ai.Configurations;
 using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Email;

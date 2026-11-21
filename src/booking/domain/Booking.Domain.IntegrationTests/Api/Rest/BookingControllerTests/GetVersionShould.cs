@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Booking.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Booking.Core.V1;
 
 namespace Booking.Domain.IntegrationTests.Api.Rest.BookingControllerTests;
 

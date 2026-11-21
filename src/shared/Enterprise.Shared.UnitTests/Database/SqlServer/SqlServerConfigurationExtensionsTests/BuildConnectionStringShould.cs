@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database.SqlServer;
+﻿using Enterprise.Shared.Database.SqlServer;
 
 namespace Enterprise.Shared.UnitTests.Database.SqlServer.SqlServerConfigurationExtensionsTests;
 

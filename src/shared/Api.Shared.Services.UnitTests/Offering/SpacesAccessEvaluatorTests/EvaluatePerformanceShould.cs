@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Api.Shared.Services.Offering;
 using SharedOffering = Api.Shared.Services.Models.Offering;
 

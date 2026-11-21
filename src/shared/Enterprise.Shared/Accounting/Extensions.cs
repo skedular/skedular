@@ -1,4 +1,4 @@
-using Enterprise.Shared.Accounting.Configurations;
+﻿using Enterprise.Shared.Accounting.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

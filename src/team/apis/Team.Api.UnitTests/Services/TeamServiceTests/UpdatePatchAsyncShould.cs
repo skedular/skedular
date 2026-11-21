@@ -1,4 +1,4 @@
-using Enterprise.Shared.UnitTesting.Assertions;
+﻿using Enterprise.Shared.UnitTesting.Assertions;
 using Microsoft.Extensions.Logging;
 using Team.Api.Models;
 using Team.Api.Services;

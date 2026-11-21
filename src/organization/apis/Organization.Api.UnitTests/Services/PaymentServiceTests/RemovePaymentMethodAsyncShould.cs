@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -10,9 +10,9 @@ using Organization.Shared.Repositories;
 using Stripe;
 using Customer = Organization.Shared.Database.Entities.Customer;
 using CustomerModel = Organization.Shared.Models.Customer;
-using PaymentMethodEntity = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 using OrganizationOfferingEntity = Organization.Shared.Database.Entities.OrganizationOffering;
 using PaymentMethod = Stripe.PaymentMethod;
+using PaymentMethodEntity = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 
 namespace Organization.Api.UnitTests.Services.PaymentServiceTests;
 

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;

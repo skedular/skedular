@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Team.Api.Services;

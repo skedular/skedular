@@ -1,4 +1,4 @@
-namespace Api.Shared.Services.Offering;
+﻿namespace Api.Shared.Services.Offering;
 
 public record SpacesQuotaUpgradePlan(
     int PlanCode,

@@ -1,4 +1,4 @@
-namespace Customer.Shared.Workflows;
+﻿namespace Customer.Shared.Workflows;
 
 public class Constants
 {

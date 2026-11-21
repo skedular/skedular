@@ -1,4 +1,4 @@
-using Enterprise.Shared.Messaging.Nats.Configuration;
+﻿using Enterprise.Shared.Messaging.Nats.Configuration;
 
 namespace Enterprise.Shared.UnitTests.Messaging.Nats.Provisioning;
 

@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;

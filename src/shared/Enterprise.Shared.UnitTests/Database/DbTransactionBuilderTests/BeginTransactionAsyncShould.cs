@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.UnitTesting.Database.TestSupport;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;

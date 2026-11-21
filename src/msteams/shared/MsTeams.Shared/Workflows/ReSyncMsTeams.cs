@@ -1,4 +1,4 @@
-using MsTeams.Shared.Activities;
+﻿using MsTeams.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 

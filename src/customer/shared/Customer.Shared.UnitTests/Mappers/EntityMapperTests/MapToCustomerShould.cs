@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Customer.Shared.Mappers;
 using CustomerEntity = Customer.Shared.Database.Entities.Customer;
 using LocationEntity = Customer.Shared.Database.Entities.Location;

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
@@ -7,8 +7,8 @@ using Enterprise.Shared.Context;
 using Enterprise.Shared.Random;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 using IMarketplaceBookingOpeningHoursService = Booking.Shared.Services.IMarketplaceBookingOpeningHoursService;
-using LocationEntity = Booking.Shared.Database.Entities.Location;
 using IPrivateBookingService = Booking.Shared.Services.IPrivateBookingService;
+using LocationEntity = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using ResourceEntity = Booking.Shared.Database.Entities.Resource;
 using Team = Booking.Shared.Database.Entities.Team;

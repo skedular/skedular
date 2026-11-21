@@ -1,4 +1,4 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using Organization.Shared.Models.PricingCatalog;
 
 namespace Organization.Shared.Services.Pricing;

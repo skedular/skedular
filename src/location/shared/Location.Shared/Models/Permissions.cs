@@ -1,4 +1,4 @@
-namespace Location.Shared.Models;
+﻿namespace Location.Shared.Models;
 
 public class Permissions
 {

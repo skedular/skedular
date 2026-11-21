@@ -1,4 +1,4 @@
-using AutoFixture;
+﻿using AutoFixture;
 using Organization.Shared.Services.Pricing;
 
 namespace Organization.Api.UnitTests.Fixtures;

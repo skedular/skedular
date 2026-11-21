@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Mappers;
@@ -10,8 +10,8 @@ using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Microsoft.EntityFrameworkCore.Storage;
-using Constants = Booking.Shared.GraphQL.Constants;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
+using Constants = Booking.Shared.GraphQL.Constants;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;

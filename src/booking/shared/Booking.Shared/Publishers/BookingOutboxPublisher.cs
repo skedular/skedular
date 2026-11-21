@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Booking.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Booking.V1;
 using Booking.Shared.Mappers;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;

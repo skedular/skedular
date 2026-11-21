@@ -1,12 +1,12 @@
-using Api.Shared.Grpc.Skedular.Team.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Team.Core.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Grpc;
 using Team.Shared.Database.Entities;
 using Team.Shared.Repositories;
 using Offering = Api.Shared.Services.Models.Offering;
-using TeamGrpcConfig = Api.Shared.Services.Configurations.Grpc.TeamConfiguration;
 using OrganizationMemberEntity = Team.Shared.Database.Entities.OrganizationMember;
+using TeamGrpcConfig = Api.Shared.Services.Configurations.Grpc.TeamConfiguration;
 
 namespace Team.Domain.IntegrationTests.Api.Grpc.TeamGrpcServiceTests;
 

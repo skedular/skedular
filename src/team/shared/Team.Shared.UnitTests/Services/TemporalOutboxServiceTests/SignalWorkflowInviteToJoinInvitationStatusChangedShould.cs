@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Temporal;
 using Microsoft.Extensions.Logging;
 using Team.Shared.Services;

@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;

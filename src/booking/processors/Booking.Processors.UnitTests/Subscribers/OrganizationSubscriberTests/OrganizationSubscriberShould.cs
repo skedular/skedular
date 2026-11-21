@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Processors.Mappers;
@@ -9,12 +9,12 @@ using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Messaging;
+using OfferingModel = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationBillingCycleModel = Api.Shared.Services.Models.OrganizationBillingCycle;
 using OrganizationTypeModel = Api.Shared.Services.Models.OrganizationType;
 using ValueMetadata = Api.Shared.Clients.Events.Skedular.Organization.V1.Metadata;
 using ValueType = Api.Shared.Clients.Events.Skedular.Organization.V1.Type;
-using OfferingModel = Api.Shared.Services.Models.Offering;
 
 namespace Booking.Processors.UnitTests.Subscribers.OrganizationSubscriberTests;
 

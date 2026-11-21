@@ -1,4 +1,4 @@
-using Slack.Shared;
+﻿using Slack.Shared;
 using Slack.Shared.Models;
 using SlackNet;
 using SlackNet.WebApi;

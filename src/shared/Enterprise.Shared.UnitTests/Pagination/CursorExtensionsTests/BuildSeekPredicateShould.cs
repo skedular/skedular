@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Outbox.Kafka;
 using Enterprise.Shared.Outbox.Temporal;

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Context;
+﻿using Enterprise.Shared.Context;
 using Enterprise.Shared.IdentityProviders.Configurations;
 using Enterprise.Shared.IdentityProviders.WorkOS;
 using Enterprise.Shared.Security.Token;

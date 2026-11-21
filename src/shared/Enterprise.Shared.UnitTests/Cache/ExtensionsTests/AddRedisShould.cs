@@ -1,4 +1,4 @@
-using Enterprise.Shared.Cache;
+﻿using Enterprise.Shared.Cache;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;

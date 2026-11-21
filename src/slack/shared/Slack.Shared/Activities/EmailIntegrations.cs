@@ -1,4 +1,4 @@
-using Enterprise.Shared.Email;
+﻿using Enterprise.Shared.Email;
 using Slack.Shared.Configurations;
 using Slack.Shared.Repositories;
 using Temporalio.Activities;

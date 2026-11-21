@@ -1,14 +1,14 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Messaging;
 using Marketplace.Processors.Mappers;
 using Marketplace.Processors.Subscribers;
 using Marketplace.Shared.Publishers;
 using Marketplace.Shared.Repositories;
+using CustomerEntity = Marketplace.Shared.Database.Entities.Customer;
+using CustomerModel = Marketplace.Shared.Models.Customer;
 using ValueMetadata = Api.Shared.Clients.Events.Skedular.Customer.V1.Metadata;
 using ValueType = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
-using CustomerModel = Marketplace.Shared.Models.Customer;
-using CustomerEntity = Marketplace.Shared.Database.Entities.Customer;
 
 namespace Marketplace.Processors.UnitTests.Subscribers;
 

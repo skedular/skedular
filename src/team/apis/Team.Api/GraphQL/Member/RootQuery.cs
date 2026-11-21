@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using HotChocolate.Types;
 
 namespace Team.Api.GraphQL.Member;

@@ -1,4 +1,4 @@
-using Customer.Api.Models;
+﻿using Customer.Api.Models;
 using HotChocolate;
 
 namespace Customer.Api.GraphQL.Billing;

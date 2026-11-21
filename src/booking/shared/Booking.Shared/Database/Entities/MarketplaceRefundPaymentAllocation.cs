@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -44,10 +44,10 @@ public class MarketplaceRefundPaymentAllocationConfiguration : IEntityTypeConfig
             x.IsSourcePayment,
         }).IsUnique();
         builder.HasIndex(x => new
-            {
-                x.SourcePaymentProvider,
-                x.SourcePaymentReference,
-            })
+        {
+            x.SourcePaymentProvider,
+            x.SourcePaymentReference,
+        })
             .IsUnique()
             .HasFilter("\"IsSourcePayment\" = TRUE");
     }

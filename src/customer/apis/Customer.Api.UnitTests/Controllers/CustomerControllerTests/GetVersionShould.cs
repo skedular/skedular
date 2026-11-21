@@ -1,4 +1,4 @@
-using Customer.Api.Controllers;
+﻿using Customer.Api.Controllers;
 using Enterprise.Shared.Version;
 
 namespace Customer.Api.UnitTests.Controllers.CustomerControllerTests;

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Messaging.Nats.Serialization;
+﻿using Enterprise.Shared.Messaging.Nats.Serialization;
 using Enterprise.Shared.Messaging.Nats.Telemetry;
 using Enterprise.Shared.Telemetry;
 using Microsoft.EntityFrameworkCore;

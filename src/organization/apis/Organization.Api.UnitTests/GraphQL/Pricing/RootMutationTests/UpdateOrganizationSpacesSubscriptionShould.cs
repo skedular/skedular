@@ -1,4 +1,4 @@
-using Organization.Api.GraphQL.Pricing;
+﻿using Organization.Api.GraphQL.Pricing;
 using Organization.Api.Services.Pricing;
 using Organization.Shared.Models.PricingCatalog;
 using PricingCatalogSubscriptionPlanCodeAlias = Organization.Shared.Models.PricingCatalog.PricingCatalogSubscriptionPlanCode;

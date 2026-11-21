@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;

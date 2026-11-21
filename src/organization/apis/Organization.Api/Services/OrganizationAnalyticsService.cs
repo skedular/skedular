@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Organization.Api.GraphQL.Analytics;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Repositories;

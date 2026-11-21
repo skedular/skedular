@@ -1,4 +1,4 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using Location.Api.Services.Authorization;
 using Location.Shared.Services.Cache;
 using Microsoft.Extensions.Logging;

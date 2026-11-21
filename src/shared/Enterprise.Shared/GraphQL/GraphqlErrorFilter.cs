@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using Enterprise.Shared.Metrics;
 using HotChocolate.Execution;

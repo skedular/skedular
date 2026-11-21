@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Team.Api.GraphQL.Invitation;
 using Team.Api.Mappers;
 using Team.Api.Services;

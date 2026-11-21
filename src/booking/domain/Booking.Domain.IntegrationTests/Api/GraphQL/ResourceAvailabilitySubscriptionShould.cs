@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.InfrastructureTest.V1;
+﻿using Api.Shared.Grpc.Skedular.InfrastructureTest.V1;
 using Booking.Domain.IntegrationTests.Skedular.GraphQL.V1;
 
 namespace Booking.Domain.IntegrationTests.Api.GraphQL;

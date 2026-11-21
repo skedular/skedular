@@ -1,11 +1,11 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
-using Resource = Booking.Shared.Database.Entities.Resource;
 using Location = Booking.Shared.Database.Entities.Location;
+using Resource = Booking.Shared.Database.Entities.Resource;
 using SharedMarketplaceBookingService = Booking.Shared.Services.IMarketplaceBookingService;
 
 namespace Booking.Api.Services;

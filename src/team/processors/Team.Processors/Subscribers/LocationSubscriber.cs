@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Location.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Location.V1;
 using Enterprise.Shared.Messaging;
 using Team.Processors.Mappers;
 using Team.Shared.Database.Entities;

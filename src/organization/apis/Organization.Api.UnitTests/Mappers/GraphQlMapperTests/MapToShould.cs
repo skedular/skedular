@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Organization.Api.GraphQL.Organization;
 using Organization.Api.Mappers;

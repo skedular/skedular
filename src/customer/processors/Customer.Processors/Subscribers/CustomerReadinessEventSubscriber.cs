@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1;
+﻿using Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1;
 using Customer.Shared.Models;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services.Cache;

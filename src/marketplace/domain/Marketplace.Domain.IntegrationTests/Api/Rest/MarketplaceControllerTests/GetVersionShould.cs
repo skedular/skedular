@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Marketplace.Core.V1;
 
 namespace Marketplace.Domain.IntegrationTests.Api.Rest.MarketplaceControllerTests;
 

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Outbox.Temporal;
+﻿using Enterprise.Shared.Outbox.Temporal;
 using Temporalio.Client;
 
 namespace Marketplace.Shared.Services;

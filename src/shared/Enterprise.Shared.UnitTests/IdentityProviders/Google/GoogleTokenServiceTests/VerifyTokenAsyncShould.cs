@@ -1,4 +1,4 @@
-using Enterprise.Shared.Context;
+﻿using Enterprise.Shared.Context;
 using Enterprise.Shared.IdentityProviders.Configurations;
 using Enterprise.Shared.IdentityProviders.Google;
 using Enterprise.Shared.UnitTesting.Assertions;

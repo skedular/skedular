@@ -1,4 +1,4 @@
-using AutoFixture;
+﻿using AutoFixture;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Enterprise.Shared.UnitTesting.Fixtures;

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
 using Booking.Api.Mappers;
 using Booking.Shared.Models;

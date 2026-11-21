@@ -1,7 +1,6 @@
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
-using Projects;
 using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
@@ -42,7 +41,7 @@ var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 var useFakeDependencies = DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled();
 
 var sharedInfrastructure = builder
-    .AddProject<Infrastructure_Shared>("infrastructureshared")
+    .AddDotnetProject("infrastructureshared", "../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -51,14 +50,14 @@ var sharedInfrastructure = builder
 
 var slackFakeDependencies = useFakeDependencies
     ? builder
-        .AddProject<Slack_Domain_FakeDependencies>("slackfakedependencies")
+        .AddDotnetProject("slackfakedependencies", "../Slack.Domain.FakeDependencies/Slack.Domain.FakeDependencies.csproj")
         .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
         .WithHttpHealthCheck(Constants.ReadinessPath)
     : null;
 
 var slackDatabase = postgres.AddDatabase("slackdb");
 var slackInfrastructure = builder
-    .AddProject<Slack_Infrastructure>("slackinfrastructure")
+    .AddDotnetProject("slackinfrastructure", "../../shared/Slack.Infrastructure/Slack.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -73,7 +72,7 @@ var slackInfrastructure = builder
     .WaitFor(slackDatabase);
 
 var slackApi = builder
-    .AddProject<Slack_Api>("slackapi")
+    .AddDotnetProject("slackapi", "../../apis/Slack.Api/Slack.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -88,7 +87,7 @@ var slackApi = builder
     .WaitForCompletion(slackInfrastructure);
 
 var slackProcessors = builder
-    .AddProject<Slack_Processors>("slackprocessors")
+    .AddDotnetProject("slackprocessors", "../../processors/Slack.Processors/Slack.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -103,7 +102,7 @@ var slackProcessors = builder
     .WaitForCompletion(slackInfrastructure);
 
 var slackJobs = builder
-    .AddProject<Slack_Jobs>("slackjobs")
+    .AddDotnetProject("slackjobs", "../../jobs/Slack.Jobs/Slack.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)

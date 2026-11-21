@@ -1,4 +1,4 @@
-namespace Organization.Shared.Models;
+﻿namespace Organization.Shared.Models;
 
 public class Permissions
 {

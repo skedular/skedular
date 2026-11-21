@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Customer = Marketplace.Shared.Models.Customer;
 using Organization = Marketplace.Shared.Database.Entities.Organization;

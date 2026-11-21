@@ -1,4 +1,4 @@
-using Enterprise.Shared.IO;
+﻿using Enterprise.Shared.IO;
 
 namespace Enterprise.Shared.UnitTests.IO.DirectoryServiceTests;
 

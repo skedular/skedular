@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using HotChocolate.Types.Pagination;
 
 namespace Organization.Api.GraphQL.Stripe;

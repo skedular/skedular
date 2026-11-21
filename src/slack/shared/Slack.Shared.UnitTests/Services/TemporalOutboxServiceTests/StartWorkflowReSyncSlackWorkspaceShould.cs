@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Slack.Shared.Services;

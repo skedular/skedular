@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Random;
 using Flurl;

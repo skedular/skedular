@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Grpc.Skedular.Core.Core.V1;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
@@ -24,7 +24,6 @@ using QuestPDF.Fluent;
 using Temporalio.Activities;
 using Xero.NetStandard.OAuth2.Api;
 using Xero.NetStandard.OAuth2.Model.Accounting;
-using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;
 using Constants = Booking.Shared.GraphQL.Constants;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 using Organization = Booking.Shared.Database.Entities.Organization;
@@ -33,6 +32,7 @@ using OrganizationArrearsInvoiceLine = Booking.Shared.Database.Entities.Organiza
 using OrganizationBillingCycle = Api.Shared.Services.Models.OrganizationBillingCycle;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using XeroInvoice = Xero.NetStandard.OAuth2.Model.Accounting.Invoice;
+using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;
 
 namespace Booking.Shared.Activities;
 
@@ -670,14 +670,14 @@ public class OrganizationArrearsBillingIntegrations(
 
         var contactsResponse = contact.ContactID is null
             ? await accountingApi.CreateContactsAsync(accessToken, xeroConnection.TenantId, new Contacts
-                {
-                    _Contacts = [contact],
-                }, null, null,
+            {
+                _Contacts = [contact],
+            }, null, null,
                 cancellationToken)
             : await accountingApi.UpdateOrCreateContactsAsync(accessToken, xeroConnection.TenantId, new Contacts
-                {
-                    _Contacts = [contact],
-                }, null,
+            {
+                _Contacts = [contact],
+            }, null,
                 null, cancellationToken);
         var exportedContact = contactsResponse?._Contacts?.FirstOrDefault() ??
                               throw new XeroContactExportFailedException();

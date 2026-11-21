@@ -1,4 +1,4 @@
-using Azure.Identity;
+﻿using Azure.Identity;
 using Enterprise.Shared.Azure.Configurations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;

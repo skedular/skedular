@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Configurations.Grpc;
 using Enterprise.Shared;
@@ -12,9 +12,9 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
 using OrganizationService = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationService;
+using Permissions = Api.Shared.Grpc.Skedular.Organization.Core.V1.Permissions;
 using TermsOfUse = Api.Shared.Grpc.Skedular.Organization.Core.V1.TermsOfUse;
 using Version = Api.Shared.Grpc.Skedular.Organization.Core.V1.Version;
-using Permissions = Api.Shared.Grpc.Skedular.Organization.Core.V1.Permissions;
 
 namespace Organization.Api.Grpc;
 

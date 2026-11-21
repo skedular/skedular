@@ -1,4 +1,4 @@
-using Enterprise.Shared.Image;
+﻿using Enterprise.Shared.Image;
 using SkiaSharp;
 
 namespace Enterprise.Shared.UnitTests.Image.ImageHelperTests;

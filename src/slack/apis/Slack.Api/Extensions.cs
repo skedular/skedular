@@ -1,15 +1,15 @@
-using Api.Shared.Services.Configurations.Grpc;
+﻿using Api.Shared.Services.Configurations.Grpc;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
+using BillingPage = Slack.Api.Pages.BillingPage;
 using BookingsPage = Slack.Api.Pages.BookingsPage;
 using HomePage = Slack.Api.Pages.HomePage;
-using SettingsPage = Slack.Api.Pages.SettingsPage;
 using LocationsPage = Slack.Api.Pages.LocationsPage;
+using SettingsPage = Slack.Api.Pages.SettingsPage;
 using TeamsPage = Slack.Api.Pages.TeamsPage;
 using ZonesPage = Slack.Api.Pages.ZonesPage;
-using BillingPage = Slack.Api.Pages.BillingPage;
 
 namespace Slack.Api;
 

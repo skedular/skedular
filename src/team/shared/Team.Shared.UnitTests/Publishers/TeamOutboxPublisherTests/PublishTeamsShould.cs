@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Team.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Team.V1;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Kafka;

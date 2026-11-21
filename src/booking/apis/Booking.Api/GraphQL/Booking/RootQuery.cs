@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Api.Mappers;
 using Booking.Api.Services;

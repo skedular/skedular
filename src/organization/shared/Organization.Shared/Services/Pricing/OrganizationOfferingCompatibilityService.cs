@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Organization.Shared.Mappers;
 using Organization.Shared.Models.PricingCatalog;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;

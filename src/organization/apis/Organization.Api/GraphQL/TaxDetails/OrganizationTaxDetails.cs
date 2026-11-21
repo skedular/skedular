@@ -1,4 +1,4 @@
-using Enterprise.Shared.GraphQL.Types;
+﻿using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 
 namespace Organization.Api.GraphQL.TaxDetails;

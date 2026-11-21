@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using TelemetryKeys = Enterprise.Shared.Outbox.Kafka.TelemetryKeys;
 
 namespace Enterprise.Shared.Database;

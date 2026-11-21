@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Models;
+﻿namespace Enterprise.Shared.Models;
 
 public class ModelBaseWithDeleted : ModelBase
 {

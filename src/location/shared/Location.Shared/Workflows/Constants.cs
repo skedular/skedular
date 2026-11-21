@@ -1,4 +1,4 @@
-namespace Location.Shared.Workflows;
+﻿namespace Location.Shared.Workflows;
 
 public class Constants
 {

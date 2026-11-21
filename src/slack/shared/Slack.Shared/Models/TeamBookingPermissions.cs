@@ -1,4 +1,4 @@
-namespace Slack.Shared.Models;
+﻿namespace Slack.Shared.Models;
 
 public class TeamBookingPermissions
 {

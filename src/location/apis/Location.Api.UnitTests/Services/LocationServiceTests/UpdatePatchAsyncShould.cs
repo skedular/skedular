@@ -1,4 +1,4 @@
-using Enterprise.Shared.UnitTesting.Assertions;
+﻿using Enterprise.Shared.UnitTesting.Assertions;
 using Location.Api.Models;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;

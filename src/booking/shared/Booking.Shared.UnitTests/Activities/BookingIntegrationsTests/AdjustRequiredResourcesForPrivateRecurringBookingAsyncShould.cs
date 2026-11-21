@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;

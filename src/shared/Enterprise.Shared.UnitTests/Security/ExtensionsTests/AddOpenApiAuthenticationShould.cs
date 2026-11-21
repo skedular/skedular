@@ -1,4 +1,4 @@
-using Enterprise.Shared.Security;
+﻿using Enterprise.Shared.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

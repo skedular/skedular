@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using HotChocolate.Types.Pagination;
 
 namespace Team.Api.GraphQL.Team;

@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.MsTeams.Core.V1;
 
 namespace MsTeams.Domain.IntegrationTests.Api.Rest.MsTeamsControllerTests;
 

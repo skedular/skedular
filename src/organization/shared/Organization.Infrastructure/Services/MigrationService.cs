@@ -1,11 +1,11 @@
-using Api.Shared.Clients.Events.Skedular.OrganizationMember.V1;
+﻿using Api.Shared.Clients.Events.Skedular.OrganizationMember.V1;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Messaging.Kafka;
 using Organization.Shared.Repositories;
 using OrganizationEvent = Api.Shared.Clients.Events.Skedular.Organization.V1.Event;
-using OrganizationKey = Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using OrganizationInternalEvent = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Event;
 using OrganizationInternalKey = Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key;
+using OrganizationKey = Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 
 namespace Organization.Infrastructure.Services;
 

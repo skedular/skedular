@@ -1,4 +1,4 @@
-using Enterprise.Shared;
+﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

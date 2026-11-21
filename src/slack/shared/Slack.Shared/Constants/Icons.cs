@@ -1,4 +1,4 @@
-using Enterprise.Shared;
+﻿using Enterprise.Shared;
 using SlackNet.Blocks;
 
 namespace Slack.Shared.Constants;

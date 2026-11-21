@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Offering;
 using Booking.Api.Mappers;
 using Booking.Api.Models;
@@ -7,15 +7,15 @@ using Booking.Shared.Models;
 using Booking.Shared.Services.Cache;
 using HotChocolate;
 using HotChocolate.Types;
-using EntitlementAdjustmentService = Booking.Shared.Services.Entitlements.IEntitlementAdjustmentService;
-using MarketplaceBookingFailureService = Booking.Shared.Services.IMarketplaceBookingFailureService;
-using MarketplaceBookingAvailabilityConflict = Booking.Shared.Services.MarketplaceBookingAvailabilityConflict;
-using SpacesSubscriptionStatus = Api.Shared.Services.Offering.SpacesSubscriptionStatus;
-using EntitlementInput = Booking.Api.GraphQL.Entitlement.ConsumeEntitlementCreditInput;
-using EntitlementPayload = Booking.Api.GraphQL.Entitlement.ConsumeEntitlementCreditPayload;
-using EntitlementBookingService = Booking.Shared.Services.Entitlements.IEntitlementBookingService;
 using AdjustEntitlementInput = Booking.Api.GraphQL.Entitlement.AdjustEntitlementCreditInput;
 using AdjustEntitlementPayload = Booking.Api.GraphQL.Entitlement.AdjustEntitlementCreditPayload;
+using EntitlementAdjustmentService = Booking.Shared.Services.Entitlements.IEntitlementAdjustmentService;
+using EntitlementBookingService = Booking.Shared.Services.Entitlements.IEntitlementBookingService;
+using EntitlementInput = Booking.Api.GraphQL.Entitlement.ConsumeEntitlementCreditInput;
+using EntitlementPayload = Booking.Api.GraphQL.Entitlement.ConsumeEntitlementCreditPayload;
+using MarketplaceBookingAvailabilityConflict = Booking.Shared.Services.MarketplaceBookingAvailabilityConflict;
+using MarketplaceBookingFailureService = Booking.Shared.Services.IMarketplaceBookingFailureService;
+using SpacesSubscriptionStatus = Api.Shared.Services.Offering.SpacesSubscriptionStatus;
 
 namespace Booking.Api.GraphQL.Booking;
 

@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -133,11 +133,11 @@ public class MarketplacePurchaseHistoryConfiguration : IEntityTypeConfiguration<
         builder.HasOne(item => item.LatestRefund).WithMany().HasForeignKey(item => item.LatestRefundId);
 
         builder.HasIndex(item => new
-            {
-                item.SourceType,
-                item.SourceId,
-                item.IdempotencyKey,
-            }).IsUnique()
+        {
+            item.SourceType,
+            item.SourceId,
+            item.IdempotencyKey,
+        }).IsUnique()
             .HasFilter("\"IdempotencyKey\" IS NOT NULL");
         builder.HasIndex(item => new
         {

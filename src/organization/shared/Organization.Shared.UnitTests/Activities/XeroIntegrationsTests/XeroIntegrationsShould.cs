@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
 using Organization.Shared.Activities;

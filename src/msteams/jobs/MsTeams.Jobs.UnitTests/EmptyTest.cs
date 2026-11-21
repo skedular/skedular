@@ -1,4 +1,4 @@
-namespace MsTeams.Jobs.UnitTests;
+﻿namespace MsTeams.Jobs.UnitTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class EmptyTest

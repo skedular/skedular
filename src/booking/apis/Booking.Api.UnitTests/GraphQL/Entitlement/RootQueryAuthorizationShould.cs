@@ -1,4 +1,4 @@
-using Booking.Api.GraphQL.Entitlement;
+﻿using Booking.Api.GraphQL.Entitlement;
 using Booking.Api.Services;
 using Booking.Shared.Services.Cache;
 

@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Grpc.Skedular.Organization.Tags.V1;
 using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Models;
@@ -10,8 +10,8 @@ using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Shared.Models;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
-using Tag = Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag;
 using PageInfo = Api.Shared.Grpc.Skedular.Organization.Core.V1.PageInfo;
+using Tag = Api.Shared.Grpc.Skedular.Organization.Core.V1.Tag;
 
 namespace Organization.Api.Grpc;
 

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Accounting;
+﻿using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Accounting.Configurations;
 using Xero.NetStandard.OAuth2.Client;
 using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;

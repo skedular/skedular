@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
+﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Random;
@@ -10,8 +10,8 @@ using Location.Shared.Repositories;
 using Microsoft.Extensions.Logging;
 using NanoidDotNet;
 using Temporalio.Testing;
-using LocationResource = Location.Shared.Database.Entities.Resource;
 using LocationEntity = Location.Shared.Database.Entities.Location;
+using LocationResource = Location.Shared.Database.Entities.Resource;
 using ResourceAvailabilityClassificationConstants = Location.Shared.Models.ResourceAvailabilityClassificationConstants;
 
 namespace Location.Domain.IntegrationTests.Activities.LocationDailyAnalyticsTests;

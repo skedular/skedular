@@ -1,4 +1,4 @@
-namespace Booking.Shared.Models;
+﻿namespace Booking.Shared.Models;
 
 /// <summary>
 ///     A confirmed request to change the fulfillment window or resource assignment of an existing marketplace booking.
@@ -73,23 +73,23 @@ public static class MarketplaceBookingModificationNotificationDeliveryStatusExte
 {
     public static string ToMarketplaceBookingModificationNotificationDeliveryStatusValue(
         this MarketplaceBookingModificationNotificationDeliveryStatus value) => value switch
-    {
-        MarketplaceBookingModificationNotificationDeliveryStatus.Pending => MarketplaceBookingModificationNotificationDeliveryStatusConstants.Pending,
-        MarketplaceBookingModificationNotificationDeliveryStatus.Sent => MarketplaceBookingModificationNotificationDeliveryStatusConstants.Sent,
-        MarketplaceBookingModificationNotificationDeliveryStatus.RecoveryRequired => MarketplaceBookingModificationNotificationDeliveryStatusConstants
-            .RecoveryRequired,
-        _ => throw new ArgumentOutOfRangeException(nameof(value), value, null),
-    };
+        {
+            MarketplaceBookingModificationNotificationDeliveryStatus.Pending => MarketplaceBookingModificationNotificationDeliveryStatusConstants.Pending,
+            MarketplaceBookingModificationNotificationDeliveryStatus.Sent => MarketplaceBookingModificationNotificationDeliveryStatusConstants.Sent,
+            MarketplaceBookingModificationNotificationDeliveryStatus.RecoveryRequired => MarketplaceBookingModificationNotificationDeliveryStatusConstants
+                .RecoveryRequired,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, null),
+        };
 
     public static MarketplaceBookingModificationNotificationDeliveryStatus
         ToMarketplaceBookingModificationNotificationDeliveryStatus(this string? value) => value switch
-    {
-        MarketplaceBookingModificationNotificationDeliveryStatusConstants.Pending => MarketplaceBookingModificationNotificationDeliveryStatus.Pending,
-        MarketplaceBookingModificationNotificationDeliveryStatusConstants.Sent => MarketplaceBookingModificationNotificationDeliveryStatus.Sent,
-        MarketplaceBookingModificationNotificationDeliveryStatusConstants.RecoveryRequired => MarketplaceBookingModificationNotificationDeliveryStatus
-            .RecoveryRequired,
-        _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown marketplace booking modification notification status."),
-    };
+        {
+            MarketplaceBookingModificationNotificationDeliveryStatusConstants.Pending => MarketplaceBookingModificationNotificationDeliveryStatus.Pending,
+            MarketplaceBookingModificationNotificationDeliveryStatusConstants.Sent => MarketplaceBookingModificationNotificationDeliveryStatus.Sent,
+            MarketplaceBookingModificationNotificationDeliveryStatusConstants.RecoveryRequired => MarketplaceBookingModificationNotificationDeliveryStatus
+                .RecoveryRequired,
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown marketplace booking modification notification status."),
+        };
 }
 
 public sealed record MarketplaceBookingModificationResult(

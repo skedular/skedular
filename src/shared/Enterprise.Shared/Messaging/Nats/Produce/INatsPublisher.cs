@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Messaging.Nats.Produce;
+﻿namespace Enterprise.Shared.Messaging.Nats.Produce;
 
 public interface INatsPublisher
 {

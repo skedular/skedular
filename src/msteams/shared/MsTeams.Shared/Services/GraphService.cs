@@ -1,4 +1,4 @@
-using Enterprise.Shared.Azure.Graph;
+﻿using Enterprise.Shared.Azure.Graph;
 using MsTeams.Shared.Mappers;
 using MsTeams.Shared.Models;
 

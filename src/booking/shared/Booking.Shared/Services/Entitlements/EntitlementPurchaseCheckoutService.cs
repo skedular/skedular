@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
@@ -8,10 +8,10 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Stripe;
 using Stripe.Checkout;
-using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using EntitlementPurchaseEntity = Booking.Shared.Database.Entities.EntitlementPurchase;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using PaymentMethod = Api.Shared.Services.Models.PaymentMethod;
+using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 
 namespace Booking.Shared.Services.Entitlements;
 

@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 

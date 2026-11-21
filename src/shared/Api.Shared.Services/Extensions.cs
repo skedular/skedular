@@ -1,4 +1,4 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Api.Shared.Services;

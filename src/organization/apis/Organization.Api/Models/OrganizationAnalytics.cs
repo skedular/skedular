@@ -1,4 +1,4 @@
-using Organization.Shared.Models;
+﻿using Organization.Shared.Models;
 
 namespace Organization.Api.Models;
 

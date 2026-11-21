@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Core.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Core.Core.V1;
 using Core.Shared.Models;
 using Enterprise.Shared;
 using File = Api.Shared.Grpc.Skedular.Core.Core.V1.File;

@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Enterprise.Shared.Security.Token;
 
 namespace Enterprise.Shared.UnitTests.Security.Token.JwsTests;

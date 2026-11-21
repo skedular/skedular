@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Location.Shared.Repositories;
 using Location.Shared.Services;

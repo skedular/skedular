@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Organization.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
@@ -15,12 +15,12 @@ using Enterprise.Shared.Grpc;
 using Microsoft.Extensions.Logging;
 using Temporalio.Activities;
 using Constants = Booking.Shared.GraphQL.Constants;
-using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
+using MarketplaceBookingFailureAccountingCleanupStatus = Booking.Shared.Models.MarketplaceBookingFailureAccountingCleanupStatus;
 using MarketplaceBookingFailureCategoryConstants = Booking.Shared.Models.MarketplaceBookingFailureCategoryConstants;
 using MarketplaceBookingFailureCustomerActionConstants = Booking.Shared.Models.MarketplaceBookingFailureCustomerActionConstants;
 using MarketplaceBookingFailureFinalization = Booking.Shared.Models.MarketplaceBookingFailureFinalization;
 using MarketplaceBookingFailureScopeConstants = Booking.Shared.Models.MarketplaceBookingFailureScopeConstants;
-using MarketplaceBookingFailureAccountingCleanupStatus = Booking.Shared.Models.MarketplaceBookingFailureAccountingCleanupStatus;
+using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 
 namespace Booking.Shared.Activities;
 

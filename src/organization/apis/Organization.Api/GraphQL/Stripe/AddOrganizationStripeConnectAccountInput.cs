@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 
 // ReSharper disable ClassNeverInstantiated.Global
 

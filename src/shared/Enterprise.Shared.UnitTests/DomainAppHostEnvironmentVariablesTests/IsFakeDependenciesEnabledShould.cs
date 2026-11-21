@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.UnitTests.DomainAppHostEnvironmentVariablesTests;
+﻿namespace Enterprise.Shared.UnitTests.DomainAppHostEnvironmentVariablesTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class IsFakeDependenciesEnabledShould

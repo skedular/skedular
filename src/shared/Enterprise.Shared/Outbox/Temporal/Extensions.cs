@@ -1,4 +1,4 @@
-using Enterprise.Shared.Telemetry;
+﻿using Enterprise.Shared.Telemetry;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

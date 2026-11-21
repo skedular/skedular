@@ -1,4 +1,4 @@
-using Organization.Infrastructure.Jobs;
+﻿using Organization.Infrastructure.Jobs;
 using Organization.Infrastructure.Services;
 
 namespace Organization.Infrastructure;

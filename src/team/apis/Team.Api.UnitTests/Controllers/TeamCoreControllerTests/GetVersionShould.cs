@@ -1,4 +1,4 @@
-using Enterprise.Shared.Version;
+﻿using Enterprise.Shared.Version;
 using Microsoft.Extensions.Logging;
 using Team.Api.Controllers;
 

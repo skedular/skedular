@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Location.Shared.Repositories;
 using Microsoft.Extensions.Logging;
 using ResourceEntity = Location.Shared.Database.Entities.Resource;

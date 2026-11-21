@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Organization.Domain.IntegrationTests.Skedular.GraphQL.V1;
 using Organization.Shared.Database.Entities;

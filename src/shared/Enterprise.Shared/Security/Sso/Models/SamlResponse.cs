@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Security.Sso.Models;
+﻿namespace Enterprise.Shared.Security.Sso.Models;
 
 //Note: This is a minimal type for the response and will be enriched in the future if needed.
 public class SamlResponse

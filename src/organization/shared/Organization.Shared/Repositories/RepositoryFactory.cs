@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Organization.Shared.Database;
 using TimeProvider = System.TimeProvider;

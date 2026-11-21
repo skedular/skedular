@@ -1,4 +1,4 @@
-using Api.Shared.Events.Kafka;
+﻿using Api.Shared.Events.Kafka;
 using Google.Protobuf.WellKnownTypes;
 
 namespace Api.Shared.UnitTests.Events.EventMetadataFactoryTests;

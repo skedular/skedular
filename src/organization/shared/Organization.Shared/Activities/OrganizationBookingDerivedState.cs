@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
+﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;

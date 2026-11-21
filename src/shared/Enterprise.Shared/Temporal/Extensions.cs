@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Outbox.Temporal;
 using Enterprise.Shared.Temporal.Configurations;

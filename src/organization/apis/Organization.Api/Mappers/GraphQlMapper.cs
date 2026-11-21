@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;
@@ -32,31 +32,31 @@ using IndustrySubCategory = Organization.Shared.Models.IndustrySubCategory;
 using JoinInvitation = Organization.Shared.Models.JoinInvitation;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using Offering = Api.Shared.Services.Offering.Offering;
-using OrganizationDailyBookingsTotal = Organization.Shared.Models.OrganizationDailyBookingsTotal;
-using OrganizationMember = Organization.Shared.Models.OrganizationMember;
-using OrganizationMemberAttendancePercentage = Organization.Shared.Models.OrganizationMemberAttendancePercentage;
-using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
-using Tag = Organization.Shared.Models.Tag;
-using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 using OrganizationBankAccount = Organization.Shared.Database.Entities.OrganizationBankAccount;
 using OrganizationBankAccountPatchRequest = Organization.Api.Models.OrganizationBankAccountPatchRequest;
 using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
+using OrganizationBillingDetailsPatchRequest = Organization.Api.Models.OrganizationBillingDetailsPatchRequest;
+using OrganizationDailyBookingsTotal = Organization.Shared.Models.OrganizationDailyBookingsTotal;
 using OrganizationDetails = Organization.Api.GraphQL.Organization.OrganizationDetails;
+using OrganizationMember = Organization.Shared.Models.OrganizationMember;
+using OrganizationMemberAttendancePercentage = Organization.Shared.Models.OrganizationMemberAttendancePercentage;
+using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
+using OrganizationPatchRequest = Organization.Api.Models.OrganizationPatchRequest;
+using OrganizationPhysicalAddress = Organization.Shared.Database.Entities.OrganizationPhysicalAddress;
 using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
-using OrganizationStripeConnectAccountPatchRequest = Organization.Api.Models.OrganizationStripeConnectAccountPatchRequest;
-using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
+using OrganizationSsoSettingsPatchRequest = Organization.Api.Models.OrganizationSsoSettingsPatchRequest;
 using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
 using OrganizationStripeConnectAccountAuthorization = Organization.Shared.Models.OrganizationStripeConnectAccountAuthorization;
+using OrganizationStripeConnectAccountPatchRequest = Organization.Api.Models.OrganizationStripeConnectAccountPatchRequest;
 using OrganizationStripeCustomer = Organization.Shared.Models.OrganizationStripeCustomer;
 using OrganizationStripePaymentMethod = Organization.Shared.Models.OrganizationStripePaymentMethod;
-using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
-using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
-using OrganizationPhysicalAddress = Organization.Shared.Database.Entities.OrganizationPhysicalAddress;
-using OrganizationPatchRequest = Organization.Api.Models.OrganizationPatchRequest;
-using OrganizationBillingDetailsPatchRequest = Organization.Api.Models.OrganizationBillingDetailsPatchRequest;
-using OrganizationSsoSettingsPatchRequest = Organization.Api.Models.OrganizationSsoSettingsPatchRequest;
+using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationTaxDetailsPatchRequest = Organization.Api.Models.OrganizationTaxDetailsPatchRequest;
+using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
 using OrganizationXeroConnectionPatchRequest = Organization.Api.Models.OrganizationXeroConnectionPatchRequest;
+using Tag = Organization.Shared.Models.Tag;
+using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
+using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
 
 
 namespace Organization.Api.Mappers;
@@ -1750,32 +1750,32 @@ public class GraphQlMapper : IGraphQlMapper
     private static Shared.Models.OrganizationStripeConnectAccount MapTo(
         OrganizationStripeConnectAccount src,
         Shared.Models.Organization organization) => new()
-    {
-        Id = src.Id,
-        CreatedAt = src.CreatedAt,
-        ModifiedAt = src.ModifiedAt,
-        DeletedAt = src.DeletedAt,
-        IsDefault = src.IsDefault,
-        StripeAccountId = src.StripeAccountId,
-        Name = src.Name,
-        ChargesEnabled = src.ChargesEnabled,
-        PayoutsEnabled = src.PayoutsEnabled,
-        Type = src.Type,
-        Country = src.Country,
-        DefaultCurrency = src.DefaultCurrency,
-        BusinessType = src.BusinessType,
-        Url = src.Url,
-        SupportUrl = src.SupportUrl,
-        CompanyName = src.CompanyName,
-        ContactEmail = src.ContactEmail,
-        ContactPhone = src.ContactPhone,
-        DetailsSubmitted = src.DetailsSubmitted,
-        CapabilitiesCardPayments = src.CapabilitiesCardPayments,
-        CapabilitiesTransfers = src.CapabilitiesTransfers,
-        OnboardingUrl = src.OnboardingUrl,
-        Organization = organization,
-        OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization),
-    };
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+            IsDefault = src.IsDefault,
+            StripeAccountId = src.StripeAccountId,
+            Name = src.Name,
+            ChargesEnabled = src.ChargesEnabled,
+            PayoutsEnabled = src.PayoutsEnabled,
+            Type = src.Type,
+            Country = src.Country,
+            DefaultCurrency = src.DefaultCurrency,
+            BusinessType = src.BusinessType,
+            Url = src.Url,
+            SupportUrl = src.SupportUrl,
+            CompanyName = src.CompanyName,
+            ContactEmail = src.ContactEmail,
+            ContactPhone = src.ContactPhone,
+            DetailsSubmitted = src.DetailsSubmitted,
+            CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+            CapabilitiesTransfers = src.CapabilitiesTransfers,
+            OnboardingUrl = src.OnboardingUrl,
+            Organization = organization,
+            OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization),
+        };
 
     private static OrganizationSsoSettingsDetails? MapTo(OrganizationSsoSettings? src) =>
         src is null

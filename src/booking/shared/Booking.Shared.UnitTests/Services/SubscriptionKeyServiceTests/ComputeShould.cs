@@ -1,4 +1,4 @@
-using Booking.Shared.Models;
+﻿using Booking.Shared.Models;
 using Booking.Shared.Services;
 
 namespace Booking.Shared.UnitTests.Services.SubscriptionKeyServiceTests;
@@ -75,12 +75,12 @@ public class ComputeShould
 
     private static ResourceAvailabilityDayFilter CreateFilter(IReadOnlyList<string> locationIds, string? floorId, string? zoneId,
         string? resourceType) => new()
-    {
-        Date = new DateOnly(2026, 8, 16),
-        OrganizationCustomDomain = "org.example",
-        LocationIds = locationIds,
-        FloorId = floorId,
-        ZoneId = zoneId,
-        ResourceType = resourceType,
-    };
+        {
+            Date = new DateOnly(2026, 8, 16),
+            OrganizationCustomDomain = "org.example",
+            LocationIds = locationIds,
+            FloorId = floorId,
+            ZoneId = zoneId,
+            ResourceType = resourceType,
+        };
 }

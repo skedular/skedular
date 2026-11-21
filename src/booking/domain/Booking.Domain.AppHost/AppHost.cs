@@ -1,6 +1,6 @@
+﻿using Aspire.Hosting.Dotnet;
 using Enterprise.Shared.Configurations;
 using Microsoft.Extensions.Hosting;
-using Projects;
 using Constants = Enterprise.Shared.HealthCheck.Constants;
 using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
@@ -42,7 +42,7 @@ var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 var useFakeDependencies = DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled();
 
 var sharedInfrastructure = builder
-    .AddProject<Infrastructure_Shared>("infrastructureshared")
+    .AddDotnetProject("infrastructureshared", "../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -51,14 +51,14 @@ var sharedInfrastructure = builder
 
 var bookingFakeDependencies = useFakeDependencies
     ? builder
-        .AddProject<Booking_Domain_FakeDependencies>("bookingfakedependencies")
+        .AddDotnetProject("bookingfakedependencies", "../Booking.Domain.FakeDependencies/Booking.Domain.FakeDependencies.csproj")
         .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
         .WithHttpHealthCheck(Constants.ReadinessPath)
     : null;
 
 var bookingDatabase = postgres.AddDatabase("bookingdb");
 var bookingInfrastructure = builder
-    .AddProject<Booking_Infrastructure>("bookinginfrastructure")
+    .AddDotnetProject("bookinginfrastructure", "../../shared/Booking.Infrastructure/Booking.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -73,7 +73,7 @@ var bookingInfrastructure = builder
     .WaitFor(bookingDatabase);
 
 var bookingApi = builder
-    .AddProject<Booking_Api>("bookingapi")
+    .AddDotnetProject("bookingapi", "../../apis/Booking.Api/Booking.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(sharedInfrastructure)
@@ -90,7 +90,7 @@ var bookingApi = builder
     .WaitForCompletion(bookingInfrastructure);
 
 var bookingProcessors = builder
-    .AddProject<Booking_Processors>("bookingprocessors")
+    .AddDotnetProject("bookingprocessors", "../../processors/Booking.Processors/Booking.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(sharedInfrastructure)
@@ -107,7 +107,7 @@ var bookingProcessors = builder
     .WaitForCompletion(bookingInfrastructure);
 
 var bookingJobs = builder
-    .AddProject<Booking_Jobs>("bookingjobs")
+    .AddDotnetProject("bookingjobs", "../../jobs/Booking.Jobs/Booking.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(sharedInfrastructure)
@@ -139,8 +139,8 @@ if (useFakeDependencies)
 await builder.Build().RunAsync();
 
 static void ConfigureSharedInfrastructureGrpc(
-    IResourceBuilder<ProjectResource> project,
-    IResourceBuilder<ProjectResource> fakeDependencies)
+    IResourceBuilder<DotnetProjectResource> project,
+    IResourceBuilder<DotnetProjectResource> fakeDependencies)
 {
     project.WithEnvironment(context =>
     {

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Models;
+﻿using Enterprise.Shared.Models;
 
 namespace Marketplace.Shared.Models;
 

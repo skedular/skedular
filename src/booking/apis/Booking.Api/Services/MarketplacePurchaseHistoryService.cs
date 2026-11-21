@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
@@ -99,9 +99,9 @@ public class MarketplacePurchaseHistoryService(
 
         var (paginatedInfo, rows, totalCount) = await repositoryFactory.MarketplacePurchaseHistoryRepository
             .GetPaginatedRowsAsync(paginationInputParam, searchCriteria with
-                {
-                    OrganizationCustomDomain = organization.CustomDomain,
-                }, orderBy,
+            {
+                OrganizationCustomDomain = organization.CustomDomain,
+            }, orderBy,
                 cancellationToken);
         logger.LogInformation(
             "Loading retained marketplace purchase history for organization {OrganizationCustomDomain}: {PurchaseCount} scalar purchase rows",

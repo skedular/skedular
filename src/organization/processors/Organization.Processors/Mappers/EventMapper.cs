@@ -1,11 +1,11 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Organization.Shared.Models;
 using Stripe;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
-using Identity = Organization.Shared.Models.Identity;
 using Customer = Organization.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
+using Identity = Organization.Shared.Models.Identity;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
 using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
@@ -416,32 +416,32 @@ public class EventMapper : IEventMapper
     private static Shared.Models.OrganizationStripeConnectAccount MapTo(
         OrganizationStripeConnectAccount src,
         Shared.Models.Organization organization) => new()
-    {
-        Id = src.Id,
-        CreatedAt = src.CreatedAt,
-        ModifiedAt = src.ModifiedAt,
-        DeletedAt = src.DeletedAt,
-        IsDefault = src.IsDefault,
-        StripeAccountId = src.StripeAccountId,
-        Name = src.Name,
-        ChargesEnabled = src.ChargesEnabled,
-        PayoutsEnabled = src.PayoutsEnabled,
-        Type = src.Type,
-        Country = src.Country,
-        DefaultCurrency = src.DefaultCurrency,
-        BusinessType = src.BusinessType,
-        Url = src.Url,
-        SupportUrl = src.SupportUrl,
-        CompanyName = src.CompanyName,
-        ContactEmail = src.ContactEmail,
-        ContactPhone = src.ContactPhone,
-        DetailsSubmitted = src.DetailsSubmitted,
-        CapabilitiesCardPayments = src.CapabilitiesCardPayments,
-        CapabilitiesTransfers = src.CapabilitiesTransfers,
-        OnboardingUrl = src.OnboardingUrl,
-        Organization = organization,
-        OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization),
-    };
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            DeletedAt = src.DeletedAt,
+            IsDefault = src.IsDefault,
+            StripeAccountId = src.StripeAccountId,
+            Name = src.Name,
+            ChargesEnabled = src.ChargesEnabled,
+            PayoutsEnabled = src.PayoutsEnabled,
+            Type = src.Type,
+            Country = src.Country,
+            DefaultCurrency = src.DefaultCurrency,
+            BusinessType = src.BusinessType,
+            Url = src.Url,
+            SupportUrl = src.SupportUrl,
+            CompanyName = src.CompanyName,
+            ContactEmail = src.ContactEmail,
+            ContactPhone = src.ContactPhone,
+            DetailsSubmitted = src.DetailsSubmitted,
+            CapabilitiesCardPayments = src.CapabilitiesCardPayments,
+            CapabilitiesTransfers = src.CapabilitiesTransfers,
+            OnboardingUrl = src.OnboardingUrl,
+            Organization = organization,
+            OrganizationStripeConnectAccountAuthorization = MapTo(src.OrganizationStripeConnectAccountAuthorization),
+        };
 
     private static OrganizationStripeConnectAccountAuthorization? MapTo(
         Shared.Database.Entities.OrganizationStripeConnectAccountAuthorization? src) =>

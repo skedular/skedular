@@ -1,4 +1,4 @@
-using System.Diagnostics.Metrics;
+﻿using System.Diagnostics.Metrics;
 using System.Net;
 using Api.Shared.Services;
 using Booking.Shared.Database.Entities;

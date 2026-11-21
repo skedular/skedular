@@ -1,4 +1,4 @@
-namespace Booking.Shared.Models;
+﻿namespace Booking.Shared.Models;
 
 /// <summary>
 ///     Computed availability view for a single resource on a selected date.

@@ -1,26 +1,26 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Api.Shared.Clients.Events.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using Organization.Shared.Models;
-using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Offering;
-using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMember;
-using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
-using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
-using OrganizationType = Api.Shared.Services.Models.OrganizationType;
-using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.PhysicalAddress;
-using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Tag;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Organization.V1.CdnFile;
 using CdnImageFile = Api.Shared.Clients.Events.Skedular.Organization.V1.CdnImageFile;
 using Currency = Api.Shared.Services.Models.Currency;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using Models_CdnFile = Api.Shared.Services.Models.CdnFile;
 using Models_CdnImageFile = Api.Shared.Services.Models.CdnImageFile;
+using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Offering;
 using OrganizationBillingCycle = Api.Shared.Services.Models.OrganizationBillingCycle;
+using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMember;
 using OrganizationMemberRole = Api.Shared.Services.Models.OrganizationMemberRole;
 using OrganizationMemberStatus = Api.Shared.Services.Models.OrganizationMemberStatus;
+using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
+using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
+using OrganizationType = Api.Shared.Services.Models.OrganizationType;
+using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.PhysicalAddress;
+using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Tag;
 
 namespace Organization.Shared.Mappers;
 

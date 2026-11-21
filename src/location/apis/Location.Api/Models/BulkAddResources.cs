@@ -1,4 +1,4 @@
-using Resource = Location.Shared.Models.Resource;
+﻿using Resource = Location.Shared.Models.Resource;
 
 namespace Location.Api.Models;
 

@@ -17,7 +17,7 @@ namespace Team.Shared.Database.Migrations
                                         WHEN ""MembershipType"" = 2 THEN 'MEMBER'
                                         ELSE 'UNKNOWN'
                                 END");
-            
+
             migrationBuilder.Sql(@"UPDATE public.""JoinInvitation""
                                     SET ""NewStatus""= CASE 
                                         WHEN ""MembershipType"" = 0 THEN 'PENDING'

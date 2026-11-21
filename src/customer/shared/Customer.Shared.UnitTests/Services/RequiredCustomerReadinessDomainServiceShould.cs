@@ -1,4 +1,4 @@
-using Customer.Shared.Services;
+﻿using Customer.Shared.Services;
 
 namespace Customer.Shared.UnitTests.Services;
 

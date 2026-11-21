@@ -1,4 +1,4 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using Booking.Shared.Logging;
 using Booking.Shared.Repositories;
 using Microsoft.Extensions.Logging;
@@ -145,9 +145,9 @@ public class SpacesBookingQuotaService(
                     offering!.SpacesPeriodStart ?? DateTimeOffset.MinValue,
                     offering.SpacesPeriodEnd ?? DateTimeOffset.MinValue)
                 with
-                {
-                    AccessDecision = accessDecision,
-                };
+            {
+                AccessDecision = accessDecision,
+            };
         }
 
         var periodStart = offering!.SpacesPeriodStart ?? DateTimeOffset.MinValue;

@@ -1,4 +1,4 @@
-using Booking.Api.GraphQL.RecurringBooking;
+﻿using Booking.Api.GraphQL.RecurringBooking;
 using HotChocolate.Types.Pagination;
 
 namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;

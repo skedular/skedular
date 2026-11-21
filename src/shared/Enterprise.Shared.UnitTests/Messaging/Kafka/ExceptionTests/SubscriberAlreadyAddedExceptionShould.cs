@@ -1,4 +1,4 @@
-using Enterprise.Shared.Messaging.Kafka.Exceptions;
+﻿using Enterprise.Shared.Messaging.Kafka.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Enterprise.Shared.UnitTests.Messaging.Kafka.ExceptionTests;

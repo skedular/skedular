@@ -1,14 +1,14 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Messaging;
 using Organization.Processors.Mappers;
 using Organization.Processors.Subscribers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using CustomerEntity = Organization.Shared.Database.Entities.Customer;
+using CustomerModel = Organization.Shared.Models.Customer;
 using ValueMetadata = Api.Shared.Clients.Events.Skedular.Customer.V1.Metadata;
 using ValueType = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
-using CustomerModel = Organization.Shared.Models.Customer;
-using CustomerEntity = Organization.Shared.Database.Entities.Customer;
 
 namespace Organization.Processors.UnitTests.Subscribers;
 

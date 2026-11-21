@@ -8,13 +8,13 @@ using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using ResourceAvailabilityClassification = Booking.Shared.Models.ResourceAvailabilityClassification;
 using ResourceAvailabilityOrder = Booking.Shared.Models.ResourceAvailabilityOrder;
 using ResourceAvailabilityOrderByField = Booking.Shared.Models.ResourceAvailabilityOrderByField;
 using ResourceAvailabilityResourceRow = Booking.Shared.Models.ResourceAvailabilityResourceRow;
 using ResourceBookingWindowRow = Booking.Shared.Models.ResourceBookingWindowRow;
 using ResourceSlotClaimResult = Booking.Shared.Models.ResourceSlotClaimResult;
-using BookingEntity = Booking.Shared.Database.Entities.Booking;
 
 namespace Booking.Shared.Repositories;
 

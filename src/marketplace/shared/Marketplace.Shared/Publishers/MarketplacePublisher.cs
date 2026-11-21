@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Marketplace.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Messaging.Kafka.Produce;

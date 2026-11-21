@@ -1,4 +1,4 @@
-using Organization.Shared.Activities;
+﻿using Organization.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Exceptions;
 using Temporalio.Workflows;

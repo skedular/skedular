@@ -1,13 +1,13 @@
-using Booking.Shared.Database.Entities;
+﻿using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Random;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
+using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
-using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 
 namespace Booking.Shared.UnitTests.Services.MarketplacePartialBookingResolutionServiceTests;
 

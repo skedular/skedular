@@ -1,4 +1,4 @@
-namespace Organization.Jobs;
+﻿namespace Organization.Jobs;
 
 public static class Extensions
 {

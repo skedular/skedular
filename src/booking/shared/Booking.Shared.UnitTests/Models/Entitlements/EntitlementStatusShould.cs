@@ -1,4 +1,4 @@
-using Booking.Shared.Models.Entitlements;
+﻿using Booking.Shared.Models.Entitlements;
 
 namespace Booking.Shared.UnitTests.Models.Entitlements;
 

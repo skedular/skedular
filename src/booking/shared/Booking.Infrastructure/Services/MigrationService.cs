@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Booking.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Booking.V1;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Messaging.Kafka;

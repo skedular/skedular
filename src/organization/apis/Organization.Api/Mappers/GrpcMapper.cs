@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+﻿using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Grpc.Skedular.Organization.Core.V1;
 using Api.Shared.Grpc.Skedular.Organization.Tags.V1;
 using Api.Shared.Grpc.Skedular.Organization.Zones.V1;
@@ -18,16 +18,16 @@ using Currency = Api.Shared.Services.Models.Currency;
 using Customer = Organization.Shared.Models.Customer;
 using IndustrySubCategory = Organization.Shared.Models.IndustrySubCategory;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
-using OrganizationMember = Organization.Shared.Models.OrganizationMember;
-using OrganizationMemberStatus = Api.Shared.Services.Models.OrganizationMemberStatus;
-using Tag = Organization.Shared.Models.Tag;
 using Member = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMember;
 using Offering = Api.Shared.Grpc.Skedular.Organization.Core.V1.Offering;
 using OrganizationBillingCycle = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationBillingCycle;
+using OrganizationMember = Organization.Shared.Models.OrganizationMember;
 using OrganizationMemberRole = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Services.Models.OrganizationMemberStatus;
 using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
-using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
 using OrganizationType = Api.Shared.Grpc.Skedular.Organization.Core.V1.OrganizationType;
+using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
+using Tag = Organization.Shared.Models.Tag;
 using TermsOfUse = Api.Shared.Grpc.Skedular.Organization.Core.V1.TermsOfUse;
 
 

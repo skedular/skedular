@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using Enterprise.Shared.Temporal.Configurations;
 using Location.Shared.Services;
 using Location.Shared.Workflows;

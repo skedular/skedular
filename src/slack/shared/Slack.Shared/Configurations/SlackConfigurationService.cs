@@ -1,4 +1,4 @@
-namespace Slack.Shared.Configurations;
+﻿namespace Slack.Shared.Configurations;
 
 public class SlackConfigurationService
 {

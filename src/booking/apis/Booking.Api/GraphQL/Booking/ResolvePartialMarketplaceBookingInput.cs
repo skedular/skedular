@@ -1,4 +1,4 @@
-namespace Booking.Api.GraphQL.Booking;
+﻿namespace Booking.Api.GraphQL.Booking;
 
 public sealed class ResolvePartialMarketplaceBookingInput
 {

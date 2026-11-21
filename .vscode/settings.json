@@ -19,5 +19,6 @@
         ".specify/scripts/bash/": true,
         ".specify/scripts/powershell/": true
     },
-    "dotnet.defaultSolution": "src/Skedular.slnx"
+    "dotnet.defaultSolution": "src/Skedular.slnx",
+    "aspire.enableSettingsFileCreationPromptOnStartup": false
 }

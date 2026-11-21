@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Organization.Api.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;

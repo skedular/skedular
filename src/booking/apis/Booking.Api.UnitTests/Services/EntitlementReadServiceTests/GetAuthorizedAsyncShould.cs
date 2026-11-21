@@ -1,4 +1,4 @@
-using Booking.Api.Services;
+﻿using Booking.Api.Services;
 using Booking.Shared.Models.Entitlements;
 using Booking.Shared.Services.Entitlements;
 

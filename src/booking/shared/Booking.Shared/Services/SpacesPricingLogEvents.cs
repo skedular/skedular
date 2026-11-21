@@ -1,4 +1,4 @@
-namespace Booking.Shared.Services;
+﻿namespace Booking.Shared.Services;
 
 /// <summary>
 ///     Structured log event IDs for Spaces pricing and quota decisions.

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Slack.Shared.Repositories;
 
 namespace Slack.Infrastructure.Services;

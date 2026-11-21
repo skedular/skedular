@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Slack.Api.Components;

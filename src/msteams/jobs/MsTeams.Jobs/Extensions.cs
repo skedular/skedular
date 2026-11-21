@@ -1,4 +1,4 @@
-namespace MsTeams.Jobs;
+﻿namespace MsTeams.Jobs;
 
 public static class Extensions
 {

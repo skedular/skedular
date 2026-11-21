@@ -1,4 +1,4 @@
-using Booking.Shared.Models;
+﻿using Booking.Shared.Models;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 

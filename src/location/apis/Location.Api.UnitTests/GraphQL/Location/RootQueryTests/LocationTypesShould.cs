@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Location.Api.GraphQL.Location;
 
 namespace Location.Api.UnitTests.GraphQL.Location.RootQueryTests;

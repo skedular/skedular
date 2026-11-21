@@ -1,4 +1,4 @@
-namespace Organization.Shared.Services.Pricing;
+﻿namespace Organization.Shared.Services.Pricing;
 
 public static class PricingLogEvents
 {

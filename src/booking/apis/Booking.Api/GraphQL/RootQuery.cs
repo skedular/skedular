@@ -1,4 +1,4 @@
-using Enterprise.Shared.Version;
+﻿using Enterprise.Shared.Version;
 using HotChocolate.Types;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 

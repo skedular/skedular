@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Activities;

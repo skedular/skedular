@@ -1,4 +1,4 @@
-using Enterprise.Shared.Encryption.Configurations;
+﻿using Enterprise.Shared.Encryption.Configurations;
 
 namespace Enterprise.Shared.Cookie.Configurations;
 

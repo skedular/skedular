@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using HotChocolate;

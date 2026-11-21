@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
+﻿using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
 using Api.Shared.Grpc.Skedular.Location.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
@@ -11,9 +11,9 @@ using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Temporalio.Activities;
 using Customer = Organization.Shared.Models.Customer;
-using OrganizationMember = Organization.Shared.Models.OrganizationMember;
-using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 using CustomerConfiguration = Api.Shared.Clients.Configurations.Grpc.CustomerConfiguration;
+using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
+using OrganizationMember = Organization.Shared.Models.OrganizationMember;
 
 namespace Organization.Shared.Activities;
 

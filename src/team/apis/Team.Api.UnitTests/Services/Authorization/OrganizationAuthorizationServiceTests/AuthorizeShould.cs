@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Microsoft.Extensions.Logging;
 using Team.Api.Services.Authorization;
 using Team.Shared.Database.Entities;

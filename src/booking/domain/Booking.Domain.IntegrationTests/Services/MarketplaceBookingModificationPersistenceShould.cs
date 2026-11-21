@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Booking.Shared.Models.Entitlements;
 using Booking.Shared.Repositories;
@@ -8,14 +8,14 @@ using Enterprise.Shared.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
+using CreditLedgerEntryEntity = Booking.Shared.Database.Entities.CreditLedgerEntry;
+using EntitlementEntity = Booking.Shared.Database.Entities.Entitlement;
+using IdentityEntity = Booking.Shared.Database.Entities.Identity;
+using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingModificationActorKind = Booking.Shared.Models.MarketplaceBookingModificationActorKind;
 using MarketplaceBookingModificationErrorCode = Booking.Shared.Models.MarketplaceBookingModificationErrorCode;
 using MarketplaceBookingModificationRequest = Booking.Shared.Models.MarketplaceBookingModificationRequest;
-using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
-using IdentityEntity = Booking.Shared.Database.Entities.Identity;
 using ProductVersionEntity = Booking.Shared.Database.Entities.ProductVersion;
-using EntitlementEntity = Booking.Shared.Database.Entities.Entitlement;
-using CreditLedgerEntryEntity = Booking.Shared.Database.Entities.CreditLedgerEntry;
 
 namespace Booking.Domain.IntegrationTests.Services;
 

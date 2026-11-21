@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable

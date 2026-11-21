@@ -1,4 +1,4 @@
-using Organization.Shared.Activities;
+﻿using Organization.Shared.Activities;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Mappers;
 using Organization.Shared.Repositories;

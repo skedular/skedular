@@ -1,4 +1,4 @@
-using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf.WellKnownTypes;
 
 namespace Api.Shared.Events.Kafka;
 

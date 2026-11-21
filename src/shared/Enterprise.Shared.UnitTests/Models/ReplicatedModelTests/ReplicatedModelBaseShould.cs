@@ -1,4 +1,4 @@
-using Enterprise.Shared.Models;
+﻿using Enterprise.Shared.Models;
 
 namespace Enterprise.Shared.UnitTests.Models.ReplicatedModelTests;
 

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Models;
+﻿using Enterprise.Shared.Models;
 using Location.Shared.Database.Entities;
 
 namespace Location.Shared.Models;

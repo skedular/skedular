@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Services;

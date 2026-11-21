@@ -1,4 +1,4 @@
-using Enterprise.Shared;
+﻿using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Processors.Subscribers;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
@@ -6,10 +6,10 @@ using Booking.Shared.Services;
 using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Database;
 using Stripe;
-using MarketplaceRefundStatusConstants = Booking.Shared.Models.MarketplaceRefundStatusConstants;
 using BookingInternalEvent = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event;
 using BookingInternalMetadata = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Metadata;
 using BookingInternalType = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Type;
+using MarketplaceRefundStatusConstants = Booking.Shared.Models.MarketplaceRefundStatusConstants;
 
 namespace Booking.Processors.UnitTests.Subscribers;
 
@@ -991,11 +991,11 @@ public class BookingInternalSubscriberStripePayoutShould
         A.CallTo(() => checkoutRepository.GetByPayoutIdAsync("po_1", cancellationToken)).Returns(checkout);
 
         await sut.HandleStateChangedAsync(new Payout
-            {
-                Id = "po_1",
-                Status = "failed",
-                FailureMessage = "bank rejected",
-            }, eventType,
+        {
+            Id = "po_1",
+            Status = "failed",
+            FailureMessage = "bank rejected",
+        }, eventType,
             cancellationToken);
 
         checkout.PayoutDisbursedAt.ShouldBeNull();

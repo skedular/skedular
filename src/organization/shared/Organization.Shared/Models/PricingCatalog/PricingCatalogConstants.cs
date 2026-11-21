@@ -1,4 +1,4 @@
-namespace Organization.Shared.Models.PricingCatalog;
+﻿namespace Organization.Shared.Models.PricingCatalog;
 
 public enum PricingCatalogProductOfferingCode
 {

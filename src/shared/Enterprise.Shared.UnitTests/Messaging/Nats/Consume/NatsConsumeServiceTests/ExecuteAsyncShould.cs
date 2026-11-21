@@ -1,4 +1,4 @@
-using Enterprise.Shared.Hosting;
+﻿using Enterprise.Shared.Hosting;
 using Enterprise.Shared.Messaging.Nats.Configuration;
 using Enterprise.Shared.Messaging.Nats.Consume;
 using Enterprise.Shared.Messaging.Nats.Produce;

@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1;
+﻿using Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1;
 using Api.Shared.Services;
 using Enterprise.Shared.Messaging;
 using Enterprise.Shared.Random;

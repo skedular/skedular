@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using Organization.Shared.Models;
 
 namespace Organization.Api.Models;

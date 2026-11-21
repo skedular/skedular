@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Context;
 

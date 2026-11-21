@@ -1,4 +1,4 @@
-using Enterprise.Shared.Context;
+﻿using Enterprise.Shared.Context;
 using Enterprise.Shared.UnitTesting.Assertions;
 using Location.Api.Models;
 using Location.Api.Services;

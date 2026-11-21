@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Organization.Api.GraphQL.Invitation;
 
 namespace Organization.Api.UnitTests.GraphQL.Invitation.RootQueryTests;

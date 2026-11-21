@@ -1,4 +1,4 @@
-namespace Booking.Shared.Models;
+﻿namespace Booking.Shared.Models;
 
 /// <summary>
 ///     Result wrapper returned by <c>IResourceAvailabilityDayViewService.GetAsync</c>.

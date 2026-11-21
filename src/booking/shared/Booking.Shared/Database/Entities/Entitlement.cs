@@ -1,4 +1,4 @@
-using Booking.Shared.Models.Entitlements;
+﻿using Booking.Shared.Models.Entitlements;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

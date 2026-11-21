@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using Enterprise.Shared.Encryption.Configurations;
 using Microsoft.Extensions.Logging;

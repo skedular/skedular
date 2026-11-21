@@ -1,4 +1,4 @@
-using Booking.Shared.Activities;
+﻿using Booking.Shared.Activities;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows;
 using Temporalio.Testing;

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Sanitization;
+﻿using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using Organization.Api.Mappers;

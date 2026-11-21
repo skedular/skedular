@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Enterprise.Shared.Messaging.Kafka.Telemetry;
 using Enterprise.Shared.Telemetry;
 

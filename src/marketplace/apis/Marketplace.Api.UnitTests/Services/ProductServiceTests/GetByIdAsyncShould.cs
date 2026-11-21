@@ -1,8 +1,8 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Marketplace.Api.Services;
 using Marketplace.Shared.Services.Cache;
-using ProductEntity = Marketplace.Shared.Database.Entities.Product;
 using OrganizationEntity = Marketplace.Shared.Database.Entities.Organization;
+using ProductEntity = Marketplace.Shared.Database.Entities.Product;
 
 namespace Marketplace.Api.UnitTests.Services.ProductServiceTests;
 

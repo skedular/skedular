@@ -1,4 +1,4 @@
-using Team.Domain.IntegrationTests.Skedular.GraphQL.V1;
+﻿using Team.Domain.IntegrationTests.Skedular.GraphQL.V1;
 
 namespace Team.Domain.IntegrationTests.Api.GraphQL;
 

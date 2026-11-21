@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using CommandLine;
 using CsvHelper;
 using Flurl;

@@ -1,4 +1,4 @@
-namespace Organization.Shared.Configurations;
+﻿namespace Organization.Shared.Configurations;
 
 public class OrganizationSsoValidationResult
 {

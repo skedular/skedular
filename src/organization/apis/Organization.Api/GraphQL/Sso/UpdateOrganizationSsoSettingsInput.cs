@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using Organization.Api.Models;
 
 // ReSharper disable ClassNeverInstantiated.Global

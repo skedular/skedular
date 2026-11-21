@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using HotChocolate.Types.Composite;
 using Organization.Shared.Models.PricingCatalog;
 

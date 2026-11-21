@@ -1,4 +1,4 @@
-using Core.Processors.Mappers;
+﻿using Core.Processors.Mappers;
 
 namespace Core.Processors;
 

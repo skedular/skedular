@@ -1,4 +1,4 @@
-using Booking.Api.GraphQL.EntitlementPurchase;
+﻿using Booking.Api.GraphQL.EntitlementPurchase;
 using Booking.Shared.Models.Entitlements;
 
 namespace Booking.Api.Mappers;

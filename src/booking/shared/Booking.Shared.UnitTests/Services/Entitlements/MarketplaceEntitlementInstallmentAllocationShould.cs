@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Services.Entitlements;
 
 namespace Booking.Shared.UnitTests.Services.Entitlements;

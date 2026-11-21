@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+﻿using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
@@ -9,11 +9,11 @@ using Enterprise.Shared.Random;
 using Google.Protobuf.WellKnownTypes;
 using Xero.NetStandard.OAuth2.Api;
 using Xero.NetStandard.OAuth2.Model.Accounting;
+using BookingEntity = Booking.Shared.Database.Entities.Booking;
+using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
+using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 using XeroInvoice = Xero.NetStandard.OAuth2.Model.Accounting.Invoice;
 using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;
-using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
-using BookingEntity = Booking.Shared.Database.Entities.Booking;
-using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.Services;
 

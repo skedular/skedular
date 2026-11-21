@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
@@ -9,13 +9,13 @@ using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Microsoft.EntityFrameworkCore.Storage;
+using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
 using MarketplaceBookingModificationActorKind = Booking.Shared.Models.MarketplaceBookingModificationActorKind;
 using MarketplaceBookingModificationRequest = Booking.Shared.Models.MarketplaceBookingModificationRequest;
-using ResourceSlotClaimResult = Booking.Shared.Models.ResourceSlotClaimResult;
 using Offering = Api.Shared.Services.Models.Offering;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
-using BookingEntity = Booking.Shared.Database.Entities.Booking;
+using ResourceSlotClaimResult = Booking.Shared.Models.ResourceSlotClaimResult;
 
 namespace Booking.Shared.UnitTests.Services.MarketplaceBookingServiceTests;
 

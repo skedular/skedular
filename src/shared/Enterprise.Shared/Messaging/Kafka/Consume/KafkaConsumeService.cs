@@ -1,4 +1,4 @@
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Hosting;
 using Enterprise.Shared.Messaging.Kafka.Configurations;

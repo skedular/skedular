@@ -1,4 +1,4 @@
-using Customer.Shared.Models;
+﻿using Customer.Shared.Models;
 using Customer.Shared.Services.Cache;
 
 namespace Customer.Api.Services;

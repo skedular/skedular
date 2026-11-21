@@ -1,4 +1,4 @@
-using AutoFixture;
+﻿using AutoFixture;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 

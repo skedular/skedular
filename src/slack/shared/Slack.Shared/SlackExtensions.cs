@@ -1,4 +1,4 @@
-using Slack.Shared.Models;
+﻿using Slack.Shared.Models;
 using SlackNet;
 using SlackNet.WebApi;
 
@@ -10,7 +10,7 @@ public static class SlackExtensions
     {
         public bool IsAcceptableWorkspaceMemberType() =>
             user.Id != "USLACKBOT" && user is
-                { IsBot: false, IsStranger: false, IsRestricted: false, IsUltraRestricted: false, Deleted: false };
+            { IsBot: false, IsStranger: false, IsRestricted: false, IsUltraRestricted: false, Deleted: false };
     }
 
     extension(Workspace workspace)

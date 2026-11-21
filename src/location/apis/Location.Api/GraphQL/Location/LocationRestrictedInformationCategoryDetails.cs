@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using Location.Shared.Models;
 
 namespace Location.Api.GraphQL.Location;

@@ -1,4 +1,4 @@
-namespace Core.Api.UnitTests;
+﻿namespace Core.Api.UnitTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class EmptyTest

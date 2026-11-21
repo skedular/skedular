@@ -1,10 +1,10 @@
-using Booking.Api.Services;
+﻿using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
-using MarketplaceBookingModificationActorKind = Booking.Shared.Models.MarketplaceBookingModificationActorKind;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
+using MarketplaceBookingModificationActorKind = Booking.Shared.Models.MarketplaceBookingModificationActorKind;
 
 namespace Booking.Api.UnitTests.Services.MarketplaceBookingServiceTests;
 

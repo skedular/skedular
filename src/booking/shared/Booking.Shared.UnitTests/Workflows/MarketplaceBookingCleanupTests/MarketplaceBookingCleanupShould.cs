@@ -1,4 +1,4 @@
-using Booking.Shared.Activities;
+﻿using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Workflows;

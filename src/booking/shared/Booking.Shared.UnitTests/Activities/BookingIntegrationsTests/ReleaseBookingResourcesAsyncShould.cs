@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Publishers;
@@ -10,10 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Temporalio.Testing;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using MarketplaceBookingFailure = Booking.Shared.Database.Entities.MarketplaceBookingFailure;
+using MarketplaceBookingFailureAccountingCleanupStatusConstants = Booking.Shared.Models.MarketplaceBookingFailureAccountingCleanupStatus;
 using MarketplaceBookingFailureCategoryConstants = Booking.Shared.Models.MarketplaceBookingFailureCategoryConstants;
 using MarketplaceBookingFailureFinalization = Booking.Shared.Models.MarketplaceBookingFailureFinalization;
 using MarketplaceBookingFailureScopeConstants = Booking.Shared.Models.MarketplaceBookingFailureScopeConstants;
-using MarketplaceBookingFailureAccountingCleanupStatusConstants = Booking.Shared.Models.MarketplaceBookingFailureAccountingCleanupStatus;
 
 namespace Booking.Shared.UnitTests.Activities.BookingIntegrationsTests;
 

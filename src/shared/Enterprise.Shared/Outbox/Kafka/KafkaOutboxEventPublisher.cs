@@ -1,4 +1,4 @@
-using Api.Shared.Events.Kafka;
+﻿using Api.Shared.Events.Kafka;
 using Confluent.Kafka;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Messaging.Kafka.Configurations;

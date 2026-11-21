@@ -1,4 +1,4 @@
-namespace Slack.Shared.Workflows;
+﻿namespace Slack.Shared.Workflows;
 
 public class Constants
 {

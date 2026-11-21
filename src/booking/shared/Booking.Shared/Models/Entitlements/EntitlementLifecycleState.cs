@@ -1,4 +1,4 @@
-namespace Booking.Shared.Models.Entitlements;
+﻿namespace Booking.Shared.Models.Entitlements;
 
 public enum EntitlementRefundStatus
 {

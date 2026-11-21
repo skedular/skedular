@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.GraphQL;

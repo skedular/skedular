@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Customer = Team.Shared.Models.Customer;
@@ -9,10 +9,10 @@ using Location = Team.Shared.Models.Location;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Team.Shared.Models.Organization;
 using OrganizationMember = Team.Shared.Database.Entities.OrganizationMember;
-using OrganizationSsoSetting = Team.Shared.Database.Entities.OrganizationSsoSetting;
-using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
 using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
 using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
+using OrganizationSsoSetting = Team.Shared.Database.Entities.OrganizationSsoSetting;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
 
 namespace Team.Processors.Mappers;
 

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;

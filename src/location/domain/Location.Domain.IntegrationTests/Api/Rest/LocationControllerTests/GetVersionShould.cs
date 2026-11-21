@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Location.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Location.Core.V1;
 
 namespace Location.Domain.IntegrationTests.Api.Rest.LocationControllerTests;
 

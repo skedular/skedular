@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Database;
+﻿namespace Enterprise.Shared.Database;
 
 /// <summary>
 ///     Represents the methods that we want to expose from the DbContext

@@ -1,4 +1,4 @@
-using Customer.Api.Services;
+﻿using Customer.Api.Services;
 using Customer.Shared.Models;
 using Customer.Shared.Services.Cache;
 using CustomerEntity = Customer.Shared.Database.Entities.Customer;

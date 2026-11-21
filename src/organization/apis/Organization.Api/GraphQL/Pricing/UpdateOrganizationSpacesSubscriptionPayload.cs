@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 
 namespace Organization.Api.GraphQL.Pricing;
 

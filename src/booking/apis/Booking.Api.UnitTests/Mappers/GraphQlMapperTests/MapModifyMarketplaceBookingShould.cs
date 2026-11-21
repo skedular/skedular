@@ -1,4 +1,4 @@
-using Booking.Api.GraphQL.Booking;
+﻿using Booking.Api.GraphQL.Booking;
 using Booking.Api.Mappers;
 
 namespace Booking.Api.UnitTests.Mappers.GraphQlMapperTests;

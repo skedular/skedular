@@ -1,4 +1,4 @@
-using Booking.Api.Mappers;
+﻿using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Services.Cache;
 using Booking.Shared.Services.Entitlements;
@@ -32,7 +32,7 @@ public sealed class RootQuery(IGraphQlMapper graphQlMapper)
         ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>
         await entitlementReadService.GetAuthorizedAsync(id, await cachedCustomerService.GetIdAsync(cancellationToken), cancellationToken) is
-            { } entitlement
+        { } entitlement
             ? graphQlMapper.MapTo(entitlement)
             : null;
 

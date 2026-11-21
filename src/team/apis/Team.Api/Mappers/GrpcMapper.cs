@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Team.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Team.Core.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using HotChocolate.Types.Pagination;

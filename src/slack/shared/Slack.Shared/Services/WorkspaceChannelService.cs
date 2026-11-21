@@ -1,4 +1,4 @@
-using Slack.Shared.Mappers;
+﻿using Slack.Shared.Mappers;
 using Slack.Shared.Repositories;
 using SlackNet;
 using SlackNet.WebApi;

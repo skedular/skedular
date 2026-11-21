@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Slack.Shared.Database;
 using Slack.Shared.Database.Entities;

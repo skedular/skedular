@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Time;
@@ -17,8 +17,8 @@ using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using BookingEdge = Slack.Shared.Models.BookingEdge;
-using Icons = Slack.Shared.Constants.Icons;
 using Button = SlackNet.Blocks.Button;
+using Icons = Slack.Shared.Constants.Icons;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 

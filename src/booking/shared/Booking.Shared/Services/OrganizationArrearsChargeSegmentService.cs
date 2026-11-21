@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Enterprise.Shared;
 using Microsoft.Extensions.Logging;

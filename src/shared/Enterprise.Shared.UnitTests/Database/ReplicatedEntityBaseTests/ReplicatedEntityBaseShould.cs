@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 
 namespace Enterprise.Shared.UnitTests.Database.ReplicatedEntityBaseTests;
 

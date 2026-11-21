@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.Skedular.Team.Core.V1;
+﻿using Api.Shared.Services.OpenApi.Skedular.Team.Core.V1;
 using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Mvc;
 using Version = Api.Shared.Services.OpenApi.Skedular.Team.Core.V1.Version;

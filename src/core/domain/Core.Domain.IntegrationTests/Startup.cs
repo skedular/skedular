@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Core.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Core.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Core.Graphql.V1;
 using Api.Shared.Grpc.Skedular.Core.Core.V1;
 using Api.Shared.Services;

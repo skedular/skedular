@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using MsTeams.Shared.Database;

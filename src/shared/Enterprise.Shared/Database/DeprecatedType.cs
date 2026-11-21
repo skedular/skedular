@@ -1,3 +1,3 @@
-namespace Enterprise.Shared.Database;
+﻿namespace Enterprise.Shared.Database;
 
 public record DeprecatedType;

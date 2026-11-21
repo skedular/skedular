@@ -1,4 +1,4 @@
-using Team.Infrastructure.Jobs;
+﻿using Team.Infrastructure.Jobs;
 using Team.Infrastructure.Services;
 
 namespace Team.Infrastructure;

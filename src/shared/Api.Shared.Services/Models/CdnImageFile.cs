@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using HotChocolate.Types.Composite;
 
 namespace Api.Shared.Services.Models;

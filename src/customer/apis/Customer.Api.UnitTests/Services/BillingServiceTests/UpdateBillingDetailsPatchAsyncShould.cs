@@ -1,4 +1,4 @@
-using Customer.Api.Models;
+﻿using Customer.Api.Models;
 using Customer.Api.Services;
 using Customer.Shared.Mappers;
 using Customer.Shared.Models;
@@ -7,8 +7,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.UnitTesting.Assertions;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-using CustomerEntity = Customer.Shared.Database.Entities.Customer;
 using CustomerBillingDetailsEntity = Customer.Shared.Database.Entities.CustomerBillingDetails;
+using CustomerEntity = Customer.Shared.Database.Entities.Customer;
 using CustomerModel = Customer.Shared.Models.Customer;
 
 namespace Customer.Api.UnitTests.Services.BillingServiceTests;

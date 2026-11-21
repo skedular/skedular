@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Api.Models;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
@@ -9,8 +9,8 @@ using Enterprise.Shared.UnitTesting.Assertions;
 using Microsoft.Extensions.Logging;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 using Organization = Booking.Shared.Database.Entities.Organization;
-using Team = Booking.Shared.Database.Entities.Team;
 using SharedPrivateBookingService = Booking.Shared.Services.IPrivateBookingService;
+using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.UnitTests.Services.PrivateBookingServiceTests;
 

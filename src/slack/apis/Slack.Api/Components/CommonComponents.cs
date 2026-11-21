@@ -1,4 +1,4 @@
-using Slack.Api.Services;
+﻿using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using SlackNet.Blocks;

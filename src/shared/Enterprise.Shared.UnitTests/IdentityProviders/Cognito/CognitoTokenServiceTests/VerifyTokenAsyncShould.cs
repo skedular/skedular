@@ -1,4 +1,4 @@
-using Enterprise.Shared.Context;
+﻿using Enterprise.Shared.Context;
 using Enterprise.Shared.IdentityProviders.Cognito;
 using Enterprise.Shared.IdentityProviders.Configurations;
 using Enterprise.Shared.Security.Token;

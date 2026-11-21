@@ -1,4 +1,4 @@
-using Booking.Api.GraphQL.MarketplaceBookingSubscription;
+﻿using Booking.Api.GraphQL.MarketplaceBookingSubscription;
 using Booking.Api.GraphQL.RecurringBooking;
 
 namespace Booking.Api.UnitTests.GraphQL.MarketplaceBookingSubscription.MarketplaceBookingSubscriptionDetailsTests;

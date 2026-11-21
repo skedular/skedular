@@ -1,4 +1,4 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using Organization.Api.GraphQL.Pricing;
 using Organization.Shared.Models.PricingCatalog;
 

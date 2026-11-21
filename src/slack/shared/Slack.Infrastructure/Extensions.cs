@@ -1,4 +1,4 @@
-using Slack.Infrastructure.Jobs;
+﻿using Slack.Infrastructure.Jobs;
 using Slack.Infrastructure.Services;
 
 namespace Slack.Infrastructure;

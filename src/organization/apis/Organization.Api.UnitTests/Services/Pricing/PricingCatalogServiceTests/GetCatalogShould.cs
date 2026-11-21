@@ -1,4 +1,4 @@
-using Organization.Api.Services.Pricing;
+﻿using Organization.Api.Services.Pricing;
 using Organization.Api.UnitTests.Fixtures;
 using Organization.Shared.Models.PricingCatalog;
 using Organization.Shared.Services.Pricing;

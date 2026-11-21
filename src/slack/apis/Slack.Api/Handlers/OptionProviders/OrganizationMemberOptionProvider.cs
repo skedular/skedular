@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;

@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Booking.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Booking.Core.V1;
 
 namespace Booking.Domain.IntegrationTests.Api.Grpc.BookingGrpcServiceTests;
 

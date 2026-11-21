@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.Skedular.MsTeams.Workaround.V1;
+﻿using Api.Shared.Services.OpenApi.Skedular.MsTeams.Workaround.V1;
 using Microsoft.AspNetCore.Mvc;
 using MsTeams.Api.Services;
 

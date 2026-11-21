@@ -1,8 +1,7 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Location.Shared.Models;
-using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductType;
 using Customer = Location.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
@@ -10,12 +9,13 @@ using Identity = Location.Shared.Database.Entities.Identity;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationSsoSetting = Location.Shared.Database.Entities.OrganizationSsoSetting;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
+using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.ProductType;
 using ProductVersion = Location.Shared.Database.Entities.ProductVersion;
-using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 
 namespace Location.Processors.Mappers;
 

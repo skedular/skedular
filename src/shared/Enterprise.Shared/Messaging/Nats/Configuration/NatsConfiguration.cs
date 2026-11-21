@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Messaging.Nats.Configuration;
+﻿namespace Enterprise.Shared.Messaging.Nats.Configuration;
 
 public sealed class NatsConfiguration
 {

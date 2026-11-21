@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared.Database;
@@ -15,8 +15,8 @@ using Organization.Shared.Services.Cache;
 using Organization.Shared.Services.Pricing;
 using Organization.Shared.Workflows;
 using Offering = Api.Shared.Services.Models.Offering;
-using OrganizationSpacesSubscriptionDto = Organization.Shared.Models.PricingCatalog.OrganizationSpacesSubscription;
 using OrganizationOfferingEntity = Organization.Shared.Database.Entities.OrganizationOffering;
+using OrganizationSpacesSubscriptionDto = Organization.Shared.Models.PricingCatalog.OrganizationSpacesSubscription;
 
 namespace Organization.Api.Services.Pricing;
 

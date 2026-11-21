@@ -1,4 +1,4 @@
-using System.Data;
+﻿using System.Data;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
@@ -19,20 +19,20 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Constants = Booking.Shared.GraphQL.Constants;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
-using MarketplaceBookingModificationActorKind = Booking.Shared.Models.MarketplaceBookingModificationActorKind;
-using MarketplaceBookingModificationActorKindExtensions = Booking.Shared.Models.MarketplaceBookingModificationActorKindExtensions;
-using MarketplaceBookingModificationError = Booking.Shared.Models.MarketplaceBookingModificationError;
-using MarketplaceBookingModificationErrorCode = Booking.Shared.Models.MarketplaceBookingModificationErrorCode;
-using MarketplaceBookingModificationRequest = Booking.Shared.Models.MarketplaceBookingModificationRequest;
-using MarketplaceBookingModificationResult = Booking.Shared.Models.MarketplaceBookingModificationResult;
-using MarketplaceBookingModificationSummary = Booking.Shared.Models.MarketplaceBookingModificationSummary;
-using MarketplaceBookingModificationNotificationDeliveryStatusConstants =
-    Booking.Shared.Models.MarketplaceBookingModificationNotificationDeliveryStatusConstants;
 using MarketplaceBookingFailureCategoryConstants = Booking.Shared.Models.MarketplaceBookingFailureCategoryConstants;
 using MarketplaceBookingFailureCustomerActionConstants = Booking.Shared.Models.MarketplaceBookingFailureCustomerActionConstants;
 using MarketplaceBookingFailureFinalization = Booking.Shared.Models.MarketplaceBookingFailureFinalization;
 using MarketplaceBookingFailureRecipient = Booking.Shared.Models.MarketplaceBookingFailureRecipient;
 using MarketplaceBookingFailureScopeConstants = Booking.Shared.Models.MarketplaceBookingFailureScopeConstants;
+using MarketplaceBookingModificationActorKind = Booking.Shared.Models.MarketplaceBookingModificationActorKind;
+using MarketplaceBookingModificationActorKindExtensions = Booking.Shared.Models.MarketplaceBookingModificationActorKindExtensions;
+using MarketplaceBookingModificationError = Booking.Shared.Models.MarketplaceBookingModificationError;
+using MarketplaceBookingModificationErrorCode = Booking.Shared.Models.MarketplaceBookingModificationErrorCode;
+using MarketplaceBookingModificationNotificationDeliveryStatusConstants =
+    Booking.Shared.Models.MarketplaceBookingModificationNotificationDeliveryStatusConstants;
+using MarketplaceBookingModificationRequest = Booking.Shared.Models.MarketplaceBookingModificationRequest;
+using MarketplaceBookingModificationResult = Booking.Shared.Models.MarketplaceBookingModificationResult;
+using MarketplaceBookingModificationSummary = Booking.Shared.Models.MarketplaceBookingModificationSummary;
 
 namespace Booking.Shared.Services;
 

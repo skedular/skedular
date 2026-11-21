@@ -1,4 +1,4 @@
-using Api.Shared.Events.Nats;
+﻿using Api.Shared.Events.Nats;
 using Enterprise.Shared.Messaging.Nats.Configuration;
 using Enterprise.Shared.Messaging.Nats.Consume;
 using Enterprise.Shared.Messaging.Nats.Provisioning;

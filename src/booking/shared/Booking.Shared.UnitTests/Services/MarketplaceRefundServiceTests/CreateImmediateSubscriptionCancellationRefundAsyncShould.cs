@@ -1,9 +1,10 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Random;
+using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
@@ -11,7 +12,6 @@ using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using ProductEntity = Booking.Shared.Database.Entities.Product;
 using ProductVersionEntity = Booking.Shared.Database.Entities.ProductVersion;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
-using BookingEntity = Booking.Shared.Database.Entities.Booking;
 
 namespace Booking.Shared.UnitTests.Services.MarketplaceRefundServiceTests;
 

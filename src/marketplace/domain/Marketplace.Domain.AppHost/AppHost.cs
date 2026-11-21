@@ -1,7 +1,6 @@
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
-using Projects;
 using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
@@ -42,7 +41,7 @@ var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 var useFakeDependencies = DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled();
 
 var sharedInfrastructure = builder
-    .AddProject<Infrastructure_Shared>("infrastructureshared")
+    .AddDotnetProject("infrastructureshared", "../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -51,14 +50,14 @@ var sharedInfrastructure = builder
 
 var marketplaceFakeDependencies = useFakeDependencies
     ? builder
-        .AddProject<Marketplace_Domain_FakeDependencies>("marketplacefakedependencies")
+        .AddDotnetProject("marketplacefakedependencies", "../Marketplace.Domain.FakeDependencies/Marketplace.Domain.FakeDependencies.csproj")
         .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
         .WithHttpHealthCheck(Constants.ReadinessPath)
     : null;
 
 var marketplaceDatabase = postgres.AddDatabase("marketplacedb");
 var marketplaceInfrastructure = builder
-    .AddProject<Marketplace_Infrastructure>("marketplaceinfrastructure")
+    .AddDotnetProject("marketplaceinfrastructure", "../../shared/Marketplace.Infrastructure/Marketplace.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -73,7 +72,7 @@ var marketplaceInfrastructure = builder
     .WaitFor(marketplaceDatabase);
 
 var marketplaceApi = builder
-    .AddProject<Marketplace_Api>("marketplaceapi")
+    .AddDotnetProject("marketplaceapi", "../../apis/Marketplace.Api/Marketplace.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -88,7 +87,7 @@ var marketplaceApi = builder
     .WaitForCompletion(marketplaceInfrastructure);
 
 var marketplaceProcessors = builder
-    .AddProject<Marketplace_Processors>("marketplaceprocessors")
+    .AddDotnetProject("marketplaceprocessors", "../../processors/Marketplace.Processors/Marketplace.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -103,7 +102,7 @@ var marketplaceProcessors = builder
     .WaitForCompletion(marketplaceInfrastructure);
 
 var marketplaceJobs = builder
-    .AddProject<Marketplace_Jobs>("marketplacejobs")
+    .AddDotnetProject("marketplacejobs", "../../jobs/Marketplace.Jobs/Marketplace.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)

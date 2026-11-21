@@ -1,4 +1,4 @@
-using Enterprise.Shared.Messaging.Nats.Produce;
+﻿using Enterprise.Shared.Messaging.Nats.Produce;
 using Enterprise.Shared.Messaging.Nats.Serialization;
 using Google.Protobuf.WellKnownTypes;
 

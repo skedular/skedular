@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Booking.Shared.Models;
 using Booking.Shared.Services;
 using HotChocolate;

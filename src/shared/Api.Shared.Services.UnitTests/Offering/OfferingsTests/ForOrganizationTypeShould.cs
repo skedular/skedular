@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 
 namespace Api.Shared.Services.UnitTests.Offering.OfferingsTests;

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Location.Shared.Repositories;
 using Microsoft.Extensions.Caching.Hybrid;
 

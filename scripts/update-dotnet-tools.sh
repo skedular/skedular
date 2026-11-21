@@ -49,7 +49,6 @@ UNIT_TEST_TOOL_DIRS=(
 
 cd "$BASE_DIR"
 
-dotnet tool update jetbrains.resharper.globaltools
 dotnet tool update dotnet-ef
 dotnet tool update dotnet-outdated-tool
 dotnet tool update chillicream.nitro.commandline

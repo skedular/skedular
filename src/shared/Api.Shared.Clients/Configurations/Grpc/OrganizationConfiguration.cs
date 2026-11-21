@@ -1,4 +1,4 @@
-namespace Api.Shared.Clients.Configurations.Grpc;
+﻿namespace Api.Shared.Clients.Configurations.Grpc;
 
 public class OrganizationConfiguration
 {

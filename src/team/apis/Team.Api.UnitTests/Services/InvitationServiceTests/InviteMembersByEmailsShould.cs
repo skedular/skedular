@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Team.Api.Services;
 
 namespace Team.Api.UnitTests.Services.InvitationServiceTests;

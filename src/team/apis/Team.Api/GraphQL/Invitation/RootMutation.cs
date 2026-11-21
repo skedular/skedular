@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using HotChocolate.Types;
 using Team.Api.Mappers;
 using Team.Api.Services;

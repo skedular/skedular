@@ -1,14 +1,14 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Booking.Processors.Mappers;
 using Booking.Processors.Subscribers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Messaging;
+using CustomerEntity = Booking.Shared.Database.Entities.Customer;
+using CustomerModel = Booking.Shared.Models.Customer;
 using ValueMetadata = Api.Shared.Clients.Events.Skedular.Customer.V1.Metadata;
 using ValueType = Api.Shared.Clients.Events.Skedular.Customer.V1.Type;
-using CustomerModel = Booking.Shared.Models.Customer;
-using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 
 namespace Booking.Processors.UnitTests.Subscribers;
 

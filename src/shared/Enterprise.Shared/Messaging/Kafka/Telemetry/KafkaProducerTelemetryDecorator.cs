@@ -1,4 +1,4 @@
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Enterprise.Shared.Telemetry;
 using Microsoft.Extensions.Logging;
 

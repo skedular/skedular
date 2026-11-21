@@ -1,4 +1,4 @@
-namespace Api.Shared.Events.Kafka;
+﻿namespace Api.Shared.Events.Kafka;
 
 /// <summary>
 ///     Types implementing IEvent should be decorated with KafkaTopicAttribute.

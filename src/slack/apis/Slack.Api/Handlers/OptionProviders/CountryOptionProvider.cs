@@ -1,4 +1,4 @@
-using CountryData;
+﻿using CountryData;
 using Slack.Shared.Constants;
 using SlackNet.Blocks;
 using SlackNet.Interaction;

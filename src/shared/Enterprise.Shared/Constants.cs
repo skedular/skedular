@@ -1,4 +1,4 @@
-namespace Enterprise.Shared;
+﻿namespace Enterprise.Shared;
 
 public static class Constants
 {

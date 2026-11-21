@@ -1,4 +1,4 @@
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Enterprise.Shared.Messaging.Kafka.Telemetry;
 using Enterprise.Shared.Telemetry;
 using Microsoft.EntityFrameworkCore;

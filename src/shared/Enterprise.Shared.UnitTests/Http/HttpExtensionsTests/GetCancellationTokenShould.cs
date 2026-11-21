@@ -1,4 +1,4 @@
-using Enterprise.Shared.Http;
+﻿using Enterprise.Shared.Http;
 using Microsoft.AspNetCore.Http;
 
 namespace Enterprise.Shared.UnitTests.Http.HttpExtensionsTests;

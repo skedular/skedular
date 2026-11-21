@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Organization.Shared.Database.Entities;

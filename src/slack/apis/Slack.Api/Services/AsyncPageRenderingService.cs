@@ -1,4 +1,4 @@
-using System.Reactive.Subjects;
+﻿using System.Reactive.Subjects;
 using SlackNet.Blocks;
 using SlackNet.Events;
 using SlackNet.Interaction;

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Encryption;
+﻿using Enterprise.Shared.Encryption;
 using Enterprise.Shared.Encryption.Configurations;
 
 namespace Enterprise.Shared.UnitTests.Encryption.StringEncryptionAlgorithmTests;

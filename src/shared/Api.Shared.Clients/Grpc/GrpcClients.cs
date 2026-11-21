@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
+﻿using Api.Shared.Clients.Configurations.Grpc;
 using Grpc.Net.ClientFactory;
 using Microsoft.Extensions.DependencyInjection;
 

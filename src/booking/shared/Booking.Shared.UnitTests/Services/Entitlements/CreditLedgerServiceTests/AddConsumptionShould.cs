@@ -1,4 +1,4 @@
-using Booking.Shared.Database.Entities;
+﻿using Booking.Shared.Database.Entities;
 using Booking.Shared.Models.Entitlements;
 using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared.Random;

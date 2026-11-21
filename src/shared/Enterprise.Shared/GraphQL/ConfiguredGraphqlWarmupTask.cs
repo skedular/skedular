@@ -1,4 +1,4 @@
-using HotChocolate.Execution;
+﻿using HotChocolate.Execution;
 using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.GraphQL;

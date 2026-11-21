@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Customer.Shared.Mappers;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;

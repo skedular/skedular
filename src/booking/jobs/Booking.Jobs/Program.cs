@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using Api.Shared.Services;
 using Booking.Jobs.Services;
 using Booking.Shared;

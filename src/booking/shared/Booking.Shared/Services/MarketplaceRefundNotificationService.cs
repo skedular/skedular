@@ -1,4 +1,4 @@
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using Api.Shared.Services.Models;
 using Booking.Shared.Configurations;
 using Booking.Shared.Database.Entities;

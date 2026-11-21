@@ -1,4 +1,4 @@
-namespace Slack.Shared.Context;
+﻿namespace Slack.Shared.Context;
 
 public class PaginationContext
 {

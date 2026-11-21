@@ -3,7 +3,7 @@
 ## 1. Prerequisites
 
 - Branch checked out: `001-team-domain-logging`
-- .NET SDK installed for repo target (`.NET 10`)
+- .NET SDK installed for repo target (`.NET 11`)
 - Dependencies available for Team test projects
 
 ## 1.1 Phase Execution Sequence
@@ -28,21 +28,21 @@ Expectation: no host-level logging pipeline rewiring is introduced by this featu
 ## 2. Implement logging updates
 
 1. Add constructor `ILogger<T>` to each in-scope Team component:
-   - `team/apis/Team.Api/Services/*`
-   - `team/apis/Team.Api/Services/Authorization/*`
-   - `team/apis/Team.Api/Grpc/TeamGrpcService.cs`
-   - `team/processors/Team.Processors/Subscribers/CustomerSubscriber.cs`
-   - `team/shared/Team.Shared/Services/Cache/*`
-   - `team/shared/Team.Shared/Publishers/TeamOutboxPublisher.cs`
-   - `team/shared/Team.Shared/Activities/*`
-   - `team/shared/Team.Shared/Services/TemporalOutboxService.cs`
+    - `team/apis/Team.Api/Services/*`
+    - `team/apis/Team.Api/Services/Authorization/*`
+    - `team/apis/Team.Api/Grpc/TeamGrpcService.cs`
+    - `team/processors/Team.Processors/Subscribers/CustomerSubscriber.cs`
+    - `team/shared/Team.Shared/Services/Cache/*`
+    - `team/shared/Team.Shared/Publishers/TeamOutboxPublisher.cs`
+    - `team/shared/Team.Shared/Activities/*`
+    - `team/shared/Team.Shared/Services/TemporalOutboxService.cs`
 2. Add structured logs according to policy:
-   - Authorization denied: `LogWarning`
-   - Authorization granted: `LogInformation`
-   - Cache miss/eviction: `LogDebug`
-   - Read methods: only denial/failure/empty-result logs
-   - Mutation/publish/activity success: `LogInformation`
-   - Exceptions caught and re-thrown: `LogError` before rethrow
+    - Authorization denied: `LogWarning`
+    - Authorization granted: `LogInformation`
+    - Cache miss/eviction: `LogDebug`
+    - Read methods: only denial/failure/empty-result logs
+    - Mutation/publish/activity success: `LogInformation`
+    - Exceptions caught and re-thrown: `LogError` before rethrow
 3. Keep log properties secret-safe (IDs/counts/booleans/enums/outcomes only).
 
 ## 3. Update tests
@@ -86,9 +86,10 @@ Run integration tests for touched behaviours when required:
 
 - `dotnet test team/apis/Team.Api.UnitTests/Team.Api.UnitTests.csproj -v minimal`: passed (1/1)
 - `dotnet test team/shared/Team.Shared.UnitTests/Team.Shared.UnitTests.csproj -v minimal`: passed (3/3)
-- `dotnet test team/processors/Team.Processors.UnitTests/Team.Processors.UnitTests.csproj -v minimal`: run and confirm current processor unit tests pass
+- `dotnet test team/processors/Team.Processors.UnitTests/Team.Processors.UnitTests.csproj -v minimal`: run and confirm
+  current processor unit tests pass
 - `dotnet build` validation passed for:
-  - `team/apis/Team.Api/Team.Api.csproj`
-  - `team/shared/Team.Shared/Team.Shared.csproj`
-  - `team/processors/Team.Processors/Team.Processors.csproj`
-  - `team/jobs/Team.Jobs/Team.Jobs.csproj`
+    - `team/apis/Team.Api/Team.Api.csproj`
+    - `team/shared/Team.Shared/Team.Shared.csproj`
+    - `team/processors/Team.Processors/Team.Processors.csproj`
+    - `team/jobs/Team.Jobs/Team.Jobs.csproj`

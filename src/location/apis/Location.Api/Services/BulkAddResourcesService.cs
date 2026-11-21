@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
@@ -11,8 +11,8 @@ using Location.Shared.Services;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows;
 using OrganizationTagEntity = Location.Shared.Database.Entities.OrganizationTag;
-using ResourceEntity = Location.Shared.Database.Entities.Resource;
 using Resource = Location.Shared.Models.Resource;
+using ResourceEntity = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Api.Services;
 

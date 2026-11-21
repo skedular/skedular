@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared.Version;
 using HotChocolate.Types;
 using Organization.Api.GraphQL.Tag;

@@ -1,4 +1,4 @@
-using Enterprise.Shared;
+﻿using Enterprise.Shared;
 
 namespace Slack.Domain.FakeDependencies;
 

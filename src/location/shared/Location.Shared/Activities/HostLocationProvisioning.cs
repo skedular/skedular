@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
+﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Grpc.Skedular.Location.Graphql.V1;
 using Api.Shared.Grpc.Skedular.Marketplace.Core.V1;
 using Api.Shared.Grpc.Skedular.Organization.Tags.V1;

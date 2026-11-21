@@ -1,4 +1,4 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using AutoFixture;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;

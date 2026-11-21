@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
+﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Grpc.Skedular.Core.Core.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;

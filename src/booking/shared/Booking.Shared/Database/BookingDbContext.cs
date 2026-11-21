@@ -1,4 +1,4 @@
-using Booking.Shared.Database.Entities;
+﻿using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Outbox.Kafka;

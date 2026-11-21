@@ -1,4 +1,4 @@
-using Booking.Shared.Services;
+﻿using Booking.Shared.Services;
 using Temporalio.Activities;
 
 namespace Booking.Shared.Activities;

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Microsoft.Extensions.Logging;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;

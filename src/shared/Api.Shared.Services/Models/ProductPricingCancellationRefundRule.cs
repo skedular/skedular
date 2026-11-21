@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using HotChocolate.Types.Composite;
 
 namespace Api.Shared.Services.Models;

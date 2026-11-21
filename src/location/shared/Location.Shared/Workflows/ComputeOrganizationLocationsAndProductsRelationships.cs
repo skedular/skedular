@@ -1,4 +1,4 @@
-using Location.Shared.Activities;
+﻿using Location.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 

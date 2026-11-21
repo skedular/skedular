@@ -1,4 +1,4 @@
-using Slack.Domain.IntegrationTests.Skedular.GraphQL.V1;
+﻿using Slack.Domain.IntegrationTests.Skedular.GraphQL.V1;
 
 namespace Slack.Domain.IntegrationTests.Api.GraphQL;
 

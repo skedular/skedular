@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.Skedular.Core.Core.V1;
+﻿using Api.Shared.Services.OpenApi.Skedular.Core.Core.V1;
 using Core.Shared.Models;
 using File = Api.Shared.Services.OpenApi.Skedular.Core.Core.V1.File;
 

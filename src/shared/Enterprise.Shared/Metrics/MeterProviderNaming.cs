@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Metrics;
+﻿namespace Enterprise.Shared.Metrics;
 
 public static class MeterProviderNaming
 {

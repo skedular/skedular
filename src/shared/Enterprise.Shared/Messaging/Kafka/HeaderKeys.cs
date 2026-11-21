@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Messaging.Kafka;
+﻿namespace Enterprise.Shared.Messaging.Kafka;
 
 public static class HeaderKeys
 {

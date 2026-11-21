@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;

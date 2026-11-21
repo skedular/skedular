@@ -1,4 +1,4 @@
-namespace Booking.Shared.Models;
+﻿namespace Booking.Shared.Models;
 
 public enum MarketplaceExternalRefundReconciliationStatus
 {

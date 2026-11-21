@@ -1,4 +1,4 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using HotChocolate;
 using Organization.Shared.Models.PricingCatalog;
 

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
 using Location.Shared.Database;

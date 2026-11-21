@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Grpc;
+﻿namespace Enterprise.Shared.Grpc;
 
 public static class Constants
 {

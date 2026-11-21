@@ -1,4 +1,4 @@
-using Core.Infrastructure.Jobs;
+﻿using Core.Infrastructure.Jobs;
 using Core.Infrastructure.Services;
 
 namespace Core.Infrastructure;

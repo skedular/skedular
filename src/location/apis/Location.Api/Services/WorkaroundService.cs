@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.Skedular.Location.Analytics.V1;
+﻿using Api.Shared.Services.OpenApi.Skedular.Location.Analytics.V1;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Time;
 using Location.Shared.Mappers;

@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 
 namespace Location.Api.GraphQL.Analytics;
 

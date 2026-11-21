@@ -1,4 +1,4 @@
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Reflection;
@@ -261,7 +261,7 @@ public static class Extensions
                     {
                         tracing.AddEntityFrameworkCoreInstrumentation(options =>
                         {
-                            options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
+                            options.EnrichWithIDbCommand = delegate (Activity activity, IDbCommand command)
                             {
                                 activity.DisplayName = $"{command.CommandType} main";
                                 activity.SetTag("db.type", command.CommandType);

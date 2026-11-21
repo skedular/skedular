@@ -1,4 +1,4 @@
-using System.Data;
+﻿using System.Data;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
@@ -14,9 +14,9 @@ using MarketplaceBookingFailureCategoryConstants = Booking.Shared.Models.Marketp
 using MarketplaceBookingFailureCustomerActionConstants = Booking.Shared.Models.MarketplaceBookingFailureCustomerActionConstants;
 using MarketplaceBookingFailureFinalization = Booking.Shared.Models.MarketplaceBookingFailureFinalization;
 using MarketplaceBookingFailureScopeConstants = Booking.Shared.Models.MarketplaceBookingFailureScopeConstants;
+using Offering = Api.Shared.Services.Models.Offering;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
 using ResourceSlotClaimResult = Booking.Shared.Models.ResourceSlotClaimResult;
-using Offering = Api.Shared.Services.Models.Offering;
 
 namespace Booking.Shared.UnitTests.Services.MarketplaceBookingServiceTests;
 

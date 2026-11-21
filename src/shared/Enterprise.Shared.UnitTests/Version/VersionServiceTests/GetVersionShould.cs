@@ -1,4 +1,4 @@
-using Enterprise.Shared.Version;
+﻿using Enterprise.Shared.Version;
 
 namespace Enterprise.Shared.UnitTests.Version.VersionServiceTests;
 

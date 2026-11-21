@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using HotChocolate.Types;
 
 namespace Team.Api.GraphQL.Member;

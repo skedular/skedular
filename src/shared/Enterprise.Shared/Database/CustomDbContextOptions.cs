@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Database;
+﻿namespace Enterprise.Shared.Database;
 
 public class CustomDbContextOptions
 {

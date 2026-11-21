@@ -1,4 +1,4 @@
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.UnitTesting.Fixtures;
 using Microsoft.Extensions.Configuration;

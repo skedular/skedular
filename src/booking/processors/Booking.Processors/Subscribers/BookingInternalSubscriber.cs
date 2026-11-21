@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.BookingInternal.V1;
+﻿using Api.Shared.Clients.Events.Skedular.BookingInternal.V1;
 using Booking.Shared.Services;
 using Enterprise.Shared.Messaging;
 using Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event;

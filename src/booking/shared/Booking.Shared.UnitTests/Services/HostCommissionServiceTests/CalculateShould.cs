@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Services;
 using Microsoft.Extensions.Logging;
 using static Enterprise.Shared.UnitTesting.Assertions.LogAssertions;

@@ -1,4 +1,4 @@
-using Customer.Shared.Database;
+﻿using Customer.Shared.Database;
 using Customer.Shared.Database.Entities;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;

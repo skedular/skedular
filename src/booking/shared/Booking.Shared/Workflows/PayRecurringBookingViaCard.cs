@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
 using Booking.Shared.Models;
 using Temporalio.Common;

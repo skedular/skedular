@@ -1,4 +1,4 @@
-using Booking.Domain.FakeDependencies.Fakes;
+﻿using Booking.Domain.FakeDependencies.Fakes;
 
 namespace Booking.Domain.FakeDependencies;
 

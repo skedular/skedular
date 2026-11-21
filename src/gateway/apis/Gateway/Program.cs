@@ -1,4 +1,4 @@
-using Enterprise.Shared;
+﻿using Enterprise.Shared;
 using Enterprise.Shared.Ai;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.GraphQL.Configurations;

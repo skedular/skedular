@@ -1,4 +1,4 @@
-using Organization.Api.Services.Pricing;
+﻿using Organization.Api.Services.Pricing;
 using Organization.Shared.Models.PricingCatalog;
 
 namespace Organization.Api.UnitTests.Services.Pricing.OrganizationTeamsSubscriptionServiceTests;

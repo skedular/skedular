@@ -1,7 +1,6 @@
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
-using Projects;
 using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
@@ -42,7 +41,7 @@ var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 var useFakeDependencies = DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled();
 
 var sharedInfrastructure = builder
-    .AddProject<Infrastructure_Shared>("infrastructureshared")
+    .AddDotnetProject("infrastructureshared", "../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -51,14 +50,14 @@ var sharedInfrastructure = builder
 
 var teamFakeDependencies = useFakeDependencies
     ? builder
-        .AddProject<Team_Domain_FakeDependencies>("teamfakedependencies")
+        .AddDotnetProject("teamfakedependencies", "../Team.Domain.FakeDependencies/Team.Domain.FakeDependencies.csproj")
         .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
         .WithHttpHealthCheck(Constants.ReadinessPath)
     : null;
 
 var teamDatabase = postgres.AddDatabase("teamdb");
 var teamInfrastructure = builder
-    .AddProject<Team_Infrastructure>("teaminfrastructure")
+    .AddDotnetProject("teaminfrastructure", "../../shared/Team.Infrastructure/Team.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -73,7 +72,7 @@ var teamInfrastructure = builder
     .WaitFor(teamDatabase);
 
 var teamApi = builder
-    .AddProject<Team_Api>("teamapi")
+    .AddDotnetProject("teamapi", "../../apis/Team.Api/Team.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -88,7 +87,7 @@ var teamApi = builder
     .WaitForCompletion(teamInfrastructure);
 
 var teamProcessors = builder
-    .AddProject<Team_Processors>("teamprocessors")
+    .AddDotnetProject("teamprocessors", "../../processors/Team.Processors/Team.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -103,7 +102,7 @@ var teamProcessors = builder
     .WaitForCompletion(teamInfrastructure);
 
 var teamJobs = builder
-    .AddProject<Team_Jobs>("teamjobs")
+    .AddDotnetProject("teamjobs", "../../jobs/Team.Jobs/Team.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)

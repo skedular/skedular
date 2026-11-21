@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Slack.Callback.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Slack.Callback.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Slack.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Slack.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Slack.Workaround.V1;

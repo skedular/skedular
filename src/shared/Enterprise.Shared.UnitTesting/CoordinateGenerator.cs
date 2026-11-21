@@ -1,4 +1,4 @@
-using AutoFixture.Kernel;
+﻿using AutoFixture.Kernel;
 using NetTopologySuite.Geometries;
 
 namespace Enterprise.Shared.UnitTesting;

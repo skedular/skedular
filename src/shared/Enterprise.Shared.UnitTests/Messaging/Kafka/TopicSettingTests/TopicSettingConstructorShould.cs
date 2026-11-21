@@ -1,4 +1,4 @@
-using Api.Shared.Events.Kafka;
+﻿using Api.Shared.Events.Kafka;
 using Enterprise.Shared.Messaging.Kafka.Consume;
 
 namespace Enterprise.Shared.UnitTests.Messaging.Kafka.TopicSettingTests;

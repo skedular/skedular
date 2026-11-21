@@ -1,4 +1,4 @@
-using Enterprise.Shared.Email;
+﻿using Enterprise.Shared.Email;
 using Location.Shared.Configurations;
 using Location.Shared.Repositories;
 using Temporalio.Activities;

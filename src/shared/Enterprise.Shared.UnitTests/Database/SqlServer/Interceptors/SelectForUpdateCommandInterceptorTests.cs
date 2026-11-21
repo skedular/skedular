@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database.Interceptors;
+﻿using Enterprise.Shared.Database.Interceptors;
 using Enterprise.Shared.Database.SqlServer.Interceptors;
 using Microsoft.Data.SqlClient;
 

@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Time;
+﻿namespace Enterprise.Shared.Time;
 
 public static class DateTimeOffsetExtensions
 {

@@ -10,7 +10,7 @@
         <RepositoryUrl>https://github.com/skedular/skedular</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>14</LangVersion>
+        <LangVersion>15</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <!-- Event protobuf classes are generated into obj/ instead of checked-in source paths.
@@ -19,7 +19,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Text.Json" Version="10.0.15"/>
+        <PackageReference Include="System.Text.Json" Version="11.0.0"/>
         <PackageReference Include="Grpc.Net.ClientFactory" Version="2.85.0"/>
 
         <!-- Build Tools / Event Protobuf Serialization -->

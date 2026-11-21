@@ -1,4 +1,4 @@
-using System.Data;
+﻿using System.Data;
 using System.Diagnostics;
 using Api.Shared.Services.Models;
 using Booking.Api.Services.Authorization;

@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.InfrastructureTest.V1;
+﻿using Api.Shared.Grpc.Skedular.InfrastructureTest.V1;
 using Api.Shared.Services.Models;
 using Booking.Domain.IntegrationTests.Fixtures;
 using Booking.Shared.Models;
@@ -203,9 +203,9 @@ public class MarketplacePurchaseHistoryRepositoryShould(
 
         var first = await repositoryFactory.MarketplacePurchaseHistoryRepository.AppendEventAsync(older, "subscription-created-1", cancellationToken);
         var replay = await repositoryFactory.MarketplacePurchaseHistoryRepository.AppendEventAsync(older with
-            {
-                Id = "different-id",
-            },
+        {
+            Id = "different-id",
+        },
             "subscription-created-1", cancellationToken);
         await repositoryFactory.MarketplacePurchaseHistoryRepository.AppendEventAsync(newer, "subscription-renewed-1", cancellationToken);
 

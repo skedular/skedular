@@ -1,4 +1,4 @@
-using AutoFixture;
+﻿using AutoFixture;
 using Organization.Shared.Activities;
 
 namespace Organization.Shared.UnitTests.Fixtures;

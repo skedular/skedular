@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Telemetry;
+﻿namespace Enterprise.Shared.Telemetry;
 
 /// <summary>
 ///     Semantic Conventions

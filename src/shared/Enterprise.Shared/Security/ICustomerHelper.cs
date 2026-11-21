@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Security;
+﻿namespace Enterprise.Shared.Security;
 
 public interface ICustomerHelper
 {

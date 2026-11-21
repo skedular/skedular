@@ -1,4 +1,4 @@
-namespace Slack.Shared.Constants;
+﻿namespace Slack.Shared.Constants;
 
 public class OptionLoaderKeys
 {

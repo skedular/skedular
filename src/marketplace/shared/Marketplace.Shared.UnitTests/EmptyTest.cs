@@ -1,4 +1,4 @@
-namespace Marketplace.Shared.UnitTests;
+﻿namespace Marketplace.Shared.UnitTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class EmptyTest

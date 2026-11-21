@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Organization.Shared.Mappers;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;

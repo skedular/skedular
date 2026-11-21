@@ -1,16 +1,16 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Marketplace.Shared.Database.Entities;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Customer = Marketplace.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Identity = Marketplace.Shared.Database.Entities.Identity;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Marketplace.Shared.Models.Organization;
 using OrganizationMember = Marketplace.Shared.Database.Entities.OrganizationMember;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationTag = Marketplace.Shared.Models.OrganizationTag;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
 

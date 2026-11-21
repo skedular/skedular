@@ -1,8 +1,8 @@
-using AutoFixture;
+﻿using AutoFixture;
 using Booking.Api.GraphQL.Booking;
 using Booking.Shared.Database.Entities;
-using BookingModel = Booking.Shared.Models.Booking;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
+using BookingModel = Booking.Shared.Models.Booking;
 
 namespace Booking.Api.UnitTests.GraphQL.Booking.RootQueryTests;
 

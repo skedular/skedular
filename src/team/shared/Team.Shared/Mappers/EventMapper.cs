@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Team.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Team.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;

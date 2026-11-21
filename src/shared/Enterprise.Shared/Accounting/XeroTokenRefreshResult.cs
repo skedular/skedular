@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Accounting;
+﻿namespace Enterprise.Shared.Accounting;
 
 public record XeroTokenRefreshResult(
     bool IsSuccessful,

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Enterprise.Shared.Telemetry;
 using OpenTelemetry.Context.Propagation;
 

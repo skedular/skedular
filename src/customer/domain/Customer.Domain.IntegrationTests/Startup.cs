@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Customer.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Customer.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Stripe.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Customer.Workaround.V1;

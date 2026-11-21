@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Organization.Core.V1;
 
 namespace Organization.Domain.IntegrationTests.Api.Rest.OrganizationControllerTests;
 

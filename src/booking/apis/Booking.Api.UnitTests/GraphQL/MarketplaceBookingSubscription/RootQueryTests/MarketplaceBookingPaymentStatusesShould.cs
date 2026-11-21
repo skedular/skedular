@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
 
 namespace Booking.Api.UnitTests.GraphQL.MarketplaceBookingSubscription.RootQueryTests;

@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Sanitization;
+﻿namespace Enterprise.Shared.Sanitization;
 
 public static class StringSanitization
 {

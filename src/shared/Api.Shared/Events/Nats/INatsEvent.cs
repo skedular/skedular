@@ -1,4 +1,4 @@
-namespace Api.Shared.Events.Nats;
+﻿namespace Api.Shared.Events.Nats;
 
 public interface INatsEvent
 {

@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Booking.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Booking.Core.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Booking.Graphql.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Booking.StripeWebhook.V1;
 using Api.Shared.Clients.OpenApi.Skedular.Booking.XeroWebhook.V1;

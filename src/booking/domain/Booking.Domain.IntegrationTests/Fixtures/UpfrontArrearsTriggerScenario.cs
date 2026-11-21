@@ -1,4 +1,4 @@
-using BookingEntity = Booking.Shared.Database.Entities.Booking;
+﻿using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;

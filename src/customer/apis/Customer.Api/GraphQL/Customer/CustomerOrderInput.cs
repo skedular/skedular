@@ -1,4 +1,4 @@
-using Customer.Shared.Models;
+﻿using Customer.Shared.Models;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 

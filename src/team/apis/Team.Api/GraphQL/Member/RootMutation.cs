@@ -1,4 +1,4 @@
-using Enterprise.Shared.Sanitization;
+﻿using Enterprise.Shared.Sanitization;
 using HotChocolate;
 using HotChocolate.Types;
 using Team.Api.GraphQL.Team;

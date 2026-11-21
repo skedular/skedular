@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Diagnostics.Metrics;
 using System.Text.RegularExpressions;
 using Enterprise.Shared.Telemetry.Configurations;

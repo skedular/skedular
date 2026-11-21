@@ -1,4 +1,4 @@
-namespace Organization.Processors.UnitTests;
+﻿namespace Organization.Processors.UnitTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class EmptyTest

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Configurations.Grpc;
+﻿using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.OpenApi.Skedular.Organization.Workaround.V1;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Api.Services;

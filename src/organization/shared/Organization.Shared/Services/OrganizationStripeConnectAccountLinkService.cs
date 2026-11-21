@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1;
+﻿using Api.Shared.Services.OpenApi.Skedular.Organization.Core.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Random;
 using Flurl;

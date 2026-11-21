@@ -1,4 +1,4 @@
-using Slack.Shared.Activities;
+﻿using Slack.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 

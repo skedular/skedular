@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1;
+﻿using Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1;
 using Api.Shared.Events.Kafka;
 
 namespace Api.Shared.Clients.UnitTests.Events.Skedular.CustomerReadiness.V1;

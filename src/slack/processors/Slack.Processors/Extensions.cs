@@ -1,4 +1,4 @@
-using Slack.Processors.Mappers;
+﻿using Slack.Processors.Mappers;
 
 namespace Slack.Processors;
 

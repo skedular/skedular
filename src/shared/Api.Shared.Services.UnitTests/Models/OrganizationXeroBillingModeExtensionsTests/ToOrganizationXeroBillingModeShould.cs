@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 
 namespace Api.Shared.Services.UnitTests.Models.OrganizationXeroBillingModeExtensionsTests;
 

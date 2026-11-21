@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
@@ -18,7 +18,7 @@ public interface IFloorPlanRepository : IRepository<FloorPlan>
     void Update(FloorPlan floorPlan);
     void Remove(FloorPlan floorPlan);
 
-    Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int )> GetPaginatedFloorPlansAsync(
+    Task<(PaginatedInfo, IReadOnlyList<Edge<FloorPlan>>, int)> GetPaginatedFloorPlansAsync(
         PaginationInputParam paginationInputParam,
         FloorPlanSearchCriteria searchCriteria,
         IReadOnlyList<FloorPlanOrder> orderByFields,

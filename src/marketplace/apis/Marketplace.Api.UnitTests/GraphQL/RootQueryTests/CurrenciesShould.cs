@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Marketplace.Api.GraphQL;
 
 namespace Marketplace.Api.UnitTests.GraphQL.RootQueryTests;

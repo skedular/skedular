@@ -1,4 +1,4 @@
-using Enterprise.Shared.Context;
+﻿using Enterprise.Shared.Context;
 using Enterprise.Shared.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;

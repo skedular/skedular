@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 
 namespace Booking.Shared.UnitTests.Models.MarketplacePurchaseHistoryTests;

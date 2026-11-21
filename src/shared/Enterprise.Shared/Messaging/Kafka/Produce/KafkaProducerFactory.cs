@@ -1,4 +1,4 @@
-using Confluent.Kafka;
+﻿using Confluent.Kafka;
 using Enterprise.Shared.Messaging.Kafka.Configurations;
 using Enterprise.Shared.Messaging.Kafka.Logger;
 using Enterprise.Shared.Messaging.Kafka.Serialization;

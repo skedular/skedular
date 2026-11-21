@@ -1,17 +1,17 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using MsTeams.Shared.Models;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Customer = MsTeams.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Identity = MsTeams.Shared.Database.Entities.Identity;
 using Location = MsTeams.Shared.Models.Location;
 using Organization = MsTeams.Shared.Models.Organization;
 using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
 using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationSsoSetting = MsTeams.Shared.Database.Entities.OrganizationSsoSetting;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
-using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
 using Team = MsTeams.Shared.Models.Team;
 
 namespace MsTeams.Processors.Mappers;

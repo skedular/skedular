@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Api.Shared.Services.Models;
 
 namespace Api.Shared.Services.UnitTests.Models;

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Booking.Shared.Mappers;
 using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 

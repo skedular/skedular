@@ -1,4 +1,4 @@
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 using Flurl;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Logging;

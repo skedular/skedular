@@ -1,4 +1,4 @@
-using Api.Shared.Services.OpenApi.Skedular.Marketplace.Workaround.V1;
+﻿using Api.Shared.Services.OpenApi.Skedular.Marketplace.Workaround.V1;
 using Marketplace.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 

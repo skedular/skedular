@@ -3,7 +3,8 @@
 **Branch**: `001-team-domain-logging` | **Date**: 2026-04-14 | **Spec**: `/specs/001-team-domain-logging/spec.md`
 **Input**: Feature specification from `/specs/001-team-domain-logging/spec.md`
 
-**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the
+execution workflow.
 
 ## Summary
 
@@ -15,15 +16,15 @@ observable behaviour with proportionate unit and integration test updates.
 
 ## Technical Context
 
-**Language/Version**: C# on .NET 10  
+**Language/Version**: C# on .NET 11  
 **Primary Dependencies**: `Microsoft.Extensions.Logging`, Enterprise.Shared logging/hosting extensions,
-Serilog pipeline via `UseSerilogCustom`, HotChocolate (existing GraphQL stack), Temporal client
-(existing usage), Kafka outbox/event subscribers (existing usage)  
+Serilog pipeline via `UseSerilogCustom`, HotChocolate (existing GraphQL stack), Temporal client (existing usage), Kafka
+outbox/event subscribers (existing usage)  
 **Storage**: PostgreSQL via Entity Framework Core (existing Team shared repositories)  
 **Testing**: xUnit + AutoFixture + FakeItEasy (`[AutoFakeItEasyData]` pattern), existing Team
 unit/integration test projects  
-**Target Platform**: Linux containerised services hosted by ASP.NET Core/.NET Generic Host
-(Team.Api, Team.Jobs, Team.Processors)  
+**Target Platform**: Linux containerised services hosted by ASP.NET Core/.NET Generic Host (Team.Api, Team.Jobs,
+Team.Processors)  
 **Project Type**: Multi-project backend domain in monorepo (`team/apis`, `team/shared`,
 `team/processors`, `team/jobs`)  
 **Performance Goals**: No material throughput regression; logging overhead remains bounded by
@@ -42,27 +43,27 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 Answer each gate. If a gate fails, resolve the issue before proceeding.
 
 - [x] **I. Contract-First** — No `api-definitions/` or generated contract surfaces are changed.
-      No regeneration required.
+  No regeneration required.
 - [x] **II. Domain Boundaries** — Scope is contained to Team domain components and existing shared
-      Team libraries. No cross-domain DB or internal-class bypass.
+  Team libraries. No cross-domain DB or internal-class bypass.
 - [x] **III. Testing** — Unit tests required for updated services/components. Integration tests
-      only where behaviour crosses persistence/event boundaries. No direct `DbContext` assertions
-      in integration tests.
+  only where behaviour crosses persistence/event boundaries. No direct `DbContext` assertions
+  in integration tests.
 - [x] **IV. Frontend** — No frontend scope.
 - [x] **V. Pattern Consistency** — Reuses existing primary-constructor `ILogger<T>` injection
-      pattern and existing Enterprise.Shared Serilog pipeline. No new pattern introduced.
+  pattern and existing Enterprise.Shared Serilog pipeline. No new pattern introduced.
 
 ### Post-Design Constitution Re-check
 
 - [x] **I. Contract-First** — Design artefacts keep all changes implementation-local; no API/
-      schema/generation impact identified.
+  schema/generation impact identified.
 - [x] **II. Domain Boundaries** — Data model and contracts are component-observability contracts
-      inside Team domain only.
+  inside Team domain only.
 - [x] **III. Testing** — Quickstart includes required unit/integration validation commands and
-      logger-safe assertions.
+  logger-safe assertions.
 - [x] **IV. Frontend** — Not applicable; unchanged.
-- [x] **V. Pattern Consistency** — Contract and data model explicitly codify existing patterns
-      (`ILogger<T>`, structured templates, safe-log property set).
+- [x] **V. Pattern Consistency** — Contract and data model explicitly codify existing patterns (`ILogger<T>`, structured
+  templates, safe-log property set).
 
 ## Project Structure
 
@@ -119,5 +120,5 @@ new projects or shared abstractions.
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
-| --------- | ---------- | ------------------------------------ |
+|-----------|------------|--------------------------------------|
 | None      | N/A        | N/A                                  |

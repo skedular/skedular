@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
+﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Grpc.Skedular.Booking.Graphql.V1;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Grpc;

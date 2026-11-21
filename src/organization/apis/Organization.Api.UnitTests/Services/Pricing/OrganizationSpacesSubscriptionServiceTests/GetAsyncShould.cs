@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Organization.Api.Services.Pricing;
 using Organization.Shared.Database.Entities;

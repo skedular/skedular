@@ -14,42 +14,43 @@ A new "Bulk add" dialog in the webapp UI completes the end-to-end flow.
 
 ## Technical Context
 
-**Language/Version**: C# .NET 10 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend)
-**Primary Dependencies**: HotChocolate (GraphQL), Entity Framework Core, `Enterprise.Shared.Database` repository pattern, Relay, MUI v9, `mui-rff` Autocomplete
-**Storage**: PostgreSQL via EF Core — no new migration; reuses existing `Resource` and `OrganizationTagResource` tables
-**Testing**: `xunit` + FakeItEasy + AutoFakeItEasyData (unit); Aspire-hosted integration tests in `Location.Domain.IntegrationTests`; Vitest + React Testing Library (UI)
-**Target Platform**: .NET 10 server; Next.js 16 App Router web app
-**Project Type**: Web service (GraphQL API) + web application (React/Next.js)
-**Performance Goals**: Batch of 100 resources completes within 5 seconds under normal load
-**Constraints**: Max 100 total resources per request (sum of quantities); single DB transaction for all successful rows
-**Scale/Scope**: Admin-facing feature; low frequency; up to 100 resources per import
+**Language/Version**: C# .NET 11 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend)
+**Primary Dependencies**: HotChocolate (GraphQL), Entity Framework Core, `Enterprise.Shared.Database` repository
+pattern, Relay, MUI v9, `mui-rff` Autocomplete **Storage**: PostgreSQL via EF Core — no new migration; reuses existing
+`Resource` and `OrganizationTagResource` tables **Testing**: `xunit` + FakeItEasy + AutoFakeItEasyData (unit);
+Aspire-hosted integration tests in `Location.Domain.IntegrationTests`; Vitest + React Testing Library (UI)
+**Target Platform**: .NET 11 server; Next.js 16 App Router web app **Project Type**: Web service (GraphQL API) + web
+application (React/Next.js)
+**Performance Goals**: Batch of 100 resources completes within 5 seconds under normal load **Constraints**: Max 100
+total resources per request (sum of quantities); single DB transaction for all successful rows **Scale/Scope**:
+Admin-facing feature; low frequency; up to 100 resources per import
 
 ## Constitution Check
 
 _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - [x] **I. Contract-First** — Yes, this feature adds new GraphQL types to the `location` API.
-      `scripts/generate-graphql.sh` regenerates the per-API `schema.graphql`, the composed
-      gateway schema, and Relay artefacts. `web/apps/webapp/scripts/generate.sh` regenerates
-      Relay TypeScript types. Both will be run after backend implementation.
+  `scripts/generate-graphql.sh` regenerates the per-API `schema.graphql`, the composed
+  gateway schema, and Relay artefacts. `web/apps/webapp/scripts/generate.sh` regenerates
+  Relay TypeScript types. Both will be run after backend implementation.
 - [x] **II. Domain Boundaries** — No cross-domain access. The bulk import mutation lives
-      entirely within the `location` domain. No other domain's DB or internals are touched.
+  entirely within the `location` domain. No other domain's DB or internals are touched.
 - [x] **III. Testing** — Unit tests planned for `BulkImportResourcesService` (naming logic,
-      validation, partial success). Integration tests planned in
-      `Location.Domain.IntegrationTests` using repository-layer assertions only (no raw
-      `DbContext` in test assertions). UI tests planned with Vitest + React Testing Library.
+  validation, partial success). Integration tests planned in
+  `Location.Domain.IntegrationTests` using repository-layer assertions only (no raw
+  `DbContext` in test assertions). UI tests planned with Vitest + React Testing Library.
 - [x] **IV. Frontend** — Yes, UI changes in `web/apps/webapp`. Relay fragments collocated
-      with their components. No hand-edited Relay artefacts. Typography via `@skedular/ui`
-      wrappers. British spelling in all user-facing copy.
+  with their components. No hand-edited Relay artefacts. Typography via `@skedular/ui`
+  wrappers. British spelling in all user-facing copy.
 - [x] **V. Pattern Consistency** — New `IBulkImportResourcesService` follows the exact same
-      service pattern as `IResourceService`. New `BulkImportResourcesInput` / payload classes
-      follow the existing HotChocolate input/payload pattern in the location API. No deviation.
-      One new repository method (`GetActiveNamesByLocationIdAsync`) follows the existing
-      repository base pattern. No new frameworks or abstractions.
+  service pattern as `IResourceService`. New `BulkImportResourcesInput` / payload classes
+  follow the existing HotChocolate input/payload pattern in the location API. No deviation.
+  One new repository method (`GetActiveNamesByLocationIdAsync`) follows the existing
+  repository base pattern. No new frameworks or abstractions.
 - [x] **VI. Logging** — Structured logging planned for: batch received (locationId, rowCount,
-      totalQuantity), per-row failure (rowIndex, reason), and completion summary
-      (created, rejected counts). All via `Microsoft.Extensions.Logging` ILogger injection,
-      consistent with existing service logging in `ResourceService`.
+  totalQuantity), per-row failure (rowIndex, reason), and completion summary (created, rejected counts). All via
+  `Microsoft.Extensions.Logging` ILogger injection,
+  consistent with existing service logging in `ResourceService`.
 
 ## Project Structure
 
@@ -195,6 +196,6 @@ directories captured above]
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
 | Violation                  | Why Needed         | Simpler Alternative Rejected Because |
-| -------------------------- | ------------------ | ------------------------------------ |
+|----------------------------|--------------------|--------------------------------------|
 | [e.g., 4th project]        | [current need]     | [why 3 projects insufficient]        |
 | [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient]  |

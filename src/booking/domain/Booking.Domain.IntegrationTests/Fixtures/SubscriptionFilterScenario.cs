@@ -1,4 +1,4 @@
-using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
+﻿using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using ProductVersionEntity = Booking.Shared.Database.Entities.ProductVersion;

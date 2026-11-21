@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Security.Sso;
 using Microsoft.EntityFrameworkCore.Storage;
 using Organization.Api.Mappers;

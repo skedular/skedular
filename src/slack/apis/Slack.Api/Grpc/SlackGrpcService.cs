@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Slack.Core.V1;
+﻿using Api.Shared.Grpc.Skedular.Slack.Core.V1;
 using Enterprise.Shared.Version;
 using Grpc.Core;
 using Version = Api.Shared.Grpc.Skedular.Slack.Core.V1.Version;

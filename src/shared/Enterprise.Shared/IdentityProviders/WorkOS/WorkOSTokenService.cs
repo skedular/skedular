@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.IdentityProviders.Configurations;
 using Enterprise.Shared.Security;

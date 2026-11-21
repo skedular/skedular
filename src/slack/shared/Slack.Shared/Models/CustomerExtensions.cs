@@ -1,4 +1,4 @@
-using Enterprise.Shared.Time;
+﻿using Enterprise.Shared.Time;
 
 namespace Slack.Shared.Models;
 

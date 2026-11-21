@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Location.Resources.V1;
+﻿using Api.Shared.Grpc.Skedular.Location.Resources.V1;
 using Api.Shared.Services.Configurations.Grpc;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
@@ -8,11 +8,11 @@ using Location.Api.Mappers;
 using Location.Api.Models;
 using Location.Api.Services;
 using Location.Shared.Models;
+using LocationResourcesService = Api.Shared.Grpc.Skedular.Location.Resources.V1.LocationResourcesService;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
 using PageInfo = Api.Shared.Grpc.Skedular.Location.Core.V1.PageInfo;
 using Resource = Api.Shared.Grpc.Skedular.Location.Core.V1.Resource;
 using ResourceOrderField = Api.Shared.Grpc.Skedular.Location.Resources.V1.ResourceOrderField;
-using LocationResourcesService = Api.Shared.Grpc.Skedular.Location.Resources.V1.LocationResourcesService;
 using ResourcePatchField = Api.Shared.Grpc.Skedular.Location.Resources.V1.ResourcePatchField;
 
 namespace Location.Api.Grpc;

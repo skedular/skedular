@@ -1,4 +1,4 @@
-namespace Booking.Shared.Models;
+﻿namespace Booking.Shared.Models;
 
 /// <summary>
 ///     Server-authoritative inputs for a marketplace booking edit that may change price.

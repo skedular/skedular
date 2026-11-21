@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Customer.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Customer.V1;
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Accounting;

@@ -1,1 +1,1 @@
-namespace Booking.Api.UnitTests.Services.GraphQlTopicEventSenderTests;
+﻿namespace Booking.Api.UnitTests.Services.GraphQlTopicEventSenderTests;

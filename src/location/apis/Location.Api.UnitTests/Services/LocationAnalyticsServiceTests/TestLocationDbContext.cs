@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Enterprise.Shared.Database;
 using Location.Shared.Database;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-namespace Booking.Shared.Workflows;
+﻿namespace Booking.Shared.Workflows;
 
 /// <summary>
 ///     Signals Temporal that a provider result was persisted but should be retried.

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
@@ -12,13 +12,13 @@ using Microsoft.Extensions.Logging;
 using Xero.NetStandard.OAuth2.Api;
 using Xero.NetStandard.OAuth2.Client;
 using Xero.NetStandard.OAuth2.Model.Accounting;
-using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;
 using CurrencyCode = Xero.NetStandard.OAuth2.Model.Accounting.CurrencyCode;
 using Enum = System.Enum;
-using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
+using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 using XeroInvoice = Xero.NetStandard.OAuth2.Model.Accounting.Invoice;
+using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;
 
 namespace Booking.Shared.Services;
 

@@ -5,7 +5,9 @@
 
 ## Summary
 
-This feature adds a new web application ("Skedualr Host") for individuals who want to rent out their physical/virtual spaces. The Host app is a presentation-layer abstraction on top of the existing Skedualr Spaces booking engine, designed to simplify the listing process for individual hosts (Airbnb-style). Key aspects:
+This feature adds a new web application ("Skedualr Host") for individuals who want to rent out their physical/virtual
+spaces. The Host app is a presentation-layer abstraction on top of the existing Skedualr Spaces booking engine, designed
+to simplify the listing process for individual hosts (Airbnb-style). Key aspects:
 
 - New "Host" organization type (alongside Private and Marketplace)
 - Host creates Locations and Products; system auto-creates underlying Resources
@@ -15,7 +17,7 @@ This feature adds a new web application ("Skedualr Host") for individuals who wa
 
 ## Technical Context
 
-**Language/Version**: C# .NET 10 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend)  
+**Language/Version**: C# .NET 11 (backend); TypeScript 6 / React 19 / Next.js 16 App Router (frontend)  
 **Primary Dependencies**: MUI, Relay (GraphQL), EF Core PostgreSQL, Kafka, Temporal  
 **Storage**: PostgreSQL via EF Core — existing `Location`, `Product`, `Resource` models reused  
 **Testing**: Unit tests (xUnit/NUnit), integration tests (repository-layer assertions), E2E (Playwright)  
@@ -29,49 +31,49 @@ This feature adds a new web application ("Skedualr Host") for individuals who wa
 
 _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-- [x] **I. Contract-First** — Does this feature touch `api-definitions/` or any generated surface?
-      **YES** — New `OrganizationType.Host` enum value and offering-owned `hostCommissionPercentage` contract. Generator: `make generate` regenerates API contracts.
+- [x] **I. Contract-First** — Does this feature touch `api-definitions/` or any generated surface? **YES** — New
+  `OrganizationType.Host` enum value and offering-owned `hostCommissionPercentage` contract. Generator: `make generate`
+  regenerates API contracts.
 
-- [x] **II. Domain Boundaries** — Does this feature cross domain ownership lines?
-      **PARTIALLY** — Hosts interact with Location (owned by location domain) and Booking (owned by booking domain). Cross-domain paths use public service/event interfaces:
-      - Location service for auto-Resource creation
-      - Booking service for full-place reservations
+- [x] **II. Domain Boundaries** — Does this feature cross domain ownership lines? **PARTIALLY** — Hosts interact with
+  Location (owned by location domain) and Booking (owned by booking domain). Cross-domain paths use public service/event
+  interfaces:
+  - Location service for auto-Resource creation
+  - Booking service for full-place reservations
 
-- [x] **III. Testing** — What test tier is required?
-      **ALL TIERS**:
-      - Unit: Host org creation, Resource auto-creation, commission calculation
-      - Integration: End-to-end flows using repository-layer (no raw DbContext)
-      - E2E: Playwright for critical user journeys (onboarding → listing → booking)
+- [x] **III. Testing** — What test tier is required? **ALL TIERS**:
+  - Unit: Host org creation, Resource auto-creation, commission calculation
+  - Integration: End-to-end flows using repository-layer (no raw DbContext)
+  - E2E: Playwright for critical user journeys (onboarding → listing → booking)
 
-- [x] **IV. Frontend** — Does this feature include web changes?
-      **YES**:
-      - New `webapp-host` app under `src/web/apps/`
-      - Relay colocation (fragments with components)
-      - No hand-edited Relay artifacts
-      - Typography wrappers from `@skedular/ui`
-      - American spelling in user-facing copy
+- [x] **IV. Frontend** — Does this feature include web changes? **YES**:
+  - New `webapp-host` app under `src/web/apps/`
+  - Relay colocation (fragments with components)
+  - No hand-edited Relay artifacts
+  - Typography wrappers from `@skedular/ui`
+  - American spelling in user-facing copy
 
-- [x] **V. Pattern Consistency** — Does this feature introduce a new pattern?
-      **NO NEW PATTERNS**:
-      - Reuses existing `webapp-spaces` structure
-      - Uses same auth, product creation flow, map integration
-      - Deviation: Host org type + auto-Resource logic (justified below)
+- [x] **V. Pattern Consistency** — Does this feature introduce a new pattern? **NO NEW PATTERNS**:
+  - Reuses existing `webapp-spaces` structure
+  - Uses same auth, product creation flow, map integration
+  - Deviation: Host org type + auto-Resource logic (justified below)
 
-- [x] **VI. Logging** — Does this feature add or change behavior?
-      **YES** — Structured logging for:
-      - Host organization creation/verification
-      - Location/Product creation
-      - Auto-Resource creation (with correlation ID)
-      - Booking completion with commission calculation
-      - Verification rejection / un-verify warnings
+- [x] **VI. Logging** — Does this feature add or change behavior? **YES** — Structured logging for:
+  - Host organization creation/verification
+  - Location/Product creation
+  - Auto-Resource creation (with correlation ID)
+  - Booking completion with commission calculation
+  - Verification rejection / un-verify warnings
 
 ### Pattern Deviation Justification
 
 **Deviation**: New "Host" UX pattern where Resource is invisible to user.
 
-**Why Needed**: The existing Spaces flow requires users to understand and manage Resources — this is too complex for individual hosts. Auto-Resource creation is necessary for the MVP.
+**Why Needed**: The existing Spaces flow requires users to understand and manage Resources — this is too complex for
+individual hosts. Auto-Resource creation is necessary for the MVP.
 
-**Simpler Alternative Rejected Because**: A true simplification would require significant refactoring of the booking engine. The presentation-layer approach (auto-creating Resource behind scenes) minimizes risk while achieving the goal.
+**Simpler Alternative Rejected Because**: A true simplification would require significant refactoring of the booking
+engine. The presentation-layer approach (auto-creating Resource behind scenes) minimizes risk while achieving the goal.
 
 ---
 
@@ -129,8 +131,10 @@ frontend/
 
 **Structure Decision**: Single project with new web app subdirectory.
 
-- **Backend changes**: Minimal. Extends existing `OrganizationType` enum, adds `AutoResourceService.cs` for Host Products.
-- **Frontend changes**: New `webapp-host` Next.js app sharing `@skedular/ui`, `@skedular/shared`, and GraphQL contracts with other apps.
+- **Backend changes**: Minimal. Extends existing `OrganizationType` enum, adds `AutoResourceService.cs` for Host
+  Products.
+- **Frontend changes**: New `webapp-host` Next.js app sharing `@skedular/ui`, `@skedular/shared`, and GraphQL contracts
+  with other apps.
 - **No separate backend/frontend split**: All new logic is in shared modules + one web app.
 
 ---
@@ -139,9 +143,9 @@ frontend/
 
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
-| Violation                  | Why Needed         | Simpler Alternative Rejected Because |
-| -------------------------- | ------------------ | ------------------------------------ |
-| New webapp (webapp-host)   | Dedicated Host UX; separate URL without impacting other apps | Hosting in existing apps would blur boundaries and require complex routing |
+| Violation                | Why Needed                                                   | Simpler Alternative Rejected Because                                       |
+|--------------------------|--------------------------------------------------------------|----------------------------------------------------------------------------|
+| New webapp (webapp-host) | Dedicated Host UX; separate URL without impacting other apps | Hosting in existing apps would blur boundaries and require complex routing |
 
 ---
 
@@ -168,9 +172,9 @@ This updates the `<!-- SPECKIT START -->` / `<!-- SPECKIT END -->` section in `C
 
 **Optional post-plan hooks** registered in `.specify/extensions.yml`:
 
-| Hook | Command | Description |
-|------|---------|-------------|
-| git.commit (optional) | `/speckit-git-commit` | Auto-commit after planning |
-| agent-context.update (optional) | `/speckit-agent-context-update` | Refresh agent context |
+| Hook                            | Command                         | Description                |
+|---------------------------------|---------------------------------|----------------------------|
+| git.commit (optional)           | `/speckit-git-commit`           | Auto-commit after planning |
+| agent-context.update (optional) | `/speckit-agent-context-update` | Refresh agent context      |
 
 Both hooks are optional. Execute before proceeding to `/speckit-tasks` if desired.

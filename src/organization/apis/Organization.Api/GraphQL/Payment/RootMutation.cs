@@ -1,4 +1,4 @@
-using Enterprise.Shared.Payment.Configurations;
+﻿using Enterprise.Shared.Payment.Configurations;
 using HotChocolate;
 using HotChocolate.Types;
 using Organization.Api.Services;

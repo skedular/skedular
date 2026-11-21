@@ -1,14 +1,14 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Core.Shared.Database.Entities;
-using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Customer = Core.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.CustomerType;
+using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Identity = Core.Shared.Database.Entities.Identity;
 using Organization = Core.Shared.Models.Organization;
 using OrganizationMember = Core.Shared.Database.Entities.OrganizationMember;
-using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
 using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberRole;
 using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationMemberStatus;
+using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.OrganizationType;
 
 namespace Core.Processors.Mappers;
 

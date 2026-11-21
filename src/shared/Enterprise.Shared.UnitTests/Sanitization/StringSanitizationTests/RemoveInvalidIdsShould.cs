@@ -1,4 +1,4 @@
-using Enterprise.Shared.Sanitization;
+﻿using Enterprise.Shared.Sanitization;
 
 namespace Enterprise.Shared.UnitTests.Sanitization.StringSanitizationTests;
 

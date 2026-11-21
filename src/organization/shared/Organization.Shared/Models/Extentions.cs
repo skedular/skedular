@@ -1,4 +1,4 @@
-namespace Organization.Shared.Models;
+﻿namespace Organization.Shared.Models;
 
 public static class Extension
 {
@@ -9,7 +9,7 @@ public static class Extension
 
         public bool IsOnboardingCompleted() =>
             organizationStripeConnectAccount.IsAuthorized() && organizationStripeConnectAccount is
-                { DetailsSubmitted: true, ChargesEnabled: true, PayoutsEnabled: true };
+            { DetailsSubmitted: true, ChargesEnabled: true, PayoutsEnabled: true };
     }
 
     extension(OrganizationStripeConnectAccount organizationStripeConnectAccount)
@@ -19,6 +19,6 @@ public static class Extension
 
         public bool IsOnboardingCompleted() =>
             organizationStripeConnectAccount.IsAuthorized() && organizationStripeConnectAccount is
-                { DetailsSubmitted: true, ChargesEnabled: true, PayoutsEnabled: true };
+            { DetailsSubmitted: true, ChargesEnabled: true, PayoutsEnabled: true };
     }
 }

@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Organization.Api.Models;
 using Organization.Shared.Models;
 using OrganizationEntity = Organization.Shared.Database.Entities.Organization;

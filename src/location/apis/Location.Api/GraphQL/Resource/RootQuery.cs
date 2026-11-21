@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
 using HotChocolate.Types.Relay;

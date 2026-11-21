@@ -1,4 +1,4 @@
-using Enterprise.Shared.Helpers;
+﻿using Enterprise.Shared.Helpers;
 
 namespace Enterprise.Shared.UnitTests.Helpers.PortFinderTests;
 

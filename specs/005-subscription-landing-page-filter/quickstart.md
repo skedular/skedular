@@ -9,7 +9,7 @@
 
 - Local services running: booking API, PostgreSQL (via Docker Compose or Aspire)
 - `pnpm install` complete in `web/`
-- .NET SDK for .NET 10
+- .NET SDK for .NET 11
 
 ---
 
@@ -106,7 +106,8 @@ query ValidateCombinedFilters($orgDomain: String!) {
 }
 ```
 
-**Expected**: All returned subscriptions have `status.type` in `[ACTIVE, PAUSED]` AND `paymentStatus.type` in `[PENDING, REJECTED]`.
+**Expected**: All returned subscriptions have `status.type` in `[ACTIVE, PAUSED]` AND `paymentStatus.type` in
+`[PENDING, REJECTED]`.
 
 ---
 
@@ -133,7 +134,8 @@ query ValidateEmptyFilter($orgDomain: String!) {
 5. Add a second status → confirm the URL includes both values and the list re-fetches.
 6. Deselect all statuses → confirm the URL param is cleared and all subscriptions return.
 7. Apply a payment status filter → confirm URL updates and results are filtered.
-8. Reload the page with filter params in the URL → confirm filters are pre-populated and results are filtered immediately.
+8. Reload the page with filter params in the URL → confirm filters are pre-populated and results are filtered
+   immediately.
 
 ---
 

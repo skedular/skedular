@@ -1,5 +1,6 @@
-using Api.Shared.Clients.Events.Skedular.Booking.V1;
+﻿using Api.Shared.Clients.Events.Skedular.Booking.V1;
 using Enterprise.Shared.Messaging.Kafka;
+using CustomerReadiness_V1_Value_Event = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Event;
 using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Event;
 using Location_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Location.V1.Event;
 using Marketplace_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Event;
@@ -9,7 +10,6 @@ using OrganizationMember_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Org
 using Team_V1_Value_Event = Api.Shared.Clients.Events.Skedular.Team.V1.Event;
 using V1_Value_Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Event;
 using Value_Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Event;
-using CustomerReadiness_V1_Value_Event = Api.Shared.Clients.Events.Skedular.CustomerReadiness.V1.Event;
 
 namespace Infrastructure.Shared.Services;
 

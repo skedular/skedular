@@ -1,4 +1,4 @@
-using Api.Shared.Clients.OpenApi.Skedular.Slack.Core.V1;
+﻿using Api.Shared.Clients.OpenApi.Skedular.Slack.Core.V1;
 
 namespace Slack.Domain.IntegrationTests.Api.Rest.SlackControllerTests;
 

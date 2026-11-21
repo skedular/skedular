@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Booking.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -152,11 +152,11 @@ public class MarketplaceRefundConfiguration : IEntityTypeConfiguration<Marketpla
         }).IsUnique();
         builder.HasIndex(item => item.IdempotencyKey).IsUnique();
         builder.HasIndex(item => new
-            {
-                item.LocalEntityType,
-                item.LocalEntityId,
-                item.RefundKind,
-            })
+        {
+            item.LocalEntityType,
+            item.LocalEntityId,
+            item.RefundKind,
+        })
             .IsUnique()
             .HasFilter(
                 $"\"{nameof(MarketplaceRefund.RefundKind)}\" = 'Cancellation' AND \"{nameof(MarketplaceRefund.Status)}\" NOT IN ('Completed', 'Failed', 'Rejected', 'Cancelled')")

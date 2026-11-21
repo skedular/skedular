@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using EmailValidation;
 using Enterprise.Shared.Azure.Configurations;
 using Enterprise.Shared.Context;

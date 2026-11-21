@@ -1,4 +1,4 @@
-namespace Api.Shared.Services;
+﻿namespace Api.Shared.Services;
 
 public static class Constants
 {

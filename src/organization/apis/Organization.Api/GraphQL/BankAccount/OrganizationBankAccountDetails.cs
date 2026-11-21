@@ -1,4 +1,4 @@
-using Enterprise.Shared.GraphQL.Types;
+﻿using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using Organization.Api.GraphQL.Organization;
 

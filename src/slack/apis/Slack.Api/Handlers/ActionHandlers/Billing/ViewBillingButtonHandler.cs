@@ -1,4 +1,4 @@
-using SlackNet.Interaction;
+﻿using SlackNet.Interaction;
 
 namespace Slack.Api.Handlers.ActionHandlers.Billing;
 

@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.IntegrationTesting;
+﻿namespace Enterprise.Shared.IntegrationTesting;
 
 public interface IEventually
 {

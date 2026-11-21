@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Configurations;
 using Microsoft.Extensions.Caching.Hybrid;

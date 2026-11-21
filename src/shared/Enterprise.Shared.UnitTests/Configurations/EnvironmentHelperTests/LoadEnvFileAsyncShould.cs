@@ -1,4 +1,4 @@
-using Enterprise.Shared.Configurations;
+﻿using Enterprise.Shared.Configurations;
 
 namespace Enterprise.Shared.UnitTests.Configurations.EnvironmentHelperTests;
 

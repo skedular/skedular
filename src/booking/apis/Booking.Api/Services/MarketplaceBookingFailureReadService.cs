@@ -1,7 +1,7 @@
-using Booking.Shared.Models;
+﻿using Booking.Shared.Models;
 using Booking.Shared.Repositories;
-using FailureModel = Booking.Shared.Models.MarketplaceBookingFailureSummary;
 using BookingEntity = Booking.Shared.Database.Entities.MarketplaceBookingFailure;
+using FailureModel = Booking.Shared.Models.MarketplaceBookingFailureSummary;
 
 namespace Booking.Api.Services;
 

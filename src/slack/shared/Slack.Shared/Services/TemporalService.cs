@@ -1,4 +1,4 @@
-using Enterprise.Shared.Temporal.Configurations;
+﻿using Enterprise.Shared.Temporal.Configurations;
 using Slack.Shared.Workflows;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;

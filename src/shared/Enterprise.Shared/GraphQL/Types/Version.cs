@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.GraphQL.Types;
+﻿namespace Enterprise.Shared.GraphQL.Types;
 
 [GraphQLName("Version")]
 [Shareable]

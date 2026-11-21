@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+﻿using Api.Shared.Services.Models;
 using Core.Shared.Models;
 using CdnFile = Core.Shared.Models.CdnFile;
 using Customer = Core.Shared.Models.Customer;

@@ -1,4 +1,4 @@
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
 using Enterprise.Shared.Database.Interceptors;
 using Microsoft.EntityFrameworkCore.Diagnostics;

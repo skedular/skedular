@@ -1,4 +1,4 @@
-using Enterprise.Shared.UnitTesting.Database.TestSupport;
+﻿using Enterprise.Shared.UnitTesting.Database.TestSupport;
 
 namespace Enterprise.Shared.UnitTesting.Fixtures;
 

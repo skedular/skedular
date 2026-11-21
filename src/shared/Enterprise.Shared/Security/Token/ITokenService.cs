@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Security.Token;
+﻿namespace Enterprise.Shared.Security.Token;
 
 public interface ITokenService
 {

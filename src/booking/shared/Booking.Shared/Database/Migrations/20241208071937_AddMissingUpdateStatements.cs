@@ -17,7 +17,7 @@ namespace Booking.Shared.Database.Migrations
                                         WHEN ""MembershipType"" = 2 THEN 'MEMBER'
                                         ELSE 'UNKNOWN'
                                 END");
-            
+
             migrationBuilder.Sql(@"UPDATE public.""TeamMember""
                                     SET ""NewMembershipType""= CASE 
                                         WHEN ""MembershipType"" = 0 THEN 'OWNER'

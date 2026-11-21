@@ -6,8 +6,8 @@ using Location.Shared.Database;
 using Location.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Resource = Location.Shared.Database.Entities.Resource;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
+using Resource = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Shared.Repositories;
 

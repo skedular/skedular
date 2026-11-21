@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Microsoft.AspNetCore.Http;

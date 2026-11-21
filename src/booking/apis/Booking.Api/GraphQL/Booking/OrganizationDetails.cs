@@ -1,4 +1,4 @@
-using Booking.Shared.Services;
+﻿using Booking.Shared.Services;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;

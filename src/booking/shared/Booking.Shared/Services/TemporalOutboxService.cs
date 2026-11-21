@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Temporal;

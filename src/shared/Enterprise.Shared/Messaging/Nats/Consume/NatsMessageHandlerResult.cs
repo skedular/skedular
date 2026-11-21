@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Messaging.Nats.Consume;
+﻿namespace Enterprise.Shared.Messaging.Nats.Consume;
 
 public abstract record NatsMessageHandlerResult
 {

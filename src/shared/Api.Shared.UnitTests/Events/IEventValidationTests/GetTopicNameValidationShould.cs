@@ -1,4 +1,4 @@
-using Api.Shared.Events.Kafka;
+﻿using Api.Shared.Events.Kafka;
 
 namespace Api.Shared.UnitTests.Events.IEventValidationTests;
 

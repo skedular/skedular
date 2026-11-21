@@ -1,4 +1,4 @@
-using Customer.Shared.Activities;
+﻿using Customer.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 

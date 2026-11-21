@@ -1,8 +1,9 @@
-<Project Sdk="Aspire.AppHost.Sdk/17.0.0">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <Features>runtime-async=on</Features>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <UserSecretsId>198c1722-bc6b-4ea8-8554-27a6f736d78c</UserSecretsId>
@@ -12,6 +13,7 @@
         <!-- Aspire / Infrastructure Hosting -->
         <PackageReference Include="InfinityFlow.Aspire.Temporal" Version="1.0.2"/>
         <PackageReference Include="Aspire.Hosting.AppHost" Version="17.0.0"/>
+        <PackageReference Include="Aspire.Hosting.Dotnet" Version="17.0.0"/>
         <PackageReference Include="Aspire.Hosting.Redis" Version="17.0.0"/>
         <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="17.0.0"/>
 
@@ -23,13 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj" IsAspireProjectResource="false"/>
-        <ProjectReference Include="../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj"/>
-        <ProjectReference Include="../Organization.Domain.FakeDependencies/Organization.Domain.FakeDependencies.csproj"/>
-        <ProjectReference Include="../../apis/Organization.Api/Organization.Api.csproj"/>
-        <ProjectReference Include="../../jobs/Organization.Jobs/Organization.Jobs.csproj"/>
-        <ProjectReference Include="../../processors/Organization.Processors/Organization.Processors.csproj"/>
-        <ProjectReference Include="../../shared/Organization.Infrastructure/Organization.Infrastructure.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

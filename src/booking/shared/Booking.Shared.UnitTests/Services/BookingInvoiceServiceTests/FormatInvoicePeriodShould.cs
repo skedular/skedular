@@ -1,4 +1,4 @@
-using Booking.Shared.Services;
+﻿using Booking.Shared.Services;
 
 namespace Booking.Shared.UnitTests.Services.BookingInvoiceServiceTests;
 

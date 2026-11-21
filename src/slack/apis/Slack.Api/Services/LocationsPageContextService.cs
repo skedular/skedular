@@ -1,4 +1,4 @@
-using Slack.Shared.Context;
+﻿using Slack.Shared.Context;
 
 namespace Slack.Api.Services;
 

@@ -5,9 +5,9 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
-using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Customer = Slack.Shared.Models.Customer;
 using CustomerConfiguration = Api.Shared.Clients.Configurations.Grpc.CustomerConfiguration;
+using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 
 namespace Slack.Shared.Services.CrossDomains;
 

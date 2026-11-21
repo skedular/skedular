@@ -1,4 +1,4 @@
-using Enterprise.Shared.Outbox;
+﻿using Enterprise.Shared.Outbox;
 using Enterprise.Shared.UnitTesting.Database.TestSupport;
 using Enterprise.Shared.UnitTesting.Fixtures;
 using Microsoft.Extensions.Logging;

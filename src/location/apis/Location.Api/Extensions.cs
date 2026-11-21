@@ -1,4 +1,4 @@
-using Api.Shared.Services.Configurations.Grpc;
+﻿using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Offering;
 using Location.Api.Mappers;
 using Location.Api.Services;

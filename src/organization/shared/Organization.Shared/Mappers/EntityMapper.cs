@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
+﻿using Api.Shared.Grpc.Skedular.Customer.Admin.V1;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
@@ -10,13 +10,13 @@ using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
 using Customer = Organization.Shared.Models.Customer;
 using CustomerType = Api.Shared.Grpc.Skedular.Customer.Core.V1.CustomerType;
 using Identity = Organization.Shared.Models.Identity;
-using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
-using PaymentMethod = Stripe.PaymentMethod;
-using PersonalInformationVisibility = Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationSpacesSubscription = Organization.Shared.Models.PricingCatalog.OrganizationSpacesSubscription;
+using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
+using PaymentMethod = Stripe.PaymentMethod;
+using PersonalInformationVisibility = Api.Shared.Grpc.Skedular.Customer.Core.V1.PersonalInformationVisibility;
 
 namespace Organization.Shared.Mappers;
 

@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;

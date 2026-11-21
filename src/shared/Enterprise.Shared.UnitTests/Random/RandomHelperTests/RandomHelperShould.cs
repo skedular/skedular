@@ -1,4 +1,4 @@
-using Enterprise.Shared.Random;
+﻿using Enterprise.Shared.Random;
 
 namespace Enterprise.Shared.UnitTests.Random.RandomHelperTests;
 

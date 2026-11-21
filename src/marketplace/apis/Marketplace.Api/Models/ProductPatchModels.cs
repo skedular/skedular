@@ -1,4 +1,4 @@
-using HotChocolate;
+﻿using HotChocolate;
 using Marketplace.Shared.Models;
 
 namespace Marketplace.Api.Models;

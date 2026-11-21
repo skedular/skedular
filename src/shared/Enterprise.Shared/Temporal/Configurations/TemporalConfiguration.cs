@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Temporal.Configurations;
+﻿namespace Enterprise.Shared.Temporal.Configurations;
 
 public static class Defaults
 {

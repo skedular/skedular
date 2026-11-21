@@ -1,4 +1,4 @@
-using Api.Shared.Services;
+﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Mappers;
@@ -117,9 +117,9 @@ public class AddAsyncShould
 
         await Should.ThrowAsync<SpacesBookingQuotaExceeded>(() =>
             sut.AddAsync(booking, new Database.Entities.Customer
-                {
-                    Id = "customer-1",
-                }, organizations, [],
+            {
+                Id = "customer-1",
+            }, organizations, [],
                 null, cancellationToken));
     }
 
@@ -224,9 +224,9 @@ public class AddAsyncShould
             .Returns(booking);
 
         var result = await sut.AddAsync(booking, new Database.Entities.Customer
-            {
-                Id = "customer-1",
-            }, organizations, [],
+        {
+            Id = "customer-1",
+        }, organizations, [],
             null, cancellationToken);
 
         result.ShouldNotBeNull();
@@ -323,9 +323,9 @@ public class AddAsyncShould
             .Returns(booking);
 
         var result = await sut.AddAsync(booking, new Database.Entities.Customer
-            {
-                Id = "customer-1",
-            }, organizations, [],
+        {
+            Id = "customer-1",
+        }, organizations, [],
             null, cancellationToken);
 
         result.ShouldNotBeNull();

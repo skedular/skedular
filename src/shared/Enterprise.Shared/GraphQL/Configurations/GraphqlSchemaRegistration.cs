@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.GraphQL.Configurations;
+﻿namespace Enterprise.Shared.GraphQL.Configurations;
 
 /// <summary>
 ///     Marker registration recording a GraphQL schema that was wired up via
