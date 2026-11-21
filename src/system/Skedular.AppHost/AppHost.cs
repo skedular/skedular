@@ -1,7 +1,7 @@
+using Aspire.Hosting.Dotnet;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
-using Projects;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), CancellationToken.None);
@@ -41,7 +41,7 @@ var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 #pragma warning restore ASPIRECERTIFICATES001
 
 var sharedInfrastructure = builder
-    .AddProject<Infrastructure_Shared>("infrastructureshared")
+    .AddDotnetProject("infrastructureshared", "../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -51,7 +51,7 @@ var sharedInfrastructure = builder
 /******************************************************************************************************************************/
 var bookingDatabase = postgres.AddDatabase("bookingdb");
 var bookingInfrastructure = builder
-    .AddProject<Booking_Infrastructure>("bookinginfrastructure")
+    .AddDotnetProject("bookinginfrastructure", "../../booking/shared/Booking.Infrastructure/Booking.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -66,7 +66,7 @@ var bookingInfrastructure = builder
     .WaitFor(bookingDatabase);
 
 var bookingApi = builder
-    .AddProject<Booking_Api>("bookingapi")
+    .AddDotnetProject("bookingapi", "../../booking/apis/Booking.Api/Booking.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -82,7 +82,7 @@ var bookingApi = builder
     .WithGraphQLHttpEndpoint();
 
 var bookingProcessors = builder
-    .AddProject<Booking_Processors>("bookingprocessors")
+    .AddDotnetProject("bookingprocessors", "../../booking/processors/Booking.Processors/Booking.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -97,7 +97,7 @@ var bookingProcessors = builder
     .WaitForCompletion(bookingInfrastructure);
 
 var bookingJobs = builder
-    .AddProject<Booking_Jobs>("bookingjobs")
+    .AddDotnetProject("bookingjobs", "../../booking/jobs/Booking.Jobs/Booking.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -115,7 +115,7 @@ var bookingJobs = builder
 /******************************************************************************************************************************/
 var coreDatabase = postgres.AddDatabase("coredb");
 var coreInfrastructure = builder
-    .AddProject<Core_Infrastructure>("coreinfrastructure")
+    .AddDotnetProject("coreinfrastructure", "../../core/shared/Core.Infrastructure/Core.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -130,7 +130,7 @@ var coreInfrastructure = builder
     .WaitFor(coreDatabase);
 
 var coreApi = builder
-    .AddProject<Core_Api>("coreapi")
+    .AddDotnetProject("coreapi", "../../core/apis/Core.Api/Core.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -146,7 +146,7 @@ var coreApi = builder
     .WithGraphQLHttpEndpoint();
 
 var coreProcessors = builder
-    .AddProject<Core_Processors>("coreprocessors")
+    .AddDotnetProject("coreprocessors", "../../core/processors/Core.Processors/Core.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -161,7 +161,7 @@ var coreProcessors = builder
     .WaitForCompletion(coreInfrastructure);
 
 var coreJobs = builder
-    .AddProject<Core_Jobs>("corejobs")
+    .AddDotnetProject("corejobs", "../../core/jobs/Core.Jobs/Core.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -179,7 +179,7 @@ var coreJobs = builder
 /******************************************************************************************************************************/
 var customerDatabase = postgres.AddDatabase("customerdb");
 var customerInfrastructure = builder
-    .AddProject<Customer_Infrastructure>("customerinfrastructure")
+    .AddDotnetProject("customerinfrastructure", "../../customer/shared/Customer.Infrastructure/Customer.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -194,7 +194,7 @@ var customerInfrastructure = builder
     .WaitFor(customerDatabase);
 
 var customerApi = builder
-    .AddProject<Customer_Api>("customerapi")
+    .AddDotnetProject("customerapi", "../../customer/apis/Customer.Api/Customer.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -210,7 +210,7 @@ var customerApi = builder
     .WithGraphQLHttpEndpoint();
 
 var customerProcessors = builder
-    .AddProject<Customer_Processors>("customerprocessors")
+    .AddDotnetProject("customerprocessors", "../../customer/processors/Customer.Processors/Customer.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -225,7 +225,7 @@ var customerProcessors = builder
     .WaitForCompletion(customerInfrastructure);
 
 var customerJobs = builder
-    .AddProject<Customer_Jobs>("customerjobs")
+    .AddDotnetProject("customerjobs", "../../customer/jobs/Customer.Jobs/Customer.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -243,7 +243,7 @@ var customerJobs = builder
 /******************************************************************************************************************************/
 var locationDatabase = postgres.AddDatabase("locationdb");
 var locationInfrastructure = builder
-    .AddProject<Location_Infrastructure>("locationinfrastructure")
+    .AddDotnetProject("locationinfrastructure", "../../location/shared/Location.Infrastructure/Location.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -258,7 +258,7 @@ var locationInfrastructure = builder
     .WaitFor(locationDatabase);
 
 var locationApi = builder
-    .AddProject<Location_Api>("locationapi")
+    .AddDotnetProject("locationapi", "../../location/apis/Location.Api/Location.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -274,7 +274,7 @@ var locationApi = builder
     .WithGraphQLHttpEndpoint();
 
 var locationProcessors = builder
-    .AddProject<Location_Processors>("locationprocessors")
+    .AddDotnetProject("locationprocessors", "../../location/processors/Location.Processors/Location.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -289,7 +289,7 @@ var locationProcessors = builder
     .WaitForCompletion(locationInfrastructure);
 
 var locationJobs = builder
-    .AddProject<Location_Jobs>("locationjobs")
+    .AddDotnetProject("locationjobs", "../../location/jobs/Location.Jobs/Location.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -307,7 +307,7 @@ var locationJobs = builder
 /******************************************************************************************************************************/
 var marketplaceDatabase = postgres.AddDatabase("marketplacedb");
 var marketplaceInfrastructure = builder
-    .AddProject<Marketplace_Infrastructure>("marketplaceinfrastructure")
+    .AddDotnetProject("marketplaceinfrastructure", "../../marketplace/shared/Marketplace.Infrastructure/Marketplace.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -322,7 +322,7 @@ var marketplaceInfrastructure = builder
     .WaitFor(marketplaceDatabase);
 
 var marketplaceApi = builder
-    .AddProject<Marketplace_Api>("marketplaceapi")
+    .AddDotnetProject("marketplaceapi", "../../marketplace/apis/Marketplace.Api/Marketplace.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -338,7 +338,7 @@ var marketplaceApi = builder
     .WithGraphQLHttpEndpoint();
 
 var marketplaceProcessors = builder
-    .AddProject<Marketplace_Processors>("marketplaceprocessors")
+    .AddDotnetProject("marketplaceprocessors", "../../marketplace/processors/Marketplace.Processors/Marketplace.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -353,7 +353,7 @@ var marketplaceProcessors = builder
     .WaitForCompletion(marketplaceInfrastructure);
 
 var marketplaceJobs = builder
-    .AddProject<Marketplace_Jobs>("marketplacejobs")
+    .AddDotnetProject("marketplacejobs", "../../marketplace/jobs/Marketplace.Jobs/Marketplace.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -371,7 +371,7 @@ var marketplaceJobs = builder
 /******************************************************************************************************************************/
 var msteamsDatabase = postgres.AddDatabase("msteamsdb");
 var msteamsInfrastructure = builder
-    .AddProject<MsTeams_Infrastructure>("msteamsinfrastructure")
+    .AddDotnetProject("msteamsinfrastructure", "../../msteams/shared/MsTeams.Infrastructure/MsTeams.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -386,7 +386,7 @@ var msteamsInfrastructure = builder
     .WaitFor(msteamsDatabase);
 
 var msteamsApi = builder
-    .AddProject<MsTeams_Api>("msteamsapi")
+    .AddDotnetProject("msteamsapi", "../../msteams/apis/MsTeams.Api/MsTeams.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -402,7 +402,7 @@ var msteamsApi = builder
     .WithGraphQLHttpEndpoint();
 
 var msteamsProcessors = builder
-    .AddProject<MsTeams_Processors>("msteamsprocessors")
+    .AddDotnetProject("msteamsprocessors", "../../msteams/processors/MsTeams.Processors/MsTeams.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -417,7 +417,7 @@ var msteamsProcessors = builder
     .WaitForCompletion(msteamsInfrastructure);
 
 var msteamsJobs = builder
-    .AddProject<MsTeams_Jobs>("msteamsjobs")
+    .AddDotnetProject("msteamsjobs", "../../msteams/jobs/MsTeams.Jobs/MsTeams.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -435,7 +435,7 @@ var msteamsJobs = builder
 /******************************************************************************************************************************/
 var organizationDatabase = postgres.AddDatabase("organizationdb");
 var organizationInfrastructure = builder
-    .AddProject<Organization_Infrastructure>("organizationinfrastructure")
+    .AddDotnetProject("organizationinfrastructure", "../../organization/shared/Organization.Infrastructure/Organization.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -450,7 +450,7 @@ var organizationInfrastructure = builder
     .WaitFor(organizationDatabase);
 
 var organizationApi = builder
-    .AddProject<Organization_Api>("organizationapi")
+    .AddDotnetProject("organizationapi", "../../organization/apis/Organization.Api/Organization.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -466,7 +466,7 @@ var organizationApi = builder
     .WithGraphQLHttpEndpoint();
 
 var organizationProcessors = builder
-    .AddProject<Organization_Processors>("organizationprocessors")
+    .AddDotnetProject("organizationprocessors", "../../organization/processors/Organization.Processors/Organization.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -481,7 +481,7 @@ var organizationProcessors = builder
     .WaitForCompletion(organizationInfrastructure);
 
 var organizationJobs = builder
-    .AddProject<Organization_Jobs>("organizationjobs")
+    .AddDotnetProject("organizationjobs", "../../organization/jobs/Organization.Jobs/Organization.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -499,7 +499,7 @@ var organizationJobs = builder
 /******************************************************************************************************************************/
 var slackDatabase = postgres.AddDatabase("slackdb");
 var slackInfrastructure = builder
-    .AddProject<Slack_Infrastructure>("slackinfrastructure")
+    .AddDotnetProject("slackinfrastructure", "../../slack/shared/Slack.Infrastructure/Slack.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -514,7 +514,7 @@ var slackInfrastructure = builder
     .WaitFor(slackDatabase);
 
 var slackApi = builder
-    .AddProject<Slack_Api>("slackapi")
+    .AddDotnetProject("slackapi", "../../slack/apis/Slack.Api/Slack.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -530,7 +530,7 @@ var slackApi = builder
     .WithGraphQLHttpEndpoint();
 
 var slackProcessors = builder
-    .AddProject<Slack_Processors>("slackprocessors")
+    .AddDotnetProject("slackprocessors", "../../slack/processors/Slack.Processors/Slack.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -545,7 +545,7 @@ var slackProcessors = builder
     .WaitForCompletion(slackInfrastructure);
 
 var slackJobs = builder
-    .AddProject<Slack_Jobs>("slackjobs")
+    .AddDotnetProject("slackjobs", "../../slack/jobs/Slack.Jobs/Slack.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -563,7 +563,7 @@ var slackJobs = builder
 /******************************************************************************************************************************/
 var teamDatabase = postgres.AddDatabase("teamdb");
 var teamInfrastructure = builder
-    .AddProject<Team_Infrastructure>("teaminfrastructure")
+    .AddDotnetProject("teaminfrastructure", "../../team/shared/Team.Infrastructure/Team.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -578,7 +578,7 @@ var teamInfrastructure = builder
     .WaitFor(teamDatabase);
 
 var teamApi = builder
-    .AddProject<Team_Api>("teamapi")
+    .AddDotnetProject("teamapi", "../../team/apis/Team.Api/Team.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -594,7 +594,7 @@ var teamApi = builder
     .WithGraphQLHttpEndpoint();
 
 var teamProcessors = builder
-    .AddProject<Team_Processors>("teamprocessors")
+    .AddDotnetProject("teamprocessors", "../../team/processors/Team.Processors/Team.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -609,7 +609,7 @@ var teamProcessors = builder
     .WaitForCompletion(teamInfrastructure);
 
 var teamJobs = builder
-    .AddProject<Team_Jobs>("teamjobs")
+    .AddDotnetProject("teamjobs", "../../team/jobs/Team.Jobs/Team.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -625,7 +625,7 @@ var teamJobs = builder
 /******************************************************************************************************************************/
 
 _ = builder
-    .AddProject<Gateway>("gateway")
+    .AddDotnetProject("gateway", "../../gateway/apis/Gateway/Gateway.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("ReverseProxy__Clusters__booking__Destinations__destination1__Address", bookingApi.GetEndpoint("http"))
     .WithEnvironment("ReverseProxy__Clusters__core__Destinations__destination1__Address", coreApi.GetEndpoint("http"))
@@ -684,16 +684,16 @@ foreach (var project in new[]
 await builder.Build().RunAsync();
 
 static void ConfigureGrpcUrls(
-    IResourceBuilder<ProjectResource> project,
-    IResourceBuilder<ProjectResource> bookingApi,
-    IResourceBuilder<ProjectResource> coreApi,
-    IResourceBuilder<ProjectResource> customerApi,
-    IResourceBuilder<ProjectResource> locationApi,
-    IResourceBuilder<ProjectResource> marketplaceApi,
-    IResourceBuilder<ProjectResource> msteamsApi,
-    IResourceBuilder<ProjectResource> organizationApi,
-    IResourceBuilder<ProjectResource> slackApi,
-    IResourceBuilder<ProjectResource> teamApi)
+    IResourceBuilder<DotnetProjectResource> project,
+    IResourceBuilder<DotnetProjectResource> bookingApi,
+    IResourceBuilder<DotnetProjectResource> coreApi,
+    IResourceBuilder<DotnetProjectResource> customerApi,
+    IResourceBuilder<DotnetProjectResource> locationApi,
+    IResourceBuilder<DotnetProjectResource> marketplaceApi,
+    IResourceBuilder<DotnetProjectResource> msteamsApi,
+    IResourceBuilder<DotnetProjectResource> organizationApi,
+    IResourceBuilder<DotnetProjectResource> slackApi,
+    IResourceBuilder<DotnetProjectResource> teamApi)
 {
     project
         .WithEnvironment("Booking__GrpcUrl", bookingApi.GetEndpoint("http"))

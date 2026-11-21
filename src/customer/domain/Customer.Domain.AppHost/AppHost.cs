@@ -1,7 +1,6 @@
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
-using Projects;
 using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
@@ -42,7 +41,7 @@ var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 var useFakeDependencies = DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled();
 
 var sharedInfrastructure = builder
-    .AddProject<Infrastructure_Shared>("infrastructureshared")
+    .AddDotnetProject("infrastructureshared", "../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Kafka__SchemaRegistry__Url", schemaRegistryUrl)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -51,14 +50,14 @@ var sharedInfrastructure = builder
 
 var customerFakeDependencies = useFakeDependencies
     ? builder
-        .AddProject<Customer_Domain_FakeDependencies>("customerfakedependencies")
+        .AddDotnetProject("customerfakedependencies", "../Customer.Domain.FakeDependencies/Customer.Domain.FakeDependencies.csproj")
         .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
         .WithHttpHealthCheck(Constants.ReadinessPath)
     : null;
 
 var customerDatabase = postgres.AddDatabase("customerdb");
 var customerInfrastructure = builder
-    .AddProject<Customer_Infrastructure>("customerinfrastructure")
+    .AddDotnetProject("customerinfrastructure", "../../shared/Customer.Infrastructure/Customer.Infrastructure.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -73,7 +72,7 @@ var customerInfrastructure = builder
     .WaitFor(customerDatabase);
 
 var customerApi = builder
-    .AddProject<Customer_Api>("customerapi")
+    .AddDotnetProject("customerapi", "../../apis/Customer.Api/Customer.Api.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -88,7 +87,7 @@ var customerApi = builder
     .WaitForCompletion(customerInfrastructure);
 
 var customerProcessors = builder
-    .AddProject<Customer_Processors>("customerprocessors")
+    .AddDotnetProject("customerprocessors", "../../processors/Customer.Processors/Customer.Processors.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -103,7 +102,7 @@ var customerProcessors = builder
     .WaitForCompletion(customerInfrastructure);
 
 var customerJobs = builder
-    .AddProject<Customer_Jobs>("customerjobs")
+    .AddDotnetProject("customerjobs", "../../jobs/Customer.Jobs/Customer.Jobs.csproj")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)

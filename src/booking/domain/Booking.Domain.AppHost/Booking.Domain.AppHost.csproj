@@ -1,6 +1,5 @@
-<Project Sdk="Aspire.AppHost.Sdk/17.0.0">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
         <OutputType>Exe</OutputType>
         <TargetFramework>net11.0</TargetFramework>
         <Features>runtime-async=on</Features>
@@ -13,6 +12,7 @@
         <!-- Aspire / Infrastructure Hosting -->
         <PackageReference Include="InfinityFlow.Aspire.Temporal" Version="1.0.2"/>
         <PackageReference Include="Aspire.Hosting.AppHost" Version="17.0.0"/>
+        <PackageReference Include="Aspire.Hosting.Dotnet" Version="17.0.0"/>
         <PackageReference Include="Aspire.Hosting.Redis" Version="17.0.0"/>
         <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="17.0.0"/>
 
@@ -24,13 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj" IsAspireProjectResource="false"/>
-        <ProjectReference Include="../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj"/>
-        <ProjectReference Include="../Booking.Domain.FakeDependencies/Booking.Domain.FakeDependencies.csproj"/>
-        <ProjectReference Include="../../apis/Booking.Api/Booking.Api.csproj"/>
-        <ProjectReference Include="../../jobs/Booking.Jobs/Booking.Jobs.csproj"/>
-        <ProjectReference Include="../../processors/Booking.Processors/Booking.Processors.csproj"/>
-        <ProjectReference Include="../../shared/Booking.Infrastructure/Booking.Infrastructure.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
