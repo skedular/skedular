@@ -1,6 +1,6 @@
 {
   "integration": "speckit",
-  "version": "1.0.6",
+  "version": "1.4.3",
   "installed_at": "2026-04-14T11:26:01.027089+00:00",
   "files": {
     ".specify/scripts/bash/common.sh": "2b767a5c97d0c8c8f0a868aaa2114f170adfb1921749f4e58675da91382defb7",
@@ -15,6 +15,7 @@
     ".specify/templates/plan-template.md": "873e84b226fe3d24afe28046931b20db9bbb9210366428dc958a515349ed6e68",
     ".specify/scripts/bash/setup-tasks.sh": "e8d050c63c5afb664a8b671b0b0155513fb9cab0567b335e16b9eb035482aad2",
     ".specify/scripts/bash/resolve-template.sh": "829e227096abc8bf0889889ec9f792f503ca5d395b7836a8a7eb739ee75214e7",
-    ".specify/.gitignore": "8c908410d177a1ef3d0dee16d7ad55f2ac3333df3104c4d4adee1c9b82f1dbc1"
+    ".specify/.gitignore": "8c908410d177a1ef3d0dee16d7ad55f2ac3333df3104c4d4adee1c9b82f1dbc1",
+    ".specify/scripts/bash/markdown_sections.py": "189e980b7c86f54c0886be57e3113cf47fc474467a08dff851144b5cc5e1fe39"
   }
 }
