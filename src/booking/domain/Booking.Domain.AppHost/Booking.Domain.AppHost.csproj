@@ -2,7 +2,8 @@
     <PropertyGroup>
         <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFramework>net11.0</TargetFramework>
+        <Features>runtime-async=on</Features>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <UserSecretsId>198c1722-bc6b-4ea8-8554-27a6f736d78c</UserSecretsId>

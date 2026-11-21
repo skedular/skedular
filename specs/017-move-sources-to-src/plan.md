@@ -18,50 +18,48 @@ log and [data-model.md](data-model.md) for the complete file change inventory.
 
 ## Technical Context
 
-**Language/Version**: Bash/sh, YAML (GitHub Actions), Dockerfile syntax, C# 14 / .NET 10
-**Primary Dependencies**: git CLI (for `git mv`), dotnet CLI (build verification), Docker CLI (compose validation)
-**Storage**: N/A — filesystem rename operation only
-**Testing**: `dotnet build src/Skedular.slnx`, `docker compose config`, existing CI test suites
-**Target Platform**: Repository structure (git + filesystem); Ubuntu CI runners
-**Project Type**: Repository structural refactoring
-**Performance Goals**: N/A
-**Constraints**: `git mv` per-file required; all 14 domains + `Skedular.slnx` moved in one atomic commit; all path fix commits separate
+**Language/Version**: Bash/sh, YAML (GitHub Actions), Dockerfile syntax, C# 14 / .NET 11 **Primary Dependencies**: git
+CLI (for `git mv`), dotnet CLI (build verification), Docker CLI (compose validation)
+**Storage**: N/A — filesystem rename operation only **Testing**: `dotnet build src/Skedular.slnx`,
+`docker compose config`, existing CI test suites **Target Platform**: Repository structure (git + filesystem); Ubuntu CI
+runners **Project Type**: Repository structural refactoring **Performance Goals**: N/A **Constraints**: `git mv`
+per-file required; all 14 domains + `Skedular.slnx` moved in one atomic commit; all path fix commits separate
 **Scale/Scope**: 14 directories + 1 solution file moved; ~31 external files requiring ~100+ path reference updates
 
 ## Constitution Check
 
 _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-- [x] **I. Contract-First** — Does this feature touch `api-definitions/` or any generated surface?
-      **No new contracts introduced.** Generation scripts (`api-definitions/generate.sh`,
-      `scripts/generate-graphql.sh`) are updated in this feature so they continue to produce
-      identical outputs from the repository root. Review gate satisfied.
+- [x] **I. Contract-First** — Does this feature touch `api-definitions/` or any generated surface? **No new contracts
+  introduced.** Generation scripts (`api-definitions/generate.sh`,
+  `scripts/generate-graphql.sh`) are updated in this feature so they continue to produce
+  identical outputs from the repository root. Review gate satisfied.
 
-- [x] **II. Domain Boundaries** — Does this feature cross domain ownership lines?
-      **No cross-domain ownership changes.** All domain source trees move together. No service,
-      event, or database access pattern is altered. Physical directory reorganization only.
+- [x] **II. Domain Boundaries** — Does this feature cross domain ownership lines? **No cross-domain ownership changes.**
+  All domain source trees move together. No service,
+  event, or database access pattern is altered. Physical directory reorganization only.
 
-- [x] **III. Testing** — What test tier is required?
-      **Structural refactoring — no new test logic.** All existing unit, integration, and system
-      tests must pass unchanged after the move. Exception approved: no new unit/integration tests
-      are written for this feature (it contains no new logic). Build verification (`dotnet build`)
-      and compose validation (`docker compose config`) serve as the acceptance tests.
+- [x] **III. Testing** — What test tier is required? **Structural refactoring — no new test logic.** All existing unit,
+  integration, and system
+  tests must pass unchanged after the move. Exception approved: no new unit/integration tests
+  are written for this feature (it contains no new logic). Build verification (`dotnet build`)
+  and compose validation (`docker compose config`) serve as the acceptance tests.
 
-- [x] **IV. Frontend** — Does this feature include web changes?
-      **`web/` moves to `src/web/`.** No Relay fragment, generated artefact, typography wrapper,
-      or copy changes. Workflow `paths:` filters and scripts that reference `web/` are updated.
-      No `@skedular/ui` / `@skedular/shared` boundary changes.
+- [x] **IV. Frontend** — Does this feature include web changes? **`web/` moves to `src/web/`.** No Relay fragment,
+  generated artefact, typography wrapper,
+  or copy changes. Workflow `paths:` filters and scripts that reference `web/` are updated.
+  No `@skedular/ui` / `@skedular/shared` boundary changes.
 
-- [x] **V. Pattern Consistency** — Does this feature introduce a new pattern?
-      **Yes — establishes the `src/` top-level source container convention for the Skedular
-      repository.** This is an intentional structural alignment with the DSST repository pattern.
-      No parallel abstractions or framework deviations introduced. Justification: root cleanliness,
-      predictable layout for new contributors, alignment with established sibling repo convention.
+- [x] **V. Pattern Consistency** — Does this feature introduce a new pattern? **Yes — establishes the `src/` top-level
+  source container convention for the Skedular
+  repository.** This is an intentional structural alignment with the DSST repository pattern.
+  No parallel abstractions or framework deviations introduced. Justification: root cleanliness,
+  predictable layout for new contributors, alignment with established sibling repo convention.
 
-- [x] **VI. Logging** — Does this feature add or change behaviour?
-      **No new application code paths, no new `ILogger` events required.** This is a structural
-      refactor. CI/CD pipeline logs will reflect updated paths post-merge; no instrumentation work
-      needed. Constitution logging exception approved for structural-only features.
+- [x] **VI. Logging** — Does this feature add or change behaviour? **No new application code paths, no new `ILogger`
+  events required.** This is a structural
+  refactor. CI/CD pipeline logs will reflect updated paths post-merge; no instrumentation work
+  needed. Constitution logging exception approved for structural-only features.
 
 ## Project Structure
 
@@ -189,8 +187,8 @@ Three `COPY ["shared/...", ...]` source paths → `COPY ["src/shared/...", ...]`
 #### B7 — All 41 domain Dockerfiles
 
 `WORKDIR "/src/<domain>/..."` → `WORKDIR "/src/src/<domain>/..."` in every Dockerfile.
-Any other container-absolute path like `/src/<domain>/...` also gains the `src/` segment
-(e.g., `all-in-one/AllApis/Dockerfile` references `/src/gateway/apis/Gateway/gateway.far`).
+Any other container-absolute path like `/src/<domain>/...` also gains the `src/` segment (e.g.,
+`all-in-one/AllApis/Dockerfile` references `/src/gateway/apis/Gateway/gateway.far`).
 
 #### B8 — .github/workflows/ (21 files)
 
@@ -199,7 +197,8 @@ For each workflow:
 1. `paths:` filters: `- "<domain>/**"` → `- "src/<domain>/**"`
 2. `workingDirectory:` / `working-directory:`: `./<domain>/...` → `./src/<domain>/...`
 3. `dockerFilePath:`: `./<domain>/...` → `./src/<domain>/...`
-4. `copilot-setup-steps.yml` only: `Skedular.slnx` → `src/Skedular.slnx`; `web/pnpm-lock.yaml` → `src/web/pnpm-lock.yaml`
+4. `copilot-setup-steps.yml` only: `Skedular.slnx` → `src/Skedular.slnx`; `web/pnpm-lock.yaml` →
+   `src/web/pnpm-lock.yaml`
 
 #### B9 — .vscode/tasks.json, .vscode/launch.json
 
@@ -241,7 +240,7 @@ grep -rn '"booking/\|"shared/\|"gateway/\|"all-in-one/\|"web/' \
 ## Files That Do NOT Need Updates
 
 | File / Category                               | Reason                             |
-| --------------------------------------------- | ---------------------------------- |
+|-----------------------------------------------|------------------------------------|
 | All `.csproj` `<ProjectReference>` entries    | Relative-path self-consistency     |
 | Domain-level `.slnx` inside `src/`            | Relative-path self-consistency     |
 | `docker-compose*.yml` (4 files)               | No domain build contexts           |

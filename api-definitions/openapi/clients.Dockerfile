@@ -1,14 +1,15 @@
 ﻿# syntax = docker/dockerfile:1.12.0
-ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk:10.0
+ARG BUILD_IMAGE=mcr.microsoft.com/dotnet/sdk:11.0
 ARG NSWAG_VERSION=latest
 
-# Provides the .NET 8 shared runtimes
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dotnet8
 
 FROM $BUILD_IMAGE AS build
 LABEL maintainer="morteza.alizadeh@gmail.com"
 
-# Keep .NET 10 and add .NET 8 alongside it
+ENV DOTNET_ROLL_FORWARD=Major
+
+# Keep .NET 11 and add .NET 8 alongside it
 COPY --from=dotnet8 /usr/share/dotnet/shared/Microsoft.NETCore.App/ \
   /usr/share/dotnet/shared/Microsoft.NETCore.App/
 COPY --from=dotnet8 /usr/share/dotnet/shared/Microsoft.AspNetCore.App/ \

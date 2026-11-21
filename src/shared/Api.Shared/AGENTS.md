@@ -91,7 +91,7 @@ var retryTopic = MyEventMetadata.TopicName.GetRetryTopicName(); // Prefixed retr
 Api.Shared (netstandard2.0)
   ↑
   ├─ Api.Shared.Clients (netstandard2.0) — for event metadata
-  ├─ Enterprise.Shared (net10.0) — for Kafka infrastructure
+  ├─ Enterprise.Shared (net11.0) — for Kafka infrastructure
   └─ (All domains consuming Kafka events)
 ```
 

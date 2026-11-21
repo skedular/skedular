@@ -9,15 +9,16 @@
         <Company>Skedular Ltd</Company>
         <RepositoryUrl>https://github.com/skedular/skedular</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <TargetFramework>net10.0</TargetFramework>
-        <LangVersion>14</LangVersion>
+        <TargetFramework>net11.0</TargetFramework>
+        <Features>runtime-async=on</Features>
+        <LangVersion>15</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
         <!-- Entity Framework Core (Design / Migration) -->
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.15">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="11.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

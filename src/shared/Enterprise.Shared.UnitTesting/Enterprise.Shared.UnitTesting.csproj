@@ -9,8 +9,9 @@
         <Company>Skedular Ltd</Company>
         <RepositoryUrl>https://github.com/skedular/skedular</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <TargetFramework>net10.0</TargetFramework>
-        <LangVersion>14</LangVersion>
+        <TargetFramework>net11.0</TargetFramework>
+        <Features>runtime-async=on</Features>
+        <LangVersion>15</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <OutputType>Exe</OutputType>
@@ -39,8 +40,8 @@
         <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.1.0"/>
 
         <!-- Entity Framework Core (In-Memory Testing) -->
-        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.15"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.15"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="11.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="11.0.0"/>
         <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3"/>
 
         <!-- Analyzers -->
