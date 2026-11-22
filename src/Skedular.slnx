@@ -432,7 +432,6 @@
         <File Path="../scripts/format.sh"/>
         <File Path="../scripts/generate-graphql.sh"/>
         <File Path="../scripts/lint.sh"/>
-        <File Path="../scripts/start-dependencies-min.sh"/>
         <File Path="../scripts/start-dependencies.sh"/>
         <File Path="../scripts/update-dotnet-tools.sh"/>
         <File Path="..\scripts\AGENTS.md"/>
@@ -471,7 +470,6 @@
         <File Path="../.gitignore"/>
         <File Path="../AGENTS.md"/>
         <File Path="../docker-compose-crm.yml"/>
-        <File Path="../docker-compose-min.yml"/>
         <File Path="../docker-compose-production.yml"/>
         <File Path="../docker-compose.yml"/>
         <File Path="../keyckloak.json"/>

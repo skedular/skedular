@@ -1,0 +1,11 @@
+version: 0.8
+listen_address: 0.0.0.0
+metastore_uri: postgres://quickwit:quickwit-local@postgres:5432/quickwit?sslmode=disable
+default_index_root_uri: s3://quickwit/indexes
+storage:
+  s3:
+    endpoint: http://observability-object-storage:8333
+    region: us-east-1
+    access_key_id: local-observability
+    secret_access_key: local-observability-secret
+    force_path_style_access: true

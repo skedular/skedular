@@ -8,6 +8,7 @@ public class OpenTelemetryConfiguration
     public bool MetricsIngestEnabled { get; set; }
     public bool EntityFrameworkEnabled { get; set; }
     public string MeterProviderName { get; set; } = string.Empty;
+    public string? LocalOtlpEndpoint { get; set; }
 
     /// <summary>
     ///     When true, spans from outbox background services (kafka_outbox, temporal_outbox)

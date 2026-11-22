@@ -21,7 +21,9 @@ public static class OpenTelemetryExtensions
 
     private static bool IsOtlpExporterConfigured(IConfiguration configuration, string signalName) =>
         !string.IsNullOrWhiteSpace(configuration[$"OTEL_EXPORTER_OTLP_{signalName}_ENDPOINT"])
-        || !string.IsNullOrWhiteSpace(configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
+        || !string.IsNullOrWhiteSpace(configuration["OTEL_EXPORTER_OTLP_ENDPOINT"])
+        || (signalName is MetricsOtlpSignalName or TracesOtlpSignalName
+            && !string.IsNullOrWhiteSpace(configuration[$"{OpenTelemetryConfiguration.Key}:{nameof(OpenTelemetryConfiguration.LocalOtlpEndpoint)}"]));
 
     private static OtlpExporterOptions CreateOtlpExporterOptions(IConfiguration configuration, string signalName)
     {
@@ -54,6 +56,16 @@ public static class OpenTelemetryExtensions
             options.Endpoint = options.Protocol == OtlpExportProtocol.HttpProtobuf
                 ? AppendOtlpHttpSignalPath(endpointUri, signalName)
                 : endpointUri;
+            return;
+        }
+
+        if (signalName is MetricsOtlpSignalName or TracesOtlpSignalName &&
+            Uri.TryCreate(
+                configuration[$"{OpenTelemetryConfiguration.Key}:{nameof(OpenTelemetryConfiguration.LocalOtlpEndpoint)}"],
+                UriKind.Absolute,
+                out var localEndpoint))
+        {
+            options.Endpoint = localEndpoint;
         }
     }
 

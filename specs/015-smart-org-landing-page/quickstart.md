@@ -9,7 +9,7 @@
 
 - pnpm 11+ installed
 - Docker running (for local dev dependencies)
-- Organization API and Customer API reachable (via `docker-compose-min.yml` or Aspire)
+- Organization API and Customer API reachable (via Docker Compose or Aspire)
 - An authenticated user account in the local environment
 
 ---
@@ -18,7 +18,7 @@
 
 ```bash
 # From repo root — start minimum local services (Postgres, Kafka, Redis, etc.)
-docker compose -f docker-compose-min.yml up -d
+./scripts/start-dependencies.sh
 
 # Install web dependencies (from repo root)
 cd web && pnpm install

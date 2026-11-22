@@ -1,0 +1,52 @@
+multitenancy_enabled: true
+
+server:
+  http_listen_port: 9009
+
+common:
+  storage:
+    backend: s3
+    s3:
+      endpoint: observability-object-storage:8333
+      bucket_name: mimir
+      access_key_id: local-observability
+      secret_access_key: local-observability-secret
+      insecure: true
+
+blocks_storage:
+  backend: s3
+  s3:
+    endpoint: observability-object-storage:8333
+    bucket_name: mimir
+    access_key_id: local-observability
+    secret_access_key: local-observability-secret
+    insecure: true
+  tsdb:
+    dir: /data/tsdb
+
+ruler_storage:
+  backend: s3
+  s3:
+    endpoint: observability-object-storage:8333
+    bucket_name: mimir-ruler
+    access_key_id: local-observability
+    secret_access_key: local-observability-secret
+    insecure: true
+
+compactor:
+  data_dir: /data/compactor
+
+distributor:
+  ring:
+    kvstore:
+      store: inmemory
+
+ingester:
+  ring:
+    replication_factor: 1
+    kvstore:
+      store: inmemory
+
+store_gateway:
+  sharding_ring:
+    replication_factor: 1

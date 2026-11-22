@@ -14,9 +14,13 @@ regenerated via a new REST endpoint.
 
 Also fixes three bugs in existing location analytics:
 
-- Cancelled bookings were counted in occupancy (now excluded; the booking gRPC server already filters soft-deleted bookings server-side)
-- Dual-tagged desk+room resources were double-counted; they are now counted as desks only in `RecordLocationDesksCountAsync` (rooms count excludes them), and classified as `Unavailable` in the availability snapshot
-- Zero-capacity locations returned misleading 0% occupancy (now omitted from the `desksOccupancyPercentage` list entirely)
+- Cancelled bookings were counted in occupancy (now excluded; the booking gRPC server already filters soft-deleted
+  bookings server-side)
+- Dual-tagged desk+room resources were double-counted; they are now counted as desks only in
+  `RecordLocationDesksCountAsync` (rooms count excludes them), and classified as `Unavailable` in the availability
+  snapshot
+- Zero-capacity locations returned misleading 0% occupancy (now omitted from the `desksOccupancyPercentage` list
+  entirely)
 
 ---
 
@@ -25,7 +29,7 @@ Also fixes three bugs in existing location analytics:
 1. Start the full stack:
 
    ```sh
-   docker-compose -f docker-compose-min.yml up -d
+   ./scripts/start-dependencies.sh
    ```
 
 2. Run the `Location.Api` service and `Location.Jobs` (Temporal worker):

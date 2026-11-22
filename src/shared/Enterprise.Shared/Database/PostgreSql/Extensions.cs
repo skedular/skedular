@@ -287,7 +287,7 @@ public static class Extensions
                     {
                         tracing.AddEntityFrameworkCoreInstrumentation(options =>
                         {
-                            options.EnrichWithIDbCommand = delegate (Activity activity, IDbCommand command)
+                            options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
                             {
                                 activity.DisplayName = $"{command.CommandType} main";
                                 activity.SetTag("db.type", command.CommandType);

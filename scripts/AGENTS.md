@@ -14,7 +14,6 @@ This file applies to `scripts/`.
 | `format.sh`                  | Runs code formatters across the repo.                                                                                                                                                     |
 | `lint.sh`                    | Runs JetBrains `inspectcode` static analysis on the .NET solution.                                                                                                                        |
 | `start-dependencies.sh`      | Starts all local development infrastructure dependencies.                                                                                                                                 |
-| `start-dependencies-min.sh`  | Starts the minimal set of local infrastructure dependencies needed for lightweight development.                                                                                           |
 | `update-dotnet-tools.sh`     | Updates the locally pinned .NET tools (manifested in `.config/dotnet-tools.json`).                                                                                                        |
 | `update-web-npm-packages.sh` | Updates web workspace dependency and peer-dependency ranges, refreshes the lockfile, and verifies shared version synchronization.                                                         |
 

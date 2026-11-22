@@ -7,6 +7,10 @@ volumes:
   skedular_kafka1_data:
   skedular_keycloak_data:
   skedular_temporal_data:
+  skedular_observability_data:
+  skedular_quickwit_data:
+  skedular_mimir_data:
+  skedular_grafana_data:
 
 services:
   dozzle:
@@ -33,6 +37,174 @@ services:
     networks:
       - skedular_network
 
+  quickwit-metastore-init:
+    image: postgis/postgis:18-master
+    depends_on:
+      postgres:
+        condition: service_started
+    environment:
+      PGPASSWORD: "123456"
+      QUICKWIT_DB_PASSWORD: quickwit-local
+    entrypoint: [ "/bin/sh" ]
+    command:
+      - -ec
+      - |
+        until pg_isready -h postgres -U 8b974997c3c54b10a556f089377505d7 -d postgres; do sleep 1; done;
+        if psql -h postgres -U 8b974997c3c54b10a556f089377505d7 -d postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname = 'quickwit'" | grep -q 1; then
+          psql -h postgres -U 8b974997c3c54b10a556f089377505d7 -d postgres -v ON_ERROR_STOP=1 -c "ALTER ROLE quickwit WITH LOGIN PASSWORD '$$QUICKWIT_DB_PASSWORD'";
+        else
+          psql -h postgres -U 8b974997c3c54b10a556f089377505d7 -d postgres -v ON_ERROR_STOP=1 -c "CREATE ROLE quickwit LOGIN PASSWORD '$$QUICKWIT_DB_PASSWORD'";
+        fi
+        if psql -h postgres -U 8b974997c3c54b10a556f089377505d7 -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname = 'quickwit'" | grep -q 1; then
+          psql -h postgres -U 8b974997c3c54b10a556f089377505d7 -d postgres -v ON_ERROR_STOP=1 -c "ALTER DATABASE quickwit OWNER TO quickwit";
+        else
+          psql -h postgres -U 8b974997c3c54b10a556f089377505d7 -d postgres -v ON_ERROR_STOP=1 -c "CREATE DATABASE quickwit OWNER quickwit";
+        fi
+    networks:
+      - skedular_network
+
+  observability-object-storage:
+    image: chrislusf/seaweedfs:latest
+    entrypoint: [ "weed" ]
+    command: [ "mini", "-dir=/data", "-ip=observability-object-storage", "-ip.bind=0.0.0.0" ]
+    restart: unless-stopped
+    environment:
+      AWS_ACCESS_KEY_ID: local-observability
+      AWS_SECRET_ACCESS_KEY: local-observability-secret
+    volumes:
+      - skedular_observability_data:/data
+    ports:
+      - "8333:8333"
+      - "9333:9333"
+    networks:
+      - skedular_network
+
+  observability-object-storage-init:
+    image: amazon/aws-cli:latest
+    depends_on:
+      - observability-object-storage
+    environment:
+      AWS_ACCESS_KEY_ID: local-observability
+      AWS_SECRET_ACCESS_KEY: local-observability-secret
+      AWS_DEFAULT_REGION: us-east-1
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >-
+        until aws --endpoint-url http://observability-object-storage:8333 s3api list-buckets; do sleep 1; done;
+        aws --endpoint-url http://observability-object-storage:8333 s3api create-bucket --bucket quickwit || true;
+        aws --endpoint-url http://observability-object-storage:8333 s3api create-bucket --bucket mimir || true;
+        aws --endpoint-url http://observability-object-storage:8333 s3api create-bucket --bucket mimir-ruler || true
+    networks:
+      - skedular_network
+
+  quickwit:
+    image: quickwit/quickwit:latest
+    restart: unless-stopped
+    command: [ "run", "--config", "/etc/quickwit/quickwit.yaml" ]
+    depends_on:
+      postgres:
+        condition: service_started
+      quickwit-metastore-init:
+        condition: service_completed_successfully
+      observability-object-storage-init:
+        condition: service_completed_successfully
+    volumes:
+      - ./local-dev/observability/quickwit.yaml:/etc/quickwit/quickwit.yaml:ro
+      - skedular_quickwit_data:/quickwit/qwdata
+    ports:
+      - "7280:7280"
+      - "7281:7281"
+      - "7282:7282"
+    networks:
+      - skedular_network
+
+  quickwit-log-retention-init:
+    image: curlimages/curl:latest
+    depends_on:
+      quickwit:
+        condition: service_started
+    volumes:
+      - ./local-dev/observability/otel-logs-index.yaml:/etc/quickwit/otel-logs-index.yaml:ro
+    entrypoint: [ "/bin/sh", "-c" ]
+    command:
+      - |
+        until curl --fail --silent http://quickwit:7280/api/v1/indexes/otel-logs-v0_9 >/dev/null 2>&1 ||
+              curl --fail --silent --retry 30 --retry-delay 2 -XPUT "http://quickwit:7280/api/v1/indexes/otel-logs-v0_9?create=true" \
+                --header "Content-Type: application/yaml" \
+                --data-binary @/etc/quickwit/otel-logs-index.yaml >/dev/null; do
+          sleep 2
+        done
+        curl --fail --retry 10 --retry-delay 2 -XPUT "http://quickwit:7280/api/v1/indexes/otel-logs-v0_9" \
+          --header "Content-Type: application/yaml" \
+          --data-binary @/etc/quickwit/otel-logs-index.yaml
+    networks:
+      - skedular_network
+
+  jaeger-ui:
+    image: jaegertracing/jaeger-query:latest
+    restart: unless-stopped
+    depends_on:
+      - quickwit
+    environment:
+      SPAN_STORAGE_TYPE: grpc
+      GRPC_STORAGE_SERVER: quickwit:7281
+    ports:
+      - "16686:16686"
+    networks:
+      - skedular_network
+
+  mimir:
+    image: grafana/mimir:latest
+    restart: unless-stopped
+    command: [ "-config.file=/etc/mimir/mimir.yaml" ]
+    depends_on:
+      observability-object-storage-init:
+        condition: service_completed_successfully
+    volumes:
+      - ./local-dev/observability/mimir.yaml:/etc/mimir/mimir.yaml:ro
+      - skedular_mimir_data:/data
+    ports:
+      - "9009:9009"
+    networks:
+      - skedular_network
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    depends_on:
+      - quickwit
+      - mimir
+      - jaeger-ui
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_INSTALL_PLUGINS: quickwit-quickwit-datasource
+    volumes:
+      - skedular_grafana_data:/var/lib/grafana
+      - ./local-dev/observability/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+    ports:
+      - "3000:3000"
+    networks:
+      - skedular_network
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    restart: unless-stopped
+    command: [ "--config=/etc/otelcol-contrib/config.yaml" ]
+    depends_on:
+      - quickwit
+      - mimir
+    volumes:
+      - ./local-dev/observability/otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8889:8889"
+    networks:
+      - skedular_network
+
   redis:
     image: redis:latest
     restart: unless-stopped
@@ -41,7 +213,7 @@ services:
     volumes:
       - skedular_redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -83,7 +255,7 @@ services:
       - "9100:9100"
     healthcheck:
       test:
-        ["CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1"]
+        [ "CMD-SHELL", "rpk cluster health | grep -E 'Healthy:.+true' || exit 1" ]
       interval: 15s
       timeout: 3s
       retries: 5
@@ -126,7 +298,7 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KEYCLOAK_IMPORT: /opt/keycloak/data/import/realm.json
       KEYCLOAK_IMPORT_STRATEGY: OVERWRITE_EXISTING
-    command: ["start-dev", "--import-realm"]
+    command: [ "start-dev", "--import-realm" ]
     volumes:
       - skedular_keycloak_data:/opt/keycloak/data
       - ./keyckloak.json:/opt/keycloak/data/import/realm.json
