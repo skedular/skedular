@@ -77,6 +77,11 @@ Use `MetricTaggingExtensions.ToTagList(ITaggable)` to convert tag objects to `Ta
 
 - Do not create `ActivitySource` instances directly in domain code — use `IActivityAccessor` to retrieve or start
   activities so the source name stays consistent.
+- Instrumentation may be registered by every embedded host, but OTLP and console exporters must be claimed once per
+  process signal and destination. Multi-host `All*` executables otherwise export every process-global activity multiple
+  times.
+- Use the all-in-one entry assembly as the OpenTelemetry service name when multiple hosts share a process.
+- Do not add SQL text, query parameters, connection strings, or provider data-source values to trace attributes.
 - Health check routes are filtered from traces automatically; do not add custom filters for them.
 - Empty or whitespace-only entity trace context is treated as absent, not malformed JSON.
 - The custom meter name must match `OpenTelemetryConfiguration.MeterProviderName` in config; do not hardcode a string.

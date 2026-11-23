@@ -11,7 +11,7 @@ namespace Enterprise.Shared.UnitTests.ExtensionsTests;
 public class AddDefaultServicesShould
 {
     [Fact]
-    public void Register_open_telemetry_logger_provider_after_serilog_logging()
+    public void Use_serilog_as_the_only_log_exporter()
     {
         var builder = CreateBuilder();
 
@@ -21,7 +21,7 @@ public class AddDefaultServicesShould
         serviceProvider
             .GetServices<ILoggerProvider>()
             .Select(provider => provider.GetType())
-            .ShouldContain(typeof(OpenTelemetryLoggerProvider));
+            .ShouldNotContain(typeof(OpenTelemetryLoggerProvider));
     }
 
     private static WebApplicationBuilder CreateBuilder()

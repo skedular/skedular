@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Enterprise.Shared.Azure.Configurations;
@@ -50,7 +51,15 @@ namespace Enterprise.Shared;
 public static class Extensions
 {
     private static string GetAppName<TProgram>(IWebHostEnvironment environment) where TProgram : class =>
-        typeof(TProgram).Assembly.GetName().Name ?? environment.ApplicationName;
+        ResolveAppName(
+            Assembly.GetEntryAssembly()?.GetName().Name,
+            typeof(TProgram).Assembly.GetName().Name,
+            environment.ApplicationName);
+
+    public static string ResolveAppName(string? entryAssembly, string? hostAssembly, string fallback) =>
+        entryAssembly?.StartsWith("All", StringComparison.Ordinal) == true
+            ? entryAssembly
+            : hostAssembly ?? fallback;
 
     private static void RecordExceptionOnActivity(object sender, UnhandledExceptionEventArgs e)
     {
@@ -169,7 +178,9 @@ public static class Extensions
         ///     <see cref="Email.IEmailService" />, <see cref="TimeProvider" />),
         ///     and the "self" liveness health check.
         /// </summary>
-        public WebApplicationBuilder AddCoreServices<TProgram>(bool enableHttpResilience = false) where TProgram : class
+        public WebApplicationBuilder AddCoreServices<TProgram>(
+            bool enableHttpResilience = false,
+            bool exportOpenTelemetryLogs = true) where TProgram : class
         {
             var services = builder.Services;
             var configuration = builder.Configuration;
@@ -185,7 +196,7 @@ public static class Extensions
             ArgumentNullException.ThrowIfNull(applicationConfiguration);
             services.AddSingleton(applicationConfiguration);
 
-            services.ConfigureOpenTelemetry(configuration, appName);
+            services.ConfigureOpenTelemetry(configuration, appName, exportOpenTelemetryLogs);
 
             services
                 .AddServiceDiscovery()
@@ -521,7 +532,7 @@ public static class Extensions
         public WebApplicationBuilder AddDefaultServices<TProgram>(bool enableHttpResilience = false) where TProgram : class =>
             builder
                 .AddSerilogLogging<TProgram>()
-                .AddCoreServices<TProgram>(enableHttpResilience)
+                .AddCoreServices<TProgram>(enableHttpResilience, false)
                 .AddIdentityTokenProviders()
                 .AddCookieServices()
                 .AddHybridCaching()

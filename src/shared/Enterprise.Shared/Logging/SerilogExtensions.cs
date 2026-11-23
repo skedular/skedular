@@ -82,7 +82,15 @@ public static class SerilogExtensions
 
                     if (!string.IsNullOrWhiteSpace(logsEndpoint))
                     {
-                        loggerConfiguration.WriteTo.OpenTelemetry(logsEndpoint, protocol);
+                        loggerConfiguration.WriteTo.OpenTelemetry(options =>
+                        {
+                            options.Endpoint = logsEndpoint;
+                            options.Protocol = protocol;
+                            options.ResourceAttributes = new Dictionary<string, object>
+                            {
+                                ["service.name"] = appName ?? hostingContext.HostingEnvironment.ApplicationName,
+                            };
+                        });
                     }
                 },
                 false,

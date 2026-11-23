@@ -1,4 +1,5 @@
-﻿using Enterprise.Shared.Metrics;
+﻿using System.Diagnostics;
+using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Telemetry.Configurations;
 using Enterprise.Shared.Telemetry.PropagatorFunctions;
 using Microsoft.Extensions.Configuration;
@@ -122,10 +123,16 @@ public static class OpenTelemetryExtensions
         configuration[$"OTEL_EXPORTER_OTLP_{signalName}_{optionName}"]
         ?? configuration[$"OTEL_EXPORTER_OTLP_{optionName}"];
 
+    private static string GetOtlpDestination(IConfiguration configuration, string signalName) =>
+        CreateOtlpExporterOptions(configuration, signalName).Endpoint.AbsoluteUri;
+
     /// <param name="services"></param>
     extension(IServiceCollection services)
     {
-        public IServiceCollection ConfigureOpenTelemetry(IConfiguration configuration, string appName)
+        public IServiceCollection ConfigureOpenTelemetry(
+            IConfiguration configuration,
+            string appName,
+            bool exportLogs = true)
         {
             var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
             ArgumentNullException.ThrowIfNull(openTelemetryConfiguration);
@@ -141,15 +148,23 @@ public static class OpenTelemetryExtensions
                 .AddSingleton<IPropagatorFunctionProvider<IDictionary<string, string>>, StringDictionaryPropagatorFunctions>()
                 .AddSingleton<IPropagatorFunctionProvider<IPropagatorEntity>, PropagatorEntityFunctions>();
 
-            services
-                .AddOpenTelemetry()
-                .WithLogging(logging =>
+            var telemetryBuilder = services.AddOpenTelemetry();
+            if (exportLogs)
+            {
+                telemetryBuilder.WithLogging(logging =>
                 {
-                    if (IsOtlpExporterConfigured(configuration, LogsOtlpSignalName))
+                    if (IsOtlpExporterConfigured(configuration, LogsOtlpSignalName) &&
+                        ProcessTelemetryExportRegistry.TryClaimProcessor<LogRecord>(
+                            LogsOtlpSignalName,
+                            GetOtlpDestination(configuration, LogsOtlpSignalName)) is { } claimProcessor)
                     {
+                        logging.AddProcessor(claimProcessor);
                         logging.AddOtlpExporter(options => ConfigureOtlpExporter(configuration, options, LogsOtlpSignalName));
                     }
-                })
+                });
+            }
+
+            telemetryBuilder
                 .WithMetrics(metrics =>
                 {
                     metrics
@@ -162,13 +177,19 @@ public static class OpenTelemetryExtensions
                         metrics.AddMeter(openTelemetryConfiguration.MeterProviderName, MeterProviderNaming.MeterProviderVersion);
                     }
 
-                    if (openTelemetryConfiguration.ConsoleEnabled)
+                    if (openTelemetryConfiguration.ConsoleEnabled &&
+                        ProcessTelemetryExportRegistry.TryClaimReader("METRICS:CONSOLE", "console") is { } consoleClaimReader)
                     {
+                        metrics.AddReader(consoleClaimReader);
                         metrics.AddConsoleExporter();
                     }
 
-                    if (IsOtlpExporterConfigured(configuration, MetricsOtlpSignalName))
+                    if (IsOtlpExporterConfigured(configuration, MetricsOtlpSignalName) &&
+                        ProcessTelemetryExportRegistry.TryClaimReader(
+                            MetricsOtlpSignalName,
+                            GetOtlpDestination(configuration, MetricsOtlpSignalName)) is { } exporterClaimReader)
                     {
+                        metrics.AddReader(exporterClaimReader);
                         metrics.AddOtlpExporter(options => ConfigureOtlpExporter(configuration, options, MetricsOtlpSignalName));
                     }
                 })
@@ -181,6 +202,8 @@ public static class OpenTelemetryExtensions
                             .AddTelemetrySdk()
                             .AddEnvironmentVariableDetector());
 
+                    tracing.AddProcessor(new DatabaseTraceSanitizingProcessor());
+
                     // Instrumentation
                     tracing.AddAspNetCoreInstrumentation(options =>
                     {
@@ -192,8 +215,10 @@ public static class OpenTelemetryExtensions
                     tracing
                         .AddHttpClientInstrumentation();
 
-                    if (openTelemetryConfiguration.ConsoleEnabled)
+                    if (openTelemetryConfiguration.ConsoleEnabled &&
+                        ProcessTelemetryExportRegistry.TryClaimProcessor<Activity>("TRACES:CONSOLE", "console") is { } consoleClaimProcessor)
                     {
+                        tracing.AddProcessor(consoleClaimProcessor);
                         if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
                         {
                             tracing.AddProcessor(
@@ -207,8 +232,12 @@ public static class OpenTelemetryExtensions
                         }
                     }
 
-                    if (IsOtlpExporterConfigured(configuration, TracesOtlpSignalName))
+                    if (IsOtlpExporterConfigured(configuration, TracesOtlpSignalName) &&
+                        ProcessTelemetryExportRegistry.TryClaimProcessor<Activity>(
+                            TracesOtlpSignalName,
+                            GetOtlpDestination(configuration, TracesOtlpSignalName)) is { } exporterClaimProcessor)
                     {
+                        tracing.AddProcessor(exporterClaimProcessor);
                         if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
                         {
                             tracing.AddProcessor(

@@ -1,7 +1,4 @@
-﻿using System.Data;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.PostgreSql.Interceptors;
 using Enterprise.Shared.Telemetry.Configurations;
@@ -285,20 +282,7 @@ public static class Extensions
 
                     if (openTelemetryConfiguration?.EntityFrameworkEnabled == true)
                     {
-                        tracing.AddEntityFrameworkCoreInstrumentation(options =>
-                        {
-                            options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
-                            {
-                                activity.DisplayName = $"{command.CommandType} main";
-                                activity.SetTag("db.type", command.CommandType);
-                                activity.SetTag("db.text", command.CommandText);
-                                activity.SetTag(
-                                    "db.parameters",
-                                    string.Join(",",
-                                        command.Parameters.OfType<DbParameter>()
-                                            .Select(parameter => $"{parameter.ParameterName}={parameter.Value}")));
-                            };
-                        });
+                        tracing.AddEntityFrameworkCoreInstrumentation();
                     }
                 });
         }
