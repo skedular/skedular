@@ -43,7 +43,7 @@ public class MarketplaceBookingFailure : EntityBase
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? RecurringBookingId { get; set; }
-    public virtual Booking? RecurringBooking { get; set; }
+    public virtual RecurringBooking? RecurringBooking { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? MarketplaceBookingSubscriptionId { get; set; }

@@ -4,6 +4,7 @@ using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
+using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 using Resource = Booking.Shared.Database.Entities.Resource;
 using ResourceBookingSlot = Booking.Shared.Database.Entities.ResourceBookingSlot;
 
@@ -81,14 +82,19 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
             Status = MarketplaceBookingSubscriptionStatusConstants.Active,
             ProductVersion = productVersion,
         });
-        repositoryFactory.BookingRepository.Add(new Shared.Database.Entities.Booking
+        repositoryFactory.RecurringBookingRepository.Add(new RecurringBooking
         {
             Id = recurringBookingId,
             From = from,
             Until = from.AddHours(1),
             Category = BookingCategory.WorkingFromCoworkingSpace.ToBookingCategory(),
             Channel = BookingChannel.Marketplace.ToBookingChannel(),
-            Schedules = [],
+            Frequency = BookingFrequency.Daily.ToBookingFrequency(),
+            Interval = 1,
+            EndType = RecurringBookingEndType.UntilDate.ToRecurringBookingEndType(),
+            StartDate = from,
+            EndDate = from.AddDays(1),
+            MarketplaceBookingSubscription = subscription,
         });
     }
 
