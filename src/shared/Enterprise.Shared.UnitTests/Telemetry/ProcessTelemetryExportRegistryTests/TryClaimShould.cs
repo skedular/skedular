@@ -50,7 +50,9 @@ public class TryClaimShould
 
             firstTracerProvider.ForceFlush().ShouldBeTrue();
             secondTracerProvider.ForceFlush().ShouldBeTrue();
-            CountOccurrences(output.ToString(), operationName).ShouldBe(1);
+            var exportedOutput = output.ToString();
+            CountOccurrences(exportedOutput, operationName).ShouldBe(1);
+            exportedOutput.ShouldContain("service.name: first");
 
             firstProvider.Dispose();
             secondProvider.Dispose();

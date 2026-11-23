@@ -4,7 +4,6 @@ using Enterprise.Shared.Telemetry.Configurations;
 using Enterprise.Shared.Telemetry.PropagatorFunctions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Logs;
@@ -148,7 +147,12 @@ public static class OpenTelemetryExtensions
                 .AddSingleton<IPropagatorFunctionProvider<IDictionary<string, string>>, StringDictionaryPropagatorFunctions>()
                 .AddSingleton<IPropagatorFunctionProvider<IPropagatorEntity>, PropagatorEntityFunctions>();
 
-            var telemetryBuilder = services.AddOpenTelemetry();
+            var telemetryBuilder = services
+                .AddOpenTelemetry()
+                .ConfigureResource(resource => resource
+                    .AddService(appName)
+                    .AddTelemetrySdk()
+                    .AddEnvironmentVariableDetector());
             if (exportLogs)
             {
                 telemetryBuilder.WithLogging(logging =>
@@ -195,12 +199,10 @@ public static class OpenTelemetryExtensions
                 })
                 .WithTracing(tracing =>
                 {
-                    // Service
-                    tracing.SetResourceBuilder(
-                        ResourceBuilder.CreateDefault()
-                            .AddService(appName)
-                            .AddTelemetrySdk()
-                            .AddEnvironmentVariableDetector());
+                    if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
+                    {
+                        tracing.SetSampler(new OutboxExcludingSampler());
+                    }
 
                     tracing.AddProcessor(new DatabaseTraceSanitizingProcessor());
 
@@ -219,17 +221,7 @@ public static class OpenTelemetryExtensions
                         ProcessTelemetryExportRegistry.TryClaimProcessor<Activity>("TRACES:CONSOLE", "console") is { } consoleClaimProcessor)
                     {
                         tracing.AddProcessor(consoleClaimProcessor);
-                        if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
-                        {
-                            tracing.AddProcessor(
-                                new OutboxTraceFilteringProcessor(
-                                    new SimpleActivityExportProcessor(
-                                        new ConsoleActivityExporter(new ConsoleExporterOptions()))));
-                        }
-                        else
-                        {
-                            tracing.AddConsoleExporter();
-                        }
+                        tracing.AddConsoleExporter();
                     }
 
                     if (IsOtlpExporterConfigured(configuration, TracesOtlpSignalName) &&
@@ -238,17 +230,7 @@ public static class OpenTelemetryExtensions
                             GetOtlpDestination(configuration, TracesOtlpSignalName)) is { } exporterClaimProcessor)
                     {
                         tracing.AddProcessor(exporterClaimProcessor);
-                        if (openTelemetryConfiguration.ExcludeOutboxTelemetry)
-                        {
-                            tracing.AddProcessor(
-                                new OutboxTraceFilteringProcessor(
-                                    new BatchActivityExportProcessor(
-                                        new OtlpTraceExporter(CreateOtlpExporterOptions(configuration, TracesOtlpSignalName)))));
-                        }
-                        else
-                        {
-                            tracing.AddOtlpExporter(options => ConfigureOtlpExporter(configuration, options, TracesOtlpSignalName));
-                        }
+                        tracing.AddOtlpExporter(options => ConfigureOtlpExporter(configuration, options, TracesOtlpSignalName));
                     }
                 });
 

@@ -28,9 +28,13 @@ public static class OutboxTelemetryFilter
         return HasError(activity) || (!IsOutboxActivity(activity) && !HasOutboxParent(activity));
     }
 
+    public static bool IsOutboxActivity(string activityName) => s_excludedActivityNames.Contains(activityName);
+
+    public static bool IsOutboxActivity(string activitySourceName, string activityName) =>
+        s_excludedActivitySourceNames.Contains(activitySourceName) || IsOutboxActivity(activityName);
+
     private static bool IsOutboxActivity(Activity activity) =>
-        s_excludedActivitySourceNames.Contains(activity.Source.Name)
-        || s_excludedActivityNames.Contains(activity.OperationName)
+        IsOutboxActivity(activity.Source.Name, activity.OperationName)
         || s_excludedActivityNames.Contains(activity.DisplayName);
 
     private static bool HasOutboxParent(Activity activity)
