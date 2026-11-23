@@ -1,0 +1,38 @@
+apiVersion: 1
+
+datasources:
+  - name: Mimir
+    uid: mimir-local
+    type: prometheus
+    access: proxy
+    url: http://mimir:9009/prometheus
+    editable: true
+    jsonData:
+      httpMethod: POST
+      httpHeaderName1: X-Scope-OrgID
+    secureJsonData:
+      httpHeaderValue1: local
+
+  - name: Quickwit Logs
+    uid: quickwit-local
+    type: quickwit-quickwit-datasource
+    access: proxy
+    url: http://quickwit:7280/api/v1
+    editable: true
+    jsonData:
+      index: otel-logs-v0_9
+      logMessageField: body.message
+      logLevelField: severity_text
+      tracesDatasourceUid: quickwit-traces
+      tracesDatasourceName: Quickwit Traces
+
+  - name: Quickwit Traces
+    uid: quickwit-traces
+    type: quickwit-quickwit-datasource
+    access: proxy
+    url: http://quickwit:7280/api/v1
+    editable: true
+    jsonData:
+      index: otel-traces-v0_9
+      logsDatasourceUid: quickwit-local
+      logsDatasourceName: Quickwit Logs

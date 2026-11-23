@@ -24,6 +24,18 @@ temporal.skedular.app {
 	reverse_proxy localhost:8080
 }
 
+grafana.skedular.app {
+	reverse_proxy localhost:3000
+}
+
+mimir.skedular.app {
+	reverse_proxy localhost:9009
+}
+
+quickwit.skedular.app {
+	reverse_proxy localhost:7280
+}
+
 zipkin.skedular.app {
 	reverse_proxy localhost:9411
 }

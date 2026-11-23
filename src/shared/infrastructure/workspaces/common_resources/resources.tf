@@ -1,7 +1,7 @@
 locals {
   is_staging             = var.environment == "staging"
   dns_records_staging    = ["apistaging", "slackapistaging"]
-  dns_records_production = ["api", "slackapi"]
+  dns_records_production = ["api", "slackapi", "grafana", "mimir", "quickwit"]
 }
 
 module "common" {

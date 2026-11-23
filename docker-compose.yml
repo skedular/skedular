@@ -157,7 +157,10 @@ services:
   mimir:
     image: grafana/mimir:latest
     restart: unless-stopped
-    command: [ "-config.file=/etc/mimir/mimir.yaml" ]
+    command:
+      - "-config.file=/etc/mimir/mimir.yaml"
+      - "-compactor.blocks-retention-period=72h"
+      - "-blocks-storage.tsdb.retention-period=72h"
     depends_on:
       observability-object-storage-init:
         condition: service_completed_successfully

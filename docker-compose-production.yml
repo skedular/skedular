@@ -5,6 +5,10 @@ volumes:
   skedular_postgres18_data:
   skedular_redis_data:
   skedular_kafka1_data:
+  skedular_observability_data:
+  skedular_quickwit_data:
+  skedular_mimir_data:
+  skedular_grafana_data:
 
 services:
   dozzle:
@@ -28,6 +32,193 @@ services:
       POSTGRES_PASSWORD: ${SKEDULAR_POSTGRES_PASSWORD}
     ports:
       - "13451:5432"
+    networks:
+      - skedular_network
+
+  quickwit-metastore-init:
+    image: postgis/postgis:18-master
+    restart: "no"
+    depends_on:
+      postgres18:
+        condition: service_started
+    environment:
+      PGPASSWORD: ${SKEDULAR_POSTGRES_PASSWORD}
+      SKEDULAR_POSTGRES_USERNAME: ${SKEDULAR_POSTGRES_USERNAME}
+      QUICKWIT_DB_PASSWORD: ${SKEDULAR_QUICKWIT_DB_PASSWORD}
+    entrypoint: ["/bin/sh"]
+    command:
+      - -ec
+      - |
+        until pg_isready -h postgres18 -U "$$SKEDULAR_POSTGRES_USERNAME" -d postgres; do sleep 1; done;
+        if psql -h postgres18 -U "$$SKEDULAR_POSTGRES_USERNAME" -d postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname = 'quickwit'" | grep -q 1; then
+          psql -h postgres18 -U "$$SKEDULAR_POSTGRES_USERNAME" -d postgres -v ON_ERROR_STOP=1 -c "ALTER ROLE quickwit WITH LOGIN PASSWORD '$$QUICKWIT_DB_PASSWORD'";
+        else
+          psql -h postgres18 -U "$$SKEDULAR_POSTGRES_USERNAME" -d postgres -v ON_ERROR_STOP=1 -c "CREATE ROLE quickwit LOGIN PASSWORD '$$QUICKWIT_DB_PASSWORD'";
+        fi
+        if psql -h postgres18 -U "$$SKEDULAR_POSTGRES_USERNAME" -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname = 'quickwit'" | grep -q 1; then
+          psql -h postgres18 -U "$$SKEDULAR_POSTGRES_USERNAME" -d postgres -v ON_ERROR_STOP=1 -c "ALTER DATABASE quickwit OWNER TO quickwit";
+        else
+          psql -h postgres18 -U "$$SKEDULAR_POSTGRES_USERNAME" -d postgres -v ON_ERROR_STOP=1 -c "CREATE DATABASE quickwit OWNER quickwit";
+        fi
+    networks:
+      - skedular_network
+
+  observability-object-storage:
+    image: chrislusf/seaweedfs:latest
+    entrypoint: ["weed"]
+    command:
+      [
+        "mini",
+        "-dir=/data",
+        "-ip=observability-object-storage",
+        "-ip.bind=0.0.0.0",
+      ]
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: "0.50"
+    environment:
+      AWS_ACCESS_KEY_ID: local-observability
+      AWS_SECRET_ACCESS_KEY: local-observability-secret
+    volumes:
+      - skedular_observability_data:/data
+    networks:
+      - skedular_network
+
+  observability-object-storage-init:
+    image: amazon/aws-cli:latest
+    restart: "no"
+    depends_on:
+      observability-object-storage:
+        condition: service_started
+    environment:
+      AWS_ACCESS_KEY_ID: local-observability
+      AWS_SECRET_ACCESS_KEY: local-observability-secret
+      AWS_DEFAULT_REGION: us-east-1
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >-
+        until aws --endpoint-url http://observability-object-storage:8333 s3api list-buckets; do sleep 1; done;
+        aws --endpoint-url http://observability-object-storage:8333 s3api create-bucket --bucket quickwit || true;
+        aws --endpoint-url http://observability-object-storage:8333 s3api create-bucket --bucket mimir || true;
+        aws --endpoint-url http://observability-object-storage:8333 s3api create-bucket --bucket mimir-ruler || true
+    networks:
+      - skedular_network
+
+  quickwit:
+    image: quickwit/quickwit:latest
+    restart: unless-stopped
+    mem_limit: 768m
+    cpus: "1.00"
+    environment:
+      SKEDULAR_QUICKWIT_DB_PASSWORD: ${SKEDULAR_QUICKWIT_DB_PASSWORD:?Set SKEDULAR_QUICKWIT_DB_PASSWORD}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        sed "s|__QUICKWIT_DB_PASSWORD__|$$SKEDULAR_QUICKWIT_DB_PASSWORD|g" \
+          /etc/quickwit/quickwit-template.yaml > /tmp/quickwit.yaml
+        exec quickwit run --config /tmp/quickwit.yaml
+    depends_on:
+      postgres18:
+        condition: service_started
+      quickwit-metastore-init:
+        condition: service_completed_successfully
+      observability-object-storage-init:
+        condition: service_completed_successfully
+    volumes:
+      - ./local-dev/observability/quickwit-production.yaml:/etc/quickwit/quickwit-template.yaml:ro
+      - skedular_quickwit_data:/quickwit/qwdata
+    ports:
+      - "127.0.0.1:7280:7280"
+      - "127.0.0.1:7281:7281"
+      - "127.0.0.1:7282:7282"
+    networks:
+      - skedular_network
+
+  quickwit-log-retention-init:
+    image: curlimages/curl:latest
+    restart: "no"
+    depends_on:
+      quickwit:
+        condition: service_started
+    volumes:
+      - ./local-dev/observability/otel-logs-index.yaml:/etc/quickwit/otel-logs-index.yaml:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        until curl --fail --silent http://quickwit:7280/api/v1/indexes/otel-logs-v0_9 >/dev/null 2>&1 ||
+              curl --fail --silent --retry 30 --retry-delay 2 -XPUT "http://quickwit:7280/api/v1/indexes/otel-logs-v0_9?create=true" \
+                --header "Content-Type: application/yaml" \
+                --data-binary @/etc/quickwit/otel-logs-index.yaml >/dev/null; do
+          sleep 2
+        done
+        curl --fail --retry 10 --retry-delay 2 -XPUT "http://quickwit:7280/api/v1/indexes/otel-logs-v0_9" \
+          --header "Content-Type: application/yaml" \
+          --data-binary @/etc/quickwit/otel-logs-index.yaml
+    networks:
+      - skedular_network
+
+  mimir:
+    image: grafana/mimir:latest
+    restart: unless-stopped
+    mem_limit: 768m
+    cpus: "1.00"
+    command:
+      - "-config.file=/etc/mimir/mimir.yaml"
+      - "-compactor.blocks-retention-period=72h"
+      - "-blocks-storage.tsdb.retention-period=72h"
+    depends_on:
+      observability-object-storage-init:
+        condition: service_completed_successfully
+    environment:
+      GOMAXPROCS: "2"
+      GOMEMLIMIT: "600MiB"
+    volumes:
+      - ./local-dev/observability/mimir.yaml:/etc/mimir/mimir.yaml:ro
+      - skedular_mimir_data:/data
+    ports:
+      - "127.0.0.1:9009:9009"
+    networks:
+      - skedular_network
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: "0.50"
+    depends_on:
+      quickwit:
+        condition: service_started
+      mimir:
+        condition: service_started
+    environment:
+      GF_SECURITY_ADMIN_USER: ${SKEDULAR_GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${SKEDULAR_GRAFANA_ADMIN_PASSWORD:?Set SKEDULAR_GRAFANA_ADMIN_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_INSTALL_PLUGINS: quickwit-quickwit-datasource
+    volumes:
+      - skedular_grafana_data:/var/lib/grafana
+      - ./local-dev/observability/grafana-datasources-production.yaml:/etc/grafana/provisioning/datasources/datasources.yaml:ro
+    ports:
+      - "3000:3000"
+    networks:
+      - skedular_network
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    restart: unless-stopped
+    mem_limit: 256m
+    cpus: "0.50"
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    depends_on:
+      quickwit:
+        condition: service_started
+      mimir:
+        condition: service_started
+    volumes:
+      - ./local-dev/observability/otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+    ports:
+      - "127.0.0.1:4317:4317"
+      - "127.0.0.1:4318:4318"
     networks:
       - skedular_network
 
@@ -202,7 +393,7 @@ services:
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
-      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -324,7 +515,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -447,7 +638,7 @@ services:
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__BookingInvoiceEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -565,7 +756,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -650,7 +841,7 @@ services:
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
-      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -772,7 +963,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -895,7 +1086,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
@@ -1013,7 +1204,7 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      # OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: true
