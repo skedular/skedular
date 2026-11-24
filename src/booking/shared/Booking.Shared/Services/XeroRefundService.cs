@@ -26,6 +26,11 @@ public interface IXeroRefundService
 {
     Task<bool> HasInvoiceTargetAsync(MarketplaceRefund refund, CancellationToken cancellationToken);
     Task<XeroRefundProcessingAvailability> GetProcessingAvailabilityAsync(MarketplaceRefund refund, CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, XeroRefundProcessingAvailability>> GetProcessingAvailabilitiesAsync(
+        IReadOnlyList<MarketplaceRefund> refunds,
+        CancellationToken cancellationToken);
+
     Task<MarketplaceRefund> ProcessAsync(MarketplaceRefund refund, CancellationToken cancellationToken);
     Task<bool> ReconcileAsync(MarketplaceRefund refund, DateTimeOffset since, CancellationToken cancellationToken);
 }
@@ -106,6 +111,45 @@ public class XeroRefundService(
         return resolution.InvoiceTarget is null
             ? new XeroRefundProcessingAvailability(false, resolution.ErrorMessage)
             : new XeroRefundProcessingAvailability(true, null);
+    }
+
+    public async Task<IReadOnlyDictionary<string, XeroRefundProcessingAvailability>> GetProcessingAvailabilitiesAsync(
+        IReadOnlyList<MarketplaceRefund> refunds,
+        CancellationToken cancellationToken)
+    {
+        var result = new Dictionary<string, XeroRefundProcessingAvailability>(refunds.Count);
+        var eligibleRefunds = new List<MarketplaceRefund>(refunds.Count);
+        foreach (var refund in refunds)
+        {
+            if (refund.Status is not (MarketplaceRefundStatusConstants.Processing or MarketplaceRefundStatusConstants.Completed))
+            {
+                result[refund.Id] = new XeroRefundProcessingAvailability(
+                    false,
+                    "Refund must be processing or completed in Stripe before Xero processing is available.");
+                continue;
+            }
+
+            if (!refund.RefundAmount.HasValue || refund.RefundAmount <= 0)
+            {
+                result[refund.Id] = new XeroRefundProcessingAvailability(
+                    false,
+                    "Refund amount must be greater than zero before Xero processing is available.");
+                continue;
+            }
+
+            eligibleRefunds.Add(refund);
+        }
+
+        var resolutions = await ResolveInvoiceTargetsAsync(eligibleRefunds, cancellationToken);
+        foreach (var refund in eligibleRefunds)
+        {
+            var resolution = resolutions[refund.Id];
+            result[refund.Id] = resolution.InvoiceTarget is null
+                ? new XeroRefundProcessingAvailability(false, resolution.ErrorMessage)
+                : new XeroRefundProcessingAvailability(true, null);
+        }
+
+        return result;
     }
 
     public async Task<MarketplaceRefund> ProcessAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
@@ -389,6 +433,227 @@ public class XeroRefundService(
         string idempotencyKey,
         CancellationToken cancellationToken) =>
         accountingApi.CreatePaymentAsync(accessToken, tenantId, payment, idempotencyKey, cancellationToken);
+
+    private async Task<IReadOnlyDictionary<string, XeroRefundInvoiceTargetResolution>> ResolveInvoiceTargetsAsync(
+        IReadOnlyList<MarketplaceRefund> refunds,
+        CancellationToken cancellationToken)
+    {
+        if (refunds.Count == 0)
+        {
+            return new Dictionary<string, XeroRefundInvoiceTargetResolution>();
+        }
+
+        var subscriptionRefunds = refunds
+            .Where(item => item.LocalEntityType == MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription)
+            .ToList();
+        var subscriptionIds = subscriptionRefunds.Select(item => item.LocalEntityId).Distinct().ToList();
+        var subscriptions = subscriptionIds.Count == 0
+            ? []
+            : await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdsAsync(
+                subscriptionIds,
+                cancellationToken);
+        var subscriptionsById = subscriptions.ToDictionary(item => item.Id);
+        var recurringBookingsByRefundId = new Dictionary<string, RecurringBookingEntity>();
+        var resolutionByRefundId = new Dictionary<string, XeroRefundInvoiceTargetResolution>();
+        var candidateRecurringBookingIds = new HashSet<string>();
+        foreach (var refund in subscriptionRefunds)
+        {
+            if (!subscriptionsById.TryGetValue(refund.LocalEntityId, out var subscription))
+            {
+                resolutionByRefundId[refund.Id] = new XeroRefundInvoiceTargetResolution(
+                    null,
+                    "The subscription refund could not be matched to a subscription.");
+                continue;
+            }
+
+            var recurringBooking = ResolveCurrentBillingWindowRecurringBooking(subscription, refund.RequestedAt)
+                                   ?? subscription.RecurringBookings
+                                       .Where(item => item.MarketplaceBooking is not null)
+                                       .OrderByDescending(item => item.StartDate)
+                                       .FirstOrDefault();
+            if (recurringBooking is null)
+            {
+                resolutionByRefundId[refund.Id] = new XeroRefundInvoiceTargetResolution(
+                    null,
+                    "The current subscription billing window could not be matched to a billed recurring booking.");
+                continue;
+            }
+
+            recurringBookingsByRefundId[refund.Id] = recurringBooking;
+            candidateRecurringBookingIds.Add(recurringBooking.Id);
+            foreach (var candidate in subscription.RecurringBookings
+                         .Where(item =>
+                             item.MarketplaceBooking is not null &&
+                             item.Id != recurringBooking.Id &&
+                             IntersectsBillingWindow(subscription, item, refund.RequestedAt))
+                         .OrderByDescending(item => item.StartDate))
+            {
+                candidateRecurringBookingIds.Add(candidate.Id);
+            }
+        }
+
+        var bookingIds = refunds
+            .Where(item => item.LocalEntityType == MarketplaceRefundEntityTypeConstants.MarketplaceBooking)
+            .Select(item => item.LocalEntityId)
+            .Distinct()
+            .ToList();
+        var entitlementIds = refunds
+            .Where(item => item.LocalEntityType == MarketplaceRefundEntityTypeConstants.EntitlementPurchase)
+            .Select(item => item.LocalEntityId)
+            .Distinct()
+            .ToList();
+        var bookingLinks = bookingIds.Count == 0
+            ? []
+            : await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntitiesAsync(
+                AccountingProviderConstants.Xero,
+                AccountingEntityTypeConstants.MarketplaceBooking,
+                bookingIds,
+                cancellationToken);
+        var entitlementLinks = entitlementIds.Count == 0
+            ? []
+            : await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntitiesAsync(
+                AccountingProviderConstants.Xero,
+                AccountingEntityTypeConstants.EntitlementPurchase,
+                entitlementIds,
+                cancellationToken);
+        var recurringBookingLinks = candidateRecurringBookingIds.Count == 0
+            ? []
+            : await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntitiesAsync(
+                AccountingProviderConstants.Xero,
+                AccountingEntityTypeConstants.RecurringBooking,
+                candidateRecurringBookingIds.ToList(),
+                cancellationToken);
+
+        var links = bookingLinks
+            .Concat(entitlementLinks)
+            .Concat(recurringBookingLinks)
+            .ToDictionary(item => (item.LocalEntityType, item.LocalEntityId));
+        var recurringBookingLinkIds = recurringBookingLinks
+            .Select(item => item.Id)
+            .Distinct()
+            .ToList();
+        var invoiceInstances = recurringBookingLinkIds.Count == 0
+            ? []
+            : await repositoryFactory.AccountingInvoiceInstanceRepository
+                .GetByAccountingInvoiceExportLinkIdsAsync(recurringBookingLinkIds, cancellationToken);
+        var invoiceInstancesByLinkId = invoiceInstances
+            .GroupBy(item => item.AccountingInvoiceExportLinkId)
+            .ToDictionary(group => group.Key, group => (IReadOnlyList<AccountingInvoiceInstance>)[.. group]);
+
+        foreach (var refund in refunds)
+        {
+            if (resolutionByRefundId.ContainsKey(refund.Id))
+            {
+                continue;
+            }
+
+            if (refund.LocalEntityType == MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription)
+            {
+                resolutionByRefundId[refund.Id] = ResolveSubscriptionInvoiceTarget(
+                    refund,
+                    subscriptionsById[refund.LocalEntityId],
+                    recurringBookingsByRefundId[refund.Id],
+                    links,
+                    invoiceInstancesByLinkId);
+                continue;
+            }
+
+            resolutionByRefundId[refund.Id] = ResolveDirectInvoiceTarget(refund, links);
+        }
+
+        return resolutionByRefundId;
+    }
+
+    private XeroRefundInvoiceTargetResolution ResolveDirectInvoiceTarget(
+        MarketplaceRefund refund,
+        IReadOnlyDictionary<(string LocalEntityType, string LocalEntityId), AccountingInvoiceExportLink> links)
+    {
+        var supportedType = refund.LocalEntityType is
+            MarketplaceRefundEntityTypeConstants.MarketplaceBooking or
+            MarketplaceRefundEntityTypeConstants.EntitlementPurchase;
+        if (!supportedType)
+        {
+            return new XeroRefundInvoiceTargetResolution(
+                null,
+                "Xero refund processing does not support this marketplace purchase type.");
+        }
+
+        if (!links.TryGetValue((refund.LocalEntityType, refund.LocalEntityId), out var link) ||
+            string.IsNullOrWhiteSpace(link.ExternalInvoiceId))
+        {
+            var description = refund.LocalEntityType == MarketplaceRefundEntityTypeConstants.EntitlementPurchase
+                ? "entitlement "
+                : string.Empty;
+            return new XeroRefundInvoiceTargetResolution(
+                null,
+                $"The original Xero {description}invoice link could not be found for this refund.");
+        }
+
+        return new XeroRefundInvoiceTargetResolution(
+            new XeroRefundInvoiceTarget(link.LocalEntityId, link.ExternalInvoiceId, link.ExternalInvoiceNumber),
+            null);
+    }
+
+    private static XeroRefundInvoiceTargetResolution ResolveSubscriptionInvoiceTarget(
+        MarketplaceRefund refund,
+        MarketplaceBookingSubscriptionEntity subscription,
+        RecurringBookingEntity recurringBooking,
+        IReadOnlyDictionary<(string LocalEntityType, string LocalEntityId), AccountingInvoiceExportLink> links,
+        IReadOnlyDictionary<string, IReadOnlyList<AccountingInvoiceInstance>> invoiceInstancesByLinkId)
+    {
+        var hasPrimaryLink = links.TryGetValue(
+            (AccountingEntityTypeConstants.RecurringBooking, recurringBooking.Id),
+            out var accountingInvoiceExportLink);
+        if (!hasPrimaryLink || string.IsNullOrWhiteSpace(accountingInvoiceExportLink!.ExternalInvoiceId))
+        {
+            foreach (var candidate in subscription.RecurringBookings
+                         .Where(item =>
+                             item.MarketplaceBooking is not null &&
+                             item.Id != recurringBooking.Id &&
+                             IntersectsBillingWindow(subscription, item, refund.RequestedAt))
+                         .OrderByDescending(item => item.StartDate))
+            {
+                if (links.TryGetValue((AccountingEntityTypeConstants.RecurringBooking, candidate.Id), out var candidateLink) &&
+                    !string.IsNullOrWhiteSpace(candidateLink.ExternalInvoiceId))
+                {
+                    recurringBooking = candidate;
+                    accountingInvoiceExportLink = candidateLink;
+                    break;
+                }
+            }
+        }
+
+        if (accountingInvoiceExportLink is null || string.IsNullOrWhiteSpace(accountingInvoiceExportLink.ExternalInvoiceId))
+        {
+            return new XeroRefundInvoiceTargetResolution(
+                null,
+                "The subscription recurring booking is not linked to a Xero invoice export.");
+        }
+
+        var invoiceInstances = invoiceInstancesByLinkId.GetValueOrDefault(accountingInvoiceExportLink.Id) ?? [];
+        if (accountingInvoiceExportLink.ExternalInvoiceMode == AccountingInvoiceExportModeConstants.RepeatingInvoice)
+        {
+            var matchingInvoiceInstance = ResolveMatchingInvoiceInstance(recurringBooking, invoiceInstances, refund.RequestedAt);
+            return matchingInvoiceInstance is null || string.IsNullOrWhiteSpace(matchingInvoiceInstance.ExternalInvoiceId)
+                ? new XeroRefundInvoiceTargetResolution(
+                    null,
+                    "The current subscription billing window has not been correlated to a concrete Xero invoice instance yet.")
+                : new XeroRefundInvoiceTargetResolution(
+                    new XeroRefundInvoiceTarget(
+                        recurringBooking.Id,
+                        matchingInvoiceInstance.ExternalInvoiceId,
+                        matchingInvoiceInstance.ExternalInvoiceNumber ?? accountingInvoiceExportLink.ExternalInvoiceNumber),
+                    null);
+        }
+
+        var nonRepeatingInvoiceInstance = ResolveMatchingInvoiceInstance(recurringBooking, invoiceInstances, refund.RequestedAt);
+        return new XeroRefundInvoiceTargetResolution(
+            new XeroRefundInvoiceTarget(
+                recurringBooking.Id,
+                nonRepeatingInvoiceInstance?.ExternalInvoiceId ?? accountingInvoiceExportLink.ExternalInvoiceId,
+                nonRepeatingInvoiceInstance?.ExternalInvoiceNumber ?? accountingInvoiceExportLink.ExternalInvoiceNumber),
+            null);
+    }
 
     private async Task<XeroRefundInvoiceTargetResolution> ResolveInvoiceTargetAsync(MarketplaceRefund refund, CancellationToken cancellationToken) =>
         refund.LocalEntityType switch

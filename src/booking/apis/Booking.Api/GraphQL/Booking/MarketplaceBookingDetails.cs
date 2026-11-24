@@ -1,9 +1,5 @@
 ﻿using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Payment;
-using Booking.Api.Mappers;
-using Booking.Api.Services;
-using Booking.Shared.Models;
-using Booking.Shared.Services.Entitlements;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
@@ -121,21 +117,15 @@ public static partial class MarketplaceBookingDetailsType
         descriptor.Ignore(item => item.ProductVersionId);
     }
 
-    public static async Task<string?> GetEntitlementPurchaseId(
+    public static Task<string?> GetEntitlementPurchaseId(
         [Parent]
         MarketplaceBookingDetails item,
         [Service]
-        IEntitlementService entitlementService,
-        CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(item.EntitlementId))
-        {
-            return null;
-        }
-
-        var entitlement = await entitlementService.GetByIdAsync(item.EntitlementId, cancellationToken);
-        return entitlement?.PurchaseReference;
-    }
+        EntitlementPurchaseReferenceDataLoader dataLoader,
+        CancellationToken cancellationToken) =>
+        string.IsNullOrWhiteSpace(item.EntitlementId)
+            ? Task.FromResult<string?>(null)
+            : dataLoader.LoadAsync(item.EntitlementId, cancellationToken);
 
     public static CustomerDetails? GetPaidByCustomer([Parent] MarketplaceBookingDetails item) => string.IsNullOrWhiteSpace(item.PaidByCustomerId)
         ? null
@@ -152,33 +142,15 @@ public static partial class MarketplaceBookingDetailsType
         [Parent]
         MarketplaceBookingDetails item,
         [Service]
-        IMarketplaceRefundReadService marketplaceRefundReadService,
-        [Service]
-        IGraphQlMapper graphQlMapper,
+        MarketplaceBookingRefundDataLoader dataLoader,
         CancellationToken cancellationToken) =>
-        MapRefundAsync(marketplaceRefundReadService.GetByMarketplaceBookingIdAsync(item.Id, cancellationToken), graphQlMapper);
+        dataLoader.LoadAsync(item.Id, cancellationToken);
 
-    private static async Task<MarketplaceRefundDetails?> MapRefundAsync(Task<MarketplaceRefundReadModel?> task, IGraphQlMapper mapper)
-    {
-        var model = await task;
-        return model is null ? null : mapper.MapTo(model);
-    }
-
-    public static async Task<MarketplaceBookingFailureDetails?> GetFailure(
+    public static Task<MarketplaceBookingFailureDetails?> GetFailure(
         [Parent]
         MarketplaceBookingDetails item,
         [Service]
-        IMarketplaceBookingFailureReadService failureReadService,
-        [Service]
-        IMarketplaceBookingService marketplaceBookingService,
-        [Service]
-        IGraphQlMapper graphQlMapper,
-        CancellationToken cancellationToken)
-    {
-        var bookingId = await marketplaceBookingService.GetBookingIdAsync(item.Id, cancellationToken);
-        var failure = bookingId is null
-            ? null
-            : await failureReadService.GetByBookingIdAsync(bookingId, cancellationToken);
-        return failure is null ? null : graphQlMapper.MapTo(failure);
-    }
+        MarketplaceBookingFailureDataLoader dataLoader,
+        CancellationToken cancellationToken) =>
+        dataLoader.LoadAsync(item.Id, cancellationToken);
 }

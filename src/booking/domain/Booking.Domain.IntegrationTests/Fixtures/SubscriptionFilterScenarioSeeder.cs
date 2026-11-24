@@ -36,6 +36,21 @@ public static class SubscriptionFilterScenarioSeeder
         productVersion.ListingMetadata = scenario.ProductVersion.ListingMetadata;
         productVersion.PricingOptions = scenario.ProductVersion.PricingOptions;
 
+        var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(
+            scenario.Location.Id,
+            organization,
+            cancellationToken);
+        location.Name = scenario.Location.Name;
+        location.Timezone = scenario.Location.Timezone;
+        location.Type = scenario.Location.Type;
+
+        var resource = await repositoryFactory.ResourceRepository.UpsertNakedAsync(
+            scenario.Resource.Id,
+            location,
+            cancellationToken);
+        resource.Name = scenario.Resource.Name;
+        resource.Capacity = scenario.Resource.Capacity;
+
         foreach (var (subscription, marketplaceBooking) in new[]
                  {
                      scenario.ActivePending, scenario.ActiveConfirmed, scenario.CancelledPending, scenario.CancelledConfirmed,
@@ -43,6 +58,9 @@ public static class SubscriptionFilterScenarioSeeder
         {
             subscription.ProductVersion = productVersion;
             subscription.InvolvedOrganizations = [organization];
+            subscription.RequestedResources = subscription.RequestedResources
+                .Select(item => item.Id == resource.Id ? resource : item)
+                .ToList();
             repositoryFactory.MarketplaceBookingSubscriptionRepository.Add(subscription);
 
             marketplaceBooking.ProductVersion = productVersion;

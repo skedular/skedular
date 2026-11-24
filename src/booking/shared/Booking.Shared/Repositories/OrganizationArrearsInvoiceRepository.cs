@@ -12,9 +12,18 @@ public interface IOrganizationArrearsInvoiceRepository : IRepository<Organizatio
     Task<OrganizationArrearsInvoice?> GetByIdWithLinesAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<OrganizationArrearsInvoice>> GetByBookingIdUntrackedAsync(string bookingId, CancellationToken cancellationToken);
 
+    Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>> GetByBookingIdsUntrackedAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<OrganizationArrearsInvoice>> GetByMarketplaceBookingSubscriptionIdUntrackedAsync(
         string marketplaceBookingSubscriptionId,
         CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>>
+        GetByMarketplaceBookingSubscriptionIdsUntrackedAsync(
+            IReadOnlyCollection<string> marketplaceBookingSubscriptionIds,
+            CancellationToken cancellationToken);
 
     Task<IReadOnlyList<string>> GetProcessedSegmentKeysAsync(
         string organizationId,
@@ -74,6 +83,38 @@ public class OrganizationArrearsInvoiceRepository(BookingDbContext dbContext, Ti
             .OrderByDescending(query => query.CreatedAt)
             .ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>> GetByBookingIdsUntrackedAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken)
+    {
+        if (bookingIds.Count == 0)
+        {
+            return new Dictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>();
+        }
+
+        var lines = await DbContext.OrganizationArrearsInvoiceLine
+            .AsNoTrackingWithIdentityResolution()
+            .Include(line => line.OrganizationArrearsInvoice)
+            .ThenInclude(invoice => invoice.Organization)
+            .Include(line => line.OrganizationArrearsInvoice)
+            .ThenInclude(invoice => invoice.Customer)
+            .Include(line => line.Booking)
+            .Where(line => bookingIds.Contains(line.Booking.Id))
+            .ToListAsync(cancellationToken);
+
+        return lines
+            .GroupBy(line => line.Booking.Id)
+            .ToDictionary(
+                group => group.Key,
+                group => (IReadOnlyList<OrganizationArrearsInvoice>)
+                [
+                    .. group
+                        .Select(line => line.OrganizationArrearsInvoice)
+                        .DistinctBy(invoice => invoice.Id)
+                        .OrderByDescending(invoice => invoice.CreatedAt),
+                ]);
+    }
+
     public async Task<IReadOnlyList<OrganizationArrearsInvoice>> GetByMarketplaceBookingSubscriptionIdUntrackedAsync(
         string marketplaceBookingSubscriptionId,
         CancellationToken cancellationToken) =>
@@ -90,6 +131,55 @@ public class OrganizationArrearsInvoiceRepository(BookingDbContext dbContext, Ti
                      line.Booking.MarketplaceBooking.MarketplaceBookingSubscriptionId == marketplaceBookingSubscriptionId)))
             .OrderByDescending(query => query.CreatedAt)
             .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>>
+        GetByMarketplaceBookingSubscriptionIdsUntrackedAsync(
+            IReadOnlyCollection<string> marketplaceBookingSubscriptionIds,
+            CancellationToken cancellationToken)
+    {
+        if (marketplaceBookingSubscriptionIds.Count == 0)
+        {
+            return new Dictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>();
+        }
+
+        var lines = await DbContext.OrganizationArrearsInvoiceLine
+            .AsNoTrackingWithIdentityResolution()
+            .Include(line => line.OrganizationArrearsInvoice)
+            .ThenInclude(invoice => invoice.Organization)
+            .Include(line => line.OrganizationArrearsInvoice)
+            .ThenInclude(invoice => invoice.Customer)
+            .Include(line => line.Booking)
+            .ThenInclude(booking => booking.RecurringBooking)
+            .ThenInclude(recurringBooking => recurringBooking!.MarketplaceBookingSubscription)
+            .Include(line => line.Booking)
+            .ThenInclude(booking => booking.MarketplaceBooking)
+            .Where(line =>
+                (line.Booking.RecurringBooking != null &&
+                 line.Booking.RecurringBooking.MarketplaceBookingSubscription != null &&
+                 marketplaceBookingSubscriptionIds.Contains(line.Booking.RecurringBooking.MarketplaceBookingSubscription.Id)) ||
+                (line.Booking.MarketplaceBooking != null &&
+                 line.Booking.MarketplaceBooking.MarketplaceBookingSubscriptionId != null &&
+                 marketplaceBookingSubscriptionIds.Contains(line.Booking.MarketplaceBooking.MarketplaceBookingSubscriptionId)))
+            .ToListAsync(cancellationToken);
+
+        return lines
+            .Select(line => new
+            {
+                SubscriptionId = line.Booking.RecurringBooking?.MarketplaceBookingSubscription?.Id ??
+                                 line.Booking.MarketplaceBooking!.MarketplaceBookingSubscriptionId!,
+                line.OrganizationArrearsInvoice,
+            })
+            .GroupBy(row => row.SubscriptionId)
+            .ToDictionary(
+                group => group.Key,
+                group => (IReadOnlyList<OrganizationArrearsInvoice>)
+                [
+                    .. group
+                        .Select(row => row.OrganizationArrearsInvoice)
+                        .DistinctBy(invoice => invoice.Id)
+                        .OrderByDescending(invoice => invoice.CreatedAt),
+                ]);
+    }
 
     public async Task<IReadOnlyList<string>> GetProcessedSegmentKeysAsync(
         string organizationId,

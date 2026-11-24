@@ -10,6 +10,23 @@ public class MapMarketplaceBookingSubscriptionShould
 {
     [Theory]
     [AutoFakeItEasyData]
+    public void Return_Empty_Details_When_Marketplace_Booking_Data_Is_Missing(GraphQlMapper sut)
+    {
+        var subscription = new MarketplaceBookingSubscription
+        {
+            Status = MarketplaceBookingSubscriptionStatus.Active,
+            MarketplaceBooking = null!,
+        };
+
+        var result = sut.MapTo(subscription);
+
+        result.MarketplaceBooking.ShouldNotBeNull();
+        result.MarketplaceBooking.ProductPricing.ShouldNotBeNull();
+        result.RecurringBookings.ShouldBeEmpty();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public void Preserve_Weekly_Selected_Days(GraphQlMapper sut)
     {
         var input = new AddMarketplaceBookingSubscriptionInput

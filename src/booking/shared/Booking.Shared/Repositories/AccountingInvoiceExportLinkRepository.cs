@@ -17,6 +17,12 @@ public interface IAccountingInvoiceExportLinkRepository : IRepository<Accounting
         string localEntityId,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<AccountingInvoiceExportLink>> GetByProviderAndLocalEntitiesAsync(
+        string provider,
+        string localEntityType,
+        IReadOnlyCollection<string> localEntityIds,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<AccountingInvoiceExportLink>> GetByProviderAndExternalInvoiceIdsAsync(
         string provider,
         IReadOnlyList<string> externalInvoiceIds,
@@ -48,6 +54,25 @@ public class AccountingInvoiceExportLinkRepository(BookingDbContext dbContext, T
         await DbContext.AccountingInvoiceExportLink.FirstOrDefaultAsync(
             query => query.Provider == provider && query.LocalEntityType == localEntityType && query.LocalEntityId == localEntityId,
             cancellationToken);
+
+    public async Task<IReadOnlyList<AccountingInvoiceExportLink>> GetByProviderAndLocalEntitiesAsync(
+        string provider,
+        string localEntityType,
+        IReadOnlyCollection<string> localEntityIds,
+        CancellationToken cancellationToken)
+    {
+        if (localEntityIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.AccountingInvoiceExportLink
+            .Where(query =>
+                query.Provider == provider &&
+                query.LocalEntityType == localEntityType &&
+                localEntityIds.Contains(query.LocalEntityId))
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<IReadOnlyList<AccountingInvoiceExportLink>> GetByProviderAndExternalInvoiceIdsAsync(
         string provider,

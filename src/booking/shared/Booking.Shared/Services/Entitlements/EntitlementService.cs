@@ -15,6 +15,11 @@ namespace Booking.Shared.Services.Entitlements;
 public interface IEntitlementService
 {
     Task<EntitlementModel?> GetByIdAsync(string entitlementId, CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, string>> GetPurchaseReferencesByIdsAsync(
+        IReadOnlyCollection<string> entitlementIds,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<EntitlementModel>> GetForCustomerAsync(string customerId, CancellationToken cancellationToken);
     Task<IReadOnlyList<EntitlementModel>> GetForOrganizationAsync(string organizationId, CancellationToken cancellationToken);
 
@@ -45,6 +50,11 @@ public sealed class EntitlementService(
         var entitlement = await repositoryFactory.EntitlementRepository.GetByIdAsync(entitlementId, cancellationToken);
         return entitlement is null ? null : await MapWithWeeklyAllowanceAsync(entitlement, cancellationToken);
     }
+
+    public Task<IReadOnlyDictionary<string, string>> GetPurchaseReferencesByIdsAsync(
+        IReadOnlyCollection<string> entitlementIds,
+        CancellationToken cancellationToken) =>
+        repositoryFactory.EntitlementRepository.GetPurchaseReferencesByIdsAsync(entitlementIds, cancellationToken);
 
     public async Task<IReadOnlyList<EntitlementModel>> GetForCustomerAsync(string customerId, CancellationToken cancellationToken) =>
         await MapWithWeeklyAllowanceAsync(await repositoryFactory.EntitlementRepository.GetForCustomerAsync(customerId, cancellationToken),

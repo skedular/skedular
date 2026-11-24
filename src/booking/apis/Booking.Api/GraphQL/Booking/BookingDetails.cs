@@ -71,37 +71,20 @@ public class BookingDetails : Node
     [UseResolverScope]
     public async Task<IEnumerable<OrganizationArrearsInvoiceDetails>> GetArrearsInvoicesAsync(
         [Service]
-        IBookingService bookingService,
-        [Service]
-        IGraphQlMapper graphQlMapper,
+        BookingArrearsInvoicesDataLoader dataLoader,
         [Parent]
         BookingDetails booking,
         CancellationToken cancellationToken) =>
-        (await bookingService.GetArrearsInvoicesAsync(booking.Id, cancellationToken)).Select(graphQlMapper.MapTo);
+        await dataLoader.LoadAsync(booking.Id, cancellationToken) ?? [];
 
     [UseResolverScope]
     public async Task<IReadOnlyList<MarketplaceBookingModificationDetails>> GetMarketplaceBookingModificationsAsync(
         [Service]
-        IMarketplaceBookingModificationService marketplaceBookingModificationService,
-        [Service]
-        IGraphQlMapper graphQlMapper,
+        BookingModificationHistoryDataLoader dataLoader,
         [Parent]
         BookingDetails booking,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            return [.. (await marketplaceBookingModificationService.GetHistoryAsync(booking.Id, cancellationToken)).Select(graphQlMapper.MapTo)];
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return [];
-        }
-        catch (CustomerNotFound)
-        {
-            return [];
-        }
-    }
+        CancellationToken cancellationToken) =>
+        await dataLoader.LoadAsync(booking.Id, cancellationToken) ?? [];
 
     [UseResolverScope]
     public async Task<MarketplaceBookingResourceSelectionDetails> GetMarketplaceBookingResourceSelectionAsync(
@@ -180,28 +163,24 @@ public static partial class BookingDetailsType
     public static IEnumerable<TeamDetails> GetInvolvedTeams([Parent] BookingDetails item) =>
         item.InvolvedTeamIds.Select(id => new TeamDetails(id));
 
-    public static async Task<MarketplaceBookingFailureDetails?> GetFailureAsync(
+    public static Task<MarketplaceBookingFailureDetails?> GetFailureAsync(
         [Service]
-        IGraphQlMapper graphQlMapper,
-        [Service]
-        IMarketplaceBookingFailureReadService failureReadService,
+        BookingFailureDataLoader dataLoader,
         [Parent]
         BookingDetails item,
-        CancellationToken cancellationToken)
-    {
-        var failure = await failureReadService.GetByBookingIdAsync(item.Id, cancellationToken);
-        return failure is null ? null : graphQlMapper.MapTo(failure);
-    }
+        CancellationToken cancellationToken) =>
+        dataLoader.LoadAsync(item.Id, cancellationToken);
 
 
     public static async Task<MarketplaceCancellationAvailabilityDetails> GetCancellationAvailabilityAsync(
         [Parent]
         BookingDetails item,
         [Service]
-        IMarketplaceCancellationAvailabilityService cancellationAvailabilityService,
+        BookingCancellationAvailabilityDataLoader dataLoader,
         CancellationToken cancellationToken)
     {
-        var availability = await cancellationAvailabilityService.GetBookingAsync(item.Id, cancellationToken);
+        var availability = await dataLoader.LoadAsync(item.Id, cancellationToken) ??
+                           new MarketplaceCancellationAvailability(false, false, false, "This booking is not available for cancellation.");
         return new MarketplaceCancellationAvailabilityDetails
         {
             CanCancel = availability.CanCancel,

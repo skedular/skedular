@@ -18,6 +18,11 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
     Task<Database.Entities.Booking?> GetByMarketplaceBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken);
     Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsMinimalAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsWithValidMarketplaceAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsForCancellationAvailabilityAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken);
+
     Task<Database.Entities.Booking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<Database.Entities.Booking>> GetFutureConfirmedMarketplaceBookingsByLocationIdAsync(
@@ -327,6 +332,21 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .Include(query => query.MarketplaceBooking)
             .AsSingleQuery()
             .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsForCancellationAvailabilityAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.Booking
+            .AddSingleBookingMinimumDependentObjects(true)
+            .Where(query => ids.Contains(query.Id))
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<Database.Entities.Booking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking

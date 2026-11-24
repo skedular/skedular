@@ -39,6 +39,21 @@ public class MarketplaceBookingModificationRepository(BookingDbContext dbContext
             .OrderByDescending(item => item.OccurredAt)
             .ToListAsync(cancellationToken);
 
+    public async Task<IReadOnlyList<MarketplaceBookingModification>> GetByBookingIdsAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken)
+    {
+        if (bookingIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.MarketplaceBookingModification
+            .Where(item => bookingIds.Contains(item.BookingId))
+            .OrderByDescending(item => item.OccurredAt)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<MarketplaceBookingModificationNotificationDelivery?> GetDeliveryByKeyAsync(
         string modificationId,
         string deliveryKey,

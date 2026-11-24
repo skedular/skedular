@@ -1,6 +1,7 @@
 ﻿using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
@@ -22,6 +23,10 @@ public interface IMarketplaceBookingModificationService
 
     Task<IReadOnlyList<MarketplaceBookingModificationSummary>> GetHistoryAsync(
         string bookingId,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, IReadOnlyList<MarketplaceBookingModificationSummary>>> GetHistoriesAsync(
+        IReadOnlyCollection<string> bookingIds,
         CancellationToken cancellationToken);
 
     Task<MarketplaceBookingResourceSelection> GetResourceSelectionAsync(
@@ -74,22 +79,71 @@ public sealed class MarketplaceBookingModificationService(
         CancellationToken cancellationToken)
     {
         await ResolveActorAsync(bookingId, null, cancellationToken);
-        var modifications = await repositoryFactory.MarketplaceBookingModificationRepository.GetByBookingIdAsync(bookingId, cancellationToken);
-        var resourceIds = modifications.SelectMany(modification => modification.OriginalResourceIds.Concat(modification.ResultResourceIds)).Distinct()
-            .ToList();
-        var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(resourceIds, false, cancellationToken);
-        var resourceNames = resources.ToDictionary(resource => resource.Id, resource => resource.Name);
-        return
-        [
-            .. modifications.Select(modification => new MarketplaceBookingModificationSummary(
-                modification.Id, modification.BookingId, modification.OccurredAt,
-                modification.ActorKind.ToMarketplaceBookingModificationActorKind(), modification.Reason,
-                modification.OriginalFrom, modification.OriginalUntil, modification.ResultFrom, modification.ResultUntil,
-                [.. modification.OriginalResourceIds], [.. modification.ResultResourceIds],
-                [.. modification.OriginalResourceIds.Select(id => resourceNames.GetValueOrDefault(id) ?? $"Resource unavailable ({id})")],
-                [.. modification.ResultResourceIds.Select(id => resourceNames.GetValueOrDefault(id) ?? $"Resource unavailable ({id})")],
-                modification.SubscriptionOccurrenceOverride)),
-        ];
+        var modifications = await repositoryFactory.MarketplaceBookingModificationRepository
+            .GetByBookingIdAsync(bookingId, cancellationToken);
+        return await MapHistoriesAsync(modifications, cancellationToken);
+    }
+
+    public async Task<IReadOnlyDictionary<string, IReadOnlyList<MarketplaceBookingModificationSummary>>> GetHistoriesAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken)
+    {
+        var ids = bookingIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
+        var result = ids.ToDictionary(id => id, _ => (IReadOnlyList<MarketplaceBookingModificationSummary>)[]);
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken);
+        if (customer is null)
+        {
+            return result;
+        }
+
+        var bookings = await repositoryFactory.BookingRepository.GetByIdsForCancellationAvailabilityAsync(ids, cancellationToken);
+        var canOverrideByOrganizationId = new Dictionary<string, bool>();
+        var authorizedIds = new List<string>(bookings.Count);
+        foreach (var booking in bookings)
+        {
+            if (booking.InvolvedCustomers.Any(item => item.Id == customer.Id))
+            {
+                authorizedIds.Add(booking.Id);
+                continue;
+            }
+
+            var organizationId = booking.MarketplaceBooking?.ProductVersion?.Product?.Organization?.Id;
+            if (string.IsNullOrWhiteSpace(organizationId))
+            {
+                continue;
+            }
+
+            if (!canOverrideByOrganizationId.TryGetValue(organizationId, out var canOverride))
+            {
+                canOverride = await organizationAuthorizationService.CanOverrideCancellationPolicyAsync(
+                    organizationId,
+                    customer.Id,
+                    cancellationToken);
+                canOverrideByOrganizationId[organizationId] = canOverride;
+            }
+
+            if (canOverride)
+            {
+                authorizedIds.Add(booking.Id);
+            }
+        }
+
+        if (authorizedIds.Count == 0)
+        {
+            return result;
+        }
+
+        var modifications = await repositoryFactory.MarketplaceBookingModificationRepository
+            .GetByBookingIdsAsync(authorizedIds, cancellationToken);
+        var summaries = await MapHistoriesAsync(modifications, cancellationToken);
+        foreach (var group in summaries.GroupBy(summary => summary.BookingId))
+        {
+            result[group.Key] = [.. group];
+        }
+
+        return result;
     }
 
     public async Task<MarketplaceBookingResourceSelection> GetResourceSelectionAsync(
@@ -163,6 +217,29 @@ public sealed class MarketplaceBookingModificationService(
             eligibleResources,
             availableResourceIds,
             eligibleLocations);
+    }
+
+    private async Task<IReadOnlyList<MarketplaceBookingModificationSummary>> MapHistoriesAsync(
+        IReadOnlyList<MarketplaceBookingModification> modifications,
+        CancellationToken cancellationToken)
+    {
+        var resourceIds = modifications
+            .SelectMany(modification => modification.OriginalResourceIds.Concat(modification.ResultResourceIds))
+            .Distinct()
+            .ToList();
+        var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(resourceIds, false, cancellationToken);
+        var resourceNames = resources.ToDictionary(resource => resource.Id, resource => resource.Name);
+        return
+        [
+            .. modifications.Select(modification => new MarketplaceBookingModificationSummary(
+                modification.Id, modification.BookingId, modification.OccurredAt,
+                modification.ActorKind.ToMarketplaceBookingModificationActorKind(), modification.Reason,
+                modification.OriginalFrom, modification.OriginalUntil, modification.ResultFrom, modification.ResultUntil,
+                [.. modification.OriginalResourceIds], [.. modification.ResultResourceIds],
+                [.. modification.OriginalResourceIds.Select(id => resourceNames.GetValueOrDefault(id) ?? $"Resource unavailable ({id})")],
+                [.. modification.ResultResourceIds.Select(id => resourceNames.GetValueOrDefault(id) ?? $"Resource unavailable ({id})")],
+                modification.SubscriptionOccurrenceOverride)),
+        ];
     }
 
     private async Task<(string CustomerId, MarketplaceBookingModificationActorKind ActorKind)> ResolveActorAsync(

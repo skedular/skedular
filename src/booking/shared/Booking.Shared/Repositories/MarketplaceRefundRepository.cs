@@ -68,6 +68,11 @@ public interface IMarketplaceRefundRepository : IRepository<MarketplaceRefund>
         string localEntityId,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<MarketplaceRefund>> GetLatestByLocalEntitiesAsync(
+        string localEntityType,
+        IReadOnlyCollection<string> localEntityIds,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<MarketplaceRefund>> GetByOrganizationIdAsync(
         string organizationId,
         IReadOnlyList<string>? statuses,
@@ -482,6 +487,31 @@ public class MarketplaceRefundRepository(BookingDbContext dbContext, TimeProvide
                     query.LocalEntityType == localEntityType &&
                     query.LocalEntityId == localEntityId,
                 cancellationToken);
+
+    public async Task<IReadOnlyList<MarketplaceRefund>> GetLatestByLocalEntitiesAsync(
+        string localEntityType,
+        IReadOnlyCollection<string> localEntityIds,
+        CancellationToken cancellationToken)
+    {
+        if (localEntityIds.Count == 0)
+        {
+            return [];
+        }
+
+        var latestRefundIds = DbContext.MarketplaceRefund
+            .Where(item => item.LocalEntityType == localEntityType && localEntityIds.Contains(item.LocalEntityId))
+            .GroupBy(item => item.LocalEntityId)
+            .Select(group => group
+                .OrderByDescending(item => item.RequestedAt)
+                .ThenByDescending(item => item.Id)
+                .Select(item => item.Id)
+                .First());
+
+        return await DbContext.MarketplaceRefund
+            .Include(query => query.PaymentAllocations)
+            .Where(item => latestRefundIds.Contains(item.Id))
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<IReadOnlyList<MarketplaceRefund>> GetByOrganizationIdAsync(
         string organizationId,

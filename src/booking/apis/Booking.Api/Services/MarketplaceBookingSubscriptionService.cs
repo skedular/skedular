@@ -29,6 +29,10 @@ public interface IMarketplaceBookingSubscriptionService
     Task<MarketplaceBookingSubscription> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string id, CancellationToken cancellationToken);
 
+    Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>> GetArrearsInvoicesAsync(
+        IReadOnlyCollection<string> subscriptionIds,
+        CancellationToken cancellationToken);
+
     Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
         PaginationInputParam paginationInputParam,
         MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
@@ -105,6 +109,38 @@ public class MarketplaceBookingSubscriptionService(
         var invoices =
             await repositoryFactory.OrganizationArrearsInvoiceRepository.GetByMarketplaceBookingSubscriptionIdUntrackedAsync(id, cancellationToken);
         return [.. invoices.Select(sharedEntityMapper.MapTo)];
+    }
+
+    public async Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>> GetArrearsInvoicesAsync(
+        IReadOnlyCollection<string> subscriptionIds,
+        CancellationToken cancellationToken)
+    {
+        var ids = subscriptionIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
+        var subscriptions = await repositoryFactory.MarketplaceBookingSubscriptionRepository
+            .GetByIdsAsync(ids, cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var authorizedIds = new List<string>(subscriptions.Count);
+        foreach (var subscription in subscriptions)
+        {
+            try
+            {
+                await EnsureCustomerCanViewMarketplaceBookingSubscriptionAsync(subscription, customerId, cancellationToken);
+                authorizedIds.Add(subscription.Id);
+            }
+            catch (UnauthorizedAccessException)
+            {
+            }
+        }
+
+        var invoicesById = authorizedIds.Count == 0
+            ? new Dictionary<string, IReadOnlyList<Shared.Database.Entities.OrganizationArrearsInvoice>>()
+            : await repositoryFactory.OrganizationArrearsInvoiceRepository
+                .GetByMarketplaceBookingSubscriptionIdsUntrackedAsync(authorizedIds, cancellationToken);
+        return ids.ToDictionary(
+            id => id,
+            id => (IReadOnlyList<OrganizationArrearsInvoice>)(invoicesById.TryGetValue(id, out var invoices)
+                ? invoices.Select(sharedEntityMapper.MapTo).ToList()
+                : []));
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(

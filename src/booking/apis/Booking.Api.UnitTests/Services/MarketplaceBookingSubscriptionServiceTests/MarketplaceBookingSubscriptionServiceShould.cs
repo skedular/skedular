@@ -68,6 +68,52 @@ public class MarketplaceBookingSubscriptionServiceShould
 
     [Theory]
     [AutoFakeItEasyData]
+    public async Task GetArrearsInvoicesAsync_Batch_Does_Not_Load_Unauthorized_Invoices(
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IOrganizationArrearsInvoiceRepository organizationArrearsInvoiceRepository,
+        [Frozen]
+        ICachedCustomerService cachedCustomerService,
+        MarketplaceBookingSubscriptionService sut,
+        CancellationToken cancellationToken)
+    {
+        var subscription = new MarketplaceBookingSubscription
+        {
+            Id = "subscription-hidden",
+            InvolvedCustomers =
+            [
+                new Customer
+                {
+                    Id = "customer-owner",
+                },
+            ],
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
+        };
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository)
+            .Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => repositoryFactory.OrganizationArrearsInvoiceRepository)
+            .Returns(organizationArrearsInvoiceRepository);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .Returns([subscription]);
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-viewer");
+
+        var result = await sut.GetArrearsInvoicesAsync([subscription.Id], cancellationToken);
+
+        result[subscription.Id].ShouldBeEmpty();
+        A.CallTo(() => organizationArrearsInvoiceRepository.GetByMarketplaceBookingSubscriptionIdsUntrackedAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .MustNotHaveHappened();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
     public async Task GetByIdAsync_Allows_Marketplace_Admin_To_View_Other_Customers_Subscription(
         [Frozen]
         IRepositoryFactory repositoryFactory,

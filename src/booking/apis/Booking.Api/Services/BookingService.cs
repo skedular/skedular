@@ -16,6 +16,10 @@ public interface IBookingService
     Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string bookingId, CancellationToken cancellationToken);
 
+    Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>> GetArrearsInvoicesAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken);
+
     Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
@@ -54,6 +58,37 @@ public class BookingService(
 
         var invoices = await repositoryFactory.OrganizationArrearsInvoiceRepository.GetByBookingIdUntrackedAsync(bookingId, cancellationToken);
         return [.. invoices.Select(sharedEntityMapper.MapTo)];
+    }
+
+    public async Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>> GetArrearsInvoicesAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken)
+    {
+        var ids = bookingIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
+        var bookings = await repositoryFactory.BookingRepository.GetByIdsForCancellationAvailabilityAsync(ids, cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var authorizedIds = new List<string>(bookings.Count);
+        foreach (var booking in bookings)
+        {
+            try
+            {
+                await EnsureCustomerCanViewBookingAsync(booking, customerId, cancellationToken);
+                authorizedIds.Add(booking.Id);
+            }
+            catch (UnauthorizedAccessException)
+            {
+            }
+        }
+
+        var invoicesById = authorizedIds.Count == 0
+            ? new Dictionary<string, IReadOnlyList<Shared.Database.Entities.OrganizationArrearsInvoice>>()
+            : await repositoryFactory.OrganizationArrearsInvoiceRepository
+                .GetByBookingIdsUntrackedAsync(authorizedIds, cancellationToken);
+        return ids.ToDictionary(
+            id => id,
+            id => (IReadOnlyList<OrganizationArrearsInvoice>)(invoicesById.TryGetValue(id, out var invoices)
+                ? invoices.Select(sharedEntityMapper.MapTo).ToList()
+                : []));
     }
 
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(

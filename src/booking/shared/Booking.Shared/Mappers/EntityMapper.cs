@@ -374,7 +374,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper, IEntitleme
 
     public MarketplaceBookingSubscription MapTo(Database.Entities.MarketplaceBookingSubscription src)
     {
-        var marketplaceBooking = MapTo(src.MarketplaceBooking)!;
+        var marketplaceBooking = MapTo(src.MarketplaceBooking) ?? new Models.MarketplaceBooking();
         var subscription = new MarketplaceBookingSubscription
         {
             Id = src.Id,
@@ -719,19 +719,21 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper, IEntitleme
         return (from, until);
     }
 
-    private static Models.ProductVersion MapTo(ProductVersion src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            Type = src.Type.ToSafeString().ToProductType(),
-            Currency = src.Currency.ToSafeString().ToCurrency(),
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
-            PricingOptions = src.PricingOptions.ToSafeCollection(),
-            Product = MapTo(src.Product)!,
-            OrganizationTags = [.. MapTo(src.OrganizationTags)],
-        };
+    private static Models.ProductVersion MapTo(ProductVersion? src) =>
+        src is null
+            ? new Models.ProductVersion()
+            : new Models.ProductVersion
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                Type = src.Type.ToSafeString().ToProductType(),
+                Currency = src.Currency.ToSafeString().ToCurrency(),
+                ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
+                PricingOptions = src.PricingOptions.ToSafeCollection(),
+                Product = MapTo(src.Product) ?? new Product(),
+                OrganizationTags = [.. MapTo(src.OrganizationTags)],
+            };
 
     private static Product? MapTo(Database.Entities.Product? src) =>
         src is null
@@ -760,7 +762,7 @@ public class EntityMapper(TimeProvider timeProvider) : IEntityMapper, IEntitleme
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
             WeeklySelectedDays = [.. src.WeeklySelectedDays.Select(item => item.ToDayOfWeek())],
-            MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
+            MarketplaceBooking = MapTo(src.MarketplaceBooking) ?? new Models.MarketplaceBooking(),
             RequestedResources = [.. MapTo(src.RequestedResources)],
         };
 
