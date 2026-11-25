@@ -8,6 +8,8 @@ namespace Booking.Shared.Repositories;
 
 public interface IResourceBookingSlotRepository : IRepository<ResourceBookingSlot>
 {
+    const int UnbookedSlotCleanupBatchSize = 500;
+
     void AddRange(IEnumerable<ResourceBookingSlot> resourceBookingSlots);
     void Update(ResourceBookingSlot resourceBookingSlot);
     void UpdateRange(IEnumerable<ResourceBookingSlot> resourceBookingSlots);
@@ -18,7 +20,7 @@ public interface IResourceBookingSlotRepository : IRepository<ResourceBookingSlo
         DateTimeOffset dayStart,
         DateTimeOffset dayEnd, CancellationToken cancellationToken);
 
-    Task<int> DeleteUnbookedBeforeAsync(DateTimeOffset cutoff, CancellationToken cancellationToken);
+    Task<int> DeleteUnbookedBatchBeforeAsync(DateTimeOffset cutoff, CancellationToken cancellationToken);
 }
 
 public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -83,8 +85,30 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<int> DeleteUnbookedBeforeAsync(DateTimeOffset cutoff, CancellationToken cancellationToken) =>
-        await DbContext.ResourceBookingSlot
+    public async Task<int> DeleteUnbookedBatchBeforeAsync(DateTimeOffset cutoff, CancellationToken cancellationToken)
+    {
+        var slotIds = await DbContext.ResourceBookingSlot
             .Where(slot => slot.Start < cutoff && !slot.Bookings.Any())
-            .ExecuteDeleteAsync(cancellationToken);
+            .OrderBy(slot => slot.Start)
+            .ThenBy(slot => slot.Id)
+            .Select(slot => slot.Id)
+            .Take(IResourceBookingSlotRepository.UnbookedSlotCleanupBatchSize + 1)
+            .ToListAsync(cancellationToken);
+
+        var hasMore = slotIds.Count > IResourceBookingSlotRepository.UnbookedSlotCleanupBatchSize;
+        if (hasMore)
+        {
+            slotIds.RemoveAt(IResourceBookingSlotRepository.UnbookedSlotCleanupBatchSize);
+        }
+
+        var deletedCount = 0;
+        if (slotIds.Count > 0)
+        {
+            deletedCount = await DbContext.ResourceBookingSlot
+                .Where(slot => slotIds.Contains(slot.Id) && !slot.Bookings.Any())
+                .ExecuteDeleteAsync(cancellationToken);
+        }
+
+        return hasMore ? IResourceBookingSlotRepository.UnbookedSlotCleanupBatchSize + 1 : deletedCount;
+    }
 }

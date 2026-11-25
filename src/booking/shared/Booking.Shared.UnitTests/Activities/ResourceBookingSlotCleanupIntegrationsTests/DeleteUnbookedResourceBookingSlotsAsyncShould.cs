@@ -24,7 +24,7 @@ public class DeleteUnbookedResourceBookingSlotsAsyncShould
 
         A.CallTo(() => repositoryFactory.ResourceBookingSlotRepository).Returns(resourceBookingSlotRepository);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
-        A.CallTo(() => resourceBookingSlotRepository.DeleteUnbookedBeforeAsync(
+        A.CallTo(() => resourceBookingSlotRepository.DeleteUnbookedBatchBeforeAsync(
                 expectedCutoff,
                 A<CancellationToken>._))
             .Returns(deletedCount);
@@ -33,7 +33,7 @@ public class DeleteUnbookedResourceBookingSlotsAsyncShould
         var result = await activityEnvironment.RunAsync(() => sut.DeleteUnbookedResourceBookingSlotsAsync());
 
         result.ShouldBe(deletedCount);
-        A.CallTo(() => resourceBookingSlotRepository.DeleteUnbookedBeforeAsync(
+        A.CallTo(() => resourceBookingSlotRepository.DeleteUnbookedBatchBeforeAsync(
                 expectedCutoff,
                 activityEnvironment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
