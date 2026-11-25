@@ -77,6 +77,11 @@ public class SpacesBookingQuotaService(
         {
             if (!organizationsById.TryGetValue(id, out var organization))
             {
+                logger.LogWarning(
+                    "{EventId}: Spaces offering state missing or invalid for organization {OrganizationId}. PlanCode: {PlanCode}",
+                    SpacesPricingLogEvents.QuotaDecisionNoOfferingState,
+                    id,
+                    null);
                 result[id] = MissingOfferingDecision(null);
                 continue;
             }
@@ -85,6 +90,11 @@ public class SpacesBookingQuotaService(
             var planCode = offering?.SpacesPlanCode;
             if (planCode is null or 0 || !s_supportedPlanCodes.Contains(planCode.Value))
             {
+                logger.LogWarning(
+                    "{EventId}: Spaces offering state missing or invalid for organization {OrganizationId}. PlanCode: {PlanCode}",
+                    SpacesPricingLogEvents.QuotaDecisionNoOfferingState,
+                    id,
+                    planCode);
                 result[id] = MissingOfferingDecision(planCode);
                 continue;
             }
@@ -95,6 +105,12 @@ public class SpacesBookingQuotaService(
                 SpacesAccessAction.CreateBookingInstance);
             if (!accessDecision.Allowed)
             {
+                logger.LogInformation(
+                    "{EventId}: Spaces access denied for organization {OrganizationId}. Status: {Status}, ReasonCode: {ReasonCode}",
+                    SpacesTrialLogEvents.AccessDecisionDenied,
+                    id,
+                    accessDecision.Status,
+                    accessDecision.ReasonCode);
                 result[id] = CreateDecision(
                         false,
                         accessDecision.Status == SpacesSubscriptionStatus.TrialExpired
@@ -108,9 +124,9 @@ public class SpacesBookingQuotaService(
                         offering!.SpacesPeriodStart ?? DateTimeOffset.MinValue,
                         offering.SpacesPeriodEnd ?? DateTimeOffset.MinValue)
                     with
-                    {
-                        AccessDecision = accessDecision,
-                    };
+                {
+                    AccessDecision = accessDecision,
+                };
                 continue;
             }
 
@@ -118,6 +134,12 @@ public class SpacesBookingQuotaService(
             var periodEnd = offering.SpacesPeriodEnd ?? DateTimeOffset.MinValue;
             if (periodStart == DateTimeOffset.MinValue || periodEnd == DateTimeOffset.MinValue || periodEnd <= periodStart)
             {
+                logger.LogWarning(
+                    "{EventId}: Spaces offering state has invalid period for organization {OrganizationId}. PeriodStart: {PeriodStart}, PeriodEnd: {PeriodEnd}",
+                    SpacesPricingLogEvents.QuotaDecisionNoOfferingState,
+                    id,
+                    periodStart,
+                    periodEnd);
                 result[id] = MissingOfferingDecision(planCode, periodStart, periodEnd);
                 continue;
             }
@@ -257,9 +279,9 @@ public class SpacesBookingQuotaService(
                     offering!.SpacesPeriodStart ?? DateTimeOffset.MinValue,
                     offering.SpacesPeriodEnd ?? DateTimeOffset.MinValue)
                 with
-                {
-                    AccessDecision = accessDecision,
-                };
+            {
+                AccessDecision = accessDecision,
+            };
         }
 
         var periodStart = offering!.SpacesPeriodStart ?? DateTimeOffset.MinValue;

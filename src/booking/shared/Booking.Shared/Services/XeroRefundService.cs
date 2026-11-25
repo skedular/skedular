@@ -531,9 +531,10 @@ public class XeroRefundService(
         var missingTargetSubscriptionIds = subscriptionRefunds
             .Where(refund =>
                 !historyLoadedSubscriptionIds.Contains(refund.LocalEntityId) &&
-                candidateRecurringBookingIdsByRefundId.TryGetValue(refund.Id, out var candidateIds) &&
-                !candidateIds.Any(id => recurringBookingLinks.Any(link =>
-                    link.LocalEntityId == id && !string.IsNullOrWhiteSpace(link.ExternalInvoiceId))))
+                recurringBookingsByRefundId.TryGetValue(refund.Id, out var primaryRecurringBooking) &&
+                !recurringBookingLinks.Any(link =>
+                    link.LocalEntityId == primaryRecurringBooking.Id &&
+                    !string.IsNullOrWhiteSpace(link.ExternalInvoiceId)))
             .Select(refund => refund.LocalEntityId)
             .Distinct()
             .ToList();

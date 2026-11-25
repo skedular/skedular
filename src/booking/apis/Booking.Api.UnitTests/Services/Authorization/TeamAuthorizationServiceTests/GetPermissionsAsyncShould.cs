@@ -34,8 +34,8 @@ public class GetPermissionsAsyncShould
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customerId);
         A.CallTo(() => cachedTeamService.GetByIdAsync(teamId, cancellationToken)).Returns(team);
         A.CallTo(() => organizationAuthorizationService.CanViewBookingsAsync(organizationId, customerId, cancellationToken)).Returns(true);
-        A.CallTo(() => organizationAuthorizationService.CanAddBookingAsync(team.Organization, customerId, cancellationToken)).Returns(false);
-        A.CallTo(() => organizationAuthorizationService.CanUpdateBookingAsync(team.Organization, customerId, cancellationToken)).Returns(true);
+        A.CallTo(() => organizationAuthorizationService.CanAddBookingAsync(organizationId, customerId, cancellationToken)).Returns(false);
+        A.CallTo(() => organizationAuthorizationService.CanUpdateBookingAsync(organizationId, customerId, cancellationToken)).Returns(true);
         A.CallTo(() => organizationAuthorizationService.CanDeleteBookingAsync(organizationId, customerId, cancellationToken)).Returns(false);
 
         var result = await sut.GetPermissionsAsync(teamId, cancellationToken);

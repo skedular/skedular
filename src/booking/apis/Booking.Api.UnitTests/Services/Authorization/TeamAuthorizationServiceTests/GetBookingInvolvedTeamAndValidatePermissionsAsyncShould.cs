@@ -64,7 +64,14 @@ public class GetBookingInvolvedTeamAndValidatePermissionsAsyncShould
 
         A.CallTo(() => repositoryFactory.TeamRepository).Returns(teamRepository);
         A.CallTo(() => teamRepository.GetByIdsAsync(A<IReadOnlyList<string>>._, false, cancellationToken)).Returns([team]);
-        A.CallTo(() => organizationAuthorizationService.CanAddBookingAsync(team.Organization, customerId, cancellationToken)).Returns(false);
+        A.CallTo(() => organizationAuthorizationService.CanAddBookingByOrganizationIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                customerId,
+                cancellationToken))
+            .Returns(new Dictionary<string, bool>
+            {
+                ["org-1"] = false,
+            });
 
         await Should.ThrowAsync<UnauthorizedAccessException>(() =>
             sut.GetBookingInvolvedTeamAndValidatePermissionsAsync([team.Id], customerId, false, cancellationToken));

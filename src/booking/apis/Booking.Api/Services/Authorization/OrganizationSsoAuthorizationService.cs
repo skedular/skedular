@@ -1,12 +1,14 @@
 ﻿using Api.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Context;
+using Organization = Booking.Shared.Database.Entities.Organization;
 
 namespace Booking.Api.Services.Authorization;
 
 public interface IOrganizationSsoAuthorizationService
 {
     ValueTask<bool> IsSsoValidAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> IsSsoValidAsync(Organization organization, string customerId, CancellationToken cancellationToken);
 }
 
 public class OrganizationSsoAuthorizationService(
@@ -18,7 +20,15 @@ public class OrganizationSsoAuthorizationService(
     public async ValueTask<bool> IsSsoValidAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken);
-        if (organization?.OrganizationSsoSettings is null || !organization.OrganizationSsoSettings.IsActive)
+        return organization is null || await IsSsoValidAsync(organization, customerId, cancellationToken);
+    }
+
+    public async ValueTask<bool> IsSsoValidAsync(
+        Organization organization,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        if (organization.OrganizationSsoSettings is null || !organization.OrganizationSsoSettings.IsActive)
         {
             return true;
         }

@@ -29,7 +29,7 @@ public class CanViewBookingsAsyncShould
         };
 
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken)).Returns(organization);
-        A.CallTo(() => organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken)).Returns(true);
+        A.CallTo(() => organizationSsoAuthorizationService.IsSsoValidAsync(organization, customerId, cancellationToken)).Returns(true);
 
         var result = await sut.CanViewBookingsAsync(organizationId, customerId, cancellationToken);
 

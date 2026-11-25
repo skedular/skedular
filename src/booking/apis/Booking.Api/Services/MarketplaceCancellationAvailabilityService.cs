@@ -135,12 +135,13 @@ public sealed class MarketplaceCancellationAvailabilityService(
             .GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
         var bookingsById = bookings.ToDictionary(item => item.Id);
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var now = timeProvider.GetUtcNow();
         var overrideOrganizationIds = bookings
             .Where(booking => booking.MarketplaceBooking is not null && booking.DeletedByCustomer is null)
             .Where(booking => !marketplaceRefundPolicyService.GetQuote(
                     booking.MarketplaceBooking!.ProductPricing,
                     booking.From,
-                    timeProvider.GetUtcNow())
+                    now)
                 .CanCancel)
             .Select(booking => booking.MarketplaceBooking!.ProductVersion?.Product?.Organization?.Id)
             .Where(item => !string.IsNullOrWhiteSpace(item))
@@ -171,7 +172,7 @@ public sealed class MarketplaceCancellationAvailabilityService(
             var quote = marketplaceRefundPolicyService.GetQuote(
                 booking.MarketplaceBooking.ProductPricing,
                 booking.From,
-                timeProvider.GetUtcNow());
+                now);
             var isCreditFunded = booking.MarketplaceBooking.EntitlementId is not null;
             if (quote.CanCancel)
             {
@@ -206,6 +207,7 @@ public sealed class MarketplaceCancellationAvailabilityService(
             .GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
         var subscriptionsById = subscriptions.ToDictionary(item => item.Id);
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var now = timeProvider.GetUtcNow();
         var overrideOrganizationIds = subscriptions
             .Where(subscription =>
                 subscription.MarketplaceBooking is not null &&
@@ -213,7 +215,7 @@ public sealed class MarketplaceCancellationAvailabilityService(
             .Where(subscription => !marketplaceRefundPolicyService.GetQuote(
                     subscription.MarketplaceBooking!.ProductPricing,
                     subscription.NextRenewalAt ?? subscription.StartedAt,
-                    timeProvider.GetUtcNow())
+                    now)
                 .CanCancel)
             .Select(subscription => subscription.ProductVersion?.Product?.Organization?.Id)
             .Where(item => !string.IsNullOrWhiteSpace(item))
@@ -250,7 +252,7 @@ public sealed class MarketplaceCancellationAvailabilityService(
             var quote = marketplaceRefundPolicyService.GetQuote(
                 subscription.MarketplaceBooking.ProductPricing,
                 referenceTime,
-                timeProvider.GetUtcNow());
+                now);
             if (quote.CanCancel)
             {
                 result[id] = new MarketplaceSubscriptionCancellationAvailability(Available(), atPeriodEnd);

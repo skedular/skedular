@@ -38,7 +38,7 @@ public class CanManagePermissionsByOrganizationIdsAsyncShould
                 cancellationToken))
             .Returns([organization]);
         A.CallTo(() => organizationSsoAuthorizationService.IsSsoValidAsync(
-                organizationId,
+                organization,
                 customerId,
                 cancellationToken))
             .Returns(true);
@@ -87,7 +87,7 @@ public class CanManagePermissionsByOrganizationIdsAsyncShould
                 cancellationToken))
             .Returns([organization]);
         A.CallTo(() => organizationSsoAuthorizationService.IsSsoValidAsync(
-                organizationId,
+                organization,
                 customerId,
                 cancellationToken))
             .Returns(true);

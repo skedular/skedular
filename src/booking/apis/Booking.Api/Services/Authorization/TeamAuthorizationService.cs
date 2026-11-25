@@ -34,11 +34,11 @@ public class TeamAuthorizationService(
 
     public async ValueTask<bool> CanAddBookingAsync(Team team, string customerId, CancellationToken cancellationToken) =>
         team.Organization is not null &&
-        await organizationAuthorizationService.CanAddBookingAsync(team.Organization, customerId, cancellationToken);
+        await organizationAuthorizationService.CanAddBookingAsync(team.Organization.Id, customerId, cancellationToken);
 
     public async ValueTask<bool> CanUpdateBookingAsync(Team team, string customerId, CancellationToken cancellationToken) =>
         team.Organization is not null &&
-        await organizationAuthorizationService.CanUpdateBookingAsync(team.Organization, customerId, cancellationToken);
+        await organizationAuthorizationService.CanUpdateBookingAsync(team.Organization.Id, customerId, cancellationToken);
 
     public async ValueTask<bool> CanDeleteBookingAsync(Team team, string customerId, CancellationToken cancellationToken) =>
         team.Organization is not null &&
@@ -77,23 +77,32 @@ public class TeamAuthorizationService(
             throw new TeamNotFound();
         }
 
+        if (teams.Any(item => item.Organization is null))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var organizationIds = teams
+            .Select(item => item.Organization!.Id)
+            .Distinct()
+            .ToList();
+
+        var permissionByOrganizationId = existing
+            ? await organizationAuthorizationService.CanUpdateBookingByOrganizationIdsAsync(
+                organizationIds,
+                customerId,
+                cancellationToken)
+            : await organizationAuthorizationService.CanAddBookingByOrganizationIdsAsync(
+                organizationIds,
+                customerId,
+                cancellationToken);
         var result = new List<Team>();
         foreach (var id in ids)
         {
             var teamEntity = teams.First(item => item.Id == id);
-            if (existing)
+            if (!permissionByOrganizationId.GetValueOrDefault(teamEntity.Organization!.Id))
             {
-                if (!await CanUpdateBookingAsync(teamEntity, customerId, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-            }
-            else
-            {
-                if (!await CanAddBookingAsync(teamEntity, customerId, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                throw new UnauthorizedAccessException();
             }
 
             result.Add(teamEntity);

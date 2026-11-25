@@ -416,7 +416,7 @@ public class GetProcessingAvailabilitiesAsyncShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Load_Full_History_When_Active_Subscription_Target_Is_Missing(
+    public async Task Load_Full_History_When_The_Primary_Subscription_Target_Is_Missing(
         [Frozen]
         IRepositoryFactory repositoryFactory,
         [Frozen]
@@ -460,12 +460,22 @@ public class GetProcessingAvailabilitiesAsyncShould
                 ProductPricing = ProductPricing.Empty("live"),
             },
         };
+        var olderLiveBooking = new RecurringBookingEntity
+        {
+            Id = "recurring-older-live",
+            StartDate = requestedAt.AddDays(-3),
+            EndDate = requestedAt.AddDays(1),
+            MarketplaceBooking = new MarketplaceBookingEntity
+            {
+                ProductPricing = ProductPricing.Empty("older-live"),
+            },
+        };
         var historicalBooking = new RecurringBookingEntity
         {
             Id = "recurring-historical",
-            StartDate = requestedAt.AddDays(-3),
+            StartDate = requestedAt.AddDays(-1),
             EndDate = requestedAt.AddDays(1),
-            DeletedAt = requestedAt.AddDays(-1),
+            DeletedAt = requestedAt.AddHours(-1),
             MarketplaceBooking = new MarketplaceBookingEntity
             {
                 ProductPricing = ProductPricing.Empty("historical"),
@@ -480,7 +490,7 @@ public class GetProcessingAvailabilitiesAsyncShould
             {
                 ProductVersion = productVersion,
             },
-            RecurringBookings = [liveBooking],
+            RecurringBookings = [liveBooking, olderLiveBooking],
         };
         var fullSubscription = new MarketplaceBookingSubscriptionEntity
         {
@@ -488,7 +498,7 @@ public class GetProcessingAvailabilitiesAsyncShould
             Status = lightSubscription.Status,
             StartedAt = lightSubscription.StartedAt,
             MarketplaceBooking = lightSubscription.MarketplaceBooking,
-            RecurringBookings = [historicalBooking, liveBooking],
+            RecurringBookings = [historicalBooking, liveBooking, olderLiveBooking],
         };
         var refund = new MarketplaceRefund
         {
@@ -499,6 +509,14 @@ public class GetProcessingAvailabilitiesAsyncShould
             RefundAmount = 10m,
             RequestedAt = requestedAt,
         };
+        var olderLiveLink = new AccountingInvoiceExportLink
+        {
+            Id = "link-older-live",
+            Provider = AccountingProviderConstants.Xero,
+            LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
+            LocalEntityId = olderLiveBooking.Id,
+            ExternalInvoiceId = "invoice-older-live",
+        };
         var historicalLink = new AccountingInvoiceExportLink
         {
             Id = "link-historical",
@@ -506,6 +524,7 @@ public class GetProcessingAvailabilitiesAsyncShould
             LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
             LocalEntityId = historicalBooking.Id,
             ExternalInvoiceId = "invoice-historical",
+            ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
         };
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
@@ -526,7 +545,9 @@ public class GetProcessingAvailabilitiesAsyncShould
             .ReturnsLazily(call => Task.FromResult<IReadOnlyList<AccountingInvoiceExportLink>>(
                 call.GetArgument<IReadOnlyCollection<string>>(2)!.Contains(historicalBooking.Id)
                     ? [historicalLink]
-                    : []));
+                    : call.GetArgument<IReadOnlyCollection<string>>(2)!.Contains(olderLiveBooking.Id)
+                        ? [olderLiveLink]
+                        : []));
         A.CallTo(() => accountingInvoiceInstanceRepository.GetByAccountingInvoiceExportLinkIdsAsync(
                 A<IReadOnlyCollection<string>>._,
                 cancellationToken))
@@ -542,7 +563,7 @@ public class GetProcessingAvailabilitiesAsyncShould
 
         var result = await sut.GetProcessingAvailabilitiesAsync([refund], cancellationToken);
 
-        result[refund.Id].CanProcessInXero.ShouldBeTrue();
+        result[refund.Id].CanProcessInXero.ShouldBeFalse();
         A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsAsync(
                 A<IReadOnlyCollection<string>>._,
                 cancellationToken))
