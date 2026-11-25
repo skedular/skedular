@@ -30,11 +30,9 @@ public class CanManagePermissionsByOrganizationIdsAsyncShould
         IReadOnlyList<string> organizationIds = [organizationId];
         var organization = CreateOrganization(organizationId, customerId);
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(
+        A.CallTo(() => organizationRepository.GetByIdsForAuthorizationAsync(
                 organizationIds,
-                null,
-                false,
-                false,
+                customerId,
                 cancellationToken))
             .Returns([organization]);
         A.CallTo(() => organizationSsoAuthorizationService.IsSsoValidAsync(
@@ -46,13 +44,18 @@ public class CanManagePermissionsByOrganizationIdsAsyncShould
         var result = await sut.CanModifyPaymentMethodByOrganizationIdsAsync(organizationIds, customerId, cancellationToken);
 
         result[organizationId].ShouldBeTrue();
-        A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(
+        A.CallTo(() => organizationRepository.GetByIdsForAuthorizationAsync(
                 organizationIds,
-                null,
-                false,
-                false,
+                customerId,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
+        A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(
+                A<IReadOnlyList<string>?>._,
+                A<IReadOnlyList<string>?>._,
+                A<bool>._,
+                A<bool>._,
+                cancellationToken))
+            .MustNotHaveHappened();
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync(
                 A<string?>._,
                 A<string?>._,
@@ -79,11 +82,9 @@ public class CanManagePermissionsByOrganizationIdsAsyncShould
         IReadOnlyList<string> organizationIds = [organizationId];
         var organization = CreateOrganization(organizationId, customerId);
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(
+        A.CallTo(() => organizationRepository.GetByIdsForAuthorizationAsync(
                 organizationIds,
-                null,
-                false,
-                false,
+                customerId,
                 cancellationToken))
             .Returns([organization]);
         A.CallTo(() => organizationSsoAuthorizationService.IsSsoValidAsync(
@@ -95,13 +96,18 @@ public class CanManagePermissionsByOrganizationIdsAsyncShould
         var result = await sut.CanOverrideCancellationPolicyByOrganizationIdsAsync(organizationIds, customerId, cancellationToken);
 
         result[organizationId].ShouldBeTrue();
-        A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(
+        A.CallTo(() => organizationRepository.GetByIdsForAuthorizationAsync(
                 organizationIds,
-                null,
-                false,
-                false,
+                customerId,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
+        A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(
+                A<IReadOnlyList<string>?>._,
+                A<IReadOnlyList<string>?>._,
+                A<bool>._,
+                A<bool>._,
+                cancellationToken))
+            .MustNotHaveHappened();
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync(
                 A<string?>._,
                 A<string?>._,

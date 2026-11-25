@@ -145,7 +145,7 @@ public class OrganizationAuthorizationService(
         string customerId,
         CancellationToken cancellationToken)
     {
-        var organizations = await GetOrganizationsByIdsAsync(organizationIds, cancellationToken);
+        var organizations = await GetOrganizationsByIdsAsync(organizationIds, customerId, cancellationToken);
         var result = new Dictionary<string, bool>(organizations.Count);
         foreach (var organization in organizations)
         {
@@ -174,7 +174,7 @@ public class OrganizationAuthorizationService(
         string customerId,
         CancellationToken cancellationToken)
     {
-        var organizations = await GetOrganizationsByIdsAsync(organizationIds, cancellationToken);
+        var organizations = await GetOrganizationsByIdsAsync(organizationIds, customerId, cancellationToken);
         var result = new Dictionary<string, bool>(organizations.Count);
         foreach (var organization in organizations)
         {
@@ -215,7 +215,7 @@ public class OrganizationAuthorizationService(
         string customerId,
         CancellationToken cancellationToken)
     {
-        var organizations = await GetOrganizationsByIdsAsync(organizationIds, cancellationToken);
+        var organizations = await GetOrganizationsByIdsAsync(organizationIds, customerId, cancellationToken);
         var result = new Dictionary<string, bool>(organizations.Count);
         foreach (var organization in organizations)
         {
@@ -244,7 +244,7 @@ public class OrganizationAuthorizationService(
         string customerId,
         CancellationToken cancellationToken)
     {
-        var organizations = await GetOrganizationsByIdsAsync(organizationIds, cancellationToken);
+        var organizations = await GetOrganizationsByIdsAsync(organizationIds, customerId, cancellationToken);
         var result = new Dictionary<string, bool>(organizations.Count);
         foreach (var organization in organizations)
         {
@@ -373,6 +373,7 @@ public class OrganizationAuthorizationService(
 
     private async Task<IReadOnlyList<Organization>> GetOrganizationsByIdsAsync(
         IReadOnlyCollection<string> organizationIds,
+        string customerId,
         CancellationToken cancellationToken)
     {
         var distinctIds = organizationIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
@@ -381,11 +382,9 @@ public class OrganizationAuthorizationService(
             return [];
         }
 
-        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsForAuthorizationAsync(
             distinctIds,
-            null,
-            false,
-            false,
+            customerId,
             cancellationToken);
         if (organizations.Count != distinctIds.Count)
         {
