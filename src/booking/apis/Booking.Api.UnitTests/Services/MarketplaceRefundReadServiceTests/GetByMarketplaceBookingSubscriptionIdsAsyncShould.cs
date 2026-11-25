@@ -47,7 +47,14 @@ public class GetByMarketplaceBookingSubscriptionIdsAsyncShould
                 cancellationToken))
             .Returns([refund]);
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
-        A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodAsync("org-1", "customer-1", cancellationToken)).Returns(true);
+        A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodByOrganizationIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                "customer-1",
+                cancellationToken))
+            .Returns(new Dictionary<string, bool>
+            {
+                ["org-1"] = true,
+            });
         A.CallTo(() => marketplaceRefundEventRepository.GetByMarketplaceRefundIdsAsync(
                 A<IReadOnlyList<string>>._,
                 cancellationToken))
@@ -121,8 +128,14 @@ public class GetByMarketplaceBookingSubscriptionIdsAsyncShould
                 cancellationToken))
             .Returns([refund]);
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
-        A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodAsync("org-hidden", "customer-1", cancellationToken))
-            .Returns(false);
+        A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodByOrganizationIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                "customer-1",
+                cancellationToken))
+            .Returns(new Dictionary<string, bool>
+            {
+                ["org-hidden"] = false,
+            });
 
         var result = await sut.GetByMarketplaceBookingSubscriptionIdsAsync([refund.LocalEntityId], cancellationToken);
 

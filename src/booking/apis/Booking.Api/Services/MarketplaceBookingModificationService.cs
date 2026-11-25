@@ -99,7 +99,19 @@ public sealed class MarketplaceBookingModificationService(
         }
 
         var bookings = await repositoryFactory.BookingRepository.GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
-        var canOverrideByOrganizationId = new Dictionary<string, bool>();
+        var organizationIds = bookings
+            .Where(booking => booking.InvolvedCustomers.All(item => item.Id != customer.Id))
+            .Select(booking => booking.MarketplaceBooking?.ProductVersion?.Product?.Organization?.Id)
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Select(item => item!)
+            .Distinct()
+            .ToList();
+        var canOverrideByOrganizationId = organizationIds.Count == 0
+            ? new Dictionary<string, bool>()
+            : await organizationAuthorizationService.CanOverrideCancellationPolicyByOrganizationIdsAsync(
+                organizationIds,
+                customer.Id,
+                cancellationToken);
         var authorizedIds = new List<string>(bookings.Count);
         foreach (var booking in bookings)
         {
@@ -115,16 +127,7 @@ public sealed class MarketplaceBookingModificationService(
                 continue;
             }
 
-            if (!canOverrideByOrganizationId.TryGetValue(organizationId, out var canOverride))
-            {
-                canOverride = await organizationAuthorizationService.CanOverrideCancellationPolicyAsync(
-                    organizationId,
-                    customer.Id,
-                    cancellationToken);
-                canOverrideByOrganizationId[organizationId] = canOverride;
-            }
-
-            if (canOverride)
+            if (canOverrideByOrganizationId.GetValueOrDefault(organizationId))
             {
                 authorizedIds.Add(booking.Id);
             }

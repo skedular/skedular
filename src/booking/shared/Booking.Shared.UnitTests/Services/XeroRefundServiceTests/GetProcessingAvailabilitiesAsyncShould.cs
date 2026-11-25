@@ -231,7 +231,7 @@ public class GetProcessingAvailabilitiesAsyncShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
         A.CallTo(() => repositoryFactory.AccountingInvoiceInstanceRepository).Returns(accountingInvoiceInstanceRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsAsync(
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsForXeroRefundAsync(
                 A<IReadOnlyCollection<string>>._,
                 cancellationToken))
             .Returns(subscriptions);
@@ -257,10 +257,14 @@ public class GetProcessingAvailabilitiesAsyncShould
         var result = await sut.GetProcessingAvailabilitiesAsync(refunds, cancellationToken);
 
         result.Values.ShouldAllBe(item => item.CanProcessInXero);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsAsync(
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsForXeroRefundAsync(
                 A<IReadOnlyCollection<string>>._,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .MustNotHaveHappened();
         A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync(
                 A<string>._,
                 cancellationToken))
@@ -378,7 +382,7 @@ public class GetProcessingAvailabilitiesAsyncShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
         A.CallTo(() => repositoryFactory.AccountingInvoiceInstanceRepository).Returns(accountingInvoiceInstanceRepository);
-        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsAsync(
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsForXeroRefundAsync(
                 A<IReadOnlyCollection<string>>._,
                 cancellationToken))
             .Returns([subscription]);
@@ -404,5 +408,144 @@ public class GetProcessingAvailabilitiesAsyncShould
         var result = await sut.GetProcessingAvailabilitiesAsync([refund], cancellationToken);
 
         result[refund.Id].CanProcessInXero.ShouldBeTrue();
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .MustNotHaveHappened();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Load_Full_History_When_Active_Subscription_Target_Is_Missing(
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
+        [Frozen]
+        IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        ILogger<XeroRefundService> logger,
+        CancellationToken cancellationToken)
+    {
+        var requestedAt = TimeProvider.System.GetUtcNow();
+        var productVersion = new ProductVersionEntity
+        {
+            Id = "product-version-history",
+            Product = new ProductEntity
+            {
+                Id = "product-history",
+                Organization = new OrganizationEntity
+                {
+                    Id = "org-history",
+                    BillingCycle = OrganizationBillingCycleConstants.Monthly,
+                },
+            },
+        };
+        var liveBooking = new RecurringBookingEntity
+        {
+            Id = "recurring-live",
+            StartDate = requestedAt.AddDays(-2),
+            EndDate = requestedAt.AddDays(2),
+            MarketplaceBooking = new MarketplaceBookingEntity
+            {
+                ProductPricing = ProductPricing.Empty("live"),
+            },
+        };
+        var historicalBooking = new RecurringBookingEntity
+        {
+            Id = "recurring-historical",
+            StartDate = requestedAt.AddDays(-3),
+            EndDate = requestedAt.AddDays(1),
+            DeletedAt = requestedAt.AddDays(-1),
+            MarketplaceBooking = new MarketplaceBookingEntity
+            {
+                ProductPricing = ProductPricing.Empty("historical"),
+            },
+        };
+        var lightSubscription = new MarketplaceBookingSubscriptionEntity
+        {
+            Id = "subscription-history",
+            Status = MarketplaceBookingSubscriptionStatusConstants.Active,
+            StartedAt = requestedAt.AddDays(-4),
+            MarketplaceBooking = new MarketplaceBookingEntity
+            {
+                ProductVersion = productVersion,
+            },
+            RecurringBookings = [liveBooking],
+        };
+        var fullSubscription = new MarketplaceBookingSubscriptionEntity
+        {
+            Id = lightSubscription.Id,
+            Status = lightSubscription.Status,
+            StartedAt = lightSubscription.StartedAt,
+            MarketplaceBooking = lightSubscription.MarketplaceBooking,
+            RecurringBookings = [historicalBooking, liveBooking],
+        };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-history",
+            LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
+            LocalEntityId = lightSubscription.Id,
+            Status = MarketplaceRefundStatusConstants.Processing,
+            RefundAmount = 10m,
+            RequestedAt = requestedAt,
+        };
+        var historicalLink = new AccountingInvoiceExportLink
+        {
+            Id = "link-historical",
+            Provider = AccountingProviderConstants.Xero,
+            LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
+            LocalEntityId = historicalBooking.Id,
+            ExternalInvoiceId = "invoice-historical",
+        };
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceInstanceRepository).Returns(accountingInvoiceInstanceRepository);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsForXeroRefundAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .Returns([lightSubscription]);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .Returns([fullSubscription]);
+        A.CallTo(() => accountingInvoiceExportLinkRepository.GetByProviderAndLocalEntitiesAsync(
+                AccountingProviderConstants.Xero,
+                AccountingEntityTypeConstants.RecurringBooking,
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .ReturnsLazily(call => Task.FromResult<IReadOnlyList<AccountingInvoiceExportLink>>(
+                call.GetArgument<IReadOnlyCollection<string>>(2)!.Contains(historicalBooking.Id)
+                    ? [historicalLink]
+                    : []));
+        A.CallTo(() => accountingInvoiceInstanceRepository.GetByAccountingInvoiceExportLinkIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .Returns([]);
+        var sut = new XeroRefundService(
+            organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
+            repositoryFactory,
+            xeroSdkClientFactory,
+            xeroTokenEncryptionService,
+            TimeProvider.System,
+            logger);
+
+        var result = await sut.GetProcessingAvailabilitiesAsync([refund], cancellationToken);
+
+        result[refund.Id].CanProcessInXero.ShouldBeTrue();
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .MustHaveHappenedOnceExactly();
     }
 }

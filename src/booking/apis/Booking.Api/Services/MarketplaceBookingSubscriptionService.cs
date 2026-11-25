@@ -169,7 +169,7 @@ public class MarketplaceBookingSubscriptionService(
             scopedOrganization is not null &&
             (requestedOtherCustomersSubscriptions || !requestedOwnSubscriptionsOnly))
         {
-            if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(scopedOrganization.Id, customerId, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(scopedOrganization, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -380,7 +380,7 @@ public class MarketplaceBookingSubscriptionService(
         var result = new List<string>();
         foreach (var organization in organizations)
         {
-            if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
+            if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken))
             {
                 result.Add(organization.Id);
             }
@@ -426,7 +426,7 @@ public class MarketplaceBookingSubscriptionService(
         foreach (var organization in organizations.DistinctBy(item => item.Id))
         {
             permissionByOrganizationId[organization.Id] = await organizationAuthorizationService
-                .CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken);
+                .CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken);
         }
 
         var teamIds = unresolved
@@ -441,7 +441,7 @@ public class MarketplaceBookingSubscriptionService(
             if (!permissionByOrganizationId.ContainsKey(team.Organization!.Id))
             {
                 permissionByOrganizationId[team.Organization.Id] = await organizationAuthorizationService
-                    .CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken);
+                    .CanViewOtherCustomersBookingsAsync(team.Organization, customerId, cancellationToken);
             }
         }
 
@@ -483,7 +483,7 @@ public class MarketplaceBookingSubscriptionService(
 
             foreach (var organization in organizations)
             {
-                if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
+                if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken))
                 {
                     return;
                 }
@@ -500,7 +500,7 @@ public class MarketplaceBookingSubscriptionService(
         foreach (var team in teams)
         {
             if (team.Organization is not null &&
-                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
+                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization, customerId, cancellationToken))
             {
                 return;
             }

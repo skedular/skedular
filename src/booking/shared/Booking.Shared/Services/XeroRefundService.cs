@@ -450,50 +450,47 @@ public class XeroRefundService(
         var subscriptionIds = subscriptionRefunds.Select(item => item.LocalEntityId).Distinct().ToList();
         var subscriptions = subscriptionIds.Count == 0
             ? []
-            : await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdsAsync(
+            : await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdsForXeroRefundAsync(
                 subscriptionIds,
                 cancellationToken);
         var subscriptionsById = subscriptions.ToDictionary(item => item.Id);
         var recurringBookingsByRefundId = new Dictionary<string, RecurringBookingEntity>();
         var resolutionByRefundId = new Dictionary<string, XeroRefundInvoiceTargetResolution>();
-        var candidateRecurringBookingIds = new HashSet<string>();
-        foreach (var refund in subscriptionRefunds)
+        var candidateRecurringBookingIdsByRefundId = new Dictionary<string, HashSet<string>>();
+
+        ResolveSubscriptionRefundRecurringBookings(
+            subscriptionRefunds,
+            subscriptionsById,
+            recurringBookingsByRefundId,
+            resolutionByRefundId,
+            candidateRecurringBookingIdsByRefundId,
+            false);
+
+        var historyLoadedSubscriptionIds = new HashSet<string>();
+        var historyRefunds = subscriptionRefunds
+            .Where(refund =>
+                subscriptionsById.TryGetValue(refund.LocalEntityId, out var subscription) &&
+                (subscription.Status == MarketplaceBookingSubscriptionStatusConstants.Cancelled ||
+                 !recurringBookingsByRefundId.ContainsKey(refund.Id)))
+            .ToList();
+        if (historyRefunds.Count != 0)
         {
-            if (!subscriptionsById.TryGetValue(refund.LocalEntityId, out var subscription))
+            var fullSubscriptions = await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdsAsync(
+                historyRefunds.Select(item => item.LocalEntityId).Distinct().ToList(),
+                cancellationToken);
+            foreach (var subscription in fullSubscriptions)
             {
-                resolutionByRefundId[refund.Id] = new XeroRefundInvoiceTargetResolution(
-                    null,
-                    "The subscription refund could not be matched to a subscription.");
-                continue;
+                subscriptionsById[subscription.Id] = subscription;
+                historyLoadedSubscriptionIds.Add(subscription.Id);
             }
 
-            var recurringBooking = ResolveCurrentBillingWindowRecurringBooking(
-                                       subscription,
-                                       refund.RequestedAt,
-                                       true)
-                                   ?? subscription.RecurringBookings
-                                       .Where(item => item.MarketplaceBooking is not null)
-                                       .OrderByDescending(item => item.StartDate)
-                                       .FirstOrDefault();
-            if (recurringBooking is null)
-            {
-                resolutionByRefundId[refund.Id] = new XeroRefundInvoiceTargetResolution(
-                    null,
-                    "The current subscription billing window could not be matched to a billed recurring booking.");
-                continue;
-            }
-
-            recurringBookingsByRefundId[refund.Id] = recurringBooking;
-            candidateRecurringBookingIds.Add(recurringBooking.Id);
-            foreach (var candidate in subscription.RecurringBookings
-                         .Where(item =>
-                             item.MarketplaceBooking is not null &&
-                             item.Id != recurringBooking.Id &&
-                             IntersectsBillingWindow(subscription, item, refund.RequestedAt))
-                         .OrderByDescending(item => item.StartDate))
-            {
-                candidateRecurringBookingIds.Add(candidate.Id);
-            }
+            ResolveSubscriptionRefundRecurringBookings(
+                historyRefunds,
+                subscriptionsById,
+                recurringBookingsByRefundId,
+                resolutionByRefundId,
+                candidateRecurringBookingIdsByRefundId,
+                true);
         }
 
         var bookingIds = refunds
@@ -520,18 +517,70 @@ public class XeroRefundService(
                 AccountingEntityTypeConstants.EntitlementPurchase,
                 entitlementIds,
                 cancellationToken);
+        var candidateRecurringBookingIds = candidateRecurringBookingIdsByRefundId
+            .SelectMany(item => item.Value)
+            .Distinct()
+            .ToList();
         var recurringBookingLinks = candidateRecurringBookingIds.Count == 0
             ? []
             : await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntitiesAsync(
                 AccountingProviderConstants.Xero,
                 AccountingEntityTypeConstants.RecurringBooking,
-                candidateRecurringBookingIds.ToList(),
+                candidateRecurringBookingIds,
                 cancellationToken);
+        var missingTargetSubscriptionIds = subscriptionRefunds
+            .Where(refund =>
+                !historyLoadedSubscriptionIds.Contains(refund.LocalEntityId) &&
+                candidateRecurringBookingIdsByRefundId.TryGetValue(refund.Id, out var candidateIds) &&
+                !candidateIds.Any(id => recurringBookingLinks.Any(link =>
+                    link.LocalEntityId == id && !string.IsNullOrWhiteSpace(link.ExternalInvoiceId))))
+            .Select(refund => refund.LocalEntityId)
+            .Distinct()
+            .ToList();
+        if (missingTargetSubscriptionIds.Count != 0)
+        {
+            var fullSubscriptions = await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdsAsync(
+                missingTargetSubscriptionIds,
+                cancellationToken);
+            foreach (var subscription in fullSubscriptions)
+            {
+                subscriptionsById[subscription.Id] = subscription;
+                historyLoadedSubscriptionIds.Add(subscription.Id);
+            }
+
+            var missingTargetRefunds = subscriptionRefunds
+                .Where(refund => missingTargetSubscriptionIds.Contains(refund.LocalEntityId))
+                .ToList();
+            ResolveSubscriptionRefundRecurringBookings(
+                missingTargetRefunds,
+                subscriptionsById,
+                recurringBookingsByRefundId,
+                resolutionByRefundId,
+                candidateRecurringBookingIdsByRefundId,
+                true);
+
+            var fallbackCandidateIds = candidateRecurringBookingIdsByRefundId
+                .Where(item => missingTargetRefunds.Any(refund => refund.Id == item.Key))
+                .SelectMany(item => item.Value)
+                .Except(candidateRecurringBookingIds)
+                .Distinct()
+                .ToList();
+            if (fallbackCandidateIds.Count != 0)
+            {
+                var fallbackLinks = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntitiesAsync(
+                    AccountingProviderConstants.Xero,
+                    AccountingEntityTypeConstants.RecurringBooking,
+                    fallbackCandidateIds,
+                    cancellationToken);
+                recurringBookingLinks = [.. recurringBookingLinks, .. fallbackLinks];
+            }
+        }
 
         var links = bookingLinks
             .Concat(entitlementLinks)
             .Concat(recurringBookingLinks)
-            .ToDictionary(item => (item.LocalEntityType, item.LocalEntityId));
+            .GroupBy(item => (item.LocalEntityType, item.LocalEntityId))
+            .ToDictionary(group => group.Key, group => group.First());
         var recurringBookingLinkIds = recurringBookingLinks
             .Select(item => item.Id)
             .Distinct()
@@ -566,6 +615,59 @@ public class XeroRefundService(
         }
 
         return resolutionByRefundId;
+    }
+
+    private void ResolveSubscriptionRefundRecurringBookings(
+        IReadOnlyList<MarketplaceRefund> refunds,
+        IReadOnlyDictionary<string, MarketplaceBookingSubscriptionEntity> subscriptionsById,
+        IDictionary<string, RecurringBookingEntity> recurringBookingsByRefundId,
+        IDictionary<string, XeroRefundInvoiceTargetResolution> resolutionByRefundId,
+        IDictionary<string, HashSet<string>> candidateRecurringBookingIdsByRefundId,
+        bool includeLatestFallback)
+    {
+        foreach (var refund in refunds)
+        {
+            resolutionByRefundId.Remove(refund.Id);
+            recurringBookingsByRefundId.Remove(refund.Id);
+            candidateRecurringBookingIdsByRefundId.Remove(refund.Id);
+
+            if (!subscriptionsById.TryGetValue(refund.LocalEntityId, out var subscription))
+            {
+                resolutionByRefundId[refund.Id] = new XeroRefundInvoiceTargetResolution(
+                    null,
+                    "The subscription refund could not be matched to a subscription.");
+                continue;
+            }
+
+            var recurringBooking = ResolveCurrentBillingWindowRecurringBooking(subscription, refund.RequestedAt, true);
+            if (recurringBooking is null && includeLatestFallback)
+            {
+                recurringBooking = subscription.RecurringBookings
+                    .Where(item => item.MarketplaceBooking is not null)
+                    .OrderByDescending(item => item.StartDate)
+                    .FirstOrDefault();
+            }
+
+            if (recurringBooking is null)
+            {
+                resolutionByRefundId[refund.Id] = new XeroRefundInvoiceTargetResolution(
+                    null,
+                    "The current subscription billing window could not be matched to a billed recurring booking.");
+                continue;
+            }
+
+            recurringBookingsByRefundId[refund.Id] = recurringBooking;
+            candidateRecurringBookingIdsByRefundId[refund.Id] = [recurringBooking.Id];
+            foreach (var candidate in subscription.RecurringBookings
+                         .Where(item =>
+                             item.MarketplaceBooking is not null &&
+                             item.Id != recurringBooking.Id &&
+                             IntersectsBillingWindow(subscription, item, refund.RequestedAt))
+                         .OrderByDescending(item => item.StartDate))
+            {
+                candidateRecurringBookingIdsByRefundId[refund.Id].Add(candidate.Id);
+            }
+        }
     }
 
     private XeroRefundInvoiceTargetResolution ResolveDirectInvoiceTarget(

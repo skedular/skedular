@@ -230,12 +230,11 @@ public class MarketplaceRefundReadService(
         }
 
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-        var canManageByOrganizationId = new Dictionary<string, bool>();
-        foreach (var organizationId in refunds.Select(item => item.OrganizationId).Distinct())
-        {
-            canManageByOrganizationId[organizationId] = await organizationAuthorizationService
-                .CanModifyPaymentMethodAsync(organizationId, customerId, cancellationToken);
-        }
+        var canManageByOrganizationId = await organizationAuthorizationService
+            .CanModifyPaymentMethodByOrganizationIdsAsync(
+                refunds.Select(item => item.OrganizationId).Distinct().ToList(),
+                customerId,
+                cancellationToken);
 
         var refundableForDetail = refunds
             .Where(item => canManageByOrganizationId[item.OrganizationId])

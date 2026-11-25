@@ -114,7 +114,7 @@ public class BookingServiceShould
                 false,
                 cancellationToken))
             .Returns([organization]);
-        A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync("org-1", "customer-1", cancellationToken))
+        A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, "customer-1", cancellationToken))
             .Returns(true);
         A.CallTo(() => sharedEntityMapper.MapTo(booking)).Returns(mappedBooking);
 
@@ -150,7 +150,7 @@ public class BookingServiceShould
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, false, false, cancellationToken)).Returns(organization);
-        A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync("org-1", "customer-1", cancellationToken))
+        A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, "customer-1", cancellationToken))
             .Returns(false);
         A.CallTo(() => bookingRepository.GetPaginatedBookingsUntrackedAsync(
                 A<PaginationInputParam>._,
@@ -192,7 +192,7 @@ public class BookingServiceShould
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, false, false, cancellationToken)).Returns(organization);
-        A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync("org-1", "customer-1", cancellationToken))
+        A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, "customer-1", cancellationToken))
             .Returns(false);
 
         await Should.ThrowAsync<UnauthorizedAccessException>(() =>
@@ -222,7 +222,7 @@ public class BookingServiceShould
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
         A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, false, false, cancellationToken)).Returns(organization);
-        A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync("org-1", "customer-1", cancellationToken))
+        A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, "customer-1", cancellationToken))
             .Returns(true);
         A.CallTo(() => bookingRepository.GetPaginatedBookingsUntrackedAsync(
                 A<PaginationInputParam>._,

@@ -53,7 +53,7 @@ public class GetTeamsShould
                 cancellationToken))
             .Returns([team]);
         A.CallTo(() => organizationRepository.GetByCustomerIdAsync("customer-1", false, false, cancellationToken)).Returns([organization]);
-        A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync("org-1", "customer-1", cancellationToken))
+        A.CallTo(() => organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, "customer-1", cancellationToken))
             .Returns(true);
         A.CallTo(() => bookingRepository.GetPaginatedBookingsUntrackedAsync(
                 A<PaginationInputParam>._,

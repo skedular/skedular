@@ -119,7 +119,7 @@ public class BookingService(
             scopedOrganization is not null &&
             (requestedOtherCustomersBookings || !requestedOwnBookingsOnly))
         {
-            if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(scopedOrganization.Id, customerId, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(scopedOrganization, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -221,7 +221,7 @@ public class BookingService(
         var result = new List<string>();
         foreach (var organization in organizations)
         {
-            if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
+            if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken))
             {
                 result.Add(organization.Id);
             }
@@ -273,7 +273,7 @@ public class BookingService(
         foreach (var organization in organizations.DistinctBy(item => item.Id))
         {
             permissionByOrganizationId[organization.Id] = await organizationAuthorizationService
-                .CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken);
+                .CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken);
         }
 
         var teamIds = unresolved
@@ -288,7 +288,7 @@ public class BookingService(
             if (!permissionByOrganizationId.ContainsKey(team.Organization!.Id))
             {
                 permissionByOrganizationId[team.Organization.Id] = await organizationAuthorizationService
-                    .CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken);
+                    .CanViewOtherCustomersBookingsAsync(team.Organization, customerId, cancellationToken);
             }
         }
 
@@ -329,7 +329,7 @@ public class BookingService(
                 cancellationToken);
             foreach (var organization in organizationEntities)
             {
-                if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
+                if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken))
                 {
                     return;
                 }
@@ -346,7 +346,7 @@ public class BookingService(
         foreach (var team in teamEntities)
         {
             if (team.Organization is not null &&
-                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
+                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization, customerId, cancellationToken))
             {
                 return;
             }

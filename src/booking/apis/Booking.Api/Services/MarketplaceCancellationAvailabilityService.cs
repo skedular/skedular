@@ -135,7 +135,24 @@ public sealed class MarketplaceCancellationAvailabilityService(
             .GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
         var bookingsById = bookings.ToDictionary(item => item.Id);
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-        var overrideByOrganizationId = new Dictionary<string, bool>();
+        var overrideOrganizationIds = bookings
+            .Where(booking => booking.MarketplaceBooking is not null && booking.DeletedByCustomer is null)
+            .Where(booking => !marketplaceRefundPolicyService.GetQuote(
+                    booking.MarketplaceBooking!.ProductPricing,
+                    booking.From,
+                    timeProvider.GetUtcNow())
+                .CanCancel)
+            .Select(booking => booking.MarketplaceBooking!.ProductVersion?.Product?.Organization?.Id)
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Select(item => item!)
+            .Distinct()
+            .ToList();
+        var overrideByOrganizationId = overrideOrganizationIds.Count == 0
+            ? new Dictionary<string, bool>()
+            : await organizationAuthorizationService.CanOverrideCancellationPolicyByOrganizationIdsAsync(
+                overrideOrganizationIds,
+                customerId,
+                cancellationToken);
         var result = new Dictionary<string, MarketplaceCancellationAvailability>(ids.Count);
         foreach (var id in ids)
         {
@@ -164,7 +181,7 @@ public sealed class MarketplaceCancellationAvailabilityService(
 
             var organizationId = booking.MarketplaceBooking.ProductVersion?.Product?.Organization?.Id;
             var canOverride = !string.IsNullOrWhiteSpace(organizationId) &&
-                              await CanOverrideCachedAsync(organizationId, customerId, overrideByOrganizationId, cancellationToken);
+                              overrideByOrganizationId.GetValueOrDefault(organizationId);
             result[id] = canOverride
                 ? new MarketplaceCancellationAvailability(true, true, true, null, isCreditFunded,
                     isCreditFunded ? "Credit will be forfeited because the cancellation policy window has closed." : null)
@@ -189,7 +206,26 @@ public sealed class MarketplaceCancellationAvailabilityService(
             .GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
         var subscriptionsById = subscriptions.ToDictionary(item => item.Id);
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-        var overrideByOrganizationId = new Dictionary<string, bool>();
+        var overrideOrganizationIds = subscriptions
+            .Where(subscription =>
+                subscription.MarketplaceBooking is not null &&
+                subscription.Status == MarketplaceBookingSubscriptionStatus.Active.ToMarketplaceBookingSubscriptionStatus())
+            .Where(subscription => !marketplaceRefundPolicyService.GetQuote(
+                    subscription.MarketplaceBooking!.ProductPricing,
+                    subscription.NextRenewalAt ?? subscription.StartedAt,
+                    timeProvider.GetUtcNow())
+                .CanCancel)
+            .Select(subscription => subscription.ProductVersion?.Product?.Organization?.Id)
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Select(item => item!)
+            .Distinct()
+            .ToList();
+        var overrideByOrganizationId = overrideOrganizationIds.Count == 0
+            ? new Dictionary<string, bool>()
+            : await organizationAuthorizationService.CanOverrideCancellationPolicyByOrganizationIdsAsync(
+                overrideOrganizationIds,
+                customerId,
+                cancellationToken);
         var result = new Dictionary<string, MarketplaceSubscriptionCancellationAvailability>(ids.Count);
         foreach (var id in ids)
         {
@@ -223,7 +259,7 @@ public sealed class MarketplaceCancellationAvailabilityService(
 
             var organizationId = subscription.ProductVersion?.Product?.Organization?.Id;
             var canOverride = !string.IsNullOrWhiteSpace(organizationId) &&
-                              await CanOverrideCachedAsync(organizationId, customerId, overrideByOrganizationId, cancellationToken);
+                              overrideByOrganizationId.GetValueOrDefault(organizationId);
             var immediate = canOverride
                 ? new MarketplaceCancellationAvailability(true, true, true, null)
                 : Unavailable("This subscription cannot be cancelled now because its cancellation policy does not allow it.");
@@ -231,24 +267,6 @@ public sealed class MarketplaceCancellationAvailabilityService(
         }
 
         return result;
-    }
-
-    private async Task<bool> CanOverrideCachedAsync(
-        string organizationId,
-        string customerId,
-        IDictionary<string, bool> cache,
-        CancellationToken cancellationToken)
-    {
-        if (!cache.TryGetValue(organizationId, out var canOverride))
-        {
-            canOverride = await organizationAuthorizationService.CanOverrideCancellationPolicyAsync(
-                organizationId,
-                customerId,
-                cancellationToken);
-            cache[organizationId] = canOverride;
-        }
-
-        return canOverride;
     }
 
     private static MarketplaceCancellationAvailability Available(bool isCreditFunded = false) =>

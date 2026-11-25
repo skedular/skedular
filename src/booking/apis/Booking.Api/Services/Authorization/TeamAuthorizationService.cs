@@ -34,11 +34,11 @@ public class TeamAuthorizationService(
 
     public async ValueTask<bool> CanAddBookingAsync(Team team, string customerId, CancellationToken cancellationToken) =>
         team.Organization is not null &&
-        await organizationAuthorizationService.CanAddBookingAsync(team.Organization.Id, customerId, cancellationToken);
+        await organizationAuthorizationService.CanAddBookingAsync(team.Organization, customerId, cancellationToken);
 
     public async ValueTask<bool> CanUpdateBookingAsync(Team team, string customerId, CancellationToken cancellationToken) =>
         team.Organization is not null &&
-        await organizationAuthorizationService.CanUpdateBookingAsync(team.Organization.Id, customerId, cancellationToken);
+        await organizationAuthorizationService.CanUpdateBookingAsync(team.Organization, customerId, cancellationToken);
 
     public async ValueTask<bool> CanDeleteBookingAsync(Team team, string customerId, CancellationToken cancellationToken) =>
         team.Organization is not null &&
