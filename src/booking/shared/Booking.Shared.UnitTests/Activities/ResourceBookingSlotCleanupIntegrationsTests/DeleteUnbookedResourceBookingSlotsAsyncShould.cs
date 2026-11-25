@@ -11,6 +11,8 @@ public class DeleteUnbookedResourceBookingSlotsAsyncShould
     [AutoFakeItEasyData]
     public async Task Delete_Slots_Before_One_Month_Cutoff(
         [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
         IResourceBookingSlotRepository resourceBookingSlotRepository,
         [Frozen]
         TimeProvider timeProvider,
@@ -20,6 +22,7 @@ public class DeleteUnbookedResourceBookingSlotsAsyncShould
         var expectedCutoff = new DateTimeOffset(2026, 2, 28, 14, 25, 0, TimeSpan.Zero);
         var deletedCount = 42;
 
+        A.CallTo(() => repositoryFactory.ResourceBookingSlotRepository).Returns(resourceBookingSlotRepository);
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
         A.CallTo(() => resourceBookingSlotRepository.DeleteUnbookedBeforeAsync(
                 expectedCutoff,
