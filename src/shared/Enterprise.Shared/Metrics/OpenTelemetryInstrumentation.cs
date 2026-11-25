@@ -8,6 +8,7 @@ namespace Enterprise.Shared.Metrics;
 public interface IOpenTelemetryInstrumentation
 {
     Counter<T> GetCounterByName<T>(string counterName) where T : struct;
+    Histogram<T> GetHistogramByName<T>(string histogramName) where T : struct;
     ObservableGauge<T> GetObservableGaugeByName<T>(string name, Func<Measurement<T>> measurement) where T : struct;
 }
 
@@ -22,6 +23,13 @@ public class OpenTelemetryInstrumentation(OpenTelemetryConfiguration openTelemet
         var result = GetOrCreate(counterName, () => _meter.CreateCounter<T>(counterName));
 
         return (Counter<T>)result;
+    }
+
+    public Histogram<T> GetHistogramByName<T>(string histogramName) where T : struct
+    {
+        var result = GetOrCreate(histogramName, () => _meter.CreateHistogram<T>(histogramName));
+
+        return (Histogram<T>)result;
     }
 
     public ObservableGauge<T> GetObservableGaugeByName<T>(string gaugeName, Func<Measurement<T>> measurement) where T : struct

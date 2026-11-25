@@ -141,6 +141,9 @@ public static class OpenTelemetryExtensions
                 .AddSingleton<IActivityAccessor, ActivityAccessor>()
                 .AddSingleton<TextMapPropagator, StandardTextMapPropagator>()
                 .AddSingleton<IOpenTelemetryInstrumentation, OpenTelemetryInstrumentation>()
+                .AddSingleton<IOperationTelemetry, OperationTelemetry>()
+                .AddSingleton<IActivitySource>(_ => new ActivitySourceFacade(MetricNames.OperationActivitySource))
+                .AddSingleton<IActivitySource>(_ => new ActivitySourceFacade("skedular.graphql.dataloader"))
                 .AddSingleton<IActivityGetter, ActivityGetter>()
                 .AddSingleton<IPropagationContextGetter, PropagationContextGetter>()
                 .AddSingleton(typeof(IActivityPropagator<>), typeof(ActivityPropagator<>))
@@ -215,7 +218,9 @@ public static class OpenTelemetryExtensions
                     });
 
                     tracing
-                        .AddHttpClientInstrumentation();
+                        .AddHttpClientInstrumentation()
+                        .AddSource(MetricNames.OperationActivitySource)
+                        .AddSource("skedular.graphql.dataloader");
 
                     if (openTelemetryConfiguration.ConsoleEnabled &&
                         ProcessTelemetryExportRegistry.TryClaimProcessor<Activity>("TRACES:CONSOLE", "console") is { } consoleClaimProcessor)

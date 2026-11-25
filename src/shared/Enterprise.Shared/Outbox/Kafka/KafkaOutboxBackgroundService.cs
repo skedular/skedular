@@ -4,6 +4,7 @@ using Confluent.Kafka;
 using Enterprise.Shared.Database.Interceptors;
 using Enterprise.Shared.Messaging.Kafka.Configurations;
 using Enterprise.Shared.Messaging.Kafka.Produce;
+using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Telemetry.Configurations;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,8 @@ public class KafkaOutboxBackgroundService<TDbContext>(
     ILogger<KafkaOutboxBackgroundService<TDbContext>> logger,
     OpenTelemetryConfiguration openTelemetryConfiguration,
     TimeProvider timeProvider,
-    IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator)
+    IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
+    IOperationTelemetry operationTelemetry)
     : BackgroundService where TDbContext : DbContext, IKafkaOutboxStore
 {
     private const int CriticalRetryThreshold = 5;
@@ -151,7 +153,11 @@ public class KafkaOutboxBackgroundService<TDbContext>(
                 // not prevent later rows in the same batch from being attempted.
                 logger.LogTrace("Producing message {MessageKey}", message.Key);
 
-                await _producer.ProduceAsync(outboxEvent.Topic, message, cancellationToken);
+                await operationTelemetry.ExecuteAsync(
+                    $"kafka.outbox.send.{outboxEvent.Topic}",
+                    "kafka.outbox.send",
+                    ct => _producer.ProduceAsync(outboxEvent.Topic, message, ct),
+                    cancellationToken);
 
                 activityAccessor.AddEvent(
                     "Publish Kafka Outbox Message",

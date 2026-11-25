@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.UnitTests.ExtensionsTests;
+﻿namespace Enterprise.Shared.UnitTests.ExtensionsTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class ResolveAppNameShould

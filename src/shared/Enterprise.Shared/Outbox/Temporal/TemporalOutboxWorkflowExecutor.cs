@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Temporal;
@@ -21,6 +22,7 @@ public class TemporalOutboxWorkflowExecutor(
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
+    IOperationTelemetry operationTelemetry,
     ILogger<TemporalOutboxWorkflowExecutor> logger)
     : ITemporalOutboxWorkflowExecutor
 {
@@ -49,14 +51,17 @@ public class TemporalOutboxWorkflowExecutor(
             var dbContext = unitOfWork as ITemporalOutboxStore;
             ArgumentNullException.ThrowIfNull(dbContext);
 
-            dbContext.TemporalOutbox.Add(new TemporalOutbox
-            {
-                Id = randomHelper.Generate(),
-                WorkflowType = typeof(TWorkflow).ToWorkflowType(),
-                ExecutionArgs = executionArgs,
-                WorkflowOptions = workflowOptions,
-                Timestamp = timeProvider.GetUtcNow(),
-            });
+            operationTelemetry.Execute(
+                $"temporal.enqueue.{typeof(TWorkflow).Name}",
+                "temporal.enqueue",
+                () => dbContext.TemporalOutbox.Add(new TemporalOutbox
+                {
+                    Id = randomHelper.Generate(),
+                    WorkflowType = typeof(TWorkflow).ToWorkflowType(),
+                    ExecutionArgs = executionArgs,
+                    WorkflowOptions = workflowOptions,
+                    Timestamp = timeProvider.GetUtcNow(),
+                }));
 
             logger.LogInformation("Temporal workflow queued in outbox successfully. WorkflowType={WorkflowType}", typeof(TWorkflow).FullName);
         }

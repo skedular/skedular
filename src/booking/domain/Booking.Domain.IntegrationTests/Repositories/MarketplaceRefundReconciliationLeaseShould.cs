@@ -157,15 +157,15 @@ public class MarketplaceRefundReconciliationLeaseShould(IRepositoryFactory repos
 
     private static MarketplaceRefundPaymentAllocation CreateSourceAllocation(
         string id, string refundId, string provider, decimal amount) => new()
-    {
-        Id = id,
-        MarketplaceRefundId = refundId,
-        SourcePaymentProvider = provider,
-        SourcePaymentReference = $"payment-{id}",
-        SourceCapturedAmount = amount,
-        Currency = "NZD",
-        IsSourcePayment = true,
-    };
+        {
+            Id = id,
+            MarketplaceRefundId = refundId,
+            SourcePaymentProvider = provider,
+            SourcePaymentReference = $"payment-{id}",
+            SourceCapturedAmount = amount,
+            Currency = "NZD",
+            IsSourcePayment = true,
+        };
 
     private static async Task<bool> TryReserveAsync(
         IRepositoryFactory repositoryFactory, string refundId, string allocationId, decimal amount,

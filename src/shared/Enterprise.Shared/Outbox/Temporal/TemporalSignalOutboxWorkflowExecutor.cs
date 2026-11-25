@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Telemetry;
 using Microsoft.Extensions.Logging;
@@ -24,6 +25,7 @@ public class TemporalSignalOutboxWorkflowExecutor(
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
+    IOperationTelemetry operationTelemetry,
     ILogger<TemporalSignalOutboxWorkflowExecutor> logger)
     : ITemporalSignalOutboxWorkflowExecutor
 {
@@ -63,15 +65,18 @@ public class TemporalSignalOutboxWorkflowExecutor(
             var dbContext = unitOfWork as ITemporalSignalOutboxStore;
             ArgumentNullException.ThrowIfNull(dbContext);
 
-            dbContext.TemporalSignalOutbox.Add(new TemporalSignalOutbox
-            {
-                Id = randomHelper.Generate(),
-                WorkflowId = workflowId,
-                SignalType = signalType,
-                ExecutionArgs = executionArgs,
-                WorkflowSignalOptions = workflowSignalOptions,
-                Timestamp = timeProvider.GetUtcNow(),
-            });
+            operationTelemetry.Execute(
+                $"temporal.enqueue_signal.{signalType}",
+                "temporal.signal.enqueue",
+                () => dbContext.TemporalSignalOutbox.Add(new TemporalSignalOutbox
+                {
+                    Id = randomHelper.Generate(),
+                    WorkflowId = workflowId,
+                    SignalType = signalType,
+                    ExecutionArgs = executionArgs,
+                    WorkflowSignalOptions = workflowSignalOptions,
+                    Timestamp = timeProvider.GetUtcNow(),
+                }));
 
             logger.LogInformation("Temporal workflow signal queued in outbox successfully. SignalType={SignalType}", signalType);
         }

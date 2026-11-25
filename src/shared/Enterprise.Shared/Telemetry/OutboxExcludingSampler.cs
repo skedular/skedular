@@ -1,4 +1,4 @@
-using Enterprise.Shared.Database;
+﻿using Enterprise.Shared.Database;
 using OpenTelemetry.Trace;
 
 namespace Enterprise.Shared.Telemetry;

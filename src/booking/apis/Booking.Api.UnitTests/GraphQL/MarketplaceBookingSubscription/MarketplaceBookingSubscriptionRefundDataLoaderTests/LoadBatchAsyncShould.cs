@@ -1,8 +1,9 @@
-using Booking.Api.GraphQL.Booking;
+﻿using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
+using Enterprise.Shared.Metrics;
 using GreenDonut;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +19,7 @@ public class LoadBatchAsyncShould
         DataLoaderOptions options,
         IMarketplaceRefundReadService marketplaceRefundReadService,
         IGraphQlMapper graphQlMapper,
+        IOpenTelemetryInstrumentation instrumentation,
         CancellationToken cancellationToken)
     {
         var refund = new MarketplaceRefundReadModel
@@ -42,6 +44,7 @@ public class LoadBatchAsyncShould
             batchScheduler,
             options,
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            instrumentation,
             graphQlMapper);
 
         var result = await sut.LoadForTestAsync(keys, cancellationToken);
@@ -57,6 +60,7 @@ public class LoadBatchAsyncShould
     public async Task Dispatch_Multiple_Loads_As_One_Batch(
         IMarketplaceRefundReadService marketplaceRefundReadService,
         IGraphQlMapper graphQlMapper,
+        IOpenTelemetryInstrumentation instrumentation,
         CancellationToken cancellationToken)
     {
         var scheduler = new ManualBatchScheduler();
@@ -95,6 +99,7 @@ public class LoadBatchAsyncShould
             scheduler,
             options,
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            instrumentation,
             graphQlMapper);
 
         var first = sut.LoadAsync("subscription-1", cancellationToken);
@@ -125,10 +130,12 @@ public class LoadBatchAsyncShould
         IBatchScheduler batchScheduler,
         DataLoaderOptions options,
         IServiceScopeFactory serviceScopeFactory,
+        IOpenTelemetryInstrumentation instrumentation,
         IGraphQlMapper graphQlMapper) : MarketplaceBookingSubscriptionRefundDataLoader(
         batchScheduler,
         options,
         serviceScopeFactory,
+        instrumentation,
         graphQlMapper)
     {
         public Task<IReadOnlyDictionary<string, MarketplaceRefundDetails?>> LoadForTestAsync(

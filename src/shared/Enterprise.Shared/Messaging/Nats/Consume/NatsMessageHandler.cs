@@ -1,5 +1,6 @@
 ﻿using Enterprise.Shared.Messaging.Nats.Serialization;
 using Enterprise.Shared.Messaging.Nats.Telemetry;
+using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Telemetry;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +19,8 @@ public sealed class NatsMessageHandler<TKey, TEvent>(
     ILogger<NatsMessageHandler<TKey, TEvent>> logger,
     IActivityAccessor activityAccessor,
     IServiceProvider serviceProvider,
-    INatsSerializer<TEvent> valueDeserializer) : INatsMessageHandler<TKey, TEvent>
+    INatsSerializer<TEvent> valueDeserializer,
+    IOperationTelemetry operationTelemetry) : INatsMessageHandler<TKey, TEvent>
     where TKey : new() where TEvent : new()
 {
     public async Task HandleMessageAsync(NatsMessage message, CancellationToken cancellationToken)
@@ -38,32 +40,38 @@ public sealed class NatsMessageHandler<TKey, TEvent>(
             try
             {
                 // Call the subscriber and process the message
-                await Policy
-                    .Handle<DbUpdateConcurrencyException>()
-                    .Or<DbUpdateException>(ex =>
-                        ex.InnerException is PostgresException &&
-                        ex.InnerException.Message.Contains("duplicate key value violates unique constraint"))
-                    .Or<InvalidOperationException>(ex =>
-                        ex.Message.Contains("cannot be tracked because another instance with the key value") ||
-                        (ex.Message.Contains("An exception has been raised that is likely due to a transient failure") &&
-                         ex.InnerException is TimeoutException or NpgsqlException && (
-                             ex.InnerException.Message.Contains("The operation has timed out") ||
-                             ex.InnerException.Message.Contains("Exception while reading from stream"))))
-                    .WaitAndRetryAsync(
-                        2,
-                        _ => TimeSpan.FromSeconds(1),
-                        (exception, _, retryAttempt, _) =>
-                        {
-                            logger.LogError(
-                                exception,
-                                "An exception occurred to call eventSubscriber.HandleAsync: {className} - Retry attempt: {retryAttempt}",
-                                className,
-                                retryAttempt);
-                        })
-                    .ExecuteAsync(async () =>
-                    {
-                        _ = await eventSubscriber.HandleAsync(eventContext, key, @event, cancellationToken);
-                    });
+                await operationTelemetry.ExecuteAsync(
+                    $"nats.consume.{typeof(TEvent).FullName}.{className}",
+                    "nats.consumer",
+                    ct => Policy
+                        .Handle<DbUpdateConcurrencyException>()
+                        .Or<DbUpdateException>(ex =>
+                            ex.InnerException is PostgresException &&
+                            ex.InnerException.Message.Contains("duplicate key value violates unique constraint"))
+                        .Or<InvalidOperationException>(ex =>
+                            ex.Message.Contains("cannot be tracked because another instance with the key value") ||
+                            (ex.Message.Contains("An exception has been raised that is likely due to a transient failure") &&
+                             ex.InnerException is TimeoutException or NpgsqlException && (
+                                 ex.InnerException.Message.Contains("The operation has timed out") ||
+                                 ex.InnerException.Message.Contains("Exception while reading from stream"))))
+                        .WaitAndRetryAsync(
+                            2,
+                            _ => TimeSpan.FromSeconds(1),
+                            (exception, _, retryAttempt, _) =>
+                            {
+                                logger.LogError(
+                                    exception,
+                                    "An exception occurred to call eventSubscriber.HandleAsync: {className} - Retry attempt: {retryAttempt}",
+                                    className,
+                                    retryAttempt);
+                            })
+                        .ExecuteAsync(
+                            async retryCancellationToken =>
+                            {
+                                _ = await eventSubscriber.HandleAsync(eventContext, key, @event, retryCancellationToken);
+                            },
+                            ct),
+                    cancellationToken);
             }
             catch (Exception ex)
             {

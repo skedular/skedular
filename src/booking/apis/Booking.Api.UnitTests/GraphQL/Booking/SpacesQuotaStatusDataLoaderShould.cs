@@ -1,6 +1,7 @@
-using Api.Shared.Services.Offering;
+﻿using Api.Shared.Services.Offering;
 using Booking.Api.GraphQL.Booking;
 using Booking.Shared.Services;
+using Enterprise.Shared.Metrics;
 using GreenDonut;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +14,7 @@ public class SpacesQuotaStatusDataLoaderShould
     [AutoFakeItEasyData]
     public async Task Return_Unavailable_For_Missing_Decision(
         ISpacesBookingQuotaService quotaService,
+        IOpenTelemetryInstrumentation instrumentation,
         CancellationToken cancellationToken)
     {
         A.CallTo(() => quotaService.GetQuotaStatusesAsync(
@@ -26,7 +28,8 @@ public class SpacesQuotaStatusDataLoaderShould
         var sut = new SpacesQuotaStatusDataLoader(
             scheduler,
             new DataLoaderOptions(),
-            serviceProvider.GetRequiredService<IServiceScopeFactory>());
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            instrumentation);
 
         var resultTask = sut.LoadAsync(string.Empty, cancellationToken);
         await scheduler.DispatchAsync();

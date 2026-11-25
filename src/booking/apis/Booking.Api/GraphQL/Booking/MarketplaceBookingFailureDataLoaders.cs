@@ -1,7 +1,8 @@
-using Booking.Api.Mappers;
+﻿using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
 using Enterprise.Shared.GraphQL;
+using Enterprise.Shared.Metrics;
 using GreenDonut;
 
 namespace Booking.Api.GraphQL.Booking;
@@ -10,54 +11,60 @@ public sealed class BookingFailureDataLoader(
     IBatchScheduler batchScheduler,
     DataLoaderOptions options,
     IServiceScopeFactory serviceScopeFactory,
+    IOpenTelemetryInstrumentation instrumentation,
     IGraphQlMapper graphQlMapper)
-    : ScopedBatchDataLoader<string, MarketplaceBookingFailureDetails?>(batchScheduler, options, serviceScopeFactory)
+    : ScopedBatchDataLoader<string, MarketplaceBookingFailureDetails?>(batchScheduler, options, serviceScopeFactory, instrumentation)
 {
     protected override async Task<IReadOnlyDictionary<string, MarketplaceBookingFailureDetails?>> LoadBatchAsync(
         IReadOnlyList<string> keys,
         CancellationToken cancellationToken) =>
-        await ExecuteInScopeAsync<IMarketplaceBookingFailureReadService, IReadOnlyDictionary<string, MarketplaceBookingFailureDetails?>>(service =>
-            MarketplaceBookingFailureDataLoaderHelper.LoadAsync(
-                keys,
-                service.GetByBookingIdsAsync,
-                graphQlMapper,
-                cancellationToken));
+        await ExecuteInScopeAsync<IMarketplaceBookingFailureReadService, IReadOnlyDictionary<string, MarketplaceBookingFailureDetails?>>(keys,
+            service =>
+                MarketplaceBookingFailureDataLoaderHelper.LoadAsync(
+                    keys,
+                    service.GetByBookingIdsAsync,
+                    graphQlMapper,
+                    cancellationToken));
 }
 
 public sealed class RecurringBookingFailureDataLoader(
     IBatchScheduler batchScheduler,
     DataLoaderOptions options,
     IServiceScopeFactory serviceScopeFactory,
+    IOpenTelemetryInstrumentation instrumentation,
     IGraphQlMapper graphQlMapper)
-    : ScopedBatchDataLoader<string, MarketplaceBookingFailureDetails?>(batchScheduler, options, serviceScopeFactory)
+    : ScopedBatchDataLoader<string, MarketplaceBookingFailureDetails?>(batchScheduler, options, serviceScopeFactory, instrumentation)
 {
     protected override async Task<IReadOnlyDictionary<string, MarketplaceBookingFailureDetails?>> LoadBatchAsync(
         IReadOnlyList<string> keys,
         CancellationToken cancellationToken) =>
-        await ExecuteInScopeAsync<IMarketplaceBookingFailureReadService, IReadOnlyDictionary<string, MarketplaceBookingFailureDetails?>>(service =>
-            MarketplaceBookingFailureDataLoaderHelper.LoadAsync(
-                keys,
-                service.GetByRecurringBookingIdsAsync,
-                graphQlMapper,
-                cancellationToken));
+        await ExecuteInScopeAsync<IMarketplaceBookingFailureReadService, IReadOnlyDictionary<string, MarketplaceBookingFailureDetails?>>(keys,
+            service =>
+                MarketplaceBookingFailureDataLoaderHelper.LoadAsync(
+                    keys,
+                    service.GetByRecurringBookingIdsAsync,
+                    graphQlMapper,
+                    cancellationToken));
 }
 
 public sealed class SubscriptionFailureDataLoader(
     IBatchScheduler batchScheduler,
     DataLoaderOptions options,
     IServiceScopeFactory serviceScopeFactory,
+    IOpenTelemetryInstrumentation instrumentation,
     IGraphQlMapper graphQlMapper)
-    : ScopedBatchDataLoader<string, MarketplaceBookingFailureDetails?>(batchScheduler, options, serviceScopeFactory)
+    : ScopedBatchDataLoader<string, MarketplaceBookingFailureDetails?>(batchScheduler, options, serviceScopeFactory, instrumentation)
 {
     protected override async Task<IReadOnlyDictionary<string, MarketplaceBookingFailureDetails?>> LoadBatchAsync(
         IReadOnlyList<string> keys,
         CancellationToken cancellationToken) =>
-        await ExecuteInScopeAsync<IMarketplaceBookingFailureReadService, IReadOnlyDictionary<string, MarketplaceBookingFailureDetails?>>(service =>
-            MarketplaceBookingFailureDataLoaderHelper.LoadAsync(
-                keys,
-                service.GetBySubscriptionIdsAsync,
-                graphQlMapper,
-                cancellationToken));
+        await ExecuteInScopeAsync<IMarketplaceBookingFailureReadService, IReadOnlyDictionary<string, MarketplaceBookingFailureDetails?>>(keys,
+            service =>
+                MarketplaceBookingFailureDataLoaderHelper.LoadAsync(
+                    keys,
+                    service.GetBySubscriptionIdsAsync,
+                    graphQlMapper,
+                    cancellationToken));
 }
 
 internal static class MarketplaceBookingFailureDataLoaderHelper

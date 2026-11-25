@@ -1128,17 +1128,17 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 
     private static MarketplaceBookingFailureResourceReleaseStatusDetails ToResourceReleaseStatusDetails(
         MarketplaceBookingFailureResourceReleaseStatus status) => new()
-    {
-        Type = status,
-        Name = status.ToDisplayName(),
-    };
+        {
+            Type = status,
+            Name = status.ToDisplayName(),
+        };
 
     private static MarketplaceBookingFailureAccountingCleanupStatusDetails ToAccountingCleanupStatusDetails(
         MarketplaceBookingFailureAccountingCleanupStatus status) => new()
-    {
-        Type = status,
-        Name = status.ToDisplayName(),
-    };
+        {
+            Type = status,
+            Name = status.ToDisplayName(),
+        };
 
     private static ProductPricing? GetPricing(EntitlementEntity source) =>
         source.EntitlementPurchase?.ProductPricing ??

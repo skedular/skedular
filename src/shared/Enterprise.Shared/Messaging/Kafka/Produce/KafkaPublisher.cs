@@ -3,6 +3,7 @@ using Api.Shared.Events.Kafka;
 using Confluent.Kafka;
 using Enterprise.Shared.Messaging.Kafka.Configurations;
 using Enterprise.Shared.Messaging.Kafka.Telemetry;
+using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Telemetry;
 using Microsoft.Extensions.Logging;
 
@@ -18,6 +19,7 @@ public class KafkaPublisher<TKey, TValue>(
     IActivityAccessor activityAccessor,
     IActivityPropagator<Headers> activityPropagator,
     KafkaConfiguration kafkaConfiguration,
+    IOperationTelemetry operationTelemetry,
     ILogger<KafkaPublisher<TKey, TValue>> logger)
     : IKafkaPublisher<TKey, TValue>
     where TValue : class, IKafkaEvent
@@ -34,20 +36,27 @@ public class KafkaPublisher<TKey, TValue>(
 
         try
         {
-            var message = new Message<TKey, TValue>
-            {
-                Value = outgoingEvent,
-                Key = key,
-                Headers = [],
-            };
+            await operationTelemetry.ExecuteAsync(
+                $"kafka.publish.{typeof(TValue).Name}",
+                "kafka.publisher",
+                async ct =>
+                {
+                    var message = new Message<TKey, TValue>
+                    {
+                        Value = outgoingEvent,
+                        Key = key,
+                        Headers = [],
+                    };
 
-            activityAccessor.AddEvent("PublishAsync", "publish", new Dictionary<string, string>
-            {
-                ["Topic"] = topic,
-            });
-            activityPropagator.PropagateActivity(message.Headers);
+                    activityAccessor.AddEvent("PublishAsync", "publish", new Dictionary<string, string>
+                    {
+                        ["Topic"] = topic,
+                    });
+                    activityPropagator.PropagateActivity(message.Headers);
 
-            await producer.ProduceAsync(topic, message, cancellationToken);
+                    await producer.ProduceAsync(topic, message, ct);
+                },
+                cancellationToken);
             logger.LogInformation("Kafka event published successfully. EventType={EventType}, Topic={Topic}", typeof(TValue).FullName, topic);
         }
         catch (Exception ex)

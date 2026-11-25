@@ -3,6 +3,7 @@ using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
+using Enterprise.Shared.Metrics;
 using GreenDonut;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,6 +40,7 @@ public class MarketplaceBookingFailureQueryShould
             AutoBatchScheduler.Default,
             new DataLoaderOptions(),
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            A.Fake<IOpenTelemetryInstrumentation>(),
             graphQlMapper);
 
         var result = await MarketplaceBookingDetailsType.GetFailure(
@@ -77,6 +79,7 @@ public class MarketplaceBookingFailureQueryShould
             AutoBatchScheduler.Default,
             new DataLoaderOptions(),
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            A.Fake<IOpenTelemetryInstrumentation>(),
             graphQlMapper);
 
         var result = await BookingDetailsType.GetFailureAsync(dataLoader, bookingDetails, cancellationToken);
@@ -106,6 +109,7 @@ public class MarketplaceBookingFailureQueryShould
             AutoBatchScheduler.Default,
             new DataLoaderOptions(),
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            A.Fake<IOpenTelemetryInstrumentation>(),
             graphQlMapper);
 
         var result = await BookingDetailsType.GetFailureAsync(dataLoader, bookingDetails, cancellationToken);

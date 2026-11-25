@@ -1,4 +1,4 @@
-using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
+﻿using Api.Shared.Grpc.Skedular.Organization.Billing.V1;
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
@@ -10,11 +10,11 @@ using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
+using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using ProductEntity = Booking.Shared.Database.Entities.Product;
 using ProductVersionEntity = Booking.Shared.Database.Entities.ProductVersion;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
-using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 
 namespace Booking.Shared.UnitTests.Services.XeroRefundServiceTests;
 

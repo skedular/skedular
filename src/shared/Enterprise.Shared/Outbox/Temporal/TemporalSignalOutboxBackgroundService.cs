@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Enterprise.Shared.Database.Interceptors;
+using Enterprise.Shared.Metrics;
 using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Telemetry.Configurations;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ public class TemporalSignalOutboxBackgroundService<TDbContext>(
     OpenTelemetryConfiguration openTelemetryConfiguration,
     TimeProvider timeProvider,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
+    IOperationTelemetry operationTelemetry,
     IServiceProvider serviceProvider)
     : BackgroundService where TDbContext : DbContext, ITemporalSignalOutboxStore
 {
@@ -148,11 +150,15 @@ public class TemporalSignalOutboxBackgroundService<TDbContext>(
                 {
                     CancellationToken = cancellationToken,
                 };
-                await temporalSignalOutboxExecutor.SignalAsync(
-                    outboxEvent.WorkflowId,
-                    outboxEvent.SignalType,
-                    outboxEvent.ExecutionArgs,
-                    outboxEvent.WorkflowSignalOptions,
+                await operationTelemetry.ExecuteAsync(
+                    $"temporal.outbox.signal.{outboxEvent.SignalType}",
+                    "temporal.outbox.signal",
+                    ct => temporalSignalOutboxExecutor.SignalAsync(
+                        outboxEvent.WorkflowId,
+                        outboxEvent.SignalType,
+                        outboxEvent.ExecutionArgs,
+                        outboxEvent.WorkflowSignalOptions,
+                        ct),
                     cancellationToken);
 
                 activityAccessor.AddEvent(

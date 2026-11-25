@@ -1,4 +1,4 @@
-using Booking.Api.Services;
+﻿using Booking.Api.Services;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Customer = Booking.Shared.Database.Entities.Customer;
