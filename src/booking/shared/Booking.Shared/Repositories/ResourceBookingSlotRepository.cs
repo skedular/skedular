@@ -17,6 +17,8 @@ public interface IResourceBookingSlotRepository : IRepository<ResourceBookingSlo
         IReadOnlyList<string> resourceIds,
         DateTimeOffset dayStart,
         DateTimeOffset dayEnd, CancellationToken cancellationToken);
+
+    Task<int> DeleteUnbookedBeforeAsync(DateTimeOffset cutoff, CancellationToken cancellationToken);
 }
 
 public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -80,4 +82,9 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
             .ThenInclude(item => item.RecurringBooking)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<int> DeleteUnbookedBeforeAsync(DateTimeOffset cutoff, CancellationToken cancellationToken) =>
+        await DbContext.ResourceBookingSlot
+            .Where(slot => slot.Start < cutoff && !slot.Bookings.Any())
+            .ExecuteDeleteAsync(cancellationToken);
 }

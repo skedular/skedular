@@ -71,6 +71,8 @@ public interface ITemporalService
 
     Task StartWorkflowExpireEntitlementsAsync(CancellationToken cancellationToken);
 
+    Task StartWorkflowCleanupUnbookedResourceBookingSlotsAsync(CancellationToken cancellationToken);
+
     Task StartWorkflowProvisionMarketplacePaidInvoiceAsync(
         ProvisionMarketplacePaidInvoiceInput args,
         CancellationToken cancellationToken);
@@ -350,6 +352,21 @@ public class TemporalService(
             new WorkflowOptions
             {
                 Id = workflowIdService.ExpireEntitlements(),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdConflictPolicy = WorkflowIdConflictPolicy.UseExisting,
+                Rpc = new RpcOptions
+                {
+                    CancellationToken = cancellationToken,
+                },
+            });
+
+    public async Task StartWorkflowCleanupUnbookedResourceBookingSlotsAsync(CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync(
+            (CleanupUnbookedResourceBookingSlots workflow) => workflow.ExecuteAsync(),
+            new WorkflowOptions
+            {
+                Id = workflowIdService.CleanupUnbookedResourceBookingSlots(),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdConflictPolicy = WorkflowIdConflictPolicy.UseExisting,

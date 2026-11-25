@@ -18,6 +18,7 @@ public interface IWorkflowIdService
     string RunOrganizationArrearsBilling(string organizationId);
     string RolloverSpacesBookingUsage();
     string ExpireEntitlements();
+    string CleanupUnbookedResourceBookingSlots();
     string MaintainOrganizationArrearsInvoiceAccountingState(string organizationArrearsInvoiceId);
     string MaintainAccountingInvoiceState(string localEntityType, string localEntityId);
     string NotifyMarketplaceBookingFailure(string failureId);
@@ -69,6 +70,9 @@ public class WorkflowIdService(ITemporalHelperService temporalHelperService) : I
 
     public string ExpireEntitlements() =>
         temporalHelperService.ToId(Constants.ExpireEntitlementsPrefix);
+
+    public string CleanupUnbookedResourceBookingSlots() =>
+        temporalHelperService.ToId(Constants.CleanupUnbookedResourceBookingSlotsPrefix);
 
 
     public string MaintainOrganizationArrearsInvoiceAccountingState(string organizationArrearsInvoiceId) =>
