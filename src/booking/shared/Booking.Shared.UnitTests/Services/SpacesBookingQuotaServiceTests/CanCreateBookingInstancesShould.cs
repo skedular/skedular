@@ -262,14 +262,12 @@ public class CanCreateBookingInstancesShould
                 A<IReadOnlyCollection<string>>._,
                 cancellationToken))
             .Returns([first, second]);
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetBookingStartsByOrganizationIdsAsync(
-                A<IReadOnlyCollection<string>>._,
-                A<DateTimeOffset>._,
-                A<DateTimeOffset>._,
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
+                A<IReadOnlyCollection<SpacesBookingUsageWindow>>._,
                 cancellationToken))
             .Returns([
-                new SpacesBookingOrganizationUsage(first.Id, first.Offering!.SpacesPeriodStart!.Value),
-                new SpacesBookingOrganizationUsage(second.Id, second.Offering!.SpacesPeriodStart!.Value),
+                new SpacesBookingOrganizationUsageCount(first.Id, 1),
+                new SpacesBookingOrganizationUsageCount(second.Id, 1),
             ]);
 
         var result = await sut.GetQuotaStatusesAsync(organizationIds, cancellationToken);
@@ -280,10 +278,8 @@ public class CanCreateBookingInstancesShould
                 A<IReadOnlyCollection<string>>._,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetBookingStartsByOrganizationIdsAsync(
-                A<IReadOnlyCollection<string>>._,
-                A<DateTimeOffset>._,
-                A<DateTimeOffset>._,
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
+                A<IReadOnlyCollection<SpacesBookingUsageWindow>>._,
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }

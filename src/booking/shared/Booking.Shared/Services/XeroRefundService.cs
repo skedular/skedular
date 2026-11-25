@@ -7,6 +7,7 @@ using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Grpc;
+using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Logging;
 using Xero.NetStandard.OAuth2.Api;
@@ -466,7 +467,10 @@ public class XeroRefundService(
                 continue;
             }
 
-            var recurringBooking = ResolveCurrentBillingWindowRecurringBooking(subscription, refund.RequestedAt)
+            var recurringBooking = ResolveCurrentBillingWindowRecurringBooking(
+                                       subscription,
+                                       refund.RequestedAt,
+                                       true)
                                    ?? subscription.RecurringBookings
                                        .Where(item => item.MarketplaceBooking is not null)
                                        .OrderByDescending(item => item.StartDate)
@@ -983,15 +987,19 @@ public class XeroRefundService(
                 !string.IsNullOrWhiteSpace(payment.Account?.Code) || !string.IsNullOrWhiteSpace(payment.Code))?
             .Code;
 
-    private static RecurringBookingEntity? ResolveCurrentBillingWindowRecurringBooking(
+    private RecurringBookingEntity? ResolveCurrentBillingWindowRecurringBooking(
         MarketplaceBookingSubscriptionEntity subscription,
-        DateTimeOffset now)
+        DateTimeOffset now,
+        bool filterInactiveHistory = false)
     {
+        var includeDeletedHistory = !filterInactiveHistory || subscription.Status ==
+            MarketplaceBookingSubscriptionStatus.Cancelled.ToMarketplaceBookingSubscriptionStatus();
+        var earliestActiveEndDate = timeProvider.GetUtcNow().StartOfDay();
         var recurringBookingsInWindow = subscription.RecurringBookings
-            // A cancellation soft-deletes the recurring booking before the eligible
-            // refund is approved. The paid invoice remains the authoritative Xero
-            // target, so deleted recurring bookings must stay eligible here.
             .Where(item => item.MarketplaceBooking is not null)
+            .Where(item => includeDeletedHistory ||
+                           (!item.DeletedAt.HasValue &&
+                            (!item.EndDate.HasValue || item.EndDate.Value >= earliestActiveEndDate)))
             .Where(item => IntersectsBillingWindow(subscription, item, now))
             .OrderBy(item => item.StartDate)
             .ToList();

@@ -60,9 +60,15 @@ public sealed class EntitlementRepository(BookingDbContext dbContext, TimeProvid
             return new Dictionary<string, string>();
         }
 
-        return await DbContext.Entitlement
+        var rows = await DbContext.Entitlement
             .Where(item => ids.Contains(item.Id))
-            .ToDictionaryAsync(item => item.Id, item => item.PurchaseReference, cancellationToken);
+            .Select(item => new
+            {
+                item.Id,
+                item.PurchaseReference,
+            })
+            .ToListAsync(cancellationToken);
+        return rows.ToDictionary(item => item.Id, item => item.PurchaseReference);
     }
 
     public Task<Entitlement?> GetByPurchaseReferenceAsync(string purchaseReference, CancellationToken cancellationToken) =>

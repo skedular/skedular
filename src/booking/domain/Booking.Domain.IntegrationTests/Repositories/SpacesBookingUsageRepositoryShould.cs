@@ -52,7 +52,7 @@ public class SpacesBookingUsageRepositoryShould(IRepositoryFactory repositoryFac
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_Batched_Booking_Starts_For_Organizations(
+    public async Task Return_Batched_Booking_Counts_For_Organizations(
         string organizationId,
         string otherOrganizationId,
         CancellationToken cancellationToken)
@@ -68,13 +68,17 @@ public class SpacesBookingUsageRepositoryShould(IRepositoryFactory repositoryFac
         repositoryFactory.BookingRepository.Add(CreateBooking($"batch-{otherOrganizationId}", periodStart.AddDays(2), otherOrganization));
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        var rows = await repositoryFactory.SpacesBookingUsageRepository.GetBookingStartsByOrganizationIdsAsync(
-            [organizationId, otherOrganizationId],
-            periodStart,
-            periodStart.AddMonths(1),
+        var rows = await repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
+            [
+                new SpacesBookingUsageWindow(organizationId, periodStart, periodStart.AddMonths(1)),
+                new SpacesBookingUsageWindow(otherOrganizationId, periodStart, periodStart.AddMonths(1)),
+            ],
             cancellationToken);
 
-        rows.Select(item => item.OrganizationId).ShouldBe([organizationId, otherOrganizationId], true);
+        rows.ShouldBe([
+            new SpacesBookingOrganizationUsageCount(organizationId, 1),
+            new SpacesBookingOrganizationUsageCount(otherOrganizationId, 1),
+        ], true);
     }
 
     private static Shared.Database.Entities.Booking CreateBooking(

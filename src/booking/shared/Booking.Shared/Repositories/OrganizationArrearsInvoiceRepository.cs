@@ -92,24 +92,35 @@ public class OrganizationArrearsInvoiceRepository(BookingDbContext dbContext, Ti
             return new Dictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>();
         }
 
-        var lines = await DbContext.OrganizationArrearsInvoiceLine
-            .AsNoTrackingWithIdentityResolution()
-            .Include(line => line.OrganizationArrearsInvoice)
-            .ThenInclude(invoice => invoice.Organization)
-            .Include(line => line.OrganizationArrearsInvoice)
-            .ThenInclude(invoice => invoice.Customer)
-            .Include(line => line.Booking)
+        var pairs = await DbContext.OrganizationArrearsInvoiceLine
+            .AsNoTracking()
             .Where(line => bookingIds.Contains(line.Booking.Id))
+            .Select(line => new
+            {
+                BookingId = line.Booking.Id,
+                InvoiceId = line.OrganizationArrearsInvoice.Id,
+            })
+            .Distinct()
             .ToListAsync(cancellationToken);
+        var invoiceIds = pairs.Select(pair => pair.InvoiceId).Distinct().ToList();
+        var invoicesById = invoiceIds.Count == 0
+            ? new Dictionary<string, OrganizationArrearsInvoice>()
+            : (await DbContext.OrganizationArrearsInvoice
+                .AsNoTracking()
+                .Include(invoice => invoice.Organization)
+                .Include(invoice => invoice.Customer)
+                .Where(invoice => invoiceIds.Contains(invoice.Id))
+                .ToListAsync(cancellationToken))
+            .ToDictionary(invoice => invoice.Id);
 
-        return lines
-            .GroupBy(line => line.Booking.Id)
+        return pairs
+            .GroupBy(pair => pair.BookingId)
             .ToDictionary(
                 group => group.Key,
                 group => (IReadOnlyList<OrganizationArrearsInvoice>)
                 [
                     .. group
-                        .Select(line => line.OrganizationArrearsInvoice)
+                        .Select(pair => invoicesById[pair.InvoiceId])
                         .DistinctBy(invoice => invoice.Id)
                         .OrderByDescending(invoice => invoice.CreatedAt),
                 ]);
@@ -142,17 +153,8 @@ public class OrganizationArrearsInvoiceRepository(BookingDbContext dbContext, Ti
             return new Dictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>();
         }
 
-        var lines = await DbContext.OrganizationArrearsInvoiceLine
-            .AsNoTrackingWithIdentityResolution()
-            .Include(line => line.OrganizationArrearsInvoice)
-            .ThenInclude(invoice => invoice.Organization)
-            .Include(line => line.OrganizationArrearsInvoice)
-            .ThenInclude(invoice => invoice.Customer)
-            .Include(line => line.Booking)
-            .ThenInclude(booking => booking.RecurringBooking)
-            .ThenInclude(recurringBooking => recurringBooking!.MarketplaceBookingSubscription)
-            .Include(line => line.Booking)
-            .ThenInclude(booking => booking.MarketplaceBooking)
+        var pairs = await DbContext.OrganizationArrearsInvoiceLine
+            .AsNoTracking()
             .Where(line =>
                 (line.Booking.RecurringBooking != null &&
                  line.Booking.RecurringBooking.MarketplaceBookingSubscription != null &&
@@ -160,22 +162,35 @@ public class OrganizationArrearsInvoiceRepository(BookingDbContext dbContext, Ti
                 (line.Booking.MarketplaceBooking != null &&
                  line.Booking.MarketplaceBooking.MarketplaceBookingSubscriptionId != null &&
                  marketplaceBookingSubscriptionIds.Contains(line.Booking.MarketplaceBooking.MarketplaceBookingSubscriptionId)))
-            .ToListAsync(cancellationToken);
-
-        return lines
             .Select(line => new
             {
-                SubscriptionId = line.Booking.RecurringBooking?.MarketplaceBookingSubscription?.Id ??
-                                 line.Booking.MarketplaceBooking!.MarketplaceBookingSubscriptionId!,
-                line.OrganizationArrearsInvoice,
+                SubscriptionId = line.Booking.RecurringBooking != null &&
+                                 line.Booking.RecurringBooking.MarketplaceBookingSubscription != null
+                    ? line.Booking.RecurringBooking.MarketplaceBookingSubscription.Id
+                    : line.Booking.MarketplaceBooking!.MarketplaceBookingSubscriptionId!,
+                InvoiceId = line.OrganizationArrearsInvoice.Id,
             })
-            .GroupBy(row => row.SubscriptionId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+        var invoiceIds = pairs.Select(pair => pair.InvoiceId).Distinct().ToList();
+        var invoicesById = invoiceIds.Count == 0
+            ? new Dictionary<string, OrganizationArrearsInvoice>()
+            : (await DbContext.OrganizationArrearsInvoice
+                .AsNoTracking()
+                .Include(invoice => invoice.Organization)
+                .Include(invoice => invoice.Customer)
+                .Where(invoice => invoiceIds.Contains(invoice.Id))
+                .ToListAsync(cancellationToken))
+            .ToDictionary(invoice => invoice.Id);
+
+        return pairs
+            .GroupBy(pair => pair.SubscriptionId)
             .ToDictionary(
                 group => group.Key,
                 group => (IReadOnlyList<OrganizationArrearsInvoice>)
                 [
                     .. group
-                        .Select(row => row.OrganizationArrearsInvoice)
+                        .Select(pair => invoicesById[pair.InvoiceId])
                         .DistinctBy(invoice => invoice.Id)
                         .OrderByDescending(invoice => invoice.CreatedAt),
                 ]);

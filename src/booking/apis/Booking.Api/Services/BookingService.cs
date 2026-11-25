@@ -65,20 +65,9 @@ public class BookingService(
         CancellationToken cancellationToken)
     {
         var ids = bookingIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
-        var bookings = await repositoryFactory.BookingRepository.GetByIdsForCancellationAvailabilityAsync(ids, cancellationToken);
+        var bookings = await repositoryFactory.BookingRepository.GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-        var authorizedIds = new List<string>(bookings.Count);
-        foreach (var booking in bookings)
-        {
-            try
-            {
-                await EnsureCustomerCanViewBookingAsync(booking, customerId, cancellationToken);
-                authorizedIds.Add(booking.Id);
-            }
-            catch (UnauthorizedAccessException)
-            {
-            }
-        }
+        var authorizedIds = await GetViewableBookingIdsAsync(bookings, customerId, cancellationToken);
 
         var invoicesById = authorizedIds.Count == 0
             ? new Dictionary<string, IReadOnlyList<Shared.Database.Entities.OrganizationArrearsInvoice>>()
@@ -251,6 +240,72 @@ public class BookingService(
     {
         var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customerId, cancellationToken);
         return [.. teams.Select(item => item.Id)];
+    }
+
+    private async Task<IReadOnlySet<string>> GetViewableBookingIdsAsync(
+        IReadOnlyList<Shared.Database.Entities.Booking> bookings,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        var result = bookings
+            .Where(booking => booking.InvolvedCustomers.Any(customer => customer.Id == customerId))
+            .Select(booking => booking.Id)
+            .ToHashSet();
+        var unresolved = bookings.Where(booking => !result.Contains(booking.Id)).ToList();
+        if (unresolved.Count == 0)
+        {
+            return result;
+        }
+
+        var organizationIds = unresolved
+            .SelectMany(booking => booking.InvolvedOrganizations.Select(item => item.Id))
+            .Distinct()
+            .ToList();
+        var organizations = organizationIds.Count == 0
+            ? []
+            : await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
+                organizationIds,
+                null,
+                false,
+                false,
+                cancellationToken);
+        var permissionByOrganizationId = new Dictionary<string, bool>();
+        foreach (var organization in organizations.DistinctBy(item => item.Id))
+        {
+            permissionByOrganizationId[organization.Id] = await organizationAuthorizationService
+                .CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken);
+        }
+
+        var teamIds = unresolved
+            .SelectMany(booking => booking.InvolvedTeams.Select(item => item.Id))
+            .Distinct()
+            .ToList();
+        var teams = teamIds.Count == 0
+            ? []
+            : await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
+        foreach (var team in teams.Where(item => item.Organization is not null).DistinctBy(item => item.Organization!.Id))
+        {
+            if (!permissionByOrganizationId.ContainsKey(team.Organization!.Id))
+            {
+                permissionByOrganizationId[team.Organization.Id] = await organizationAuthorizationService
+                    .CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken);
+            }
+        }
+
+        var permittedTeamIds = teams
+            .Where(team => team.Organization is not null && permissionByOrganizationId.GetValueOrDefault(team.Organization.Id))
+            .Select(team => team.Id)
+            .ToHashSet();
+        foreach (var booking in unresolved)
+        {
+            if (booking.InvolvedOrganizations.Any(item => permissionByOrganizationId.GetValueOrDefault(item.Id)) ||
+                booking.InvolvedTeams.Any(item => permittedTeamIds.Contains(item.Id)))
+            {
+                result.Add(booking.Id);
+            }
+        }
+
+        return result;
     }
 
     private async Task EnsureCustomerCanViewBookingAsync(

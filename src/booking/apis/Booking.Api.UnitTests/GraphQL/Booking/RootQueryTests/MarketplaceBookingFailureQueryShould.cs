@@ -4,6 +4,7 @@ using Booking.Api.Services;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using GreenDonut;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Booking.Api.UnitTests.GraphQL.Booking.RootQueryTests;
 
@@ -31,10 +32,13 @@ public class MarketplaceBookingFailureQueryShould
                 [marketplaceBookingDetails.Id] = failureModel,
             });
         A.CallTo(() => graphQlMapper.MapTo(failureModel)).Returns(failureDetails);
+        await using var serviceProvider = new ServiceCollection()
+            .AddSingleton(failureReadService)
+            .BuildServiceProvider();
         var dataLoader = new MarketplaceBookingFailureDataLoader(
             AutoBatchScheduler.Default,
             new DataLoaderOptions(),
-            failureReadService,
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             graphQlMapper);
 
         var result = await MarketplaceBookingDetailsType.GetFailure(
@@ -66,10 +70,13 @@ public class MarketplaceBookingFailureQueryShould
                 [bookingDetails.Id] = failureModel,
             });
         A.CallTo(() => graphQlMapper.MapTo(failureModel)).Returns(failureDetails);
+        await using var serviceProvider = new ServiceCollection()
+            .AddSingleton(failureReadService)
+            .BuildServiceProvider();
         var dataLoader = new BookingFailureDataLoader(
             AutoBatchScheduler.Default,
             new DataLoaderOptions(),
-            failureReadService,
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             graphQlMapper);
 
         var result = await BookingDetailsType.GetFailureAsync(dataLoader, bookingDetails, cancellationToken);
@@ -92,10 +99,13 @@ public class MarketplaceBookingFailureQueryShould
                 A<IReadOnlyCollection<string>>._,
                 cancellationToken))
             .Returns(new Dictionary<string, MarketplaceBookingFailureSummary>());
+        await using var serviceProvider = new ServiceCollection()
+            .AddSingleton(failureReadService)
+            .BuildServiceProvider();
         var dataLoader = new BookingFailureDataLoader(
             AutoBatchScheduler.Default,
             new DataLoaderOptions(),
-            failureReadService,
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             graphQlMapper);
 
         var result = await BookingDetailsType.GetFailureAsync(dataLoader, bookingDetails, cancellationToken);

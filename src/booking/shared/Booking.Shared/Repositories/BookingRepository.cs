@@ -19,7 +19,7 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
     Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsMinimalAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
     Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsWithValidMarketplaceAsync(IReadOnlyList<string> ids, CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsForCancellationAvailabilityAsync(
+    Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsForGraphQlBatchAsync(
         IReadOnlyCollection<string> ids,
         CancellationToken cancellationToken);
 
@@ -333,7 +333,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .AsSingleQuery()
             .ToListAsync(cancellationToken);
 
-    public async Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsForCancellationAvailabilityAsync(
+    public async Task<IReadOnlyList<Database.Entities.Booking>> GetByIdsForGraphQlBatchAsync(
         IReadOnlyCollection<string> ids,
         CancellationToken cancellationToken)
     {
@@ -343,8 +343,16 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         }
 
         return await DbContext.Booking
-            .AddSingleBookingMinimumDependentObjects(true)
-            .Where(query => ids.Contains(query.Id))
+            .AsNoTrackingWithIdentityResolution()
+            .Include(booking => booking.InvolvedCustomers)
+            .Include(booking => booking.InvolvedOrganizations)
+            .Include(booking => booking.InvolvedTeams)
+            .Include(booking => booking.DeletedByCustomer)
+            .Include(booking => booking.MarketplaceBooking)
+            .ThenInclude(marketplaceBooking => marketplaceBooking!.ProductVersion)
+            .ThenInclude(productVersion => productVersion.Product)
+            .ThenInclude(product => product.Organization)
+            .Where(booking => ids.Contains(booking.Id))
             .ToListAsync(cancellationToken);
     }
 

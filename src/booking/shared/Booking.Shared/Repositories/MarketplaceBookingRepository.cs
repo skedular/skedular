@@ -56,9 +56,15 @@ public class MarketplaceBookingRepository(BookingDbContext dbContext, TimeProvid
             return new Dictionary<string, string>();
         }
 
-        return await DbContext.MarketplaceBooking
+        var rows = await DbContext.MarketplaceBooking
             .Where(item => ids.Contains(item.Id) && item.BookingId != null)
-            .ToDictionaryAsync(item => item.Id, item => item.BookingId!, cancellationToken);
+            .Select(item => new
+            {
+                item.Id,
+                item.BookingId,
+            })
+            .ToListAsync(cancellationToken);
+        return rows.ToDictionary(item => item.Id, item => item.BookingId!);
     }
 
     public MarketplaceBooking Add(MarketplaceBooking marketplaceBooking)

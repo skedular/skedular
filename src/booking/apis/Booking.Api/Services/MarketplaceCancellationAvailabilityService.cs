@@ -132,7 +132,7 @@ public sealed class MarketplaceCancellationAvailabilityService(
         }
 
         var bookings = await repositoryFactory.BookingRepository
-            .GetByIdsForCancellationAvailabilityAsync(ids, cancellationToken);
+            .GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
         var bookingsById = bookings.ToDictionary(item => item.Id);
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var overrideByOrganizationId = new Dictionary<string, bool>();
@@ -186,7 +186,7 @@ public sealed class MarketplaceCancellationAvailabilityService(
         }
 
         var subscriptions = await repositoryFactory.MarketplaceBookingSubscriptionRepository
-            .GetByIdsAsync(ids, cancellationToken);
+            .GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
         var subscriptionsById = subscriptions.ToDictionary(item => item.Id);
         var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var overrideByOrganizationId = new Dictionary<string, bool>();

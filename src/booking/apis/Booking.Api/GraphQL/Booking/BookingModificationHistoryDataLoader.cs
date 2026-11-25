@@ -1,5 +1,7 @@
 using Booking.Api.Mappers;
 using Booking.Api.Services;
+using Booking.Shared.Models;
+using Enterprise.Shared.GraphQL;
 using GreenDonut;
 
 namespace Booking.Api.GraphQL.Booking;
@@ -7,15 +9,18 @@ namespace Booking.Api.GraphQL.Booking;
 public sealed class BookingModificationHistoryDataLoader(
     IBatchScheduler batchScheduler,
     DataLoaderOptions options,
-    IMarketplaceBookingModificationService modificationService,
+    IServiceScopeFactory serviceScopeFactory,
     IGraphQlMapper graphQlMapper)
-    : BatchDataLoader<string, IReadOnlyList<MarketplaceBookingModificationDetails>>(batchScheduler, options)
+    : ScopedBatchDataLoader<string, IReadOnlyList<MarketplaceBookingModificationDetails>>(batchScheduler, options, serviceScopeFactory)
 {
     protected override async Task<IReadOnlyDictionary<string, IReadOnlyList<MarketplaceBookingModificationDetails>>> LoadBatchAsync(
         IReadOnlyList<string> keys,
         CancellationToken cancellationToken)
     {
-        var historiesByBookingId = await modificationService.GetHistoriesAsync(keys, cancellationToken);
+        var historiesByBookingId =
+            await ExecuteInScopeAsync<IMarketplaceBookingModificationService,
+                IReadOnlyDictionary<string, IReadOnlyList<MarketplaceBookingModificationSummary>>>(service =>
+                service.GetHistoriesAsync(keys, cancellationToken));
         return keys.Distinct().ToDictionary(
             bookingId => bookingId,
             bookingId => (IReadOnlyList<MarketplaceBookingModificationDetails>)(

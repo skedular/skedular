@@ -130,14 +130,15 @@ public class SpacesBookingQuotaService(
             return result;
         }
 
-        var usageRows = await repositoryFactory.SpacesBookingUsageRepository.GetBookingStartsByOrganizationIdsAsync(
-            usageWindows.Keys.ToList(),
-            usageWindows.Values.Min(item => item.Start),
-            usageWindows.Values.Max(item => item.End),
+        var usageCounts = await repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
+            [
+                .. usageWindows.Select(pair => new SpacesBookingUsageWindow(
+                    pair.Key,
+                    pair.Value.Start,
+                    pair.Value.End)),
+            ],
             cancellationToken);
-        var usageByOrganizationId = usageRows
-            .GroupBy(item => item.OrganizationId)
-            .ToDictionary(group => group.Key, group => group.Select(item => item.BookingStartUtc).ToList());
+        var usageByOrganizationId = usageCounts.ToDictionary(item => item.OrganizationId, item => item.Count);
 
         foreach (var (organizationId, window) in usageWindows)
         {
@@ -147,9 +148,7 @@ public class SpacesBookingQuotaService(
                 planCode,
                 organization.Offering.SpacesQuotaLimit,
                 organization.Offering.SpacesCustomCapacity);
-            var currentUsage = usageByOrganizationId.TryGetValue(organizationId, out var starts)
-                ? starts.Count(item => item >= window.Start && item < window.End)
-                : 0;
+            var currentUsage = usageByOrganizationId.GetValueOrDefault(organizationId);
             result[organizationId] = quotaLimit >= 0 && currentUsage >= quotaLimit
                 ? Block(organizationId, planCode, currentUsage, quotaLimit, 0, 0, window.Start, window.End)
                 : CreateDecision(

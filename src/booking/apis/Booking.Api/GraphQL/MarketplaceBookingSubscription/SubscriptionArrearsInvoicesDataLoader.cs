@@ -1,6 +1,8 @@
 using Booking.Api.GraphQL.Booking;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
+using Booking.Shared.Models;
+using Enterprise.Shared.GraphQL;
 using GreenDonut;
 
 namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
@@ -8,16 +10,19 @@ namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 public sealed class SubscriptionArrearsInvoicesDataLoader(
     IBatchScheduler batchScheduler,
     DataLoaderOptions options,
-    IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+    IServiceScopeFactory serviceScopeFactory,
     IGraphQlMapper graphQlMapper)
-    : BatchDataLoader<string, IReadOnlyList<OrganizationArrearsInvoiceDetails>>(batchScheduler, options)
+    : ScopedBatchDataLoader<string, IReadOnlyList<OrganizationArrearsInvoiceDetails>>(batchScheduler, options, serviceScopeFactory)
 {
     protected override async Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoiceDetails>>> LoadBatchAsync(
         IReadOnlyList<string> keys,
         CancellationToken cancellationToken)
     {
-        var invoicesBySubscriptionId = await marketplaceBookingSubscriptionService
-            .GetArrearsInvoicesAsync(keys, cancellationToken);
+        var invoicesBySubscriptionId =
+            await
+                ExecuteInScopeAsync<IMarketplaceBookingSubscriptionService,
+                    IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>>(service =>
+                    service.GetArrearsInvoicesAsync(keys, cancellationToken));
 
         return keys.Distinct().ToDictionary(
             subscriptionId => subscriptionId,

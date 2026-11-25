@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Shared.Repositories;
 
-public sealed record SpacesBookingOrganizationUsage(string OrganizationId, DateTimeOffset BookingStartUtc);
+public sealed record SpacesBookingUsageWindow(string OrganizationId, DateTimeOffset StartInclusive, DateTimeOffset EndExclusive);
+
+public sealed record SpacesBookingOrganizationUsageCount(string OrganizationId, int Count);
 
 public interface ISpacesBookingUsageRepository : IRepository<Organization>
 {
@@ -17,10 +19,8 @@ public interface ISpacesBookingUsageRepository : IRepository<Organization>
         IReadOnlyCollection<string> organizationIds,
         CancellationToken cancellationToken);
 
-    Task<IReadOnlyList<SpacesBookingOrganizationUsage>> GetBookingStartsByOrganizationIdsAsync(
-        IReadOnlyCollection<string> organizationIds,
-        DateTimeOffset fromInclusive,
-        DateTimeOffset toExclusive,
+    Task<IReadOnlyList<SpacesBookingOrganizationUsageCount>> CountCurrentPeriodBookingInstancesAsync(
+        IReadOnlyCollection<SpacesBookingUsageWindow> windows,
         CancellationToken cancellationToken);
 
     Task<int> CountCurrentPeriodBookingInstancesAsync(
@@ -33,6 +33,8 @@ public interface ISpacesBookingUsageRepository : IRepository<Organization>
 public class SpacesBookingUsageRepository(BookingDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<BookingDbContext, Organization>(dbContext, timeProvider), ISpacesBookingUsageRepository
 {
+    private const int MaximumAggregateWindowCount = 100;
+
     public async Task<Organization?> GetOrganizationWithOfferingAsync(
         string organizationId,
         CancellationToken cancellationToken) =>
@@ -56,29 +58,23 @@ public class SpacesBookingUsageRepository(BookingDbContext dbContext, TimeProvid
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyList<SpacesBookingOrganizationUsage>> GetBookingStartsByOrganizationIdsAsync(
-        IReadOnlyCollection<string> organizationIds,
-        DateTimeOffset fromInclusive,
-        DateTimeOffset toExclusive,
+    public async Task<IReadOnlyList<SpacesBookingOrganizationUsageCount>> CountCurrentPeriodBookingInstancesAsync(
+        IReadOnlyCollection<SpacesBookingUsageWindow> windows,
         CancellationToken cancellationToken)
     {
-        if (organizationIds.Count == 0)
+        var distinctWindows = windows.DistinctBy(window => window.OrganizationId).ToList();
+        if (distinctWindows.Count == 0)
         {
             return [];
         }
 
-        return await DbContext.Booking
-            .AsNoTracking()
-            .Where(query =>
-                !query.DeletedAt.HasValue &&
-                query.From >= fromInclusive &&
-                query.From < toExclusive &&
-                query.InvolvedOrganizations.Any(organization =>
-                    !organization.DeletedAt.HasValue && organizationIds.Contains(organization.Id)))
-            .SelectMany(query => query.InvolvedOrganizations
-                .Where(organization => !organization.DeletedAt.HasValue && organizationIds.Contains(organization.Id))
-                .Select(organization => new SpacesBookingOrganizationUsage(organization.Id, query.From)))
-            .ToListAsync(cancellationToken);
+        var result = new List<SpacesBookingOrganizationUsageCount>(distinctWindows.Count);
+        foreach (var chunk in distinctWindows.Chunk(MaximumAggregateWindowCount))
+        {
+            result.AddRange(await CountCurrentPeriodBookingInstancesAsync(chunk, cancellationToken));
+        }
+
+        return result;
     }
 
     public async Task<int> CountCurrentPeriodBookingInstancesAsync(
@@ -94,4 +90,52 @@ public class SpacesBookingUsageRepository(BookingDbContext dbContext, TimeProvid
                 query.From < periodEnd &&
                 query.InvolvedOrganizations.Any(organization => !organization.DeletedAt.HasValue && organization.Id == organizationId))
             .CountAsync(cancellationToken);
+
+    private async Task<IReadOnlyList<SpacesBookingOrganizationUsageCount>> CountCurrentPeriodBookingInstancesAsync(
+        IReadOnlyList<SpacesBookingUsageWindow> distinctWindows,
+        CancellationToken cancellationToken)
+    {
+        var firstWindow = distinctWindows[0];
+        var firstOrganizationId = firstWindow.OrganizationId;
+        var firstStartInclusive = firstWindow.StartInclusive;
+        var firstEndExclusive = firstWindow.EndExclusive;
+        var rows = DbContext.Booking
+            .AsNoTracking()
+            .Where(booking =>
+                !booking.DeletedAt.HasValue &&
+                booking.From >= firstStartInclusive &&
+                booking.From < firstEndExclusive &&
+                booking.InvolvedOrganizations.Any(organization =>
+                    !organization.DeletedAt.HasValue && organization.Id == firstOrganizationId))
+            .Select(booking => new
+            {
+                OrganizationId = firstOrganizationId,
+                booking.Id,
+            });
+
+        foreach (var window in distinctWindows.Skip(1))
+        {
+            var organizationId = window.OrganizationId;
+            var startInclusive = window.StartInclusive;
+            var endExclusive = window.EndExclusive;
+            rows = rows.Concat(DbContext.Booking
+                .AsNoTracking()
+                .Where(booking =>
+                    !booking.DeletedAt.HasValue &&
+                    booking.From >= startInclusive &&
+                    booking.From < endExclusive &&
+                    booking.InvolvedOrganizations.Any(organization =>
+                        !organization.DeletedAt.HasValue && organization.Id == organizationId))
+                .Select(booking => new
+                {
+                    OrganizationId = organizationId,
+                    booking.Id,
+                }));
+        }
+
+        return await rows
+            .GroupBy(row => row.OrganizationId)
+            .Select(group => new SpacesBookingOrganizationUsageCount(group.Key, group.Count()))
+            .ToListAsync(cancellationToken);
+    }
 }

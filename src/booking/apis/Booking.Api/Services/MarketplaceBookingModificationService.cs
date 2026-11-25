@@ -98,7 +98,7 @@ public sealed class MarketplaceBookingModificationService(
             return result;
         }
 
-        var bookings = await repositoryFactory.BookingRepository.GetByIdsForCancellationAvailabilityAsync(ids, cancellationToken);
+        var bookings = await repositoryFactory.BookingRepository.GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
         var canOverrideByOrganizationId = new Dictionary<string, bool>();
         var authorizedIds = new List<string>(bookings.Count);
         foreach (var booking in bookings)

@@ -276,4 +276,133 @@ public class GetProcessingAvailabilitiesAsyncShould
                 cancellationToken))
             .MustHaveHappenedOnceExactly();
     }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Prefer_Live_Recurring_Cycle_For_Active_Subscription_Batch(
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        [Frozen]
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen]
+        IAccountingInvoiceExportLinkRepository accountingInvoiceExportLinkRepository,
+        [Frozen]
+        IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
+        [Frozen]
+        OrganizationConfiguration organizationConfiguration,
+        [Frozen]
+        CallInvoker callInvoker,
+        [Frozen]
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen]
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        ILogger<XeroRefundService> logger,
+        CancellationToken cancellationToken)
+    {
+        var requestedAt = TimeProvider.System.GetUtcNow();
+        var organization = new OrganizationEntity
+        {
+            Id = "org-live-cycle",
+            BillingCycle = OrganizationBillingCycleConstants.Monthly,
+        };
+        var productVersion = new ProductVersionEntity
+        {
+            Id = "product-version-live-cycle",
+            Product = new ProductEntity
+            {
+                Id = "product-live-cycle",
+                Organization = organization,
+            },
+        };
+        var liveBooking = new RecurringBookingEntity
+        {
+            Id = "recurring-live",
+            StartDate = requestedAt.AddDays(-2),
+            EndDate = requestedAt.AddDays(2),
+            MarketplaceBooking = new MarketplaceBookingEntity
+            {
+                ProductPricing = ProductPricing.Empty("live"),
+            },
+        };
+        var deletedBooking = new RecurringBookingEntity
+        {
+            Id = "recurring-deleted",
+            StartDate = requestedAt.AddDays(-1),
+            EndDate = requestedAt.AddDays(3),
+            DeletedAt = requestedAt.AddHours(-1),
+            MarketplaceBooking = new MarketplaceBookingEntity
+            {
+                ProductPricing = ProductPricing.Empty("deleted"),
+            },
+        };
+        var subscription = new MarketplaceBookingSubscriptionEntity
+        {
+            Id = "subscription-live-cycle",
+            Status = MarketplaceBookingSubscriptionStatusConstants.Active,
+            StartedAt = requestedAt.AddDays(-3),
+            MarketplaceBooking = new MarketplaceBookingEntity
+            {
+                ProductVersion = productVersion,
+            },
+            RecurringBookings = [liveBooking, deletedBooking],
+        };
+        var refund = new MarketplaceRefund
+        {
+            Id = "refund-live-cycle",
+            LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
+            LocalEntityId = subscription.Id,
+            Status = MarketplaceRefundStatusConstants.Processing,
+            RefundAmount = 10m,
+            RequestedAt = requestedAt,
+        };
+        AccountingInvoiceExportLink[] links =
+        [
+            new()
+            {
+                Id = "link-live",
+                Provider = AccountingProviderConstants.Xero,
+                LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
+                LocalEntityId = liveBooking.Id,
+                ExternalInvoiceId = "invoice-live",
+            },
+            new()
+            {
+                Id = "link-deleted",
+                Provider = AccountingProviderConstants.Xero,
+                LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
+                LocalEntityId = deletedBooking.Id,
+                ExternalInvoiceId = "template-deleted",
+                ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
+            },
+        ];
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceExportLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceInstanceRepository).Returns(accountingInvoiceInstanceRepository);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .Returns([subscription]);
+        A.CallTo(() => accountingInvoiceExportLinkRepository.GetByProviderAndLocalEntitiesAsync(
+                AccountingProviderConstants.Xero,
+                AccountingEntityTypeConstants.RecurringBooking,
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .Returns(links);
+        A.CallTo(() => accountingInvoiceInstanceRepository.GetByAccountingInvoiceExportLinkIdsAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .Returns([]);
+        var sut = new XeroRefundService(
+            organizationConfiguration,
+            new OrganizationBillingService.OrganizationBillingServiceClient(callInvoker),
+            repositoryFactory,
+            xeroSdkClientFactory,
+            xeroTokenEncryptionService,
+            TimeProvider.System,
+            logger);
+
+        var result = await sut.GetProcessingAvailabilitiesAsync([refund], cancellationToken);
+
+        result[refund.Id].CanProcessInXero.ShouldBeTrue();
+    }
 }

@@ -27,6 +27,10 @@ public interface IMarketplaceBookingSubscriptionRepository : IRepository<Marketp
     Task<MarketplaceBookingSubscription?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByIdsAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByIdsForGraphQlBatchAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken);
+
     Task<MarketplaceBookingSubscription?> GetByStripeSubscriptionAsync(
         string stripeAccountId,
         string stripeSubscriptionId,
@@ -376,8 +380,30 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
         }
 
         return await DbContext.MarketplaceBookingSubscription
-            .AddDependentObjects(true, TimeProvider, true, false)
+            .AddDependentObjects(false, TimeProvider, true, false)
             .Where(query => ids.Contains(query.Id))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByIdsForGraphQlBatchAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.MarketplaceBookingSubscription
+            .AsNoTrackingWithIdentityResolution()
+            .Include(subscription => subscription.InvolvedCustomers)
+            .Include(subscription => subscription.InvolvedOrganizations)
+            .Include(subscription => subscription.InvolvedTeams)
+            .Include(subscription => subscription.MarketplaceBooking)
+            .Include(subscription => subscription.ProductVersion)
+            .ThenInclude(productVersion => productVersion.Product)
+            .ThenInclude(product => product.Organization)
+            .Where(subscription => ids.Contains(subscription.Id))
             .ToListAsync(cancellationToken);
     }
 

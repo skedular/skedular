@@ -46,7 +46,7 @@ public class GetHistoriesAsyncShould
         A.CallTo(() => repositoryFactory.MarketplaceBookingModificationRepository).Returns(modificationRepository);
         A.CallTo(() => context.GetVerifiableToken()).Returns(token);
         A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(token, true, cancellationToken)).Returns(customer);
-        A.CallTo(() => bookingRepository.GetByIdsForCancellationAvailabilityAsync(
+        A.CallTo(() => bookingRepository.GetByIdsForGraphQlBatchAsync(
                 A<IReadOnlyCollection<string>>._,
                 cancellationToken))
             .Returns([booking]);

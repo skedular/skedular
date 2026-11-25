@@ -4,6 +4,7 @@ using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
 using GreenDonut;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Booking.Api.UnitTests.GraphQL.MarketplaceBookingSubscription.MarketplaceBookingSubscriptionRefundDataLoaderTests;
 
@@ -34,7 +35,14 @@ public class LoadBatchAsyncShould
                 [keys[0]] = refund,
             });
         A.CallTo(() => graphQlMapper.MapTo(refund)).Returns(refundDetails);
-        var sut = new TestDataLoader(batchScheduler, options, marketplaceRefundReadService, graphQlMapper);
+        await using var serviceProvider = new ServiceCollection()
+            .AddSingleton(marketplaceRefundReadService)
+            .BuildServiceProvider();
+        var sut = new TestDataLoader(
+            batchScheduler,
+            options,
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            graphQlMapper);
 
         var result = await sut.LoadForTestAsync(keys, cancellationToken);
 
@@ -80,10 +88,13 @@ public class LoadBatchAsyncShould
             });
         A.CallTo(() => graphQlMapper.MapTo(refund1)).Returns(details1);
         A.CallTo(() => graphQlMapper.MapTo(refund2)).Returns(details2);
+        await using var serviceProvider = new ServiceCollection()
+            .AddSingleton(marketplaceRefundReadService)
+            .BuildServiceProvider();
         var sut = new MarketplaceBookingSubscriptionRefundDataLoader(
             scheduler,
             options,
-            marketplaceRefundReadService,
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             graphQlMapper);
 
         var first = sut.LoadAsync("subscription-1", cancellationToken);
@@ -113,11 +124,11 @@ public class LoadBatchAsyncShould
     private sealed class TestDataLoader(
         IBatchScheduler batchScheduler,
         DataLoaderOptions options,
-        IMarketplaceRefundReadService marketplaceRefundReadService,
+        IServiceScopeFactory serviceScopeFactory,
         IGraphQlMapper graphQlMapper) : MarketplaceBookingSubscriptionRefundDataLoader(
         batchScheduler,
         options,
-        marketplaceRefundReadService,
+        serviceScopeFactory,
         graphQlMapper)
     {
         public Task<IReadOnlyDictionary<string, MarketplaceRefundDetails?>> LoadForTestAsync(
