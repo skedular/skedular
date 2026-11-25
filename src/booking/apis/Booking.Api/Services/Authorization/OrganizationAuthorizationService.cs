@@ -12,11 +12,39 @@ public interface IOrganizationAuthorizationService
     ValueTask<bool> CanViewOrganizationDetailsAsync(string organizationId, string customerId, CancellationToken cancellationToken);
     ValueTask<bool> CanViewBookingsAsync(string organizationId, string customerId, CancellationToken cancellationToken);
     ValueTask<bool> CanViewOtherCustomersBookingsAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanViewOtherCustomersBookingsAsync(Organization organization, string customerId, CancellationToken cancellationToken);
     ValueTask<bool> CanAddBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanAddBookingAsync(Organization organization, string customerId, CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, bool>> CanAddBookingByOrganizationIdsAsync(
+        IReadOnlyCollection<string> organizationIds,
+        string customerId,
+        CancellationToken cancellationToken);
+
     ValueTask<bool> CanUpdateBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanUpdateBookingAsync(Organization organization, string customerId, CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, bool>> CanUpdateBookingByOrganizationIdsAsync(
+        IReadOnlyCollection<string> organizationIds,
+        string customerId,
+        CancellationToken cancellationToken);
+
     ValueTask<bool> CanDeleteBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken);
     ValueTask<bool> CanOverrideCancellationPolicyAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanOverrideCancellationPolicyAsync(Organization organization, string customerId, CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, bool>> CanOverrideCancellationPolicyByOrganizationIdsAsync(
+        IReadOnlyCollection<string> organizationIds,
+        string customerId,
+        CancellationToken cancellationToken);
+
     ValueTask<bool> CanModifyPaymentMethodAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanModifyPaymentMethodAsync(Organization organization, string customerId, CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, bool>> CanModifyPaymentMethodByOrganizationIdsAsync(
+        IReadOnlyCollection<string> organizationIds,
+        string customerId,
+        CancellationToken cancellationToken);
 
     ValueTask<OrganizationPermissions> GetPermissionsAsync(
         string? organizationId,
@@ -48,7 +76,7 @@ public class OrganizationAuthorizationService(
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
-        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization, customerId, cancellationToken);
     }
 
     public async ValueTask<bool> CanViewBookingsAsync(string organizationId, string customerId, CancellationToken cancellationToken)
@@ -58,14 +86,14 @@ public class OrganizationAuthorizationService(
 
         if (organization.Type != OrganizationTypeConstants.Private)
         {
-            return await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+            return await organizationSsoAuthorizationService.IsSsoValidAsync(organization, customerId, cancellationToken);
         }
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
-        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization, customerId, cancellationToken);
     }
 
     public async ValueTask<bool> CanViewOtherCustomersBookingsAsync(string organizationId, string customerId, CancellationToken cancellationToken)
@@ -73,13 +101,21 @@ public class OrganizationAuthorizationService(
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
+        return await CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken);
+    }
+
+    public ValueTask<bool> CanViewOtherCustomersBookingsAsync(
+        Organization organization,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
         var member = organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId);
         if (member is null || member.Status != OrganizationMemberStatusConstants.Active)
         {
-            return false;
+            return ValueTask.FromResult(false);
         }
 
-        return organization.Type switch
+        return ValueTask.FromResult(organization.Type switch
         {
             OrganizationTypeConstants.Private => member.Role is OrganizationMemberRoleConstants.Owner or
                 OrganizationMemberRoleConstants.Administrator or
@@ -87,7 +123,7 @@ public class OrganizationAuthorizationService(
             OrganizationTypeConstants.Marketplace or OrganizationTypeConstants.Host => member.Role is OrganizationMemberRoleConstants.Owner or
                 OrganizationMemberRoleConstants.Administrator,
             _ => false,
-        };
+        });
     }
 
     public async ValueTask<bool> CanAddBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken)
@@ -95,16 +131,28 @@ public class OrganizationAuthorizationService(
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (organization.Type != OrganizationTypeConstants.Private)
+        return await CanAddBookingAsync(organization, customerId, cancellationToken);
+    }
+
+    public async ValueTask<bool> CanAddBookingAsync(
+        Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        await CanAddOrUpdateBookingAsync(organization, customerId, cancellationToken);
+
+    public async Task<IReadOnlyDictionary<string, bool>> CanAddBookingByOrganizationIdsAsync(
+        IReadOnlyCollection<string> organizationIds,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        var organizations = await GetOrganizationsByIdsAsync(organizationIds, customerId, cancellationToken);
+        var result = new Dictionary<string, bool>(organizations.Count);
+        foreach (var organization in organizations)
         {
-            return await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+            result[organization.Id] = await CanAddBookingAsync(organization, customerId, cancellationToken);
         }
 
-        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
-        {
-            Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
-        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+        return result;
     }
 
     public async ValueTask<bool> CanUpdateBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken)
@@ -112,16 +160,28 @@ public class OrganizationAuthorizationService(
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (organization.Type != OrganizationTypeConstants.Private)
+        return await CanUpdateBookingAsync(organization, customerId, cancellationToken);
+    }
+
+    public async ValueTask<bool> CanUpdateBookingAsync(
+        Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        await CanAddOrUpdateBookingAsync(organization, customerId, cancellationToken);
+
+    public async Task<IReadOnlyDictionary<string, bool>> CanUpdateBookingByOrganizationIdsAsync(
+        IReadOnlyCollection<string> organizationIds,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        var organizations = await GetOrganizationsByIdsAsync(organizationIds, customerId, cancellationToken);
+        var result = new Dictionary<string, bool>(organizations.Count);
+        foreach (var organization in organizations)
         {
-            return await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+            result[organization.Id] = await CanUpdateBookingAsync(organization, customerId, cancellationToken);
         }
 
-        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
-        {
-            Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
-        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+        return result;
     }
 
     public async ValueTask<bool> CanDeleteBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken)
@@ -133,7 +193,7 @@ public class OrganizationAuthorizationService(
         {
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
-        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization, customerId, cancellationToken);
     }
 
     public async ValueTask<bool> CanOverrideCancellationPolicyAsync(string organizationId, string customerId, CancellationToken cancellationToken)
@@ -141,11 +201,28 @@ public class OrganizationAuthorizationService(
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
+        return await CanOverrideCancellationPolicyAsync(organization, customerId, cancellationToken);
+    }
+
+    public async ValueTask<bool> CanOverrideCancellationPolicyAsync(
+        Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        await CanManageOrganizationBookingAsync(organization, customerId, cancellationToken);
+
+    public async Task<IReadOnlyDictionary<string, bool>> CanOverrideCancellationPolicyByOrganizationIdsAsync(
+        IReadOnlyCollection<string> organizationIds,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        var organizations = await GetOrganizationsByIdsAsync(organizationIds, customerId, cancellationToken);
+        var result = new Dictionary<string, bool>(organizations.Count);
+        foreach (var organization in organizations)
         {
-            Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
-        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+            result[organization.Id] = await CanOverrideCancellationPolicyAsync(organization, customerId, cancellationToken);
+        }
+
+        return result;
     }
 
     public async ValueTask<bool> CanModifyPaymentMethodAsync(string organizationId, string customerId, CancellationToken cancellationToken)
@@ -153,11 +230,28 @@ public class OrganizationAuthorizationService(
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
+        return await CanModifyPaymentMethodAsync(organization, customerId, cancellationToken);
+    }
+
+    public async ValueTask<bool> CanModifyPaymentMethodAsync(
+        Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        await CanManageOrganizationBookingAsync(organization, customerId, cancellationToken);
+
+    public async Task<IReadOnlyDictionary<string, bool>> CanModifyPaymentMethodByOrganizationIdsAsync(
+        IReadOnlyCollection<string> organizationIds,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        var organizations = await GetOrganizationsByIdsAsync(organizationIds, customerId, cancellationToken);
+        var result = new Dictionary<string, bool>(organizations.Count);
+        foreach (var organization in organizations)
         {
-            Status: OrganizationMemberStatusConstants.Active,
-            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
-        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+            result[organization.Id] = await CanModifyPaymentMethodAsync(organization, customerId, cancellationToken);
+        }
+
+        return result;
     }
 
     public async ValueTask<OrganizationPermissions> GetPermissionsAsync(
@@ -174,8 +268,8 @@ public class OrganizationAuthorizationService(
         return new OrganizationPermissions
         {
             CanViewBookings = await CanViewBookingsAsync(organization.Id, customerId, cancellationToken),
-            CanAddBooking = await CanAddBookingAsync(organization.Id, customerId, cancellationToken),
-            CanUpdateBooking = await CanUpdateBookingAsync(organization.Id, customerId, cancellationToken),
+            CanAddBooking = await CanAddBookingAsync(organization, customerId, cancellationToken),
+            CanUpdateBooking = await CanUpdateBookingAsync(organization, customerId, cancellationToken),
             CanDeleteBooking = await CanDeleteBookingAsync(organization.Id, customerId, cancellationToken),
             CanModifyPaymentMethod = await CanModifyPaymentMethodAsync(organization.Id, customerId, cancellationToken),
         };
@@ -213,14 +307,14 @@ public class OrganizationAuthorizationService(
                 var organizationEntity = organizations.First(item => item.Id == id);
                 if (existing)
                 {
-                    if (!await CanUpdateBookingAsync(organizationEntity.Id, customerId, cancellationToken))
+                    if (!await CanUpdateBookingAsync(organizationEntity, customerId, cancellationToken))
                     {
                         throw new UnauthorizedAccessException();
                     }
                 }
                 else
                 {
-                    if (!await CanAddBookingAsync(organizationEntity.Id, customerId, cancellationToken))
+                    if (!await CanAddBookingAsync(organizationEntity, customerId, cancellationToken))
                     {
                         throw new UnauthorizedAccessException();
                     }
@@ -252,14 +346,14 @@ public class OrganizationAuthorizationService(
                 var organizationEntity = organizations.First(item => item.CustomDomain == customDomain);
                 if (existing)
                 {
-                    if (!await CanUpdateBookingAsync(organizationEntity.Id, customerId, cancellationToken))
+                    if (!await CanUpdateBookingAsync(organizationEntity, customerId, cancellationToken))
                     {
                         throw new UnauthorizedAccessException();
                     }
                 }
                 else
                 {
-                    if (!await CanAddBookingAsync(organizationEntity.Id, customerId, cancellationToken))
+                    if (!await CanAddBookingAsync(organizationEntity, customerId, cancellationToken))
                     {
                         throw new UnauthorizedAccessException();
                     }
@@ -275,5 +369,55 @@ public class OrganizationAuthorizationService(
         }
 
         return result;
+    }
+
+    private async Task<IReadOnlyList<Organization>> GetOrganizationsByIdsAsync(
+        IReadOnlyCollection<string> organizationIds,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        var distinctIds = organizationIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
+        if (distinctIds.Count == 0)
+        {
+            return [];
+        }
+
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsForAuthorizationAsync(
+            distinctIds,
+            customerId,
+            cancellationToken);
+        if (organizations.Count != distinctIds.Count)
+        {
+            throw new OrganizationNotFound();
+        }
+
+        return organizations;
+    }
+
+    private async ValueTask<bool> CanManageOrganizationBookingAsync(
+        Organization organization,
+        string customerId,
+        CancellationToken cancellationToken) =>
+        organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
+        {
+            Status: OrganizationMemberStatusConstants.Active,
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator,
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization, customerId, cancellationToken);
+
+    private async ValueTask<bool> CanAddOrUpdateBookingAsync(
+        Organization organization,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        if (organization.Type != OrganizationTypeConstants.Private)
+        {
+            return await organizationSsoAuthorizationService.IsSsoValidAsync(organization, customerId, cancellationToken);
+        }
+
+        return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
+        {
+            Status: OrganizationMemberStatusConstants.Active,
+            Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member,
+        } && await organizationSsoAuthorizationService.IsSsoValidAsync(organization, customerId, cancellationToken);
     }
 }

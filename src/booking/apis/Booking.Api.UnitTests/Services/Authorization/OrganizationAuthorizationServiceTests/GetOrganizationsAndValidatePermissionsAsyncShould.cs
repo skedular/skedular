@@ -72,7 +72,7 @@ public class GetOrganizationsAndValidatePermissionsAsyncShould
         A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(organizationIds, null, false, false, cancellationToken))
             .Returns([organization]);
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken)).Returns(organization);
-        A.CallTo(() => organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken)).Returns(true);
+        A.CallTo(() => organizationSsoAuthorizationService.IsSsoValidAsync(organization, customerId, cancellationToken)).Returns(true);
         A.CallTo(() => organizationOfferingService.IsMoreInteractionAllowedAsync(organizationId, customerId, cancellationToken)).Returns(false);
 
         await Should.ThrowAsync<NoMoreInteractionAllowed>(() =>
@@ -108,7 +108,7 @@ public class GetOrganizationsAndValidatePermissionsAsyncShould
         A.CallTo(() => organizationRepository.GetByIdsOrCustomDomainsAsync(organizationIds, null, false, false, cancellationToken))
             .Returns([organization]);
         A.CallTo(() => cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken)).Returns(organization);
-        A.CallTo(() => organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken)).Returns(true);
+        A.CallTo(() => organizationSsoAuthorizationService.IsSsoValidAsync(organization, customerId, cancellationToken)).Returns(true);
         A.CallTo(() => organizationOfferingService.IsMoreInteractionAllowedAsync(organizationId, customerId, cancellationToken)).Returns(true);
 
         var result = await sut.GetOrganizationsAndValidatePermissionsAsync(organizationIds, [], customerId, false, cancellationToken);

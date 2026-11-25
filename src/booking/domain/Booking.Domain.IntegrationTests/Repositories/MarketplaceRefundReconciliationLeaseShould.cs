@@ -111,6 +111,37 @@ public class MarketplaceRefundReconciliationLeaseShould(IRepositoryFactory repos
             TimeSpan.FromMinutes(5), cancellationToken)).ShouldBeTrue();
     }
 
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_Only_The_Latest_Refund_For_Each_Local_Entity(
+        string localEntityId,
+        CancellationToken cancellationToken)
+    {
+        await EnsureOrganizationAsync(cancellationToken);
+        var now = TimeProvider.System.GetUtcNow();
+        var older = CreateRefund($"{localEntityId}-older");
+        older.LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription;
+        older.LocalEntityId = localEntityId;
+        older.Status = MarketplaceRefundStatusConstants.Completed;
+        older.RequestedAt = now.AddDays(-1);
+        var newer = CreateRefund($"{localEntityId}-newer");
+        newer.LocalEntityType = MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription;
+        newer.LocalEntityId = localEntityId;
+        newer.Status = MarketplaceRefundStatusConstants.Completed;
+        newer.RequestedAt = now;
+        repositoryFactory.MarketplaceRefundRepository.Add(older);
+        repositoryFactory.MarketplaceRefundRepository.Add(newer);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        var result = await repositoryFactory.MarketplaceRefundRepository.GetLatestByLocalEntitiesAsync(
+            MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
+            [localEntityId],
+            cancellationToken);
+
+        result.Count.ShouldBe(1);
+        result[0].Id.ShouldBe(newer.Id);
+    }
+
     private static MarketplaceRefund CreateRefund(string id) => new()
     {
         Id = id,
@@ -126,15 +157,15 @@ public class MarketplaceRefundReconciliationLeaseShould(IRepositoryFactory repos
 
     private static MarketplaceRefundPaymentAllocation CreateSourceAllocation(
         string id, string refundId, string provider, decimal amount) => new()
-        {
-            Id = id,
-            MarketplaceRefundId = refundId,
-            SourcePaymentProvider = provider,
-            SourcePaymentReference = $"payment-{id}",
-            SourceCapturedAmount = amount,
-            Currency = "NZD",
-            IsSourcePayment = true,
-        };
+    {
+        Id = id,
+        MarketplaceRefundId = refundId,
+        SourcePaymentProvider = provider,
+        SourcePaymentReference = $"payment-{id}",
+        SourceCapturedAmount = amount,
+        Currency = "NZD",
+        IsSourcePayment = true,
+    };
 
     private static async Task<bool> TryReserveAsync(
         IRepositoryFactory repositoryFactory, string refundId, string allocationId, decimal amount,

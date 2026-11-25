@@ -25,6 +25,10 @@ public interface IAccountingInvoiceInstanceRepository : IRepository<AccountingIn
         string accountingInvoiceExportLinkId,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<AccountingInvoiceInstance>> GetByAccountingInvoiceExportLinkIdsAsync(
+        IReadOnlyCollection<string> accountingInvoiceExportLinkIds,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<AccountingInvoiceInstance>> GetByAccountingInvoiceExportLinkIdAsync(
         string accountingInvoiceExportLinkId,
         CancellationToken cancellationToken);
@@ -82,6 +86,21 @@ public class AccountingInvoiceInstanceRepository(BookingDbContext dbContext, Tim
             .Where(query => query.AccountingInvoiceExportLinkId == accountingInvoiceExportLinkId)
             .OrderByDescending(query => query.CreatedAt)
             .FirstOrDefaultAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<AccountingInvoiceInstance>> GetByAccountingInvoiceExportLinkIdsAsync(
+        IReadOnlyCollection<string> accountingInvoiceExportLinkIds,
+        CancellationToken cancellationToken)
+    {
+        if (accountingInvoiceExportLinkIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.AccountingInvoiceInstance
+            .Where(query => accountingInvoiceExportLinkIds.Contains(query.AccountingInvoiceExportLinkId))
+            .OrderByDescending(query => query.CreatedAt)
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<IReadOnlyList<AccountingInvoiceInstance>> GetByAccountingInvoiceExportLinkIdAsync(
         string accountingInvoiceExportLinkId,

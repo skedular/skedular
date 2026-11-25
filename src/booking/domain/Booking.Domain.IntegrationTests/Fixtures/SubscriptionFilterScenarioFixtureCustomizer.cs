@@ -1,10 +1,12 @@
 ﻿using Api.Shared.Services.Models;
 using AutoFixture;
+using LocationEntity = Booking.Shared.Database.Entities.Location;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using ProductEntity = Booking.Shared.Database.Entities.Product;
 using ProductVersionEntity = Booking.Shared.Database.Entities.ProductVersion;
+using ResourceEntity = Booking.Shared.Database.Entities.Resource;
 
 namespace Booking.Domain.IntegrationTests.Fixtures;
 
@@ -60,12 +62,29 @@ public class SubscriptionFilterScenarioFixtureCustomizer : IFixtureCustomizer
             PricingOptions = [pricing],
         };
 
+        var location = new LocationEntity
+        {
+            Id = NewId(),
+            Name = "Filter Location",
+            Timezone = "Pacific/Auckland",
+            Type = LocationTypeConstants.Private,
+            Organization = organization,
+        };
+        var resource = new ResourceEntity
+        {
+            Id = NewId(),
+            Name = "Filter Resource",
+            Capacity = 1,
+            Location = location,
+        };
+
         var activePending = CreateSubscriptionPair(
             organization,
             productVersion,
             pricing,
             MarketplaceBookingSubscriptionStatusConstants.Active,
             PaymentStatusConstants.Pending);
+        activePending.Subscription.RequestedResources = [resource];
 
         var activeConfirmed = CreateSubscriptionPair(
             organization,
@@ -91,6 +110,8 @@ public class SubscriptionFilterScenarioFixtureCustomizer : IFixtureCustomizer
         return new SubscriptionFilterScenario(
             organization,
             productVersion,
+            location,
+            resource,
             activePending,
             activeConfirmed,
             cancelledPending,

@@ -248,6 +248,44 @@ public class CanCreateBookingInstancesShould
 
     [Theory]
     [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
+    public async Task Batch_Offering_And_Usage_Queries_For_Quota_Status(
+        [Frozen]
+        IRepositoryFactory repositoryFactory,
+        SpacesBookingQuotaService sut,
+        CancellationToken cancellationToken)
+    {
+        var first = CreateOrganization(1);
+        var second = CreateOrganization(5);
+        second.Id = "org-2";
+        string[] organizationIds = [first.Id, second.Id];
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationsWithOfferingAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .Returns([first, second]);
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
+                A<IReadOnlyCollection<SpacesBookingUsageWindow>>._,
+                cancellationToken))
+            .Returns([
+                new SpacesBookingOrganizationUsageCount(first.Id, 1),
+                new SpacesBookingOrganizationUsageCount(second.Id, 1),
+            ]);
+
+        var result = await sut.GetQuotaStatusesAsync(organizationIds, cancellationToken);
+
+        result.Keys.ShouldBe(organizationIds, true);
+        result.Values.ShouldAllBe(item => item.CanCreate);
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.GetOrganizationsWithOfferingAsync(
+                A<IReadOnlyCollection<string>>._,
+                cancellationToken))
+            .MustHaveHappenedOnceExactly();
+        A.CallTo(() => repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
+                A<IReadOnlyCollection<SpacesBookingUsageWindow>>._,
+                cancellationToken))
+            .MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData([typeof(SpacesAccessFixtureCustomizer)])]
     public async Task Enforce_Configured_Free_Quota_During_Active_Trial(
         [Frozen]
         IRepositoryFactory repositoryFactory,

@@ -1,4 +1,6 @@
 ﻿using Api.Shared.Services;
+using Booking.Api.GraphQL.Booking;
+using Booking.Api.GraphQL.MarketplaceBookingSubscription;
 using Booking.Api.Grpc;
 using Booking.Api.Services;
 using Booking.Shared;
@@ -35,7 +37,24 @@ public class Program
             .AddSso()
             .AddSecurity()
             .WithPooledPostgreSqlDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb", true)
-            .AddGraphql(configuration, "booking-api", requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
+            .AddGraphql(configuration, "booking-api", requestExecutorBuilder =>
+            {
+                requestExecutorBuilder
+                    .AddApiTypes()
+                    .AddDataLoader<MarketplaceBookingSubscriptionRefundDataLoader>()
+                    .AddDataLoader<MarketplaceBookingRefundDataLoader>()
+                    .AddDataLoader<BookingFailureDataLoader>()
+                    .AddDataLoader<MarketplaceBookingFailureDataLoader>()
+                    .AddDataLoader<RecurringBookingFailureDataLoader>()
+                    .AddDataLoader<SubscriptionFailureDataLoader>()
+                    .AddDataLoader<BookingArrearsInvoicesDataLoader>()
+                    .AddDataLoader<BookingModificationHistoryDataLoader>()
+                    .AddDataLoader<SubscriptionArrearsInvoicesDataLoader>()
+                    .AddDataLoader<EntitlementPurchaseReferenceDataLoader>()
+                    .AddDataLoader<BookingCancellationAvailabilityDataLoader>()
+                    .AddDataLoader<SubscriptionCancellationAvailabilityDataLoader>()
+                    .AddDataLoader<SpacesQuotaStatusDataLoader>();
+            })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddXeroServices(configuration)

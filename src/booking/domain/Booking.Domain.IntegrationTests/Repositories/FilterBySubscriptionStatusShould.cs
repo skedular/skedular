@@ -35,6 +35,24 @@ public class FilterBySubscriptionStatusShould(
 
     [Theory]
     [AutoFakeItEasyData([typeof(SubscriptionFilterScenarioFixtureCustomizer)])]
+    public async Task Load_Requested_Resource_Location_For_Detail_Reads(
+        SubscriptionFilterScenario scenario,
+        CancellationToken cancellationToken)
+    {
+        await infrastructureTestClient.ResetAsync(new ResetInput(), cancellationToken: cancellationToken);
+        await SubscriptionFilterScenarioSeeder.SeedAsync(repositoryFactory, scenario, cancellationToken);
+
+        var reloaded = await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdAsync(
+            scenario.ActivePending.Subscription.Id,
+            cancellationToken);
+
+        reloaded.ShouldNotBeNull()
+            .RequestedResources.Single().Location.ShouldNotBeNull()
+            .Timezone.ShouldBe(scenario.Location.Timezone);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData([typeof(SubscriptionFilterScenarioFixtureCustomizer)])]
     public async Task Return_Only_Active_Subscriptions_When_Active_Status_Filter_Applied(
         SubscriptionFilterScenario scenario,
         CancellationToken cancellationToken)

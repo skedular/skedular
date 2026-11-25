@@ -10,6 +10,11 @@ namespace Booking.Shared.Repositories;
 public interface IMarketplaceBookingRepository : IRepository<MarketplaceBooking>
 {
     Task<MarketplaceBooking?> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, string>> GetBookingIdsByIdsAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken);
+
     MarketplaceBooking Add(MarketplaceBooking marketplaceBooking);
     MarketplaceBooking Update(MarketplaceBooking marketplaceBooking);
 }
@@ -41,6 +46,26 @@ public class MarketplaceBookingRepository(BookingDbContext dbContext, TimeProvid
         await DbContext.MarketplaceBooking
             .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<IReadOnlyDictionary<string, string>> GetBookingIdsByIdsAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return new Dictionary<string, string>();
+        }
+
+        var rows = await DbContext.MarketplaceBooking
+            .Where(item => ids.Contains(item.Id) && item.BookingId != null)
+            .Select(item => new
+            {
+                item.Id,
+                item.BookingId,
+            })
+            .ToListAsync(cancellationToken);
+        return rows.ToDictionary(item => item.Id, item => item.BookingId!);
+    }
 
     public MarketplaceBooking Add(MarketplaceBooking marketplaceBooking)
     {

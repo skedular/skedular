@@ -29,6 +29,10 @@ public interface IMarketplaceBookingSubscriptionService
     Task<MarketplaceBookingSubscription> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string id, CancellationToken cancellationToken);
 
+    Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>> GetArrearsInvoicesAsync(
+        IReadOnlyCollection<string> subscriptionIds,
+        CancellationToken cancellationToken);
+
     Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
         PaginationInputParam paginationInputParam,
         MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
@@ -107,6 +111,27 @@ public class MarketplaceBookingSubscriptionService(
         return [.. invoices.Select(sharedEntityMapper.MapTo)];
     }
 
+    public async Task<IReadOnlyDictionary<string, IReadOnlyList<OrganizationArrearsInvoice>>> GetArrearsInvoicesAsync(
+        IReadOnlyCollection<string> subscriptionIds,
+        CancellationToken cancellationToken)
+    {
+        var ids = subscriptionIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
+        var subscriptions = await repositoryFactory.MarketplaceBookingSubscriptionRepository
+            .GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var authorizedIds = await GetViewableSubscriptionIdsAsync(subscriptions, customerId, cancellationToken);
+
+        var invoicesById = authorizedIds.Count == 0
+            ? new Dictionary<string, IReadOnlyList<Shared.Database.Entities.OrganizationArrearsInvoice>>()
+            : await repositoryFactory.OrganizationArrearsInvoiceRepository
+                .GetByMarketplaceBookingSubscriptionIdsUntrackedAsync(authorizedIds, cancellationToken);
+        return ids.ToDictionary(
+            id => id,
+            id => (IReadOnlyList<OrganizationArrearsInvoice>)(invoicesById.TryGetValue(id, out var invoices)
+                ? invoices.Select(sharedEntityMapper.MapTo).ToList()
+                : []));
+    }
+
     public async Task<(PaginatedInfo, IReadOnlyList<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
         PaginationInputParam paginationInputParam,
         MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
@@ -144,7 +169,7 @@ public class MarketplaceBookingSubscriptionService(
             scopedOrganization is not null &&
             (requestedOtherCustomersSubscriptions || !requestedOwnSubscriptionsOnly))
         {
-            if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(scopedOrganization.Id, customerId, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(scopedOrganization, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -355,7 +380,7 @@ public class MarketplaceBookingSubscriptionService(
         var result = new List<string>();
         foreach (var organization in organizations)
         {
-            if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
+            if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken))
             {
                 result.Add(organization.Id);
             }
@@ -368,6 +393,72 @@ public class MarketplaceBookingSubscriptionService(
     {
         var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customerId, cancellationToken);
         return [.. teams.Select(item => item.Id)];
+    }
+
+    private async Task<IReadOnlySet<string>> GetViewableSubscriptionIdsAsync(
+        IReadOnlyList<Shared.Database.Entities.MarketplaceBookingSubscription> subscriptions,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        var result = subscriptions
+            .Where(subscription => subscription.InvolvedCustomers.Any(customer => customer.Id == customerId))
+            .Select(subscription => subscription.Id)
+            .ToHashSet();
+        var unresolved = subscriptions.Where(subscription => !result.Contains(subscription.Id)).ToList();
+        if (unresolved.Count == 0)
+        {
+            return result;
+        }
+
+        var organizationIds = unresolved
+            .SelectMany(subscription => subscription.InvolvedOrganizations.Select(item => item.Id))
+            .Distinct()
+            .ToList();
+        var organizations = organizationIds.Count == 0
+            ? []
+            : await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
+                organizationIds,
+                null,
+                false,
+                false,
+                cancellationToken);
+        var permissionByOrganizationId = new Dictionary<string, bool>();
+        foreach (var organization in organizations.DistinctBy(item => item.Id))
+        {
+            permissionByOrganizationId[organization.Id] = await organizationAuthorizationService
+                .CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken);
+        }
+
+        var teamIds = unresolved
+            .SelectMany(subscription => subscription.InvolvedTeams.Select(item => item.Id))
+            .Distinct()
+            .ToList();
+        var teams = teamIds.Count == 0
+            ? []
+            : await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
+        foreach (var team in teams.Where(item => item.Organization is not null).DistinctBy(item => item.Organization!.Id))
+        {
+            if (!permissionByOrganizationId.ContainsKey(team.Organization!.Id))
+            {
+                permissionByOrganizationId[team.Organization.Id] = await organizationAuthorizationService
+                    .CanViewOtherCustomersBookingsAsync(team.Organization, customerId, cancellationToken);
+            }
+        }
+
+        var permittedTeamIds = teams
+            .Where(team => team.Organization is not null && permissionByOrganizationId.GetValueOrDefault(team.Organization.Id))
+            .Select(team => team.Id)
+            .ToHashSet();
+        foreach (var subscription in unresolved)
+        {
+            if (subscription.InvolvedOrganizations.Any(item => permissionByOrganizationId.GetValueOrDefault(item.Id)) ||
+                subscription.InvolvedTeams.Any(item => permittedTeamIds.Contains(item.Id)))
+            {
+                result.Add(subscription.Id);
+            }
+        }
+
+        return result;
     }
 
     private async Task EnsureCustomerCanViewMarketplaceBookingSubscriptionAsync(
@@ -392,7 +483,7 @@ public class MarketplaceBookingSubscriptionService(
 
             foreach (var organization in organizations)
             {
-                if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
+                if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken))
                 {
                     return;
                 }
@@ -409,7 +500,7 @@ public class MarketplaceBookingSubscriptionService(
         foreach (var team in teams)
         {
             if (team.Organization is not null &&
-                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
+                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization, customerId, cancellationToken))
             {
                 return;
             }

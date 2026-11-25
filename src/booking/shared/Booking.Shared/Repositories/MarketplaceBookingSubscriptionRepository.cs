@@ -8,8 +8,6 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Time;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using Customer = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 
@@ -27,6 +25,15 @@ public interface IMarketplaceBookingSubscriptionRepository : IRepository<Marketp
     Task<MarketplaceBookingSubscription?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<MarketplaceBookingSubscription?> GetByIdForUpdateAsync(string id, CancellationToken cancellationToken);
     Task<MarketplaceBookingSubscription?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
+    Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByIdsAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByIdsForXeroRefundAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByIdsForGraphQlBatchAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken);
 
     Task<MarketplaceBookingSubscription?> GetByStripeSubscriptionAsync(
         string stripeAccountId,
@@ -53,70 +60,89 @@ public static class MarketplaceBookingSubscriptionExtensions
 {
     extension(IQueryable<MarketplaceBookingSubscription> originalQuery)
     {
-        public IIncludableQueryable<MarketplaceBookingSubscription, Customer?> AddDependentObjects(
+        public IQueryable<MarketplaceBookingSubscription> AddDependentObjects(
             bool isTracked,
             TimeProvider timeProvider,
-            bool includeDeletedRecurringBookings = false) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-            .Include(query => query.MarketplaceBooking)
-            .ThenInclude(query => query.ProductVersion)
-            .ThenInclude(query => query.Product)
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.MarketplaceBooking)
-            .ThenInclude(query => query!.PaidByCustomer)
-            .Include(query => query.MarketplaceBooking)
-            .ThenInclude(query => query.ProductVersion)
-            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.RecurringBookings.Where(recurringBooking =>
-                (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
-                recurringBooking.MarketplaceBooking != null &&
-                (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
-                 recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
-            .ThenInclude(query => query.MarketplaceBooking)
-            .ThenInclude(query => query!.StripeCheckoutSession)
-            .ThenInclude(query => query!.StripeCustomer)
-            .Include(query => query.RecurringBookings.Where(recurringBooking =>
-                (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
-                recurringBooking.MarketplaceBooking != null &&
-                (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
-                 recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
-            .ThenInclude(query => query.InvolvedCustomers)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.RecurringBookings.Where(recurringBooking =>
-                (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
-                recurringBooking.MarketplaceBooking != null &&
-                (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
-                 recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
-            .ThenInclude(query => query.MarketplaceBooking)
-            .ThenInclude(query => query!.ProductVersion)
-            .ThenInclude(query => query.Product)
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.RecurringBookings.Where(recurringBooking =>
-                (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
-                recurringBooking.MarketplaceBooking != null &&
-                (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
-                 recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
-            .ThenInclude(query => query.MarketplaceBooking)
-            .ThenInclude(query => query!.ProductVersion)
-            .Include(query => query.RecurringBookings.Where(recurringBooking =>
-                (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
-                recurringBooking.MarketplaceBooking != null &&
-                (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
-                 recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
-            .ThenInclude(query => query.MarketplaceBooking)
-            .ThenInclude(query => query!.StripeCheckoutSession)
-            .Include(query => query.ProductVersion)
-            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.InvolvedCustomers)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.InvolvedOrganizations)
-            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .Include(query => query.InvolvedTeams)
-            .Include(query => query.RequestedResources)
-            .ThenInclude(query => query.Location)
-            .Include(query => query.CreatedByCustomer)
-            .Include(query => query.LastModifiedByCustomer)
-            .Include(query => query.DeletedByCustomer);
+            bool includeDeletedRecurringBookings = false,
+            bool includeDetailRelations = true)
+        {
+            var query = (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+                .Include(query => query.MarketplaceBooking)
+                .ThenInclude(query => query.ProductVersion)
+                .ThenInclude(query => query.Product)
+                .ThenInclude(query => query.Organization)
+                .Include(query => query.MarketplaceBooking)
+                .ThenInclude(query => query!.PaidByCustomer)
+                .Include(query => query.MarketplaceBooking)
+                .ThenInclude(query => query.ProductVersion)
+                .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .Include(query => query.RecurringBookings.Where(recurringBooking =>
+                    (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
+                    recurringBooking.MarketplaceBooking != null &&
+                    (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
+                     recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
+                .ThenInclude(query => query.MarketplaceBooking)
+                .ThenInclude(query => query!.StripeCheckoutSession)
+                .Include(query => query.RecurringBookings.Where(recurringBooking =>
+                    (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
+                    recurringBooking.MarketplaceBooking != null &&
+                    (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
+                     recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
+                .ThenInclude(query => query.InvolvedCustomers)
+                .ThenInclude(query => query.Identities)
+                .Include(query => query.RecurringBookings.Where(recurringBooking =>
+                    (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
+                    recurringBooking.MarketplaceBooking != null &&
+                    (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
+                     recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
+                .ThenInclude(query => query.MarketplaceBooking)
+                .ThenInclude(query => query!.ProductVersion)
+                .ThenInclude(query => query.Product)
+                .ThenInclude(query => query.Organization)
+                .Include(query => query.RecurringBookings.Where(recurringBooking =>
+                    (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
+                    recurringBooking.MarketplaceBooking != null &&
+                    (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
+                     recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
+                .ThenInclude(query => query.MarketplaceBooking)
+                .ThenInclude(query => query!.ProductVersion)
+                .Include(query => query.RecurringBookings.Where(recurringBooking =>
+                    (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
+                    recurringBooking.MarketplaceBooking != null &&
+                    (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
+                     recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
+                .ThenInclude(query => query.MarketplaceBooking)
+                .ThenInclude(query => query!.StripeCheckoutSession)
+                .Include(query => query.ProductVersion)
+                .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .Include(query => query.InvolvedCustomers)
+                .ThenInclude(query => query.Identities)
+                .Include(query => query.InvolvedOrganizations)
+                .Include(query => query.InvolvedTeams)
+                .Include(query => query.RequestedResources)
+                .Include(query => query.CreatedByCustomer)
+                .Include(query => query.LastModifiedByCustomer)
+                .Include(query => query.DeletedByCustomer);
+
+            if (!includeDetailRelations)
+            {
+                return query;
+            }
+
+            return query
+                .Include(subscription => subscription.RecurringBookings.Where(recurringBooking =>
+                    (includeDeletedRecurringBookings || !recurringBooking.DeletedAt.HasValue) &&
+                    recurringBooking.MarketplaceBooking != null &&
+                    (includeDeletedRecurringBookings || !recurringBooking.EndDate.HasValue ||
+                     recurringBooking.EndDate.Value >= timeProvider.GetUtcNow().StartOfDay())))
+                .ThenInclude(recurringBooking => recurringBooking.MarketplaceBooking)
+                .ThenInclude(marketplaceBooking => marketplaceBooking!.StripeCheckoutSession)
+                .ThenInclude(stripeCheckoutSession => stripeCheckoutSession!.StripeCustomer)
+                .Include(subscription => subscription.InvolvedOrganizations)
+                .ThenInclude(organization => organization.OrganizationMembers.Where(member => !member.DeletedAt.HasValue))
+                .Include(subscription => subscription.RequestedResources)
+                .ThenInclude(resource => resource.Location);
+        }
 
         public IQueryable<MarketplaceBookingSubscription> AddSearchCriteria(
             MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
@@ -348,6 +374,58 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
             .AddDependentObjects(false, TimeProvider)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
+    public async Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByIdsAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.MarketplaceBookingSubscription
+            .AddDependentObjects(false, TimeProvider, true, false)
+            .Where(query => ids.Contains(query.Id))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByIdsForXeroRefundAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.MarketplaceBookingSubscription
+            .AddDependentObjects(false, TimeProvider, includeDetailRelations: false)
+            .Where(query => ids.Contains(query.Id))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<MarketplaceBookingSubscription>> GetByIdsForGraphQlBatchAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.MarketplaceBookingSubscription
+            .AsNoTrackingWithIdentityResolution()
+            .Include(subscription => subscription.InvolvedCustomers)
+            .Include(subscription => subscription.InvolvedOrganizations)
+            .Include(subscription => subscription.InvolvedTeams)
+            .Include(subscription => subscription.MarketplaceBooking)
+            .Include(subscription => subscription.ProductVersion)
+            .ThenInclude(productVersion => productVersion.Product)
+            .ThenInclude(product => product.Organization)
+            .Where(subscription => ids.Contains(subscription.Id))
+            .ToListAsync(cancellationToken);
+    }
+
     public MarketplaceBookingSubscription Add(MarketplaceBookingSubscription recurringBooking)
     {
         var now = TimeProvider.GetUtcNow();
@@ -378,7 +456,7 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
             CancellationToken cancellationToken) =>
         await DbContext.MarketplaceBookingSubscription
             .AddSearchCriteria(searchCriteria, accessScope)
-            .AddDependentObjects(false, TimeProvider)
+            .AddDependentObjects(false, TimeProvider, includeDetailRelations: false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
     private static List<KeysetPaginationField<MarketplaceBookingSubscription>> GetPaginationFields(

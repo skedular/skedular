@@ -20,6 +20,18 @@ public interface IMarketplaceBookingFailureRepository : IRepository<MarketplaceB
     Task<MarketplaceBookingFailure?> GetByMarketplaceBookingSubscriptionIdAsync(string marketplaceBookingSubscriptionId,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<MarketplaceBookingFailure>> GetByBookingIdsAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<MarketplaceBookingFailure>> GetByRecurringBookingIdsAsync(
+        IReadOnlyCollection<string> recurringBookingIds,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<MarketplaceBookingFailure>> GetByMarketplaceBookingSubscriptionIdsAsync(
+        IReadOnlyCollection<string> marketplaceBookingSubscriptionIds,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<MarketplaceBookingFailure>> GetVisibleToCustomerAsync(string customerId, CancellationToken cancellationToken);
     Task<IReadOnlyList<MarketplaceBookingFailure>> GetCleanupCandidatesAsync(int maxCount, CancellationToken cancellationToken);
     Task<IReadOnlyList<MarketplaceBookingFailure>> GetAccountingCleanupCandidatesAsync(int maxCount, CancellationToken cancellationToken);
@@ -79,6 +91,73 @@ public class MarketplaceBookingFailureRepository(BookingDbContext dbContext, Tim
             .Include(item => item.Deliveries)
             .OrderByDescending(item => item.FinalizedAt)
             .FirstOrDefaultAsync(item => item.MarketplaceBookingSubscriptionId == marketplaceBookingSubscriptionId, cancellationToken);
+
+    public async Task<IReadOnlyList<MarketplaceBookingFailure>> GetByBookingIdsAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken)
+    {
+        if (bookingIds.Count == 0)
+        {
+            return [];
+        }
+
+        var latestIds = DbContext.MarketplaceBookingFailure
+            .Where(item => item.BookingId != null && bookingIds.Contains(item.BookingId))
+            .GroupBy(item => item.BookingId)
+            .Select(group => group
+                .OrderByDescending(item => item.FinalizedAt)
+                .ThenByDescending(item => item.Id)
+                .Select(item => item.Id)
+                .First());
+        return await DbContext.MarketplaceBookingFailure
+            .Where(item => latestIds.Contains(item.Id))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<MarketplaceBookingFailure>> GetByRecurringBookingIdsAsync(
+        IReadOnlyCollection<string> recurringBookingIds,
+        CancellationToken cancellationToken)
+    {
+        if (recurringBookingIds.Count == 0)
+        {
+            return [];
+        }
+
+        var latestIds = DbContext.MarketplaceBookingFailure
+            .Where(item => item.RecurringBookingId != null && recurringBookingIds.Contains(item.RecurringBookingId))
+            .GroupBy(item => item.RecurringBookingId)
+            .Select(group => group
+                .OrderByDescending(item => item.FinalizedAt)
+                .ThenByDescending(item => item.Id)
+                .Select(item => item.Id)
+                .First());
+        return await DbContext.MarketplaceBookingFailure
+            .Where(item => latestIds.Contains(item.Id))
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<MarketplaceBookingFailure>> GetByMarketplaceBookingSubscriptionIdsAsync(
+        IReadOnlyCollection<string> marketplaceBookingSubscriptionIds,
+        CancellationToken cancellationToken)
+    {
+        if (marketplaceBookingSubscriptionIds.Count == 0)
+        {
+            return [];
+        }
+
+        var latestIds = DbContext.MarketplaceBookingFailure
+            .Where(item => item.MarketplaceBookingSubscriptionId != null &&
+                           marketplaceBookingSubscriptionIds.Contains(item.MarketplaceBookingSubscriptionId))
+            .GroupBy(item => item.MarketplaceBookingSubscriptionId)
+            .Select(group => group
+                .OrderByDescending(item => item.FinalizedAt)
+                .ThenByDescending(item => item.Id)
+                .Select(item => item.Id)
+                .First());
+        return await DbContext.MarketplaceBookingFailure
+            .Where(item => latestIds.Contains(item.Id))
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<IReadOnlyList<MarketplaceBookingFailure>> GetVisibleToCustomerAsync(
         string customerId,

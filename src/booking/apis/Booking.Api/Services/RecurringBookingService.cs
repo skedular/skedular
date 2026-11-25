@@ -81,7 +81,7 @@ public class RecurringBookingService(
             scopedOrganization is not null &&
             (requestedOtherCustomersBookings || !requestedOwnBookingsOnly))
         {
-            if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(scopedOrganization.Id, customerId, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(scopedOrganization, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -166,7 +166,7 @@ public class RecurringBookingService(
         var result = new List<string>();
         foreach (var organization in organizations)
         {
-            if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
+            if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken))
             {
                 result.Add(organization.Id);
             }
@@ -202,7 +202,7 @@ public class RecurringBookingService(
                 cancellationToken);
             foreach (var organization in organizationEntities)
             {
-                if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
+                if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization, customerId, cancellationToken))
                 {
                     return;
                 }
@@ -219,7 +219,7 @@ public class RecurringBookingService(
         foreach (var team in teamEntities)
         {
             if (team.Organization is not null &&
-                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
+                await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization, customerId, cancellationToken))
             {
                 return;
             }

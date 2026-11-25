@@ -262,13 +262,11 @@ public class MarketplaceBookingSubscriptionDetails : Node
     }
 
     [UseResolverScope]
-    public async Task<IEnumerable<OrganizationArrearsInvoiceDetails>> GetArrearsInvoices(
+    public async Task<IReadOnlyList<OrganizationArrearsInvoiceDetails>> GetArrearsInvoices(
         [Service]
-        IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
-        [Service]
-        IGraphQlMapper graphQlMapper,
+        SubscriptionArrearsInvoicesDataLoader dataLoader,
         CancellationToken cancellationToken) =>
-        [.. (await marketplaceBookingSubscriptionService.GetArrearsInvoicesAsync(Id, cancellationToken)).Select(graphQlMapper.MapTo)];
+        await dataLoader.LoadAsync(Id, cancellationToken) ?? [];
 }
 
 [ObjectType<MarketplaceBookingSubscriptionDetails>]
@@ -307,41 +305,30 @@ public static partial class MarketplaceBookingSubscriptionDetailsType
         [Parent]
         MarketplaceBookingSubscriptionDetails item,
         [Service]
-        IMarketplaceRefundReadService marketplaceRefundReadService,
-        [Service]
-        IGraphQlMapper graphQlMapper,
+        MarketplaceBookingSubscriptionRefundDataLoader dataLoader,
         CancellationToken cancellationToken) =>
-        MapRefundAsync(marketplaceRefundReadService.GetByMarketplaceBookingSubscriptionIdAsync(item.Id, cancellationToken), graphQlMapper);
-
-    private static async Task<MarketplaceRefundDetails?> MapRefundAsync(Task<MarketplaceRefundReadModel?> task, IGraphQlMapper mapper)
-    {
-        var model = await task;
-        return model is null ? null : mapper.MapTo(model);
-    }
+        dataLoader.LoadAsync(item.Id, cancellationToken);
 
     [UseResolverScope]
-    public static async Task<MarketplaceBookingFailureDetails?> GetFailure(
+    public static Task<MarketplaceBookingFailureDetails?> GetFailure(
         [Parent]
         MarketplaceBookingSubscriptionDetails item,
         [Service]
-        IMarketplaceBookingFailureReadService failureReadService,
-        [Service]
-        IGraphQlMapper graphQlMapper,
-        CancellationToken cancellationToken)
-    {
-        var failure = await failureReadService.GetBySubscriptionIdAsync(item.Id, cancellationToken);
-        return failure is null ? null : graphQlMapper.MapTo(failure);
-    }
+        SubscriptionFailureDataLoader dataLoader,
+        CancellationToken cancellationToken) =>
+        dataLoader.LoadAsync(item.Id, cancellationToken);
 
     [UseResolverScope]
     public static async Task<MarketplaceSubscriptionCancellationAvailabilityDetails> GetCancellationAvailabilityAsync(
         [Parent]
         MarketplaceBookingSubscriptionDetails item,
         [Service]
-        IMarketplaceCancellationAvailabilityService cancellationAvailabilityService,
+        SubscriptionCancellationAvailabilityDataLoader dataLoader,
         CancellationToken cancellationToken)
     {
-        var availability = await cancellationAvailabilityService.GetSubscriptionAsync(item.Id, cancellationToken);
+        var unavailable = new MarketplaceCancellationAvailability(false, false, false, "This subscription is not available for cancellation.");
+        var availability = await dataLoader.LoadAsync(item.Id, cancellationToken) ??
+                           new MarketplaceSubscriptionCancellationAvailability(unavailable, unavailable);
         return new MarketplaceSubscriptionCancellationAvailabilityDetails
         {
             Immediate = new MarketplaceCancellationAvailabilityDetails

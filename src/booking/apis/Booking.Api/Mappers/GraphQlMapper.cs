@@ -623,7 +623,7 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 
     public MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src)
     {
-        var marketplaceBooking = MapTo(src.MarketplaceBooking)!;
+        var marketplaceBooking = MapTo(src.MarketplaceBooking) ?? new MarketplaceBookingDetails();
         // The subscription is a container; the amount shown in its header belongs to
         // the latest retained billing period. This also works for canceled subscriptions,
         // whose period rows are loaded from soft-deleted history.
@@ -1128,17 +1128,17 @@ public class GraphQlMapper(IEntityMapper sharedEntityMapper) : IGraphQlMapper
 
     private static MarketplaceBookingFailureResourceReleaseStatusDetails ToResourceReleaseStatusDetails(
         MarketplaceBookingFailureResourceReleaseStatus status) => new()
-        {
-            Type = status,
-            Name = status.ToDisplayName(),
-        };
+    {
+        Type = status,
+        Name = status.ToDisplayName(),
+    };
 
     private static MarketplaceBookingFailureAccountingCleanupStatusDetails ToAccountingCleanupStatusDetails(
         MarketplaceBookingFailureAccountingCleanupStatus status) => new()
-        {
-            Type = status,
-            Name = status.ToDisplayName(),
-        };
+    {
+        Type = status,
+        Name = status.ToDisplayName(),
+    };
 
     private static ProductPricing? GetPricing(EntitlementEntity source) =>
         source.EntitlementPurchase?.ProductPricing ??

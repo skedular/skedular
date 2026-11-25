@@ -22,6 +22,14 @@ public interface IMarketplaceCancellationAvailabilityService
 {
     Task<MarketplaceCancellationAvailability> GetBookingAsync(string bookingId, CancellationToken cancellationToken);
     Task<MarketplaceSubscriptionCancellationAvailability> GetSubscriptionAsync(string subscriptionId, CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, MarketplaceCancellationAvailability>> GetBookingsAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, MarketplaceSubscriptionCancellationAvailability>> GetSubscriptionsAsync(
+        IReadOnlyCollection<string> subscriptionIds,
+        CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -111,6 +119,156 @@ public sealed class MarketplaceCancellationAvailabilityService(
             ? new MarketplaceCancellationAvailability(true, true, true, null)
             : Unavailable("This subscription cannot be cancelled now because its cancellation policy does not allow it.");
         return new MarketplaceSubscriptionCancellationAvailability(immediate, atPeriodEnd);
+    }
+
+    public async Task<IReadOnlyDictionary<string, MarketplaceCancellationAvailability>> GetBookingsAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken)
+    {
+        var ids = bookingIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
+        if (ids.Count == 0)
+        {
+            return new Dictionary<string, MarketplaceCancellationAvailability>();
+        }
+
+        var bookings = await repositoryFactory.BookingRepository
+            .GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
+        var bookingsById = bookings.ToDictionary(item => item.Id);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var now = timeProvider.GetUtcNow();
+        var overrideOrganizationIds = bookings
+            .Where(booking => booking.MarketplaceBooking is not null && booking.DeletedByCustomer is null)
+            .Where(booking => !marketplaceRefundPolicyService.GetQuote(
+                    booking.MarketplaceBooking!.ProductPricing,
+                    booking.From,
+                    now)
+                .CanCancel)
+            .Select(booking => booking.MarketplaceBooking!.ProductVersion?.Product?.Organization?.Id)
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Select(item => item!)
+            .Distinct()
+            .ToList();
+        var overrideByOrganizationId = overrideOrganizationIds.Count == 0
+            ? new Dictionary<string, bool>()
+            : await organizationAuthorizationService.CanOverrideCancellationPolicyByOrganizationIdsAsync(
+                overrideOrganizationIds,
+                customerId,
+                cancellationToken);
+        var result = new Dictionary<string, MarketplaceCancellationAvailability>(ids.Count);
+        foreach (var id in ids)
+        {
+            if (!bookingsById.TryGetValue(id, out var booking) || booking.MarketplaceBooking is null)
+            {
+                result[id] = Unavailable("This booking is not available for cancellation.");
+                continue;
+            }
+
+            if (booking.DeletedByCustomer is not null)
+            {
+                result[id] = Unavailable("This booking has already been cancelled.");
+                continue;
+            }
+
+            var quote = marketplaceRefundPolicyService.GetQuote(
+                booking.MarketplaceBooking.ProductPricing,
+                booking.From,
+                now);
+            var isCreditFunded = booking.MarketplaceBooking.EntitlementId is not null;
+            if (quote.CanCancel)
+            {
+                result[id] = Available(isCreditFunded);
+                continue;
+            }
+
+            var organizationId = booking.MarketplaceBooking.ProductVersion?.Product?.Organization?.Id;
+            var canOverride = !string.IsNullOrWhiteSpace(organizationId) &&
+                              overrideByOrganizationId.GetValueOrDefault(organizationId);
+            result[id] = canOverride
+                ? new MarketplaceCancellationAvailability(true, true, true, null, isCreditFunded,
+                    isCreditFunded ? "Credit will be forfeited because the cancellation policy window has closed." : null)
+                : Unavailable(
+                    "This booking cannot be cancelled because its cancellation window has closed or the product does not allow cancellation.");
+        }
+
+        return result;
+    }
+
+    public async Task<IReadOnlyDictionary<string, MarketplaceSubscriptionCancellationAvailability>> GetSubscriptionsAsync(
+        IReadOnlyCollection<string> subscriptionIds,
+        CancellationToken cancellationToken)
+    {
+        var ids = subscriptionIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
+        if (ids.Count == 0)
+        {
+            return new Dictionary<string, MarketplaceSubscriptionCancellationAvailability>();
+        }
+
+        var subscriptions = await repositoryFactory.MarketplaceBookingSubscriptionRepository
+            .GetByIdsForGraphQlBatchAsync(ids, cancellationToken);
+        var subscriptionsById = subscriptions.ToDictionary(item => item.Id);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var now = timeProvider.GetUtcNow();
+        var overrideOrganizationIds = subscriptions
+            .Where(subscription =>
+                subscription.MarketplaceBooking is not null &&
+                subscription.Status == MarketplaceBookingSubscriptionStatus.Active.ToMarketplaceBookingSubscriptionStatus())
+            .Where(subscription => !marketplaceRefundPolicyService.GetQuote(
+                    subscription.MarketplaceBooking!.ProductPricing,
+                    subscription.NextRenewalAt ?? subscription.StartedAt,
+                    now)
+                .CanCancel)
+            .Select(subscription => subscription.ProductVersion?.Product?.Organization?.Id)
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Select(item => item!)
+            .Distinct()
+            .ToList();
+        var overrideByOrganizationId = overrideOrganizationIds.Count == 0
+            ? new Dictionary<string, bool>()
+            : await organizationAuthorizationService.CanOverrideCancellationPolicyByOrganizationIdsAsync(
+                overrideOrganizationIds,
+                customerId,
+                cancellationToken);
+        var result = new Dictionary<string, MarketplaceSubscriptionCancellationAvailability>(ids.Count);
+        foreach (var id in ids)
+        {
+            if (!subscriptionsById.TryGetValue(id, out var subscription) || subscription.MarketplaceBooking is null)
+            {
+                var unavailable = Unavailable("This subscription is not available for cancellation.");
+                result[id] = new MarketplaceSubscriptionCancellationAvailability(unavailable, unavailable);
+                continue;
+            }
+
+            if (subscription.Status != MarketplaceBookingSubscriptionStatus.Active.ToMarketplaceBookingSubscriptionStatus())
+            {
+                var unavailable = Unavailable("This subscription is no longer active and cannot be cancelled.");
+                result[id] = new MarketplaceSubscriptionCancellationAvailability(unavailable, unavailable);
+                continue;
+            }
+
+            var atPeriodEnd = subscription.AutoRenew
+                ? Available()
+                : Unavailable("This subscription is already set not to renew.");
+            var referenceTime = subscription.NextRenewalAt ?? subscription.StartedAt;
+            var quote = marketplaceRefundPolicyService.GetQuote(
+                subscription.MarketplaceBooking.ProductPricing,
+                referenceTime,
+                now);
+            if (quote.CanCancel)
+            {
+                result[id] = new MarketplaceSubscriptionCancellationAvailability(Available(), atPeriodEnd);
+                continue;
+            }
+
+            var organizationId = subscription.ProductVersion?.Product?.Organization?.Id;
+            var canOverride = !string.IsNullOrWhiteSpace(organizationId) &&
+                              overrideByOrganizationId.GetValueOrDefault(organizationId);
+            var immediate = canOverride
+                ? new MarketplaceCancellationAvailability(true, true, true, null)
+                : Unavailable("This subscription cannot be cancelled now because its cancellation policy does not allow it.");
+            result[id] = new MarketplaceSubscriptionCancellationAvailability(immediate, atPeriodEnd);
+        }
+
+        return result;
     }
 
     private static MarketplaceCancellationAvailability Available(bool isCreditFunded = false) =>

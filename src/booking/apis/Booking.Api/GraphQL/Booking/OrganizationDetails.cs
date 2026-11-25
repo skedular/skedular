@@ -1,5 +1,4 @@
-﻿using Booking.Shared.Services;
-using Enterprise.Shared.GraphQL.Types;
+﻿using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Composite;
@@ -22,18 +21,13 @@ public static partial class OrganizationDetailsType
         [Parent]
         OrganizationDetails organization,
         [Service]
-        ISpacesBookingQuotaService spacesBookingQuotaService,
-        CancellationToken cancellationToken)
-    {
-        var decision = await spacesBookingQuotaService.GetQuotaStatusAsync(organization.Id, cancellationToken);
-        return new SpacesPublicBookingAvailabilityDetails
+        SpacesQuotaStatusDataLoader dataLoader,
+        CancellationToken cancellationToken) =>
+        await dataLoader.LoadAsync(organization.Id, cancellationToken) ?? new SpacesPublicBookingAvailabilityDetails
         {
-            Available = decision.CanCreate,
-            Message = decision.CanCreate
-                ? "Bookings are available."
-                : "Bookings are currently unavailable for this workspace.",
+            Available = false,
+            Message = "Bookings are currently unavailable for this workspace.",
         };
-    }
 }
 
 [GraphQLName("SpacesPublicBookingAvailabilityDetails")]

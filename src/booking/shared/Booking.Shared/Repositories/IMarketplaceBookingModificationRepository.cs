@@ -11,6 +11,10 @@ public interface IMarketplaceBookingModificationRepository : IRepository<Marketp
     Task<MarketplaceBookingModification?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<IReadOnlyList<MarketplaceBookingModification>> GetByBookingIdAsync(string bookingId, CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<MarketplaceBookingModification>> GetByBookingIdsAsync(
+        IReadOnlyCollection<string> bookingIds,
+        CancellationToken cancellationToken);
+
     Task<MarketplaceBookingModificationNotificationDelivery?> GetDeliveryByKeyAsync(
         string modificationId,
         string deliveryKey,

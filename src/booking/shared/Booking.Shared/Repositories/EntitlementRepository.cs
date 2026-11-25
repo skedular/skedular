@@ -13,6 +13,11 @@ public interface IEntitlementRepository : IRepository<Entitlement>
 {
     Entitlement Add(Entitlement entitlement);
     Task<Entitlement?> GetByIdAsync(string id, CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, string>> GetPurchaseReferencesByIdsAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken);
+
     Task<Entitlement?> GetByPurchaseReferenceAsync(string purchaseReference, CancellationToken cancellationToken);
     Task<IReadOnlyList<Entitlement>> GetActiveForCustomerAsync(string customerId, DateTimeOffset usageAt, CancellationToken cancellationToken);
     Task<IReadOnlyList<Entitlement>> GetForCustomerAsync(string customerId, CancellationToken cancellationToken);
@@ -45,6 +50,26 @@ public sealed class EntitlementRepository(BookingDbContext dbContext, TimeProvid
             .Include(item => item.EntitlementPurchase)
             .ThenInclude(item => item!.ProductVersion)
             .SingleOrDefaultAsync(item => item.Id == id, cancellationToken);
+
+    public async Task<IReadOnlyDictionary<string, string>> GetPurchaseReferencesByIdsAsync(
+        IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return new Dictionary<string, string>();
+        }
+
+        var rows = await DbContext.Entitlement
+            .Where(item => ids.Contains(item.Id))
+            .Select(item => new
+            {
+                item.Id,
+                item.PurchaseReference,
+            })
+            .ToListAsync(cancellationToken);
+        return rows.ToDictionary(item => item.Id, item => item.PurchaseReference);
+    }
 
     public Task<Entitlement?> GetByPurchaseReferenceAsync(string purchaseReference, CancellationToken cancellationToken) =>
         DbContext.Entitlement

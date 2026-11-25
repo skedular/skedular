@@ -109,7 +109,7 @@ public class GetPaginatedAsyncShould
             }));
         A.CallTo(() => marketplaceBookingService.GetBookingIdAsync("purchase-1", cancellationToken)).Returns("booking-1");
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
-        A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync("organization-1", "customer-1", cancellationToken)).Returns(true);
+        A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync(A<Organization>._, "customer-1", cancellationToken)).Returns(true);
         A.CallTo(() => historyRepository.GetPaginatedRowsAsync(
                 A<PaginationInputParam>._,
                 A<MarketplacePurchaseHistorySearchCriteria>._,
@@ -162,7 +162,7 @@ public class GetPaginatedAsyncShould
                 CustomDomain = "example.test",
             }));
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
-        A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync(row.OrganizationId, "customer-1", cancellationToken)).Returns(false);
+        A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync(A<Organization>._, "customer-1", cancellationToken)).Returns(false);
         A.CallTo(() => historyRepository.GetPaginatedRowsAsync(A<PaginationInputParam>._, A<MarketplacePurchaseHistorySearchCriteria>._,
                 A<IReadOnlyList<MarketplacePurchaseHistoryOrder>?>._, cancellationToken))
             .Returns((new PaginatedInfo(false, false, null, null), [new Edge<MarketplacePurchaseHistoryRow>(row, "cursor-1")], 1));
@@ -200,7 +200,7 @@ public class GetPaginatedAsyncShould
                 CustomDomain = "example.test",
             }));
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
-        A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync(row.OrganizationId, "customer-1", cancellationToken)).Returns(true);
+        A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync(A<Organization>._, "customer-1", cancellationToken)).Returns(true);
         A.CallTo(() => historyRepository.GetPaginatedRowsAsync(A<PaginationInputParam>._, A<MarketplacePurchaseHistorySearchCriteria>._,
                 A<IReadOnlyList<MarketplacePurchaseHistoryOrder>?>._, cancellationToken))
             .Returns((new PaginatedInfo(false, false, "cursor-1", "cursor-1"), [new Edge<MarketplacePurchaseHistoryRow>(row, "cursor-1")], 1));
@@ -250,7 +250,7 @@ public class GetPaginatedAsyncShould
                     CustomDomain = "example.test",
                 }));
             A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
-            A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync(row.OrganizationId, "customer-1", cancellationToken))
+            A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync(A<Organization>._, "customer-1", cancellationToken))
                 .Returns(true);
             A.CallTo(() => historyRepository.GetPaginatedRowsAsync(A<PaginationInputParam>._, A<MarketplacePurchaseHistorySearchCriteria>._,
                     A<IReadOnlyList<MarketplacePurchaseHistoryOrder>?>._, cancellationToken))
@@ -291,7 +291,7 @@ public class GetPaginatedAsyncShould
                 CustomDomain = "example.test",
             }));
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
-        A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync(row.OrganizationId, "customer-1", cancellationToken)).Returns(true);
+        A.CallTo(() => authorizationService.CanViewOtherCustomersBookingsAsync(A<Organization>._, "customer-1", cancellationToken)).Returns(true);
         A.CallTo(() => historyRepository.GetPaginatedRowsAsync(A<PaginationInputParam>._, A<MarketplacePurchaseHistorySearchCriteria>._,
                 A<IReadOnlyList<MarketplacePurchaseHistoryOrder>?>._, cancellationToken))
             .Returns((new PaginatedInfo(false, false, "cursor-1", "cursor-1"), [new Edge<MarketplacePurchaseHistoryRow>(row, "cursor-1")], 1));

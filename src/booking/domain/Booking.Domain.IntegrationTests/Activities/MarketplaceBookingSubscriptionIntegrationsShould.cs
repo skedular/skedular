@@ -6,6 +6,7 @@ using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscriptionEntity = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
+using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Domain.IntegrationTests.Activities;
 
@@ -199,14 +200,19 @@ public class MarketplaceBookingSubscriptionIntegrationsShould(IRepositoryFactory
             Status = MarketplaceBookingSubscriptionStatusConstants.Active,
             ProductVersion = productVersion,
         });
-        repositoryFactory.BookingRepository.Add(new BookingEntity
+        repositoryFactory.RecurringBookingRepository.Add(new RecurringBooking
         {
             Id = recurringBookingId,
             From = from,
             Until = from.AddHours(1),
             Category = BookingCategory.WorkingFromCoworkingSpace.ToBookingCategory(),
             Channel = BookingChannel.Marketplace.ToBookingChannel(),
-            Schedules = [],
+            Frequency = BookingFrequency.Daily.ToBookingFrequency(),
+            Interval = 1,
+            EndType = RecurringBookingEndType.UntilDate.ToRecurringBookingEndType(),
+            StartDate = from,
+            EndDate = from.AddDays(1),
+            MarketplaceBookingSubscription = subscription,
         });
     }
 

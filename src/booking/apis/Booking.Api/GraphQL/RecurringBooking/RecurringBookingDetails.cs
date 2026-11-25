@@ -1,6 +1,4 @@
 ﻿using Booking.Api.GraphQL.Booking;
-using Booking.Api.Mappers;
-using Booking.Api.Services;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
@@ -111,16 +109,11 @@ public static partial class RecurringBookingDetailsType
     public static IEnumerable<TeamDetails> GetInvolvedTeams([Parent] RecurringBookingDetails item) =>
         item.InvolvedTeamIds.Select(id => new TeamDetails(id));
 
-    public static async Task<MarketplaceBookingFailureDetails?> GetFailure(
+    public static Task<MarketplaceBookingFailureDetails?> GetFailure(
         [Parent]
         RecurringBookingDetails item,
         [Service]
-        IMarketplaceBookingFailureReadService failureReadService,
-        [Service]
-        IGraphQlMapper graphQlMapper,
-        CancellationToken cancellationToken)
-    {
-        var failure = await failureReadService.GetByRecurringBookingIdAsync(item.Id, cancellationToken);
-        return failure is null ? null : graphQlMapper.MapTo(failure);
-    }
+        RecurringBookingFailureDataLoader dataLoader,
+        CancellationToken cancellationToken) =>
+        dataLoader.LoadAsync(item.Id, cancellationToken);
 }

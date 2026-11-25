@@ -54,12 +54,18 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
             .GetByRecurringBookingIdAsync(recurringBookingId, cancellationToken);
         var bySubscription = await repositoryFactory.MarketplaceBookingFailureRepository
             .GetByMarketplaceBookingSubscriptionIdAsync(subscriptionId, cancellationToken);
+        var byRecurringBookings = await repositoryFactory.MarketplaceBookingFailureRepository
+            .GetByRecurringBookingIdsAsync([recurringBookingId], cancellationToken);
+        var bySubscriptions = await repositoryFactory.MarketplaceBookingFailureRepository
+            .GetByMarketplaceBookingSubscriptionIdsAsync([subscriptionId], cancellationToken);
 
         byRecurringBooking.ShouldNotBeNull();
         byRecurringBooking.Id.ShouldBe(latestFailureId);
         byRecurringBooking.FinalizedAt.ShouldBe(latestFinalizedAt);
         bySubscription.ShouldNotBeNull();
         bySubscription.Id.ShouldBe(latestFailureId);
+        byRecurringBookings.ShouldHaveSingleItem().Id.ShouldBe(latestFailureId);
+        bySubscriptions.ShouldHaveSingleItem().Id.ShouldBe(latestFailureId);
     }
 
     private async Task SeedRecurringOccurrenceContextAsync(
@@ -96,6 +102,42 @@ public class MarketplaceBookingFailureRepositoryShould(IRepositoryFactory reposi
             EndDate = from.AddDays(1),
             MarketplaceBookingSubscription = subscription,
         });
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_Only_The_Latest_Failure_For_Bookings_In_A_Batch(
+        string bookingId,
+        string firstFailureId,
+        string latestFailureId,
+        CancellationToken cancellationToken)
+    {
+        var finalizedAt = TimeProvider.System.GetUtcNow();
+        await AddBookingAsync(bookingId, finalizedAt, cancellationToken);
+        repositoryFactory.MarketplaceBookingFailureRepository.Add(new MarketplaceBookingFailure
+        {
+            Id = firstFailureId,
+            FailureKey = $"{bookingId}-first",
+            BookingId = bookingId,
+            Category = MarketplaceBookingFailureCategoryConstants.PaymentFailed,
+            Scope = MarketplaceBookingFailureScopeConstants.OneTimeBooking,
+            FinalizedAt = finalizedAt.AddMinutes(-1),
+        });
+        repositoryFactory.MarketplaceBookingFailureRepository.Add(new MarketplaceBookingFailure
+        {
+            Id = latestFailureId,
+            FailureKey = $"{bookingId}-latest",
+            BookingId = bookingId,
+            Category = MarketplaceBookingFailureCategoryConstants.PaymentExpired,
+            Scope = MarketplaceBookingFailureScopeConstants.OneTimeBooking,
+            FinalizedAt = finalizedAt,
+        });
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        var failures = await repositoryFactory.MarketplaceBookingFailureRepository
+            .GetByBookingIdsAsync([bookingId], cancellationToken);
+
+        failures.ShouldHaveSingleItem().Id.ShouldBe(latestFailureId);
     }
 
     [Theory]

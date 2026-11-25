@@ -40,6 +40,11 @@ public interface IOrganizationRepository : IRepository<Organization>
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyList<Organization>> GetByIdsForAuthorizationAsync(
+        IReadOnlyCollection<string> ids,
+        string customerId,
+        CancellationToken cancellationToken);
+
     Organization Update(Organization organization);
     Organization Remove(Organization organization);
 }
@@ -178,6 +183,32 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
         }
 
         throw new InvalidOperationException("Either ids or customDomains must be provided.");
+    }
+
+    public async Task<IReadOnlyList<Organization>> GetByIdsForAuthorizationAsync(
+        IReadOnlyCollection<string> ids,
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        var validIds = ids.RemoveInvalidIds().ToSafeCollection();
+        if (validIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await DbContext.Organization
+            .AsNoTrackingWithIdentityResolution()
+            .Include(organization => organization.OrganizationSsoSettings)
+            .Include(organization => organization.OrganizationMembers.Where(member =>
+                !member.DeletedAt.HasValue && member.CustomerId == customerId))
+            .ThenInclude(member => member.Customer)
+            .Where(organization => validIds.Contains(organization.Id))
+            .ToListAsync(cancellationToken);
     }
 
     public Organization Update(Organization organization)

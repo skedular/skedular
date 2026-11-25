@@ -16,6 +16,10 @@ public interface ISpacesBookingQuotaService
         string organizationId,
         CancellationToken cancellationToken);
 
+    Task<IReadOnlyDictionary<string, SpacesQuotaDecision>> GetQuotaStatusesAsync(
+        IReadOnlyCollection<string> organizationIds,
+        CancellationToken cancellationToken);
+
     Task<SpacesQuotaDecision> CanCreateBookingInstanceAsync(
         string organizationId,
         DateTimeOffset bookingStartUtc,
@@ -53,6 +57,136 @@ public class SpacesBookingQuotaService(
         string organizationId,
         CancellationToken cancellationToken) =>
         await EvaluateAsync(organizationId, [], cancellationToken);
+
+    public async Task<IReadOnlyDictionary<string, SpacesQuotaDecision>> GetQuotaStatusesAsync(
+        IReadOnlyCollection<string> organizationIds,
+        CancellationToken cancellationToken)
+    {
+        var ids = organizationIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToList();
+        if (ids.Count == 0)
+        {
+            return new Dictionary<string, SpacesQuotaDecision>();
+        }
+
+        var organizations = await repositoryFactory.SpacesBookingUsageRepository
+            .GetOrganizationsWithOfferingAsync(ids, cancellationToken);
+        var organizationsById = organizations.ToDictionary(item => item.Id);
+        var result = new Dictionary<string, SpacesQuotaDecision>(ids.Count);
+        var usageWindows = new Dictionary<string, (DateTimeOffset Start, DateTimeOffset End)>();
+        foreach (var id in ids)
+        {
+            if (!organizationsById.TryGetValue(id, out var organization))
+            {
+                logger.LogWarning(
+                    "{EventId}: Spaces offering state missing or invalid for organization {OrganizationId}. PlanCode: {PlanCode}",
+                    SpacesPricingLogEvents.QuotaDecisionNoOfferingState,
+                    id,
+                    null);
+                result[id] = MissingOfferingDecision(null);
+                continue;
+            }
+
+            var offering = organization.Offering;
+            var planCode = offering?.SpacesPlanCode;
+            if (planCode is null or 0 || !s_supportedPlanCodes.Contains(planCode.Value))
+            {
+                logger.LogWarning(
+                    "{EventId}: Spaces offering state missing or invalid for organization {OrganizationId}. PlanCode: {PlanCode}",
+                    SpacesPricingLogEvents.QuotaDecisionNoOfferingState,
+                    id,
+                    planCode);
+                result[id] = MissingOfferingDecision(planCode);
+                continue;
+            }
+
+            var accessDecision = spacesAccessEvaluator.Evaluate(
+                timeProvider.GetUtcNow(),
+                offering,
+                SpacesAccessAction.CreateBookingInstance);
+            if (!accessDecision.Allowed)
+            {
+                logger.LogInformation(
+                    "{EventId}: Spaces access denied for organization {OrganizationId}. Status: {Status}, ReasonCode: {ReasonCode}",
+                    SpacesTrialLogEvents.AccessDecisionDenied,
+                    id,
+                    accessDecision.Status,
+                    accessDecision.ReasonCode);
+                result[id] = CreateDecision(
+                        false,
+                        accessDecision.Status == SpacesSubscriptionStatus.TrialExpired
+                            ? SpacesQuotaReasonCode.TrialExpired
+                            : SpacesQuotaReasonCode.MissingOfferingState,
+                        planCode,
+                        0,
+                        0,
+                        0,
+                        0,
+                        offering!.SpacesPeriodStart ?? DateTimeOffset.MinValue,
+                        offering.SpacesPeriodEnd ?? DateTimeOffset.MinValue)
+                    with
+                {
+                    AccessDecision = accessDecision,
+                };
+                continue;
+            }
+
+            var periodStart = offering!.SpacesPeriodStart ?? DateTimeOffset.MinValue;
+            var periodEnd = offering.SpacesPeriodEnd ?? DateTimeOffset.MinValue;
+            if (periodStart == DateTimeOffset.MinValue || periodEnd == DateTimeOffset.MinValue || periodEnd <= periodStart)
+            {
+                logger.LogWarning(
+                    "{EventId}: Spaces offering state has invalid period for organization {OrganizationId}. PeriodStart: {PeriodStart}, PeriodEnd: {PeriodEnd}",
+                    SpacesPricingLogEvents.QuotaDecisionNoOfferingState,
+                    id,
+                    periodStart,
+                    periodEnd);
+                result[id] = MissingOfferingDecision(planCode, periodStart, periodEnd);
+                continue;
+            }
+
+            usageWindows[id] = (periodStart, periodEnd);
+        }
+
+        if (usageWindows.Count == 0)
+        {
+            return result;
+        }
+
+        var usageCounts = await repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
+            [
+                .. usageWindows.Select(pair => new SpacesBookingUsageWindow(
+                    pair.Key,
+                    pair.Value.Start,
+                    pair.Value.End)),
+            ],
+            cancellationToken);
+        var usageByOrganizationId = usageCounts.ToDictionary(item => item.OrganizationId, item => item.Count);
+
+        foreach (var (organizationId, window) in usageWindows)
+        {
+            var organization = organizationsById[organizationId];
+            var planCode = organization.Offering!.SpacesPlanCode!.Value;
+            var quotaLimit = GetEffectiveQuotaLimit(
+                planCode,
+                organization.Offering.SpacesQuotaLimit,
+                organization.Offering.SpacesCustomCapacity);
+            var currentUsage = usageByOrganizationId.GetValueOrDefault(organizationId);
+            result[organizationId] = quotaLimit >= 0 && currentUsage >= quotaLimit
+                ? Block(organizationId, planCode, currentUsage, quotaLimit, 0, 0, window.Start, window.End)
+                : CreateDecision(
+                    true,
+                    SpacesQuotaReasonCode.WithinQuota,
+                    planCode,
+                    currentUsage,
+                    quotaLimit,
+                    0,
+                    0,
+                    window.Start,
+                    window.End);
+        }
+
+        return result;
+    }
 
     public async Task<SpacesQuotaDecision> CanCreateBookingInstanceAsync(
         string organizationId,
@@ -257,6 +391,22 @@ public class SpacesBookingQuotaService(
             periodStart,
             periodEnd);
     }
+
+    private static SpacesQuotaDecision MissingOfferingDecision(
+        int? planCode,
+        DateTimeOffset periodStart = default,
+        DateTimeOffset periodEnd = default) =>
+        new(
+            false,
+            SpacesQuotaReasonCode.MissingOfferingState,
+            planCode,
+            0,
+            0,
+            0,
+            0,
+            0,
+            periodStart,
+            periodEnd);
 
     private SpacesQuotaDecision Block(
         string organizationId,

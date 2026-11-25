@@ -15,6 +15,10 @@ public interface IMarketplaceRefundReadService
     Task<MarketplaceRefundReadModel?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<MarketplaceRefundReadModel?> GetByMarketplaceBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken);
 
+    Task<IReadOnlyDictionary<string, MarketplaceRefundReadModel>> GetByMarketplaceBookingIdsAsync(
+        IReadOnlyCollection<string> marketplaceBookingIds,
+        CancellationToken cancellationToken);
+
     Task<IReadOnlyList<MarketplaceRefundReadModel>> GetByOrganizationCustomDomainAsync(
         string organizationCustomDomain,
         IReadOnlyList<string>? statuses,
@@ -30,6 +34,10 @@ public interface IMarketplaceRefundReadService
 
     Task<MarketplaceRefundReadModel?> GetByMarketplaceBookingSubscriptionIdAsync(
         string marketplaceBookingSubscriptionId,
+        CancellationToken cancellationToken);
+
+    Task<IReadOnlyDictionary<string, MarketplaceRefundReadModel>> GetByMarketplaceBookingSubscriptionIdsAsync(
+        IReadOnlyCollection<string> marketplaceBookingSubscriptionIds,
         CancellationToken cancellationToken);
 }
 
@@ -79,6 +87,22 @@ public class MarketplaceRefundReadService(
 
         return refund is null ? null : await MapWithAccessControlAsync(refund, cancellationToken);
     }
+
+    public Task<IReadOnlyDictionary<string, MarketplaceRefundReadModel>> GetByMarketplaceBookingIdsAsync(
+        IReadOnlyCollection<string> marketplaceBookingIds,
+        CancellationToken cancellationToken) =>
+        GetByMarketplaceBookingEntityIdsAsync(
+            MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
+            marketplaceBookingIds,
+            cancellationToken);
+
+    public Task<IReadOnlyDictionary<string, MarketplaceRefundReadModel>> GetByMarketplaceBookingSubscriptionIdsAsync(
+        IReadOnlyCollection<string> marketplaceBookingSubscriptionIds,
+        CancellationToken cancellationToken) =>
+        GetByMarketplaceBookingEntityIdsAsync(
+            MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
+            marketplaceBookingSubscriptionIds,
+            cancellationToken);
 
     public async Task<IReadOnlyList<MarketplaceRefundReadModel>> GetByOrganizationCustomDomainAsync(
         string organizationCustomDomain,
@@ -183,6 +207,80 @@ public class MarketplaceRefundReadService(
         }
 
         return (pageInfo, results, totalCount);
+    }
+
+    private async Task<IReadOnlyDictionary<string, MarketplaceRefundReadModel>> GetByMarketplaceBookingEntityIdsAsync(
+        string localEntityType,
+        IReadOnlyCollection<string> marketplaceBookingEntityIds,
+        CancellationToken cancellationToken)
+    {
+        var ids = marketplaceBookingEntityIds.Where(item => !string.IsNullOrWhiteSpace(item)).Distinct().ToArray();
+        if (ids.Length == 0)
+        {
+            return new Dictionary<string, MarketplaceRefundReadModel>();
+        }
+
+        var refunds = await repositoryFactory.MarketplaceRefundRepository.GetLatestByLocalEntitiesAsync(
+            localEntityType,
+            ids,
+            cancellationToken);
+        if (refunds.Count == 0)
+        {
+            return new Dictionary<string, MarketplaceRefundReadModel>();
+        }
+
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var canManageByOrganizationId = await organizationAuthorizationService
+            .CanModifyPaymentMethodByOrganizationIdsAsync(
+                refunds.Select(item => item.OrganizationId).Distinct().ToList(),
+                customerId,
+                cancellationToken);
+
+        var refundableForDetail = refunds
+            .Where(item => canManageByOrganizationId[item.OrganizationId])
+            .ToList();
+        var refundEvents = refundableForDetail.Count == 0
+            ? []
+            : await repositoryFactory.MarketplaceRefundEventRepository
+                .GetByMarketplaceRefundIdsAsync(refundableForDetail.Select(item => item.Id).ToList(), cancellationToken);
+        var refundEventsByRefundId = refundEvents
+            .GroupBy(item => item.MarketplaceRefundId)
+            .ToDictionary(group => group.Key, group => (IReadOnlyList<MarketplaceRefundEvent>)[.. group]);
+        var actorsById = await GetActorsByIdAsync(refundableForDetail, refundEvents, cancellationToken);
+        var customerNames = refundableForDetail.Count == 0
+            ? new Dictionary<string, string>()
+            : await repositoryFactory.MarketplaceRefundRepository.GetCustomerNamesByRefundsAsync(refundableForDetail, cancellationToken);
+        var availabilityByRefundId = refundableForDetail.Count == 0
+            ? new Dictionary<string, XeroRefundProcessingAvailability>()
+            : await xeroRefundService.GetProcessingAvailabilitiesAsync(refundableForDetail, cancellationToken);
+
+        var result = new Dictionary<string, MarketplaceRefundReadModel>(refunds.Count);
+        foreach (var refund in refunds)
+        {
+            MarketplaceRefundReadModel model;
+            if (canManageByOrganizationId[refund.OrganizationId])
+            {
+                model = MapToDetails(
+                    refund,
+                    refundEventsByRefundId.TryGetValue(refund.Id, out var events) ? events : [],
+                    actorsById,
+                    availabilityByRefundId[refund.Id],
+                    customerNames.GetValueOrDefault($"{refund.LocalEntityType}:{refund.LocalEntityId}"));
+            }
+            else
+            {
+                model = MapToModel(refund);
+                model.Events = [];
+                model.RequestedByCustomerName = null;
+                model.LastError = null;
+                model.CanProcessInXero = false;
+                model.XeroProcessingBlockedReason = null;
+            }
+
+            result[refund.LocalEntityId] = model;
+        }
+
+        return result;
     }
 
     private async Task<MarketplaceRefundReadModel> MapWithAvailabilityAsync(MarketplaceRefund refund, CancellationToken cancellationToken)

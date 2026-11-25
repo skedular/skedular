@@ -50,6 +50,37 @@ public class SpacesBookingUsageRepositoryShould(IRepositoryFactory repositoryFac
         count.ShouldBe(2);
     }
 
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_Batched_Booking_Counts_For_Organizations(
+        string organizationId,
+        string otherOrganizationId,
+        CancellationToken cancellationToken)
+    {
+        var periodStart = new DateTimeOffset(2026, 7, 1, 0, 0, 0, TimeSpan.Zero);
+        var organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+            organizationId,
+            cancellationToken);
+        var otherOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(
+            otherOrganizationId,
+            cancellationToken);
+        repositoryFactory.BookingRepository.Add(CreateBooking($"batch-{organizationId}", periodStart.AddDays(1), organization));
+        repositoryFactory.BookingRepository.Add(CreateBooking($"batch-{otherOrganizationId}", periodStart.AddDays(2), otherOrganization));
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        var rows = await repositoryFactory.SpacesBookingUsageRepository.CountCurrentPeriodBookingInstancesAsync(
+            [
+                new SpacesBookingUsageWindow(organizationId, periodStart, periodStart.AddMonths(1)),
+                new SpacesBookingUsageWindow(otherOrganizationId, periodStart, periodStart.AddMonths(1)),
+            ],
+            cancellationToken);
+
+        rows.ShouldBe([
+            new SpacesBookingOrganizationUsageCount(organizationId, 1),
+            new SpacesBookingOrganizationUsageCount(otherOrganizationId, 1),
+        ], true);
+    }
+
     private static Shared.Database.Entities.Booking CreateBooking(
         string id,
         DateTimeOffset from,
