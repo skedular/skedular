@@ -87,6 +87,7 @@ public static class Extensions
             });
         }
 
+        app.UseServerHttpLogging();
         app.UseCors(corsPolicyBuilder => corsPolicyBuilder.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
         if (app.Environment.IsDevelopment())
@@ -513,6 +514,7 @@ public static class Extensions
                     loggingBuilder.ClearProviders();
                     loggingBuilder.AddEventSourceLogger();
                 });
+            builder.AddServerHttpLogging();
             builder.Host.UseSerilogCustom(appName);
 
             return builder;

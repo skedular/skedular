@@ -30,6 +30,9 @@ locals {
     PUBLIC_SKEDULAR_SLACK_INSTALL_URL      = local.slack_url
     PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID = var.google_analytics_measurement_id
     PUBLIC_LOGROCKET_APP_ID                = var.logrocket_app_id
+    PUBLIC_OTEL_EXPORTER_OTLP_ENDPOINT     = "https://otel.skedular.app"
+    PUBLIC_OTEL_API_ENDPOINT               = "https://${module.shared_common.api_domain_name}"
+    PUBLIC_OTEL_SERVICE_NAME               = var.environment == "production" ? "public-web" : "public-web-staging"
   }
   public_skedular_pages_env_vars = {
     for name, value in local.public_skedular_env_vars : name => {

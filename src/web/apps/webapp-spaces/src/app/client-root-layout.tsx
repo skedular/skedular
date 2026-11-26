@@ -1,141 +1,138 @@
 'use client';
 
-import {GoogleAnalytics, GoogleTagManager} from '@/libs/analytics';
-import {TeamsUserCredential} from '@microsoft/teamsfx';
-import {AppRouterCacheProvider} from '@mui/material-nextjs/v15-appRouter';
+import { GoogleAnalytics, GoogleTagManager } from '@/libs/analytics';
+import { TeamsUserCredential } from '@microsoft/teamsfx';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import CssBaseline from '@mui/material/CssBaseline';
 import {
-    AuthenticatedRelayProvider,
-    DatePickerLocalizationProvider,
-    GoogleAnalyticsProvider,
-    InMsTeamsContext,
-    InMsTeamsProvider,
-    installBrowserTracing,
-    LogRocketProvider,
-    MuiXLicense,
-    PaletteModeContext,
-    PaletteModeProvider,
-    ThemeProvider,
+  AuthenticatedRelayProvider,
+  DatePickerLocalizationProvider,
+  GoogleAnalyticsProvider,
+  InMsTeamsContext,
+  InMsTeamsProvider,
+  installBrowserTelemetry,
+  LogRocketProvider,
+  MuiXLicense,
+  PaletteModeContext,
+  PaletteModeProvider,
+  ThemeProvider,
 } from '@skedular/shared';
-import {Analytics} from '@vercel/analytics/react';
-import {SpeedInsights} from '@vercel/speed-insights/react';
-import {AuthKitProvider, useAuth} from '@workos-inc/authkit-nextjs/components';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { AuthKitProvider, useAuth } from '@workos-inc/authkit-nextjs/components';
 import Script from 'next/script';
-import type {PropsWithChildren} from 'react';
-import {memo, useContext, useEffect, useState} from 'react';
-import {ToastContainer} from 'react-toastify';
+import type { PropsWithChildren } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-installBrowserTracing({
-    serviceName: 'webapp-spaces',
-    apiEndpoint: process.env.NEXT_PUBLIC_API_ENDPOINT,
-    tracesEndpoint: process.env.NEXT_PUBLIC_OTEL_EXPORTER_OTLP_ENDPOINT,
+installBrowserTelemetry({
+  serviceName: process.env.NEXT_PUBLIC_OTEL_SERVICE_NAME ?? 'webapp-spaces',
+  apiEndpoint: process.env.NEXT_PUBLIC_API_ENDPOINT,
+  otlpEndpoint: process.env.NEXT_PUBLIC_OTEL_EXPORTER_OTLP_ENDPOINT,
 });
 
 type AppAuthenticatedRelayProviderProps = PropsWithChildren<{
-    teamsToken: string | null;
+  teamsToken: string | null;
 }>;
 
-const authKitInitialAuth = process.env.NEXT_PUBLIC_SKEDULAR_UI_TEST_BYPASS_AUTH === 'true' ? {user: null} : undefined;
+const authKitInitialAuth = process.env.NEXT_PUBLIC_SKEDULAR_UI_TEST_BYPASS_AUTH === 'true' ? { user: null } : undefined;
 
-const AppAuthenticatedRelayProvider = ({children, teamsToken}: AppAuthenticatedRelayProviderProps) => {
-    const {loading: authLoading} = useAuth();
+const AppAuthenticatedRelayProvider = ({ children, teamsToken }: AppAuthenticatedRelayProviderProps) => {
+  const { loading: authLoading } = useAuth();
 
-    return (
-        <AuthenticatedRelayProvider authLoading={authLoading} teamsToken={teamsToken}>
-            {children}
-        </AuthenticatedRelayProvider>
-    );
+  return (
+    <AuthenticatedRelayProvider authLoading={authLoading} teamsToken={teamsToken}>
+      {children}
+    </AuthenticatedRelayProvider>
+  );
 };
 
-const InnerRootLayout = ({children}: PropsWithChildren) => {
-    const paletteMode = useContext(PaletteModeContext);
-    const inMsTeams = useContext(InMsTeamsContext);
-    const [token, setToken] = useState<string | null>(null);
+const InnerRootLayout = ({ children }: PropsWithChildren) => {
+  const paletteMode = useContext(PaletteModeContext);
+  const inMsTeams = useContext(InMsTeamsContext);
+  const [token, setToken] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!inMsTeams) {
-            return;
+  useEffect(() => {
+    if (!inMsTeams) {
+      return;
+    }
+
+    const appInitialize = async () => {
+      const scope: string[] = [];
+      const credential = new TeamsUserCredential({
+        initiateLoginEndpoint: new URL('auth-start.html', process.env.NEXT_PUBLIC_SITE_URL).href,
+        clientId: process.env.NEXT_PUBLIC_APPLICATION_REGISTRATION_ID!,
+      });
+
+      try {
+        try {
+          const accessTokenResult = await credential.getToken(scope);
+          if (!accessTokenResult) {
+            throw new Error('accessTokenResult is null');
+          }
+
+          setToken(accessTokenResult.token);
+        } catch {
+          await credential.login(scope);
+
+          const accessTokenResult = await credential.getToken(scope);
+          if (!accessTokenResult) {
+            throw new Error('accessTokenResult is null');
+          }
+
+          setToken(accessTokenResult.token);
         }
+      } catch (err) {
+        alert('Login failed: ' + err);
 
-        const appInitialize = async () => {
-            const scope: string[] = [];
-            const credential = new TeamsUserCredential({
-                initiateLoginEndpoint: new URL('auth-start.html', process.env.NEXT_PUBLIC_SITE_URL).href,
-                clientId: process.env.NEXT_PUBLIC_APPLICATION_REGISTRATION_ID!,
-            });
+        return;
+      }
+    };
 
-            try {
-                try {
-                    const accessTokenResult = await credential.getToken(scope);
-                    if (!accessTokenResult) {
-                        throw new Error('accessTokenResult is null');
-                    }
+    appInitialize();
+  }, [inMsTeams]);
 
-                    setToken(accessTokenResult.token);
-                } catch {
-                    await credential.login(scope);
-
-                    const accessTokenResult = await credential.getToken(scope);
-                    if (!accessTokenResult) {
-                        throw new Error('accessTokenResult is null');
-                    }
-
-                    setToken(accessTokenResult.token);
-                }
-            } catch (err) {
-                alert('Login failed: ' + err);
-
-                return;
-            }
-        };
-
-        appInitialize();
-    }, [inMsTeams]);
-
-    return (
-        <ThemeProvider mode={paletteMode}>
-            <CssBaseline/>
-            <DatePickerLocalizationProvider>
-                <AuthKitProvider initialAuth={authKitInitialAuth}>
-                    <AppAuthenticatedRelayProvider teamsToken={token}>{children}</AppAuthenticatedRelayProvider>
-                </AuthKitProvider>
-            </DatePickerLocalizationProvider>
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider mode={paletteMode}>
+      <CssBaseline />
+      <DatePickerLocalizationProvider>
+        <AuthKitProvider initialAuth={authKitInitialAuth}>
+          <AppAuthenticatedRelayProvider teamsToken={token}>{children}</AppAuthenticatedRelayProvider>
+        </AuthKitProvider>
+      </DatePickerLocalizationProvider>
+    </ThemeProvider>
+  );
 };
 
-const ClientRootLayout = ({children}: PropsWithChildren) => (
-    <>
-        {process.env.NEXT_PUBLIC_MICROANALYTICS_APP_ID && (
-            <Script
-                data-host="https://app.microanalytics.io"
-                data-dnt="false"
-                src="https://app.microanalytics.io/js/script.js"
-                id={process.env.NEXT_PUBLIC_MICROANALYTICS_APP_ID}
-                async
-                defer
-            />
-        )}
-        <AppRouterCacheProvider>
-            <PaletteModeProvider>
-                <InMsTeamsProvider>
-                    <InnerRootLayout>{children}</InnerRootLayout>
-                </InMsTeamsProvider>
-            </PaletteModeProvider>
-        </AppRouterCacheProvider>
-        <Analytics/>
-        <SpeedInsights/>
-        <MuiXLicense/>
-        <ToastContainer position="top-right" pauseOnFocusLoss pauseOnHover hideProgressBar={false} draggable
-                        rtl={false}/>
-        <GoogleAnalytics ignoreOptOutCookie={true} forceOverride={false}/>
-        <GoogleTagManager ignoreOptOutCookie={true} forceOverride={false}/>
-        <LogRocketProvider ignoreOptOutCookie={true} forceOverride={false}
-                           logRocketAppId={process.env.NEXT_PUBLIC_LOGROCKET_APP_ID}/>
-        <GoogleAnalyticsProvider ignoreOptOutCookie={true} forceOverride={false}
-                                 googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID}/>
-    </>
+const ClientRootLayout = ({ children }: PropsWithChildren) => (
+  <>
+    {process.env.NEXT_PUBLIC_MICROANALYTICS_APP_ID && (
+      <Script
+        data-host="https://app.microanalytics.io"
+        data-dnt="false"
+        src="https://app.microanalytics.io/js/script.js"
+        id={process.env.NEXT_PUBLIC_MICROANALYTICS_APP_ID}
+        async
+        defer
+      />
+    )}
+    <AppRouterCacheProvider>
+      <PaletteModeProvider>
+        <InMsTeamsProvider>
+          <InnerRootLayout>{children}</InnerRootLayout>
+        </InMsTeamsProvider>
+      </PaletteModeProvider>
+    </AppRouterCacheProvider>
+    <Analytics />
+    <SpeedInsights />
+    <MuiXLicense />
+    <ToastContainer position="top-right" pauseOnFocusLoss pauseOnHover hideProgressBar={false} draggable rtl={false} />
+    <GoogleAnalytics ignoreOptOutCookie={true} forceOverride={false} />
+    <GoogleTagManager ignoreOptOutCookie={true} forceOverride={false} />
+    <LogRocketProvider ignoreOptOutCookie={true} forceOverride={false} logRocketAppId={process.env.NEXT_PUBLIC_LOGROCKET_APP_ID} />
+    <GoogleAnalyticsProvider ignoreOptOutCookie={true} forceOverride={false} googleTagManagerContainerId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_CONTAINER_ID} />
+  </>
 );
 
 export default memo(ClientRootLayout);

@@ -216,6 +216,7 @@ services:
         condition: service_started
     volumes:
       - ./local-dev/observability/otel-collector.yaml:/etc/otelcol-contrib/config.yaml:ro
+    # Caddy exposes only the OTLP signal routes over HTTPS.
     ports:
       - "127.0.0.1:4317:4317"
       - "127.0.0.1:4318:4318"
@@ -394,6 +395,7 @@ services:
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      HttpLogging__Enabled: false
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: false
@@ -516,6 +518,7 @@ services:
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      HttpLogging__Enabled: false
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: false
@@ -639,6 +642,7 @@ services:
       Email__BookingInvoiceEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      HttpLogging__Enabled: false
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: false
@@ -757,6 +761,7 @@ services:
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      HttpLogging__Enabled: false
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: false
@@ -842,6 +847,7 @@ services:
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      HttpLogging__Enabled: false
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: false
@@ -964,6 +970,8 @@ services:
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      # TEMP: remove after tracing propagation diagnostics.
+      HttpLogging__Enabled: true
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: false
@@ -1087,6 +1095,7 @@ services:
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      HttpLogging__Enabled: false
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: false
@@ -1205,6 +1214,7 @@ services:
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+      HttpLogging__Enabled: false
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__ExcludeOutboxTelemetry: true
       OpenTelemetry__EntityFrameworkEnabled: false

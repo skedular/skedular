@@ -37,6 +37,12 @@
       ],
       "@skedular/shared/*": [
         "../../packages/shared/src/*"
+      ],
+      "@skedular/shared/node-telemetry": [
+        "../../packages/shared/src/node-telemetry.ts"
+      ],
+      "@skedular/shared/src/*": [
+        "../../packages/shared/src/*"
       ]
     }
   },

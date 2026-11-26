@@ -28,6 +28,12 @@ grafana.skedular.app {
 	reverse_proxy localhost:3000
 }
 
+otel.skedular.app {
+	reverse_proxy /v1/traces localhost:4318
+	reverse_proxy /v1/logs localhost:4318
+	reverse_proxy /v1/metrics localhost:4318
+}
+
 mimir.skedular.app {
 	reverse_proxy localhost:9009
 }

@@ -12,6 +12,9 @@ interface ImportMetaEnv {
   readonly PUBLIC_SKEDULAR_SLACK_INSTALL_URL: string;
   readonly PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID?: string;
   readonly PUBLIC_LOGROCKET_APP_ID?: string;
+  readonly PUBLIC_OTEL_EXPORTER_OTLP_ENDPOINT: string;
+  readonly PUBLIC_OTEL_API_ENDPOINT: string;
+  readonly PUBLIC_OTEL_SERVICE_NAME: string;
 }
 
 interface ImportMeta {

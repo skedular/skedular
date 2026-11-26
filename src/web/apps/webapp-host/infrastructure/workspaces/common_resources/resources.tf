@@ -143,22 +143,50 @@ locals {
     }
   ]
 
-  vercel_environment = flatten([
-    for environment_variable in local.vercel_environment_variables : [
+  vercel_environment = concat(
+    flatten([
+      for environment_variable in local.vercel_environment_variables : [
+        {
+          key       = environment_variable.key
+          sensitive = false
+          value     = environment_variable.value
+          target    = ["development"]
+        },
+        {
+          key       = environment_variable.key
+          sensitive = true
+          value     = environment_variable.value
+          target    = ["preview", "production"]
+        }
+      ]
+    ]),
+    [
       {
-        key       = environment_variable.key
+        key       = "NEXT_PUBLIC_OTEL_EXPORTER_OTLP_ENDPOINT"
         sensitive = false
-        value     = environment_variable.value
-        target    = ["development"]
+        value     = "https://otel.skedular.app"
+        target    = ["production"]
       },
       {
-        key       = environment_variable.key
-        sensitive = true
-        value     = environment_variable.value
-        target    = ["preview", "production"]
+        key       = "OTEL_EXPORTER_OTLP_ENDPOINT"
+        sensitive = false
+        value     = "https://otel.skedular.app"
+        target    = ["production"]
+      },
+      {
+        key       = "NEXT_PUBLIC_OTEL_SERVICE_NAME"
+        sensitive = false
+        value     = local.is_staging ? "webapp-host-staging" : "webapp-host"
+        target    = ["production"]
+      },
+      {
+        key       = "OTEL_SERVICE_NAME"
+        sensitive = false
+        value     = local.is_staging ? "webapp-host-staging" : "webapp-host"
+        target    = ["production"]
       }
     ]
-  ])
+  )
 }
 
 resource "aws_cognito_user_pool_client" "default" {

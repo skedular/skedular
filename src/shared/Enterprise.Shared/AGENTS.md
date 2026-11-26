@@ -18,41 +18,54 @@ Every module exposes its own `Add*` / `Use*` extension methods. Call only the on
 
 ### Builder Modules (`WebApplicationBuilder` / `IServiceCollection` extensions)
 
-| Method                                                      | Where defined                   | What it registers                                                                                                                                             |
-|-------------------------------------------------------------|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `builder.AddCoreServices<TProgram>()`                       | `Extensions.cs`                 | Config, `ApplicationConfiguration`, OpenTelemetry, service discovery, HTTP timeout, auth/authz, CORS, problem details, core singletons, liveness health check |
-| `builder.AddIdentityTokenProviders()`                       | `Extensions.cs`                 | Each token provider registered only when its config section is present: WorkOS, Cognito, Google, Azure Entra; also aggregates the registered `ITokenService`s |
-| `builder.AddCookieServices()`                               | `Extensions.cs`                 | `CookieConfiguration` + `ICookieEncryptionService` when the `Cookie` config section is present                                                                |
-| `builder.AddHybridCaching()`                                | `Extensions.cs`                 | Redis-backed `HybridCache` with GeoJSON-aware JSON options — requires Redis to be registered separately                                                       |
-| `builder.AddApiControllers<TProgram>()`                     | `Extensions.cs`                 | MVC controllers, camelCase JSON, Swagger/NSwag, validation error shapes                                                                                       |
-| `builder.AddSerilogLogging<TProgram>()`                     | `Extensions.cs`                 | Serilog host integration, clears default log providers                                                                                                        |
-| `builder.AddDefaultServices<TProgram>()`                    | `Extensions.cs`                 | **In-repo bundle** — calls all five above in order. Do not use in external projects.                                                                          |
-| `services.AddKafka(...)`                                    | `Kafka/Extensions.cs`           | Full Kafka producer/consumer stack                                                                                                                            |
-| `services.AddTemporalWorker(...)`                           | `Temporal/Extensions.cs`        | Temporal worker + outbox writers                                                                                                                              |
-| `services.AddTemporalClient(...)`                           | `Temporal/Extensions.cs`        | Temporal client only (no hosted worker)                                                                                                                       |
-| `services.AddGraphql(...)`                                  | `GraphQL/GraphqlExtensions.cs`  | HotChocolate GraphQL server                                                                                                                                   |
-| `services.AddRedis(...)`                                    | `Cache/Extensions.cs`           | `IConnectionMultiplexer` + `IDistributedCache` via StackExchange.Redis                                                                                        |
-| `services.AddFileStorage(...)`                              | `FileStorage/Extensions.cs`     | `ICdnService` + `IFileService` (local dev or Cloudflare)                                                                                                      |
-| `services.AddStripe(...)`                                   | `Payment/Extensions.cs`         | Stripe SDK service interfaces                                                                                                                                 |
-| `services.AddXeroServices(...)`                             | `Accounting/Extensions.cs`      | `IXeroSdkClientFactory`, `IXeroTokenEncryptionService`                                                                                                        |
-| `services.AddMcpServer(...)`                                | `Ai/Extentions.cs`              | Model Context Protocol server                                                                                                                                 |
-| `services.AddSecurity()`                                    | `Security/Extensions.cs`        | gRPC authenticator and the security middleware surface; expects token providers to already be registered                                                      |
-| `services.AddSso()`                                         | `Security/Sso/Extensions.cs`    | SAML assertion consumer + login request factory                                                                                                               |
-| `services.AddKafkaOutboxBackgroundService<TDbContext>()`    | `Outbox/Kafka/Extensions.cs`    | Background service that drains `KafkaOutbox` rows to Kafka                                                                                                    |
-| `services.AddKafkaOutboxService()`                          | `Outbox/Kafka/Extensions.cs`    | Open-generic `IKafkaOutboxEventPublisher<,>` — already called by `AddKafka`                                                                                   |
-| `services.AddTemporalOutboxBackgroundService<TDbContext>()` | `Outbox/Temporal/Extensions.cs` | Background services for workflow-start and signal outbox draining                                                                                             |
-| `services.AddTemporalOutboxService()`                       | `Outbox/Temporal/Extensions.cs` | `ITemporalOutboxWorkflowExecutor` + `ITemporalSignalOutboxWorkflowExecutor` — already called by `AddTemporalWorker`                                           |
+| Method                                                      | Where defined                            | What it registers                                                                                                                                             |
+|-------------------------------------------------------------|------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `builder.AddCoreServices<TProgram>()`                       | `Extensions.cs`                          | Config, `ApplicationConfiguration`, OpenTelemetry, service discovery, HTTP timeout, auth/authz, CORS, problem details, core singletons, liveness health check |
+| `builder.AddIdentityTokenProviders()`                       | `Extensions.cs`                          | Each token provider registered only when its config section is present: WorkOS, Cognito, Google, Azure Entra; also aggregates the registered `ITokenService`s |
+| `builder.AddCookieServices()`                               | `Extensions.cs`                          | `CookieConfiguration` + `ICookieEncryptionService` when the `Cookie` config section is present                                                                |
+| `builder.AddHybridCaching()`                                | `Extensions.cs`                          | Redis-backed `HybridCache` with GeoJSON-aware JSON options — requires Redis to be registered separately                                                       |
+| `builder.AddApiControllers<TProgram>()`                     | `Extensions.cs`                          | MVC controllers, camelCase JSON, Swagger/NSwag, validation error shapes                                                                                       |
+| `builder.AddSerilogLogging<TProgram>()`                     | `Extensions.cs`                          | Serilog host integration, clears default log providers                                                                                                        |
+| `builder.AddServerHttpLogging()`                            | `Logging/ServerHttpLoggingExtensions.cs` | Opt-in ASP.NET Core request/response HTTP logging with bounded bodies and configurable header/media allowlists                                                |
+| `builder.AddDefaultServices<TProgram>()`                    | `Extensions.cs`                          | **In-repo bundle** — calls all five above in order and registers optional server HTTP logging. Do not use in external projects.                               |
+| `services.AddKafka(...)`                                    | `Kafka/Extensions.cs`                    | Full Kafka producer/consumer stack                                                                                                                            |
+| `services.AddTemporalWorker(...)`                           | `Temporal/Extensions.cs`                 | Temporal worker + outbox writers                                                                                                                              |
+| `services.AddTemporalClient(...)`                           | `Temporal/Extensions.cs`                 | Temporal client only (no hosted worker)                                                                                                                       |
+| `services.AddGraphql(...)`                                  | `GraphQL/GraphqlExtensions.cs`           | HotChocolate GraphQL server                                                                                                                                   |
+| `services.AddRedis(...)`                                    | `Cache/Extensions.cs`                    | `IConnectionMultiplexer` + `IDistributedCache` via StackExchange.Redis                                                                                        |
+| `services.AddFileStorage(...)`                              | `FileStorage/Extensions.cs`              | `ICdnService` + `IFileService` (local dev or Cloudflare)                                                                                                      |
+| `services.AddStripe(...)`                                   | `Payment/Extensions.cs`                  | Stripe SDK service interfaces                                                                                                                                 |
+| `services.AddXeroServices(...)`                             | `Accounting/Extensions.cs`               | `IXeroSdkClientFactory`, `IXeroTokenEncryptionService`                                                                                                        |
+| `services.AddMcpServer(...)`                                | `Ai/Extentions.cs`                       | Model Context Protocol server                                                                                                                                 |
+| `services.AddSecurity()`                                    | `Security/Extensions.cs`                 | gRPC authenticator and the security middleware surface; expects token providers to already be registered                                                      |
+| `services.AddSso()`                                         | `Security/Sso/Extensions.cs`             | SAML assertion consumer + login request factory                                                                                                               |
+| `services.AddKafkaOutboxBackgroundService<TDbContext>()`    | `Outbox/Kafka/Extensions.cs`             | Background service that drains `KafkaOutbox` rows to Kafka                                                                                                    |
+| `services.AddKafkaOutboxService()`                          | `Outbox/Kafka/Extensions.cs`             | Open-generic `IKafkaOutboxEventPublisher<,>` — already called by `AddKafka`                                                                                   |
+| `services.AddTemporalOutboxBackgroundService<TDbContext>()` | `Outbox/Temporal/Extensions.cs`          | Background services for workflow-start and signal outbox draining                                                                                             |
+| `services.AddTemporalOutboxService()`                       | `Outbox/Temporal/Extensions.cs`          | `ITemporalOutboxWorkflowExecutor` + `ITemporalSignalOutboxWorkflowExecutor` — already called by `AddTemporalWorker`                                           |
 
 ### App Modules (`WebApplication` extensions)
 
-| Method                                      | Where defined                  | What it does                                                                                         |
-|---------------------------------------------|--------------------------------|------------------------------------------------------------------------------------------------------|
-| `app.UseApplicationCore<TProgram>()`        | `Extensions.cs`                | Exception handling, CORS, routing, auth, health checks, context middleware, controllers — no GraphQL |
-| `app.UseWebApplicationDefaults<TProgram>()` | `Extensions.cs`                | **In-repo bundle** — `UseApplicationCore` + `MapGraphqlEndpoints` (no-op when GraphQL config absent) |
-| `app.MapGraphqlEndpoints(configuration)`    | `GraphQL/GraphqlExtensions.cs` | Maps the HotChocolate GraphQL route                                                                  |
-| `app.UseSecurity()`                         | `Security/Extensions.cs`       | Adds `SecurityContextEnricherMiddleware`                                                             |
-| `app.UseSso()`                              | `Security/Sso/Extensions.cs`   | Adds `SsoContextEnricherMiddleware`                                                                  |
-| `app.UseMcpServer()`                        | `Ai/Extentions.cs`             | Maps the MCP HTTP transport route                                                                    |
+| Method                                      | Where defined                            | What it does                                                                                         |
+|---------------------------------------------|------------------------------------------|------------------------------------------------------------------------------------------------------|
+| `app.UseApplicationCore<TProgram>()`        | `Extensions.cs`                          | Exception handling, CORS, routing, auth, health checks, context middleware, controllers — no GraphQL |
+| `app.UseWebApplicationDefaults<TProgram>()` | `Extensions.cs`                          | **In-repo bundle** — `UseApplicationCore` + `MapGraphqlEndpoints` (no-op when GraphQL config absent) |
+| `app.UseServerHttpLogging()`                | `Logging/ServerHttpLoggingExtensions.cs` | Activates ASP.NET Core HTTP logging only when `HttpLogging:Enabled=true`                             |
+| `app.MapGraphqlEndpoints(configuration)`    | `GraphQL/GraphqlExtensions.cs`           | Maps the HotChocolate GraphQL route                                                                  |
+| `app.UseSecurity()`                         | `Security/Extensions.cs`                 | Adds `SecurityContextEnricherMiddleware`                                                             |
+| `app.UseSso()`                              | `Security/Sso/Extensions.cs`             | Adds `SsoContextEnricherMiddleware`                                                                  |
+| `app.UseMcpServer()`                        | `Ai/Extentions.cs`                       | Maps the MCP HTTP transport route                                                                    |
+
+## Server HTTP Logging
+
+- Hosts using `AddDefaultServices` register optional ASP.NET Core HTTP logging; enable it with
+  `HttpLogging__Enabled=true`.
+- Configure `HttpLogging:LoggingFields`, `RequestBodyLogLimit`, `ResponseBodyLogLimit`, `CombineLogs`, `RequestHeaders`,
+  `ResponseHeaders`, and `MediaTypes` through appsettings or environment variables.
+- Body logging can expose credentials, tokens, and personal data. Keep it disabled by default and enable it only
+  temporarily in a controlled environment with restricted log access and bounded size limits.
+- The logs represent the body bytes observed by the ASP.NET server; for outbound client requests use the HTTP client
+  logging handlers in `Api.Shared.Clients` and `Api.Shared.Clients.Legacy`.
 
 ## Module Folders
 

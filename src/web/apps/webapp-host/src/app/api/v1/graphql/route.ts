@@ -1,11 +1,13 @@
 import { authkit } from '@workos-inc/authkit-nextjs';
 import { NextRequest, NextResponse } from 'next/server';
 import { v7 as uuid } from 'uuid';
+import { getTraceContextHeaders, logTraceContextIngress } from '@skedular/shared';
 import { applyAuthkitResponseHeaders, getForwardedAuthorizationHeader } from '../authkit-response-headers';
 
 const federatedGraphQLEndpoint = new URL('v1/graphql', process.env.GATEWAY_ENDPOINT).href;
 
 const handler = async (request: NextRequest) => {
+  logTraceContextIngress('webapp-host', request);
   const { headers: authkitHeaders, session } = await authkit(request);
   const authorization = request.headers.get('Authorization');
   const correlationId = request.headers.get('X-Correlation-Id') ?? uuid();
@@ -15,6 +17,7 @@ const handler = async (request: NextRequest) => {
     'Content-Type': request.headers.get('Content-Type') ?? 'application/json',
     'X-Correlation-Id': correlationId,
     'X-SSO-Cookies': Buffer.from(JSON.stringify(request.cookies.getAll().filter((item) => item.name.startsWith('organization-sso'))), 'binary').toString('base64'),
+    ...getTraceContextHeaders(request.headers),
   };
 
   if (forwardedAuthorization) {

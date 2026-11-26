@@ -1,4 +1,4 @@
-using Booking.Shared.Repositories;
+﻿using Booking.Shared.Repositories;
 using Temporalio.Activities;
 
 namespace Booking.Shared.Activities;

@@ -17,19 +17,30 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@opentelemetry/api": "^1.10.0",
+    "@opentelemetry/context-zone": "^3.1.1",
+    "@opentelemetry/core": "^3.1.1",
+    "@opentelemetry/exporter-metrics-otlp-http": "^0.301.2",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.301.2",
+    "@opentelemetry/instrumentation": "^0.301.2",
+    "@opentelemetry/instrumentation-fetch": "^0.301.2",
+    "@opentelemetry/resources": "^3.1.1",
+    "@opentelemetry/sdk-metrics": "^3.1.1",
+    "@opentelemetry/sdk-trace": "^3.1.1",
     "astro": "^7.4.13",
-    "logrocket": "^12.4.0"
+    "logrocket": "^12.4.0",
+    "web-vitals": "^6.2.3"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
     "@testing-library/dom": "^10.4.2",
-    "@types/node": "^26.6.6",
+    "@types/node": "^26.6.11",
     "axe-core": "^4.14.1",
     "jsdom": "^31.0.1",
     "prettier": "^3.10.1",
     "prettier-plugin-astro": "^1.1.2",
     "typescript": "^6.0.3",
-    "vitest": "^5.1.1",
-    "wrangler": "^4.166.0"
+    "vitest": "^5.1.2",
+    "wrangler": "^4.168.0"
   }
 }

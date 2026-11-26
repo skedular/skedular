@@ -11,8 +11,26 @@ receivers:
             - http://localhost:15002
             - http://localhost:15004
             - http://localhost:15006
+            - http://localhost:15008
+            - https://skedular.app
+            - https://getskedular.com
+            - https://www.getskedular.com
+            - https://staging.getskedular.com
+            - https://host.skedular.app
+            - https://spaces.skedular.app
+            - https://teams.skedular.app
+            - https://staging.skedular.app
+            - https://skedularmarketplacetrial.skedular.app
+            - https://wisecounselingcollective.skedular.app
+            - https://assemble.skedular.app
+            - https://hoststaging.skedular.app
+            - https://spacesstaging.skedular.app
+            - https://teamsstaging.skedular.app
           allowed_headers:
             - Content-Type
+            - traceparent
+            - tracestate
+            - baggage
           max_age: 7200
 
 processors:

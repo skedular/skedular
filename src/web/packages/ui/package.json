@@ -14,9 +14,9 @@
     "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix"
   },
   "peerDependencies": {
-    "@mui/icons-material": "^9.5.0",
-    "@mui/material": "^9.5.0",
-    "@mui/system": "^9.5.0",
+    "@mui/icons-material": "^9.6.0",
+    "@mui/material": "^9.6.0",
+    "@mui/system": "^9.6.0",
     "@mui/x-data-grid": "^9.18.0",
     "@mui/x-date-pickers": "^9.18.0",
     "@mui/x-date-pickers-pro": "^9.18.0",
@@ -27,13 +27,13 @@
     "react-svg-credit-card-payment-icons": "^6.0.4"
   },
   "devDependencies": {
-    "@mui/icons-material": "^9.5.0",
-    "@mui/material": "^9.5.0",
+    "@mui/icons-material": "^9.6.0",
+    "@mui/material": "^9.6.0",
     "@mui/x-data-grid": "^9.18.0",
     "@testing-library/jest-dom": "^8.0.0",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.13",
-    "@types/react": "^19.3.0",
+    "@types/react": "^19.3.3",
     "@types/react-dom": "^19.3.0",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.4.6",
@@ -41,6 +41,6 @@
     "next": "^16.4.6",
     "prettier": "^3.10.1",
     "typescript": "^6.0.3",
-    "vitest": "^5.1.1"
+    "vitest": "^5.1.2"
   }
 }

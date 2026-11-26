@@ -113,7 +113,7 @@
         <PackageReference Include="Serilog.Settings.Configuration" Version="11.0.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1"/>
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
-        <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.2.0"/>
+        <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.3.0"/>
 
         <!-- Temporal Workflows -->
         <PackageReference Include="Temporalio" Version="1.22.0"/>

@@ -351,6 +351,13 @@ const socialLinks = [
     </footer>
 
     <script>
+      import { installPublicWebTelemetry } from "../scripts/telemetry";
+      installPublicWebTelemetry({
+        serviceName: import.meta.env.PUBLIC_OTEL_SERVICE_NAME,
+        apiEndpoint: import.meta.env.PUBLIC_OTEL_API_ENDPOINT,
+        otlpEndpoint: import.meta.env.PUBLIC_OTEL_EXPORTER_OTLP_ENDPOINT,
+      });
+
       const navMenus = Array.from(
         document.querySelectorAll<HTMLDetailsElement>(".primary-nav .nav-menu"),
       );
