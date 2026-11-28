@@ -101,7 +101,7 @@ public class AddCustomTagButtonHandler(
         var workspace = entityMapper.MapTo(workspaceEntity);
         var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddCustomTagContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var values = viewSubmission.View.State.Values;
+        var values = viewSubmission.View.State?.Values ?? [];
         var organizationCustomTag = new OrganizationCustomTag
         {
             Id = randomHelper.Generate(),

@@ -217,7 +217,7 @@ public class AddResourceButtonHandler(
         var workspace = entityMapper.MapTo(workspaceEntity);
         var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var values = viewSubmission.View.State.Values;
+        var values = viewSubmission.View.State?.Values ?? [];
         var deskId = randomHelper.Generate();
         var resource = new Shared.Models.Resource
         {

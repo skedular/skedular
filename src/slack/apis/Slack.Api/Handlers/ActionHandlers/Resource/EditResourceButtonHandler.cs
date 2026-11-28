@@ -40,7 +40,7 @@ public class EditResourceButtonHandler(
             throw new UnauthorizedAccessException();
         }
 
-        var values = viewSubmission.View.State.Values;
+        var values = viewSubmission.View.State?.Values ?? [];
         var resource = await locationResourceService.GetAsync(workspaceMember.Id, context.ResourceId, cancellationToken);
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var locationBlock))

@@ -14,6 +14,7 @@ using Enterprise.Shared.IntegrationTesting;
 using Enterprise.Shared.IntegrationTesting.Aspire;
 using Enterprise.Shared.Messaging.Kafka;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.Telemetry;
 using Flurl;
 using Location.Shared;
 using Location.Shared.Database;
@@ -56,6 +57,8 @@ public class Startup
         ArgumentNullException.ThrowIfNull(locationApiClient.BaseAddress);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
+        configuration["OpenTelemetry:MeterProviderName"] = "skedular.location-integration-tests";
+        services.ConfigureOpenTelemetry(configuration, "Location.Domain.IntegrationTests");
         var locationApiGrpcChannel = GrpcChannelFactory.Create(locationApiGrpcEndpoint);
 
         services.TryAddSingleton(TimeProvider.System);

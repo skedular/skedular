@@ -25,7 +25,7 @@
         <PackageReference Include="Confluent.SchemaRegistry.Serdes.Protobuf" Version="2.16.0"/>
         <PackageReference Include="NATS.Net" Version="3.4.1"/>
         <!-- Required by Confluent's protobuf serdes for descriptor/reflection types such as FileDescriptorSet. -->
-        <PackageReference Include="protobuf-net.Reflection" Version="3.4.40"/>
+        <PackageReference Include="protobuf-net.Reflection" Version="3.4.51"/>
 
         <!-- Database / PostgreSQL -->
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
@@ -139,8 +139,8 @@
         <PackageReference Include="QuestPDF" Version="2026.9.2"/>
 
         <!-- Image Processing -->
-        <PackageReference Include="SkiaSharp" Version="4.157.0"/>
-        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.157.0"/>
+        <PackageReference Include="SkiaSharp" Version="4.158.0"/>
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="4.158.0"/>
 
         <!-- API Documentation -->
         <PackageReference Include="NSwag.AspNetCore" Version="14.8.0"/>

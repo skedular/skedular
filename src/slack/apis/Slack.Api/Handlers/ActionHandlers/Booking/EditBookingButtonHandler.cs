@@ -169,7 +169,7 @@ public class EditBookingButtonHandler(
         var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditBookingContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var booking = await bookingService.GetAsync(workspaceMember.Id, context.BookingId, cancellationToken);
-        var values = viewSubmission.View.State.Values;
+        var values = viewSubmission.View.State?.Values ?? [];
         if (values.TryGetValue(OptionLoaderKeys.OrganizationMemberKey, out var organizationMemberBlock))
         {
             if (organizationMemberBlock.TryGetValue(OptionLoaderKeys.OrganizationMemberKey, out var block))

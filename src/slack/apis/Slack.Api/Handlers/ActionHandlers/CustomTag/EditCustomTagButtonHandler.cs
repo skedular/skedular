@@ -40,7 +40,7 @@ public class EditCustomTagButtonHandler(
             throw new UnauthorizedAccessException();
         }
 
-        var values = viewSubmission.View.State.Values;
+        var values = viewSubmission.View.State?.Values ?? [];
         var organizationCustomTag =
             new OrganizationCustomTag
             {

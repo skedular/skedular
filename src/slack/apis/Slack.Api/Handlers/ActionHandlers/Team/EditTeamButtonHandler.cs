@@ -45,7 +45,7 @@ public class EditTeamButtonHandler(
         }
 
         var existingTeam = await teamService.GetAsync(workspaceMember.Id, context.TeamId, cancellationToken);
-        var values = viewSubmission.View.State.Values;
+        var values = viewSubmission.View.State?.Values ?? [];
         var team = new Shared.Models.Team
         {
             Id = context.TeamId,

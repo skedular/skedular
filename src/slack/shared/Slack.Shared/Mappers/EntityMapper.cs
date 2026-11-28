@@ -81,23 +81,23 @@ public class EntityMapper : IEntityMapper
     public WorkspaceMember MergeToEntity(User src, WorkspaceMember dest, Workspace workspace)
     {
         dest.Id = src.Id;
-        dest.Email = src.Profile.Email.ToSafeString();
-        dest.Designation = src.Profile.Title.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxPersonDesignationLength);
-        dest.Name = src.Profile.RealName.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxPersonNameLength);
-        dest.GivenName = src.Profile.FirstName.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxGivenNameLength);
-        dest.FamilyName = src.Profile.LastName.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxFamilyNameLength);
+        dest.Email = src.Profile?.Email.ToSafeString() ?? string.Empty;
+        dest.Designation = src.Profile?.Title.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxPersonDesignationLength) ?? string.Empty;
+        dest.Name = src.Profile?.RealName.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxPersonNameLength) ?? string.Empty;
+        dest.GivenName = src.Profile?.FirstName.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxGivenNameLength) ?? string.Empty;
+        dest.FamilyName = src.Profile?.LastName.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxFamilyNameLength) ?? string.Empty;
         dest.Timezone = src.Tz.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxTimezoneLength);
         dest.IsAdmin = src.IsAdmin;
         dest.IsOwner = src.IsOwner;
         dest.IsPrimaryOwner = src.IsPrimaryOwner;
-        dest.Locale = src.Locale.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxLocaleLength);
-        dest.PhotoUrl = src.Profile.ImageOriginal.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
-        dest.PhotoUrl24 = src.Profile.Image24.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
-        dest.PhotoUrl32 = src.Profile.Image32.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
-        dest.PhotoUrl48 = src.Profile.Image48.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
-        dest.PhotoUrl72 = src.Profile.Image72.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
-        dest.PhotoUrl192 = src.Profile.Image192.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
-        dest.PhotoUrl512 = src.Profile.Image512.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.Locale = src.Locale.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxLocaleLength) ?? string.Empty;
+        dest.PhotoUrl = src.Profile?.ImageOriginal.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl24 = src.Profile?.Image24.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl32 = src.Profile?.Image32.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl48 = src.Profile?.Image48.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl72 = src.Profile?.Image72.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl192 = src.Profile?.Image192.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxUrlLength);
+        dest.PhotoUrl512 = src.Profile?.Image512.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxUrlLength);
         dest.Workspace = workspace;
         return dest;
     }
@@ -107,9 +107,9 @@ public class EntityMapper : IEntityMapper
     public WorkspaceChannel MergeToEntity(Conversation src, WorkspaceChannel dest, Workspace workspace)
     {
         dest.Id = src.Id;
-        dest.Name = src.Name.Truncate(Api.Shared.Services.Constants.MaxUrlLength);
-        dest.Topic = src.Topic.Value;
-        dest.Purpose = src.Purpose.Value;
+        dest.Name = src.Name.ToSafeString().Truncate(Api.Shared.Services.Constants.MaxUrlLength) ?? string.Empty;
+        dest.Topic = src.Topic?.Value.ToSafeString() ?? string.Empty;
+        dest.Purpose = src.Purpose?.Value.ToSafeString() ?? string.Empty;
         dest.IsPrivate = src.IsPrivate;
         dest.IsGeneral = src.IsGeneral;
         dest.IsGroup = src.IsGroup;
@@ -121,7 +121,7 @@ public class EntityMapper : IEntityMapper
 
     public Workspace MergeToEntity(Team src, Workspace dest)
     {
-        dest.Name = src.Name;
+        dest.Name = src.Name.ToSafeString();
         dest.Domain = src.Domain;
         dest.EmailDomain = src.EmailDomain;
         dest.EnterpriseId = src.EnterpriseId;

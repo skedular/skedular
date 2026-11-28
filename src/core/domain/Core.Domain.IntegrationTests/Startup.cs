@@ -11,6 +11,7 @@ using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.IntegrationTesting;
 using Enterprise.Shared.IntegrationTesting.Aspire;
 using Enterprise.Shared.Messaging.Kafka;
+using Enterprise.Shared.Telemetry;
 using Flurl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,6 +53,8 @@ public class Startup
         ArgumentNullException.ThrowIfNull(coreApiClient.BaseAddress);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
+        configuration["OpenTelemetry:MeterProviderName"] = "skedular.core-integration-tests";
+        services.ConfigureOpenTelemetry(configuration, "Core.Domain.IntegrationTests");
         var coreApiGrpcChannel = GrpcChannelFactory.Create(coreApiGrpcEndpoint);
 
         services.TryAddSingleton(TimeProvider.System);

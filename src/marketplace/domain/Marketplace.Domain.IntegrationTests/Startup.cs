@@ -10,6 +10,7 @@ using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.IntegrationTesting;
 using Enterprise.Shared.IntegrationTesting.Aspire;
 using Enterprise.Shared.Messaging.Kafka;
+using Enterprise.Shared.Telemetry;
 using Flurl;
 using Marketplace.Shared;
 using Marketplace.Shared.Database;
@@ -53,6 +54,8 @@ public class Startup
         ArgumentNullException.ThrowIfNull(marketplaceApiClient.BaseAddress);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
+        configuration["OpenTelemetry:MeterProviderName"] = "skedular.marketplace-integration-tests";
+        services.ConfigureOpenTelemetry(configuration, "Marketplace.Domain.IntegrationTests");
         var marketplaceApiGrpcChannel = GrpcChannelFactory.Create(marketplaceApiGrpcEndpoint);
 
         services.TryAddSingleton(TimeProvider.System);

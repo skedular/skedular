@@ -76,6 +76,7 @@ public class Startup
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
         configuration["Stripe:SecretKey"] = configuration["Stripe:SecretKey"] ?? "sk_test_integration";
         configuration["Kafka:SchemaRegistry:Url"] = schemaRegistryEndpoint;
+        configuration["OpenTelemetry:MeterProviderName"] = "skedular.integration-tests";
         services.AddSingleton(
             configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>() ??
             new ApplicationConfiguration());
@@ -87,6 +88,7 @@ public class Startup
         services.AddSingleton<IPropagationContextGetter, PropagationContextGetter>();
         services.AddSingleton<TextMapPropagator>(_ => Propagators.DefaultTextMapPropagator);
         services.AddSingleton<IPropagatorFunctionProvider<IDictionary<string, string>>, StringDictionaryPropagatorFunctions>();
+        services.ConfigureOpenTelemetry(configuration, "Booking.Domain.IntegrationTests");
         services.AddSingleton<IRandomHelper, RandomHelper>();
         services.AddSingleton<ITemporalClient>(_ =>
             TemporalClient.ConnectAsync(new TemporalClientConnectOptions

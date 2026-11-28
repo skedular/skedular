@@ -40,7 +40,7 @@ public class EditZoneButtonHandler(
             throw new UnauthorizedAccessException();
         }
 
-        var values = viewSubmission.View.State.Values;
+        var values = viewSubmission.View.State?.Values ?? [];
         var organizationZone = new OrganizationZone
         {
             Id = context.ZoneId,

@@ -11,6 +11,7 @@ using Enterprise.Shared.Database.PostgreSql;
 using Enterprise.Shared.IntegrationTesting;
 using Enterprise.Shared.IntegrationTesting.Aspire;
 using Enterprise.Shared.Messaging.Kafka;
+using Enterprise.Shared.Telemetry;
 using Flurl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +55,8 @@ public class Startup
         ArgumentNullException.ThrowIfNull(slackApiClient.BaseAddress);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
+        configuration["OpenTelemetry:MeterProviderName"] = "skedular.slack-integration-tests";
+        services.ConfigureOpenTelemetry(configuration, "Slack.Domain.IntegrationTests");
         var slackApiGrpcChannel = GrpcChannelFactory.Create(slackApiGrpcEndpoint);
 
         services.TryAddSingleton(TimeProvider.System);

@@ -101,7 +101,7 @@ public class AddZoneButtonHandler(
         var workspace = entityMapper.MapTo(workspaceEntity);
         var workspaceMember = entityMapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddZoneContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var values = viewSubmission.View.State.Values;
+        var values = viewSubmission.View.State?.Values ?? [];
         var organizationZone = new OrganizationZone
         {
             Id = randomHelper.Generate(),

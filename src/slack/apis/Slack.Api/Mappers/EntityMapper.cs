@@ -30,15 +30,15 @@ public class EntityMapper : IEntityMapper
 
     public Workspace MergeTo(OauthV2AccessResponse src, Workspace dest, Organization organization)
     {
-        dest.Id = src.Team!.Id;
+        dest.Id = src.Team?.Id ?? string.Empty;
         dest.Name = (string.IsNullOrWhiteSpace(src.Team?.Name) ? string.Empty : src.Team.Name).Truncate(Constants.MaxSlackWorkspaceNameLength);
-        dest.BotUserId = src.BotUserId;
-        dest.BotUserScope = src.Scope.Truncate(Constants.MaxSlackScopeLength);
-        dest.BotUserAccessToken = src.AccessToken.Truncate(Constants.MaxSlackTokenLength);
+        dest.BotUserId = src.BotUserId.ToSafeString();
+        dest.BotUserScope = src.Scope.ToSafeString().Truncate(Constants.MaxSlackScopeLength);
+        dest.BotUserAccessToken = src.AccessToken.ToSafeString().Truncate(Constants.MaxSlackTokenLength);
         dest.BotRefreshToken = src.RefreshToken.ToSafeString().Truncate(Constants.MaxSlackTokenLength);
-        dest.AuthedUserId = src.AuthedUser.Id;
-        dest.AuthedUserScope = src.AuthedUser.Scope.Truncate(Constants.MaxSlackScopeLength);
-        dest.AuthedUserAccessToken = src.AuthedUser.AccessToken.Truncate(Constants.MaxSlackTokenLength);
+        dest.AuthedUserId = src.AuthedUser?.Id ?? string.Empty;
+        dest.AuthedUserScope = src.AuthedUser?.Scope.ToSafeString().Truncate(Constants.MaxSlackScopeLength) ?? string.Empty;
+        dest.AuthedUserAccessToken = src.AuthedUser?.AccessToken.ToSafeString().Truncate(Constants.MaxSlackTokenLength) ?? string.Empty;
         dest.AuthedRefreshToken =
             (src.AuthedUser is null ? string.Empty : src.AuthedUser.RefreshToken.ToSafeString()).Truncate(Constants.MaxSlackTokenLength);
         dest.Organization = organization;
@@ -51,9 +51,9 @@ public class EntityMapper : IEntityMapper
         new()
         {
             Id = src.Id,
-            Name = src.Name.ToSafeString().Truncate(Constants.MaxSlackChannelNameLength),
-            Topic = src.Topic.Value.ToSafeString().Truncate(Constants.MaxSlackChannelTopicLength),
-            Purpose = src.Purpose.Value.ToSafeString().Truncate(Constants.MaxSlackChannelPurposeLength),
+            Name = src.Name.ToSafeString().Truncate(Constants.MaxSlackChannelNameLength) ?? string.Empty,
+            Topic = src.Topic?.Value.ToSafeString().Truncate(Constants.MaxSlackChannelTopicLength) ?? string.Empty,
+            Purpose = src.Purpose?.Value.ToSafeString().Truncate(Constants.MaxSlackChannelPurposeLength) ?? string.Empty,
             IsPrivate = src.IsPrivate,
             IsGeneral = src.IsGeneral,
             IsGroup = src.IsGroup,
@@ -165,23 +165,23 @@ public class EntityMapper : IEntityMapper
     private static WorkspaceMember MergeToEntity(User src, WorkspaceMember dest, Workspace workspace)
     {
         dest.Id = src.Id;
-        dest.Email = src.Profile.Email.ToSafeString();
-        dest.Designation = src.Profile.Title.ToSafeString();
-        dest.Name = src.Profile.RealName.ToSafeString();
-        dest.GivenName = src.Profile.FirstName.ToSafeString();
-        dest.FamilyName = src.Profile.LastName.ToSafeString();
+        dest.Email = src.Profile?.Email.ToSafeString() ?? string.Empty;
+        dest.Designation = src.Profile?.Title.ToSafeString() ?? string.Empty;
+        dest.Name = src.Profile?.RealName.ToSafeString() ?? string.Empty;
+        dest.GivenName = src.Profile?.FirstName.ToSafeString() ?? string.Empty;
+        dest.FamilyName = src.Profile?.LastName.ToSafeString() ?? string.Empty;
         dest.Timezone = src.Tz.ToSafeString();
         dest.IsAdmin = src.IsAdmin;
         dest.IsOwner = src.IsOwner;
         dest.IsPrimaryOwner = src.IsPrimaryOwner;
         dest.Locale = src.Locale.ToSafeString();
-        dest.PhotoUrl = src.Profile.ImageOriginal;
-        dest.PhotoUrl24 = src.Profile.Image24;
-        dest.PhotoUrl32 = src.Profile.Image32;
-        dest.PhotoUrl48 = src.Profile.Image48;
-        dest.PhotoUrl72 = src.Profile.Image72;
-        dest.PhotoUrl192 = src.Profile.Image192;
-        dest.PhotoUrl512 = src.Profile.Image512;
+        dest.PhotoUrl = src.Profile?.ImageOriginal;
+        dest.PhotoUrl24 = src.Profile?.Image24;
+        dest.PhotoUrl32 = src.Profile?.Image32;
+        dest.PhotoUrl48 = src.Profile?.Image48;
+        dest.PhotoUrl72 = src.Profile?.Image72;
+        dest.PhotoUrl192 = src.Profile?.Image192;
+        dest.PhotoUrl512 = src.Profile?.Image512;
         dest.Workspace = workspace;
         return dest;
     }

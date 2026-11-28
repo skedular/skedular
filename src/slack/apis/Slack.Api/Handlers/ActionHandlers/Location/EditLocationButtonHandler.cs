@@ -43,7 +43,7 @@ public class EditLocationButtonHandler(
         }
 
         var existingLocation = await locationService.GetAsync(workspaceMember.Id, context.LocationId, cancellationToken);
-        var values = viewSubmission.View.State.Values;
+        var values = viewSubmission.View.State?.Values ?? [];
         var location = new Shared.Models.Location
         {
             Id = context.LocationId,

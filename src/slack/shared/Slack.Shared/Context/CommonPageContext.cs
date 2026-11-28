@@ -2,13 +2,24 @@
 
 namespace Slack.Shared.Context;
 
+internal static class ContextJson
+{
+    public static T Deserialize<T>(string? value)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(value);
+        var result = JsonSerializer.Deserialize<T>(value);
+        ArgumentNullException.ThrowIfNull(result);
+        return result;
+    }
+}
+
 public record CommonPageContext(PageContext PageContext)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static CommonPageContext Deserialize(string value)
+    public static CommonPageContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<CommonPageContext>(value);
+        var context = ContextJson.Deserialize<CommonPageContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -18,9 +29,9 @@ public record AddBookingContext(PageContext PageContext, DateTimeOffset? From, s
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static AddBookingContext Deserialize(string value)
+    public static AddBookingContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<AddBookingContext>(value);
+        var context = ContextJson.Deserialize<AddBookingContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -45,9 +56,9 @@ public class InstantAddBookingContext(
 
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static InstantAddBookingContext Deserialize(string value)
+    public static InstantAddBookingContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<InstantAddBookingContext>(value);
+        var context = ContextJson.Deserialize<InstantAddBookingContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -57,9 +68,9 @@ public record EditBookingContext(PageContext PageContext, string BookingId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static EditBookingContext Deserialize(string value)
+    public static EditBookingContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<EditBookingContext>(value);
+        var context = ContextJson.Deserialize<EditBookingContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -69,9 +80,9 @@ public record CancelBookingContext(PageContext PageContext, string BookingId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static CancelBookingContext Deserialize(string value)
+    public static CancelBookingContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<CancelBookingContext>(value);
+        var context = ContextJson.Deserialize<CancelBookingContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -81,9 +92,9 @@ public record JoinBookingContext(PageContext PageContext, string BookingId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static JoinBookingContext Deserialize(string value)
+    public static JoinBookingContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<JoinBookingContext>(value);
+        var context = ContextJson.Deserialize<JoinBookingContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -93,9 +104,9 @@ public record RemovePreferredTeamContext(PageContext PageContext, string TeamId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemovePreferredTeamContext Deserialize(string value)
+    public static RemovePreferredTeamContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<RemovePreferredTeamContext>(value);
+        var context = ContextJson.Deserialize<RemovePreferredTeamContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -105,9 +116,9 @@ public record AddAsPreferredTeamContext(PageContext PageContext, string TeamId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static AddAsPreferredTeamContext Deserialize(string value)
+    public static AddAsPreferredTeamContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<AddAsPreferredTeamContext>(value);
+        var context = ContextJson.Deserialize<AddAsPreferredTeamContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -119,9 +130,9 @@ public class EditTeamContext(PageContext pageContext, string teamId)
     public string TeamId { get; set; } = teamId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static EditTeamContext Deserialize(string value)
+    public static EditTeamContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<EditTeamContext>(value);
+        var context = ContextJson.Deserialize<EditTeamContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -133,9 +144,9 @@ public class RemoveTeamContext(PageContext pageContext, string teamId)
     public string TeamId { get; set; } = teamId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemoveTeamContext Deserialize(string value)
+    public static RemoveTeamContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<RemoveTeamContext>(value);
+        var context = ContextJson.Deserialize<RemoveTeamContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -145,9 +156,9 @@ public record ClearPreferredLocationContext(PageContext PageContext, string Loca
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static ClearPreferredLocationContext Deserialize(string value)
+    public static ClearPreferredLocationContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<ClearPreferredLocationContext>(value);
+        var context = ContextJson.Deserialize<ClearPreferredLocationContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -157,9 +168,9 @@ public record AddAsPreferredLocationContext(PageContext PageContext, string Loca
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static AddAsPreferredLocationContext Deserialize(string value)
+    public static AddAsPreferredLocationContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<AddAsPreferredLocationContext>(value);
+        var context = ContextJson.Deserialize<AddAsPreferredLocationContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -171,9 +182,9 @@ public class EditLocationContext(PageContext pageContext, string locationId)
     public string LocationId { get; set; } = locationId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static EditLocationContext Deserialize(string value)
+    public static EditLocationContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<EditLocationContext>(value);
+        var context = ContextJson.Deserialize<EditLocationContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -185,9 +196,9 @@ public class RemoveLocationContext(PageContext pageContext, string locationId)
     public string LocationId { get; set; } = locationId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemoveLocationContext Deserialize(string value)
+    public static RemoveLocationContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<RemoveLocationContext>(value);
+        var context = ContextJson.Deserialize<RemoveLocationContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -200,9 +211,9 @@ public class EditZoneContext(PageContext pageContext, string locationId, string 
     public string ZoneId { get; set; } = zoneId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static EditZoneContext Deserialize(string value)
+    public static EditZoneContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<EditZoneContext>(value);
+        var context = ContextJson.Deserialize<EditZoneContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -212,9 +223,9 @@ public record RemovePreferredZoneContext(PageContext PageContext, string ZoneId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemovePreferredZoneContext Deserialize(string value)
+    public static RemovePreferredZoneContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<RemovePreferredZoneContext>(value);
+        var context = ContextJson.Deserialize<RemovePreferredZoneContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -224,9 +235,9 @@ public record SetPreferredZoneContext(PageContext PageContext, string ZoneId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static SetPreferredZoneContext Deserialize(string value)
+    public static SetPreferredZoneContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<SetPreferredZoneContext>(value);
+        var context = ContextJson.Deserialize<SetPreferredZoneContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -239,9 +250,9 @@ public class RemoveZoneContext(PageContext pageContext, string locationId, strin
     public string ZoneId { get; set; } = zoneId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemoveZoneContext Deserialize(string value)
+    public static RemoveZoneContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<RemoveZoneContext>(value);
+        var context = ContextJson.Deserialize<RemoveZoneContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -254,9 +265,9 @@ public class EditResourceContext(PageContext pageContext, string locationId, str
     public string ResourceId { get; set; } = resourceId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static EditResourceContext Deserialize(string value)
+    public static EditResourceContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<EditResourceContext>(value);
+        var context = ContextJson.Deserialize<EditResourceContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -266,9 +277,9 @@ public record RemovePreferredResourceContext(PageContext PageContext, string Res
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemovePreferredResourceContext Deserialize(string value)
+    public static RemovePreferredResourceContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<RemovePreferredResourceContext>(value);
+        var context = ContextJson.Deserialize<RemovePreferredResourceContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -278,9 +289,9 @@ public record SetPreferredResourceContext(PageContext PageContext, string Resour
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static SetPreferredResourceContext Deserialize(string value)
+    public static SetPreferredResourceContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<SetPreferredResourceContext>(value);
+        var context = ContextJson.Deserialize<SetPreferredResourceContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -293,9 +304,9 @@ public class RemoveResourceContext(PageContext pageContext, string locationId, s
     public string LocationId { get; set; } = locationId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemoveResourceContext Deserialize(string value)
+    public static RemoveResourceContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<RemoveResourceContext>(value);
+        var context = ContextJson.Deserialize<RemoveResourceContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -305,9 +316,9 @@ public record AddZoneContext(PageContext PageContext)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static AddZoneContext Deserialize(string value)
+    public static AddZoneContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<AddZoneContext>(value);
+        var context = ContextJson.Deserialize<AddZoneContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -317,9 +328,9 @@ public record AddResourceContext(PageContext PageContext, string LocationId)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static AddResourceContext Deserialize(string value)
+    public static AddResourceContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<AddResourceContext>(value);
+        var context = ContextJson.Deserialize<AddResourceContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -329,9 +340,9 @@ public record AddCustomTagContext(PageContext PageContext)
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static AddCustomTagContext Deserialize(string value)
+    public static AddCustomTagContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<AddCustomTagContext>(value);
+        var context = ContextJson.Deserialize<AddCustomTagContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -341,9 +352,9 @@ public record RemovePreferredCustomTagContext(PageContext PageContext, string Cu
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemovePreferredCustomTagContext Deserialize(string value)
+    public static RemovePreferredCustomTagContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<RemovePreferredCustomTagContext>(value);
+        var context = ContextJson.Deserialize<RemovePreferredCustomTagContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -353,9 +364,9 @@ public record SetPreferredCustomTagContext(PageContext PageContext, string Custo
 {
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static SetPreferredCustomTagContext Deserialize(string value)
+    public static SetPreferredCustomTagContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<SetPreferredCustomTagContext>(value);
+        var context = ContextJson.Deserialize<SetPreferredCustomTagContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -367,9 +378,9 @@ public class EditCustomTagContext(PageContext pageContext, string customTagId)
     public string CustomTagId { get; set; } = customTagId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static EditCustomTagContext Deserialize(string value)
+    public static EditCustomTagContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<EditCustomTagContext>(value);
+        var context = ContextJson.Deserialize<EditCustomTagContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }
@@ -381,9 +392,9 @@ public class RemoveCustomTagContext(PageContext pageContext, string customTagId)
     public string CustomTagId { get; set; } = customTagId;
     public string Serialize() => JsonSerializer.Serialize(this);
 
-    public static RemoveCustomTagContext Deserialize(string value)
+    public static RemoveCustomTagContext Deserialize(string? value)
     {
-        var context = JsonSerializer.Deserialize<RemoveCustomTagContext>(value);
+        var context = ContextJson.Deserialize<RemoveCustomTagContext>(value);
         ArgumentNullException.ThrowIfNull(context);
         return context;
     }

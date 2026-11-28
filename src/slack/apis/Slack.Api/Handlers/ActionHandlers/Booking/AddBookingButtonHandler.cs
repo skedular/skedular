@@ -139,7 +139,7 @@ public class AddBookingButtonHandler(
             ],
         };
 
-        var values = viewSubmission.View.State.Values;
+        var values = viewSubmission.View.State?.Values ?? [];
         if (values.TryGetValue(DateKey, out var dateBlock))
         {
             if (dateBlock.TryGetValue(DateKey, out var block))
